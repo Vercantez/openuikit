@@ -180,7 +180,13 @@ open class NSEntityDescription: NSObject {
     public var versionHashModifier: String?
     public var uniquenessConstraints: [[Any]] = []
     public var compoundIndexes: [[Any]] = []
-    public var indexes: [NSFetchIndexDescription] = []
+    public var indexes: [NSFetchIndexDescription] = [] {
+        didSet {
+            for index in indexes {
+                index.entity = self
+            }
+        }
+    }
     public var properties: [NSPropertyDescription] = [] {
         didSet { _reindexProperties() }
     }
@@ -363,10 +369,17 @@ open class NSManagedObjectModel: NSObject {
         super.init()
         guard let models else { return nil }
         var merged: [NSEntityDescription] = []
+        var seen = Set<String>()
         for model in models {
-            merged.append(contentsOf: model.entities)
+            for entity in model.entities {
+                guard let name = entity.name, !name.isEmpty else { continue }
+                if seen.contains(name) { continue }
+                seen.insert(name)
+                merged.append(entity)
+            }
         }
         entities = merged
+        _reindex()
     }
 
     public convenience init?(byMerging models: [NSManagedObjectModel], forStoreMetadata metadata: [String: Any]) {
@@ -375,7 +388,10 @@ open class NSManagedObjectModel: NSObject {
 
     public convenience init?(byMergingModels models: [NSManagedObjectModel], forStoreMetadata metadata: [String: Any]) {
         self.init(byMergingModels: models)
-        _ = metadata
+        if let hashes = metadata[NSStoreModelVersionHashesKey] as? [String: Data],
+           hashes != entityVersionHashesByName {
+            return nil
+        }
     }
 
     open class func mergedModel(from bundles: [Bundle]?) -> NSManagedObjectModel? {

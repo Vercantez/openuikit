@@ -179,6 +179,30 @@ protocol _CDRowStore: AnyObject {
     func _cdApplySave(inserted: [_CDStoredRow], updated: [_CDStoredRow], deleted: [String]) throws
 }
 
+func _CDApplySQLitePragmas(_ connection: _CDSQLiteConnection, options: [AnyHashable: Any]?) throws {
+    let pragmas: [String: Any]
+    if let typed = options?[NSSQLitePragmasOption] as? [String: Any] {
+        pragmas = typed
+    } else if let objects = options?[NSSQLitePragmasOption] as? [String: NSObject] {
+        pragmas = objects
+    } else {
+        return
+    }
+    for (name, value) in pragmas {
+        let safeName = String(name.filter { $0.isLetter || $0.isNumber || $0 == "_" })
+        guard safeName == name, !name.isEmpty else { continue }
+        let rendered: String
+        if let number = value as? NSNumber {
+            rendered = number.stringValue
+        } else {
+            rendered = String(describing: value)
+        }
+        let safeValue = String(rendered.filter { $0.isLetter || $0.isNumber || $0 == "_" || $0 == "-" })
+        guard !safeValue.isEmpty else { continue }
+        try connection.exec("PRAGMA \(safeName) = \(safeValue)")
+    }
+}
+
 extension _CDInMemoryPersistentStore: _CDRowStore {
     func _cdAllRows(entityNames: Set<String>) -> [_CDStoredRow] {
         backing.lock.lock()
@@ -232,6 +256,7 @@ final class _CDSQLitePersistentStore: NSPersistentStore, _CDRowStore {
         let conn = try _CDSQLiteConnection(path: fileURL.path)
         connection = conn
         do {
+            try _CDApplySQLitePragmas(conn, options: options)
             try installSchemaIfNeeded(conn)
             try loadOrWriteMetadata(conn)
         } catch {

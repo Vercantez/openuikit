@@ -170,7 +170,7 @@ open class NSBatchInsertRequest: NSPersistentStoreRequest {
 }
 
 open class NSBatchUpdateRequest: NSPersistentStoreRequest {
-    public private(set) var entity: NSEntityDescription
+    public var entity: NSEntityDescription
     public var entityName: String { entity.name ?? "" }
     public var includesSubentities: Bool = true
     public var predicate: NSPredicate?
@@ -497,13 +497,23 @@ open class NSPersistentStoreAsynchronousResult: NSPersistentStoreResult {
         super.init()
     }
 
-    public func cancel() {}
+    public func cancel() {
+        operationError = _CDMakeError(NSPersistentStoreOperationError, "asynchronous fetch cancelled")
+    }
 }
 
-open class NSAsynchronousFetchRequest<ResultType>: NSPersistentStoreRequest {
+protocol _CDAsynchronousFetchExecuting: AnyObject {
+    func _cdExecute(on context: NSManagedObjectContext) throws -> NSPersistentStoreResult
+}
+
+open class NSAsynchronousFetchRequest<ResultType>: NSPersistentStoreRequest, _CDAsynchronousFetchExecuting {
     public let fetchRequest: NSFetchRequest<ResultType>
     public var estimatedResultCount: Int = 0
     public var completionBlock: NSPersistentStoreAsynchronousFetchResultCompletionBlock?
+    private var _typedCompletion: ((NSAsynchronousFetchResult<ResultType>) -> Void)?
+    private var _cancelled = false
+
+    public override var requestType: NSPersistentStoreRequestType { .fetchRequestType }
 
     public init(
         fetchRequest request: NSFetchRequest<ResultType>,
@@ -511,6 +521,7 @@ open class NSAsynchronousFetchRequest<ResultType>: NSPersistentStoreRequest {
     ) {
         self.fetchRequest = request
         super.init()
+        self._typedCompletion = blk
         if let blk {
             self.completionBlock = { boxed in
                 if let typed = boxed as? NSAsynchronousFetchResult<ResultType> {
@@ -518,6 +529,23 @@ open class NSAsynchronousFetchRequest<ResultType>: NSPersistentStoreRequest {
                 }
             }
         }
+    }
+
+    func _cdExecute(on context: NSManagedObjectContext) throws -> NSPersistentStoreResult {
+        if _cancelled {
+            let result = NSAsynchronousFetchResult(fetchRequest: self, context: context, finalResult: nil)
+            result.operationError = _CDMakeError(NSPersistentStoreOperationError, "asynchronous fetch cancelled")
+            return result
+        }
+        let objects = try context.fetch(fetchRequest)
+        let result = NSAsynchronousFetchResult(fetchRequest: self, context: context, finalResult: objects)
+        result.progress = Progress(totalUnitCount: Int64(objects.count))
+        _typedCompletion?(result)
+        return result
+    }
+
+    public func cancel() {
+        _cancelled = true
     }
 }
 

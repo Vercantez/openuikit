@@ -240,7 +240,12 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
                 throw _CDMakeError(
                     NSValidationMissingMandatoryPropertyError,
                     "missing required attribute \(key)",
-                    userInfo: [NSValidationKeyErrorKey: key]
+                    userInfo: [
+                        NSValidationKeyErrorKey: key,
+                        NSValidationObjectErrorKey: self,
+                        NSValidationValueErrorKey: current as Any,
+                        NSAffectedObjectsErrorKey: [self]
+                    ]
                 )
             }
             for predicate in attribute.validationPredicates {
@@ -250,8 +255,10 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
                         "validation predicate failed for \(key)",
                         userInfo: [
                             NSValidationKeyErrorKey: key,
+                            NSValidationObjectErrorKey: self,
                             NSValidationPredicateErrorKey: predicate,
-                            NSValidationValueErrorKey: current as Any
+                            NSValidationValueErrorKey: current as Any,
+                            NSAffectedObjectsErrorKey: [self]
                         ]
                     )
                 }
@@ -354,7 +361,11 @@ open class NSManagedObject: NSObject, NSFetchRequestResult {
                 throw _CDMakeError(
                     NSValidationMissingMandatoryPropertyError,
                     "missing required attribute \(name)",
-                    userInfo: [NSValidationKeyErrorKey: name, NSValidationObjectErrorKey: self]
+                    userInfo: [
+                        NSValidationKeyErrorKey: name,
+                        NSValidationObjectErrorKey: self,
+                        NSAffectedObjectsErrorKey: [self]
+                    ]
                 )
             }
         }
