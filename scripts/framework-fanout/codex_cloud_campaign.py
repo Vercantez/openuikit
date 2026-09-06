@@ -155,8 +155,7 @@ def main():
             if state == "done":
                 fw = next(f for f in camp["frameworks"] if f["slug"] == slug)
                 try:
-                    e["lastStatus"] = raw[:400]
-                res = harvest(fw, e["taskId"], starting_ref, {**st, **e}); e.update(res)
+                    res = harvest(fw, e["taskId"], starting_ref, {**st, **e}); e.update(res)
                     print(f"  {slug}: {res['status']} {res.get('shortstat','')} -> {res.get('branch','')}")
                 except Exception as ex:
                     e["status"] = "harvest_failed"; e["error"] = str(ex)[-600:]; print(f"  {slug}: HARVEST FAILED {ex}")
