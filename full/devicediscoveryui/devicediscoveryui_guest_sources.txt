@@ -1,0 +1,8 @@
+full/devicediscoveryui/DDDevicePairingAccess.swift
+full/devicediscoveryui/DDDevicePairingViewController.swift
+full/devicediscoveryui/DDDevicePickerViewController.swift
+full/devicediscoveryui/DeviceDiscoveryUI.swift
+full/devicediscoveryui/DeviceDiscoveryUILookalikes.swift
+full/devicediscoveryui/DeviceDiscoveryUIViewSurface.swift
+full/devicediscoveryui/DevicePairingView.swift
+full/devicediscoveryui/DevicePicker.swift
