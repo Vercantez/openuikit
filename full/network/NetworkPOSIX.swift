@@ -224,6 +224,10 @@ enum NWPOSIX {
         return parameters.defaultProtocolStack.applicationProtocols.contains { $0 is NWProtocolTLS.Options }
     }
 
+    static func wantsQUIC(_ parameters: NWParameters) -> Bool {
+        parameters.defaultProtocolStack.transportProtocol is NWProtocolQUIC.Options
+    }
+
     static func makeSocket(udp: Bool) -> Int32? {
         let fd = socket(Int32(AF_INET), udp ? datagramSocketType : streamSocketType, 0)
         return fd >= 0 ? fd : nil
