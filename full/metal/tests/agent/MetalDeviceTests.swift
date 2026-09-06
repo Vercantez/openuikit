@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 import Metal
 
@@ -78,4 +79,84 @@ func testCPUDevice() {
     let samples = device.getDefaultSamplePositions(sampleCount: 1)
     precondition(samples.count == 1)
     precondition(device.getDefaultSamplePositions(sampleCount: 4).isEmpty)
+}
+
+func testDeviceFactoryAndFailClosed() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let timestamps = device.sampleTimestamps()
+    precondition(timestamps.cpu > 0)
+    precondition(timestamps.gpu == timestamps.cpu)
+    let shared = device.makeBuffer(length: 8, options: .storageModeShared)!
+    precondition(shared.length == 8)
+    var payload: UInt32 = 0x11223344
+    let copied = withUnsafeBytes(of: &payload) { raw in
+        device.makeBuffer(bytes: raw.baseAddress!, length: 4, options: .storageModeShared)!
+    }
+    precondition(copied.contents().load(as: UInt32.self) == 0x11223344)
+    var borrowed = [UInt8](repeating: 7, count: 2)
+    let noCopy = borrowed.withUnsafeMutableBytes { raw in
+        device.makeBuffer(
+            bytesNoCopy: raw.baseAddress!,
+            length: 2,
+            options: .storageModeShared,
+            deallocator: { _, _ in }
+        )!
+    }
+    precondition(noCopy.length == 2)
+    let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .r8Unorm,
+        width: 2,
+        height: 2,
+        mipmapped: false
+    )
+    let texture = device.makeTexture(descriptor: textureDesc)!
+    precondition(texture.width == 2)
+    let heapDesc = MTLHeapDescriptor()
+    heapDesc.size = 128
+    precondition(device.makeHeap(descriptor: heapDesc) != nil)
+    let argument = MTLArgumentDescriptor.argumentDescriptor()
+    argument.dataType = .float
+    argument.index = 0
+    precondition(device.makeArgumentEncoder(arguments: [argument]) != nil)
+    precondition(device.makeDefaultLibrary() == nil)
+    do {
+        _ = try device.makeLibrary(data: DispatchData.empty)
+        fatalError("DispatchData metallib load must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .fileNotFound)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let render = MTLRenderPipelineDescriptor()
+    render.colorAttachments[0].pixelFormat = .rgba8Unorm
+    let (state, reflection) = try! device.makeRenderPipelineState(descriptor: render, options: [])
+    _ = state
+    precondition(reflection == nil)
+    do {
+        _ = try device.makeRenderPipelineState(descriptor: MTLMeshRenderPipelineDescriptor(), options: [])
+        fatalError("mesh pipeline must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+        let description = (error.userInfo[NSLocalizedDescriptionKey] as? String) ?? error.localizedDescription
+        precondition(description.contains("no shader compiler"))
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try device.makeRenderPipelineState(tileDescriptor: MTLTileRenderPipelineDescriptor(), options: [])
+        fatalError("tile pipeline must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let compute = MTLComputePipelineDescriptor()
+    compute.computeFunction = MTLMakeCPUBuiltinLibrary(device).makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)
+    do {
+        let (computeState, computeReflection) = try device.makeComputePipelineState(descriptor: compute, options: [])
+        _ = computeState.maxTotalThreadsPerThreadgroup
+        precondition(computeReflection == nil)
+    } catch {
+        fatalError("CPU builtin compute pipeline must succeed")
+    }
 }

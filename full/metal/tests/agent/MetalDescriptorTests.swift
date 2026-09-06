@@ -221,3 +221,76 @@ func testDescriptorValueSemantics() {
     metal4.renderTargetHeight = 8
     precondition(metal4.renderTargetWidth == 8)
 }
+
+func testMeshAndTilePipelineDescriptors() {
+    let mesh = MTLMeshRenderPipelineDescriptor()
+    mesh.label = "mesh"
+    mesh.rasterSampleCount = 1
+    mesh.isAlphaToCoverageEnabled = true
+    mesh.isAlphaToOneEnabled = false
+    mesh.isRasterizationEnabled = true
+    mesh.maxVertexAmplificationCount = 1
+    mesh.maxTotalThreadsPerObjectThreadgroup = 32
+    mesh.maxTotalThreadsPerMeshThreadgroup = 64
+    mesh.maxTotalThreadgroupsPerMeshGrid = 8
+    mesh.payloadMemoryLength = 128
+    mesh.objectThreadgroupSizeIsMultipleOfThreadExecutionWidth = true
+    mesh.meshThreadgroupSizeIsMultipleOfThreadExecutionWidth = true
+    mesh.requiredThreadsPerObjectThreadgroup = MTLSizeMake(8, 1, 1)
+    mesh.requiredThreadsPerMeshThreadgroup = MTLSizeMake(16, 1, 1)
+    mesh.supportIndirectCommandBuffers = false
+    mesh.shaderValidation = .disabled
+    mesh.depthAttachmentPixelFormat = .depth32Float
+    mesh.stencilAttachmentPixelFormat = .stencil8
+    mesh.colorAttachments[0].pixelFormat = .rgba8Unorm
+    mesh.objectBuffers[0].mutability = .immutable
+    mesh.meshBuffers[1].mutability = .mutable
+    mesh.fragmentBuffers[2].mutability = .default
+    mesh.objectLinkedFunctions = MTLLinkedFunctions()
+    mesh.meshLinkedFunctions = MTLLinkedFunctions()
+    mesh.fragmentLinkedFunctions = MTLLinkedFunctions()
+    mesh.objectLinkedFunctions.functions = []
+    mesh.objectLinkedFunctions.binaryFunctions = []
+    mesh.objectLinkedFunctions.privateFunctions = []
+    mesh.objectLinkedFunctions.groups = [:]
+    mesh.binaryArchives = nil
+    precondition(mesh.label == "mesh")
+    precondition(mesh.colorAttachments[0].pixelFormat == .rgba8Unorm)
+    precondition(mesh.objectBuffers[0].mutability == .immutable)
+    precondition(mesh.meshBuffers[1].mutability == .mutable)
+    mesh.reset()
+    precondition(mesh.label == nil)
+    precondition(mesh.rasterSampleCount == 1)
+    precondition(mesh.objectBuffers[0].mutability == .default)
+
+    let tile = MTLTileRenderPipelineDescriptor()
+    tile.label = "tile"
+    tile.rasterSampleCount = 1
+    tile.threadgroupSizeMatchesTileSize = true
+    tile.maxTotalThreadsPerThreadgroup = 32
+    tile.maxCallStackDepth = 1
+    tile.supportAddingBinaryFunctions = false
+    tile.requiredThreadsPerThreadgroup = MTLSizeMake(8, 8, 1)
+    tile.shaderValidation = .enabled
+    tile.colorAttachments[0].pixelFormat = .bgra8Unorm
+    tile.tileBuffers[0].mutability = .mutable
+    tile.linkedFunctions = MTLLinkedFunctions()
+    tile.linkedFunctions.functions = []
+    tile.preloadedLibraries = []
+    tile.binaryArchives = nil
+    precondition(tile.colorAttachments[0].pixelFormat == .bgra8Unorm)
+    tile.reset()
+    precondition(tile.label == nil)
+    precondition(tile.tileBuffers[0].mutability == .default)
+
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.vertexBuffers[0].mutability = .immutable
+    pipeline.fragmentBuffers[1].mutability = .mutable
+    pipeline.vertexLinkedFunctions = MTLLinkedFunctions()
+    pipeline.fragmentLinkedFunctions = MTLLinkedFunctions()
+    pipeline.binaryArchives = nil
+    precondition(pipeline.vertexBuffers[0].mutability == .immutable)
+    let compute = MTLComputePipelineDescriptor()
+    compute.buffers[0].mutability = .immutable
+    precondition(compute.buffers[0].mutability == .immutable)
+}
