@@ -144,5 +144,23 @@ Top-5 `implemented` evidence distribution after this pass:
 No non-constant test owns more than 40% of implemented rows. Audio
 `AudioStreamBasicDescription` create/getters, `CVImageBuffer` sample-buffer
 entry points, `CMTag`, and stereo-tagged buffer groups remain deferred. `CMMemoryPool`
-is a default-allocator wrapper (no slab cache). Endian sample-description
-bridges and bitstream parsers stay fail-closed.
+is a default-allocator wrapper (`CFAllocatorGetDefault()` / `kCFAllocatorSystemDefault`;
+no slab cache). Endian sample-description bridges and bitstream parsers stay
+fail-closed.
+
+Sealed gate `bash full/coremedia/tests/acceptance/test_host.sh` (this snapshot):
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=CoreMedia lane=large-partitioned symbols=3504
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREMEDIA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreMedia dylib=libCoreMedia.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token, not printed by the sealed framework gate.
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
+linux and the gate compiled with a clean product tree.
