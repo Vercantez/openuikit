@@ -1,0 +1,460 @@
+[
+ {
+  "module": "Accelerate",
+  "old": {
+   "declared": 2901,
+   "implemented": 2534,
+   "deferred": 1421
+  },
+  "new": {
+   "declared": 2242,
+   "implemented": 3359,
+   "deferred": 1252,
+   "not-applicable": 3
+  }
+ },
+ {
+  "module": "AppIntents",
+  "old": {
+   "declared": 3126,
+   "deferred": 1524,
+   "implemented": 348,
+   "not-applicable": 1588
+  },
+  "new": {
+   "declared": 2052,
+   "deferred": 1208,
+   "implemented": 1738,
+   "not-applicable": 1588
+  }
+ },
+ {
+  "module": "Assignables",
+  "old": null,
+  "new": {
+   "implemented": 314,
+   "declared": 1572
+  }
+ },
+ {
+  "module": "AudioToolbox",
+  "old": {
+   "deferred": 1765,
+   "implemented": 873,
+   "declared": 277,
+   "unavailable": 319
+  },
+  "new": {
+   "implemented": 2932,
+   "deferred": 262,
+   "declared": 39,
+   "unavailable": 1
+  }
+ },
+ {
+  "module": "AVFoundation",
+  "old": {
+   "declared": 4175,
+   "implemented": 1188,
+   "deferred": 269
+  },
+  "new": {
+   "declared": 1707,
+   "implemented": 3681,
+   "deferred": 244
+  }
+ },
+ {
+  "module": "BrowserEngineKit",
+  "old": null,
+  "new": {
+   "implemented": 492,
+   "declared": 19
+  }
+ },
+ {
+  "module": "Charts",
+  "old": {
+   "implemented": 673,
+   "deferred": 1124,
+   "declared": 6861,
+   "not-applicable": 816
+  },
+  "new": {
+   "implemented": 2314,
+   "declared": 2580,
+   "deferred": 926,
+   "not-applicable": 3654
+  }
+ },
+ {
+  "module": "CloudKit",
+  "old": {
+   "implemented": 802,
+   "deferred": 212,
+   "not-applicable": 1209,
+   "unavailable": 22
+  },
+  "new": {
+   "implemented": 1030,
+   "unavailable": 28,
+   "deferred": 2,
+   "not-applicable": 1185
+  }
+ },
+ {
+  "module": "CoreData",
+  "old": {
+   "declared": 612,
+   "implemented": 682,
+   "unavailable": 10,
+   "deferred": 15
+  },
+  "new": {
+   "implemented": 1283,
+   "unavailable": 10,
+   "deferred": 15,
+   "declared": 11
+  }
+ },
+ {
+  "module": "CoreImage",
+  "old": {
+   "implemented": 621,
+   "unavailable": 90,
+   "declared": 144
+  },
+  "new": {
+   "implemented": 765,
+   "unavailable": 90
+  }
+ },
+ {
+  "module": "CoreMedia",
+  "old": {
+   "deferred": 1167,
+   "implemented": 737,
+   "declared": 1600
+  },
+  "new": {
+   "implemented": 2111,
+   "deferred": 267,
+   "declared": 1126
+  }
+ },
+ {
+  "module": "CoreML",
+  "old": {
+   "implemented": 633,
+   "declared": 311,
+   "unavailable": 16,
+   "deferred": 148,
+   "not-applicable": 578
+  },
+  "new": {
+   "implemented": 886,
+   "declared": 208,
+   "unavailable": 16,
+   "deferred": 576
+  }
+ },
+ {
+  "module": "CoreText",
+  "old": {
+   "implemented": 1450,
+   "deferred": 426,
+   "declared": 768
+  },
+  "new": {
+   "implemented": 2631,
+   "deferred": 13
+  }
+ },
+ {
+  "module": "CoreTransferable",
+  "old": {
+   "unavailable": 148,
+   "implemented": 152,
+   "declared": 3,
+   "deferred": 2
+  },
+  "new": {
+   "implemented": 297,
+   "declared": 3,
+   "deferred": 5
+  }
+ },
+ {
+  "module": "GSS",
+  "old": null,
+  "new": {
+   "implemented": 248
+  }
+ },
+ {
+  "module": "HealthKit",
+  "old": {
+   "implemented": 1663,
+   "declared": 943,
+   "unavailable": 39
+  },
+  "new": {
+   "implemented": 2019,
+   "declared": 587,
+   "deferred": 39
+  }
+ },
+ {
+  "module": "HomeKit",
+  "old": {
+   "implemented": 906,
+   "declared": 605,
+   "unavailable": 8,
+   "not-applicable": 776
+  },
+  "new": {
+   "implemented": 1129,
+   "declared": 382,
+   "unavailable": 8,
+   "not-applicable": 776
+  }
+ },
+ {
+  "module": "IdentityDocumentServices",
+  "old": null,
+  "new": {
+   "implemented": 99,
+   "declared": 7
+  }
+ },
+ {
+  "module": "Intents",
+  "old": {
+   "implemented": 1800,
+   "declared": 1583,
+   "deferred": 777
+  },
+  "new": {
+   "implemented": 3340,
+   "declared": 369,
+   "deferred": 451
+  }
+ },
+ {
+  "module": "LightweightCodeRequirements",
+  "old": null,
+  "new": {
+   "implemented": 294
+  }
+ },
+ {
+  "module": "Matter",
+  "old": {
+   "implemented": 11913,
+   "deferred": 15470,
+   "declared": 1039,
+   "unavailable": 40
+  },
+  "new": {
+   "implemented": 22588,
+   "deferred": 5025,
+   "declared": 809,
+   "unavailable": 40
+  }
+ },
+ {
+  "module": "Metal",
+  "old": {
+   "deferred": 2164,
+   "implemented": 1991,
+   "declared": 389,
+   "unavailable": 3
+  },
+  "new": {
+   "deferred": 328,
+   "implemented": 4013,
+   "unavailable": 3,
+   "declared": 203
+  }
+ },
+ {
+  "module": "MetalPerformanceShaders",
+  "old": {
+   "deferred": 1875,
+   "implemented": 1501,
+   "declared": 6
+  },
+  "new": {
+   "deferred": 585,
+   "implemented": 2795,
+   "declared": 2
+  }
+ },
+ {
+  "module": "MusicKit",
+  "old": {
+   "implemented": 905,
+   "not-applicable": 1169,
+   "declared": 460
+  },
+  "new": {
+   "implemented": 1248,
+   "not-applicable": 1110,
+   "declared": 176
+  }
+ },
+ {
+  "module": "Network",
+  "old": {
+   "implemented": 1266,
+   "declared": 754,
+   "deferred": 1027
+  },
+  "new": {
+   "implemented": 1921,
+   "declared": 241,
+   "deferred": 885
+  }
+ },
+ {
+  "module": "Photos",
+  "old": {
+   "implemented": 597,
+   "deferred": 48,
+   "declared": 142
+  },
+  "new": {
+   "implemented": 752,
+   "deferred": 34,
+   "not-applicable": 1
+  }
+ },
+ {
+  "module": "SceneKit",
+  "old": {
+   "implemented": 1369,
+   "declared": 350,
+   "deferred": 892
+  },
+  "new": {
+   "implemented": 1728,
+   "deferred": 74,
+   "not-applicable": 809
+  }
+ },
+ {
+  "module": "SecureElementCredential",
+  "old": null,
+  "new": {
+   "implemented": 123,
+   "unavailable": 7,
+   "declared": 25
+  }
+ },
+ {
+  "module": "SpriteKit",
+  "old": {
+   "implemented": 981,
+   "deferred": 902
+  },
+  "new": {
+   "implemented": 991,
+   "unavailable": 49,
+   "not-applicable": 843
+  }
+ },
+ {
+  "module": "StoreKit",
+  "old": {
+   "implemented": 933,
+   "declared": 14352,
+   "deferred": 348,
+   "not-applicable": 62
+  },
+  "new": {
+   "implemented": 1541,
+   "deferred": 180,
+   "declared": 6673,
+   "not-applicable": 7301
+  }
+ },
+ {
+  "module": "SystemExtensions",
+  "old": null,
+  "new": {
+   "implemented": 57
+  }
+ },
+ {
+  "module": "TelephonyMessagingKit",
+  "old": null,
+  "new": {
+   "implemented": 957,
+   "declared": 24
+  }
+ },
+ {
+  "module": "TranslationUIProvider",
+  "old": null,
+  "new": {
+   "implemented": 16
+  }
+ },
+ {
+  "module": "Vision",
+  "old": {
+   "implemented": 729,
+   "deferred": 295,
+   "declared": 2560
+  },
+  "new": {
+   "implemented": 2977,
+   "deferred": 58,
+   "declared": 549
+  }
+ },
+ {
+  "module": "VisualIntelligence",
+  "old": null,
+  "new": {
+   "implemented": 13
+  }
+ },
+ {
+  "module": "WeatherKit",
+  "old": {
+   "implemented": 697,
+   "declared": 1,
+   "deferred": 559,
+   "unavailable": 7
+  },
+  "new": {
+   "implemented": 1222,
+   "declared": 1,
+   "deferred": 34,
+   "unavailable": 7
+  }
+ },
+ {
+  "module": "WidgetKit",
+  "old": {
+   "deferred": 27,
+   "implemented": 391,
+   "not-applicable": 777,
+   "declared": 1681
+  },
+  "new": {
+   "deferred": 17,
+   "implemented": 456,
+   "not-applicable": 777,
+   "declared": 1626
+  }
+ },
+ {
+  "module": "WirelessInsights",
+  "old": null,
+  "new": {
+   "implemented": 75
+  }
+ }
+]
