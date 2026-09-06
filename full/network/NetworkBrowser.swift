@@ -169,7 +169,7 @@ public final class NWConnectionGroup: @unchecked Sendable {
 }
 
 extension NWConnectionGroup.Message {
-    public static let `default` = Message(group: nil)
+    public static let `default` = NWConnectionGroup.Message(group: nil)
     public var localEndpoint: NWEndpoint? { nil }
     public var remoteEndpoint: NWEndpoint? { nil }
     public var path: NWPath? { nil }
