@@ -1,0 +1,3 @@
+import SensitiveContentAnalysis
+
+let frameworkLoadSmokeMarker = "SENSITIVECONTENTANALYSIS_AGENT_RUNTIME_OK"
