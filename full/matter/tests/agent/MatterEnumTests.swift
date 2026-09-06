@@ -8,6 +8,10 @@ func mtrRequire(_ condition: Bool, _ message: String) {
     }
 }
 
+func mtrExpectInvalidState(_ err: (any Error)?) {
+    mtrRequire((err as? MTRError)?.code == .invalidState, "expected MTRError.invalidState")
+}
+
 func mtrCheck<T: RawRepresentable & Equatable>(_ value: T, _ raw: T.RawValue, _ name: String)
 where T.RawValue: Equatable {
     mtrRequire(value.rawValue == raw, name)
