@@ -1,0 +1,5 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/BrowserKit.framework/BrowserKit.tbd	254	ef3fe84e2f0c3e03d6ef32ca3175dcd30b6bdc0055aab8bb05c547314d7e375b
+header	System/Library/Frameworks/BrowserKit.framework/Headers/BEAvailability.h	1161	ae0fc7bbcf8b774ef3e63274cc54005f163a93ff966bfab39bf5fc17a3c459fb
+header	System/Library/Frameworks/BrowserKit.framework/Headers/BrowserKit.h	92	c1d7f8cf3f1f590a19cc38376fa18ca88e03370bd12a3dff68886988cb7c104b
+modulemap	System/Library/Frameworks/BrowserKit.framework/Modules/module.modulemap	115	b28d901be88310b677c0e7895160649fe7c485d30e4d2b98e9be5636e7b88c6a

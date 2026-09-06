@@ -1,0 +1,1427 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentServices",
+        "printedName": "IdentityDocumentServices"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "UIWindow",
+            "printedName": "UIKit.UIWindow",
+            "usr": "c:objc(cs)UIWindow"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB18PresentationAnchora",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentPresentationAnchor",
+        "printedName": "IdentityDocumentPresentationAnchor",
+        "usr": "s:26IdentityDocumentServicesUI0aB18PresentationAnchora"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIWindow",
+                        "printedName": "UIKit.UIWindow",
+                        "usr": "c:objc(cs)UIWindow"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "IdentityDocumentPresentationAnchor",
+                    "printedName": "IdentityDocumentServicesUI.IdentityDocumentPresentationAnchor"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "IdentityDocumentServicesUI.IdentityDocumentPresentationAnchor?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentPresentmentControlling",
+                "printedName": "any IdentityDocumentServicesUI.IdentityDocumentPresentmentControlling",
+                "usr": "s:26IdentityDocumentServicesUI0aB22PresentmentControllingP"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : IdentityDocumentServicesUI.IdentityDocumentPresentmentControllerPresentationContextProviding>",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB49PresentmentControllerPresentationContextProvidingP021presentationAnchorForeF0ySo8UIWindowCSgAA0abE11Controlling_pF",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "presentationAnchorForPresentmentController",
+            "printedName": "presentationAnchorForPresentmentController(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB49PresentmentControllerPresentationContextProvidingP021presentationAnchorForeF0ySo8UIWindowCSgAA0abE11Controlling_pF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : AnyObject>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB49PresentmentControllerPresentationContextProvidingP",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentPresentmentControllerPresentationContextProviding",
+        "printedName": "IdentityDocumentPresentmentControllerPresentationContextProviding",
+        "usr": "s:26IdentityDocumentServicesUI0aB49PresentmentControllerPresentationContextProvidingP"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB22PresentmentControllingP",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentPresentmentControlling",
+        "printedName": "IdentityDocumentPresentmentControlling",
+        "usr": "s:26IdentityDocumentServicesUI0aB22PresentmentControllingP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "IdentityDocumentWebPresentmentControllerDelegate",
+                        "printedName": "any IdentityDocumentServicesUI.IdentityDocumentWebPresentmentControllerDelegate",
+                        "usr": "s:26IdentityDocumentServicesUI0aB32WebPresentmentControllerDelegateP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any IdentityDocumentServicesUI.IdentityDocumentWebPresentmentControllerDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC8delegateAA0abefG8Delegate_pSgvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC8delegateAA0abefG8Delegate_pSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "IdentityDocumentWebPresentmentControllerDelegate",
+                        "printedName": "any IdentityDocumentServicesUI.IdentityDocumentWebPresentmentControllerDelegate",
+                        "usr": "s:26IdentityDocumentServicesUI0aB32WebPresentmentControllerDelegateP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any IdentityDocumentServicesUI.IdentityDocumentWebPresentmentControllerDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC8delegateAA0abefG8Delegate_pSgvs",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC8delegateAA0abefG8Delegate_pSgvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any IdentityDocumentServicesUI.IdentityDocumentWebPresentmentControllerDelegate)?"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "ReferenceOwnership",
+              "HasStorage",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC8delegateAA0abefG8Delegate_pSgvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "delegate",
+            "ownership": 1,
+            "printedName": "delegate",
+            "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC8delegateAA0abefG8Delegate_pSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "IdentityDocumentPresentmentControllerPresentationContextProviding",
+                        "printedName": "any IdentityDocumentServicesUI.IdentityDocumentPresentmentControllerPresentationContextProviding",
+                        "usr": "s:26IdentityDocumentServicesUI0aB49PresentmentControllerPresentationContextProvidingP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any IdentityDocumentServicesUI.IdentityDocumentPresentmentControllerPresentationContextProviding)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC27presentationContextProviderAA0abfg12PresentationI9Providing_pSgvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC27presentationContextProviderAA0abfg12PresentationI9Providing_pSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "IdentityDocumentPresentmentControllerPresentationContextProviding",
+                        "printedName": "any IdentityDocumentServicesUI.IdentityDocumentPresentmentControllerPresentationContextProviding",
+                        "usr": "s:26IdentityDocumentServicesUI0aB49PresentmentControllerPresentationContextProvidingP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any IdentityDocumentServicesUI.IdentityDocumentPresentmentControllerPresentationContextProviding)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC27presentationContextProviderAA0abfg12PresentationI9Providing_pSgvs",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC27presentationContextProviderAA0abfg12PresentationI9Providing_pSgvs"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any IdentityDocumentServicesUI.IdentityDocumentPresentmentControllerPresentationContextProviding)?"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "ReferenceOwnership",
+              "HasStorage",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC27presentationContextProviderAA0abfg12PresentationI9Providing_pSgvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "presentationContextProvider",
+            "ownership": 1,
+            "printedName": "presentationContextProvider",
+            "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC27presentationContextProviderAA0abfg12PresentationI9Providing_pSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentWebPresentmentController",
+                "printedName": "IdentityDocumentServicesUI.IdentityDocumentWebPresentmentController",
+                "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerCACycfc",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "init",
+            "printedName": "init()",
+            "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerCACycfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentWebPresentmentResponse",
+                "printedName": "any IdentityDocumentServices.IdentityDocumentWebPresentmentResponse",
+                "usr": "s:24IdentityDocumentServices0aB22WebPresentmentResponseP"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentWebPresentmentRequest",
+                    "printedName": "any IdentityDocumentServices.IdentityDocumentWebPresentmentRequest",
+                    "usr": "s:24IdentityDocumentServices0aB21WebPresentmentRequestP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[any IdentityDocumentServices.IdentityDocumentWebPresentmentRequest]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC15performRequests_6origin0abC00abeF8Response_pSayAF0abeF7Request_pG_10Foundation3URLVtYaKF",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "performRequests",
+            "printedName": "performRequests(_:origin:)",
+            "throwing": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC15performRequests_6origin0abC00abeF8Response_pSayAF0abeF7Request_pG_10Foundation3URLVtYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB22PresentmentControllingP",
+            "name": "IdentityDocumentPresentmentControlling",
+            "printedName": "IdentityDocumentPresentmentControlling",
+            "usr": "s:26IdentityDocumentServicesUI0aB22PresentmentControllingP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Class",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB24WebPresentmentControllerC",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentWebPresentmentController",
+        "printedName": "IdentityDocumentWebPresentmentController",
+        "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentWebPresentmentRawRequest",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IdentityDocumentWebPresentmentController",
+                "printedName": "IdentityDocumentServicesUI.IdentityDocumentWebPresentmentController",
+                "usr": "s:26IdentityDocumentServicesUI0aB24WebPresentmentControllerC"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : IdentityDocumentServicesUI.IdentityDocumentWebPresentmentControllerDelegate>",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB32WebPresentmentControllerDelegateP014rawRequestsForefG0ySay0abC00abeF10RawRequestVGAA0abefG0CYaF",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "rawRequestsForWebPresentmentController",
+            "printedName": "rawRequestsForWebPresentmentController(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB32WebPresentmentControllerDelegateP014rawRequestsForefG0ySay0abC00abeF10RawRequestVGAA0abefG0CYaF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : AnyObject>",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB32WebPresentmentControllerDelegateP",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentWebPresentmentControllerDelegate",
+        "printedName": "IdentityDocumentWebPresentmentControllerDelegate",
+        "usr": "s:26IdentityDocumentServicesUI0aB32WebPresentmentControllerDelegateP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "URL",
+                        "printedName": "Foundation.URL",
+                        "usr": "s:10Foundation3URLV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Foundation.URL?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV23requestingWebsiteOrigin10Foundation3URLVSgvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV23requestingWebsiteOrigin10Foundation3URLVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.URL?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV23requestingWebsiteOrigin10Foundation3URLVSgvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "requestingWebsiteOrigin",
+            "printedName": "requestingWebsiteOrigin",
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV23requestingWebsiteOrigin10Foundation3URLVSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ISO18013MobileDocumentRequest",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV7request0abC00efbG0Vvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV7request0abC00efbG0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ISO18013MobileDocumentRequest",
+                "printedName": "IdentityDocumentServices.ISO18013MobileDocumentRequest",
+                "usr": "s:24IdentityDocumentServices014ISO18013MobileB7RequestV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV7request0abC00efbG0Vvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "request",
+            "printedName": "request",
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV7request0abC00efbG0Vvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ISO18013MobileDocumentResponse",
+                    "printedName": "IdentityDocumentServices.ISO18013MobileDocumentResponse",
+                    "usr": "s:24IdentityDocumentServices014ISO18013MobileB8ResponseV"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentWebPresentmentRawRequest",
+                    "printedName": "IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest",
+                    "usr": "s:24IdentityDocumentServices0aB24WebPresentmentRawRequestV"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(IdentityDocumentServices.IdentityDocumentWebPresentmentRawRequest) async throws -> IdentityDocumentServices.ISO18013MobileDocumentResponse"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV12sendResponseyy0abC00efbJ0VAE0ab17WebPresentmentRawG0VYaYbKcYaKF",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "sendResponse",
+            "printedName": "sendResponse(_:)",
+            "throwing": true,
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV12sendResponseyy0abC00efbJ0VAE0ab17WebPresentmentRawG0VYaYbKcYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV6cancelyyF",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "cancel",
+            "printedName": "cancel()",
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV6cancelyyF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "ISO18013MobileDocumentRequestContext",
+        "printedName": "ISO18013MobileDocumentRequestContext",
+        "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "ISO18013MobileDocumentRequestScene",
+                "printedName": "IdentityDocumentServicesUI.ISO18013MobileDocumentRequestScene<Content>",
+                "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "Content"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ISO18013MobileDocumentRequestContext",
+                    "printedName": "IdentityDocumentServicesUI.ISO18013MobileDocumentRequestContext",
+                    "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB14RequestContextV"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(IdentityDocumentServicesUI.ISO18013MobileDocumentRequestContext) -> Content"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "genericSig": "<Content where Content : Swift.Sendable, Content : SwiftUI.View>",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV7contentACyxGxAA0efbG7ContextVc_tcfc",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "init",
+            "printedName": "init(content:)",
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV7contentACyxGxAA0efbG7ContextVc_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AppExtensionScene",
+                        "printedName": "ExtensionKit.AppExtensionScene",
+                        "usr": "s:12ExtensionKit03AppA5SceneP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some ExtensionKit.AppExtensionScene"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Content where Content : Swift.Sendable, Content : SwiftUI.View>",
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV4bodyQrvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV4bodyQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV4bodyQrvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "body",
+            "printedName": "body",
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV4bodyQrvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionScene",
+                    "printedName": "ExtensionKit.AppExtensionScene",
+                    "usr": "s:12ExtensionKit03AppA5SceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some ExtensionKit.AppExtensionScene"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "genericSig": "<Content where Content : Swift.Sendable, Content : SwiftUI.View>",
+            "intro_iOS": "26.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV4Bodya",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "Body",
+            "printedName": "Body",
+            "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV4Bodya"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB12RequestSceneP",
+            "name": "IdentityDocumentRequestScene",
+            "printedName": "IdentityDocumentRequestScene",
+            "usr": "s:26IdentityDocumentServicesUI0aB12RequestSceneP"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AppExtensionScene",
+                            "printedName": "ExtensionKit.AppExtensionScene",
+                            "usr": "s:12ExtensionKit03AppA5SceneP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "OpaqueTypeArchetype",
+                        "printedName": "some ExtensionKit.AppExtensionScene"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Body",
+                    "printedName": "IdentityDocumentServicesUI.ISO18013MobileDocumentRequestScene<Content>.Body"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "Body",
+                "printedName": "Body"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "genericSig": "<Content where Content : Swift.Sendable, Content : SwiftUI.View>",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "ISO18013MobileDocumentRequestScene",
+        "printedName": "ISO18013MobileDocumentRequestScene",
+        "usr": "s:26IdentityDocumentServicesUI014ISO18013MobileB12RequestSceneV"
+      },
+      {
+        "children": [
+          {
+            "declKind": "AssociatedType",
+            "kind": "AssociatedType",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderP4BodyQa",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "Body",
+            "printedName": "Body",
+            "protocolReq": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB8ProviderP4BodyQa"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DependentMember",
+                    "printedName": "Self.Body"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : IdentityDocumentServicesUI.IdentityDocumentProvider>",
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderP4body4BodyQzvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:26IdentityDocumentServicesUI0aB8ProviderP4body4BodyQzvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DependentMember",
+                "printedName": "Self.Body"
+              }
+            ],
+            "declAttributes": [
+              "Custom",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderP4body4BodyQzvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "body",
+            "printedName": "body",
+            "protocolReq": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB8ProviderP4body4BodyQzvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : IdentityDocumentServicesUI.IdentityDocumentProvider>",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderP26performRegistrationUpdatesyyYaF",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "performRegistrationUpdates",
+            "printedName": "performRegistrationUpdates()",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB8ProviderP26performRegistrationUpdatesyyYaF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AppExtensionSceneConfiguration",
+                    "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                    "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : IdentityDocumentServicesUI.IdentityDocumentProvider>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderPAAE13configuration12ExtensionKit03AppG18SceneConfigurationVvg",
+                "moduleName": "IdentityDocumentServicesUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:26IdentityDocumentServicesUI0aB8ProviderPAAE13configuration12ExtensionKit03AppG18SceneConfigurationVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AppExtensionSceneConfiguration",
+                "printedName": "ExtensionKit.AppExtensionSceneConfiguration",
+                "usr": "s:12ExtensionKit03AppA18SceneConfigurationV"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderPAAE13configuration12ExtensionKit03AppG18SceneConfigurationVvp",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:26IdentityDocumentServicesUI0aB8ProviderPAAE13configuration12ExtensionKit03AppG18SceneConfigurationVvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension, Self.Body : IdentityDocumentServicesUI.IdentityDocumentRequestScene>",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB8ProviderP",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentProvider",
+        "printedName": "IdentityDocumentProvider",
+        "usr": "s:26IdentityDocumentServicesUI0aB8ProviderP"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s12ExtensionKit03AppA5SceneP",
+            "name": "AppExtensionScene",
+            "printedName": "AppExtensionScene",
+            "usr": "s:12ExtensionKit03AppA5SceneP"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionKit.AppExtensionScene>",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB12RequestSceneP",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentRequestScene",
+        "printedName": "IdentityDocumentRequestScene",
+        "usr": "s:26IdentityDocumentServicesUI0aB12RequestSceneP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentRequestScene",
+                    "printedName": "IdentityDocumentServicesUI.IdentityDocumentRequestScene",
+                    "usr": "s:26IdentityDocumentServicesUI0aB12RequestSceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB19RequestSceneBuilderV10buildBlockyQrxAA0abeF0RzlFZ",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:)",
+            "static": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB19RequestSceneBuilderV10buildBlockyQrxAA0abeF0RzlFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentRequestScene",
+                    "printedName": "IdentityDocumentServicesUI.IdentityDocumentRequestScene",
+                    "usr": "s:26IdentityDocumentServicesUI0aB12RequestSceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB19RequestSceneBuilderV10buildBlockyQrx_q_tAA0abeF0RzAaER_r0_lFZ",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "buildBlock",
+            "printedName": "buildBlock(_:_:)",
+            "static": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB19RequestSceneBuilderV10buildBlockyQrx_q_tAA0abeF0RzAaER_r0_lFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentRequestScene",
+                    "printedName": "IdentityDocumentServicesUI.IdentityDocumentRequestScene",
+                    "usr": "s:26IdentityDocumentServicesUI0aB12RequestSceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "(some IdentityDocumentServicesUI.IdentityDocumentRequestScene)?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB19RequestSceneBuilderV13buildOptionalyQrxSgAA0abeF0RzlFZ",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "buildOptional",
+            "printedName": "buildOptional(_:)",
+            "static": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB19RequestSceneBuilderV13buildOptionalyQrxSgAA0abeF0RzlFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "IdentityDocumentRequestScene",
+                    "printedName": "IdentityDocumentServicesUI.IdentityDocumentRequestScene",
+                    "usr": "s:26IdentityDocumentServicesUI0aB12RequestSceneP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "some IdentityDocumentServicesUI.IdentityDocumentRequestScene"
+              }
+            ],
+            "declAttributes": [
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s26IdentityDocumentServicesUI0aB19RequestSceneBuilderV24buildLimitedAvailabilityyQrxAA0abeF0RzlFZ",
+            "moduleName": "IdentityDocumentServicesUI",
+            "name": "buildLimitedAvailability",
+            "printedName": "buildLimitedAvailability(_:)",
+            "static": true,
+            "usr": "s:26IdentityDocumentServicesUI0aB19RequestSceneBuilderV24buildLimitedAvailabilityyQrxAA0abeF0RzlFZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "ResultBuilder",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s26IdentityDocumentServicesUI0aB19RequestSceneBuilderV",
+        "moduleName": "IdentityDocumentServicesUI",
+        "name": "IdentityDocumentRequestSceneBuilder",
+        "printedName": "IdentityDocumentRequestSceneBuilder",
+        "usr": "s:26IdentityDocumentServicesUI0aB19RequestSceneBuilderV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "IdentityDocumentServicesUI",
+    "printedName": "IdentityDocumentServicesUI"
+  }
+}

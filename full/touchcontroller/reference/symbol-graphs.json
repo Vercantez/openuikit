@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/TouchController.symbols.json",
+      "relationshipCount": 468,
+      "sha256": "9488c1d255a4dc1a7432e021654547304161f8c4fb211a0b2d993670353bd72d",
+      "symbolCount": 302
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "TouchController",
+  "relationshipCount": 468,
+  "relationshipMultisetSHA256": "5ad92c44a7634e290484af96a0b3aed0ef1d79a13c249dcf035860a4aa0dc32e",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 302,
+  "symbolMultisetSHA256": "3af541d46a353516ca90c245f72f19d23b4b4b2d0e5d6857ce1126281839affa",
+  "target": "arm64-apple-ios26.0"
+}

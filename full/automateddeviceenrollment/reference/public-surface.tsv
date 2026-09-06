@@ -1,0 +1,2 @@
+precise	kind	title	path	declaration
+s:7SwiftUI4ViewP25AutomatedDeviceEnrollmentE09automatedeF8Addition11isPresentedQrAA7BindingVySbG_tF	swift.method	automatedDeviceEnrollmentAddition(isPresented:)	View.automatedDeviceEnrollmentAddition(isPresented:)	@MainActor @preconcurrency func automatedDeviceEnrollmentAddition(isPresented: Binding<Bool>) -> some View\n

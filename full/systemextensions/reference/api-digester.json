@@ -1,0 +1,2162 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "SystemExtensions",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "intro_iOS": "18.4",
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "SystemExtensions",
+        "name": "NSSystemExtensionUsageDescriptionKey",
+        "printedName": "NSSystemExtensionUsageDescriptionKey",
+        "usr": "c:@NSSystemExtensionUsageDescriptionKey"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "intro_iOS": "18.4",
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "SystemExtensions",
+        "name": "OSBundleUsageDescriptionKey",
+        "printedName": "OSBundleUsageDescriptionKey",
+        "usr": "c:@OSBundleUsageDescriptionKey"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV03_nsC0So7NSErrorCvg",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV03_nsC0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV03_nsC0So7NSErrorCvp",
+            "moduleName": "SystemExtensions",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC26OSSystemExtensionErrorCodeLeV03_nsC0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSSystemExtensionError",
+                "printedName": "SystemExtensions.OSSystemExtensionError",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV03_nsC0ABSo7NSErrorC_tcfc",
+            "moduleName": "SystemExtensions",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC26OSSystemExtensionErrorCodeLeV03_nsC0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "SystemExtensions",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC26OSSystemExtensionErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo26OSSystemExtensionErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "SystemExtensions",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So26OSSystemExtensionErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo26OSSystemExtensionErrorCodeV8rawValueSivg",
+                    "moduleName": "SystemExtensions",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So26OSSystemExtensionErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo26OSSystemExtensionErrorCodeV8rawValueSivp",
+                "moduleName": "SystemExtensions",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So26OSSystemExtensionErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo26OSSystemExtensionErrorCodeV8RawValuea",
+                "moduleName": "SystemExtensions",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So26OSSystemExtensionErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OSSystemExtensionError",
+                    "printedName": "SystemExtensions.OSSystemExtensionError",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "SystemExtensions",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "missingEntitlement",
+                "printedName": "missingEntitlement",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorMissingEntitlement"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "unsupportedParentBundleLocation",
+                "printedName": "unsupportedParentBundleLocation",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnsupportedParentBundleLocation"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "extensionNotFound",
+                "printedName": "extensionNotFound",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorExtensionNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "extensionMissingIdentifier",
+                "printedName": "extensionMissingIdentifier",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorExtensionMissingIdentifier"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "duplicateExtensionIdentifer",
+                "printedName": "duplicateExtensionIdentifer",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorDuplicateExtensionIdentifer"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "unknownExtensionCategory",
+                "printedName": "unknownExtensionCategory",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnknownExtensionCategory"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "codeSignatureInvalid",
+                "printedName": "codeSignatureInvalid",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorCodeSignatureInvalid"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "validationFailed",
+                "printedName": "validationFailed",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorValidationFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "forbiddenBySystemPolicy",
+                "printedName": "forbiddenBySystemPolicy",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorForbiddenBySystemPolicy"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "requestCanceled",
+                "printedName": "requestCanceled",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorRequestCanceled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "requestSuperseded",
+                "printedName": "requestSuperseded",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorRequestSuperseded"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                        "usr": "c:@E@OSSystemExtensionErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                            "usr": "c:@E@OSSystemExtensionErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(SystemExtensions.OSSystemExtensionError.Code.Type) -> SystemExtensions.OSSystemExtensionError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "SystemExtensions",
+                "name": "authorizationRequired",
+                "printedName": "authorizationRequired",
+                "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorAuthorizationRequired"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "SystemExtensions.OSSystemExtensionError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "18.4",
+            "kind": "TypeDecl",
+            "moduleName": "SystemExtensions",
+            "name": "Code",
+            "objc_name": "OSSystemExtensionErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@OSSystemExtensionErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV18missingEntitlementSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV18missingEntitlementSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "missingEntitlement",
+            "printedName": "missingEntitlement",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorMissingEntitlement"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV31unsupportedParentBundleLocationSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV31unsupportedParentBundleLocationSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "unsupportedParentBundleLocation",
+            "printedName": "unsupportedParentBundleLocation",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnsupportedParentBundleLocation"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV17extensionNotFoundSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV17extensionNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "extensionNotFound",
+            "printedName": "extensionNotFound",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorExtensionNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV26extensionMissingIdentifierSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV26extensionMissingIdentifierSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "extensionMissingIdentifier",
+            "printedName": "extensionMissingIdentifier",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorExtensionMissingIdentifier"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV09duplicateB9IdentiferSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV09duplicateB9IdentiferSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "duplicateExtensionIdentifer",
+            "printedName": "duplicateExtensionIdentifer",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorDuplicateExtensionIdentifer"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV07unknownB8CategorySoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV07unknownB8CategorySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "unknownExtensionCategory",
+            "printedName": "unknownExtensionCategory",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnknownExtensionCategory"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV20codeSignatureInvalidSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV20codeSignatureInvalidSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "codeSignatureInvalid",
+            "printedName": "codeSignatureInvalid",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorCodeSignatureInvalid"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV16validationFailedSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV16validationFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "validationFailed",
+            "printedName": "validationFailed",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorValidationFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV23forbiddenBySystemPolicySoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV23forbiddenBySystemPolicySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "forbiddenBySystemPolicy",
+            "printedName": "forbiddenBySystemPolicy",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorForbiddenBySystemPolicy"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV15requestCanceledSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV15requestCanceledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "requestCanceled",
+            "printedName": "requestCanceled",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorRequestCanceled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV17requestSupersededSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV17requestSupersededSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "requestSuperseded",
+            "printedName": "requestSuperseded",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorRequestSuperseded"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                    "usr": "c:@E@OSSystemExtensionErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC26OSSystemExtensionErrorCodeLeV21authorizationRequiredSoAAVvgZ",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC26OSSystemExtensionErrorCodeLeV21authorizationRequiredSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "SystemExtensions.OSSystemExtensionError.Code",
+                "usr": "c:@E@OSSystemExtensionErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "authorizationRequired",
+            "printedName": "authorizationRequired",
+            "static": true,
+            "usr": "c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorAuthorizationRequired"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18.4",
+        "kind": "TypeDecl",
+        "moduleName": "SystemExtensions",
+        "name": "OSSystemExtensionError",
+        "printedName": "OSSystemExtensionError",
+        "usr": "c:@E@OSSystemExtensionErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "intro_iOS": "18.4",
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "SystemExtensions",
+        "name": "OSSystemExtensionErrorDomain",
+        "printedName": "OSSystemExtensionErrorDomain",
+        "usr": "c:@OSSystemExtensionErrorDomain"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "18.4",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "objc_name": "bundleIdentifier",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSSystemExtensionProperties(im)bundleIdentifier"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "bundleIdentifier",
+            "objc_name": "bundleIdentifier",
+            "printedName": "bundleIdentifier",
+            "usr": "c:objc(cs)OSSystemExtensionProperties(py)bundleIdentifier"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "18.4",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "objc_name": "bundleVersion",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSSystemExtensionProperties(im)bundleVersion"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "bundleVersion",
+            "objc_name": "bundleVersion",
+            "printedName": "bundleVersion",
+            "usr": "c:objc(cs)OSSystemExtensionProperties(py)bundleVersion"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "18.4",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "objc_name": "bundleShortVersion",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSSystemExtensionProperties(im)bundleShortVersion"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "bundleShortVersion",
+            "objc_name": "bundleShortVersion",
+            "printedName": "bundleShortVersion",
+            "usr": "c:objc(cs)OSSystemExtensionProperties(py)bundleShortVersion"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "18.4",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "objc_name": "isEnabled",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)OSSystemExtensionProperties(im)isEnabled"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.4",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "isEnabled",
+            "objc_name": "isEnabled",
+            "printedName": "isEnabled",
+            "usr": "c:objc(cs)OSSystemExtensionProperties(py)isEnabled"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSSystemExtensionProperties",
+                "printedName": "SystemExtensions.OSSystemExtensionProperties",
+                "usr": "c:objc(cs)OSSystemExtensionProperties"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "SystemExtensions",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "18.4",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SystemExtensions",
+        "name": "OSSystemExtensionProperties",
+        "objc_name": "OSSystemExtensionProperties",
+        "printedName": "OSSystemExtensionProperties",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)OSSystemExtensionProperties"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OSSystemExtensionsWorkspace",
+                    "printedName": "SystemExtensions.OSSystemExtensionsWorkspace",
+                    "usr": "c:objc(cs)OSSystemExtensionsWorkspace"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "DiscardableResult",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "SystemExtensions",
+                "name": "Get",
+                "objc_name": "sharedWorkspace",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "c:objc(cs)OSSystemExtensionsWorkspace(cm)sharedWorkspace"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSSystemExtensionsWorkspace",
+                "printedName": "SystemExtensions.OSSystemExtensionsWorkspace",
+                "usr": "c:objc(cs)OSSystemExtensionsWorkspace"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "SystemExtensions",
+            "name": "shared",
+            "objc_name": "sharedWorkspace",
+            "printedName": "shared",
+            "static": true,
+            "usr": "c:objc(cs)OSSystemExtensionsWorkspace(cpy)sharedWorkspace"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OSSystemExtensionProperties",
+                    "printedName": "SystemExtensions.OSSystemExtensionProperties",
+                    "usr": "c:objc(cs)OSSystemExtensionProperties"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Set",
+                "printedName": "Swift.Set<SystemExtensions.OSSystemExtensionProperties>",
+                "usr": "s:Sh"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "DiscardableResult",
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "18.4",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "SystemExtensions",
+            "name": "systemExtensions",
+            "objc_name": "systemExtensionsForApplicationWithBundleID:error:",
+            "printedName": "systemExtensions(forApplicationWithBundleID:)",
+            "throwing": true,
+            "usr": "c:objc(cs)OSSystemExtensionsWorkspace(im)systemExtensionsForApplicationWithBundleID:error:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OSSystemExtensionsWorkspace",
+                "printedName": "SystemExtensions.OSSystemExtensionsWorkspace",
+                "usr": "c:objc(cs)OSSystemExtensionsWorkspace"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "SystemExtensions",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "18.4",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "SystemExtensions",
+        "name": "OSSystemExtensionsWorkspace",
+        "objc_name": "OSSystemExtensionsWorkspace",
+        "printedName": "OSSystemExtensionsWorkspace",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)OSSystemExtensionsWorkspace"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "SystemExtensions",
+    "printedName": "SystemExtensions"
+  }
+}

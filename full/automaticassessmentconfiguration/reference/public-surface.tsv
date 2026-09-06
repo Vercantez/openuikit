@@ -1,0 +1,103 @@
+precise	kind	title	path	declaration
+c:@AEAssessmentErrorDomain	swift.var	AEAssessmentErrorDomain	AEAssessmentErrorDomain	let AEAssessmentErrorDomain: String
+c:@E@AEAssessmentErrorCode	swift.enum	AEAssessmentError.Code	AEAssessmentError.Code	enum Code
+c:@E@AEAssessmentErrorCode@AEAssessmentErrorConfigurationUpdatesNotSupported	swift.enum.case	AEAssessmentError.Code.configurationUpdatesNotSupported	AEAssessmentError.Code.configurationUpdatesNotSupported	case configurationUpdatesNotSupported
+c:@E@AEAssessmentErrorCode@AEAssessmentErrorMultipleParticipantsNotSupported	swift.enum.case	AEAssessmentError.Code.multipleParticipantsNotSupported	AEAssessmentError.Code.multipleParticipantsNotSupported	case multipleParticipantsNotSupported
+c:@E@AEAssessmentErrorCode@AEAssessmentErrorRequiredParticipantsNotAvailable	swift.enum.case	AEAssessmentError.Code.requiredParticipantsNotAvailable	AEAssessmentError.Code.requiredParticipantsNotAvailable	case requiredParticipantsNotAvailable
+c:@E@AEAssessmentErrorCode@AEAssessmentErrorUnknown	swift.enum.case	AEAssessmentError.Code.unknown	AEAssessmentError.Code.unknown	case unknown
+c:@E@AEAssessmentErrorCode@AEAssessmentErrorUnsupportedPlatform	swift.enum.case	AEAssessmentError.Code.unsupportedPlatform	AEAssessmentError.Code.unsupportedPlatform	case unsupportedPlatform
+c:@E@AEAutocorrectMode	swift.struct	AEAssessmentConfiguration.AutocorrectMode	AEAssessmentConfiguration.AutocorrectMode	struct AutocorrectMode
+c:@E@AEAutocorrectMode@AEAutocorrectModePunctuation	swift.type.property	punctuation	AEAssessmentConfiguration.AutocorrectMode.punctuation	static var punctuation: AEAssessmentConfiguration.AutocorrectMode { get }
+c:@E@AEAutocorrectMode@AEAutocorrectModeSpelling	swift.type.property	spelling	AEAssessmentConfiguration.AutocorrectMode.spelling	static var spelling: AEAssessmentConfiguration.AutocorrectMode { get }
+c:objc(cs)AEAssessmentApplication	swift.class	AEAssessmentApplication	AEAssessmentApplication	class AEAssessmentApplication
+c:objc(cs)AEAssessmentApplication(im)initWithBundleIdentifier:	swift.init	init(bundleIdentifier:)	AEAssessmentApplication.init(bundleIdentifier:)	init(bundleIdentifier: String)
+c:objc(cs)AEAssessmentApplication(py)bundleIdentifier	swift.property	bundleIdentifier	AEAssessmentApplication.bundleIdentifier	var bundleIdentifier: String { get }
+c:objc(cs)AEAssessmentConfiguration	swift.class	AEAssessmentConfiguration	AEAssessmentConfiguration	class AEAssessmentConfiguration
+c:objc(cs)AEAssessmentConfiguration(im)removeApplication:	swift.method	remove(_:)	AEAssessmentConfiguration.remove(_:)	func remove(_ application: AEAssessmentApplication)
+c:objc(cs)AEAssessmentConfiguration(im)setConfiguration:forApplication:	swift.method	setConfiguration(_:for:)	AEAssessmentConfiguration.setConfiguration(_:for:)	func setConfiguration(_ configuration: AEAssessmentParticipantConfiguration, for application: AEAssessmentApplication)
+c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilityLiveCaptions	swift.property	allowsAccessibilityLiveCaptions	AEAssessmentConfiguration.allowsAccessibilityLiveCaptions	var allowsAccessibilityLiveCaptions: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilityReader	swift.property	allowsAccessibilityReader	AEAssessmentConfiguration.allowsAccessibilityReader	var allowsAccessibilityReader: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilitySpeech	swift.property	allowsAccessibilitySpeech	AEAssessmentConfiguration.allowsAccessibilitySpeech	var allowsAccessibilitySpeech: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilityTypingFeedback	swift.property	allowsAccessibilityTypingFeedback	AEAssessmentConfiguration.allowsAccessibilityTypingFeedback	var allowsAccessibilityTypingFeedback: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsActivityContinuation	swift.property	allowsActivityContinuation	AEAssessmentConfiguration.allowsActivityContinuation	var allowsActivityContinuation: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsContinuousPathKeyboard	swift.property	allowsContinuousPathKeyboard	AEAssessmentConfiguration.allowsContinuousPathKeyboard	var allowsContinuousPathKeyboard: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsDictation	swift.property	allowsDictation	AEAssessmentConfiguration.allowsDictation	var allowsDictation: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsKeyboardShortcuts	swift.property	allowsKeyboardShortcuts	AEAssessmentConfiguration.allowsKeyboardShortcuts	var allowsKeyboardShortcuts: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsPasswordAutoFill	swift.property	allowsPasswordAutoFill	AEAssessmentConfiguration.allowsPasswordAutoFill	var allowsPasswordAutoFill: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsPredictiveKeyboard	swift.property	allowsPredictiveKeyboard	AEAssessmentConfiguration.allowsPredictiveKeyboard	var allowsPredictiveKeyboard: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)allowsSpellCheck	swift.property	allowsSpellCheck	AEAssessmentConfiguration.allowsSpellCheck	var allowsSpellCheck: Bool { get set }
+c:objc(cs)AEAssessmentConfiguration(py)autocorrectMode	swift.property	autocorrectMode	AEAssessmentConfiguration.autocorrectMode	var autocorrectMode: AEAssessmentConfiguration.AutocorrectMode { get set }
+c:objc(cs)AEAssessmentConfiguration(py)configurationsByApplication	swift.property	configurationsByApplication	AEAssessmentConfiguration.configurationsByApplication	var configurationsByApplication: [AEAssessmentApplication : AEAssessmentParticipantConfiguration] { get }
+c:objc(cs)AEAssessmentConfiguration(py)mainParticipantConfiguration	swift.property	mainParticipantConfiguration	AEAssessmentConfiguration.mainParticipantConfiguration	var mainParticipantConfiguration: AEAssessmentParticipantConfiguration { get }
+c:objc(cs)AEAssessmentParticipantConfiguration	swift.class	AEAssessmentParticipantConfiguration	AEAssessmentParticipantConfiguration	class AEAssessmentParticipantConfiguration
+c:objc(cs)AEAssessmentParticipantConfiguration(cm)new	swift.type.method	new()	AEAssessmentParticipantConfiguration.new()	class func new() -> Self
+c:objc(cs)AEAssessmentParticipantConfiguration(im)init	swift.init	init()	AEAssessmentParticipantConfiguration.init()	init()
+c:objc(cs)AEAssessmentParticipantConfiguration(py)allowsNetworkAccess	swift.property	allowsNetworkAccess	AEAssessmentParticipantConfiguration.allowsNetworkAccess	var allowsNetworkAccess: Bool { get set }
+c:objc(cs)AEAssessmentParticipantConfiguration(py)configurationInfo	swift.property	configurationInfo	AEAssessmentParticipantConfiguration.configurationInfo	var configurationInfo: [String : Any] { get set }
+c:objc(cs)AEAssessmentParticipantConfiguration(py)required	swift.property	isRequired	AEAssessmentParticipantConfiguration.isRequired	var isRequired: Bool { get set }
+c:objc(cs)AEAssessmentSession	swift.class	AEAssessmentSession	AEAssessmentSession	class AEAssessmentSession
+c:objc(cs)AEAssessmentSession(cpy)supportsConfigurationUpdates	swift.type.property	supportsConfigurationUpdates	AEAssessmentSession.supportsConfigurationUpdates	class var supportsConfigurationUpdates: Bool { get }
+c:objc(cs)AEAssessmentSession(cpy)supportsMultipleParticipants	swift.type.property	supportsMultipleParticipants	AEAssessmentSession.supportsMultipleParticipants	class var supportsMultipleParticipants: Bool { get }
+c:objc(cs)AEAssessmentSession(im)begin	swift.method	begin()	AEAssessmentSession.begin()	func begin()
+c:objc(cs)AEAssessmentSession(im)end	swift.method	end()	AEAssessmentSession.end()	func end()
+c:objc(cs)AEAssessmentSession(im)initWithConfiguration:	swift.init	init(configuration:)	AEAssessmentSession.init(configuration:)	init(configuration: AEAssessmentConfiguration)
+c:objc(cs)AEAssessmentSession(im)updateToConfiguration:	swift.method	update(to:)	AEAssessmentSession.update(to:)	func update(to configuration: AEAssessmentConfiguration)
+c:objc(cs)AEAssessmentSession(py)active	swift.property	isActive	AEAssessmentSession.isActive	var isActive: Bool { get }
+c:objc(cs)AEAssessmentSession(py)configuration	swift.property	configuration	AEAssessmentSession.configuration	@NSCopying var configuration: AEAssessmentConfiguration { get }
+c:objc(cs)AEAssessmentSession(py)delegate	swift.property	delegate	AEAssessmentSession.delegate	weak var delegate: (any AEAssessmentSessionDelegate)? { get set }
+c:objc(pl)AEAssessmentSessionDelegate	swift.protocol	AEAssessmentSessionDelegate	AEAssessmentSessionDelegate	protocol AEAssessmentSessionDelegate : NSObjectProtocol
+c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSession:failedToBeginWithError:	swift.method	assessmentSession(_:failedToBeginWithError:)	AEAssessmentSessionDelegate.assessmentSession(_:failedToBeginWithError:)	optional func assessmentSession(_ session: AEAssessmentSession, failedToBeginWithError error: any Error)
+c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSession:failedToUpdateToConfiguration:error:	swift.method	assessmentSession(_:failedToUpdateTo:error:)	AEAssessmentSessionDelegate.assessmentSession(_:failedToUpdateTo:error:)	optional func assessmentSession(_ session: AEAssessmentSession, failedToUpdateTo configuration: AEAssessmentConfiguration, error: any Error)
+c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSession:wasInterruptedWithError:	swift.method	assessmentSession(_:wasInterruptedWithError:)	AEAssessmentSessionDelegate.assessmentSession(_:wasInterruptedWithError:)	optional func assessmentSession(_ session: AEAssessmentSession, wasInterruptedWithError error: any Error)
+c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSessionDidBegin:	swift.method	assessmentSessionDidBegin(_:)	AEAssessmentSessionDelegate.assessmentSessionDidBegin(_:)	optional func assessmentSessionDidBegin(_ session: AEAssessmentSession)
+c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSessionDidEnd:	swift.method	assessmentSessionDidEnd(_:)	AEAssessmentSessionDelegate.assessmentSessionDidEnd(_:)	optional func assessmentSessionDidEnd(_ session: AEAssessmentSession)
+c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSessionDidUpdate:	swift.method	assessmentSessionDidUpdate(_:)	AEAssessmentSessionDelegate.assessmentSessionDidUpdate(_:)	optional func assessmentSessionDidUpdate(_ session: AEAssessmentSession)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.type.property	errorDomain	AEAssessmentError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	errorUserInfo	AEAssessmentError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	errorCode	AEAssessmentError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.func.op	~=(_:_:)	AEAssessmentError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	errorUserInfo	AEAssessmentError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.func.op	==(_:_:)	AEAssessmentError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	code	AEAssessmentError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.method	hash(into:)	AEAssessmentError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	userInfo	AEAssessmentError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	errorCode	AEAssessmentError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	hashValue	AEAssessmentError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.init	init(_:userInfo:)	AEAssessmentError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC21AEAssessmentErrorCodeLeV	swift.struct	AEAssessmentError	AEAssessmentError	struct AEAssessmentError
+s:SC21AEAssessmentErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	AEAssessmentError.errorDomain	static var errorDomain: String { get }
+s:SC21AEAssessmentErrorCodeLeV19unsupportedPlatformSoAAVvpZ	swift.type.property	unsupportedPlatform	AEAssessmentError.unsupportedPlatform	static var unsupportedPlatform: AEAssessmentError.Code { get }
+s:SC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE24notInstalledParticipantsSaySSGSgvp	swift.property	notInstalledParticipants	AEAssessmentError.notInstalledParticipants	var notInstalledParticipants: [String]? { get }
+s:SC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE28restrictedSystemParticipantsSaySSGSgvp	swift.property	restrictedSystemParticipants	AEAssessmentError.restrictedSystemParticipants	var restrictedSystemParticipants: [String]? { get }
+s:SC21AEAssessmentErrorCodeLeV32configurationUpdatesNotSupportedSoAAVvpZ	swift.type.property	configurationUpdatesNotSupported	AEAssessmentError.configurationUpdatesNotSupported	static var configurationUpdatesNotSupported: AEAssessmentError.Code { get }
+s:SC21AEAssessmentErrorCodeLeV32multipleParticipantsNotSupportedSoAAVvpZ	swift.type.property	multipleParticipantsNotSupported	AEAssessmentError.multipleParticipantsNotSupported	static var multipleParticipantsNotSupported: AEAssessmentError.Code { get }
+s:SC21AEAssessmentErrorCodeLeV32requiredParticipantsNotAvailableSoAAVvpZ	swift.type.property	requiredParticipantsNotAvailable	AEAssessmentError.requiredParticipantsNotAvailable	static var requiredParticipantsNotAvailable: AEAssessmentError.Code { get }
+s:SC21AEAssessmentErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	AEAssessmentError.unknown	static var unknown: AEAssessmentError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.func.op	!=(_:_:)	AEAssessmentError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.func.op	!=(_:_:)	AEAssessmentConfiguration.AutocorrectMode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	hashValue	AEAssessmentError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.method	hash(into:)	AEAssessmentError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So17AEAutocorrectModeV8rawValueABSu_tcfc	swift.init	init(rawValue:)	AEAssessmentConfiguration.AutocorrectMode.init(rawValue:)	init(rawValue: UInt)
+s:So21AEAssessmentErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	AEAssessmentError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.init	init(arrayLiteral:)	AEAssessmentConfiguration.AutocorrectMode.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	isDisjoint(with:)	AEAssessmentConfiguration.AutocorrectMode.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	isSuperset(of:)	AEAssessmentConfiguration.AutocorrectMode.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	subtracting(_:)	AEAssessmentConfiguration.AutocorrectMode.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	isStrictSubset(of:)	AEAssessmentConfiguration.AutocorrectMode.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	isStrictSuperset(of:)	AEAssessmentConfiguration.AutocorrectMode.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.property	isEmpty	AEAssessmentConfiguration.AutocorrectMode.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	isSubset(of:)	AEAssessmentConfiguration.AutocorrectMode.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	subtract(_:)	AEAssessmentConfiguration.AutocorrectMode.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.init	init(_:)	AEAssessmentConfiguration.AutocorrectMode.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@AEAssessmentErrorCode	swift.property	localizedDescription	AEAssessmentError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	insert(_:)	AEAssessmentConfiguration.AutocorrectMode.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	remove(_:)	AEAssessmentConfiguration.AutocorrectMode.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	update(with:)	AEAssessmentConfiguration.AutocorrectMode.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	contains(_:)	AEAssessmentConfiguration.AutocorrectMode.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	intersection(_:)	AEAssessmentConfiguration.AutocorrectMode.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	symmetricDifference(_:)	AEAssessmentConfiguration.AutocorrectMode.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	union(_:)	AEAssessmentConfiguration.AutocorrectMode.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	formIntersection(_:)	AEAssessmentConfiguration.AutocorrectMode.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	formSymmetricDifference(_:)	AEAssessmentConfiguration.AutocorrectMode.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.method	formUnion(_:)	AEAssessmentConfiguration.AutocorrectMode.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@AEAutocorrectMode	swift.init	init()	AEAssessmentConfiguration.AutocorrectMode.init()	init()

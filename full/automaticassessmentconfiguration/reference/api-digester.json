@@ -1,0 +1,4294 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "bundleIdentifier",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentApplication(im)bundleIdentifier"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "bundleIdentifier",
+            "objc_name": "bundleIdentifier",
+            "printedName": "bundleIdentifier",
+            "usr": "c:objc(cs)AEAssessmentApplication(py)bundleIdentifier"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentApplication",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentApplication",
+                "usr": "c:objc(cs)AEAssessmentApplication"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "intro_iOS": "17.5",
+            "kind": "Constructor",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "init",
+            "objc_name": "initWithBundleIdentifier:",
+            "printedName": "init(bundleIdentifier:)",
+            "usr": "c:objc(cs)AEAssessmentApplication(im)initWithBundleIdentifier:"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentApplication",
+        "objc_name": "AEAssessmentApplication",
+        "printedName": "AEAssessmentApplication",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)AEAssessmentApplication"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "autocorrectMode",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)autocorrectMode"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAutocorrectMode:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAutocorrectMode:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AutocorrectMode",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                "usr": "c:@E@AEAutocorrectMode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "autocorrectMode",
+            "objc_name": "autocorrectMode",
+            "printedName": "autocorrectMode",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)autocorrectMode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsSpellCheck",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsSpellCheck"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsSpellCheck:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsSpellCheck:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsSpellCheck",
+            "objc_name": "allowsSpellCheck",
+            "printedName": "allowsSpellCheck",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsSpellCheck"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsPredictiveKeyboard",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsPredictiveKeyboard"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsPredictiveKeyboard:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsPredictiveKeyboard:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsPredictiveKeyboard",
+            "objc_name": "allowsPredictiveKeyboard",
+            "printedName": "allowsPredictiveKeyboard",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsPredictiveKeyboard"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsKeyboardShortcuts",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsKeyboardShortcuts"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsKeyboardShortcuts:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsKeyboardShortcuts:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsKeyboardShortcuts",
+            "objc_name": "allowsKeyboardShortcuts",
+            "printedName": "allowsKeyboardShortcuts",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsKeyboardShortcuts"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsActivityContinuation",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsActivityContinuation"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsActivityContinuation:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsActivityContinuation:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsActivityContinuation",
+            "objc_name": "allowsActivityContinuation",
+            "printedName": "allowsActivityContinuation",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsActivityContinuation"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsDictation",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsDictation"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsDictation:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsDictation:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsDictation",
+            "objc_name": "allowsDictation",
+            "printedName": "allowsDictation",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsDictation"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.1",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsAccessibilityLiveCaptions",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsAccessibilityLiveCaptions"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.1",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsAccessibilityLiveCaptions:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsAccessibilityLiveCaptions:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.1",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsAccessibilityLiveCaptions",
+            "objc_name": "allowsAccessibilityLiveCaptions",
+            "printedName": "allowsAccessibilityLiveCaptions",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilityLiveCaptions"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.1",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsAccessibilityReader",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsAccessibilityReader"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.1",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsAccessibilityReader:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsAccessibilityReader:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.1",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsAccessibilityReader",
+            "objc_name": "allowsAccessibilityReader",
+            "printedName": "allowsAccessibilityReader",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilityReader"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsAccessibilitySpeech",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsAccessibilitySpeech"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsAccessibilitySpeech:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsAccessibilitySpeech:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsAccessibilitySpeech",
+            "objc_name": "allowsAccessibilitySpeech",
+            "printedName": "allowsAccessibilitySpeech",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilitySpeech"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsAccessibilityTypingFeedback",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsAccessibilityTypingFeedback"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsAccessibilityTypingFeedback:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsAccessibilityTypingFeedback:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsAccessibilityTypingFeedback",
+            "objc_name": "allowsAccessibilityTypingFeedback",
+            "printedName": "allowsAccessibilityTypingFeedback",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsAccessibilityTypingFeedback"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsPasswordAutoFill",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsPasswordAutoFill"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsPasswordAutoFill:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsPasswordAutoFill:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsPasswordAutoFill",
+            "objc_name": "allowsPasswordAutoFill",
+            "printedName": "allowsPasswordAutoFill",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsPasswordAutoFill"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsContinuousPathKeyboard",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)allowsContinuousPathKeyboard"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "14.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsContinuousPathKeyboard:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)setAllowsContinuousPathKeyboard:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "14.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsContinuousPathKeyboard",
+            "objc_name": "allowsContinuousPathKeyboard",
+            "printedName": "allowsContinuousPathKeyboard",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)allowsContinuousPathKeyboard"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AEAssessmentParticipantConfiguration",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration",
+                    "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "mainParticipantConfiguration",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)mainParticipantConfiguration"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentParticipantConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "mainParticipantConfiguration",
+            "objc_name": "mainParticipantConfiguration",
+            "printedName": "mainParticipantConfiguration",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)mainParticipantConfiguration"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AEAssessmentApplication",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentApplication",
+                        "usr": "c:objc(cs)AEAssessmentApplication"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AEAssessmentParticipantConfiguration",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration",
+                        "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[AutomaticAssessmentConfiguration.AEAssessmentApplication : AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "configurationsByApplication",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentConfiguration(im)configurationsByApplication"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AEAssessmentApplication",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentApplication",
+                    "usr": "c:objc(cs)AEAssessmentApplication"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AEAssessmentParticipantConfiguration",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration",
+                    "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[AutomaticAssessmentConfiguration.AEAssessmentApplication : AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration]",
+                "usr": "s:SD"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "configurationsByApplication",
+            "objc_name": "configurationsByApplication",
+            "printedName": "configurationsByApplication",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(py)configurationsByApplication"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentParticipantConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentApplication",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentApplication",
+                "usr": "c:objc(cs)AEAssessmentApplication"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "setConfiguration",
+            "objc_name": "setConfiguration:forApplication:",
+            "printedName": "setConfiguration(_:for:)",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(im)setConfiguration:forApplication:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentApplication",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentApplication",
+                "usr": "c:objc(cs)AEAssessmentApplication"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "remove",
+            "objc_name": "removeApplication:",
+            "printedName": "remove(_:)",
+            "usr": "c:objc(cs)AEAssessmentConfiguration(im)removeApplication:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration",
+                "usr": "c:objc(cs)AEAssessmentConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "implicit": true,
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)NSObject(im)init"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo17AEAutocorrectModeV8rawValueABSu_tcfc",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So17AEAutocorrectModeV8rawValueABSu_tcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "implicit": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$sSo17AEAutocorrectModeV8rawValueSuvp",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So17AEAutocorrectModeV8rawValueSuvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt",
+                    "printedName": "Swift.UInt",
+                    "usr": "s:Su"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo17AEAutocorrectModeV8RawValuea",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So17AEAutocorrectModeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo17AEAutocorrectModeV7Elementa",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Element",
+                "printedName": "Element",
+                "usr": "s:So17AEAutocorrectModeV7Elementa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo17AEAutocorrectModeV19ArrayLiteralElementa",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "ArrayLiteralElement",
+                "printedName": "ArrayLiteralElement",
+                "usr": "s:So17AEAutocorrectModeV19ArrayLiteralElementa"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutocorrectMode",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                        "usr": "c:@E@AEAutocorrectMode"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo17AEAutocorrectModeV8spellingABvgZ",
+                    "moduleName": "AutomaticAssessmentConfiguration",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So17AEAutocorrectModeV8spellingABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  }
+                ],
+                "declAttributes": [
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "spelling",
+                "printedName": "spelling",
+                "static": true,
+                "usr": "c:@E@AEAutocorrectMode@AEAutocorrectModeSpelling"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AutocorrectMode",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                        "usr": "c:@E@AEAutocorrectMode"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo17AEAutocorrectModeV11punctuationABvgZ",
+                    "moduleName": "AutomaticAssessmentConfiguration",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So17AEAutocorrectModeV11punctuationABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AutocorrectMode",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                    "usr": "c:@E@AEAutocorrectMode"
+                  }
+                ],
+                "declAttributes": [
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "punctuation",
+                "printedName": "punctuation",
+                "static": true,
+                "usr": "c:@E@AEAutocorrectMode@AEAutocorrectModePunctuation"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AutocorrectMode",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                            "usr": "c:@E@AEAutocorrectMode"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss9OptionSetP",
+                "name": "OptionSet",
+                "printedName": "OptionSet",
+                "usr": "s:s9OptionSetP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UInt",
+                            "printedName": "Swift.UInt",
+                            "usr": "s:Su"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AutocorrectMode",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                            "usr": "c:@E@AEAutocorrectMode"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "Element",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode.Element"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "Element",
+                    "printedName": "Element"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss10SetAlgebraP",
+                "name": "SetAlgebra",
+                "printedName": "SetAlgebra",
+                "usr": "s:s10SetAlgebraP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "AutocorrectMode",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode",
+                            "usr": "c:@E@AEAutocorrectMode"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "ArrayLiteralElement",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration.AutocorrectMode.ArrayLiteralElement"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "ArrayLiteralElement",
+                    "printedName": "ArrayLiteralElement"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$ss25ExpressibleByArrayLiteralP",
+                "name": "ExpressibleByArrayLiteral",
+                "printedName": "ExpressibleByArrayLiteral",
+                "usr": "s:s25ExpressibleByArrayLiteralP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "Sendable"
+            ],
+            "declKind": "Struct",
+            "intro_iOS": "14.0",
+            "isFromExtension": true,
+            "kind": "TypeDecl",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "AutocorrectMode",
+            "printedName": "AutocorrectMode",
+            "usr": "c:@E@AEAutocorrectMode"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "13.4",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentConfiguration",
+        "objc_name": "AEAssessmentConfiguration",
+        "printedName": "AEAssessmentConfiguration",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)AEAssessmentConfiguration"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV03_nsB0So7NSErrorCvg",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC21AEAssessmentErrorCodeLeV03_nsB0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC21AEAssessmentErrorCodeLeV03_nsB0So7NSErrorCvp",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC21AEAssessmentErrorCodeLeV03_nsB0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentError",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC21AEAssessmentErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC21AEAssessmentErrorCodeLeV03_nsB0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC21AEAssessmentErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC21AEAssessmentErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC21AEAssessmentErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                        "usr": "c:@E@AEAssessmentErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo21AEAssessmentErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So21AEAssessmentErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo21AEAssessmentErrorCodeV8rawValueSivg",
+                    "moduleName": "AutomaticAssessmentConfiguration",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So21AEAssessmentErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo21AEAssessmentErrorCodeV8rawValueSivp",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So21AEAssessmentErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo21AEAssessmentErrorCodeV8RawValuea",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So21AEAssessmentErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AEAssessmentError",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError",
+                    "usr": "c:@E@AEAssessmentErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                        "usr": "c:@E@AEAssessmentErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                            "usr": "c:@E@AEAssessmentErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type) -> AutomaticAssessmentConfiguration.AEAssessmentError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                        "usr": "c:@E@AEAssessmentErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                            "usr": "c:@E@AEAssessmentErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type) -> AutomaticAssessmentConfiguration.AEAssessmentError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "16.0",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "unsupportedPlatform",
+                "printedName": "unsupportedPlatform",
+                "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorUnsupportedPlatform"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                        "usr": "c:@E@AEAssessmentErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                            "usr": "c:@E@AEAssessmentErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type) -> AutomaticAssessmentConfiguration.AEAssessmentError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.5",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "multipleParticipantsNotSupported",
+                "printedName": "multipleParticipantsNotSupported",
+                "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorMultipleParticipantsNotSupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                        "usr": "c:@E@AEAssessmentErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                            "usr": "c:@E@AEAssessmentErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type) -> AutomaticAssessmentConfiguration.AEAssessmentError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "17.5",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "configurationUpdatesNotSupported",
+                "printedName": "configurationUpdatesNotSupported",
+                "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorConfigurationUpdatesNotSupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                        "usr": "c:@E@AEAssessmentErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                            "usr": "c:@E@AEAssessmentErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AutomaticAssessmentConfiguration.AEAssessmentError.Code.Type) -> AutomaticAssessmentConfiguration.AEAssessmentError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "intro_iOS": "26.0",
+                "kind": "Var",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "requiredParticipantsNotAvailable",
+                "printedName": "requiredParticipantsNotAvailable",
+                "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorRequiredParticipantsNotAvailable"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "13.4",
+            "kind": "TypeDecl",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "Code",
+            "objc_name": "AEAssessmentErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@AEAssessmentErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                    "usr": "c:@E@AEAssessmentErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC21AEAssessmentErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                    "usr": "c:@E@AEAssessmentErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV19unsupportedPlatformSoAAVvgZ",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC21AEAssessmentErrorCodeLeV19unsupportedPlatformSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "16.0",
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "unsupportedPlatform",
+            "printedName": "unsupportedPlatform",
+            "static": true,
+            "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorUnsupportedPlatform"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                    "usr": "c:@E@AEAssessmentErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV32multipleParticipantsNotSupportedSoAAVvgZ",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC21AEAssessmentErrorCodeLeV32multipleParticipantsNotSupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "multipleParticipantsNotSupported",
+            "printedName": "multipleParticipantsNotSupported",
+            "static": true,
+            "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorMultipleParticipantsNotSupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                    "usr": "c:@E@AEAssessmentErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV32configurationUpdatesNotSupportedSoAAVvgZ",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC21AEAssessmentErrorCodeLeV32configurationUpdatesNotSupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "configurationUpdatesNotSupported",
+            "printedName": "configurationUpdatesNotSupported",
+            "static": true,
+            "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorConfigurationUpdatesNotSupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                    "usr": "c:@E@AEAssessmentErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV32requiredParticipantsNotAvailableSoAAVvgZ",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC21AEAssessmentErrorCodeLeV32requiredParticipantsNotAvailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentError.Code",
+                "usr": "c:@E@AEAssessmentErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.0",
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "requiredParticipantsNotAvailable",
+            "printedName": "requiredParticipantsNotAvailable",
+            "static": true,
+            "usr": "c:@E@AEAssessmentErrorCode@AEAssessmentErrorRequiredParticipantsNotAvailable"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.String]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "[Swift.String]?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE24notInstalledParticipantsSaySSGSgvg",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE24notInstalledParticipantsSaySSGSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.String]?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE24notInstalledParticipantsSaySSGSgvp",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "notInstalledParticipants",
+            "printedName": "notInstalledParticipants",
+            "usr": "s:SC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE24notInstalledParticipantsSaySSGSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Array",
+                        "printedName": "[Swift.String]",
+                        "usr": "s:Sa"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "[Swift.String]?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE28restrictedSystemParticipantsSaySSGSgvg",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE28restrictedSystemParticipantsSaySSGSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[Swift.String]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "[Swift.String]?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE28restrictedSystemParticipantsSaySSGSgvp",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "restrictedSystemParticipants",
+            "printedName": "restrictedSystemParticipants",
+            "usr": "s:SC21AEAssessmentErrorCodeLeV32AutomaticAssessmentConfigurationE28restrictedSystemParticipantsSaySSGSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "13.4",
+        "kind": "TypeDecl",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentError",
+        "printedName": "AEAssessmentError",
+        "usr": "c:@E@AEAssessmentErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Available"
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "intro_iOS": "13.4",
+        "isLet": true,
+        "kind": "Var",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentErrorDomain",
+        "printedName": "AEAssessmentErrorDomain",
+        "usr": "c:@AEAssessmentErrorDomain"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "allowsNetworkAccess",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)allowsNetworkAccess"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setAllowsNetworkAccess:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)setAllowsNetworkAccess:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "allowsNetworkAccess",
+            "objc_name": "allowsNetworkAccess",
+            "printedName": "allowsNetworkAccess",
+            "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(py)allowsNetworkAccess"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "isRequired",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)isRequired"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "26.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setRequired:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)setRequired:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "isRequired",
+            "objc_name": "required",
+            "printedName": "isRequired",
+            "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(py)required"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "18.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "configurationInfo",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)configurationInfo"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ProtocolComposition",
+                        "printedName": "Any"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Dictionary",
+                    "printedName": "[Swift.String : Any]",
+                    "usr": "s:SD"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "18.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setConfigurationInfo:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)setConfigurationInfo:"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ProtocolComposition",
+                    "printedName": "Any"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Dictionary",
+                "printedName": "[Swift.String : Any]",
+                "usr": "s:SD"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "18.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "configurationInfo",
+            "objc_name": "configurationInfo",
+            "printedName": "configurationInfo",
+            "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(py)configurationInfo"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentParticipantConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentParticipantConfiguration",
+                "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "intro_iOS": "17.5",
+            "kind": "Constructor",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(im)init"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DynamicSelf",
+                "printedName": "Self"
+              }
+            ],
+            "declAttributes": [
+              "DiscardableResult",
+              "Available",
+              "Override",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "new",
+            "objc_name": "new",
+            "overriding": true,
+            "printedName": "new()",
+            "static": true,
+            "usr": "c:objc(cs)AEAssessmentParticipantConfiguration(cm)new"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCopying",
+            "printedName": "NSCopying",
+            "usr": "c:objc(pl)NSCopying"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "15.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentParticipantConfiguration",
+        "objc_name": "AEAssessmentParticipantConfiguration",
+        "printedName": "AEAssessmentParticipantConfiguration",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)AEAssessmentParticipantConfiguration"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "supportsMultipleParticipants",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "c:objc(cs)AEAssessmentSession(cm)supportsMultipleParticipants"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "supportsMultipleParticipants",
+            "objc_name": "supportsMultipleParticipants",
+            "printedName": "supportsMultipleParticipants",
+            "static": true,
+            "usr": "c:objc(cs)AEAssessmentSession(cpy)supportsMultipleParticipants"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "17.5",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "supportsConfigurationUpdates",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "c:objc(cs)AEAssessmentSession(cm)supportsConfigurationUpdates"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "supportsConfigurationUpdates",
+            "objc_name": "supportsConfigurationUpdates",
+            "printedName": "supportsConfigurationUpdates",
+            "static": true,
+            "usr": "c:objc(cs)AEAssessmentSession(cpy)supportsConfigurationUpdates"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AEAssessmentSessionDelegate",
+                        "printedName": "any AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate",
+                        "usr": "c:objc(pl)AEAssessmentSessionDelegate"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "delegate",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentSession(im)delegate"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AEAssessmentSessionDelegate",
+                        "printedName": "any AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate",
+                        "usr": "c:objc(pl)AEAssessmentSessionDelegate"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Set",
+                "objc_name": "setDelegate:",
+                "printedName": "Set()",
+                "usr": "c:objc(cs)AEAssessmentSession(im)setDelegate:"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "WeakStorage",
+                "printedName": "(any AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate)?"
+              }
+            ],
+            "declAttributes": [
+              "ReferenceOwnership",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "delegate",
+            "objc_name": "delegate",
+            "ownership": 1,
+            "printedName": "delegate",
+            "usr": "c:objc(cs)AEAssessmentSession(py)delegate"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AEAssessmentConfiguration",
+                    "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration",
+                    "usr": "c:objc(cs)AEAssessmentConfiguration"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "Available",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "intro_iOS": "15.0",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "configuration",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentSession(im)configuration"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration",
+                "usr": "c:objc(cs)AEAssessmentConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "NSCopying",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "15.0",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "configuration",
+            "objc_name": "configuration",
+            "printedName": "configuration",
+            "usr": "c:objc(cs)AEAssessmentSession(py)configuration"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declAttributes": [
+                  "DiscardableResult",
+                  "DiscardableResult",
+                  "ObjC",
+                  "Dynamic"
+                ],
+                "declKind": "Accessor",
+                "isOpen": true,
+                "kind": "Accessor",
+                "moduleName": "AutomaticAssessmentConfiguration",
+                "name": "Get",
+                "objc_name": "isActive",
+                "printedName": "Get()",
+                "usr": "c:objc(cs)AEAssessmentSession(im)isActive"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Var",
+            "isOpen": true,
+            "kind": "Var",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "isActive",
+            "objc_name": "active",
+            "printedName": "isActive",
+            "usr": "c:objc(cs)AEAssessmentSession(py)active"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration",
+                "usr": "c:objc(cs)AEAssessmentConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "init",
+            "objc_name": "initWithConfiguration:",
+            "printedName": "init(configuration:)",
+            "usr": "c:objc(cs)AEAssessmentSession(im)initWithConfiguration:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "begin",
+            "objc_name": "begin",
+            "printedName": "begin()",
+            "usr": "c:objc(cs)AEAssessmentSession(im)begin"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "end",
+            "objc_name": "end",
+            "printedName": "end()",
+            "usr": "c:objc(cs)AEAssessmentSession(im)end"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration",
+                "usr": "c:objc(cs)AEAssessmentConfiguration"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_iOS": "17.5",
+            "isOpen": true,
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "update",
+            "objc_name": "updateToConfiguration:",
+            "printedName": "update(to:)",
+            "usr": "c:objc(cs)AEAssessmentSession(im)updateToConfiguration:"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "13.4",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentSession",
+        "objc_name": "AEAssessmentSession",
+        "printedName": "AEAssessmentSession",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)AEAssessmentSession"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Optional",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate>",
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "assessmentSessionDidBegin",
+            "objc_name": "assessmentSessionDidBegin:",
+            "printedName": "assessmentSessionDidBegin(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSessionDidBegin:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Optional",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate>",
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "assessmentSession",
+            "objc_name": "assessmentSession:failedToBeginWithError:",
+            "printedName": "assessmentSession(_:failedToBeginWithError:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSession:failedToBeginWithError:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Optional",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate>",
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "assessmentSession",
+            "objc_name": "assessmentSession:wasInterruptedWithError:",
+            "printedName": "assessmentSession(_:wasInterruptedWithError:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSession:wasInterruptedWithError:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Optional",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate>",
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "assessmentSessionDidEnd",
+            "objc_name": "assessmentSessionDidEnd:",
+            "printedName": "assessmentSessionDidEnd(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSessionDidEnd:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Optional",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate>",
+            "intro_iOS": "17.5",
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "assessmentSessionDidUpdate",
+            "objc_name": "assessmentSessionDidUpdate:",
+            "printedName": "assessmentSessionDidUpdate(_:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSessionDidUpdate:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "Void",
+                "printedName": "Swift.Void"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentSession",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentSession",
+                "usr": "c:objc(cs)AEAssessmentSession"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AEAssessmentConfiguration",
+                "printedName": "AutomaticAssessmentConfiguration.AEAssessmentConfiguration",
+                "usr": "c:objc(cs)AEAssessmentConfiguration"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Error",
+                "printedName": "any Swift.Error",
+                "usr": "s:s5ErrorP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "ObjC",
+              "Optional",
+              "Dynamic"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : AutomaticAssessmentConfiguration.AEAssessmentSessionDelegate>",
+            "intro_iOS": "17.5",
+            "kind": "Function",
+            "moduleName": "AutomaticAssessmentConfiguration",
+            "name": "assessmentSession",
+            "objc_name": "assessmentSession:failedToUpdateToConfiguration:error:",
+            "printedName": "assessmentSession(_:failedToUpdateTo:error:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "c:objc(pl)AEAssessmentSessionDelegate(im)assessmentSession:failedToUpdateToConfiguration:error:"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ObjectiveC.NSObjectProtocol>",
+        "intro_iOS": "13.4",
+        "kind": "TypeDecl",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AEAssessmentSessionDelegate",
+        "objc_name": "AEAssessmentSessionDelegate",
+        "printedName": "AEAssessmentSessionDelegate",
+        "usr": "c:objc(pl)AEAssessmentSessionDelegate"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "AutomaticAssessmentConfiguration",
+        "printedName": "AutomaticAssessmentConfiguration"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AutomaticAssessmentConfiguration",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "AutomaticAssessmentConfiguration",
+    "printedName": "AutomaticAssessmentConfiguration"
+  }
+}

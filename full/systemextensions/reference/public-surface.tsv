@@ -1,0 +1,58 @@
+precise	kind	title	path	declaration
+c:@E@OSSystemExtensionErrorCode	swift.enum	OSSystemExtensionError.Code	OSSystemExtensionError.Code	enum Code
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorAuthorizationRequired	swift.enum.case	OSSystemExtensionError.Code.authorizationRequired	OSSystemExtensionError.Code.authorizationRequired	case authorizationRequired
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorCodeSignatureInvalid	swift.enum.case	OSSystemExtensionError.Code.codeSignatureInvalid	OSSystemExtensionError.Code.codeSignatureInvalid	case codeSignatureInvalid
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorDuplicateExtensionIdentifer	swift.enum.case	OSSystemExtensionError.Code.duplicateExtensionIdentifer	OSSystemExtensionError.Code.duplicateExtensionIdentifer	case duplicateExtensionIdentifer
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorExtensionMissingIdentifier	swift.enum.case	OSSystemExtensionError.Code.extensionMissingIdentifier	OSSystemExtensionError.Code.extensionMissingIdentifier	case extensionMissingIdentifier
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorExtensionNotFound	swift.enum.case	OSSystemExtensionError.Code.extensionNotFound	OSSystemExtensionError.Code.extensionNotFound	case extensionNotFound
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorForbiddenBySystemPolicy	swift.enum.case	OSSystemExtensionError.Code.forbiddenBySystemPolicy	OSSystemExtensionError.Code.forbiddenBySystemPolicy	case forbiddenBySystemPolicy
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorMissingEntitlement	swift.enum.case	OSSystemExtensionError.Code.missingEntitlement	OSSystemExtensionError.Code.missingEntitlement	case missingEntitlement
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorRequestCanceled	swift.enum.case	OSSystemExtensionError.Code.requestCanceled	OSSystemExtensionError.Code.requestCanceled	case requestCanceled
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorRequestSuperseded	swift.enum.case	OSSystemExtensionError.Code.requestSuperseded	OSSystemExtensionError.Code.requestSuperseded	case requestSuperseded
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnknown	swift.enum.case	OSSystemExtensionError.Code.unknown	OSSystemExtensionError.Code.unknown	case unknown
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnknownExtensionCategory	swift.enum.case	OSSystemExtensionError.Code.unknownExtensionCategory	OSSystemExtensionError.Code.unknownExtensionCategory	case unknownExtensionCategory
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorUnsupportedParentBundleLocation	swift.enum.case	OSSystemExtensionError.Code.unsupportedParentBundleLocation	OSSystemExtensionError.Code.unsupportedParentBundleLocation	case unsupportedParentBundleLocation
+c:@E@OSSystemExtensionErrorCode@OSSystemExtensionErrorValidationFailed	swift.enum.case	OSSystemExtensionError.Code.validationFailed	OSSystemExtensionError.Code.validationFailed	case validationFailed
+c:@NSSystemExtensionUsageDescriptionKey	swift.var	NSSystemExtensionUsageDescriptionKey	NSSystemExtensionUsageDescriptionKey	let NSSystemExtensionUsageDescriptionKey: String
+c:@OSBundleUsageDescriptionKey	swift.var	OSBundleUsageDescriptionKey	OSBundleUsageDescriptionKey	let OSBundleUsageDescriptionKey: String
+c:@OSSystemExtensionErrorDomain	swift.var	OSSystemExtensionErrorDomain	OSSystemExtensionErrorDomain	let OSSystemExtensionErrorDomain: String
+c:objc(cs)OSSystemExtensionProperties	swift.class	OSSystemExtensionProperties	OSSystemExtensionProperties	class OSSystemExtensionProperties
+c:objc(cs)OSSystemExtensionProperties(py)bundleIdentifier	swift.property	bundleIdentifier	OSSystemExtensionProperties.bundleIdentifier	var bundleIdentifier: String { get }
+c:objc(cs)OSSystemExtensionProperties(py)bundleShortVersion	swift.property	bundleShortVersion	OSSystemExtensionProperties.bundleShortVersion	var bundleShortVersion: String { get }
+c:objc(cs)OSSystemExtensionProperties(py)bundleVersion	swift.property	bundleVersion	OSSystemExtensionProperties.bundleVersion	var bundleVersion: String { get }
+c:objc(cs)OSSystemExtensionProperties(py)isEnabled	swift.property	isEnabled	OSSystemExtensionProperties.isEnabled	var isEnabled: Bool { get }
+c:objc(cs)OSSystemExtensionsWorkspace	swift.class	OSSystemExtensionsWorkspace	OSSystemExtensionsWorkspace	class OSSystemExtensionsWorkspace
+c:objc(cs)OSSystemExtensionsWorkspace(cpy)sharedWorkspace	swift.type.property	shared	OSSystemExtensionsWorkspace.shared	class var shared: OSSystemExtensionsWorkspace { get }
+c:objc(cs)OSSystemExtensionsWorkspace(im)systemExtensionsForApplicationWithBundleID:error:	swift.method	systemExtensions(forApplicationWithBundleID:)	OSSystemExtensionsWorkspace.systemExtensions(forApplicationWithBundleID:)	func systemExtensions(forApplicationWithBundleID bundleID: String) throws -> Set<OSSystemExtensionProperties>
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.type.property	errorDomain	OSSystemExtensionError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	errorUserInfo	OSSystemExtensionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	errorCode	OSSystemExtensionError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.func.op	~=(_:_:)	OSSystemExtensionError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	errorUserInfo	OSSystemExtensionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.func.op	==(_:_:)	OSSystemExtensionError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	code	OSSystemExtensionError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.method	hash(into:)	OSSystemExtensionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	userInfo	OSSystemExtensionError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	errorCode	OSSystemExtensionError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	hashValue	OSSystemExtensionError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.init	init(_:userInfo:)	OSSystemExtensionError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC26OSSystemExtensionErrorCodeLeV	swift.struct	OSSystemExtensionError	OSSystemExtensionError	struct OSSystemExtensionError
+s:SC26OSSystemExtensionErrorCodeLeV07unknownB8CategorySoAAVvpZ	swift.type.property	unknownExtensionCategory	OSSystemExtensionError.unknownExtensionCategory	static var unknownExtensionCategory: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV09duplicateB9IdentiferSoAAVvpZ	swift.type.property	duplicateExtensionIdentifer	OSSystemExtensionError.duplicateExtensionIdentifer	static var duplicateExtensionIdentifer: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	OSSystemExtensionError.errorDomain	static var errorDomain: String { get }
+s:SC26OSSystemExtensionErrorCodeLeV15requestCanceledSoAAVvpZ	swift.type.property	requestCanceled	OSSystemExtensionError.requestCanceled	static var requestCanceled: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV16validationFailedSoAAVvpZ	swift.type.property	validationFailed	OSSystemExtensionError.validationFailed	static var validationFailed: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV17extensionNotFoundSoAAVvpZ	swift.type.property	extensionNotFound	OSSystemExtensionError.extensionNotFound	static var extensionNotFound: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV17requestSupersededSoAAVvpZ	swift.type.property	requestSuperseded	OSSystemExtensionError.requestSuperseded	static var requestSuperseded: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV18missingEntitlementSoAAVvpZ	swift.type.property	missingEntitlement	OSSystemExtensionError.missingEntitlement	static var missingEntitlement: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV20codeSignatureInvalidSoAAVvpZ	swift.type.property	codeSignatureInvalid	OSSystemExtensionError.codeSignatureInvalid	static var codeSignatureInvalid: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV21authorizationRequiredSoAAVvpZ	swift.type.property	authorizationRequired	OSSystemExtensionError.authorizationRequired	static var authorizationRequired: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV23forbiddenBySystemPolicySoAAVvpZ	swift.type.property	forbiddenBySystemPolicy	OSSystemExtensionError.forbiddenBySystemPolicy	static var forbiddenBySystemPolicy: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV26extensionMissingIdentifierSoAAVvpZ	swift.type.property	extensionMissingIdentifier	OSSystemExtensionError.extensionMissingIdentifier	static var extensionMissingIdentifier: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV31unsupportedParentBundleLocationSoAAVvpZ	swift.type.property	unsupportedParentBundleLocation	OSSystemExtensionError.unsupportedParentBundleLocation	static var unsupportedParentBundleLocation: OSSystemExtensionError.Code { get }
+s:SC26OSSystemExtensionErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	OSSystemExtensionError.unknown	static var unknown: OSSystemExtensionError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.func.op	!=(_:_:)	OSSystemExtensionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	hashValue	OSSystemExtensionError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.method	hash(into:)	OSSystemExtensionError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:So26OSSystemExtensionErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	OSSystemExtensionError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@OSSystemExtensionErrorCode	swift.property	localizedDescription	OSSystemExtensionError.localizedDescription	var localizedDescription: String { get }

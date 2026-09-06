@@ -1,0 +1,9 @@
+precise	graphKind	graphPath	status	basis	rawCandidateCount	compatibleCandidateCount	selectedNodePath	candidateNodePaths
+c:@E@BEEligibilityContext	swift.enum	["BEAvailability","Context"]	unmatched	none	0	0		[]
+c:@E@BEEligibilityContext@BEEligibilityContextWebBrowser	swift.enum.case	["BEAvailability","Context","webBrowser"]	unmatched	none	0	0		[]
+c:objc(cs)BEAvailability	swift.class	["BEAvailability"]	import-name	exported-import-name	1	1	/ABIRoot/children/0	["/ABIRoot/children/0"]
+c:objc(cs)BEAvailability(cm)isEligibleForContext:completionHandler:	swift.type.method	["BEAvailability","isEligible(for:)"]	unmatched	none	0	0		[]
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BEEligibilityContext	swift.func.op	["BEAvailability","Context","!=(_:_:)"]	unmatched	none	0	0		[]
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BEEligibilityContext	swift.property	["BEAvailability","Context","hashValue"]	unmatched	none	0	0		[]
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BEEligibilityContext	swift.method	["BEAvailability","Context","hash(into:)"]	unmatched	none	0	0		[]
+s:So20BEEligibilityContextV8rawValueABSgSi_tcfc	swift.init	["BEAvailability","Context","init(rawValue:)"]	unmatched	none	0	0		[]

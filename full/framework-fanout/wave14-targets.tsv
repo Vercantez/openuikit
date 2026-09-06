@@ -1,0 +1,15 @@
+module	slug	lane	priority	risks	dependencies
+AutomatedDeviceEnrollment	automateddeviceenrollment	leaf-full	100	mdm,os-service,fail-closed	Foundation
+AutomaticAssessmentConfiguration	automaticassessmentconfiguration	leaf-full	100	education,os-service,fail-closed	Foundation
+BrowserEngineCore	browserenginecore	leaf-full	100	c-abi,process,fail-closed	CoreFoundation
+BrowserKit	browserkit	leaf-full	100	extension,process,fail-closed	Foundation
+FinanceKitUI	financekitui	leaf-full	100	ui,finance,fail-closed	FinanceKit,Foundation,UIKit
+GSS	gss	legacy-adapter	100	legacy,c-abi,security,fail-closed	CoreFoundation
+IdentityDocumentServicesUI	identitydocumentservicesui	leaf-full	100	ui,privacy,fail-closed	Foundation,IdentityDocumentServices,UIKit
+LightweightCodeRequirements	lightweightcoderequirements	leaf-full	100	security,codesign,fail-closed	Foundation
+SecurityUI	securityui	leaf-full	100	ui,security,fail-closed	Foundation,UIKit
+SystemExtensions	systemextensions	leaf-full	100	os-service,extension,fail-closed	Foundation
+TouchController	touchcontroller	medium-full	100	games,input,ui,fail-closed	Foundation,UIKit
+TranslationUIProvider	translationuiprovider	leaf-full	100	extension,ui,fail-closed	Foundation
+VisualIntelligence	visualintelligence	leaf-full	100	ml,extension,fail-closed	Foundation
+WirelessInsights	wirelessinsights	leaf-full	100	network,os-service,fail-closed	Foundation

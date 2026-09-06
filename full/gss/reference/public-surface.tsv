@@ -1,0 +1,249 @@
+precise	kind	title	path	declaration
+c:@F@GSSCreateCredentialFromUUID	swift.func	GSSCreateCredentialFromUUID(_:)	GSSCreateCredentialFromUUID(_:)	func GSSCreateCredentialFromUUID(_ uuid: CFUUID) -> gss_cred_id_t?
+c:@F@GSSCreateError	swift.func	GSSCreateError(_:_:_:)	GSSCreateError(_:_:_:)	func GSSCreateError(_ mech: gss_const_OID, _ major_status: OM_uint32, _ minor_status: OM_uint32) -> Unmanaged<CFError>?
+c:@F@GSSCreateName	swift.func	GSSCreateName(_:_:_:)	GSSCreateName(_:_:_:)	func GSSCreateName(_ name: CFTypeRef, _ name_type: gss_const_OID, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> gss_name_t?
+c:@F@GSSCredentialCopyName	swift.func	GSSCredentialCopyName(_:)	GSSCredentialCopyName(_:)	func GSSCredentialCopyName(_ cred: gss_cred_id_t) -> gss_name_t?
+c:@F@GSSCredentialCopyUUID	swift.func	GSSCredentialCopyUUID(_:)	GSSCredentialCopyUUID(_:)	func GSSCredentialCopyUUID(_ credential: gss_cred_id_t) -> Unmanaged<CFUUID>?
+c:@F@GSSCredentialGetLifetime	swift.func	GSSCredentialGetLifetime(_:)	GSSCredentialGetLifetime(_:)	func GSSCredentialGetLifetime(_ cred: gss_cred_id_t) -> OM_uint32
+c:@F@GSSNameCreateDisplayString	swift.func	GSSNameCreateDisplayString(_:)	GSSNameCreateDisplayString(_:)	func GSSNameCreateDisplayString(_ name: gss_name_t) -> Unmanaged<CFString>?
+c:@F@gss_aapl_change_password	swift.func	gss_aapl_change_password(_:_:_:_:)	gss_aapl_change_password(_:_:_:_:)	func gss_aapl_change_password(_ name: gss_name_t, _ mech: gss_const_OID, _ attributes: CFDictionary, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> OM_uint32
+c:@F@gss_aapl_initial_cred	swift.func	gss_aapl_initial_cred(_:_:_:_:_:)	gss_aapl_initial_cred(_:_:_:_:_:)	func gss_aapl_initial_cred(_ desired_name: gss_name_t, _ desired_mech: gss_const_OID, _ attributes: CFDictionary?, _ output_cred_handle: UnsafeMutablePointer<gss_cred_id_t?>, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> OM_uint32
+c:@F@gss_accept_sec_context	swift.func	gss_accept_sec_context(_:_:_:_:_:_:_:_:_:_:_:)	gss_accept_sec_context(_:_:_:_:_:_:_:_:_:_:_:)	func gss_accept_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t?>, _ acceptor_cred_handle: gss_cred_id_t?, _ input_token: gss_buffer_t?, _ input_chan_bindings: gss_channel_bindings_t?, _ src_name: UnsafeMutablePointer<gss_name_t?>?, _ mech_type: UnsafeMutablePointer<gss_OID?>?, _ output_token: gss_buffer_t, _ ret_flags: UnsafeMutablePointer<OM_uint32>?, _ time_rec: UnsafeMutablePointer<OM_uint32>?, _ delegated_cred_handle: UnsafeMutablePointer<gss_cred_id_t?>?) -> OM_uint32
+c:@F@gss_acquire_cred	swift.func	gss_acquire_cred(_:_:_:_:_:_:_:_:)	gss_acquire_cred(_:_:_:_:_:_:_:_:)	func gss_acquire_cred(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ desired_name: gss_name_t?, _ time_req: OM_uint32, _ desired_mechs: gss_OID_set?, _ cred_usage: gss_cred_usage_t, _ output_cred_handle: UnsafeMutablePointer<gss_cred_id_t?>, _ actual_mechs: UnsafeMutablePointer<gss_OID_set?>?, _ time_rec: UnsafeMutablePointer<OM_uint32>?) -> OM_uint32
+c:@F@gss_acquire_cred_with_password	swift.func	gss_acquire_cred_with_password(_:_:_:_:_:_:_:_:_:)	gss_acquire_cred_with_password(_:_:_:_:_:_:_:_:_:)	func gss_acquire_cred_with_password(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ desired_name: gss_name_t, _ password: gss_buffer_t, _ time_req: OM_uint32, _ desired_mechs: gss_OID_set?, _ cred_usage: gss_cred_usage_t, _ output_cred_handle: UnsafeMutablePointer<gss_cred_id_t?>, _ actual_mechs: UnsafeMutablePointer<gss_OID_set?>?, _ time_rec: UnsafeMutablePointer<OM_uint32>?) -> OM_uint32
+c:@F@gss_add_buffer_set_member	swift.func	gss_add_buffer_set_member(_:_:_:)	gss_add_buffer_set_member(_:_:_:)	func gss_add_buffer_set_member(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ member_buffer: gss_buffer_t, _ buffer_set: UnsafeMutablePointer<gss_buffer_set_t>) -> OM_uint32
+c:@F@gss_add_cred	swift.func	gss_add_cred(_:_:_:_:_:_:_:_:_:_:_:)	gss_add_cred(_:_:_:_:_:_:_:_:_:_:_:)	func gss_add_cred(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_cred_handle: gss_cred_id_t?, _ desired_name: gss_name_t?, _ desired_mech: gss_OID?, _ cred_usage: gss_cred_usage_t, _ initiator_time_req: OM_uint32, _ acceptor_time_req: OM_uint32, _ output_cred_handle: UnsafeMutablePointer<gss_cred_id_t?>, _ actual_mechs: UnsafeMutablePointer<gss_OID_set?>?, _ initiator_time_rec: UnsafeMutablePointer<OM_uint32>?, _ acceptor_time_rec: UnsafeMutablePointer<OM_uint32>?) -> OM_uint32
+c:@F@gss_add_oid_set_member	swift.func	gss_add_oid_set_member(_:_:_:)	gss_add_oid_set_member(_:_:_:)	func gss_add_oid_set_member(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ member_oid: gss_const_OID, _ oid_set: UnsafeMutablePointer<gss_OID_set>) -> OM_uint32
+c:@F@gss_canonicalize_name	swift.func	gss_canonicalize_name(_:_:_:_:)	gss_canonicalize_name(_:_:_:_:)	func gss_canonicalize_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name: gss_name_t, _ mech_type: gss_OID, _ output_name: UnsafeMutablePointer<gss_name_t?>) -> OM_uint32
+c:@F@gss_compare_name	swift.func	gss_compare_name(_:_:_:_:)	gss_compare_name(_:_:_:_:)	func gss_compare_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ name1_arg: gss_name_t, _ name2_arg: gss_name_t, _ name_equal: UnsafeMutablePointer<Int32>) -> OM_uint32
+c:@F@gss_context_time	swift.func	gss_context_time(_:_:_:)	gss_context_time(_:_:_:)	func gss_context_time(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ time_rec: UnsafeMutablePointer<OM_uint32>) -> OM_uint32
+c:@F@gss_create_empty_buffer_set	swift.func	gss_create_empty_buffer_set(_:_:)	gss_create_empty_buffer_set(_:_:)	func gss_create_empty_buffer_set(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ buffer_set: UnsafeMutablePointer<gss_buffer_set_t?>) -> OM_uint32
+c:@F@gss_create_empty_oid_set	swift.func	gss_create_empty_oid_set(_:_:)	gss_create_empty_oid_set(_:_:)	func gss_create_empty_oid_set(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ oid_set: UnsafeMutablePointer<gss_OID_set?>) -> OM_uint32
+c:@F@gss_decapsulate_token	swift.func	gss_decapsulate_token(_:_:_:)	gss_decapsulate_token(_:_:_:)	func gss_decapsulate_token(_ input_token: gss_const_buffer_t, _ oid: gss_const_OID, _ output_token: gss_buffer_t) -> OM_uint32
+c:@F@gss_delete_sec_context	swift.func	gss_delete_sec_context(_:_:_:)	gss_delete_sec_context(_:_:_:)	func gss_delete_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t?>, _ output_token: gss_buffer_t?) -> OM_uint32
+c:@F@gss_destroy_cred	swift.func	gss_destroy_cred(_:_:)	gss_destroy_cred(_:_:)	func gss_destroy_cred(_ min_stat: UnsafeMutablePointer<OM_uint32>, _ cred_handle: UnsafeMutablePointer<gss_cred_id_t?>) -> OM_uint32
+c:@F@gss_display_mech_attr	swift.func	gss_display_mech_attr(_:_:_:_:_:)	gss_display_mech_attr(_:_:_:_:_:)	func gss_display_mech_attr(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ mech_attr: gss_const_OID, _ name: gss_buffer_t?, _ short_desc: gss_buffer_t?, _ long_desc: gss_buffer_t?) -> OM_uint32
+c:@F@gss_display_name	swift.func	gss_display_name(_:_:_:_:)	gss_display_name(_:_:_:_:)	func gss_display_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name: gss_name_t, _ output_name_buffer: gss_buffer_t, _ output_name_type: UnsafeMutablePointer<gss_OID?>?) -> OM_uint32
+c:@F@gss_display_status	swift.func	gss_display_status(_:_:_:_:_:_:)	gss_display_status(_:_:_:_:_:_:)	func gss_display_status(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ status_value: OM_uint32, _ status_type: Int32, _ mech_type: gss_OID?, _ message_content: UnsafeMutablePointer<OM_uint32>, _ status_string: gss_buffer_t) -> OM_uint32
+c:@F@gss_duplicate_name	swift.func	gss_duplicate_name(_:_:_:)	gss_duplicate_name(_:_:_:)	func gss_duplicate_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ src_name: gss_name_t, _ dest_name: UnsafeMutablePointer<gss_name_t?>) -> OM_uint32
+c:@F@gss_encapsulate_token	swift.func	gss_encapsulate_token(_:_:_:)	gss_encapsulate_token(_:_:_:)	func gss_encapsulate_token(_ input_token: gss_const_buffer_t, _ oid: gss_const_OID, _ output_token: gss_buffer_t) -> OM_uint32
+c:@F@gss_export_cred	swift.func	gss_export_cred(_:_:_:)	gss_export_cred(_:_:_:)	func gss_export_cred(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred_handle: gss_cred_id_t, _ token: gss_buffer_t) -> OM_uint32
+c:@F@gss_export_name	swift.func	gss_export_name(_:_:_:)	gss_export_name(_:_:_:)	func gss_export_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name: gss_name_t, _ exported_name: gss_buffer_t) -> OM_uint32
+c:@F@gss_export_sec_context	swift.func	gss_export_sec_context(_:_:_:)	gss_export_sec_context(_:_:_:)	func gss_export_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t?>, _ interprocess_token: gss_buffer_t?) -> OM_uint32
+c:@F@gss_get_mic	swift.func	gss_get_mic(_:_:_:_:_:)	gss_get_mic(_:_:_:_:_:)	func gss_get_mic(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ qop_req: gss_qop_t, _ message_buffer: gss_buffer_t, _ message_token: gss_buffer_t) -> OM_uint32
+c:@F@gss_import_cred	swift.func	gss_import_cred(_:_:_:)	gss_import_cred(_:_:_:)	func gss_import_cred(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ token: gss_buffer_t, _ cred_handle: UnsafeMutablePointer<gss_cred_id_t?>) -> OM_uint32
+c:@F@gss_import_name	swift.func	gss_import_name(_:_:_:_:)	gss_import_name(_:_:_:_:)	func gss_import_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name_buffer: gss_buffer_t, _ input_name_type: gss_const_OID?, _ output_name: UnsafeMutablePointer<gss_name_t?>) -> OM_uint32
+c:@F@gss_import_sec_context	swift.func	gss_import_sec_context(_:_:_:)	gss_import_sec_context(_:_:_:)	func gss_import_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ interprocess_token: gss_buffer_t, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t?>) -> OM_uint32
+c:@F@gss_indicate_mechs	swift.func	gss_indicate_mechs(_:_:)	gss_indicate_mechs(_:_:)	func gss_indicate_mechs(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ mech_set: UnsafeMutablePointer<gss_OID_set?>) -> OM_uint32
+c:@F@gss_indicate_mechs_by_attrs	swift.func	gss_indicate_mechs_by_attrs(_:_:_:_:_:)	gss_indicate_mechs_by_attrs(_:_:_:_:_:)	func gss_indicate_mechs_by_attrs(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ desired_mech_attrs: gss_const_OID_set?, _ except_mech_attrs: gss_const_OID_set?, _ critical_mech_attrs: gss_const_OID_set?, _ mechs: UnsafeMutablePointer<gss_OID_set?>) -> OM_uint32
+c:@F@gss_init_sec_context	swift.func	gss_init_sec_context(_:_:_:_:_:_:_:_:_:_:_:_:_:)	gss_init_sec_context(_:_:_:_:_:_:_:_:_:_:_:_:_:)	func gss_init_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ initiator_cred_handle: gss_cred_id_t?, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t?>, _ target_name: gss_name_t, _ input_mech_type: gss_OID?, _ req_flags: OM_uint32, _ time_req: OM_uint32, _ input_chan_bindings: gss_channel_bindings_t?, _ input_token: gss_buffer_t?, _ actual_mech_type: UnsafeMutablePointer<gss_OID?>?, _ output_token: gss_buffer_t, _ ret_flags: UnsafeMutablePointer<OM_uint32>?, _ time_rec: UnsafeMutablePointer<OM_uint32>?) -> OM_uint32
+c:@F@gss_inquire_attrs_for_mech	swift.func	gss_inquire_attrs_for_mech(_:_:_:_:)	gss_inquire_attrs_for_mech(_:_:_:_:)	func gss_inquire_attrs_for_mech(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ mech: gss_const_OID, _ mech_attr: UnsafeMutablePointer<gss_OID_set?>?, _ known_mech_attrs: UnsafeMutablePointer<gss_OID_set?>?) -> OM_uint32
+c:@F@gss_inquire_context	swift.func	gss_inquire_context(_:_:_:_:_:_:_:_:_:)	gss_inquire_context(_:_:_:_:_:_:_:_:_:)	func gss_inquire_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ src_name: UnsafeMutablePointer<gss_name_t?>?, _ targ_name: UnsafeMutablePointer<gss_name_t?>?, _ lifetime_rec: UnsafeMutablePointer<OM_uint32>?, _ mech_type: UnsafeMutablePointer<gss_OID?>?, _ ctx_flags: UnsafeMutablePointer<OM_uint32>?, _ locally_initiated: UnsafeMutablePointer<Int32>?, _ xopen: UnsafeMutablePointer<Int32>?) -> OM_uint32
+c:@F@gss_inquire_cred	swift.func	gss_inquire_cred(_:_:_:_:_:_:)	gss_inquire_cred(_:_:_:_:_:_:)	func gss_inquire_cred(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred_handle: gss_cred_id_t?, _ name_ret: UnsafeMutablePointer<gss_name_t?>?, _ lifetime: UnsafeMutablePointer<OM_uint32>?, _ cred_usage: UnsafeMutablePointer<gss_cred_usage_t>?, _ mechanisms: UnsafeMutablePointer<gss_OID_set?>?) -> OM_uint32
+c:@F@gss_inquire_cred_by_mech	swift.func	gss_inquire_cred_by_mech(_:_:_:_:_:_:_:)	gss_inquire_cred_by_mech(_:_:_:_:_:_:_:)	func gss_inquire_cred_by_mech(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred_handle: gss_cred_id_t?, _ mech_type: gss_OID, _ cred_name: UnsafeMutablePointer<gss_name_t?>?, _ initiator_lifetime: UnsafeMutablePointer<OM_uint32>?, _ acceptor_lifetime: UnsafeMutablePointer<OM_uint32>?, _ cred_usage: UnsafeMutablePointer<gss_cred_usage_t>?) -> OM_uint32
+c:@F@gss_inquire_cred_by_oid	swift.func	gss_inquire_cred_by_oid(_:_:_:_:)	gss_inquire_cred_by_oid(_:_:_:_:)	func gss_inquire_cred_by_oid(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred_handle: gss_cred_id_t, _ desired_object: gss_OID, _ data_set: UnsafeMutablePointer<gss_buffer_set_t?>) -> OM_uint32
+c:@F@gss_inquire_mech_for_saslname	swift.func	gss_inquire_mech_for_saslname(_:_:_:)	gss_inquire_mech_for_saslname(_:_:_:)	func gss_inquire_mech_for_saslname(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ sasl_mech_name: gss_buffer_t?, _ mech_type: UnsafeMutablePointer<gss_OID?>) -> OM_uint32
+c:@F@gss_inquire_mechs_for_name	swift.func	gss_inquire_mechs_for_name(_:_:_:)	gss_inquire_mechs_for_name(_:_:_:)	func gss_inquire_mechs_for_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name: gss_name_t, _ mech_types: UnsafeMutablePointer<gss_OID_set?>) -> OM_uint32
+c:@F@gss_inquire_name	swift.func	gss_inquire_name(_:_:_:_:_:)	gss_inquire_name(_:_:_:_:_:)	func gss_inquire_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name: gss_name_t, _ name_is_MN: UnsafeMutablePointer<Int32>, _ MN_mech: UnsafeMutablePointer<gss_OID?>?, _ attrs: UnsafeMutablePointer<gss_buffer_set_t?>?) -> OM_uint32
+c:@F@gss_inquire_names_for_mech	swift.func	gss_inquire_names_for_mech(_:_:_:)	gss_inquire_names_for_mech(_:_:_:)	func gss_inquire_names_for_mech(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ mechanism: gss_const_OID, _ name_types: UnsafeMutablePointer<gss_OID_set?>) -> OM_uint32
+c:@F@gss_inquire_saslname_for_mech	swift.func	gss_inquire_saslname_for_mech(_:_:_:_:_:)	gss_inquire_saslname_for_mech(_:_:_:_:_:)	func gss_inquire_saslname_for_mech(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ desired_mech: gss_OID, _ sasl_mech_name: gss_buffer_t?, _ mech_name: gss_buffer_t?, _ mech_description: gss_buffer_t?) -> OM_uint32
+c:@F@gss_inquire_sec_context_by_oid	swift.func	gss_inquire_sec_context_by_oid(_:_:_:_:)	gss_inquire_sec_context_by_oid(_:_:_:_:)	func gss_inquire_sec_context_by_oid(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ desired_object: gss_OID, _ data_set: UnsafeMutablePointer<gss_buffer_set_t>?) -> OM_uint32
+c:@F@gss_iter_creds	swift.func	gss_iter_creds(_:_:_:_:)	gss_iter_creds(_:_:_:_:)	func gss_iter_creds(_ min_stat: UnsafeMutablePointer<OM_uint32>, _ flags: OM_uint32, _ mech: gss_const_OID?, _ useriter: @escaping (gss_OID?, gss_cred_id_t?) -> Void) -> OM_uint32
+c:@F@gss_iter_creds_f	swift.func	gss_iter_creds_f(_:_:_:_:_:)	gss_iter_creds_f(_:_:_:_:_:)	func gss_iter_creds_f(_ min_stat: UnsafeMutablePointer<OM_uint32>, _ flags: OM_uint32, _ mech: gss_const_OID?, _ userctx: UnsafeMutableRawPointer?, _ useriter: (UnsafeMutableRawPointer?, gss_OID?, gss_cred_id_t?) -> Void) -> OM_uint32
+c:@F@gss_krb5_ccache_name	swift.func	gss_krb5_ccache_name(_:_:_:)	gss_krb5_ccache_name(_:_:_:)	func gss_krb5_ccache_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ name: UnsafePointer<CChar>?, _ out_name: UnsafeMutablePointer<UnsafePointer<CChar>?>?) -> OM_uint32
+c:@F@gss_krb5_export_lucid_sec_context	swift.func	gss_krb5_export_lucid_sec_context(_:_:_:_:)	gss_krb5_export_lucid_sec_context(_:_:_:_:)	func gss_krb5_export_lucid_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t?>, _ version: OM_uint32, _ rctx: UnsafeMutablePointer<UnsafeMutableRawPointer>?) -> OM_uint32
+c:@F@gss_krb5_free_lucid_sec_context	swift.func	gss_krb5_free_lucid_sec_context(_:_:)	gss_krb5_free_lucid_sec_context(_:_:)	func gss_krb5_free_lucid_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ c: UnsafeMutableRawPointer) -> OM_uint32
+c:@F@gss_krb5_set_allowable_enctypes	swift.func	gss_krb5_set_allowable_enctypes(_:_:_:_:)	gss_krb5_set_allowable_enctypes(_:_:_:_:)	func gss_krb5_set_allowable_enctypes(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred: gss_cred_id_t, _ num_enctypes: OM_uint32, _ enctypes: UnsafeMutablePointer<Int32>) -> OM_uint32
+c:@F@gss_oid_equal	swift.func	gss_oid_equal(_:_:)	gss_oid_equal(_:_:)	func gss_oid_equal(_ a: gss_const_OID?, _ b: gss_const_OID?) -> Int32
+c:@F@gss_oid_to_str	swift.func	gss_oid_to_str(_:_:_:)	gss_oid_to_str(_:_:_:)	func gss_oid_to_str(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ oid: gss_OID, _ oid_str: gss_buffer_t) -> OM_uint32
+c:@F@gss_process_context_token	swift.func	gss_process_context_token(_:_:_:)	gss_process_context_token(_:_:_:)	func gss_process_context_token(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ token_buffer: gss_buffer_t) -> OM_uint32
+c:@F@gss_pseudo_random	swift.func	gss_pseudo_random(_:_:_:_:_:_:)	gss_pseudo_random(_:_:_:_:_:_:)	func gss_pseudo_random(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context: gss_ctx_id_t, _ prf_key: Int32, _ prf_in: gss_buffer_t, _ desired_output_len: Int, _ prf_out: gss_buffer_t) -> OM_uint32
+c:@F@gss_release_buffer	swift.func	gss_release_buffer(_:_:)	gss_release_buffer(_:_:)	func gss_release_buffer(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ buffer: gss_buffer_t) -> OM_uint32
+c:@F@gss_release_buffer_set	swift.func	gss_release_buffer_set(_:_:)	gss_release_buffer_set(_:_:)	func gss_release_buffer_set(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ buffer_set: UnsafeMutablePointer<gss_buffer_set_t?>) -> OM_uint32
+c:@F@gss_release_cred	swift.func	gss_release_cred(_:_:)	gss_release_cred(_:_:)	func gss_release_cred(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred_handle: UnsafeMutablePointer<gss_cred_id_t?>) -> OM_uint32
+c:@F@gss_release_name	swift.func	gss_release_name(_:_:)	gss_release_name(_:_:)	func gss_release_name(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ input_name: UnsafeMutablePointer<gss_name_t?>) -> OM_uint32
+c:@F@gss_release_oid_set	swift.func	gss_release_oid_set(_:_:)	gss_release_oid_set(_:_:)	func gss_release_oid_set(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ set: UnsafeMutablePointer<gss_OID_set?>) -> OM_uint32
+c:@F@gss_set_cred_option	swift.func	gss_set_cred_option(_:_:_:_:)	gss_set_cred_option(_:_:_:_:)	func gss_set_cred_option(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ cred_handle: UnsafeMutablePointer<gss_cred_id_t?>?, _ object: gss_OID, _ value: gss_buffer_t?) -> OM_uint32
+c:@F@gss_set_sec_context_option	swift.func	gss_set_sec_context_option(_:_:_:_:)	gss_set_sec_context_option(_:_:_:_:)	func gss_set_sec_context_option(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: UnsafeMutablePointer<gss_ctx_id_t>?, _ object: gss_OID, _ value: gss_buffer_t?) -> OM_uint32
+c:@F@gss_test_oid_set_member	swift.func	gss_test_oid_set_member(_:_:_:_:)	gss_test_oid_set_member(_:_:_:_:)	func gss_test_oid_set_member(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ member: gss_const_OID, _ set: gss_OID_set, _ present: UnsafeMutablePointer<Int32>) -> OM_uint32
+c:@F@gss_unwrap	swift.func	gss_unwrap(_:_:_:_:_:_:)	gss_unwrap(_:_:_:_:_:_:)	func gss_unwrap(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ input_message_buffer: gss_buffer_t, _ output_message_buffer: gss_buffer_t, _ conf_state: UnsafeMutablePointer<Int32>?, _ qop_state: UnsafeMutablePointer<gss_qop_t>?) -> OM_uint32
+c:@F@gss_userok	swift.func	gss_userok(_:_:)	gss_userok(_:_:)	func gss_userok(_ name: gss_name_t, _ user: UnsafePointer<CChar>) -> Int32
+c:@F@gss_verify_mic	swift.func	gss_verify_mic(_:_:_:_:_:)	gss_verify_mic(_:_:_:_:_:)	func gss_verify_mic(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ message_buffer: gss_buffer_t, _ token_buffer: gss_buffer_t, _ qop_state: UnsafeMutablePointer<gss_qop_t>?) -> OM_uint32
+c:@F@gss_wrap	swift.func	gss_wrap(_:_:_:_:_:_:_:)	gss_wrap(_:_:_:_:_:_:_:)	func gss_wrap(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ conf_req_flag: Int32, _ qop_req: gss_qop_t, _ input_message_buffer: gss_buffer_t, _ conf_state: UnsafeMutablePointer<Int32>?, _ output_message_buffer: gss_buffer_t) -> OM_uint32
+c:@F@gss_wrap_size_limit	swift.func	gss_wrap_size_limit(_:_:_:_:_:_:)	gss_wrap_size_limit(_:_:_:_:_:_:)	func gss_wrap_size_limit(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ conf_req_flag: Int32, _ qop_req: gss_qop_t, _ req_output_size: OM_uint32, _ max_input_size: UnsafeMutablePointer<OM_uint32>) -> OM_uint32
+c:@F@gsskrb5_extract_authz_data_from_sec_context	swift.func	gsskrb5_extract_authz_data_from_sec_context(_:_:_:_:)	gsskrb5_extract_authz_data_from_sec_context(_:_:_:_:)	func gsskrb5_extract_authz_data_from_sec_context(_ minor_status: UnsafeMutablePointer<OM_uint32>, _ context_handle: gss_ctx_id_t, _ ad_type: Int32, _ ad_data: gss_buffer_t) -> OM_uint32
+c:@F@gsskrb5_register_acceptor_identity	swift.func	gsskrb5_register_acceptor_identity(_:)	gsskrb5_register_acceptor_identity(_:)	func gsskrb5_register_acceptor_identity(_ identity: UnsafePointer<CChar>) -> OM_uint32
+c:@F@krb5_gss_register_acceptor_identity	swift.func	krb5_gss_register_acceptor_identity(_:)	krb5_gss_register_acceptor_identity(_:)	func krb5_gss_register_acceptor_identity(_ identity: UnsafePointer<CChar>) -> OM_uint32
+c:@S@gss_OID_desc_struct	swift.struct	gss_OID_desc_struct	gss_OID_desc_struct	struct gss_OID_desc_struct
+c:@S@gss_OID_desc_struct@FI@elements	swift.property	elements	gss_OID_desc_struct.elements	var elements: UnsafeMutableRawPointer!
+c:@S@gss_OID_desc_struct@FI@length	swift.property	length	gss_OID_desc_struct.length	var length: OM_uint32
+c:@S@gss_OID_set_desc_struct	swift.struct	gss_OID_set_desc_struct	gss_OID_set_desc_struct	struct gss_OID_set_desc_struct
+c:@S@gss_OID_set_desc_struct@FI@count	swift.property	count	gss_OID_set_desc_struct.count	var count: Int
+c:@S@gss_OID_set_desc_struct@FI@elements	swift.property	elements	gss_OID_set_desc_struct.elements	var elements: gss_OID!
+c:@S@gss_buffer_desc_struct	swift.struct	gss_buffer_desc_struct	gss_buffer_desc_struct	struct gss_buffer_desc_struct
+c:@S@gss_buffer_desc_struct@FI@length	swift.property	length	gss_buffer_desc_struct.length	var length: Int
+c:@S@gss_buffer_desc_struct@FI@value	swift.property	value	gss_buffer_desc_struct.value	var value: UnsafeMutableRawPointer!
+c:@S@gss_buffer_set_desc_struct	swift.struct	gss_buffer_set_desc_struct	gss_buffer_set_desc_struct	struct gss_buffer_set_desc_struct
+c:@S@gss_buffer_set_desc_struct@FI@count	swift.property	count	gss_buffer_set_desc_struct.count	var count: Int
+c:@S@gss_buffer_set_desc_struct@FI@elements	swift.property	elements	gss_buffer_set_desc_struct.elements	var elements: UnsafeMutablePointer<gss_buffer_desc>!
+c:@S@gss_channel_bindings_struct	swift.struct	gss_channel_bindings_struct	gss_channel_bindings_struct	struct gss_channel_bindings_struct
+c:@S@gss_channel_bindings_struct@FI@acceptor_address	swift.property	acceptor_address	gss_channel_bindings_struct.acceptor_address	var acceptor_address: gss_buffer_desc
+c:@S@gss_channel_bindings_struct@FI@acceptor_addrtype	swift.property	acceptor_addrtype	gss_channel_bindings_struct.acceptor_addrtype	var acceptor_addrtype: OM_uint32
+c:@S@gss_channel_bindings_struct@FI@application_data	swift.property	application_data	gss_channel_bindings_struct.application_data	var application_data: gss_buffer_desc
+c:@S@gss_channel_bindings_struct@FI@initiator_address	swift.property	initiator_address	gss_channel_bindings_struct.initiator_address	var initiator_address: gss_buffer_desc
+c:@S@gss_channel_bindings_struct@FI@initiator_addrtype	swift.property	initiator_addrtype	gss_channel_bindings_struct.initiator_addrtype	var initiator_addrtype: OM_uint32
+c:@S@gss_iov_buffer_desc_struct	swift.struct	gss_iov_buffer_desc_struct	gss_iov_buffer_desc_struct	struct gss_iov_buffer_desc_struct
+c:@S@gss_iov_buffer_desc_struct@FI@buffer	swift.property	buffer	gss_iov_buffer_desc_struct.buffer	var buffer: gss_buffer_desc
+c:@S@gss_iov_buffer_desc_struct@FI@type	swift.property	type	gss_iov_buffer_desc_struct.type	var type: OM_uint32
+c:gssapi.h@10018@macro@GSS_S_BAD_MECH	swift.var	GSS_S_BAD_MECH	GSS_S_BAD_MECH	var GSS_S_BAD_MECH: UInt { get }
+c:gssapi.h@10077@macro@GSS_S_BAD_NAME	swift.var	GSS_S_BAD_NAME	GSS_S_BAD_NAME	var GSS_S_BAD_NAME: UInt { get }
+c:gssapi.h@10136@macro@GSS_S_BAD_NAMETYPE	swift.var	GSS_S_BAD_NAMETYPE	GSS_S_BAD_NAMETYPE	var GSS_S_BAD_NAMETYPE: UInt { get }
+c:gssapi.h@10200@macro@GSS_S_BAD_BINDINGS	swift.var	GSS_S_BAD_BINDINGS	GSS_S_BAD_BINDINGS	var GSS_S_BAD_BINDINGS: UInt { get }
+c:gssapi.h@10263@macro@GSS_S_BAD_STATUS	swift.var	GSS_S_BAD_STATUS	GSS_S_BAD_STATUS	var GSS_S_BAD_STATUS: UInt { get }
+c:gssapi.h@10324@macro@GSS_S_BAD_SIG	swift.var	GSS_S_BAD_SIG	GSS_S_BAD_SIG	var GSS_S_BAD_SIG: UInt { get }
+c:gssapi.h@10382@macro@GSS_S_BAD_MIC	swift.var	GSS_S_BAD_MIC	GSS_S_BAD_MIC	var GSS_S_BAD_MIC: UInt { get }
+c:gssapi.h@10418@macro@GSS_S_NO_CRED	swift.var	GSS_S_NO_CRED	GSS_S_NO_CRED	var GSS_S_NO_CRED: UInt { get }
+c:gssapi.h@10476@macro@GSS_S_NO_CONTEXT	swift.var	GSS_S_NO_CONTEXT	GSS_S_NO_CONTEXT	var GSS_S_NO_CONTEXT: UInt { get }
+c:gssapi.h@10537@macro@GSS_S_DEFECTIVE_TOKEN	swift.var	GSS_S_DEFECTIVE_TOKEN	GSS_S_DEFECTIVE_TOKEN	var GSS_S_DEFECTIVE_TOKEN: UInt { get }
+c:gssapi.h@10603@macro@GSS_S_DEFECTIVE_CREDENTIAL	swift.var	GSS_S_DEFECTIVE_CREDENTIAL	GSS_S_DEFECTIVE_CREDENTIAL	var GSS_S_DEFECTIVE_CREDENTIAL: UInt { get }
+c:gssapi.h@10675@macro@GSS_S_CREDENTIALS_EXPIRED	swift.var	GSS_S_CREDENTIALS_EXPIRED	GSS_S_CREDENTIALS_EXPIRED	var GSS_S_CREDENTIALS_EXPIRED: UInt { get }
+c:gssapi.h@10746@macro@GSS_S_CONTEXT_EXPIRED	swift.var	GSS_S_CONTEXT_EXPIRED	GSS_S_CONTEXT_EXPIRED	var GSS_S_CONTEXT_EXPIRED: UInt { get }
+c:gssapi.h@10813@macro@GSS_S_FAILURE	swift.var	GSS_S_FAILURE	GSS_S_FAILURE	var GSS_S_FAILURE: UInt { get }
+c:gssapi.h@10872@macro@GSS_S_BAD_QOP	swift.var	GSS_S_BAD_QOP	GSS_S_BAD_QOP	var GSS_S_BAD_QOP: UInt { get }
+c:gssapi.h@10931@macro@GSS_S_UNAUTHORIZED	swift.var	GSS_S_UNAUTHORIZED	GSS_S_UNAUTHORIZED	var GSS_S_UNAUTHORIZED: UInt { get }
+c:gssapi.h@10995@macro@GSS_S_UNAVAILABLE	swift.var	GSS_S_UNAVAILABLE	GSS_S_UNAVAILABLE	var GSS_S_UNAVAILABLE: UInt { get }
+c:gssapi.h@11058@macro@GSS_S_DUPLICATE_ELEMENT	swift.var	GSS_S_DUPLICATE_ELEMENT	GSS_S_DUPLICATE_ELEMENT	var GSS_S_DUPLICATE_ELEMENT: UInt { get }
+c:gssapi.h@11127@macro@GSS_S_NAME_NOT_MN	swift.var	GSS_S_NAME_NOT_MN	GSS_S_NAME_NOT_MN	var GSS_S_NAME_NOT_MN: UInt { get }
+c:gssapi.h@11190@macro@GSS_S_BAD_MECH_ATTR	swift.var	GSS_S_BAD_MECH_ATTR	GSS_S_BAD_MECH_ATTR	var GSS_S_BAD_MECH_ATTR: UInt { get }
+c:gssapi.h@11295@macro@GSS_S_CRED_UNAVAIL	swift.var	GSS_S_CRED_UNAVAIL	GSS_S_CRED_UNAVAIL	var GSS_S_CRED_UNAVAIL: UInt { get }
+c:gssapi.h@11758@macro@GSS_C_OPTION_MASK	swift.var	GSS_C_OPTION_MASK	GSS_C_OPTION_MASK	var GSS_C_OPTION_MASK: Int32 { get }
+c:gssapi.h@11791@macro@GSS_C_CRED_NO_UI	swift.var	GSS_C_CRED_NO_UI	GSS_C_CRED_NO_UI	var GSS_C_CRED_NO_UI: Int32 { get }
+c:gssapi.h@11866@macro@GSS_C_PRF_KEY_FULL	swift.var	GSS_C_PRF_KEY_FULL	GSS_C_PRF_KEY_FULL	var GSS_C_PRF_KEY_FULL: Int32 { get }
+c:gssapi.h@11895@macro@GSS_C_PRF_KEY_PARTIAL	swift.var	GSS_C_PRF_KEY_PARTIAL	GSS_C_PRF_KEY_PARTIAL	var GSS_C_PRF_KEY_PARTIAL: Int32 { get }
+c:gssapi.h@12101@macro@kGSSICPassword	swift.var	kGSSICPassword	kGSSICPassword	var kGSSICPassword: String { get }
+c:gssapi.h@12150@macro@kGSSICCertificate	swift.var	kGSSICCertificate	kGSSICCertificate	var kGSSICCertificate: String { get }
+c:gssapi.h@12204@macro@kGSSICVerifyCredential	swift.var	kGSSICVerifyCredential	kGSSICVerifyCredential	var kGSSICVerifyCredential: String { get }
+c:gssapi.h@12269@macro@kGSSCredentialUsage	swift.var	kGSSCredentialUsage	kGSSCredentialUsage	var kGSSCredentialUsage: String { get }
+c:gssapi.h@12327@macro@kGSS_C_INITIATE	swift.var	kGSS_C_INITIATE	kGSS_C_INITIATE	var kGSS_C_INITIATE: String { get }
+c:gssapi.h@12378@macro@kGSS_C_ACCEPT	swift.var	kGSS_C_ACCEPT	kGSS_C_ACCEPT	var kGSS_C_ACCEPT: String { get }
+c:gssapi.h@12425@macro@kGSS_C_BOTH	swift.var	kGSS_C_BOTH	kGSS_C_BOTH	var kGSS_C_BOTH: String { get }
+c:gssapi.h@12469@macro@kGSSICLKDCHostname	swift.var	kGSSICLKDCHostname	kGSSICLKDCHostname	var kGSSICLKDCHostname: String { get }
+c:gssapi.h@12526@macro@kGSSICKerberosCacheName	swift.var	kGSSICKerberosCacheName	kGSSICKerberosCacheName	var kGSSICKerberosCacheName: String { get }
+c:gssapi.h@12592@macro@kGSSICSiteName	swift.var	kGSSICSiteName	kGSSICSiteName	var kGSSICSiteName: String { get }
+c:gssapi.h@12641@macro@kGSSICAppIdentifierACL	swift.var	kGSSICAppIdentifierACL	kGSSICAppIdentifierACL	var kGSSICAppIdentifierACL: String { get }
+c:gssapi.h@12705@macro@kGSSICVerifyCredentialAcceptorName	swift.var	kGSSICVerifyCredentialAcceptorName	kGSSICVerifyCredentialAcceptorName	var kGSSICVerifyCredentialAcceptorName: String { get }
+c:gssapi.h@12792@macro@kGSSICCreateNewCredential	swift.var	kGSSICCreateNewCredential	kGSSICCreateNewCredential	var kGSSICCreateNewCredential: String { get }
+c:gssapi.h@12861@macro@kGSSICAppleSourceApp	swift.var	kGSSICAppleSourceApp	kGSSICAppleSourceApp	var kGSSICAppleSourceApp: String { get }
+c:gssapi.h@12921@macro@kGSSICAppleSourceAppAuditToken	swift.var	kGSSICAppleSourceAppAuditToken	kGSSICAppleSourceAppAuditToken	var kGSSICAppleSourceAppAuditToken: String { get }
+c:gssapi.h@13000@macro@kGSSICAppleSourceAppPID	swift.var	kGSSICAppleSourceAppPID	kGSSICAppleSourceAppPID	var kGSSICAppleSourceAppPID: String { get }
+c:gssapi.h@13066@macro@kGSSICAppleSourceAppSigningIdentity	swift.var	kGSSICAppleSourceAppSigningIdentity	kGSSICAppleSourceAppSigningIdentity	var kGSSICAppleSourceAppSigningIdentity: String { get }
+c:gssapi.h@13156@macro@kGSSICAuthenticationContext	swift.var	kGSSICAuthenticationContext	kGSSICAuthenticationContext	var kGSSICAuthenticationContext: String { get }
+c:gssapi.h@13232@macro@kGSSChangePasswordOldPassword	swift.var	kGSSChangePasswordOldPassword	kGSSChangePasswordOldPassword	var kGSSChangePasswordOldPassword: String { get }
+c:gssapi.h@13309@macro@kGSSChangePasswordNewPassword	swift.var	kGSSChangePasswordNewPassword	kGSSChangePasswordNewPassword	var kGSSChangePasswordNewPassword: String { get }
+c:gssapi.h@4764@macro@GSS_C_DELEG_FLAG	swift.var	GSS_C_DELEG_FLAG	GSS_C_DELEG_FLAG	var GSS_C_DELEG_FLAG: Int32 { get }
+c:gssapi.h@4791@macro@GSS_C_MUTUAL_FLAG	swift.var	GSS_C_MUTUAL_FLAG	GSS_C_MUTUAL_FLAG	var GSS_C_MUTUAL_FLAG: Int32 { get }
+c:gssapi.h@4819@macro@GSS_C_REPLAY_FLAG	swift.var	GSS_C_REPLAY_FLAG	GSS_C_REPLAY_FLAG	var GSS_C_REPLAY_FLAG: Int32 { get }
+c:gssapi.h@4847@macro@GSS_C_SEQUENCE_FLAG	swift.var	GSS_C_SEQUENCE_FLAG	GSS_C_SEQUENCE_FLAG	var GSS_C_SEQUENCE_FLAG: Int32 { get }
+c:gssapi.h@4877@macro@GSS_C_CONF_FLAG	swift.var	GSS_C_CONF_FLAG	GSS_C_CONF_FLAG	var GSS_C_CONF_FLAG: Int32 { get }
+c:gssapi.h@4904@macro@GSS_C_INTEG_FLAG	swift.var	GSS_C_INTEG_FLAG	GSS_C_INTEG_FLAG	var GSS_C_INTEG_FLAG: Int32 { get }
+c:gssapi.h@4932@macro@GSS_C_ANON_FLAG	swift.var	GSS_C_ANON_FLAG	GSS_C_ANON_FLAG	var GSS_C_ANON_FLAG: Int32 { get }
+c:gssapi.h@4959@macro@GSS_C_PROT_READY_FLAG	swift.var	GSS_C_PROT_READY_FLAG	GSS_C_PROT_READY_FLAG	var GSS_C_PROT_READY_FLAG: Int32 { get }
+c:gssapi.h@4993@macro@GSS_C_TRANS_FLAG	swift.var	GSS_C_TRANS_FLAG	GSS_C_TRANS_FLAG	var GSS_C_TRANS_FLAG: Int32 { get }
+c:gssapi.h@5023@macro@GSS_C_DCE_STYLE	swift.var	GSS_C_DCE_STYLE	GSS_C_DCE_STYLE	var GSS_C_DCE_STYLE: Int32 { get }
+c:gssapi.h@5052@macro@GSS_C_IDENTIFY_FLAG	swift.var	GSS_C_IDENTIFY_FLAG	GSS_C_IDENTIFY_FLAG	var GSS_C_IDENTIFY_FLAG: Int32 { get }
+c:gssapi.h@5085@macro@GSS_C_EXTENDED_ERROR_FLAG	swift.var	GSS_C_EXTENDED_ERROR_FLAG	GSS_C_EXTENDED_ERROR_FLAG	var GSS_C_EXTENDED_ERROR_FLAG: Int32 { get }
+c:gssapi.h@5125@macro@GSS_C_DELEG_POLICY_FLAG	swift.var	GSS_C_DELEG_POLICY_FLAG	GSS_C_DELEG_POLICY_FLAG	var GSS_C_DELEG_POLICY_FLAG: Int32 { get }
+c:gssapi.h@5199@macro@GSS_C_BOTH	swift.var	GSS_C_BOTH	GSS_C_BOTH	var GSS_C_BOTH: Int32 { get }
+c:gssapi.h@5220@macro@GSS_C_INITIATE	swift.var	GSS_C_INITIATE	GSS_C_INITIATE	var GSS_C_INITIATE: Int32 { get }
+c:gssapi.h@5245@macro@GSS_C_ACCEPT	swift.var	GSS_C_ACCEPT	GSS_C_ACCEPT	var GSS_C_ACCEPT: Int32 { get }
+c:gssapi.h@5388@macro@GSS_C_GSS_CODE	swift.var	GSS_C_GSS_CODE	GSS_C_GSS_CODE	var GSS_C_GSS_CODE: Int32 { get }
+c:gssapi.h@5413@macro@GSS_C_MECH_CODE	swift.var	GSS_C_MECH_CODE	GSS_C_MECH_CODE	var GSS_C_MECH_CODE: Int32 { get }
+c:gssapi.h@5513@macro@GSS_C_AF_UNSPEC	swift.var	GSS_C_AF_UNSPEC	GSS_C_AF_UNSPEC	var GSS_C_AF_UNSPEC: Int32 { get }
+c:gssapi.h@5543@macro@GSS_C_AF_LOCAL	swift.var	GSS_C_AF_LOCAL	GSS_C_AF_LOCAL	var GSS_C_AF_LOCAL: Int32 { get }
+c:gssapi.h@5573@macro@GSS_C_AF_INET	swift.var	GSS_C_AF_INET	GSS_C_AF_INET	var GSS_C_AF_INET: Int32 { get }
+c:gssapi.h@5603@macro@GSS_C_AF_IMPLINK	swift.var	GSS_C_AF_IMPLINK	GSS_C_AF_IMPLINK	var GSS_C_AF_IMPLINK: Int32 { get }
+c:gssapi.h@5633@macro@GSS_C_AF_PUP	swift.var	GSS_C_AF_PUP	GSS_C_AF_PUP	var GSS_C_AF_PUP: Int32 { get }
+c:gssapi.h@5663@macro@GSS_C_AF_CHAOS	swift.var	GSS_C_AF_CHAOS	GSS_C_AF_CHAOS	var GSS_C_AF_CHAOS: Int32 { get }
+c:gssapi.h@5693@macro@GSS_C_AF_NS	swift.var	GSS_C_AF_NS	GSS_C_AF_NS	var GSS_C_AF_NS: Int32 { get }
+c:gssapi.h@5723@macro@GSS_C_AF_NBS	swift.var	GSS_C_AF_NBS	GSS_C_AF_NBS	var GSS_C_AF_NBS: Int32 { get }
+c:gssapi.h@5753@macro@GSS_C_AF_ECMA	swift.var	GSS_C_AF_ECMA	GSS_C_AF_ECMA	var GSS_C_AF_ECMA: Int32 { get }
+c:gssapi.h@5783@macro@GSS_C_AF_DATAKIT	swift.var	GSS_C_AF_DATAKIT	GSS_C_AF_DATAKIT	var GSS_C_AF_DATAKIT: Int32 { get }
+c:gssapi.h@5813@macro@GSS_C_AF_CCITT	swift.var	GSS_C_AF_CCITT	GSS_C_AF_CCITT	var GSS_C_AF_CCITT: Int32 { get }
+c:gssapi.h@5844@macro@GSS_C_AF_SNA	swift.var	GSS_C_AF_SNA	GSS_C_AF_SNA	var GSS_C_AF_SNA: Int32 { get }
+c:gssapi.h@5875@macro@GSS_C_AF_DECnet	swift.var	GSS_C_AF_DECnet	GSS_C_AF_DECnet	var GSS_C_AF_DECnet: Int32 { get }
+c:gssapi.h@5906@macro@GSS_C_AF_DLI	swift.var	GSS_C_AF_DLI	GSS_C_AF_DLI	var GSS_C_AF_DLI: Int32 { get }
+c:gssapi.h@5937@macro@GSS_C_AF_LAT	swift.var	GSS_C_AF_LAT	GSS_C_AF_LAT	var GSS_C_AF_LAT: Int32 { get }
+c:gssapi.h@5968@macro@GSS_C_AF_HYLINK	swift.var	GSS_C_AF_HYLINK	GSS_C_AF_HYLINK	var GSS_C_AF_HYLINK: Int32 { get }
+c:gssapi.h@5999@macro@GSS_C_AF_APPLETALK	swift.var	GSS_C_AF_APPLETALK	GSS_C_AF_APPLETALK	var GSS_C_AF_APPLETALK: Int32 { get }
+c:gssapi.h@6030@macro@GSS_C_AF_BSC	swift.var	GSS_C_AF_BSC	GSS_C_AF_BSC	var GSS_C_AF_BSC: Int32 { get }
+c:gssapi.h@6061@macro@GSS_C_AF_DSS	swift.var	GSS_C_AF_DSS	GSS_C_AF_DSS	var GSS_C_AF_DSS: Int32 { get }
+c:gssapi.h@6092@macro@GSS_C_AF_OSI	swift.var	GSS_C_AF_OSI	GSS_C_AF_OSI	var GSS_C_AF_OSI: Int32 { get }
+c:gssapi.h@6123@macro@GSS_C_AF_X25	swift.var	GSS_C_AF_X25	GSS_C_AF_X25	var GSS_C_AF_X25: Int32 { get }
+c:gssapi.h@6154@macro@GSS_C_AF_INET6	swift.var	GSS_C_AF_INET6	GSS_C_AF_INET6	var GSS_C_AF_INET6: Int32 { get }
+c:gssapi.h@6185@macro@GSS_C_AF_NULLADDR	swift.var	GSS_C_AF_NULLADDR	GSS_C_AF_NULLADDR	var GSS_C_AF_NULLADDR: Int32 { get }
+c:gssapi.h@7306@macro@GSS_C_QOP_DEFAULT	swift.var	GSS_C_QOP_DEFAULT	GSS_C_QOP_DEFAULT	var GSS_C_QOP_DEFAULT: Int32 { get }
+c:gssapi.h@7335@macro@GSS_KRB5_CONF_C_QOP_DES	swift.var	GSS_KRB5_CONF_C_QOP_DES	GSS_KRB5_CONF_C_QOP_DES	var GSS_KRB5_CONF_C_QOP_DES: Int32 { get }
+c:gssapi.h@7375@macro@GSS_KRB5_CONF_C_QOP_DES3_KD	swift.var	GSS_KRB5_CONF_C_QOP_DES3_KD	GSS_KRB5_CONF_C_QOP_DES3_KD	var GSS_KRB5_CONF_C_QOP_DES3_KD: Int32 { get }
+c:gssapi.h@7527@macro@GSS_C_INDEFINITE	swift.var	GSS_C_INDEFINITE	GSS_C_INDEFINITE	var GSS_C_INDEFINITE: UInt { get }
+c:gssapi.h@7618@macro@GSS_IOV_BUFFER_TYPE_EMPTY	swift.var	GSS_IOV_BUFFER_TYPE_EMPTY	GSS_IOV_BUFFER_TYPE_EMPTY	var GSS_IOV_BUFFER_TYPE_EMPTY: Int32 { get }
+c:gssapi.h@7654@macro@GSS_IOV_BUFFER_TYPE_DATA	swift.var	GSS_IOV_BUFFER_TYPE_DATA	GSS_IOV_BUFFER_TYPE_DATA	var GSS_IOV_BUFFER_TYPE_DATA: Int32 { get }
+c:gssapi.h@7689@macro@GSS_IOV_BUFFER_TYPE_HEADER	swift.var	GSS_IOV_BUFFER_TYPE_HEADER	GSS_IOV_BUFFER_TYPE_HEADER	var GSS_IOV_BUFFER_TYPE_HEADER: Int32 { get }
+c:gssapi.h@7726@macro@GSS_IOV_BUFFER_TYPE_MECH_PARAMS	swift.var	GSS_IOV_BUFFER_TYPE_MECH_PARAMS	GSS_IOV_BUFFER_TYPE_MECH_PARAMS	var GSS_IOV_BUFFER_TYPE_MECH_PARAMS: Int32 { get }
+c:gssapi.h@7769@macro@GSS_IOV_BUFFER_TYPE_TRAILER	swift.var	GSS_IOV_BUFFER_TYPE_TRAILER	GSS_IOV_BUFFER_TYPE_TRAILER	var GSS_IOV_BUFFER_TYPE_TRAILER: Int32 { get }
+c:gssapi.h@7807@macro@GSS_IOV_BUFFER_TYPE_PADDING	swift.var	GSS_IOV_BUFFER_TYPE_PADDING	GSS_IOV_BUFFER_TYPE_PADDING	var GSS_IOV_BUFFER_TYPE_PADDING: Int32 { get }
+c:gssapi.h@7845@macro@GSS_IOV_BUFFER_TYPE_STREAM	swift.var	GSS_IOV_BUFFER_TYPE_STREAM	GSS_IOV_BUFFER_TYPE_STREAM	var GSS_IOV_BUFFER_TYPE_STREAM: Int32 { get }
+c:gssapi.h@7883@macro@GSS_IOV_BUFFER_TYPE_SIGN_ONLY	swift.var	GSS_IOV_BUFFER_TYPE_SIGN_ONLY	GSS_IOV_BUFFER_TYPE_SIGN_ONLY	var GSS_IOV_BUFFER_TYPE_SIGN_ONLY: Int32 { get }
+c:gssapi.h@7925@macro@GSS_IOV_BUFFER_TYPE_FLAG_MASK	swift.var	GSS_IOV_BUFFER_TYPE_FLAG_MASK	GSS_IOV_BUFFER_TYPE_FLAG_MASK	var GSS_IOV_BUFFER_TYPE_FLAG_MASK: UInt32 { get }
+c:gssapi.h@7975@macro@GSS_IOV_BUFFER_FLAG_ALLOCATE	swift.var	GSS_IOV_BUFFER_FLAG_ALLOCATE	GSS_IOV_BUFFER_FLAG_ALLOCATE	var GSS_IOV_BUFFER_FLAG_ALLOCATE: Int32 { get }
+c:gssapi.h@8024@macro@GSS_IOV_BUFFER_FLAG_ALLOCATED	swift.var	GSS_IOV_BUFFER_FLAG_ALLOCATED	GSS_IOV_BUFFER_FLAG_ALLOCATED	var GSS_IOV_BUFFER_FLAG_ALLOCATED: Int32 { get }
+c:gssapi.h@8075@macro@GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATE	swift.var	GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATE	GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATE	var GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATE: Int32 { get }
+c:gssapi.h@8143@macro@GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATED	swift.var	GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATED	GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATED	var GSS_IOV_BUFFER_TYPE_FLAG_ALLOCATED: Int32 { get }
+c:gssapi.h@8618@macro@GSS_S_COMPLETE	swift.var	GSS_S_COMPLETE	GSS_S_COMPLETE	var GSS_S_COMPLETE: Int32 { get }
+c:gssapi.h@8720@macro@GSS_C_CALLING_ERROR_OFFSET	swift.var	GSS_C_CALLING_ERROR_OFFSET	GSS_C_CALLING_ERROR_OFFSET	var GSS_C_CALLING_ERROR_OFFSET: Int32 { get }
+c:gssapi.h@8758@macro@GSS_C_ROUTINE_ERROR_OFFSET	swift.var	GSS_C_ROUTINE_ERROR_OFFSET	GSS_C_ROUTINE_ERROR_OFFSET	var GSS_C_ROUTINE_ERROR_OFFSET: Int32 { get }
+c:gssapi.h@8796@macro@GSS_C_SUPPLEMENTARY_OFFSET	swift.var	GSS_C_SUPPLEMENTARY_OFFSET	GSS_C_SUPPLEMENTARY_OFFSET	var GSS_C_SUPPLEMENTARY_OFFSET: Int32 { get }
+c:gssapi.h@8833@macro@GSS_C_CALLING_ERROR_MASK	swift.var	GSS_C_CALLING_ERROR_MASK	GSS_C_CALLING_ERROR_MASK	var GSS_C_CALLING_ERROR_MASK: UInt { get }
+c:gssapi.h@8873@macro@GSS_C_ROUTINE_ERROR_MASK	swift.var	GSS_C_ROUTINE_ERROR_MASK	GSS_C_ROUTINE_ERROR_MASK	var GSS_C_ROUTINE_ERROR_MASK: UInt { get }
+c:gssapi.h@8913@macro@GSS_C_SUPPLEMENTARY_MASK	swift.var	GSS_C_SUPPLEMENTARY_MASK	GSS_C_SUPPLEMENTARY_MASK	var GSS_C_SUPPLEMENTARY_MASK: UInt { get }
+c:gssapi.h@9682@macro@GSS_S_CALL_INACCESSIBLE_READ	swift.var	GSS_S_CALL_INACCESSIBLE_READ	GSS_S_CALL_INACCESSIBLE_READ	var GSS_S_CALL_INACCESSIBLE_READ: UInt { get }
+c:gssapi.h@9786@macro@GSS_S_CALL_INACCESSIBLE_WRITE	swift.var	GSS_S_CALL_INACCESSIBLE_WRITE	GSS_S_CALL_INACCESSIBLE_WRITE	var GSS_S_CALL_INACCESSIBLE_WRITE: UInt { get }
+c:gssapi.h@9891@macro@GSS_S_CALL_BAD_STRUCTURE	swift.var	GSS_S_CALL_BAD_STRUCTURE	GSS_S_CALL_BAD_STRUCTURE	var GSS_S_CALL_BAD_STRUCTURE: UInt { get }
+c:gssapi.h@T@OM_uint32	swift.typealias	OM_uint32	OM_uint32	typealias OM_uint32 = UInt32
+c:gssapi.h@T@OM_uint64	swift.typealias	OM_uint64	OM_uint64	typealias OM_uint64 = UInt64
+c:gssapi.h@T@gss_OID	swift.typealias	gss_OID	gss_OID	typealias gss_OID = UnsafeMutablePointer<gss_OID_desc_struct>
+c:gssapi.h@T@gss_OID_desc	swift.typealias	gss_OID_desc	gss_OID_desc	typealias gss_OID_desc = gss_OID_desc_struct
+c:gssapi.h@T@gss_OID_set	swift.typealias	gss_OID_set	gss_OID_set	typealias gss_OID_set = UnsafeMutablePointer<gss_OID_set_desc_struct>
+c:gssapi.h@T@gss_OID_set_desc	swift.typealias	gss_OID_set_desc	gss_OID_set_desc	typealias gss_OID_set_desc = gss_OID_set_desc_struct
+c:gssapi.h@T@gss_auth_identity_t	swift.typealias	gss_auth_identity_t	gss_auth_identity_t	typealias gss_auth_identity_t = OpaquePointer
+c:gssapi.h@T@gss_buffer_desc	swift.typealias	gss_buffer_desc	gss_buffer_desc	typealias gss_buffer_desc = gss_buffer_desc_struct
+c:gssapi.h@T@gss_buffer_set_desc	swift.typealias	gss_buffer_set_desc	gss_buffer_set_desc	typealias gss_buffer_set_desc = gss_buffer_set_desc_struct
+c:gssapi.h@T@gss_buffer_set_t	swift.typealias	gss_buffer_set_t	gss_buffer_set_t	typealias gss_buffer_set_t = UnsafeMutablePointer<gss_buffer_set_desc_struct>
+c:gssapi.h@T@gss_buffer_t	swift.typealias	gss_buffer_t	gss_buffer_t	typealias gss_buffer_t = UnsafeMutablePointer<gss_buffer_desc_struct>
+c:gssapi.h@T@gss_channel_bindings_t	swift.typealias	gss_channel_bindings_t	gss_channel_bindings_t	typealias gss_channel_bindings_t = UnsafeMutablePointer<gss_channel_bindings_struct>
+c:gssapi.h@T@gss_const_OID	swift.typealias	gss_const_OID	gss_const_OID	typealias gss_const_OID = UnsafePointer<gss_OID_desc>
+c:gssapi.h@T@gss_const_OID_set	swift.typealias	gss_const_OID_set	gss_const_OID_set	typealias gss_const_OID_set = UnsafePointer<gss_OID_set_desc>
+c:gssapi.h@T@gss_const_buffer_t	swift.typealias	gss_const_buffer_t	gss_const_buffer_t	typealias gss_const_buffer_t = UnsafePointer<gss_buffer_desc>
+c:gssapi.h@T@gss_const_channel_bindings_t	swift.typealias	gss_const_channel_bindings_t	gss_const_channel_bindings_t	typealias gss_const_channel_bindings_t = UnsafePointer<gss_channel_bindings_struct>
+c:gssapi.h@T@gss_const_cred_id_t	swift.typealias	gss_const_cred_id_t	gss_const_cred_id_t	typealias gss_const_cred_id_t = OpaquePointer
+c:gssapi.h@T@gss_const_name_t	swift.typealias	gss_const_name_t	gss_const_name_t	typealias gss_const_name_t = OpaquePointer
+c:gssapi.h@T@gss_cred_id_t	swift.typealias	gss_cred_id_t	gss_cred_id_t	typealias gss_cred_id_t = OpaquePointer
+c:gssapi.h@T@gss_cred_usage_t	swift.typealias	gss_cred_usage_t	gss_cred_usage_t	typealias gss_cred_usage_t = Int32
+c:gssapi.h@T@gss_ctx_id_t	swift.typealias	gss_ctx_id_t	gss_ctx_id_t	typealias gss_ctx_id_t = OpaquePointer
+c:gssapi.h@T@gss_iov_buffer_desc	swift.typealias	gss_iov_buffer_desc	gss_iov_buffer_desc	typealias gss_iov_buffer_desc = gss_iov_buffer_desc_struct
+c:gssapi.h@T@gss_iov_buffer_t	swift.typealias	gss_iov_buffer_t	gss_iov_buffer_t	typealias gss_iov_buffer_t = UnsafeMutablePointer<gss_iov_buffer_desc_struct>
+c:gssapi.h@T@gss_name_t	swift.typealias	gss_name_t	gss_name_t	typealias gss_name_t = OpaquePointer
+c:gssapi.h@T@gss_qop_t	swift.typealias	gss_qop_t	gss_qop_t	typealias gss_qop_t = OM_uint32
+c:gssapi.h@T@gss_status_id_t	swift.typealias	gss_status_id_t	gss_status_id_t	typealias gss_status_id_t = UnsafeMutablePointer<OM_uint32>
+c:gssapi.h@T@gss_uint32	swift.typealias	gss_uint32	gss_uint32	typealias gss_uint32 = UInt32
+s:So19gss_OID_desc_structV6length8elementsABs6UInt32V_SvSgtcfc	swift.init	init(length:elements:)	gss_OID_desc_struct.init(length:elements:)	init(length: OM_uint32, elements: UnsafeMutableRawPointer!)
+s:So19gss_OID_desc_structVABycfc	swift.init	init()	gss_OID_desc_struct.init()	init()
+s:So22gss_buffer_desc_structV6length5valueABSi_SvSgtcfc	swift.init	init(length:value:)	gss_buffer_desc_struct.init(length:value:)	init(length: Int, value: UnsafeMutableRawPointer!)
+s:So22gss_buffer_desc_structVABycfc	swift.init	init()	gss_buffer_desc_struct.init()	init()
+s:So23gss_OID_set_desc_structV5count8elementsABSi_SpySo0a1_b1_d1_E0VGSgtcfc	swift.init	init(count:elements:)	gss_OID_set_desc_struct.init(count:elements:)	init(count: Int, elements: gss_OID!)
+s:So23gss_OID_set_desc_structVABycfc	swift.init	init()	gss_OID_set_desc_struct.init()	init()
+s:So26gss_buffer_set_desc_structV5count8elementsABSi_SpySo0a1_b1_d1_E0VGSgtcfc	swift.init	init(count:elements:)	gss_buffer_set_desc_struct.init(count:elements:)	init(count: Int, elements: UnsafeMutablePointer<gss_buffer_desc>!)
+s:So26gss_buffer_set_desc_structVABycfc	swift.init	init()	gss_buffer_set_desc_struct.init()	init()
+s:So26gss_iov_buffer_desc_structV4type0C0ABs6UInt32V_So0a1_c1_d1_E0Vtcfc	swift.init	init(type:buffer:)	gss_iov_buffer_desc_struct.init(type:buffer:)	init(type: OM_uint32, buffer: gss_buffer_desc)
+s:So26gss_iov_buffer_desc_structVABycfc	swift.init	init()	gss_iov_buffer_desc_struct.init()	init()
+s:So27gss_channel_bindings_structV18initiator_addrtype0E8_address09acceptor_F00h1_G016application_dataABs6UInt32V_So0a13_buffer_desc_D0VAi2Ktcfc	swift.init	init(initiator_addrtype:initiator_address:acceptor_addrtype:acceptor_address:application_data:)	gss_channel_bindings_struct.init(initiator_addrtype:initiator_address:acceptor_addrtype:acceptor_address:application_data:)	init(initiator_addrtype: OM_uint32, initiator_address: gss_buffer_desc, acceptor_addrtype: OM_uint32, acceptor_address: gss_buffer_desc, application_data: gss_buffer_desc)
+s:So27gss_channel_bindings_structVABycfc	swift.init	init()	gss_channel_bindings_struct.init()	init()
