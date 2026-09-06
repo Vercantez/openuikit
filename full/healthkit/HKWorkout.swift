@@ -70,6 +70,11 @@ open class HKWorkoutActivity: NSObject, NSCopying, NSSecureCoding, @unchecked Se
     public let endDate: Date?
     public let workoutConfiguration: HKWorkoutConfiguration
     public let metadata: [String: Any]?
+    public var workoutEvents: [HKWorkoutEvent]
+    public var allStatistics: [HKQuantityType: HKStatistics] { [:] }
+    public var duration: TimeInterval {
+        (endDate ?? startDate).timeIntervalSince(startDate)
+    }
 
     public init(
         workoutConfiguration: HKWorkoutConfiguration,
@@ -83,7 +88,26 @@ open class HKWorkoutActivity: NSObject, NSCopying, NSSecureCoding, @unchecked Se
         self.endDate = endDate
         self.uuid = uuid
         self.metadata = metadata
+        self.workoutEvents = []
         super.init()
+    }
+
+    public convenience init(
+        workoutConfiguration: HKWorkoutConfiguration,
+        startDate: Date,
+        endDate: Date?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            workoutConfiguration: workoutConfiguration,
+            start: startDate,
+            end: endDate,
+            metadata: metadata
+        )
+    }
+
+    public func statistics(for quantityType: HKQuantityType) -> HKStatistics? {
+        allStatistics[quantityType]
     }
 
     public required init?(coder: NSCoder) {
@@ -92,19 +116,22 @@ open class HKWorkoutActivity: NSObject, NSCopying, NSSecureCoding, @unchecked Se
         self.endDate = nil
         self.uuid = UUID()
         self.metadata = nil
+        self.workoutEvents = []
         super.init()
     }
 
     public func encode(with coder: NSCoder) {}
 
     public func copy(with zone: NSZone? = nil) -> Any {
-        HKWorkoutActivity(
+        let copy = HKWorkoutActivity(
             workoutConfiguration: workoutConfiguration,
             start: startDate,
             end: endDate,
             uuid: uuid,
             metadata: metadata
         )
+        copy.workoutEvents = workoutEvents
+        return copy
     }
 }
 
@@ -174,6 +201,230 @@ open class HKWorkout: HKSample, @unchecked Sendable {
         )
     }
 
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        start startDate: Date,
+        end endDate: Date,
+        duration: TimeInterval,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            duration: duration,
+            workoutEvents: nil,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalSwimmingStrokeCount: nil,
+            totalFlightsClimbed: nil,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        startDate: Date,
+        endDate: Date,
+        duration: TimeInterval,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            duration: duration,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        start startDate: Date,
+        end endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            duration: 0,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalSwimmingStrokeCount: nil,
+            totalFlightsClimbed: nil,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        startDate: Date,
+        endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        start startDate: Date,
+        end endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        totalFlightsClimbed: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            duration: 0,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalSwimmingStrokeCount: nil,
+            totalFlightsClimbed: totalFlightsClimbed,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        startDate: Date,
+        endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        totalFlightsClimbed: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalFlightsClimbed: totalFlightsClimbed,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        start startDate: Date,
+        end endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        totalSwimmingStrokeCount: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            duration: 0,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalSwimmingStrokeCount: totalSwimmingStrokeCount,
+            totalFlightsClimbed: nil,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        activityType workoutActivityType: HKWorkoutActivityType,
+        startDate: Date,
+        endDate: Date,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        totalSwimmingStrokeCount: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(
+            activityType: workoutActivityType,
+            start: startDate,
+            end: endDate,
+            workoutEvents: workoutEvents,
+            totalEnergyBurned: totalEnergyBurned,
+            totalDistance: totalDistance,
+            totalSwimmingStrokeCount: totalSwimmingStrokeCount,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public init(
+        activityType: HKWorkoutActivityType,
+        start startDate: Date,
+        end endDate: Date,
+        duration: TimeInterval,
+        workoutEvents: [HKWorkoutEvent]?,
+        totalEnergyBurned: HKQuantity?,
+        totalDistance: HKQuantity?,
+        totalSwimmingStrokeCount: HKQuantity?,
+        totalFlightsClimbed: HKQuantity?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.workoutActivityType = activityType
+        self.duration = duration > 0 ? duration : endDate.timeIntervalSince(startDate)
+        self.totalEnergyBurned = totalEnergyBurned
+        self.totalDistance = totalDistance
+        self.totalSwimmingStrokeCount = totalSwimmingStrokeCount
+        self.totalFlightsClimbed = totalFlightsClimbed
+        self.workoutEvents = workoutEvents ?? []
+        self.workoutActivities = []
+        super.init(
+            type: HKObjectType.workoutType(),
+            start: startDate,
+            end: endDate,
+            device: device,
+            metadata: metadata
+        )
+    }
+
     public init(
         activityType: HKWorkoutActivityType,
         start startDate: Date,
@@ -236,10 +487,36 @@ open class HKWorkout: HKSample, @unchecked Sendable {
         super.init(coder: coder)
     }
 
-    public var allStatistics: [HKQuantityType: HKStatistics] { [:] }
+    public var allStatistics: [HKQuantityType: HKStatistics] {
+        var stats: [HKQuantityType: HKStatistics] = [:]
+        if let energy = totalEnergyBurned,
+           let type = HKObjectType.quantityType(forIdentifier: .activeEnergyBurned) {
+            stats[type] = HKStatistics.compute(
+                quantityType: type,
+                samples: [
+                    HKQuantitySample(type: type, quantity: energy, start: startDate, end: endDate)
+                ],
+                options: .cumulativeSum,
+                start: startDate,
+                end: endDate
+            )
+        }
+        if let distance = totalDistance,
+           let type = HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning) {
+            stats[type] = HKStatistics.compute(
+                quantityType: type,
+                samples: [
+                    HKQuantitySample(type: type, quantity: distance, start: startDate, end: endDate)
+                ],
+                options: .cumulativeSum,
+                start: startDate,
+                end: endDate
+            )
+        }
+        return stats
+    }
 
     public func statistics(for quantityType: HKQuantityType) -> HKStatistics? {
-        _ = quantityType
-        return nil
+        allStatistics[quantityType]
     }
 }
