@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+StoreKit	storekit	medium-full	100	ui,fail-closed	Foundation
+PassKit	passkit	medium-full	100	ui,fail-closed	Foundation
+FamilyControls	familycontrols	leaf-full	100	privacy,authorization,fail-closed	Foundation
+WidgetKit	widgetkit	medium-full	100	ui,fail-closed	Foundation
+Assignables	assignables	medium-full	100	education,persistence,fail-closed	Foundation
+ManagedAppDistribution	managedappdistribution	leaf-full	100	mdm,os-service,fail-closed	Foundation
+DeviceDiscoveryUI	devicediscoveryui	leaf-full	100	ui,network,fail-closed	Foundation,UIKit
+FinanceKitUI	financekitui	leaf-full	100	ui,finance,fail-closed	FinanceKit,Foundation,UIKit
+CoreMedia	coremedia	large-partitioned	100	media,time,c-abi,buffer-ownership,callbacks,concurrency	CoreAudioTypes,CoreFoundation,CoreVideo,Foundation
+Network	network	medium-full	100	ui,fail-closed	Foundation
+AuthenticationServices	authenticationservices	medium-full	100	ui,fail-closed	Foundation
+Intents	intents	medium-full	100	ui,fail-closed	Foundation
+DeviceActivity	deviceactivity	leaf-full	100	privacy,os-service,fail-closed	Foundation
+JournalingSuggestions	journalingsuggestions	leaf-full	100	privacy,ui,fail-closed	Foundation
+CoreML	coreml	large-partitioned	100	ml-backend,tensor,model-io	CoreGraphics,CoreVideo,Foundation,ImageIO
+CoreLocationUI	corelocationui	leaf-full	100	ui,fail-closed	CoreLocation,Foundation,UIKit

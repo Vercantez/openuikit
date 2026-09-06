@@ -15,7 +15,7 @@ is the recipe; `.codex/setup.sh` is the script.
 | Setup script | `bash .codex/setup.sh` |
 | Environment variables | `LANG=C.UTF-8`, `LC_ALL=C.UTF-8`, `OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios` |
 | Agent internet access | off (the setup phase installs everything; gates run offline) |
-| Setup time | ~6–10 minutes cold (apt + the Swift 6.2.4 toolchain + the pinned static-evidence clone) |
+| Setup time | ~24 minutes cold (apt, the swift.org 6.2.4 toolchain at /opt/swift624, evidence, corpus 4/4, built products incl. the x86 cycle rung a, verify); proven 2026-09-16 by task task_e_6a9de7a103fc8326ac14815dd550839b (`CURSOR_ENV_OK=1`, `CODEX_SWIFT_ENVIRONMENT_OK`) |
 
 The setup script mirrors `.cursor/Dockerfile` (the accepted Swift 6.2 /
 Ubuntu 24.04 lab), installs the swift.org **6.2.4** toolchain when the image
@@ -34,4 +34,6 @@ codex cloud exec --env <ENV_ID> \
 
 and harvests with `codex cloud status|diff|apply <task>` into a local branch,
 which the operator merges with `fw_merge.sh <slug> <branch>` exactly as the
-Cursor branches were.
+Cursor branches were. `scripts/framework-fanout/codex_cloud_campaign.py
+<campaign.json> [--slugs a,b] [--max-active N]` does the submit/poll/harvest loop
+(branches `agent/fw-<slug>-cc`, state `<campaign>.codex.state.json`).
