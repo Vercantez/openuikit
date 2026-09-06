@@ -97,3 +97,52 @@ public var kCMTextFormatType_3GText: CMTextFormatType { cmFourCC("tx3g") }
 public var kCMTimeCodeFlag_DropFrame: UInt32 { 1 << 0 }
 public var kCMTimeCodeFlag_24HourMax: UInt32 { 1 << 1 }
 public var kCMTimeCodeFlag_NegTimesOK: UInt32 { 1 << 2 }
+
+/// FourCC payloads for packing / projection match the public `CMFormatDescription.h`
+/// character literals (`'none'`, `'side'`, `'over'`, `'rect'`, `'equi'`, `'hequ'`,
+/// `'fish'`, `'prim'`). Stereo view bits are 1<<0 / 1<<1. Graph does not record
+/// the integers; see `oracle-questions.tsv`.
+public enum CMPackingType: UInt64, Hashable, Sendable {
+    case none = 0x6E6F6E65
+    case sideBySide = 0x73696465
+    case overUnder = 0x6F766572
+}
+
+public enum CMProjectionType: UInt64, Hashable, Sendable {
+    case rectangular = 0x72656374
+    case equirectangular = 0x65717569
+    case halfEquirectangular = 0x68657175
+    case fisheye = 0x66697368
+    case parametricImmersive = 0x7072696D
+}
+
+public struct CMStereoViewComponents: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt64
+    public init(rawValue: UInt64) { self.rawValue = rawValue }
+    public static let leftEye = CMStereoViewComponents(rawValue: 1 << 0)
+    public static let rightEye = CMStereoViewComponents(rawValue: 1 << 1)
+}
+
+public struct CMStereoViewInterpretationOptions: OptionSet, Hashable, Sendable {
+    public let rawValue: UInt64
+    public init(rawValue: UInt64) { self.rawValue = rawValue }
+    public static let stereoOrderReversed = CMStereoViewInterpretationOptions(rawValue: 1 << 0)
+    public static let additionalViews = CMStereoViewInterpretationOptions(rawValue: 1 << 1)
+}
+
+public var kCMPackingType_None: UInt64 { CMPackingType.none.rawValue }
+public var kCMPackingType_SideBySide: UInt64 { CMPackingType.sideBySide.rawValue }
+public var kCMPackingType_OverUnder: UInt64 { CMPackingType.overUnder.rawValue }
+public var kCMProjectionType_Rectangular: UInt64 { CMProjectionType.rectangular.rawValue }
+public var kCMProjectionType_Equirectangular: UInt64 { CMProjectionType.equirectangular.rawValue }
+public var kCMProjectionType_HalfEquirectangular: UInt64 { CMProjectionType.halfEquirectangular.rawValue }
+public var kCMProjectionType_Fisheye: UInt64 { CMProjectionType.fisheye.rawValue }
+public var kCMProjectionType_ParametricImmersive: UInt64 { CMProjectionType.parametricImmersive.rawValue }
+public var kCMStereoView_LeftEye: UInt64 { CMStereoViewComponents.leftEye.rawValue }
+public var kCMStereoView_RightEye: UInt64 { CMStereoViewComponents.rightEye.rawValue }
+public var kCMStereoViewInterpretation_StereoOrderReversed: UInt64 {
+    CMStereoViewInterpretationOptions.stereoOrderReversed.rawValue
+}
+public var kCMStereoViewInterpretation_AdditionalViews: UInt64 {
+    CMStereoViewInterpretationOptions.additionalViews.rawValue
+}

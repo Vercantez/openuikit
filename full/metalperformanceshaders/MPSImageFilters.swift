@@ -54,7 +54,14 @@ open class MPSImageGaussianBlur: MPSUnaryImageKernel {
         destinationImage: MPSImage
     ) {
         _ = commandBuffer
-        mpsCPUSeparableGaussian(source: sourceImage, destination: destinationImage, sigma: sigma, edgeMode: edgeMode)
+        mpsCPUSeparableGaussian(
+            source: sourceImage,
+            destination: destinationImage,
+            sigma: sigma,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -94,7 +101,15 @@ open class MPSImageBox: MPSUnaryImageKernel {
         destinationImage: MPSImage
     ) {
         _ = commandBuffer
-        mpsCPUBox(source: sourceImage, destination: destinationImage, kernelWidth: kernelWidth, kernelHeight: kernelHeight, edgeMode: edgeMode)
+        mpsCPUBox(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: kernelWidth,
+            kernelHeight: kernelHeight,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -105,6 +120,23 @@ open class MPSImageTent: MPSImageBox {
 
     public override init(device: any MTLDevice, kernelWidth: Int, kernelHeight: Int) {
         super.init(device: device, kernelWidth: kernelWidth, kernelHeight: kernelHeight)
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUTent(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: kernelWidth,
+            kernelHeight: kernelHeight,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -137,6 +169,22 @@ open class MPSImageSobel: MPSUnaryImageKernel {
 
     deinit {
         transformPointer.deallocate()
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUSobel(
+            source: sourceImage,
+            destination: destinationImage,
+            transform: transformPointer,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -184,6 +232,7 @@ open class MPSImageHistogram: MPSKernel {
 
 open class MPSImageHistogramEqualization: MPSUnaryImageKernel {
     public private(set) var histogramInfo: MPSImageHistogramInfo
+    var equalizationLUT: [UInt8] = []
 
     public required init(device: any MTLDevice) {
         self.histogramInfo = MPSImageHistogramInfo()
@@ -205,8 +254,28 @@ open class MPSImageHistogramEqualization: MPSUnaryImageKernel {
         histogram: any MTLBuffer,
         histogramOffset: Int
     ) {
-        _ = (commandBuffer, source, histogram, histogramOffset)
-        MPSHostBoundary.refuseGPUEncode("MPSImageHistogramEqualization.encodeTransform")
+        _ = (commandBuffer, source)
+        let entries = max(histogramInfo.numberOfHistogramEntries, 1)
+        let available = max(histogram.length - histogramOffset, 0) / MemoryLayout<UInt32>.stride
+        guard available >= entries else { return }
+        let counts = histogram.contents.advanced(by: histogramOffset).bindMemory(to: UInt32.self, capacity: available)
+        equalizationLUT = mpsHistogramEqualizationLUT(counts: counts, entries: entries, channelCount: min(4, available / entries))
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUApplyLUT(
+            source: sourceImage,
+            destination: destinationImage,
+            lut: equalizationLUT,
+            offset: offset,
+            clipRect: clipRect,
+            edgeMode: edgeMode
+        )
     }
 }
 
@@ -282,6 +351,23 @@ open class MPSImageLanczosScale: MPSImageScale {
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
     }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUScale(
+            source: sourceImage,
+            destination: destinationImage,
+            transform: scaleTransform?.pointee,
+            mode: .lanczos,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
+    }
 }
 
 open class MPSImageBilinearScale: MPSImageScale {
@@ -291,6 +377,23 @@ open class MPSImageBilinearScale: MPSImageScale {
 
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUScale(
+            source: sourceImage,
+            destination: destinationImage,
+            transform: scaleTransform?.pointee,
+            mode: .bilinear,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -324,6 +427,25 @@ open class MPSImageThresholdBinary: MPSUnaryImageKernel {
 
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUThreshold(
+            source: sourceImage,
+            destination: destinationImage,
+            thresholdValue: thresholdValue,
+            maximumValue: maximumValue,
+            transform: transformStorage.pointer,
+            mode: .binary,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -387,6 +509,25 @@ open class MPSImageThresholdToZero: MPSUnaryImageKernel {
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
     }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUThreshold(
+            source: sourceImage,
+            destination: destinationImage,
+            thresholdValue: thresholdValue,
+            maximumValue: 1,
+            transform: transformStorage.pointer,
+            mode: .toZero,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
+    }
 }
 
 open class MPSImageThresholdTruncate: MPSUnaryImageKernel {
@@ -416,6 +557,25 @@ open class MPSImageThresholdTruncate: MPSUnaryImageKernel {
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
     }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUThreshold(
+            source: sourceImage,
+            destination: destinationImage,
+            thresholdValue: thresholdValue,
+            maximumValue: 1,
+            transform: transformStorage.pointer,
+            mode: .truncate,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
+    }
 }
 
 open class MPSImageAreaMax: MPSUnaryImageKernel {
@@ -437,6 +597,24 @@ open class MPSImageAreaMax: MPSUnaryImageKernel {
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
     }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUAreaExtrema(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: kernelWidth,
+            kernelHeight: kernelHeight,
+            findMax: true,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
+    }
 }
 
 open class MPSImageAreaMin: MPSImageAreaMax {
@@ -446,6 +624,24 @@ open class MPSImageAreaMin: MPSImageAreaMax {
 
     public override init(device: any MTLDevice, kernelWidth: Int, kernelHeight: Int) {
         super.init(device: device, kernelWidth: kernelWidth, kernelHeight: kernelHeight)
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUAreaExtrema(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: kernelWidth,
+            kernelHeight: kernelHeight,
+            findMax: false,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -493,7 +689,9 @@ open class MPSImageConvolution: MPSUnaryImageKernel {
             kernelHeight: kernelHeight,
             weights: weights,
             bias: bias,
-            edgeMode: edgeMode
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
         )
     }
 }
@@ -517,6 +715,22 @@ open class MPSImageMedian: MPSUnaryImageKernel {
 
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUMedian(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelDiameter: kernelDiameter,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -623,7 +837,7 @@ open class MPSImageDivide: MPSImageArithmetic {
 open class MPSImageDilate: MPSUnaryImageKernel {
     public private(set) var kernelWidth: Int
     public private(set) var kernelHeight: Int
-    private let values: [Float]
+    let values: [Float]
 
     public required init(device: any MTLDevice) {
         self.kernelWidth = 1
@@ -649,6 +863,25 @@ open class MPSImageDilate: MPSUnaryImageKernel {
     public override init?(coder aDecoder: NSCoder, device: any MTLDevice) {
         return nil
     }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUMorphology(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: kernelWidth,
+            kernelHeight: kernelHeight,
+            values: values,
+            dilate: true,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
+    }
 }
 
 open class MPSImageErode: MPSImageDilate {
@@ -663,6 +896,25 @@ open class MPSImageErode: MPSImageDilate {
         values: UnsafePointer<Float>
     ) {
         super.init(device: device, kernelWidth: kernelWidth, kernelHeight: kernelHeight, values: values)
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        mpsCPUMorphology(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: kernelWidth,
+            kernelHeight: kernelHeight,
+            values: values,
+            dilate: false,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -683,6 +935,30 @@ open class MPSImageLaplacian: MPSUnaryImageKernel {
 
     public required init(device: any MTLDevice) {
         super.init(device: device)
+    }
+
+    open override func encode(
+        commandBuffer: any MTLCommandBuffer,
+        sourceImage: MPSImage,
+        destinationImage: MPSImage
+    ) {
+        _ = commandBuffer
+        let kernel: [Float] = [
+            0, -1, 0,
+            -1, 4, -1,
+            0, -1, 0
+        ]
+        mpsCPUConvolve(
+            source: sourceImage,
+            destination: destinationImage,
+            kernelWidth: 3,
+            kernelHeight: 3,
+            weights: kernel,
+            bias: bias,
+            edgeMode: edgeMode,
+            offset: offset,
+            clipRect: clipRect
+        )
     }
 }
 
@@ -998,7 +1274,46 @@ func mpsMirrorIndex(_ value: Int, _ length: Int) -> Int {
     return wrapped
 }
 
-func mpsCPUSeparableGaussian(source: MPSImage, destination: MPSImage, sigma: Float, edgeMode: MPSImageEdgeMode) {
+enum MPSCPUThresholdMode {
+    case binary
+    case toZero
+    case truncate
+}
+
+enum MPSCPUScaleMode {
+    case bilinear
+    case lanczos
+}
+
+func mpsQuantizeUnorm8(_ value: Float) -> UInt8 {
+    UInt8((min(max(value, 0), 1) * 255).rounded())
+}
+
+func mpsClipBounds(clipRect: MTLRegion, width: Int, height: Int) -> (Int, Int, Int, Int) {
+    if clipRect.size.width >= Int.max / 4 || clipRect.size.height >= Int.max / 4 {
+        return (0, 0, width, height)
+    }
+    let x0 = max(clipRect.origin.x, 0)
+    let y0 = max(clipRect.origin.y, 0)
+    let x1 = min(clipRect.origin.x + clipRect.size.width, width)
+    let y1 = min(clipRect.origin.y + clipRect.size.height, height)
+    return (x0, y0, max(x0, x1), max(y0, y1))
+}
+
+func mpsSourceCoord(destX: Int, destY: Int, offset: MPSOffset, clipRect: MTLRegion) -> (Int, Int) {
+    let clipX = clipRect.size.width >= Int.max / 4 ? 0 : clipRect.origin.x
+    let clipY = clipRect.size.height >= Int.max / 4 ? 0 : clipRect.origin.y
+    return (destX - clipX + offset.x, destY - clipY + offset.y)
+}
+
+func mpsCPUSeparableGaussian(
+    source: MPSImage,
+    destination: MPSImage,
+    sigma: Float,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset = MPSOffset(),
+    clipRect: MTLRegion = MPSRectNoClip
+) {
     let radius = max(Int(ceil(Double(abs(sigma)) * 3)), 1)
     var weights = [Float](repeating: 0, count: radius * 2 + 1)
     var sum: Float = 0
@@ -1009,18 +1324,46 @@ func mpsCPUSeparableGaussian(source: MPSImage, destination: MPSImage, sigma: Flo
         sum += w
     }
     for i in weights.indices { weights[i] /= sum }
+    let intermediate = MPSImage(
+        device: source.device,
+        imageDescriptor: MPSImageDescriptor(
+            channelFormat: source.featureChannelFormat,
+            width: source.width,
+            height: source.height,
+            featureChannels: source.featureChannels
+        )
+    )
     mpsCPUConvolve(
         source: source,
-        destination: destination,
+        destination: intermediate,
         kernelWidth: weights.count,
         kernelHeight: 1,
+        weights: weights,
+        bias: 0,
+        edgeMode: edgeMode,
+        offset: offset,
+        clipRect: clipRect
+    )
+    mpsCPUConvolve(
+        source: intermediate,
+        destination: destination,
+        kernelWidth: 1,
+        kernelHeight: weights.count,
         weights: weights,
         bias: 0,
         edgeMode: edgeMode
     )
 }
 
-func mpsCPUBox(source: MPSImage, destination: MPSImage, kernelWidth: Int, kernelHeight: Int, edgeMode: MPSImageEdgeMode) {
+func mpsCPUBox(
+    source: MPSImage,
+    destination: MPSImage,
+    kernelWidth: Int,
+    kernelHeight: Int,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset = MPSOffset(),
+    clipRect: MTLRegion = MPSRectNoClip
+) {
     let count = max(kernelWidth * kernelHeight, 1)
     let weights = [Float](repeating: 1 / Float(count), count: count)
     mpsCPUConvolve(
@@ -1030,7 +1373,55 @@ func mpsCPUBox(source: MPSImage, destination: MPSImage, kernelWidth: Int, kernel
         kernelHeight: kernelHeight,
         weights: weights,
         bias: 0,
-        edgeMode: edgeMode
+        edgeMode: edgeMode,
+        offset: offset,
+        clipRect: clipRect
+    )
+}
+
+func mpsTent1D(_ length: Int) -> [Float] {
+    let n = max(length, 1)
+    let radius = n / 2
+    var weights = [Float](repeating: 0, count: n)
+    var sum: Float = 0
+    for i in 0..<n {
+        let w = Float(radius + 1 - abs(i - radius))
+        weights[i] = max(w, 0)
+        sum += weights[i]
+    }
+    if sum > 0 {
+        for i in weights.indices { weights[i] /= sum }
+    }
+    return weights
+}
+
+func mpsCPUTent(
+    source: MPSImage,
+    destination: MPSImage,
+    kernelWidth: Int,
+    kernelHeight: Int,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let wx = mpsTent1D(kernelWidth)
+    let wy = mpsTent1D(kernelHeight)
+    var kernel = [Float](repeating: 0, count: kernelWidth * kernelHeight)
+    for y in 0..<kernelHeight {
+        for x in 0..<kernelWidth {
+            kernel[y * kernelWidth + x] = wy[y] * wx[x]
+        }
+    }
+    mpsCPUConvolve(
+        source: source,
+        destination: destination,
+        kernelWidth: kernelWidth,
+        kernelHeight: kernelHeight,
+        weights: kernel,
+        bias: 0,
+        edgeMode: edgeMode,
+        offset: offset,
+        clipRect: clipRect
     )
 }
 
@@ -1041,17 +1432,24 @@ func mpsCPUConvolve(
     kernelHeight: Int,
     weights: [Float],
     bias: Float,
-    edgeMode: MPSImageEdgeMode
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset = MPSOffset(),
+    clipRect: MTLRegion = MPSRectNoClip
 ) {
-    let width = source.width
-    let height = source.height
-    let channels = source.featureChannels
+    let width = destination.width
+    let height = destination.height
+    let channels = min(source.featureChannels, destination.featureChannels)
     let src = mpsReadUnorm8(source)
-    var dst = [UInt8](repeating: 0, count: width * height * channels)
+    var dst = mpsReadUnorm8(destination)
+    if dst.count < width * height * destination.featureChannels {
+        dst = [UInt8](repeating: 0, count: width * height * destination.featureChannels)
+    }
     let ox = kernelWidth / 2
     let oy = kernelHeight / 2
-    for y in 0..<height {
-        for x in 0..<width {
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx0, sy0) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
             for c in 0..<channels {
                 var acc = bias
                 for ky in 0..<kernelHeight {
@@ -1059,19 +1457,399 @@ func mpsCPUConvolve(
                         let weight = weights[ky * kernelWidth + kx]
                         let sample = mpsSampleUnorm8(
                             src,
-                            width: width,
-                            height: height,
-                            channels: channels,
-                            x: x + kx - ox,
-                            y: y + ky - oy,
+                            width: source.width,
+                            height: source.height,
+                            channels: source.featureChannels,
+                            x: sx0 + kx - ox,
+                            y: sy0 + ky - oy,
                             channel: c,
                             edgeMode: edgeMode
                         )
                         acc += weight * sample
                     }
                 }
-                let value = min(max(acc, 0), 1)
-                dst[(y * width + x) * channels + c] = UInt8(value * 255)
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(acc)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsGray(
+    _ pixels: [UInt8],
+    width: Int,
+    height: Int,
+    channels: Int,
+    x: Int,
+    y: Int,
+    transform: UnsafePointer<Float>,
+    edgeMode: MPSImageEdgeMode
+) -> Float {
+    if channels <= 1 {
+        return mpsSampleUnorm8(pixels, width: width, height: height, channels: channels, x: x, y: y, channel: 0, edgeMode: edgeMode)
+    }
+    let r = mpsSampleUnorm8(pixels, width: width, height: height, channels: channels, x: x, y: y, channel: 0, edgeMode: edgeMode)
+    let g = mpsSampleUnorm8(pixels, width: width, height: height, channels: channels, x: x, y: y, channel: 1, edgeMode: edgeMode)
+    let b = mpsSampleUnorm8(pixels, width: width, height: height, channels: channels, x: x, y: y, channel: min(2, channels - 1), edgeMode: edgeMode)
+    return r * transform[0] + g * transform[1] + b * transform[2]
+}
+
+func mpsCPUSobel(
+    source: MPSImage,
+    destination: MPSImage,
+    transform: UnsafePointer<Float>,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    let gxk: [Float] = [-1, 0, 1, -2, 0, 2, -1, 0, 1]
+    let gyk: [Float] = [-1, -2, -1, 0, 0, 0, 1, 2, 1]
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx0, sy0) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            var gx: Float = 0
+            var gy: Float = 0
+            for ky in 0..<3 {
+                for kx in 0..<3 {
+                    let sample = mpsGray(
+                        src,
+                        width: source.width,
+                        height: source.height,
+                        channels: source.featureChannels,
+                        x: sx0 + kx - 1,
+                        y: sy0 + ky - 1,
+                        transform: transform,
+                        edgeMode: edgeMode
+                    )
+                    gx += gxk[ky * 3 + kx] * sample
+                    gy += gyk[ky * 3 + kx] * sample
+                }
+            }
+            let mag = min(sqrt(gx * gx + gy * gy), 1)
+            for c in 0..<destination.featureChannels {
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(mag)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsCPUThreshold(
+    source: MPSImage,
+    destination: MPSImage,
+    thresholdValue: Float,
+    maximumValue: Float,
+    transform: UnsafePointer<Float>,
+    mode: MPSCPUThresholdMode,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx, sy) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            let gray = mpsGray(
+                src,
+                width: source.width,
+                height: source.height,
+                channels: source.featureChannels,
+                x: sx,
+                y: sy,
+                transform: transform,
+                edgeMode: edgeMode
+            )
+            var out: Float = 0
+            switch mode {
+            case .binary:
+                out = gray >= thresholdValue ? maximumValue : 0
+            case .toZero:
+                out = gray >= thresholdValue ? gray : 0
+            case .truncate:
+                out = min(gray, thresholdValue)
+            }
+            for c in 0..<destination.featureChannels {
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(out)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsCPUMedian(
+    source: MPSImage,
+    destination: MPSImage,
+    kernelDiameter: Int,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let radius = kernelDiameter / 2
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    var window = [Float]()
+    window.reserveCapacity(kernelDiameter * kernelDiameter)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx0, sy0) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            for c in 0..<min(source.featureChannels, destination.featureChannels) {
+                window.removeAll(keepingCapacity: true)
+                for ky in -radius...radius {
+                    for kx in -radius...radius {
+                        window.append(
+                            mpsSampleUnorm8(
+                                src,
+                                width: source.width,
+                                height: source.height,
+                                channels: source.featureChannels,
+                                x: sx0 + kx,
+                                y: sy0 + ky,
+                                channel: c,
+                                edgeMode: edgeMode
+                            )
+                        )
+                    }
+                }
+                window.sort()
+                let mid = window[window.count / 2]
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(mid)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsCPUAreaExtrema(
+    source: MPSImage,
+    destination: MPSImage,
+    kernelWidth: Int,
+    kernelHeight: Int,
+    findMax: Bool,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let ox = kernelWidth / 2
+    let oy = kernelHeight / 2
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx0, sy0) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            for c in 0..<min(source.featureChannels, destination.featureChannels) {
+                var acc: Float = findMax ? -1 : 2
+                for ky in 0..<kernelHeight {
+                    for kx in 0..<kernelWidth {
+                        let sample = mpsSampleUnorm8(
+                            src,
+                            width: source.width,
+                            height: source.height,
+                            channels: source.featureChannels,
+                            x: sx0 + kx - ox,
+                            y: sy0 + ky - oy,
+                            channel: c,
+                            edgeMode: edgeMode
+                        )
+                        acc = findMax ? max(acc, sample) : min(acc, sample)
+                    }
+                }
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(acc)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsCPUMorphology(
+    source: MPSImage,
+    destination: MPSImage,
+    kernelWidth: Int,
+    kernelHeight: Int,
+    values: [Float],
+    dilate: Bool,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let ox = kernelWidth / 2
+    let oy = kernelHeight / 2
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx0, sy0) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            for c in 0..<min(source.featureChannels, destination.featureChannels) {
+                var acc: Float = dilate ? -Float.greatestFiniteMagnitude : Float.greatestFiniteMagnitude
+                for ky in 0..<kernelHeight {
+                    for kx in 0..<kernelWidth {
+                        let probe = values[ky * kernelWidth + kx]
+                        let sample = mpsSampleUnorm8(
+                            src,
+                            width: source.width,
+                            height: source.height,
+                            channels: source.featureChannels,
+                            x: sx0 + kx - ox,
+                            y: sy0 + ky - oy,
+                            channel: c,
+                            edgeMode: edgeMode
+                        )
+                        if dilate {
+                            acc = max(acc, sample - probe)
+                        } else {
+                            acc = min(acc, sample + probe)
+                        }
+                    }
+                }
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(acc)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsLanczos2(_ x: Float) -> Float {
+    let ax = abs(x)
+    if ax < 0.0001 { return 1 }
+    if ax >= 2 { return 0 }
+    let pi = Float.pi
+    return (sin(pi * ax) / (pi * ax)) * (sin(pi * ax / 2) / (pi * ax / 2))
+}
+
+func mpsCPUScale(
+    source: MPSImage,
+    destination: MPSImage,
+    transform: MPSScaleTransform?,
+    mode: MPSCPUScaleMode,
+    edgeMode: MPSImageEdgeMode,
+    offset: MPSOffset,
+    clipRect: MTLRegion
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let scaleX = Float(transform?.scaleX ?? Double(source.width) / Double(max(width, 1)))
+    let scaleY = Float(transform?.scaleY ?? Double(source.height) / Double(max(height, 1)))
+    let translateX = Float(transform?.translateX ?? 0)
+    let translateY = Float(transform?.translateY ?? 0)
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (dx, dy) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            let srcXf = (Float(dx) + 0.5) * scaleX + Float(translateX) - 0.5
+            let srcYf = (Float(dy) + 0.5) * scaleY + Float(translateY) - 0.5
+            for c in 0..<min(source.featureChannels, destination.featureChannels) {
+                var acc: Float = 0
+                if mode == .bilinear {
+                    let x0s = Int(floor(srcXf))
+                    let y0s = Int(floor(srcYf))
+                    let fx = srcXf - Float(x0s)
+                    let fy = srcYf - Float(y0s)
+                    let s00 = mpsSampleUnorm8(src, width: source.width, height: source.height, channels: source.featureChannels, x: x0s, y: y0s, channel: c, edgeMode: edgeMode)
+                    let s10 = mpsSampleUnorm8(src, width: source.width, height: source.height, channels: source.featureChannels, x: x0s + 1, y: y0s, channel: c, edgeMode: edgeMode)
+                    let s01 = mpsSampleUnorm8(src, width: source.width, height: source.height, channels: source.featureChannels, x: x0s, y: y0s + 1, channel: c, edgeMode: edgeMode)
+                    let s11 = mpsSampleUnorm8(src, width: source.width, height: source.height, channels: source.featureChannels, x: x0s + 1, y: y0s + 1, channel: c, edgeMode: edgeMode)
+                    let top = s00 * (1 - fx) + s10 * fx
+                    let bottom = s01 * (1 - fx) + s11 * fx
+                    acc = top * (1 - fy) + bottom * fy
+                } else {
+                    var weightSum: Float = 0
+                    let ix = Int(floor(srcXf))
+                    let iy = Int(floor(srcYf))
+                    for ky in (iy - 1)...(iy + 2) {
+                        for kx in (ix - 1)...(ix + 2) {
+                            let w = mpsLanczos2(srcXf - Float(kx)) * mpsLanczos2(srcYf - Float(ky))
+                            acc += w * mpsSampleUnorm8(
+                                src,
+                                width: source.width,
+                                height: source.height,
+                                channels: source.featureChannels,
+                                x: kx,
+                                y: ky,
+                                channel: c,
+                                edgeMode: edgeMode
+                            )
+                            weightSum += w
+                        }
+                    }
+                    if weightSum != 0 { acc /= weightSum }
+                }
+                dst[(y * width + x) * destination.featureChannels + c] = mpsQuantizeUnorm8(acc)
+            }
+        }
+    }
+    mpsWriteUnorm8(destination, dst)
+}
+
+func mpsHistogramEqualizationLUT(counts: UnsafePointer<UInt32>, entries: Int, channelCount: Int = 4) -> [UInt8] {
+    let channels = min(max(channelCount, 1), 4)
+    var lut = [UInt8](repeating: 0, count: max(entries, 1) * 4)
+    for channel in 0..<channels {
+        var total: UInt64 = 0
+        for i in 0..<entries {
+            total += UInt64(counts[channel * entries + i])
+        }
+        if total == 0 { continue }
+        var cdf: UInt64 = 0
+        for i in 0..<entries {
+            cdf += UInt64(counts[channel * entries + i])
+            let mapped = (Double(cdf) / Double(total)) * 255
+            lut[channel * entries + i] = UInt8(min(max(mapped.rounded(), 0), 255))
+        }
+    }
+    return lut
+}
+
+func mpsCPUApplyLUT(
+    source: MPSImage,
+    destination: MPSImage,
+    lut: [UInt8],
+    offset: MPSOffset,
+    clipRect: MTLRegion,
+    edgeMode: MPSImageEdgeMode
+) {
+    let src = mpsReadUnorm8(source)
+    var dst = mpsReadUnorm8(destination)
+    let width = destination.width
+    let height = destination.height
+    let entries = max(lut.count / 4, 1)
+    let (x0, y0, x1, y1) = mpsClipBounds(clipRect: clipRect, width: width, height: height)
+    for y in y0..<y1 {
+        for x in x0..<x1 {
+            let (sx, sy) = mpsSourceCoord(destX: x, destY: y, offset: offset, clipRect: clipRect)
+            for c in 0..<min(source.featureChannels, destination.featureChannels) {
+                let sample = mpsSampleUnorm8(
+                    src,
+                    width: source.width,
+                    height: source.height,
+                    channels: source.featureChannels,
+                    x: sx,
+                    y: sy,
+                    channel: c,
+                    edgeMode: edgeMode
+                )
+                let value = mpsQuantizeUnorm8(sample)
+                let bin = min(Int(value) * entries / 256, entries - 1)
+                let mapped = lut.isEmpty ? value : lut[min(c, 3) * entries + bin]
+                dst[(y * width + x) * destination.featureChannels + c] = mapped
             }
         }
     }

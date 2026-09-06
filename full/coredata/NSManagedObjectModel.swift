@@ -19,11 +19,7 @@ open class NSPropertyDescription: NSObject {
     public var entity: NSEntityDescription { _entity ?? NSEntityDescription() }
 
     public var versionHash: Data {
-        var hasher = Hasher()
-        hasher.combine(name)
-        hasher.combine(isOptional)
-        hasher.combine(isTransient)
-        return withUnsafeBytes(of: hasher.finalize()) { Data($0) }
+        _CDStableData([name, isOptional ? "1" : "0", isTransient ? "1" : "0"])
     }
 
     public override init() { super.init() }
@@ -77,10 +73,7 @@ open class NSAttributeDescription: NSPropertyDescription {
     }
 
     public override var versionHash: Data {
-        var hasher = Hasher()
-        hasher.combine(name)
-        hasher.combine(attributeType.rawValue)
-        return withUnsafeBytes(of: hasher.finalize()) { Data($0) }
+        _CDStableData([name, "attr", String(attributeType.rawValue)])
     }
 }
 
@@ -113,13 +106,14 @@ open class NSRelationshipDescription: NSPropertyDescription {
     public var isToMany: Bool { maxCount != 1 }
 
     public override var versionHash: Data {
-        var hasher = Hasher()
-        hasher.combine(name)
-        hasher.combine(deleteRule.rawValue)
-        hasher.combine(maxCount)
-        hasher.combine(minCount)
-        hasher.combine(isOrdered)
-        return withUnsafeBytes(of: hasher.finalize()) { Data($0) }
+        _CDStableData([
+            name,
+            "rel",
+            String(deleteRule.rawValue),
+            String(maxCount),
+            String(minCount),
+            isOrdered ? "1" : "0"
+        ])
     }
 }
 
@@ -239,12 +233,11 @@ open class NSEntityDescription: NSObject {
     }
 
     public var versionHash: Data {
-        var hasher = Hasher()
-        hasher.combine(name)
+        var parts = [name ?? "", "entity"]
         for property in properties.sorted(by: { $0.name < $1.name }) {
-            hasher.combine(property.versionHash)
+            parts.append(String(data: property.versionHash, encoding: .utf8) ?? property.name)
         }
-        return withUnsafeBytes(of: hasher.finalize()) { Data($0) }
+        return _CDStableData(parts)
     }
 
     public override init() { super.init() }
@@ -316,12 +309,14 @@ open class NSManagedObjectModel: NSObject {
     }
 
     public var versionChecksum: String {
-        var hasher = Hasher()
+        var parts: [String] = []
         for name in _entitiesByName.keys.sorted() {
-            hasher.combine(name)
-            hasher.combine(_entitiesByName[name]?.versionHash)
+            parts.append(name)
+            if let hash = _entitiesByName[name]?.versionHash, let text = String(data: hash, encoding: .utf8) {
+                parts.append(text)
+            }
         }
-        return String(hasher.finalize())
+        return String(_CDStableData(parts).hashValue)
     }
 
     public override init() { super.init() }
@@ -335,10 +330,20 @@ open class NSManagedObjectModel: NSObject {
     }
 
     public convenience init?(contentsOfURL url: URL) {
-        // Compiled .mom/.momd bytes are Apple SDK artifacts and are not decoded here.
+        guard let loaded = _CDLoadManagedObjectModel(from: url) else {
+            self.init()
+            return nil
+        }
         self.init()
-        _ = url
-        return nil
+        entities = loaded.entities
+        versionIdentifiers = loaded.versionIdentifiers
+        localizationDictionary = loaded.localizationDictionary
+        for configuration in loaded.configurations {
+            if let configured = loaded.entities(forConfigurationName: configuration) {
+                setEntities(configured, forConfigurationName: configuration)
+            }
+        }
+        _reindex()
     }
 
     public convenience init?(byMerging models: [NSManagedObjectModel]?) {

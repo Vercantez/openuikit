@@ -89,6 +89,11 @@ internal final class ATAudioQueueObject: ATObject {
     var sampleTime: Float64 = 0
     var listeners: [(id: AudioQueuePropertyID, proc: AudioQueuePropertyListenerProc, user: UnsafeMutableRawPointer?)] = []
     var renderedPCM = Data()
+    var volume: AudioQueueParameterValue = 1
+    var pan: AudioQueueParameterValue = 0
+    var playRate: AudioQueueParameterValue = 1
+    var pitch: AudioQueueParameterValue = 0
+    var volumeRampTime: AudioQueueParameterValue = 0
 }
 
 public func AudioQueueAllocateBuffer(
@@ -345,9 +350,28 @@ internal func atPumpAudioQueue(_ queue: ATAudioQueueObject) {
         owner.enqueued = false
         let byteSize = Int(owner.pointer.pointee.mAudioDataByteSize)
         if byteSize > 0 {
-            queue.renderedPCM.append(
-                Data(bytes: owner.data, count: min(byteSize, owner.dataCapacity))
-            )
+            let count = min(byteSize, owner.dataCapacity)
+            if queue.volume != 1 {
+                var scaled = Data(count: count)
+                scaled.withUnsafeMutableBytes { destRaw in
+                    _ = atMixPCM(
+                        inputs: [
+                            (
+                                format: queue.format,
+                                bytes: UnsafeRawPointer(owner.data),
+                                byteCount: count,
+                                gain: queue.volume
+                            )
+                        ],
+                        dest: queue.format,
+                        output: destRaw.baseAddress!,
+                        outputByteCapacity: destRaw.count
+                    )
+                }
+                queue.renderedPCM.append(scaled)
+            } else {
+                queue.renderedPCM.append(Data(bytes: owner.data, count: count))
+            }
         }
         let frames = Int(owner.pointer.pointee.mAudioDataByteSize) / max(Int(queue.format.mBytesPerFrame), 1)
         queue.sampleTime += Float64(max(frames, 1))
@@ -567,4 +591,152 @@ public func AudioQueueSetProperty(
         return 0
     }
     return kAudioQueueErr_InvalidProperty
+}
+
+@_cdecl("AudioQueueGetParameter")
+public func AudioQueueGetParameter(
+    _ inAQ: AudioQueueRef?,
+    _ inParamID: AudioQueueParameterID,
+    _ outValue: UnsafeMutablePointer<AudioQueueParameterValue>?
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    switch inParamID {
+    case kAudioQueueParam_Volume: outValue?.pointee = queue.volume
+    case kAudioQueueParam_PlayRate: outValue?.pointee = queue.playRate
+    case kAudioQueueParam_Pitch: outValue?.pointee = queue.pitch
+    case kAudioQueueParam_VolumeRampTime: outValue?.pointee = queue.volumeRampTime
+    case kAudioQueueParam_Pan: outValue?.pointee = queue.pan
+    default:
+        return kAudioQueueErr_InvalidParameter
+    }
+    return 0
+}
+
+@_cdecl("AudioQueueSetParameter")
+public func AudioQueueSetParameter(
+    _ inAQ: AudioQueueRef?,
+    _ inParamID: AudioQueueParameterID,
+    _ inValue: AudioQueueParameterValue
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    switch inParamID {
+    case kAudioQueueParam_Volume: queue.volume = inValue
+    case kAudioQueueParam_PlayRate: queue.playRate = inValue
+    case kAudioQueueParam_Pitch: queue.pitch = inValue
+    case kAudioQueueParam_VolumeRampTime: queue.volumeRampTime = inValue
+    case kAudioQueueParam_Pan: queue.pan = inValue
+    default:
+        return kAudioQueueErr_InvalidParameter
+    }
+    return 0
+}
+
+@_cdecl("AudioQueuePrime")
+public func AudioQueuePrime(
+    _ inAQ: AudioQueueRef?,
+    _ inNumberOfFramesToPrepare: UInt32,
+    _ outNumberOfFramesPrepared: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    outNumberOfFramesPrepared?.pointee = inNumberOfFramesToPrepare
+    _ = queue
+    return 0
+}
+
+public func AudioQueueGetCurrentTime(
+    _ inAQ: AudioQueueRef?,
+    _ inTimeline: AudioQueueTimelineRef?,
+    _ outTimeStamp: UnsafeMutableRawPointer?,
+    _ outTimelineDiscontinuity: UnsafeMutablePointer<UInt8>?
+) -> Int32 {
+    _ = inTimeline
+    guard let queue = ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    outTimeStamp?.storeBytes(of: queue.sampleTime, toByteOffset: 0, as: Float64.self)
+    outTimelineDiscontinuity?.pointee = 0
+    return 0
+}
+
+public func AudioQueueProcessingTapNew(
+    _ inAQ: AudioQueueRef?,
+    _ inCallback: UnsafeRawPointer?,
+    _ inClientData: UnsafeMutableRawPointer?,
+    _ inFlags: AudioQueueProcessingTapFlags,
+    _ outMaxFrames: UnsafeMutablePointer<UInt32>?,
+    _ outProcessingFormat: UnsafeMutableRawPointer?,
+    _ outAQTap: UnsafeMutablePointer<AudioQueueProcessingTapRef?>?
+) -> Int32 {
+    _ = inCallback
+    _ = inClientData
+    _ = inFlags
+    outMaxFrames?.pointee = 0
+    _ = outProcessingFormat
+    outAQTap?.pointee = nil
+    guard ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) != nil else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    return kAudioQueueErr_TooManyTaps
+}
+
+@_cdecl("AudioQueueProcessingTapDispose")
+public func AudioQueueProcessingTapDispose(_ inAQTap: AudioQueueProcessingTapRef?) -> Int32 {
+    _ = inAQTap
+    return kAudioQueueErr_InvalidTapContext
+}
+
+public func AudioQueueProcessingTapGetQueueTime(
+    _ inAQTap: AudioQueueProcessingTapRef?,
+    _ outQueueSampleTime: UnsafeMutablePointer<Float64>?,
+    _ outQueueFrameCount: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    _ = inAQTap
+    outQueueSampleTime?.pointee = 0
+    outQueueFrameCount?.pointee = 0
+    return kAudioQueueErr_InvalidTapContext
+}
+
+public func AudioQueueProcessingTapGetSourceAudio(
+    _ inAQTap: AudioQueueProcessingTapRef?,
+    _ inNumberFrames: UInt32,
+    _ ioTimeStamp: UnsafeMutableRawPointer?,
+    _ outFlags: UnsafeMutablePointer<AudioQueueProcessingTapFlags>?,
+    _ outNumberFrames: UnsafeMutablePointer<UInt32>?,
+    _ ioData: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inNumberFrames
+    _ = ioTimeStamp
+    outFlags?.pointee = []
+    outNumberFrames?.pointee = 0
+    _ = ioData
+    _ = inAQTap
+    return kAudioQueueErr_InvalidTapContext
+}
+
+@_cdecl("AudioQueueCreateTimeline")
+public func AudioQueueCreateTimeline(
+    _ inAQ: AudioQueueRef?,
+    _ outTimeline: UnsafeMutablePointer<AudioQueueTimelineRef?>?
+) -> Int32 {
+    outTimeline?.pointee = nil
+    guard ATRegistry.shared.lookup(inAQ, as: ATAudioQueueObject.self) != nil else {
+        return kAudioQueueErr_QueueInvalidated
+    }
+    return kAudioQueueErr_InvalidParameter
+}
+
+@_cdecl("AudioQueueDisposeTimeline")
+public func AudioQueueDisposeTimeline(
+    _ inAQ: AudioQueueRef?,
+    _ inTimeline: AudioQueueTimelineRef?
+) -> Int32 {
+    _ = inAQ
+    _ = inTimeline
+    return 0
 }

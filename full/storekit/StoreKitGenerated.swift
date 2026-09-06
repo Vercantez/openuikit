@@ -117,13 +117,26 @@ public struct SKCloudServiceSetupOptionsKey: Hashable, RawRepresentable, Sendabl
 
 open class SKArcadeService: NSObject {
     public override init() { super.init() }
-    public class func registerArcadeApp(
-        withRandomFromLib randomFromLib: Data,
+
+    public class func registerArcadeAppWithRandom(
+        fromLib randomFromLib: Data,
         randomFromLibLength: UInt32,
         resultHandler: @escaping (Data?, UInt32, Data?, UInt32, (any Error)?) -> Void
     ) {
+        _ = randomFromLib
+        _ = randomFromLibLength
         resultHandler(nil, 0, nil, 0, StoreKitPortableError(.serviceUnavailable))
     }
+
+    public class func arcadeSubscriptionStatus(
+        withNonce nonce: UInt64,
+        resultHandler: @escaping (Data?, UInt32, Data?, UInt32, (any Error)?) -> Void
+    ) {
+        _ = nonce
+        resultHandler(nil, 0, nil, 0, StoreKitPortableError(.serviceUnavailable))
+    }
+
+    public class func repairArcadeApp() {}
 }
 
 open class SKCloudServiceController: NSObject {
@@ -156,6 +169,15 @@ open class SKCloudServiceController: NSObject {
         _ = clientToken
         completionHandler(nil, StoreKitPortableError(.serviceUnavailable))
     }
+
+    public func requestUserTokenNow(forDeveloperToken developerToken: String) throws -> String {
+        _ = developerToken
+        throw StoreKitPortableError(.serviceUnavailable)
+    }
+
+    public func requestUserToken(forDeveloperToken developerToken: String) async throws -> String {
+        try requestUserTokenNow(forDeveloperToken: developerToken)
+    }
 }
 
 open class SKCloudServiceSetupViewController: UIViewController {
@@ -179,6 +201,7 @@ public extension SKCloudServiceSetupViewControllerDelegate {
 
 open class SKDownload: NSObject {
     public var state: SKDownloadState { .failed }
+    public var downloadState: SKDownloadState { state }
     public var contentIdentifier: String { "" }
     public var contentURL: URL? { nil }
     public var contentVersion: String { "" }
@@ -186,6 +209,8 @@ open class SKDownload: NSObject {
     public var progress: Float { 0 }
     public var timeRemaining: TimeInterval { SKDownloadTimeRemainingUnknown }
     public var expectedContentLength: Int64 { 0 }
+    public var contentLength: Int64 { expectedContentLength }
+    public var transaction: SKPaymentTransaction? { nil }
     public override init() { super.init() }
 }
 
@@ -467,7 +492,7 @@ public struct AppStoreMerchandisingKind: Hashable, Sendable {
 }
 
 public struct AppTransaction: Hashable, Sendable, CustomDebugStringConvertible {
-    public var jsonRepresentation: Data { Data() }
+    public let jsonRepresentation: Data
     public let originalAppVersion: String
     public let appVersion: String
     public let signedDate: Date
@@ -483,6 +508,10 @@ public struct AppTransaction: Hashable, Sendable, CustomDebugStringConvertible {
     public var appTransactionID: String { "0" }
     public var originalPlatformStringRepresentation: String { originalPlatform.rawValue }
     public var debugDescription: String { "AppTransaction(\(bundleID))" }
+    let jwsHeaderData: Data
+    let jwsPayloadData: Data
+    let jwsSignatureData: Data
+    let jwsRepresentation: String
 
     public init() {
         originalAppVersion = "1.0"
@@ -497,17 +526,35 @@ public struct AppTransaction: Hashable, Sendable, CustomDebugStringConvertible {
         deviceVerificationNonce = UUID()
         appID = nil
         bundleID = Bundle.main.bundleIdentifier ?? ""
+        jsonRepresentation = Data()
+        jwsHeaderData = Data()
+        jwsPayloadData = Data()
+        jwsSignatureData = Data()
+        jwsRepresentation = ""
+    }
+
+    init(signed: StoreKitJWS, bundleID: String, environment: AppStore.Environment) {
+        self.originalAppVersion = "1.0"
+        self.appVersion = "1.0"
+        self.signedDate = Date()
+        self.environment = environment
+        self.appVersionID = nil
+        self.preorderDate = nil
+        self.originalPlatform = .iOS
+        self.deviceVerification = Data(repeating: 0, count: 16)
+        self.originalPurchaseDate = Date(timeIntervalSince1970: 0)
+        self.deviceVerificationNonce = UUID()
+        self.appID = nil
+        self.bundleID = bundleID
+        self.jsonRepresentation = signed.payloadData
+        self.jwsHeaderData = signed.headerData
+        self.jwsPayloadData = signed.payloadData
+        self.jwsSignatureData = signed.signatureData
+        self.jwsRepresentation = signed.compactSerialization
     }
 
     public static func currentForTesting() throws -> VerificationResult<AppTransaction> {
-        guard LocalTestingStore.shared.isLoaded else {
-            throw StoreKitError.notAvailableInStorefront
-        }
-        let value = AppTransaction()
-        if LocalTestingStore.shared.treatsTransactionsAsVerified {
-            return .verified(value)
-        }
-        return .unverified(value, .invalidSignature)
+        try LocalTestingStore.shared.appTransaction()
     }
 
     public static var shared: VerificationResult<AppTransaction> {
@@ -526,14 +573,26 @@ public struct PurchaseIntent: Hashable, Sendable, Identifiable {
     public struct PurchaseIntents: AsyncSequence {
         public typealias Element = PurchaseIntent
         public struct AsyncIterator: AsyncIteratorProtocol {
-            public mutating func next() async -> PurchaseIntent? { nil }
+            var snapshot: [PurchaseIntent]
+            var index = 0
+            public mutating func next() async -> PurchaseIntent? {
+                guard index < snapshot.count else { return nil }
+                let value = snapshot[index]
+                index += 1
+                return value
+            }
         }
-        public func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+        let snapshot: [PurchaseIntent]
+        public func makeAsyncIterator() -> AsyncIterator {
+            AsyncIterator(snapshot: snapshot)
+        }
     }
     public var product: Product
     public var offer: Product.SubscriptionOffer?
     public var id: Product.ID { product.id }
-    public static var intents: PurchaseIntents { PurchaseIntents() }
+    public static var intents: PurchaseIntents {
+        PurchaseIntents(snapshot: LocalTestingStore.shared.pendingPurchaseIntents())
+    }
     public init(product: Product, offer: Product.SubscriptionOffer? = nil) {
         self.product = product
         self.offer = offer
@@ -541,44 +600,264 @@ public struct PurchaseIntent: Hashable, Sendable, Identifiable {
 }
 
 public enum ExternalPurchase {
+    public enum NoticeResult: Hashable, Sendable {
+        case cancelled
+        case continuedWithExternalPurchaseToken(token: String)
+    }
+
     public static var isEligible: Bool { false }
+    public static var canPresentNow: Bool { false }
+    public static var canPresent: Bool {
+        get async { canPresentNow }
+    }
+
+    public static func presentNoticeSheetNow() throws -> NoticeResult {
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func presentNoticeSheet() async throws -> NoticeResult {
+        try presentNoticeSheetNow()
+    }
 }
 
 public enum ExternalLinkAccount {
     public static var isEligible: Bool { false }
+    public static var canOpenNow: Bool { false }
+    public static var canOpen: Bool {
+        get async { canOpenNow }
+    }
+
+    public static func openNow() throws {
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func open() async throws {
+        try openNow()
+    }
 }
 
 public enum ExternalPurchaseLink {
     public static var isEligible: Bool { false }
+    public static var canOpenNow: Bool { false }
+    public static var canOpen: Bool {
+        get async { canOpenNow }
+    }
+    public static var eligibleURLs: [URL]? { nil }
+
+    public static func openNow() throws {
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func open() async throws {
+        try openNow()
+    }
+
+    public static func openNow(url: URL) throws {
+        _ = url
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func open(url: URL) async throws {
+        try openNow(url: url)
+    }
 }
 
 public enum ExternalPurchaseCustomLink {
-    public struct Token: Hashable, Sendable { public init() {} }
-    public struct NoticeType: Hashable, Sendable { public init() {} }
-    public static var isEligible: Bool { false }
+    public struct Token: Hashable, Sendable {
+        public let value: String
+        public init(value: String = "") { self.value = value }
+    }
+
+    public enum NoticeType: Int, Hashable, Sendable {
+        case browser = 0
+        case withinApp = 1
+    }
+
+    public enum NoticeResult: Hashable, Sendable {
+        case cancelled
+        case continued
+    }
+
+    public static var isEligibleNow: Bool { false }
+    public static var isEligible: Bool {
+        get async { isEligibleNow }
+    }
+
+    public static func tokenNow(for tokenType: String) throws -> Token? {
+        _ = tokenType
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func token(for tokenType: String) async throws -> Token? {
+        try tokenNow(for: tokenType)
+    }
+
+    public static func showNoticeNow(type: NoticeType) throws -> NoticeResult {
+        _ = type
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func showNotice(type: NoticeType) async throws -> NoticeResult {
+        try showNoticeNow(type: type)
+    }
 }
 
 public struct InvalidRequestError: Error, Hashable, Sendable {
-    public init() {}
-}
-
-public struct PaymentMethodBinding: Hashable, Sendable {
-    public var id: String { "" }
-}
-
-public struct AdvancedCommerceProduct: Hashable, Sendable {
-    public struct PurchaseOption: Hashable, Sendable {
-        public init() {}
+    public var code: Int64
+    public var message: String
+    public init(code: Int64 = 0, message: String = "") {
+        self.code = code
+        self.message = message
     }
-    public var id: String { "" }
+}
+
+public struct PaymentMethodBinding: Hashable, Sendable, Identifiable {
+    public typealias ID = String
+    public enum PaymentMethodBindingError: Error, Hashable, Sendable, LocalizedError {
+        case notEligible
+        case invalidPinningID
+        case failed
+        public var errorDescription: String? { String(describing: self) }
+        public var failureReason: String? { errorDescription }
+        public var recoverySuggestion: String? { nil }
+        public var helpAnchor: String? { nil }
+    }
+
+    public let id: String
+
+    public init(portableID: String) {
+        self.id = portableID
+    }
+
+    public static func make(id: String) throws -> PaymentMethodBinding {
+        _ = id
+        throw PaymentMethodBindingError.notEligible
+    }
+
+    public init(id: String) async throws {
+        self = try Self.make(id: id)
+    }
+
+    public func bindNow() throws {
+        throw PaymentMethodBindingError.failed
+    }
+
+    public func bind() async throws {
+        try bindNow()
+    }
+}
+
+public struct AdvancedCommerceProduct: Hashable, Sendable, Identifiable, CustomDebugStringConvertible {
+    public typealias ID = String
+    public typealias ProductType = Product.ProductType
+    public typealias PurchaseResult = Product.PurchaseResult
+
+    public struct PurchaseOption: Hashable, Sendable, CustomDebugStringConvertible {
+        public var debugDescription: String { "AdvancedCommerceProduct.PurchaseOption" }
+        public init() {}
+        public static func onStorefrontChange(
+            shouldContinuePurchase: @escaping (Storefront) -> Bool
+        ) -> PurchaseOption {
+            _ = shouldContinuePurchase
+            return PurchaseOption()
+        }
+    }
+
+    public let id: ID
+    public let type: ProductType
+    public var debugDescription: String { "AdvancedCommerceProduct(\(id))" }
+    public var currentEntitlements: Transaction.Transactions {
+        Transaction.currentEntitlements
+    }
+    public var allTransactions: Transaction.Transactions { Transaction.all }
+    public var latestTransaction: VerificationResult<Transaction>? {
+        get async { await Transaction.latest(for: id) }
+    }
+
+    public init(portableID: String, type: ProductType = .autoRenewable) {
+        self.id = portableID
+        self.type = type
+    }
+
+    public static func make(id: ID) throws -> AdvancedCommerceProduct {
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+        return AdvancedCommerceProduct(portableID: id)
+    }
+
+    public init(id: ID) async throws {
+        self = try Self.make(id: id)
+    }
+
+    public func purchaseNow(
+        compactJWS: String,
+        options: Set<PurchaseOption> = []
+    ) throws -> PurchaseResult {
+        _ = compactJWS
+        _ = options
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public func purchase(
+        compactJWS: String,
+        confirmIn viewController: UIViewController,
+        options: Set<PurchaseOption> = []
+    ) async throws -> PurchaseResult {
+        _ = viewController
+        return try purchaseNow(compactJWS: compactJWS, options: options)
+    }
 }
 
 public struct Message: Hashable, Sendable {
     public struct Reason: Hashable, Sendable, RawRepresentable {
-        public var rawValue: String
-        public init(rawValue: String) { self.rawValue = rawValue }
+        public typealias RawValue = Int
+        public var rawValue: Int
+        public init(rawValue: Int) { self.rawValue = rawValue }
+        public static let generic = Reason(rawValue: 0)
+        public static let billingIssue = Reason(rawValue: 1)
+        public static let priceIncreaseConsent = Reason(rawValue: 2)
+        public static let winBackOffer = Reason(rawValue: 3)
+        public var localizedDescription: String {
+            switch self {
+            case .billingIssue: return "billingIssue"
+            case .priceIncreaseConsent: return "priceIncreaseConsent"
+            case .winBackOffer: return "winBackOffer"
+            default: return "generic"
+            }
+        }
     }
-    public struct Messages {}
-    public var reason: Reason { Reason(rawValue: "") }
+
+    public struct Messages: AsyncSequence {
+        public typealias Element = Message
+        public struct AsyncIterator: AsyncIteratorProtocol {
+            var snapshot: [Message]
+            var index = 0
+            public mutating func next() async -> Message? {
+                guard index < snapshot.count else { return nil }
+                let value = snapshot[index]
+                index += 1
+                return value
+            }
+        }
+        let snapshot: [Message]
+        public func makeAsyncIterator() -> AsyncIterator {
+            AsyncIterator(snapshot: snapshot)
+        }
+    }
+
+    public let reason: Reason
+    public static var messages: Messages {
+        Messages(snapshot: LocalTestingStore.shared.pendingMessages())
+    }
+
+    public init(reason: Reason) {
+        self.reason = reason
+    }
+
+    public func display(in scene: UIWindowScene) throws {
+        _ = scene
+        throw StoreKitError.notAvailableInStorefront
+    }
 }
 

@@ -250,6 +250,189 @@ overload.
 - SwiftUI overlay modifiers remain identity stubs or Chart-local
   storage; they are not claimed as Apple `View` overlay behavior.
 
+### Third pass (plot-space layout attributes)
+
+Third SDK-depth pass on the wave-8 plot engine already in this tree.
+First-pass and wave-8 sources and tests stay in place. This pass stamps
+`ChartContent` / `AxisMark` modifiers onto `ChartPlotRecord` layout
+attributes, applies those offsets in `ChartLayout.place`, and nices
+inferred linear/log/symbolLog domains.
+
+Before this pass (wave-8 repaired ledger):
+
+| status | before |
+| --- | ---: |
+| implemented | 673 |
+| declared | 6861 |
+| deferred | 1124 |
+| unavailable | 0 |
+| not-applicable | 816 |
+
+After this pass:
+
+| status | after |
+| --- | ---: |
+| implemented | 1892 |
+| declared | 2845 |
+| deferred | 1083 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+Implemented gain is +1219. Nondeferred (`implemented` + `declared`) is
+4737, exactly the medium-full floor. Unique cited tests: 141. Every
+`not-applicable` row is a SwiftUI cross-import overlay (`s:7SwiftUI…`)
+with the note `SwiftUI cross-import overlay; owned by the SwiftUI lane`.
+Stdlib operator overlays stay `deferred`, not `not-applicable`.
+
+Top-5 implemented evidence after this pass (1892 rows; cap 40% = 756):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 41 | 2.2% | `ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers` |
+| 41 | 2.2% | `ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers` |
+| 41 | 2.2% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
+| 41 | 2.2% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
+| 41 | 2.2% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |
+
+No single test exceeds 40% of implemented rows. Each cited
+`ChartContent` modifier catalog constructs that type and asserts a
+stamped layout field for that identifier family.
+
+Public surface added in this pass:
+
+- `ChartLayoutAttributes` on each `ChartPlotRecord` (offset X/Y and
+  edges, cornerRadius, zIndex, symbolSize, blur, shadow, clip, mask,
+  accessibility, compositing, positionBy). `ChartLayout.place` applies
+  those pixel offsets after scale mapping.
+- Inferred linear/log/symbolLog domains are niced with the 1-2-5×10^n
+  rule when no explicit domain is stored (`0.2...9.7` → `0...10`).
+  Explicit `chartXScale(domain:)` is left unchanged.
+- `ChartContent` modifiers return `_ChartAttributedPlotContent` that
+  stamps records: offset overloads, symbolSize, cornerRadius,
+  compositingLayer, accessibility, blur, mask, shadow, symbol, zIndex,
+  opacity, position, clipShape, lineStyle(by:).
+- `AxisMarkBuilder` / `AxisContentBuilder` (buildBlock, buildEither,
+  buildIf, buildExpression, buildLimitedAvailability) plus
+  `AxisMark.foregroundStyle` / `font` / `offset`.
+- `MarkDimension.fixed` / `ratio` and integer/float literals.
+- `AnnotationPosition` corners and `AnnotationOverflowResolution.Strategy`.
+- `Plot` collects `chartPlotRecords` from builder content.
+- Geometry tests compare against hand-computed pixels for a fixed
+  100×40 plot.
+
+Fail-closed (unchanged): `Chart3D` / `SurfaceMark` have no RealityKit
+renderer. Scroll and selection store host models only. SwiftUI `View`
+overlay re-exports stay `not-applicable`. Lookalike
+`View.offset<T0,T1>(x:y:)` can steal `ChartContent.offset` when arguments
+are `Int`; tests use `CGFloat` literals and contextual types. Apple
+overload ranking is unobserved (see `oracle-questions.tsv`).
+
+### Fourth pass (NumberBins / DateBins collection + PrimitivePlottable)
+
+Next SDK-depth pass on the wave-8 / third-pass tree. First-pass, wave-8,
+and third-pass sources and tests stay in place. This pass implements the
+plot-space histogram binning engine and honest PrimitivePlottable
+witnesses. Stdlib `FixedWidthInteger` / `AdditiveArithmetic` / integer
+operator overlays stay `deferred` (Charts does not redeclare them).
+`Chart3D` / `SurfaceMark` stay fail-closed.
+
+Before this pass (third-pass ledger):
+
+| status | before |
+| --- | ---: |
+| implemented | 1892 |
+| declared | 2845 |
+| deferred | 1083 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+After this pass:
+
+| status | after |
+| --- | ---: |
+| implemented | 2046 |
+| declared | 2783 |
+| deferred | 991 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+Implemented gain is +154. Nondeferred (`implemented` + `declared`) is
+4829, above the 4737 floor. Unique cited tests: 165. Every
+`not-applicable` row remains a SwiftUI cross-import overlay
+(`s:7SwiftUI…`) with the note `SwiftUI cross-import overlay; owned by
+the SwiftUI lane`. `unavailable` stays 0.
+
+Top-5 implemented evidence after this pass (2046 rows; cap 40% = 818):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |
+
+No single test exceeds 40% of implemented rows.
+
+Public surface added in this pass:
+
+- `NumberBins` is `RandomAccessCollection` of `ChartBinRange`. Owned
+  inits: `thresholds`, `range:count:` (integer and floating),
+  `size:range:`, `range:desiredCount:minimumStride:` (1-2-5×10^n nice
+  ticks: `0.2...9.7` desired 5 → `0, 2, 4, 6, 8, 10`), and
+  `data:desiredCount:minimumStride:`. `index(for:)` clamps below the
+  first threshold to 0 and values at/above the last threshold onto the
+  last bin.
+- `DateBins` collection plus `init(thresholds:)`,
+  `init(timeInterval:range:)`, `init(unit:by:range:calendar:)`,
+  `init(range:desiredCount:calendar:)`, `init(data:desiredCount:calendar:)`.
+  The first-pass `init(unit:range:)` convenience remains.
+- `ChartBinRange` is `RangeExpression`: half-open `contains`,
+  `relative(to:)`, and `~=`.
+- Histogram geometry: bins `0...10` count 2, data `[1,2,3,8,9]` →
+  counts `[3,2]`; two category bars on a 100×40 plot match hand-computed
+  frames (inset 4, band 50, y domain 0...4 inverted).
+- `PrimitivePlottableProtocol` identity witnesses on numeric types
+  including `Float16`, plus `String`/`Date`. `Decimal` plots through
+  `Double`. String raw-value enumerations use `rawValue`. `Never`
+  typealias is exercised; `Never` values stay uninhabited (`declared`).
+- Collection/Sequence algorithms on `NumberBins` and `DateBins` are
+  exercised (map/filter/reduce/prefix/suffix/…). Combine `publisher`,
+  Foundation `FormatStyle`/`SortComparator`, deprecated optional
+  `flatMap`, and `indices` where `Indices == Self` stay `deferred`.
+
+Fail-closed (unchanged): `Chart3D` / `SurfaceMark` have no RealityKit
+renderer. Scroll and selection store host models only. SwiftUI overlay
+re-exports stay `not-applicable`. Stdlib integer operator overlays stay
+`deferred`.
+
+Environment: this pod booted from Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not campaign
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`.
+`.cursor/verify-cloud-environment.sh` fails earlier (`missing corpus
+checkout: scratch/ladder-corpus/focus-ios`). `swiftc` is Swift 6.2.4
+targeting `x86_64-unknown-linux-gnu`. The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token; `products=clean` means the sealed gate ran
+with no stale `full/charts/.build`, `build`, or `scratch` products.
+
+Sealed host gate on this Linux host (Swift 6.2.4, `x86_64-unknown-linux-gnu`):
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Charts lane=medium-full symbols=9474
+FRAMEWORK_FANOUT_REFERENCE_OK
+CHARTS_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Charts dylib=libCharts.dylib
+```
+
+`bash full/charts/tests/acceptance/test_host.sh` printed the four
+FRAMEWORK_FANOUT / CHARTS_AGENT markers above. The inventory stamp is
+not emitted by the verifier on this snapshot (corpus checkout missing);
+`swiftc --version` is Swift 6.2.4 and the gate compiled a clean product
+tree. Darwin `full/charts/tests/test_charts_host.sh` remains IceCubes /
+`xcrun` and is not the Linux deliverable.
+
 ## Wave-6 deliverable gate
 
 ```sh

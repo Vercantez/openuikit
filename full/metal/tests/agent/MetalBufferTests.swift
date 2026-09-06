@@ -41,14 +41,41 @@ func testBufferStorage() {
     precondition(noCopy.length == 4)
     let privateBuf = device.makeBuffer(length: 4, options: .storageModePrivate)!
     precondition(privateBuf.storageMode == .private)
+    privateBuf.contents().storeBytes(of: UInt32(0xAABBCCDD), as: UInt32.self)
+    privateBuf.didModifyRange(0..<4)
+    let privateDest = device.makeBuffer(length: 4, options: .storageModeShared)!
+    let queue = device.makeCommandQueue()!
+    let copy = queue.makeCommandBuffer()!
+    let blit = copy.makeBlitCommandEncoder()!
+    blit.copy(from: privateBuf, sourceOffset: 0, to: privateDest, destinationOffset: 0, size: 4)
+    blit.endEncoding()
+    copy.commit()
+    copy.waitUntilCompleted()
+    precondition(privateDest.contents().load(as: UInt32.self) == 0xAABBCCDD)
     let viewDesc = MTLTextureDescriptor.texture2DDescriptor(
         pixelFormat: .r8Unorm,
-        width: 4,
-        height: 1,
+        width: 2,
+        height: 2,
         mipmapped: false
     )
     viewDesc.usage = [.shaderRead]
-    let view = destination.makeTexture(descriptor: viewDesc, offset: 0, bytesPerRow: 4)
-    precondition(view != nil)
+    let layout: [UInt8] = [1, 2, 0xAA, 0xBB, 3, 4, 0xCC, 0xDD]
+    layout.withUnsafeBytes { raw in
+        destination.contents().copyMemory(from: raw.baseAddress!, byteCount: 8)
+    }
+    let view = destination.makeTexture(descriptor: viewDesc, offset: 0, bytesPerRow: 4)!
+    precondition(view.buffer === destination)
+    precondition(view.bufferOffset == 0)
+    precondition(view.bufferBytesPerRow == 4)
+    var fromView = [UInt8](repeating: 0, count: 4)
+    fromView.withUnsafeMutableBytes { raw in
+        view.getBytes(
+            raw.baseAddress!,
+            bytesPerRow: 2,
+            from: MTLRegionMake2D(0, 0, 2, 2),
+            mipmapLevel: 0
+        )
+    }
+    precondition(fromView == [1, 2, 3, 4])
     _ = destination.device
 }

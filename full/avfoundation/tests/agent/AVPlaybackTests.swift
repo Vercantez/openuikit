@@ -463,3 +463,142 @@ func testAVKeyValueStatusRawValues() {
     precondition(AVKeyValueStatus.failed.rawValue == 3)
     precondition(AVKeyValueStatus.cancelled.rawValue == 4)
 }
+
+func testAVPlayerExternalPlaybackAndHDR() {
+    let player = AVPlayer()
+    precondition(!player.allowsExternalPlayback)
+    player.allowsExternalPlayback = true
+    precondition(player.allowsExternalPlayback)
+    precondition(!player.isExternalPlaybackActive)
+    precondition(!player.usesExternalPlaybackWhileExternalScreenIsActive)
+    player.usesExternalPlaybackWhileExternalScreenIsActive = true
+    precondition(player.usesExternalPlaybackWhileExternalScreenIsActive)
+    precondition(player.externalPlaybackVideoGravity == .resizeAspect)
+    player.externalPlaybackVideoGravity = .resize
+    precondition(player.externalPlaybackVideoGravity == .resize)
+    precondition(player.appliesMediaSelectionCriteriaAutomatically)
+    player.appliesMediaSelectionCriteriaAutomatically = false
+    precondition(!player.appliesMediaSelectionCriteriaAutomatically)
+    precondition(!player.isClosedCaptionDisplayEnabled)
+    player.isClosedCaptionDisplayEnabled = true
+    precondition(player.isClosedCaptionDisplayEnabled)
+    precondition(player.networkResourcePriority == .default)
+    player.networkResourcePriority = .low
+    precondition(player.networkResourcePriority == .low)
+    precondition(player.reasonForWaitingToPlay == nil)
+    precondition(!player.isOutputObscuredDueToInsufficientExternalProtection)
+    precondition(!player.audioOutputSuppressedDueToNonMixableAudioRoute)
+    precondition(AVPlayer.availableHDRModes.isEmpty)
+    precondition(!AVPlayer.eligibleForHDRPlayback)
+    precondition(AVPlayer.HDRMode.hlg.rawValue == 1)
+    precondition(AVPlayer.HDRMode.hdr10.rawValue == 2)
+    precondition(AVPlayer.HDRMode.dolbyVision.rawValue == 4)
+    precondition(AVPlayer.NetworkResourcePriority.default.rawValue == 0)
+    precondition(AVPlayer.NetworkResourcePriority.low.rawValue == 1)
+    precondition(AVPlayer.NetworkResourcePriority.high.rawValue == 2)
+    precondition(AVPlayer.WaitingReason.toMinimizeStalls.rawValue == "toMinimizeStalls")
+    precondition(AVPlayer.WaitingReason.noItemToPlay.rawValue == "noItemToPlay")
+    precondition(AVPlayer.WaitingReason.evaluatingBufferingRate.rawValue == "evaluatingBufferingRate")
+    precondition(AVPlayer.WaitingReason.interstitialEvent.rawValue == "interstitialEvent")
+    precondition(AVPlayer.WaitingReason.waitingForCoordinatedPlayback.rawValue == "waitingForCoordinatedPlayback")
+    player.setRate(1.25, time: CMTime(seconds: 0.5, preferredTimescale: 600), atHostTime: .zero)
+    precondition(abs(player.currentTime().seconds - 0.5) < 0.01)
+    precondition(abs(Double(player.rate) - 1.25) < 0.01)
+    player.pause()
+    let preroll = avfAwait { await player.preroll(atRate: 1) }
+    switch preroll {
+    case .success(let ok):
+        precondition(!ok)
+    default:
+        preconditionFailure("preroll must fail closed")
+    }
+    player.cancelPendingPrerolls()
+    let prerollDone = AVFLocked(true)
+    player.preroll(atRate: 1) { ok in
+        prerollDone.store(ok)
+    }
+    precondition(!prerollDone.load())
+}
+
+func testAVPlayerItemOutputsAndMix() {
+    let item = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/openav-item-out.mp4"))
+    precondition(item.outputs.isEmpty)
+    let output = AVPlayerItemOutput()
+    item.add(output)
+    precondition(item.outputs.count == 1)
+    item.remove(output)
+    precondition(item.outputs.isEmpty)
+    let mix = AVMutableAudioMix()
+    item.audioMix = mix
+    precondition(item.audioMix === mix)
+    let composition = AVMutableVideoComposition()
+    item.videoComposition = composition
+    precondition(item.videoComposition === composition)
+    item.seekingWaitsForVideoCompositionRendering = true
+    precondition(item.seekingWaitsForVideoCompositionRendering)
+    item.preferredForwardBufferDuration = 2
+    precondition(item.preferredForwardBufferDuration == 2)
+    item.videoApertureMode = .encodedPixels
+    precondition(item.videoApertureMode == .encodedPixels)
+    precondition(!item.canPlayFastForward)
+    precondition(!item.canPlayReverse)
+    precondition(!item.canStepForward)
+    item.seek(to: CMTime(seconds: 1, preferredTimescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+    precondition(abs(item.currentTime().seconds - 1) < 0.01)
+    let seeked = AVFLocked(false)
+    item.seek(
+        to: CMTime(seconds: 2, preferredTimescale: 1),
+        toleranceBefore: .zero,
+        toleranceAfter: .zero
+    ) { ok in
+        seeked.store(ok)
+    }
+    precondition(seeked.load())
+    precondition(abs(item.currentTime().seconds - 2) < 0.01)
+    let collector = AVPlayerItemMediaDataCollector()
+    item.add(collector)
+    precondition(item.mediaDataCollectors.count == 1)
+    item.remove(collector)
+    precondition(item.mediaDataCollectors.isEmpty)
+}
+
+func testAVPlayerItemCapabilitiesAndBitRate() {
+    let item = AVPlayerItem(url: URL(fileURLWithPath: "/tmp/openav-item-caps.mp4"))
+    precondition(!item.canPlayFastForward)
+    precondition(!item.canPlaySlowForward)
+    precondition(!item.canPlayReverse)
+    precondition(!item.canPlaySlowReverse)
+    precondition(!item.canPlayFastReverse)
+    precondition(!item.canStepForward)
+    precondition(!item.canStepBackward)
+    precondition(item.timedMetadata == nil)
+    precondition(item.timebase == nil)
+    precondition(item.currentDate() == nil)
+    item.step(byCount: 1)
+    item.automaticallyPreservesTimeOffsetFromLive = true
+    precondition(item.automaticallyPreservesTimeOffsetFromLive)
+    item.forwardPlaybackEndTime = CMTime(seconds: 5, preferredTimescale: 1)
+    precondition(item.forwardPlaybackEndTime.seconds == 5)
+    item.reversePlaybackEndTime = CMTime(seconds: 1, preferredTimescale: 1)
+    precondition(item.reversePlaybackEndTime.seconds == 1)
+    item.preferredPeakBitRate = 1_000_000
+    precondition(item.preferredPeakBitRate == 1_000_000)
+    item.preferredPeakBitRateForExpensiveNetworks = 500_000
+    precondition(item.preferredPeakBitRateForExpensiveNetworks == 500_000)
+    item.preferredMaximumResolution = CGSize(width: 1920, height: 1080)
+    precondition(item.preferredMaximumResolution.width == 1920)
+    item.preferredMaximumResolutionForExpensiveNetworks = CGSize(width: 1280, height: 720)
+    precondition(item.preferredMaximumResolutionForExpensiveNetworks.width == 1280)
+    item.startsOnFirstEligibleVariant = true
+    precondition(item.startsOnFirstEligibleVariant)
+    precondition(!item.canUseNetworkResourcesForLiveStreamingWhilePaused)
+    precondition(!item.appliesPerFrameHDRDisplayMetadata)
+    precondition(!item.isAudioSpatializationAllowed)
+    let videoOutput = AVPlayerItemVideoOutput()
+    precondition(!videoOutput.hasNewPixelBuffer(forItemTime: .zero))
+    precondition(videoOutput.copyPixelBuffer(forItemTime: .zero, itemTimeForDisplay: nil) == nil)
+    item.add(videoOutput)
+    precondition(item.outputs.count == 1)
+    item.remove(videoOutput)
+    precondition(item.outputs.isEmpty)
+}

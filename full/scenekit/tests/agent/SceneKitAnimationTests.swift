@@ -40,3 +40,35 @@ func testAnimatableKeys() {
     _ = morph.weight(forTargetNamed: "a")
     _ = morph.calculationMode
 }
+
+func testCAAnimationBridge() {
+    let scn = SCNAnimation()
+    scn.duration = 2
+    scn.blendInDuration = 0.1
+    scn.blendOutDuration = 0.2
+    scn.usesSceneTimeBase = true
+    scn.isAdditive = true
+    scn.isCumulative = true
+    scn.fillsForward = true
+    scn.fillsBackward = true
+    scn.animationEvents = [SCNAnimationEvent(keyTime: 0.25, block: { _, _, _ in })]
+    var started = false
+    scn.animationDidStart = { _, _ in started = true }
+    scn.animationDidStop = { _, _, _ in }
+    _ = scn.animationDidStart
+    _ = started
+    let ca = CAAnimation(SCNAnimation: scn)
+    precondition(abs(ca.duration - 2) < 1e-9)
+    precondition(ca.usesSceneTimeBase)
+    precondition(abs(Float(ca.fadeInDuration) - 0.1) < 1e-4)
+    let back = SCNAnimation(caAnimation: ca)
+    precondition(abs(back.duration - 2) < 1e-9)
+    let alt = SCNAnimation(CAAnimation: ca)
+    precondition(abs(alt.duration - 2) < 1e-9)
+    let node = SCNNode()
+    node.addAnimation(scn, forKey: "pos")
+    let retrieved = node.animation(forKey: "pos")
+    precondition(retrieved != nil)
+    let controller = SCNParticlePropertyController(animation: ca)
+    precondition(abs(controller.animation.duration - 2) < 1e-9)
+}

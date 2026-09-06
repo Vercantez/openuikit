@@ -208,4 +208,18 @@ func testCoordinateMapping() {
     visionExpect(abs(roiRect.origin.x - 25) < 1e-9, "roi rect")
     let backROI = VNNormalizedRectForImageRectUsingRegionOfInterest(roiRect, 100, 100, CGRect(x: 0.25, y: 0.25, width: 0.5, height: 0.5))
     visionExpect(abs(backROI.width - 1) < 1e-9, "roi rect back")
+    let roiBackPoint = VNNormalizedPointForImagePointUsingRegionOfInterest(
+        CGPoint(x: 40, y: 40),
+        100,
+        100,
+        CGRect(x: 0.2, y: 0.2, width: 0.4, height: 0.4)
+    )
+    visionExpect(abs(roiBackPoint.x - 0.5) < 1e-9 && abs(roiBackPoint.y - 0.5) < 1e-9, "roi image to normalized")
+    let faceNorm = VNNormalizedFaceBoundingBoxPointForLandmarkPoint(
+        SIMD2<Float>(0.5, 0.25),
+        CGRect(x: 0.2, y: 0.2, width: 0.4, height: 0.4),
+        100,
+        100
+    )
+    visionExpect(abs(faceNorm.x - 0.4) < 1e-9 && abs(faceNorm.y - 0.3) < 1e-9, "face landmark normalized")
 }

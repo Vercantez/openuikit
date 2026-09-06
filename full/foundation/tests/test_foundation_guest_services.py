@@ -70,15 +70,15 @@ class FoundationGuestServicesTests(unittest.TestCase):
         source = ONBOARDING.read_text()
         self.assertIn("FOUNDATION_GUEST_MANIFEST=", source)
         self.assertIn("mapfile -t FOUNDATION_GUEST_RELATIVE_SOURCES", source)
-        # The Focus onboarding builder still pins 38 sources until the operator
-        # advances it; this branch adds three formatter files to the production
-        # manifest the core guest package consumes (41 lines).
+        # The Focus onboarding builder now consumes the 41-line production
+        # manifest and excludes URLSession.swift (no host URL-transport helper
+        # in that historical harness), leaving 40 compiled sources.
         self.assertIn(
-            '"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 38',
+            '"${#FOUNDATION_GUEST_RELATIVE_SOURCES[@]}" -eq 41',
             source,
         )
         self.assertIn(
-            '"${#FOUNDATION_GUEST_SOURCES[@]}" -eq 37', source
+            '"${#FOUNDATION_GUEST_SOURCES[@]}" -eq 40', source
         )
         self.assertIn("COpenFoundationCore/module.modulemap", source)
         self.assertIn('"${FOUNDATION_GUEST_SOURCES[@]}"', source)
@@ -314,11 +314,25 @@ class FoundationGuestServicesTests(unittest.TestCase):
             self.assertIn(token, source)
         self.assertNotIn("open class URLSession", source)
         for token in (
+            "public struct URLComponents",
+            "public struct URLQueryItem",
+            "public typealias NSURLComponents",
+        ):
+            self.assertIn(token, source)
+        for token in (
             "open class URLSession: NSObject",
             "open class HTTPURLResponse: URLResponse",
             "open class HTTPCookieStorage: NSObject",
             "open class URLCache: NSObject",
             "open class URLProtocol: NSObject",
+            "open class URLSessionTask: NSObject",
+            "open class URLSessionDataTask: URLSessionTask",
+            "open class URLSessionUploadTask: URLSessionDataTask",
+            "open class URLSessionDownloadTask: URLSessionTask",
+            "open class URLCredential: NSObject",
+            "open class URLAuthenticationChallenge: NSObject",
+            "open class URLProtectionSpace: NSObject",
+            "public protocol URLSessionDataDelegate",
             "openui_url_transport_v1_perform",
             "withTaskCancellationHandler",
         ):

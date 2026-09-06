@@ -266,8 +266,8 @@ public func BNNSTileBackward(_ in_delta: UnsafeMutablePointer<BNNSNDArrayDescrip
 public func BNNSTranspose(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ axis0: Int, _ axis1: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
 public func SparseCleanup(_ toFree: SparseMatrix_Complex_Double) { }
 public func SparseCleanup(_ toFree: SparseMatrix_Complex_Float) { }
-public func SparseCleanup(_ toFree: SparseMatrix_Double) { }
-public func SparseCleanup(_ toFree: SparseMatrix_Float) { }
+public func SparseCleanup(_ toFree: SparseMatrix_Double) { _sparseCleanupDouble(toFree) }
+public func SparseCleanup(_ toFree: SparseMatrix_Float) { _sparseCleanupFloat(toFree) }
 public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Complex_Double) { }
 public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Complex_Float) { }
 public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Double) { }
@@ -294,13 +294,39 @@ public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32,
 @discardableResult
 public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributesComplex_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: OpaquePointer, _ storage: UnsafeMutableRawPointer, _ workspace: UnsafeMutableRawPointer) -> SparseMatrix_Complex_Float { return SparseMatrix_Complex_Float() }
 @discardableResult
-public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Double>) -> SparseMatrix_Double { return SparseMatrix_Double() }
+public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Double>) -> SparseMatrix_Double {
+    let packed = _sparseConvertFromCoordinate(rowCount: rowCount, columnCount: columnCount, blockCount: blockCount, blockSize: blockSize, attributes: attributes, row: row, column: column, data: data)
+    var matrix = SparseMatrix_Double()
+    matrix.data.deallocate()
+    matrix.structure.columnStarts.deallocate()
+    matrix.structure.rowIndices.deallocate()
+    matrix.structure = packed.structure
+    matrix.data = packed.values
+    return matrix
+}
 @discardableResult
-public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Double>, _ storage: UnsafeMutableRawPointer, _ workspace: UnsafeMutableRawPointer) -> SparseMatrix_Double { return SparseMatrix_Double() }
+public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Double>, _ storage: UnsafeMutableRawPointer, _ workspace: UnsafeMutableRawPointer) -> SparseMatrix_Double {
+    _ = storage
+    _ = workspace
+    return SparseConvertFromCoordinate(rowCount, columnCount, blockCount, blockSize, attributes, row, column, data)
+}
 @discardableResult
-public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Float>) -> SparseMatrix_Float { return SparseMatrix_Float() }
+public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Float>) -> SparseMatrix_Float {
+    let packed = _sparseConvertFromCoordinate(rowCount: rowCount, columnCount: columnCount, blockCount: blockCount, blockSize: blockSize, attributes: attributes, row: row, column: column, data: data)
+    var matrix = SparseMatrix_Float()
+    matrix.data.deallocate()
+    matrix.structure.columnStarts.deallocate()
+    matrix.structure.rowIndices.deallocate()
+    matrix.structure = packed.structure
+    matrix.data = packed.values
+    return matrix
+}
 @discardableResult
-public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Float>, _ storage: UnsafeMutableRawPointer, _ workspace: UnsafeMutableRawPointer) -> SparseMatrix_Float { return SparseMatrix_Float() }
+public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributes_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: UnsafePointer<Float>, _ storage: UnsafeMutableRawPointer, _ workspace: UnsafeMutableRawPointer) -> SparseMatrix_Float {
+    _ = storage
+    _ = workspace
+    return SparseConvertFromCoordinate(rowCount, columnCount, blockCount, blockSize, attributes, row, column, data)
+}
 @discardableResult
 public func SparseConvertFromOpaque(_ matrix: sparse_matrix_double) -> SparseMatrix_Double { return SparseMatrix_Double() }
 @discardableResult
@@ -445,10 +471,18 @@ public func SparseMultiply(_ A: SparseMatrix_Complex_Double, _ X: DenseMatrix_Co
 public func SparseMultiply(_ A: SparseMatrix_Complex_Double, _ x: DenseVector_Complex_Double, _ y: DenseVector_Complex_Double) { }
 public func SparseMultiply(_ A: SparseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Y: DenseMatrix_Complex_Float) { }
 public func SparseMultiply(_ A: SparseMatrix_Complex_Float, _ x: DenseVector_Complex_Float, _ y: DenseVector_Complex_Float) { }
-public func SparseMultiply(_ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) { }
-public func SparseMultiply(_ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) { }
-public func SparseMultiply(_ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) { }
-public func SparseMultiply(_ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) { }
+public func SparseMultiply(_ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) {
+    _sparseCSCMultiplyMatrixD(structure: A.structure, data: A.data, x: X, y: Y, alpha: 1, add: false)
+}
+public func SparseMultiply(_ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: 1, add: false)
+}
+public func SparseMultiply(_ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) {
+    _sparseCSCMultiplyMatrix(structure: A.structure, data: A.data, x: X, y: Y, alpha: 1, add: false)
+}
+public func SparseMultiply(_ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: 1, add: false)
+}
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Double, _ XY: DenseMatrix_Complex_Double) { }
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Double, _ XY: DenseMatrix_Complex_Double, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Y: DenseMatrix_Complex_Double) { }
@@ -481,22 +515,46 @@ public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: Dense
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ XY: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseVector_Float, _ Y: DenseVector_Float) { }
 public func SparseMultiply(_ Subfactor: SparseOpaqueSubfactor_Float, _ X: DenseVector_Float, _ Y: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseMultiply(_ alpha: Double, _ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) { }
-public func SparseMultiply(_ alpha: Double, _ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) { }
-public func SparseMultiply(_ alpha: Float, _ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) { }
-public func SparseMultiply(_ alpha: Float, _ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) { }
+public func SparseMultiply(_ alpha: Double, _ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) {
+    _sparseCSCMultiplyMatrixD(structure: A.structure, data: A.data, x: X, y: Y, alpha: alpha, add: false)
+}
+public func SparseMultiply(_ alpha: Double, _ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: alpha, add: false)
+}
+public func SparseMultiply(_ alpha: Float, _ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) {
+    _sparseCSCMultiplyMatrix(structure: A.structure, data: A.data, x: X, y: Y, alpha: alpha, add: false)
+}
+public func SparseMultiply(_ alpha: Float, _ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: alpha, add: false)
+}
 public func SparseMultiplyAdd(_ A: SparseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Y: DenseMatrix_Complex_Double) { }
 public func SparseMultiplyAdd(_ A: SparseMatrix_Complex_Double, _ x: DenseVector_Complex_Double, _ y: DenseVector_Complex_Double) { }
 public func SparseMultiplyAdd(_ A: SparseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Y: DenseMatrix_Complex_Float) { }
 public func SparseMultiplyAdd(_ A: SparseMatrix_Complex_Float, _ x: DenseVector_Complex_Float, _ y: DenseVector_Complex_Float) { }
-public func SparseMultiplyAdd(_ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) { }
-public func SparseMultiplyAdd(_ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) { }
-public func SparseMultiplyAdd(_ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) { }
-public func SparseMultiplyAdd(_ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) { }
-public func SparseMultiplyAdd(_ alpha: Double, _ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) { }
-public func SparseMultiplyAdd(_ alpha: Double, _ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) { }
-public func SparseMultiplyAdd(_ alpha: Float, _ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) { }
-public func SparseMultiplyAdd(_ alpha: Float, _ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) { }
+public func SparseMultiplyAdd(_ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) {
+    _sparseCSCMultiplyMatrixD(structure: A.structure, data: A.data, x: X, y: Y, alpha: 1, add: true)
+}
+public func SparseMultiplyAdd(_ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: 1, add: true)
+}
+public func SparseMultiplyAdd(_ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) {
+    _sparseCSCMultiplyMatrix(structure: A.structure, data: A.data, x: X, y: Y, alpha: 1, add: true)
+}
+public func SparseMultiplyAdd(_ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: 1, add: true)
+}
+public func SparseMultiplyAdd(_ alpha: Double, _ A: SparseMatrix_Double, _ X: DenseMatrix_Double, _ Y: DenseMatrix_Double) {
+    _sparseCSCMultiplyMatrixD(structure: A.structure, data: A.data, x: X, y: Y, alpha: alpha, add: true)
+}
+public func SparseMultiplyAdd(_ alpha: Double, _ A: SparseMatrix_Double, _ x: DenseVector_Double, _ y: DenseVector_Double) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: alpha, add: true)
+}
+public func SparseMultiplyAdd(_ alpha: Float, _ A: SparseMatrix_Float, _ X: DenseMatrix_Float, _ Y: DenseMatrix_Float) {
+    _sparseCSCMultiplyMatrix(structure: A.structure, data: A.data, x: X, y: Y, alpha: alpha, add: true)
+}
+public func SparseMultiplyAdd(_ alpha: Float, _ A: SparseMatrix_Float, _ x: DenseVector_Float, _ y: DenseVector_Float) {
+    _sparseCSCMultiplyVector(structure: A.structure, data: A.data, x: x.data, y: y.data, alpha: alpha, add: true)
+}
 public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Double, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Double>) { }
 public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Double, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Double>, _ nfoptions: SparseNumericFactorOptions) { }
 public func SparseRefactor(_ Matrix: SparseMatrix_Complex_Double, _ Factored: UnsafeMutablePointer<SparseOpaqueFactorization_Complex_Double>, _ nfoptions: SparseNumericFactorOptions, _ workspace: UnsafeMutableRawPointer) { }
@@ -777,9 +835,15 @@ public func dger_(_ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<I
     return 0
 }
 @discardableResult
-public func drot_(_ n: UnsafeMutablePointer<Int32>!, _ dx: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ dy: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ c: UnsafeMutablePointer<Double>!, _ s: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
+public func drot_(_ n: UnsafeMutablePointer<Int32>!, _ dx: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ dy: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ c: UnsafeMutablePointer<Double>!, _ s: UnsafeMutablePointer<Double>!) -> Int32 {
+    guard let n, let dx, let incx, let dy, let incy, let c, let s else { return -1 }
+    return _rot(n: Int(n.pointee), x: dx, incx: Int(incx.pointee), y: dy, incy: Int(incy.pointee), c: c.pointee, s: s.pointee)
+}
 @discardableResult
-public func drotg_(_ da: UnsafeMutablePointer<Double>!, _ db: UnsafeMutablePointer<Double>!, _ c: UnsafeMutablePointer<Double>!, _ s: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
+public func drotg_(_ da: UnsafeMutablePointer<Double>!, _ db: UnsafeMutablePointer<Double>!, _ c: UnsafeMutablePointer<Double>!, _ s: UnsafeMutablePointer<Double>!) -> Int32 {
+    guard let da, let db, let c, let s else { return -1 }
+    return _rotg(a: &da.pointee, b: &db.pointee, c: &c.pointee, s: &s.pointee)
+}
 @discardableResult
 public func drotm_(_ n: UnsafeMutablePointer<Int32>!, _ dx: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ dy: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ dparam: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
 @discardableResult
@@ -787,7 +851,9 @@ public func drotmg_(_ dd1: UnsafeMutablePointer<Double>!, _ dd2: UnsafeMutablePo
 @discardableResult
 public func dsbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func dsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Double { return 0 }
+public func dsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Double {
+    return sdot_(n, sx, incx, sy, incy)
+}
 @discardableResult
 public func dspmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
@@ -797,15 +863,24 @@ public func dspr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointe
 @discardableResult
 public func dsymm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func dsymv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsymv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _symv(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
 public func dsyr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
 public func dsyr2k_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func dsyr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsyr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let a, let lda else { return -1 }
+    return _syr(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), a: a, lda: Int(lda.pointee))
+}
 @discardableResult
-public func dsyrk_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsyrk_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let n, let k, let alpha, let a, let lda, let beta, let c__, let ldc else { return -1 }
+    return _syrk(uplo: uplo.pointee, trans: trans.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
 public func dtbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
@@ -817,11 +892,17 @@ public func dtpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutableP
 @discardableResult
 public func dtrmm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func dtrmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtrmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
+    return _trmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
 public func dtrsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func dtrsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtrsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
+    return _trsv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
 public func dzasum_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Double { return 0 }
 @discardableResult
@@ -916,7 +997,10 @@ public func scasum_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPoi
 @discardableResult
 public func scnrm2_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Double { return 0 }
 @discardableResult
-public func sdsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sb: UnsafeMutablePointer<Float>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Double { return 0 }
+public func sdsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sb: UnsafeMutablePointer<Float>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Double {
+    guard let sb else { return 0 }
+    return Double(sb.pointee) + sdot_(n, sx, incx, sy, incy)
+}
 @discardableResult
 public func sgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
@@ -1151,9 +1235,15 @@ public func sparse_vector_triangular_solve_dense_double(_ transt: CBLAS_TRANSPOS
 @discardableResult
 public func sparse_vector_triangular_solve_dense_float(_ transt: CBLAS_TRANSPOSE, _ alpha: Float, _ T: sparse_matrix_float!, _ x: UnsafeMutablePointer<Float>!, _ incx: sparse_stride) -> sparse_status { return sparse_status(rawValue: 0) }
 @discardableResult
-public func srot_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ c: UnsafeMutablePointer<Float>!, _ s: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
+public func srot_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ c: UnsafeMutablePointer<Float>!, _ s: UnsafeMutablePointer<Float>!) -> Int32 {
+    guard let n, let sx, let incx, let sy, let incy, let c, let s else { return -1 }
+    return _rot(n: Int(n.pointee), x: sx, incx: Int(incx.pointee), y: sy, incy: Int(incy.pointee), c: c.pointee, s: s.pointee)
+}
 @discardableResult
-public func srotg_(_ sa: UnsafeMutablePointer<Float>!, _ sb: UnsafeMutablePointer<Float>!, _ c: UnsafeMutablePointer<Float>!, _ s: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
+public func srotg_(_ sa: UnsafeMutablePointer<Float>!, _ sb: UnsafeMutablePointer<Float>!, _ c: UnsafeMutablePointer<Float>!, _ s: UnsafeMutablePointer<Float>!) -> Int32 {
+    guard let sa, let sb, let c, let s else { return -1 }
+    return _rotg(a: &sa.pointee, b: &sb.pointee, c: &c.pointee, s: &s.pointee)
+}
 @discardableResult
 public func srotm_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ param: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
 @discardableResult
@@ -1169,15 +1259,24 @@ public func sspr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointe
 @discardableResult
 public func ssymm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func ssymv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssymv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _symv(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
 public func ssyr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
 public func ssyr2k_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func ssyr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssyr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let a, let lda else { return -1 }
+    return _syr(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), a: a, lda: Int(lda.pointee))
+}
 @discardableResult
-public func ssyrk_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssyrk_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let n, let k, let alpha, let a, let lda, let beta, let c__, let ldc else { return -1 }
+    return _syrk(uplo: uplo.pointee, trans: trans.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
 public func stbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
@@ -1189,11 +1288,17 @@ public func stpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutableP
 @discardableResult
 public func strmm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func strmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func strmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
+    return _trmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
 public func strsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
-public func strsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func strsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
+    return _trsv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
 public func vDSP_DFT_Interleaved_CreateSetup(_ Previous: vDSP_DFT_Interleaved_Setup?, _ Length: vDSP_Length, _ Direction: vDSP_DFT_Direction, _ RealtoComplex: vDSP_DFT_RealtoComplex) -> vDSP_DFT_Interleaved_Setup? {
     _ = Previous; _ = Direction
@@ -1245,7 +1350,10 @@ public func vImageAffineWarpD_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ des
 @discardableResult
 public func vImageAffineWarpD_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageAffineWarpD_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageAffineWarpD_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    return _vImageAffineWarpU8(src, dest, transform: _vImageAffineFromDouble(transform.pointee), backColor: backColor, bytesPerPixel: 4, flags: flags)
+}
 @discardableResult
 public func vImageAffineWarpD_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: UnsafePointer<Float>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1253,7 +1361,11 @@ public func vImageAffineWarpD_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ des
 @discardableResult
 public func vImageAffineWarpD_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: Pixel_16F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageAffineWarpD_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageAffineWarpD_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    var color = backColor
+    return _vImageAffineWarpU8(src, dest, transform: _vImageAffineFromDouble(transform.pointee), backColor: &color, bytesPerPixel: 1, flags: flags)
+}
 @discardableResult
 public func vImageAffineWarpD_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform_Double>, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1263,7 +1375,10 @@ public func vImageAffineWarp_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest
 @discardableResult
 public func vImageAffineWarp_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageAffineWarp_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageAffineWarp_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    return _vImageAffineWarpU8(src, dest, transform: transform.pointee, backColor: backColor, bytesPerPixel: 4, flags: flags)
+}
 @discardableResult
 public func vImageAffineWarp_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: UnsafePointer<Float>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -1271,7 +1386,11 @@ public func vImageAffineWarp_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest
 @discardableResult
 public func vImageAffineWarp_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: Pixel_16F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageAffineWarp_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageAffineWarp_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    var color = backColor
+    return _vImageAffineWarpU8(src, dest, transform: transform.pointee, backColor: &color, bytesPerPixel: 1, flags: flags)
+}
 @discardableResult
 public func vImageAffineWarp_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_AffineTransform>, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2083,11 +2202,16 @@ public func vImagePermuteChannels_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _
 @discardableResult
 public func vImagePermuteChannels_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ permuteMap: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImagePermuteChannels_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ permuteMap: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImagePermuteChannels_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ permuteMap: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error {
+    return _vImagePermuteChannelsU8(src, dest, permuteMap: permuteMap, channelCount: 4, flags: flags)
+}
 @discardableResult
 public func vImagePermuteChannels_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ permuteMap: UnsafePointer<UInt8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImagePermuteChannels_RGB888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ permuteMap: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImagePermuteChannels_RGB888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ permuteMap: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error {
+    guard let permuteMap else { return kvImageNullPointerArgument }
+    return _vImagePermuteChannelsU8(src, dest, permuteMap: permuteMap, channelCount: 3, flags: flags)
+}
 @discardableResult
 public func vImagePerspectiveWarp_ARGB16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ transform: UnsafePointer<vImage_PerpsectiveTransform>, _ interpolation: vImage_WarpInterpolation, _ backColor: UnsafeMutablePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2211,7 +2335,10 @@ public func vImageRotate_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: Un
 @discardableResult
 public func vImageRotate_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: UnsafePointer<UInt16>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageRotate_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    return _vImageRotateU8(src, dest, angleInRadians: angleInRadians, backColor: backColor, bytesPerPixel: 4, flags: flags)
+}
 @discardableResult
 public func vImageRotate_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: UnsafePointer<Float>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2219,7 +2346,11 @@ public func vImageRotate_CbCr16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: Un
 @discardableResult
 public func vImageRotate_Planar16F(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: Pixel_16F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageRotate_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageRotate_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    var color = backColor
+    return _vImageRotateU8(src, dest, angleInRadians: angleInRadians, backColor: &color, bytesPerPixel: 1, flags: flags)
+}
 @discardableResult
 public func vImageRotate_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ angleInRadians: Float, _ backColor: Pixel_F, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
@@ -2229,7 +2360,7 @@ public func vImageScale_ARGB16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: Uns
 @discardableResult
 public func vImageScale_ARGB16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 8, flags: flags) }
 @discardableResult
-public func vImageScale_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
+public func vImageScale_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageScaleDispatch(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
 public func vImageScale_ARGBFFFF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 16, flags: flags) }
 @discardableResult
@@ -2245,7 +2376,7 @@ public func vImageScale_Planar16S(_ src: UnsafePointer<vImage_Buffer>, _ dest: U
 @discardableResult
 public func vImageScale_Planar16U(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 2, flags: flags) }
 @discardableResult
-public func vImageScale_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 1, flags: flags) }
+public func vImageScale_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageScaleDispatch(src, dest, bytesPerPixel: 1, flags: flags) }
 @discardableResult
 public func vImageScale_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ flags: vImage_Flags) -> vImage_Error { _ = tempBuffer; return _vImageNearestScale(src, dest, bytesPerPixel: 4, flags: flags) }
 @discardableResult
@@ -2277,9 +2408,21 @@ public func vImageTableLookUp_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ de
 @discardableResult
 public func vImageTableLookUp_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ table: UnsafePointer<Pixel_8>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vImageTentConvolve_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageTentConvolve_ARGB8888(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: UnsafePointer<UInt8>!, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    _ = srcOffsetToROI_X
+    _ = srcOffsetToROI_Y
+    _ = backgroundColor
+    return _vImageTentConvolveU8(src, dest, kernelWidth: kernel_width, kernelHeight: kernel_height, bytesPerPixel: 4, flags: flags)
+}
 @discardableResult
-public func vImageTentConvolve_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
+public func vImageTentConvolve_Planar8(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ tempBuffer: UnsafeMutableRawPointer!, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ kernel_height: UInt32, _ kernel_width: UInt32, _ backgroundColor: Pixel_8, _ flags: vImage_Flags) -> vImage_Error {
+    _ = tempBuffer
+    _ = srcOffsetToROI_X
+    _ = srcOffsetToROI_Y
+    _ = backgroundColor
+    return _vImageTentConvolveU8(src, dest, kernelWidth: kernel_width, kernelHeight: kernel_height, bytesPerPixel: 1, flags: flags)
+}
 @discardableResult
 public func vImageUnpremultiplyData_ARGB16Q12(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult

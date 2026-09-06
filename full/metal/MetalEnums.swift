@@ -310,6 +310,11 @@ public enum MTLSparsePageSize: Int, Equatable, Hashable, Sendable {
     case size256 = 256
 }
 
+public enum MTLSparseTextureMappingMode: UInt, Equatable, Hashable, Sendable {
+    case map = 0
+    case unmap = 1
+}
+
 public enum MTLBufferSparseTier: Int, Equatable, Hashable, Sendable {
     case tierNone = 0
     case tier1 = 1

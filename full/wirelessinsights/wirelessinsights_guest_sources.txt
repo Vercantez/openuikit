@@ -1,0 +1,3 @@
+full/wirelessinsights/ServicePrediction.swift
+full/wirelessinsights/ServicePredictionProvider.swift
+full/wirelessinsights/WirelessInsights.swift

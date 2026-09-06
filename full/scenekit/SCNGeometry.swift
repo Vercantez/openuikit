@@ -795,8 +795,12 @@ open class SCNFloor: SCNGeometry {
 }
 
 open class SCNText: SCNGeometry {
-    public var string: Any?
-    public var extrusionDepth: CGFloat
+    public var string: Any? {
+        didSet { _refreshText() }
+    }
+    public var extrusionDepth: CGFloat {
+        didSet { _refreshText() }
+    }
     public var alignmentMode: String
     public var truncationMode: String
     public var isWrapped: Bool
@@ -813,12 +817,28 @@ open class SCNText: SCNGeometry {
         chamferRadius = 0
         containerFrame = .zero
         super.init()
+        _refreshText()
     }
 
     public convenience init(string: Any?, extrusionDepth: CGFloat) {
         self.init()
         self.string = string
         self.extrusionDepth = extrusionDepth
+        _refreshText()
+    }
+
+    /// Linux fallback: a box sized by character count. Not glyph tessellation.
+    private func _refreshText() {
+        let text = (string as? String) ?? ""
+        let width = max(0.5, CGFloat(max(text.count, 1)) * 0.5)
+        let height: CGFloat = 1
+        let depth = max(extrusionDepth, 0.01)
+        _scnAssignMesh(self, _scnBoxMesh(
+            width: Float(width),
+            height: Float(height),
+            length: Float(depth),
+            wSeg: 1, hSeg: 1, lSeg: 1
+        ))
     }
 
     public required init?(coder: NSCoder) { return nil }

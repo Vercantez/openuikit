@@ -268,6 +268,20 @@ public struct CAFMarker: Equatable, Hashable, Sendable {
         mSMPTETime = CAF_SMPTE_Time()
         mChannel = 0
     }
+
+    public init(
+        mType: UInt32,
+        mFramePosition: Float64,
+        mMarkerID: UInt32,
+        mSMPTETime: CAF_SMPTE_Time,
+        mChannel: UInt32
+    ) {
+        self.mType = mType
+        self.mFramePosition = mFramePosition
+        self.mMarkerID = mMarkerID
+        self.mSMPTETime = mSMPTETime
+        self.mChannel = mChannel
+    }
 }
 
 @frozen
@@ -280,6 +294,12 @@ public struct CAFMarkerChunk: Equatable, Hashable, Sendable {
         mSMPTE_TimeType = kCAF_SMPTE_TimeTypeNone
         mNumberMarkers = 0
         mMarkers = CAFMarker()
+    }
+
+    public init(mSMPTE_TimeType: UInt32, mNumberMarkers: UInt32, mMarkers: CAFMarker) {
+        self.mSMPTE_TimeType = mSMPTE_TimeType
+        self.mNumberMarkers = mNumberMarkers
+        self.mMarkers = mMarkers
     }
 }
 
@@ -316,6 +336,12 @@ public struct CAFRegionChunk: Equatable, Hashable, Sendable {
         mNumberRegions = 0
         mRegions = CAFRegion()
     }
+
+    public init(mSMPTE_TimeType: UInt32, mNumberRegions: UInt32, mRegions: CAFRegion) {
+        self.mSMPTE_TimeType = mSMPTE_TimeType
+        self.mNumberRegions = mNumberRegions
+        self.mRegions = mRegions
+    }
 }
 
 @frozen
@@ -343,6 +369,30 @@ public struct CAFInstrumentChunk: Equatable, Hashable, Sendable {
         mReleaseRegionID = 0
         mInstrumentID = 0
     }
+
+    public init(
+        mBaseNote: Float32,
+        mMIDILowNote: UInt8,
+        mMIDIHighNote: UInt8,
+        mMIDILowVelocity: UInt8,
+        mMIDIHighVelocity: UInt8,
+        mdBGain: Float32,
+        mStartRegionID: UInt32,
+        mSustainRegionID: UInt32,
+        mReleaseRegionID: UInt32,
+        mInstrumentID: UInt32
+    ) {
+        self.mBaseNote = mBaseNote
+        self.mMIDILowNote = mMIDILowNote
+        self.mMIDIHighNote = mMIDIHighNote
+        self.mMIDILowVelocity = mMIDILowVelocity
+        self.mMIDIHighVelocity = mMIDIHighVelocity
+        self.mdBGain = mdBGain
+        self.mStartRegionID = mStartRegionID
+        self.mSustainRegionID = mSustainRegionID
+        self.mReleaseRegionID = mReleaseRegionID
+        self.mInstrumentID = mInstrumentID
+    }
 }
 
 @frozen
@@ -358,6 +408,18 @@ public struct CAFPacketTableHeader: Equatable, Hashable, Sendable {
         mPrimingFrames = 0
         mRemainderFrames = 0
     }
+
+    public init(
+        mNumberPackets: Int64,
+        mNumberValidFrames: Int64,
+        mPrimingFrames: Int32,
+        mRemainderFrames: Int32
+    ) {
+        self.mNumberPackets = mNumberPackets
+        self.mNumberValidFrames = mNumberValidFrames
+        self.mPrimingFrames = mPrimingFrames
+        self.mRemainderFrames = mRemainderFrames
+    }
 }
 
 @frozen
@@ -368,6 +430,11 @@ public struct CAFPositionPeak: Equatable, Hashable, Sendable {
     public init() {
         mValue = 0
         mFrameNumber = 0
+    }
+
+    public init(mValue: Float32, mFrameNumber: UInt64) {
+        self.mValue = mValue
+        self.mFrameNumber = mFrameNumber
     }
 }
 
@@ -380,6 +447,11 @@ public struct CAFPeakChunk: Equatable, Hashable, Sendable {
         mEditCount = 0
         mPeaks = CAFPositionPeak()
     }
+
+    public init(mEditCount: UInt32, mPeaks: CAFPositionPeak) {
+        self.mEditCount = mEditCount
+        self.mPeaks = mPeaks
+    }
 }
 
 @frozen
@@ -390,6 +462,11 @@ public struct CAFOverviewSample: Equatable, Hashable, Sendable {
     public init() {
         mMinValue = 0
         mMaxValue = 0
+    }
+
+    public init(mMinValue: Int16, mMaxValue: Int16) {
+        self.mMinValue = mMinValue
+        self.mMaxValue = mMaxValue
     }
 }
 
@@ -404,6 +481,12 @@ public struct CAFOverviewChunk: Equatable, Hashable, Sendable {
         mNumFramesPerOVWSample = 0
         mData = CAFOverviewSample()
     }
+
+    public init(mEditCount: UInt32, mNumFramesPerOVWSample: UInt32, mData: CAFOverviewSample) {
+        self.mEditCount = mEditCount
+        self.mNumFramesPerOVWSample = mNumFramesPerOVWSample
+        self.mData = mData
+    }
 }
 
 @frozen
@@ -414,6 +497,11 @@ public struct CAFStringID: Equatable, Hashable, Sendable {
     public init() {
         mStringID = 0
         mStringStartByteOffset = 0
+    }
+
+    public init(mStringID: UInt32, mStringStartByteOffset: Int64) {
+        self.mStringID = mStringID
+        self.mStringStartByteOffset = mStringStartByteOffset
     }
 }
 
@@ -426,6 +514,11 @@ public struct CAFStrings: Equatable, Hashable, Sendable {
         mNumEntries = 0
         mStringsIDs = CAFStringID()
     }
+
+    public init(mNumEntries: UInt32, mStringsIDs: CAFStringID) {
+        self.mNumEntries = mNumEntries
+        self.mStringsIDs = mStringsIDs
+    }
 }
 
 @frozen
@@ -434,6 +527,10 @@ public struct CAFInfoStrings: Equatable, Hashable, Sendable {
 
     public init() {
         mNumEntries = 0
+    }
+
+    public init(mNumEntries: UInt32) {
+        self.mNumEntries = mNumEntries
     }
 }
 
@@ -451,5 +548,16 @@ public struct CAFUMIDChunk: Sendable {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
         )
+    }
+
+    public init(
+        mBytes: (
+            UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+            UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+            UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
+            UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8
+        )
+    ) {
+        self.mBytes = mBytes
     }
 }

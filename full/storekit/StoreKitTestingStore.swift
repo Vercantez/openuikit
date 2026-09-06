@@ -54,14 +54,30 @@ public enum StoreKitTesting {
     ) throws -> Product.PurchaseResult {
         var quantity = 1
         var token: UUID?
+        var offer: Transaction.Offer?
         for option in options {
             if let value = option.quantityValue { quantity = value }
             if let value = option.appAccountTokenValue { token = value }
+            if let identifier = option.promotionalOfferID {
+                offer = Transaction.Offer(
+                    id: identifier,
+                    type: .promotional,
+                    paymentMode: .payAsYouGo
+                )
+            }
+            if let identifier = option.winBackOfferID {
+                offer = Transaction.Offer(
+                    id: identifier,
+                    type: .winBack,
+                    paymentMode: .freeTrial
+                )
+            }
         }
         let result = try LocalTestingStore.shared.purchase(
             product: product,
             quantity: quantity,
-            appAccountToken: token
+            appAccountToken: token,
+            offer: offer
         )
         return .success(result)
     }
@@ -152,29 +168,47 @@ public enum StoreKitTesting {
         LocalTestingStore.shared.takePendingUpdates()
     }
 
+    public static func enqueuePurchaseIntent(
+        productID: String,
+        offer: Product.SubscriptionOffer? = nil
+    ) throws {
+        try LocalTestingStore.shared.enqueuePurchaseIntent(productID: productID, offer: offer)
+    }
+
+    public static func takePendingIntents() -> [PurchaseIntent] {
+        LocalTestingStore.shared.takePendingIntents()
+    }
+
+    public static func enqueueMessage(reason: Message.Reason) {
+        LocalTestingStore.shared.enqueueMessage(Message(reason: reason))
+    }
+
+    public static func takePendingMessages() -> [Message] {
+        LocalTestingStore.shared.takePendingMessages()
+    }
+
     public static func promotionOrder() throws -> [Product.PromotionInfo] {
         guard LocalTestingStore.shared.isLoaded else {
             throw StoreKitError.notAvailableInStorefront
         }
-        return []
+        return LocalTestingStore.shared.promotionInfos()
     }
 
     public static func updateProductVisibility(
         _ visibility: Product.PromotionInfo.Visibility,
         for productID: String
     ) throws {
-        _ = visibility
-        _ = productID
         guard LocalTestingStore.shared.isLoaded else {
             throw StoreKitError.notAvailableInStorefront
         }
+        LocalTestingStore.shared.setPromotionVisibility(visibility, for: productID)
     }
 
     public static func updateProductOrder(byID order: [String]) throws {
-        _ = order
         guard LocalTestingStore.shared.isLoaded else {
             throw StoreKitError.notAvailableInStorefront
         }
+        LocalTestingStore.shared.setPromotionOrder(order)
     }
 }
 
@@ -191,6 +225,8 @@ struct CatalogProduct: Sendable {
     var groupDisplayName: String
     var period: Product.SubscriptionPeriod?
     var introductory: Product.SubscriptionOffer?
+    var promotionalOffers: [Product.SubscriptionOffer]
+    var winBackOffers: [Product.SubscriptionOffer]
 }
 
 struct StoredTransaction: Sendable {
@@ -219,6 +255,10 @@ final class LocalTestingStore: @unchecked Sendable {
     private var listeners: [UUID: UpdateListenerBox] = [:]
     private var skTransactions: [SKPaymentTransaction] = []
     private var introConsumedGroups: Set<String> = []
+    private var purchaseIntents: [PurchaseIntent] = []
+    private var messages: [Message] = []
+    private var promotionOrderIDs: [String] = []
+    private var promotionVisibility: [String: Product.PromotionInfo.Visibility] = [:]
 
     private init() {}
 
@@ -282,6 +322,10 @@ final class LocalTestingStore: @unchecked Sendable {
         listeners = [:]
         skTransactions = []
         introConsumedGroups = []
+        purchaseIntents = []
+        messages = []
+        promotionOrderIDs = []
+        promotionVisibility = [:]
         lock.unlock()
         for box in waiting.values {
             box.continuation?.resume(returning: nil)
@@ -308,6 +352,11 @@ final class LocalTestingStore: @unchecked Sendable {
         nextTransactionID = 1
         pendingUpdates = []
         skTransactions = []
+        introConsumedGroups = []
+        purchaseIntents = []
+        messages = []
+        promotionOrderIDs = []
+        promotionVisibility = [:]
         parseSettings(root["settings"] as? [String: Any])
         parseProducts(root["products"] as? [Any] ?? [])
         parseNonRenewing(root["nonRenewingSubscriptions"] as? [Any] ?? [])
@@ -351,7 +400,8 @@ final class LocalTestingStore: @unchecked Sendable {
     func purchase(
         product: Product,
         quantity: Int,
-        appAccountToken: UUID?
+        appAccountToken: UUID?,
+        offer: Transaction.Offer? = nil
     ) throws -> VerificationResult<Transaction> {
         lock.lock()
         guard loaded else {
@@ -366,6 +416,21 @@ final class LocalTestingStore: @unchecked Sendable {
             lock.unlock()
             throw Product.PurchaseError.invalidQuantity
         }
+        var appliedOffer = offer
+        if let identifier = offer?.id, offer?.type == .promotional {
+            let known = catalogProduct.promotionalOffers.contains { $0.id == identifier }
+            if !known {
+                lock.unlock()
+                throw Product.PurchaseError.invalidOfferIdentifier
+            }
+        }
+        if let identifier = offer?.id, offer?.type == .winBack {
+            let known = catalogProduct.winBackOffers.contains { $0.id == identifier }
+            if !known {
+                lock.unlock()
+                throw Product.PurchaseError.invalidOfferIdentifier
+            }
+        }
         let now = Date()
         let identifier = nextTransactionID
         nextTransactionID += 1
@@ -373,7 +438,23 @@ final class LocalTestingStore: @unchecked Sendable {
         if catalogProduct.type == .autoRenewable, let period = catalogProduct.period {
             expiration = period.endDate(from: now)
         }
+        if catalogProduct.type == .nonRenewable, let period = catalogProduct.period {
+            expiration = period.endDate(from: now)
+        }
         if catalogProduct.type == .autoRenewable, let group = catalogProduct.subscriptionGroupID {
+            if appliedOffer == nil,
+               !introConsumedGroups.contains(group),
+               let introductory = catalogProduct.introductory
+            {
+                appliedOffer = Transaction.Offer(
+                    id: introductory.id,
+                    type: .introductory,
+                    paymentMode: Transaction.Offer.PaymentMode(
+                        rawValue: introductory.paymentMode.rawValue
+                    ),
+                    period: introductory.period
+                )
+            }
             introConsumedGroups.insert(group)
         }
         let storefront = Storefront(id: storefrontID, countryCode: countryCode)
@@ -418,7 +499,7 @@ final class LocalTestingStore: @unchecked Sendable {
             jwsRepresentation: jws.compactSerialization,
             price: catalogProduct.price,
             currencyCode: currencyCode,
-            offer: nil
+            offer: appliedOffer
         )
         transactions.append(StoredTransaction(transaction: transaction, finished: false))
         let result: VerificationResult<Transaction>
@@ -567,6 +648,103 @@ final class LocalTestingStore: @unchecked Sendable {
         return values
     }
 
+    func enqueuePurchaseIntent(productID: String, offer: Product.SubscriptionOffer?) throws {
+        lock.lock()
+        defer { lock.unlock() }
+        guard loaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+        guard let catalogProduct = catalog[productID] else {
+            throw Product.PurchaseError.productUnavailable
+        }
+        purchaseIntents.append(
+            PurchaseIntent(product: makeProduct(catalogProduct), offer: offer)
+        )
+    }
+
+    func pendingPurchaseIntents() -> [PurchaseIntent] {
+        lock.lock()
+        defer { lock.unlock() }
+        return purchaseIntents
+    }
+
+    func takePendingIntents() -> [PurchaseIntent] {
+        lock.lock()
+        defer { lock.unlock() }
+        let values = purchaseIntents
+        purchaseIntents = []
+        return values
+    }
+
+    func enqueueMessage(_ message: Message) {
+        lock.lock()
+        defer { lock.unlock() }
+        messages.append(message)
+    }
+
+    func pendingMessages() -> [Message] {
+        lock.lock()
+        defer { lock.unlock() }
+        return messages
+    }
+
+    func takePendingMessages() -> [Message] {
+        lock.lock()
+        defer { lock.unlock() }
+        let values = messages
+        messages = []
+        return values
+    }
+
+    func appTransaction() throws -> VerificationResult<AppTransaction> {
+        lock.lock()
+        defer { lock.unlock() }
+        guard loaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+        let bundleID = Bundle.main.bundleIdentifier ?? "localhost"
+        let payload: [String: Any] = [
+            "bundleId": bundleID,
+            "applicationVersion": "1.0",
+            "originalApplicationVersion": "1.0",
+            "environment": "Xcode",
+            "originalPlatform": "iOS",
+            "receiptType": "Xcode",
+        ]
+        let signed = StoreKitJWSCodec.encode(payload: payload)
+        let value = AppTransaction(signed: signed, bundleID: bundleID, environment: .xcode)
+        if treatVerified {
+            return .verified(value)
+        }
+        return .unverified(value, .invalidSignature)
+    }
+
+    func promotionInfos() -> [Product.PromotionInfo] {
+        lock.lock()
+        defer { lock.unlock() }
+        let order = promotionOrderIDs
+        return order.compactMap { identifier in
+            guard catalog[identifier] != nil else { return nil }
+            let visibility = promotionVisibility[identifier] ?? .appStoreConnectDefault
+            return Product.PromotionInfo(productID: identifier, visibility: visibility)
+        }
+    }
+
+    func setPromotionVisibility(
+        _ visibility: Product.PromotionInfo.Visibility,
+        for productID: String
+    ) {
+        lock.lock()
+        defer { lock.unlock() }
+        promotionVisibility[productID] = visibility
+    }
+
+    func setPromotionOrder(_ order: [String]) {
+        lock.lock()
+        defer { lock.unlock() }
+        promotionOrderIDs = order
+    }
+
     func isEligibleForIntroOffer(groupID: String) -> Bool {
         lock.lock()
         defer { lock.unlock() }
@@ -652,8 +830,8 @@ final class LocalTestingStore: @unchecked Sendable {
                 groupDisplayName: catalogProduct.groupDisplayName,
                 groupLevel: catalogProduct.groupLevel,
                 introductoryOffer: catalogProduct.introductory,
-                promotionalOffers: [],
-                winBackOffers: []
+                promotionalOffers: catalogProduct.promotionalOffers,
+                winBackOffers: catalogProduct.winBackOffers
             )
         }
         return Product(
@@ -766,6 +944,8 @@ final class LocalTestingStore: @unchecked Sendable {
         let periodRaw = dict["recurringSubscriptionPeriod"] as? String
         let period = periodRaw.flatMap(Product.SubscriptionPeriod.init(iso8601Duration:))
         let intro = parseIntro(dict["introductoryOffer"] as? [String: Any])
+        let promotional = parseOffers(dict["adHocOffers"] as? [Any] ?? [], type: .promotional)
+        let winBack = parseOffers(dict["winBackOffers"] as? [Any] ?? [], type: .winBack)
         let resolvedGroup = (dict["subscriptionGroupID"] as? String) ?? groupID
         catalog[productID] = CatalogProduct(
             id: productID,
@@ -779,7 +959,9 @@ final class LocalTestingStore: @unchecked Sendable {
             groupLevel: groupLevel,
             groupDisplayName: groupName,
             period: period,
-            introductory: intro
+            introductory: intro,
+            promotionalOffers: promotional,
+            winBackOffers: winBack
         )
     }
 
@@ -830,6 +1012,29 @@ final class LocalTestingStore: @unchecked Sendable {
             periodCount: count,
             paymentMode: mode
         )
+    }
+
+    private func parseOffers(
+        _ items: [Any],
+        type: Product.SubscriptionOffer.OfferType
+    ) -> [Product.SubscriptionOffer] {
+        var result: [Product.SubscriptionOffer] = []
+        for item in items {
+            guard let dict = item as? [String: Any] else { continue }
+            guard let parsed = parseIntro(dict) else { continue }
+            result.append(
+                Product.SubscriptionOffer(
+                    id: parsed.id,
+                    type: type,
+                    price: parsed.price,
+                    displayPrice: parsed.displayPrice,
+                    period: parsed.period,
+                    periodCount: parsed.periodCount,
+                    paymentMode: parsed.paymentMode
+                )
+            )
+        }
+        return result
     }
 
     private func formatDisplayPrice(_ price: Decimal) -> String {

@@ -776,6 +776,34 @@ open class SKAdNetwork: NSObject {
         _ = impression
         throw StoreKitPortableError(.serviceUnavailable)
     }
+
+    public class func startImpression(
+        _ impression: SKAdImpression,
+        completionHandler: ((Error?) -> Void)? = nil
+    ) {
+        _ = impression
+        completionHandler?(StoreKitPortableError(.serviceUnavailable))
+    }
+
+    public class func endImpression(
+        _ impression: SKAdImpression,
+        completionHandler: ((Error?) -> Void)? = nil
+    ) {
+        _ = impression
+        completionHandler?(StoreKitPortableError(.serviceUnavailable))
+    }
+
+    public class func updatePostbackConversionValue(
+        _ fineValue: Int,
+        coarseValue: CoarseConversionValue,
+        lockWindow: Bool,
+        completionHandler: ((Error?) -> Void)? = nil
+    ) {
+        _ = fineValue
+        _ = coarseValue
+        _ = lockWindow
+        completionHandler?(StoreKitPortableError(.serviceUnavailable))
+    }
 }
 
 open class SKAdImpression: NSObject {

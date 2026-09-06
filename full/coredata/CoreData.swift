@@ -1,10 +1,10 @@
 // CoreData Linux starting point.
 //
-// This module implements an in-memory object graph, model/metadata types,
-// fetch/save, and NSPersistentContainer wiring. Durable Apple SQLite/binary
-// store formats, CloudKit, ubiquity, Spotlight, momd decoding, and string
-// NSPredicate/KVC sort descriptors are fail-closed: they compile where the
-// Linux Foundation types exist, and otherwise remain deferred.
+// This module implements an in-memory object graph, a Linux SQLite store
+// (libsqlite3 via dlopen, not Apple's Z* WAL layout), model/metadata types
+// including `.xcdatamodel` XML loading, fetch/save, and NSPersistentContainer
+// wiring. Apple compiled `.mom` bytes, binary stores, CloudKit, ubiquity,
+// Spotlight, and string NSPredicate/KVC sort descriptors stay fail-closed.
 
 import Foundation
 
@@ -542,7 +542,7 @@ func _CDMakeError(_ code: Int, _ message: String, userInfo extra: [String: Any] 
 func _CDUnsupportedStoreError(_ storeType: String) -> NSError {
     _CDMakeError(
         NSPersistentStoreOpenError,
-        "Linux CoreData does not open Apple-format '\(storeType)' stores. Use NSInMemoryStoreType."
+        "Linux CoreData does not open Apple-format '\(storeType)' stores. Use NSInMemoryStoreType or NSSQLiteStoreType."
     )
 }
 

@@ -6,18 +6,18 @@ func testInMemoryCRUDAndFailClosed() {
             let container = try makeLoadedContainer(model)
 
             try withUniqueTempDirectory { directory in
-                let sqliteURL = directory.appendingPathComponent("should-not-open.sqlite")
-                let sqlite = NSPersistentStoreDescription(url: sqliteURL)
-                sqlite.type = NSSQLiteStoreType
-                var sqliteFailed = false
-                container.persistentStoreCoordinator.addPersistentStore(with: sqlite) { _, error in
-                    sqliteFailed = error != nil
+                let binaryURL = directory.appendingPathComponent("should-not-open.binary")
+                let binary = NSPersistentStoreDescription(url: binaryURL)
+                binary.type = NSBinaryStoreType
+                var binaryFailed = false
+                container.persistentStoreCoordinator.addPersistentStore(with: binary) { _, error in
+                    binaryFailed = error != nil
                 }
-                guard sqliteFailed else {
-                    throw ProbeFailure.message("SQLite addPersistentStore must fail closed on Linux")
+                guard binaryFailed else {
+                    throw ProbeFailure.message("binary addPersistentStore must fail closed on Linux")
                 }
-                guard !FileManager.default.fileExists(atPath: sqliteURL.path) else {
-                    throw ProbeFailure.message("fail-closed SQLite open must not create \(sqliteURL.path)")
+                guard !FileManager.default.fileExists(atPath: binaryURL.path) else {
+                    throw ProbeFailure.message("fail-closed binary open must not create \(binaryURL.path)")
                 }
             }
 
