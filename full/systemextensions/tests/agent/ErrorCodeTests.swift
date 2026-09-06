@@ -1,6 +1,15 @@
 import Foundation
 import SystemExtensions
 
+func testOSSystemExtensionErrorCodeType() {
+    typealias Code = OSSystemExtensionError.Code
+    let sample: Code = .unknown
+    precondition(type(of: sample) == Code.self)
+    let boxed: Any = sample
+    precondition(boxed is Code)
+    precondition(!(boxed is String))
+}
+
 func testOSSystemExtensionErrorCodeRawValues() {
     typealias Code = OSSystemExtensionError.Code
     let expected: [(Code, Int)] = [
@@ -23,33 +32,16 @@ func testOSSystemExtensionErrorCodeRawValues() {
         precondition(code.rawValue == raw)
         precondition(Code(rawValue: raw) == code)
     }
+}
+
+func testOSSystemExtensionErrorCodeInitRawValue() {
+    typealias Code = OSSystemExtensionError.Code
+    precondition(Code(rawValue: 1) == .unknown)
+    precondition(Code(rawValue: 8) == .codeSignatureInvalid)
+    precondition(Code(rawValue: 13) == .authorizationRequired)
     precondition(Code(rawValue: 0) == nil)
     precondition(Code(rawValue: 14) == nil)
     precondition(Code(rawValue: -1) == nil)
-}
-
-func testOSSystemExtensionErrorStaticCodeAliases() {
-    typealias Code = OSSystemExtensionError.Code
-    let aliases: [(Code, Code)] = [
-        (OSSystemExtensionError.unknown, .unknown),
-        (OSSystemExtensionError.missingEntitlement, .missingEntitlement),
-        (OSSystemExtensionError.unsupportedParentBundleLocation, .unsupportedParentBundleLocation),
-        (OSSystemExtensionError.extensionNotFound, .extensionNotFound),
-        (OSSystemExtensionError.extensionMissingIdentifier, .extensionMissingIdentifier),
-        (OSSystemExtensionError.duplicateExtensionIdentifer, .duplicateExtensionIdentifer),
-        (OSSystemExtensionError.unknownExtensionCategory, .unknownExtensionCategory),
-        (OSSystemExtensionError.codeSignatureInvalid, .codeSignatureInvalid),
-        (OSSystemExtensionError.validationFailed, .validationFailed),
-        (OSSystemExtensionError.forbiddenBySystemPolicy, .forbiddenBySystemPolicy),
-        (OSSystemExtensionError.requestCanceled, .requestCanceled),
-        (OSSystemExtensionError.requestSuperseded, .requestSuperseded),
-        (OSSystemExtensionError.authorizationRequired, .authorizationRequired),
-    ]
-    precondition(aliases.count == 13)
-    for (alias, member) in aliases {
-        precondition(alias == member)
-        precondition(alias.rawValue == member.rawValue)
-    }
 }
 
 func testOSSystemExtensionErrorCodePatternMatch() {

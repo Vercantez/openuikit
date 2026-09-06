@@ -7,26 +7,28 @@ Endpoint Security success.
 
 ## Depth pass 2026-09
 
-This is a fresh seed: **57 exact public identifiers**, floor 46 nondeferred
-(`ceil(80% of 57)`). Every identifier is `implemented` with a focused
-top-level synchronous `func test*()`.
+Fresh seed started at **0 implemented / 0 declared**. The first starting-point
+commit was **57 implemented / 0 declared**, but the operator merge refused it:
+`testOSSystemExtensionErrorStaticCodeAliases` was cited by **13 of 27**
+remaining implemented rows (bulk relabel). This repair splits those aliases
+and the enum-type / `init(rawValue:)` rows onto focused tests.
 
-Coverage after this pass: **57 implemented / 0 declared / 0 deferred /
+Coverage after this repair: **57 implemented / 0 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
 Top-5 implemented evidence distribution (57 implemented rows):
 
 | rows | share | evidence |
 | ---: | ---: | --- |
-| 15 | 26.3% | `ErrorCodeTests.swift#testOSSystemExtensionErrorCodeRawValues` (enum cases + `init(rawValue:)`; table-driven value test) |
-| 13 | 22.8% of remaining 42 | `ErrorCodeTests.swift#testOSSystemExtensionErrorStaticCodeAliases` |
-| 1 | 1.8% | `ConstantTests.swift#testNSSystemExtensionUsageDescriptionKey` |
-| 1 | 1.8% | `ConstantTests.swift#testOSBundleUsageDescriptionKey` |
-| 1 | 1.8% | `ConstantTests.swift#testOSSystemExtensionErrorDomain` |
+| 13 | 22.8% | `ErrorCodeTests.swift#testOSSystemExtensionErrorCodeRawValues` (enum *members* only; table-driven raw values) |
+| 1 | 1.8% | `ErrorCodeTests.swift#testOSSystemExtensionErrorCodeType` |
+| 1 | 1.8% | `ErrorCodeTests.swift#testOSSystemExtensionErrorCodeInitRawValue` |
+| 1 | 1.8% | `ErrorAliasTests.swift#testOSSystemExtensionErrorUnknownAlias` |
+| 1 | 1.8% | `ErrorAliasTests.swift#testOSSystemExtensionErrorMissingEntitlementAlias` |
 
-The remaining 27 implemented rows each have their own test (error bridging,
-equality/hashing, properties getters, workspace singleton and fail-closed
-query). No non-enum test exceeds 40% of the remaining implemented rows.
+The other 40 implemented rows each cite their own test. Remaining after the
+13 enum-member rows: **44**. No non-enum test is cited more than once
+(1/44 = 2.3%, under the 40% bulk-relabel cap).
 
 Environment: `git rev-parse HEAD` was
 `26f5086c5b31ba816742f18d3096152cd32280f4`. `swiftc` is Swift 6.2.4,
