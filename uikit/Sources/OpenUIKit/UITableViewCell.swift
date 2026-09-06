@@ -165,22 +165,44 @@ final class UITableCellAccessoryView: UIView {
         case .none:
             break
         case .disclosureIndicator:
-            // 10.5x14 box; ink fitted to the golden chevron (2 pt stroke,
-            // round caps, apex right of center). RTL (MEASURED /tmp/rtlprobe,
-            // iPhone SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron
-            // points toward trailing (left), mirrored in the 10.5 box.
+            // 10.5x14 box at `.large`; ink fitted to the golden chevron (2 pt
+            // stroke, round caps, apex right of center). RTL (MEASURED
+            // /tmp/rtlprobe, iPhone SE 2x / iOS 26.1, disclosure abs.x = 16):
+            // the chevron points toward trailing (left), mirrored in the box.
+            // MEASURED Ledger t200.xxxl / t200.ax1: the box grows to 14×19.5
+            // / 20×28.5; scale the design-space polyline only when the box
+            // is that larger size so the 3x 10.333 box (realapp_storage)
+            // keeps the fitted 2 pt stroke.
             let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
-            let points: [CGPoint]
-            if _layoutIsRTL {
-                points = [CGPoint(x: 7.3, y: 1.1),
-                          CGPoint(x: 2.5, y: 5.85),
-                          CGPoint(x: 7.3, y: 10.6)]
+            // Keep the `.large` 10.5×14 (and 3x 10.333×14) polyline
+            // literal so realapp_focus_settings / storage stay byte-identical
+            // to the fitted 2 pt stroke. Scale only the Dynamic Type boxes
+            // (xxxl 14×19.5, ax1 20×28.5).
+            if bounds.height > 15 {
+                let sx = bounds.width / 10.5
+                let sy = bounds.height / 14
+                let points: [CGPoint]
+                if _layoutIsRTL {
+                    points = [CGPoint(x: 7.3 * sx, y: 1.1 * sy),
+                              CGPoint(x: 2.5 * sx, y: 5.85 * sy),
+                              CGPoint(x: 7.3 * sx, y: 10.6 * sy)]
+                } else {
+                    points = [CGPoint(x: 3.2 * sx, y: 1.1 * sy),
+                              CGPoint(x: 8.0 * sx, y: 5.85 * sy),
+                              CGPoint(x: 3.2 * sx, y: 10.6 * sy)]
+                }
+                strokePolyline(points, width: 2 * sy, in: canvas, color: color)
+            } else if _layoutIsRTL {
+                strokePolyline([CGPoint(x: 7.3, y: 1.1),
+                                CGPoint(x: 2.5, y: 5.85),
+                                CGPoint(x: 7.3, y: 10.6)],
+                               width: 2, in: canvas, color: color)
             } else {
-                points = [CGPoint(x: 3.2, y: 1.1),
-                          CGPoint(x: 8.0, y: 5.85),
-                          CGPoint(x: 3.2, y: 10.6)]
+                strokePolyline([CGPoint(x: 3.2, y: 1.1),
+                                CGPoint(x: 8.0, y: 5.85),
+                                CGPoint(x: 3.2, y: 10.6)],
+                               width: 2, in: canvas, color: color)
             }
-            strokePolyline(points, width: 2, in: canvas, color: color)
         case .checkmark:
             // 19x18 box; tintColor stroke fitted to the golden checkmark.
             let color = tintColor.resolvedCGColor(with: traitCollection)
@@ -571,8 +593,24 @@ open class UITableViewCell: UIView, ReusableView {
     static var detailTrailingMargin: CGFloat { isIOSChrome ? 16 : 16 }
     /// iOS: the chevron symbol is 10.333 wide at 3x and 10.5 at 2x — a
     /// width in (10, 10.333] rounded up to the device pixel; 14 tall on both.
+    /// MEASURED Ledger t200 / t200.xxxl / t200.ax1, iPhone SE 2x / iOS 26.1:
+    /// `.large` accessory `_UITableCellAccessoryButton [316.5, 39, 10.5, 14]`
+    /// contentView 316.5; `.xxxl` `[313, 34, 14, 19.5]` contentView 313;
+    /// `.ax1` `[307, 26, 20, 28.5]` contentView 307. Trailing margin stays 16
+    /// (343 − content − accessory). Other accessibility categories reuse the
+    /// ax1 size (same pattern as `usesAccessibilityEditChrome`).
     static var disclosureSize: CGSize {
-        isIOSChrome ? CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14) : CGSize(width: 10.5, height: 14)
+        disclosureSize(compatibleWith: .current)
+    }
+    static func disclosureSize(compatibleWith traits: UITraitCollection) -> CGSize {
+        let base = isIOSChrome
+            ? CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14)
+            : CGSize(width: 10.5, height: 14)
+        guard isIOSChrome else { return base }
+        let cat = traits.preferredContentSizeCategory
+        if cat.isAccessibilityCategory { return CGSize(width: 20, height: 28.5) }
+        if cat == .extraExtraExtraLarge { return CGSize(width: 14, height: 19.5) }
+        return base
     }
     /// iOS: 19 x 17.333 at 3x, 19 x 18 at 2x (measured; no single rounding
     /// of one value gives both, so the two readings are carried as such).
@@ -946,7 +984,7 @@ open class UITableViewCell: UIView, ReusableView {
             return available
         case .disclosureIndicator:
             return max(0, available - trailingMargin
-                       - UITableViewCell.disclosureSize.width)
+                       - UITableViewCell.disclosureSize(compatibleWith: traitCollection).width)
         case .checkmark:
             return max(0, available - checkmarkTrailingMargin
                        - UITableViewCell.checkmarkSize.width
@@ -1066,7 +1104,7 @@ open class UITableViewCell: UIView, ReusableView {
                 _accessoryGlyphView.isHidden = true
             case .disclosureIndicator:
                 _accessoryGlyphView.isHidden = false
-                let s = UITableViewCell.disclosureSize
+                let s = UITableViewCell.disclosureSize(compatibleWith: traitCollection)
                 _accessoryGlyphView.frame = CGRect(
                     x: w - trailingMargin - s.width,
                     y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),

@@ -350,14 +350,26 @@ open class UITableView: UIScrollView {
     var groupedHeaderLabelX: CGFloat {
         // MEASURED Forms t200, iPhone SE 2x, iOS 26.1: a `.grouped` table
         // (no card — cells are full-bleed 375) puts the section header
-        // label at x = 16, the window's system margin. `insetGroupedSideInset
-        // + 16` is the insetGrouped reading (card at 16, header at 32) and
-        // stays the rule for `.insetGrouped` / Catalyst, except pad
-        // inset-grouped which adds 20 (table_inset_nav header abs 40 =
-        // card 20 + 20).
+        // label at x = 16, the window's system margin. Portrait
+        // inset-grouped is card + 16 (SE 32; 393 realapp 36). Compact
+        // height uses iOSMargin as the inner inset — MEASURED Ledger
+        // t200.landscape `_UITableViewHeaderFooterViewLabel` abs.x **40**
+        // = card 20 + 20, not 36. Pad inset-grouped adds 20
+        // (table_inset_nav header abs 40 = card 20 + 20).
         if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
-        let inner = (style == .insetGrouped && UITableView.isPadChrome)
-            ? UITableView.iOSPadInsetGroupedInnerInset : 16
+        let inner: CGFloat
+        if style == .insetGrouped && UITableView.isPadChrome {
+            inner = UITableView.iOSPadInsetGroupedInnerInset
+        } else if UITableView.isIOSChrome, UINavigationBar.isCompactHeight {
+            // MEASURED Ledger t200.landscape, iPhone SE 2x / iOS 26.1:
+            // compact 667 card at 20, header abs.x **40** = 20+20, not
+            // 36. Portrait keeps the previous inner 16 (375 → 32;
+            // 393 realapp_focus_settings stays card+16 so the 3x floor
+            // does not move).
+            inner = iOSMargin
+        } else {
+            inner = 16
+        }
         return insetGroupedSideInset + inner
     }
 
