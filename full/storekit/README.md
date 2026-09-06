@@ -14,16 +14,16 @@ seed `7147ef0e`, PR #115). Immutable seed files were not rewritten.
 
 ## Coverage (measured)
 
-| status | first pass | after 2026-09 wave 8 | after depth pass 3 | after depth pass 4 |
-| --- | ---: | ---: | ---: | ---: |
-| implemented | 824 | 933 | 1107 | 1298 |
-| declared | 14483 | 14352 | 6893 | 6759 |
-| deferred | 368 | 348 | 310 | 253 |
-| unavailable | 0 | 0 | 0 | 0 |
-| not-applicable | 20 | 62 | 7385 | 7385 |
+| status | first pass | after 2026-09 wave 8 | after depth pass 3 | after depth pass 4 | after NA repair |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| implemented | 824 | 933 | 1107 | 1298 | 1370 |
+| declared | 14483 | 14352 | 6893 | 6759 | 6753 |
+| deferred | 368 | 348 | 310 | 253 | 271 |
+| unavailable | 0 | 0 | 0 | 0 | 0 |
+| not-applicable | 20 | 62 | 7385 | 7385 | 7301 |
 
 Floor of 7848 nondeferred (`implemented` + `declared`) remains met
-(8057). CryptoKit `P256` JWS `signature` stays deferred.
+(8123). CryptoKit `P256` JWS `signature` stays deferred.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -177,6 +177,39 @@ That campaign token is the host-inventory stamp; the sealed framework gate
 prints the four lines above. The verify script's success line on a complete
 image is `products=scratch-corpus`, not `products=clean`. Starting commit
 was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+
+## Depth pass 2026-09 (wave 8, NA repair)
+
+Checked merge of `43103bf1` refused 18 `not-applicable` rows that are not
+SwiftUI `View` overlay IDs (`s:7SwiftUI4View…`). `_StoreKit_SwiftUI`
+`StoreContent` protocol methods, style `.automatic`/`.large`/`.regular`
+witnesses, `EnvironmentValues` StoreKit actions, and
+`ContainerBackgroundPlacement.subscriptionStore*` are StoreKit-owned.
+This repair implements those APIs as model-level declarations and cites
+focused tests in `StoreKitDepthPass5Tests.swift`. Optional/Never
+`StoreContent` method witnesses stay `deferred` (same reason as
+`Optional.Body` / `Optional.body`). Remaining NA is 7301
+`s:7SwiftUI4View…` overlay re-exports.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before (pass 4 / refused merge) | 1298 | 6759 | 253 | 0 | 7385 |
+| after NA repair | 1370 | 6753 | 271 | 0 | 7301 |
+
+Nondeferred: **8123** (floor 7848). Unique `implemented` evidence tests: 93.
+Top-5 evidence distribution (of 1370 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (8.4%)
+2. `testAdvancedCommerceTypes` — 111 (8.1%)
+3. `testJWSUnverifiedFields` — 67 (4.9%)
+4. `testHashableRawRepresentableMixing` — 48 (3.5%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (3.0%)
+
+No cited test covers more than 40% of implemented rows. New tests each
+cover one family (StoreContent modifiers per conforming type, product
+view style statics, overlay style statics, environment actions,
+container-background placements). Enum / option-set members and C
+`k…`/`err…` constants still share table-driven value tests.
 
 ## What is real (isolated host)
 
