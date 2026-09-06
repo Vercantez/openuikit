@@ -19,7 +19,7 @@ func testVImagePermuteARGBToRGBA() {
     precondition(dest == [1, 2, 3, 10, 4, 5, 6, 20])
 }
 
-func testVImageAffineIdentityAndScale() {
+func testVImageAffineWarpPlanar8Identity() {
     var src: [UInt8] = [
         10, 20,
         30, 40
@@ -37,6 +37,13 @@ func testVImageAffineIdentityAndScale() {
         }
     }
     precondition(dest == src)
+}
+
+func testVImageScalePlanar8Nearest() {
+    var src: [UInt8] = [
+        10, 20,
+        30, 40
+    ]
     var scaled = [UInt8](repeating: 0, count: 16)
     src.withUnsafeMutableBytes { sb in
         scaled.withUnsafeMutableBytes { db in
@@ -66,7 +73,7 @@ func testVImageAffineIdentityAndScale() {
     precondition(bilinear == src)
 }
 
-func testVImageRotateZeroAnd180() {
+func testVImageRotatePlanar8ZeroAnd180() {
     var src: [UInt8] = [
         1, 2,
         3, 4
@@ -95,7 +102,7 @@ func testVImageRotateZeroAnd180() {
     precondition(flipped == [4, 3, 2, 1])
 }
 
-func testVImageAffineARGB8888Identity() {
+func testVImageAffineWarpARGB8888Identity() {
     var src: [UInt8] = [1, 2, 3, 4, 5, 6, 7, 8]
     var dest = [UInt8](repeating: 0, count: 8)
     var identity = vImage_AffineTransform(a: Float(1), b: Float(0), c: Float(0), d: Float(1), tx: Float(0), ty: Float(0))
@@ -113,7 +120,7 @@ func testVImageAffineARGB8888Identity() {
     precondition(dest == src)
 }
 
-func testVImageTentConvolveConstant() {
+func testVImageTentConvolvePlanar8Constant() {
     var src: [UInt8] = [
         10, 10, 10,
         10, 10, 10,
@@ -131,6 +138,9 @@ func testVImageTentConvolveConstant() {
         }
     }
     precondition(dest == src)
+}
+
+func testVImageTentConvolveARGB8888Constant() {
     var argb: [UInt8] = [
         10, 1, 2, 3, 10, 1, 2, 3,
         10, 1, 2, 3, 10, 1, 2, 3
@@ -164,7 +174,7 @@ func testVImagePermuteRGB888() {
     precondition(dest == [3, 2, 1, 6, 5, 4])
 }
 
-func testVImageAffineWarpDIdentity() {
+func testVImageAffineWarpDPlanar8Identity() {
     var src: [UInt8] = [
         10, 20,
         30, 40
@@ -184,8 +194,14 @@ func testVImageAffineWarpDIdentity() {
         }
     }
     precondition(dest == src)
+}
+
+func testVImageAffineWarpDARGB8888Identity() {
     var argb: [UInt8] = [1, 2, 3, 4, 5, 6, 7, 8]
     var argbOut = [UInt8](repeating: 0, count: 8)
+    var identity = vImage_AffineTransform_Double(
+        a: 1.0, b: 0.0, c: 0.0, d: 1.0, tx: 0.0, ty: 0.0
+    )
     var back: [UInt8] = [0, 0, 0, 0]
     argb.withUnsafeMutableBytes { sb in
         argbOut.withUnsafeMutableBytes { db in
