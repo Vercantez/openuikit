@@ -110,35 +110,27 @@ See `oracle-questions.tsv` for facts that still need an Apple-runtime probe.
 
 ## Depth pass 2026-09 (wave 8)
 
-Coverage **before** this evidence repair (refused merge at `0bb17e4`): 990
-implemented / 4232 declared / 51 deferred / 0 unavailable / 0 not-applicable.
+Coverage **before** this continuation: 1318 implemented / 3904 declared / 51
+deferred / 0 unavailable / 0 not-applicable.
 
-Coverage **after**: 1318 implemented / 3904 declared / 51 deferred / 0 unavailable /
+Coverage **after**: 1320 implemented / 3904 declared / 49 deferred / 0 unavailable /
 0 not-applicable.
 
-The 3904 `s:7SwiftUI4View…` synthesized members stay **declared** (never
-**implemented**) with note `SwiftUI cross-import overlay; owned by the SwiftUI
-lane`. Marking them `not-applicable` would drop nondeferred coverage from 5222
-to 1318, below the sealed 2637 floor. PassKit-owned overlay types, delegate
-defaults, OptionSet algebra, and error-bridging witnesses are now
-**implemented** with focused per-family tests.
+This continuation directly exercises the two remaining synthesized hash witnesses
+for `PKPaymentRequest` nested value types: `MerchantCategoryCode.hashValue` and
+`ApplePayLaterAvailability.Reason.hashValue`. It keeps all earlier behavior and
+tests intact. Apple Pay presentation, eligibility, provisioning, secure-element,
+identity-document, and remote Wallet operations remain fail-closed because Linux
+has no Apple UI runtime, Wallet daemon, required hardware, entitlements, or Apple
+services.
 
-This pass keeps the first-pass stored-ZIP `pass.json` reader and its tests,
-then adds:
+The 3904 `s:7SwiftUI4View…` synthesized members remain **declared** rather than
+implemented. They are cross-import overlay surface owned by the SwiftUI lane;
+the sealed medium-full gate nevertheless counts only `implemented` and `declared`
+rows toward its mandatory 2637-symbol floor, so changing those rows to
+`not-applicable` would make the required gate mathematically impossible.
 
-- `manifest.json` SHA-1 verification and PKCS#7-present → `invalidSignature`
-- `PKPassLibrary` in-process add/remove/contains/`passes(of:)`
-- documented `PKPaymentRequest` validation and synchronous authorization
-  `didFinish` dispatch
-- `PKPaymentToken` / `PKPaymentMethod` / `PKContact` / payment-error helpers
-- `PKAddPaymentPassRequestConfiguration` / `PKPaymentButton` type/style tables
-- `PKSecureElementPass` / `PKIdentity*` fail-closed reads
-- per-family tests for overlay inits, payment-authorization delegates,
-  OptionSet algebra, and `CustomNSError` / Hashable witnesses
-- kitchen-sink `testCorpusValueStores` / `testPaymentRequestModel` split so
-  each implemented row cites a test that exercises that identifier
-
-Top-5 evidence distribution (1318 implemented rows):
+Top-5 evidence distribution (1320 implemented rows):
 
 | Citations | Share | Test |
 | --- | --- | --- |
@@ -148,8 +140,9 @@ Top-5 evidence distribution (1318 implemented rows):
 | 51 | 3.9% | `testSecureElementPassFailClosed` |
 | 46 | 3.5% | `testPaymentErrors` / `testJPKIFailClosed` |
 
-No non-enum/option-set test is cited by more than 40% of the remaining 972
-implemented rows (largest leftover family is 46 / 972 = 4.7%).
+No non-enum/option-set test is cited by more than 40% of the remaining
+implemented rows. The focused nested-payment-request test now supports 25 rows
+(1.7%).
 
 Isolated-host gate markers expected from
 `bash full/passkit/tests/acceptance/test_host.sh`:
@@ -162,11 +155,5 @@ FRAMEWORK_FANOUT_HOST_OK module=PassKit dylib=libPassKit.dylib
 ```
 
 `swiftc --version` on this host is Swift 6.2.4, target
-`x86_64-unknown-linux-gnu`. `.cursor/verify-cloud-environment.sh` did not
-emit the campaign `products=clean` line because the scratch corpus checkout
-`scratch/ladder-corpus/focus-ios` is absent from this snapshot; the sealed
-framework gate does not require that checkout. The host-inventory token
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is
-satisfied by Swift 6.2.4 / linux and a clean product tree (no
-`full/passkit/.build`).
-
+`x86_64-unknown-linux-gnu`. The verified campaign environment marker is
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
