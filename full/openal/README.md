@@ -72,8 +72,18 @@ Top-5 evidence distribution (implemented rows → test):
 4. `testALScalarTypes` — 24 (C scalar typealiases)
 5. `testAppleExtensionProcPtrsFailClosed` — 23 (Apple proc-pointer aliases, fail-closed)
 
+Host gate markers from `bash full/openal/tests/acceptance/test_host.sh`:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=OpenAL lane=legacy-adapter symbols=342
+FRAMEWORK_FANOUT_REFERENCE_OK
+OPENAL_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=OpenAL dylib=libOpenAL.dylib
+```
+
 `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
 (`missing corpus checkout: scratch/ladder-corpus/focus-ios`) and therefore does
-not print the campaign inventory stamp. `swiftc` is Swift 6.2.4 targeting
-`x86_64-unknown-linux-gnu`. The sealed gate compiles a clean product tree
-(no `.build` / `build` / `scratch` under `full/openal/`).
+not print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+`swiftc` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`. The sealed gate
+compiled a clean product tree (no `.build` / `build` / `scratch` under
+`full/openal/`).
