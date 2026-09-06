@@ -1,0 +1,6 @@
+Unmodified Fuzi 3.1.3 sources (pin f08c8323da21e985f3772610753bcfc652c2103f,
+Focus Package.resolved). Cloned at scratch/ladder-corpus/deps/Fuzi.
+`import libxml2` resolves to the SDK on Darwin and to CLibXML2 (pkg-config
+libxml-2.0) on Linux. LICENSE is Fuzi's MIT license.
+LinuxCFString.swift is NOT upstream: it vends CFStringConvertIANACharSetNameToEncoding
+for corelibs (Document.swift:36), measured swift:6.2-noble.

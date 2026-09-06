@@ -351,6 +351,7 @@ PORTED_PRODUCTS = {
     "WebKit": "WebKit",
     "Sentry": "Sentry",
     "Fuzi": "Fuzi",
+    "libkern": "libkern",
     "FocusAppServices": "FocusAppServices",
     "UIHelpers": "UIHelpers",
     "UIComponents": "UIComponents",
@@ -1099,8 +1100,10 @@ def classify_module(name: str) -> dict[str, Any]:
     if name in PORTED_PRODUCTS:
         if name in LADDER_DEP_CLASS:
             cls = LADDER_DEP_CLASS[name]
-        elif name in {"Foundation", "Dispatch", "Combine", "os"}:
+        elif name in {"Foundation", "Dispatch", "Combine", "os", "libkern"}:
             cls = "Foundation-heavy"
+        elif name == "Fuzi":
+            cls = "unmeasured"
         else:
             cls = "UIKit-bound"
         return {
@@ -1592,10 +1595,11 @@ def emit_package_swift(
         '                .product(name: "Onboarding", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Licenses", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "DesignSystem", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-        '                .product(name: "SnapKit", package: "OpenUIKit")',
+        '                .product(name: "SnapKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Sentry", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Fuzi", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "libkern", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "WebKit", package: "OpenUIKit")',
-        '                .product(name: "Sentry", package: "OpenUIKit")',
-        '                .product(name: "Fuzi", package: "OpenUIKit")',
         '                .product(name: "FocusAppServices", package: "OpenUIKit")',
         '                .product(name: "UIHelpers", package: "OpenUIKit")',
         '                .product(name: "UIComponents", package: "OpenUIKit")',
@@ -1665,6 +1669,39 @@ def _copy_file(src: Path, dst: Path) -> None:
     shutil.copy2(src, dst)
 
 
+def _copy_swift_source_with_libkern(src: Path, dst: Path) -> None:
+    """Copy a Swift file, adding Linux-resolvable imports the corpus omits.
+
+    MEASURED mozilla-mobile/focus-ios a2832521
+    Blockzilla/Lib/Deferred/Deferred.swift sibling ReadWriteLock.swift:
+    `import Foundation` only, then OSAtomicCompareAndSwap32Barrier and
+    OSSpinLockLock/Unlock. Darwin Foundation re-exports libkern; Linux
+    corelibs does not. The corpus is never patched — only the generated
+    ingest copy gets the import (focus-deps).
+
+    `import os.log` is rewritten to `import os`: SwiftPM cannot ship a
+    module named os.log (focus-e2e), and clang submodules on the os
+    target still failed `import os.log` (MEASURED swift:6.2-noble
+    OSTests.swift:5). The os product already exports OSLog / os_log.
+    """
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    text = src.read_text(encoding="utf-8")
+    needs_libkern = (
+        "OSAtomicCompareAndSwap" in text or "OSSpinLock" in text
+    ) and "import libkern" not in text
+    if needs_libkern:
+        text = "import libkern\n" + text
+    # SwiftPM cannot ship a module literally named os.log (focus-e2e:
+    # target "os.log" compiles as os_log). The os product already exports
+    # OSLog / os_log. Generated copies rewrite the import so NimbusWrapper
+    # does not need a generated-package exclude. MEASURED OSTests
+    # `import os.log` still fails with clang submodules on the os target
+    # (swift:6.2-noble).
+    text = re.sub(r"^import os\.log\b", "import os", text, flags=re.MULTILINE)
+    text = re.sub(r"^import os\.signpost\b", "import os", text, flags=re.MULTILINE)
+    dst.write_text(text, encoding="utf-8")
+
+
 def emit_tree(
     graph: ProjectGraph,
     manifest: dict[str, Any],
@@ -1682,11 +1719,18 @@ def emit_tree(
     src_root.mkdir(parents=True)
 
     # Swift sources keep their repo-relative path so #filePath stays meaningful.
+    # Focus Deferred/ReadWriteLock.swift names OSAtomic* / OSSpinLock* with
+    # only `import Foundation` (Darwin re-exports libkern). Generated copies
+    # get `import libkern` so the Linux product resolves; corpus is unpatched.
     for rel in manifest["swift_sources"]:
         src = graph.source_root / rel
         if not src.is_file():
             continue
-        _copy_file(src, src_root / rel)
+        dest = src_root / rel
+        if src.suffix == ".swift":
+            _copy_swift_source_with_libkern(src, dest)
+        else:
+            _copy_file(src, dest)
 
     mapping_notes = {
         "xcassets": "OpenUIKit named-color/image reader (docs/NAMED_ASSETS.md): "

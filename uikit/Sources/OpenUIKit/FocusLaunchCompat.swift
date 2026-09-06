@@ -26,23 +26,9 @@ public func CATransform3DMakeScale(_ sx: CGFloat, _ sy: CGFloat, _ sz: CGFloat) 
     return t
 }
 
-// MARK: - Empty constraint / progress style
-
-extension NSLayoutConstraint {
-    /// Focus SearchSuggestionsPromptView.swift:16 `= NSLayoutConstraint()`.
-    /// The object is replaced before activation (same file:131).
-    public convenience init() {
-        self.init(
-            item: UIView(),
-            attribute: .notAnAttribute,
-            relatedBy: .equal,
-            toItem: nil,
-            attribute: .notAnAttribute,
-            multiplier: 1,
-            constant: 0
-        )
-    }
-}
+// MARK: - Empty progress style
+// NSLayoutConstraint() lives on the class (NSLayoutConstraint.swift) now
+// that it inherits NSObject (focus-deps).
 
 extension UIProgressView {
     public enum Style: Int, Sendable {
