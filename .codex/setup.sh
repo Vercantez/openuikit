@@ -53,10 +53,27 @@ for llvm_tool in llvm-nm llvm-otool llvm-objdump; do
 done
 [ -x /usr/bin/llvm-readtapi-18 ] && sudo ln -sfn /usr/bin/llvm-readtapi-18 /usr/bin/llvm-readtapi || true
 sudo git lfs install --system
-export LANG=C.UTF-8 LC_ALL=C.UTF-8 OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios
-echo 'export LANG=C.UTF-8 LC_ALL=C.UTF-8 OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios' | sudo tee /etc/profile.d/openuikit.sh >/dev/null
 
+# The universal image ships Swift 6.2.4 with its own ld64.lld (LLD 17) and
+# llvm-* binaries in the toolchain's bin directory, which precedes /usr/bin on
+# PATH. The lab pins Ubuntu's LLVM 18 (verify refuses anything else: the first
+# Codex smoke task failed with "llvm-nm does not resolve to llvm-nm-18"), so a
+# small bin directory of LLVM 18 links goes FIRST on PATH for setup and for
+# every later shell.
+sudo mkdir -p /opt/openuikit-llvm18/bin
+for tool in ld64.lld llvm-nm llvm-otool llvm-objdump llvm-readtapi; do
+    [ -x "/usr/bin/${tool}-18" ] && sudo ln -sfn "/usr/bin/${tool}-18" "/opt/openuikit-llvm18/bin/${tool}"
+done
+export PATH=/opt/openuikit-llvm18/bin:$PATH
+export LANG=C.UTF-8 LC_ALL=C.UTF-8 OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios
+echo 'export PATH=/opt/openuikit-llvm18/bin:$PATH LANG=C.UTF-8 LC_ALL=C.UTF-8 OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios' | sudo tee /etc/profile.d/openuikit.sh >/dev/null
+for rc in "$HOME/.bashrc" "$HOME/.profile"; do
+    grep -q openuikit-llvm18 "$rc" 2>/dev/null || echo 'export PATH=/opt/openuikit-llvm18/bin:$PATH LANG=C.UTF-8 LC_ALL=C.UTF-8 OPENUIKIT_MACIOS_ROOT=/opt/openuikit-evidence/dotnet-macios' >> "$rc"
+done
+
+echo "swiftc: $(command -v swiftc)"
 swiftc --version
+echo "ld64.lld: $(command -v ld64.lld) -> $(readlink -f "$(command -v ld64.lld)")"
 ld64.lld --version | head -1
 bash .cursor/install-static-evidence.sh
 bash .cursor/verify-cloud-environment.sh
