@@ -150,7 +150,7 @@ open class MLModelAsset: NSObject {
     }
 }
 
-open class MLModel: NSObject {
+open class MLModel: NSObject, MLWritable {
     public let configuration: MLModelConfiguration
     public let modelDescription: MLModelDescription
     let compiled: CoreMLCompiledModel?
@@ -346,6 +346,13 @@ open class MLModel: NSObject {
             }
         }
         return MLState(buffers: buffers)
+    }
+
+    open func write(to url: URL) throws {
+        guard let compiled else {
+            throw coreMLError(.io, "MLModel.write(to:) has no compiled specification to serialize.")
+        }
+        try CoreMLModelCodec.writeCompiledBundle(compiled, to: url)
     }
 }
 

@@ -88,6 +88,19 @@ extension MLShapedArrayProtocol {
     public var scalarCount: Int { coreMLElementCount(shape: shape) }
     public var isScalar: Bool { shape.isEmpty }
 
+    public var scalars: [Scalar] {
+        var result: [Scalar] = []
+        withUnsafeShapedBufferPointer { buffer, _, _ in
+            result = Array(buffer)
+        }
+        return result
+    }
+
+    public var scalar: Scalar? {
+        guard isScalar else { return nil }
+        return scalars.first
+    }
+
     public init(bytesNoCopy bytes: UnsafeRawPointer, shape: [Int], deallocator: Data.Deallocator) {
         self.init(
             bytesNoCopy: bytes,
@@ -788,95 +801,6 @@ extension MLShapedArraySlice: Decodable where Scalar: Decodable {
     }
 }
 
-
-public struct MLTensor: Sendable, CustomStringConvertible {
-    public let shape: [Int]
-    public var scalarType: any MLTensorScalar.Type
-    private let storage: Data
-
-    public var rank: Int { shape.count }
-    public var scalarCount: Int { coreMLElementCount(shape: shape) }
-    public var isScalar: Bool { shape.isEmpty }
-    public var description: String { "MLTensor(shape: \(shape), scalarCount: \(scalarCount))" }
-    public var customMirror: Mirror {
-        Mirror(self, children: ["shape": shape, "scalarCount": scalarCount])
-    }
-
-    public init(shape: [Int], data: Data, scalarType: any MLTensorScalar.Type) {
-        self.shape = shape
-        self.storage = data
-        self.scalarType = scalarType
-    }
-
-    public init(repeating repeatedValue: Float, shape: [Int]) {
-        var data = Data(count: coreMLElementCount(shape: shape) * MemoryLayout<Float>.stride)
-        data.withUnsafeMutableBytes { buffer in
-            buffer.bindMemory(to: Float.self).initialize(repeating: repeatedValue)
-        }
-        self.init(shape: shape, data: data, scalarType: Float.self)
-    }
-
-    public init(_ scalars: some Collection<Float>) {
-        self.init(shape: [scalars.count], scalars: Array(scalars))
-    }
-
-    public init(_ scalars: some Collection<Int32>) {
-        var data = Data(count: scalars.count * MemoryLayout<Int32>.stride)
-        data.withUnsafeMutableBytes { buffer in
-            var iterator = scalars.makeIterator()
-            for index in buffer.bindMemory(to: Int32.self).indices {
-                buffer.bindMemory(to: Int32.self)[index] = iterator.next() ?? 0
-            }
-        }
-        self.init(shape: [scalars.count], data: data, scalarType: Int32.self)
-    }
-
-    public init(shape: [Int], scalars: some Collection<Float>) {
-        var data = Data(count: coreMLElementCount(shape: shape) * MemoryLayout<Float>.stride)
-        data.withUnsafeMutableBytes { buffer in
-            var iterator = scalars.makeIterator()
-            for index in buffer.bindMemory(to: Float.self).indices {
-                buffer.bindMemory(to: Float.self)[index] = iterator.next() ?? 0
-            }
-        }
-        self.init(shape: shape, data: data, scalarType: Float.self)
-    }
-
-    public init<Scalar: MLTensorScalar>(zeros shape: [Int], scalarType: Scalar.Type = Scalar.self) {
-        self.init(shape: shape, data: Data(count: coreMLElementCount(shape: shape) * 4), scalarType: scalarType)
-    }
-
-    public func reshaped(to newShape: [Int]) -> MLTensor {
-        precondition(coreMLElementCount(shape: newShape) == scalarCount)
-        return MLTensor(shape: newShape, data: storage, scalarType: scalarType)
-    }
-
-    public func flattened() -> MLTensor {
-        reshaped(to: [scalarCount])
-    }
-
-    public init(concatenating tensors: some Collection<MLTensor>, alongAxis axis: Int = 0) {
-        let items = Array(tensors)
-        precondition(!items.isEmpty)
-        var shape = items[0].shape
-        var axisCount = 0
-        var data = Data()
-        let normalized = axis < 0 ? axis + shape.count : axis
-        for tensor in items {
-            precondition(tensor.shape.count == shape.count)
-            axisCount += tensor.shape[normalized]
-            data.append(tensor.storage)
-        }
-        shape[normalized] = axisCount
-        self.init(shape: shape, data: data, scalarType: items[0].scalarType)
-    }
-
-    public func shapedArray<Scalar>(
-        of scalarType: Scalar.Type
-    ) async -> MLShapedArray<Scalar> where Scalar: MLShapedArrayScalar, Scalar: MLTensorScalar {
-        MLShapedArray(data: storage, shape: shape)
-    }
-}
 
 public enum MLModelStructure: Sendable {
     public struct NeuralNetwork: Sendable {

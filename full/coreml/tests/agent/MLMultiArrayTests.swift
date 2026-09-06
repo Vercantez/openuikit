@@ -170,3 +170,34 @@ func testMultiArrayCoderReturnsNil() {
     precondition(MLMultiArray(coder: NSCoder()) == nil)
     _ = MLMultiArray.supportsSecureCoding
 }
+
+func testMultiArrayCopyDataAndTranspose() {
+    let source = try! MLMultiArray(shape: [2, 2], dataType: .float32)
+    source[0] = 1
+    source[1] = 2
+    source[2] = 3
+    source[3] = 4
+    let copied = source.copy() as! MLMultiArray
+    precondition(copied !== source)
+    precondition(copied[3].floatValue == 4)
+    copied[0] = 9
+    precondition(source[0].floatValue == 1)
+    let data = source.data
+    precondition(data.count >= 16)
+    let fromData = try! MLMultiArray(data: data, shape: [2, 2], dataType: .float32)
+    precondition(fromData[1].floatValue == 2)
+    let transposed = try! source.transposed()
+    precondition(transposed.shape.map(\.intValue) == [2, 2])
+    precondition(transposed[[NSNumber(value: 0), NSNumber(value: 1)]].floatValue == 3)
+    let int8 = try! MLMultiArray(shape: [2], dataType: .int8)
+    int8[0] = 7
+    precondition(int8[0].int8Value == 7)
+    let float16 = try! MLMultiArray(shape: [2], dataType: .float16)
+    float16[0] = 1.5
+    precondition(abs(float16[0].floatValue - 1.5) < 0.01)
+    let doubles = try! MLMultiArray(shape: [1], dataType: .double)
+    doubles[0] = 2.5
+    precondition(doubles.dataType == .double)
+    let witness: any Foundation.NSCopying = source
+    _ = witness
+}

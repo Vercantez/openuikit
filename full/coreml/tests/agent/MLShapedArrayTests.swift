@@ -233,3 +233,64 @@ func testShapedArrayJSONCodingAndRanges() {
     precondition((..<3).relative(toShapedArrayAxis: 0..<5) == 0..<3)
     precondition((...2).relative(toShapedArrayAxis: 0..<5) == 0..<3)
 }
+
+func testShapedArrayEquatableCollectionOps() {
+    let array = MLShapedArray<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    let first = array[0]
+    let second = array[1]
+    precondition(array.contains(first))
+    precondition(array.firstIndex(of: first) == 0)
+    precondition(array.elementsEqual([first, second]))
+    precondition(array.starts(with: [first]))
+    precondition(array.contains([first]))
+    let slice = MLShapedArraySlice<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    precondition(slice.contains(slice[0]))
+    precondition(slice.firstIndex(of: slice[0]) == 0)
+    precondition(slice.elementsEqual([slice[0], slice[1]]))
+    precondition(slice.starts(with: [slice[0]]))
+    precondition(slice.contains([slice[0]]))
+    precondition(array.difference(from: array).isEmpty)
+    precondition(slice.difference(from: slice).isEmpty)
+}
+
+func testShapedArrayProtocolWitnesses() {
+    func inspect<T: MLShapedArrayProtocol>(_ value: T, expected: [T.Scalar], shape: [Int])
+    where T.Scalar: Equatable {
+        precondition(value.shape == shape)
+        precondition(value.strides == [1] || value.strides.count == shape.count)
+        precondition(value.scalarCount == expected.count)
+        precondition(value.scalars == expected)
+        precondition(value.isScalar == shape.isEmpty)
+        if shape.isEmpty {
+            precondition(value.scalar == expected.first)
+        } else {
+            precondition(value.scalar == nil)
+        }
+    }
+    inspect(MLShapedArray<Float>(scalars: [1, 2], shape: [2]), expected: [1, 2], shape: [2])
+    inspect(MLShapedArraySlice<Float>(scalars: [1, 2], shape: [2]), expected: [1, 2], shape: [2])
+    inspect(MLShapedArray<Float>(scalar: 3), expected: [3], shape: [])
+}
+
+func testShapedArraySequenceHelpers() {
+    let array = MLShapedArray<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    precondition(array.allSatisfy { $0.scalarCount == 2 })
+    precondition(array.contains(where: { $0.scalars.first == 1 }))
+    precondition(array.first(where: { $0.scalars.first == 3 })?.scalars == [3, 4])
+    precondition(array.filter { $0.scalars.first == 1 }.count == 1)
+    precondition(array.reduce(0) { $0 + ($1.scalars.first ?? 0) } == 4)
+    var walked = 0
+    array.forEach { sum in walked += Int(sum.scalars.first ?? 0) }
+    precondition(walked == 4)
+    precondition(array.compactMap { $0.scalars.first }.count == 2)
+    precondition(Array(array.enumerated()).count == 2)
+    precondition(array.underestimatedCount >= 2)
+    precondition(array.dropLast(1).count == 1)
+    precondition(array.suffix(1).count == 1)
+    precondition(array.lastIndex(of: array[1]) == 1)
+    let slice = MLShapedArraySlice<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    precondition(slice.allSatisfy { $0.scalarCount == 2 })
+    precondition(slice.contains(where: { $0.scalars.first == 1 }))
+    precondition(slice.filter { $0.scalars.first == 1 }.count == 1)
+    precondition(slice.reduce(0) { $0 + ($1.scalars.first ?? 0) } == 4)
+}
