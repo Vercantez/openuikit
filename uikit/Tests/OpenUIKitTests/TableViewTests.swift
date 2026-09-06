@@ -1599,4 +1599,70 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertEqual(reorder.frame.width, 36.5, accuracy: 0.001)
         XCTAssertEqual(reorder.frame.height, 83, accuracy: 0.001)
     }
+
+    /// MEASURED NavFlow t200.ax1, iPhone SE 2x / iOS 26.1: value1
+    /// disclosure **20×28.5**, contentView 307, "Automatic" compressed to
+    /// 105 against Appearance, "1.2 GB" width 0, label y **3**.
+    func testValue1DisclosureAndDetailCompressionAtAccessibilityLarge() {
+        let savedTraits = UITraitCollection.current
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        defer { UITraitCollection.current = savedTraits }
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let table = UITableView(frame: window.bounds, style: .insetGrouped)
+        let source = NavFlowValue1Source()
+        table.dataSource = source
+        table.delegate = source
+        window.addSubview(table)
+        window.layoutIfNeeded()
+
+        let appearance = table.cellForRow(at: IndexPath(row: 1, section: 0))!
+        XCTAssertEqual(appearance.bounds.width, 343, accuracy: 0.01)
+        XCTAssertEqual(appearance.contentView.bounds.width, 307, accuracy: 0.01)
+        XCTAssertEqual(appearance._accessoryGlyphView.frame.size,
+                       CGSize(width: 20, height: 28.5))
+        XCTAssertEqual(appearance.textLabel.frame.origin.y, 3, accuracy: 0.01)
+        XCTAssertEqual(appearance.detailTextLabel!.frame.origin.x, 194, accuracy: 1.5)
+        XCTAssertEqual(appearance.detailTextLabel!.frame.width, 105, accuracy: 2)
+
+        let manage = table.cellForRow(at: IndexPath(row: 0, section: 1))!
+        XCTAssertEqual(manage.detailTextLabel!.frame.width, 0, accuracy: 0.5)
+        XCTAssertEqual(manage.detailTextLabel!.frame.maxX, 299, accuracy: 1.5)
+    }
+}
+
+#if !os(Linux)
+@MainActor
+#endif
+private final class NavFlowValue1Source: UITableViewDataSource, UITableViewDelegate {
+    let sections: [(String, [(String, String)])] = [
+        ("General", [
+            ("Notifications", "On"),
+            ("Appearance", "Automatic"),
+            ("Downloads", "Wi-Fi"),
+        ]),
+        ("Storage", [
+            ("Manage Downloads", "1.2 GB"),
+            ("Clear Cache", ""),
+        ]),
+    ]
+    func numberOfSections(in tableView: UITableView) -> Int { sections.count }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        sections[section].1.count
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        sections[section].0
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        let item = sections[indexPath.section].1[indexPath.row]
+        cell.textLabel.text = item.0
+        cell.detailTextLabel?.text = item.1
+        cell.accessoryType = .disclosureIndicator
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat { 44 }
 }

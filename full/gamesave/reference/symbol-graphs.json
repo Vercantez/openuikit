@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 3,
+  "duplicateOccurrenceCount": 3,
+  "duplicateRelationshipOccurrenceCount": 3,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/GameSave.symbols.json",
+      "relationshipCount": 95,
+      "sha256": "7aeb78eecbee13c5b8c549782218f844d5324b047b86a37f631373d334b3fc32",
+      "symbolCount": 64
+    },
+    {
+      "path": "reference/symbol-graphs/GameSave@SwiftUICore.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "08e599e6dfabeb38c56013df36e68b5256ed4a8513d14a213769baa96e2dcc51",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "GameSave",
+  "relationshipCount": 96,
+  "relationshipMultisetSHA256": "a0b62626551cd75794336bfe9a3e1142a993842cf94cd20d071a8e12fb54a6f2",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 62,
+  "symbolMultisetSHA256": "e1585d661c27e0e28a73c24863f5f4765361d2a721bb6a0e7093fde4a8f79fea",
+  "target": "arm64-apple-ios26.0"
+}

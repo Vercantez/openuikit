@@ -1,0 +1,3 @@
+precise	graphKind	graphPath	status	basis	rawCandidateCount	compatibleCandidateCount	selectedNodePath	candidateNodePaths
+c:@T@LAPresentationContext	swift.typealias	["LAPresentationContext"]	import-name	exported-import-name	1	1	/ABIRoot/children/1	["/ABIRoot/children/1"]
+c:objc(cs)LARight(im)authorizeWithLocalizedReason:inPresentationContext:completion:	swift.method	["LARight","authorize(localizedReason:in:)"]	unmatched	none	0	0		[]

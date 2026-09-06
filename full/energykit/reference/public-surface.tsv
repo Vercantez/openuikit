@@ -1,0 +1,257 @@
+precise	kind	title	path	declaration
+s:9EnergyKit0A5VenueV	swift.struct	EnergyVenue	EnergyVenue	struct EnergyVenue
+s:9EnergyKit0A5VenueV12submitEventsyySayxGYaKAA27ElectricalLoadEventProtocolRzlF	swift.method	submitEvents(_:)	EnergyVenue.submitEvents(_:)	func submitEvents<Event>(_ events: [Event]) async throws where Event : ElectricalLoadEventProtocol
+s:9EnergyKit0A5VenueV2IDa	swift.typealias	EnergyVenue.ID	EnergyVenue.ID	typealias ID = UUID
+s:9EnergyKit0A5VenueV2id10Foundation4UUIDVvp	swift.property	id	EnergyVenue.id	let id: UUID
+s:9EnergyKit0A5VenueV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	EnergyVenue.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit0A5VenueV4nameSSvp	swift.property	name	EnergyVenue.name	let name: String
+s:9EnergyKit0A5VenueV5venue28matchingHomeUniqueIdentifierAC10Foundation4UUIDV_tYaKFZ	swift.type.method	venue(matchingHomeUniqueIdentifier:)	EnergyVenue.venue(matchingHomeUniqueIdentifier:)	static func venue(matchingHomeUniqueIdentifier: UUID) async throws -> EnergyVenue
+s:9EnergyKit0A5VenueV5venue3forAC10Foundation4UUIDV_tYaKFZ	swift.type.method	venue(for:)	EnergyVenue.venue(for:)	static func venue(for id: UUID) async throws -> EnergyVenue
+s:9EnergyKit0A5VenueV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	EnergyVenue.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit0A5VenueV6venuesSayACGyYaKFZ	swift.type.method	venues()	EnergyVenue.venues()	static func venues() async throws -> [EnergyVenue]
+s:9EnergyKit0aB5ErrorO	swift.enum	EnergyKitError	EnergyKitError	enum EnergyKitError
+s:9EnergyKit0aB5ErrorO10helpAnchorSSSgvp	swift.property	helpAnchor	EnergyKitError.helpAnchor	var helpAnchor: String? { get }
+s:9EnergyKit0aB5ErrorO10inProgressyA2CmF	swift.enum.case	EnergyKitError.inProgress	EnergyKitError.inProgress	case inProgress
+s:9EnergyKit0aB5ErrorO13failureReasonSSSgvp	swift.property	failureReason	EnergyKitError.failureReason	var failureReason: String? { get }
+s:9EnergyKit0aB5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	EnergyKitError.errorDescription	var errorDescription: String? { get }
+s:9EnergyKit0aB5ErrorO16invalidLoadEventyA2CmF	swift.enum.case	EnergyKitError.invalidLoadEvent	EnergyKitError.invalidLoadEvent	case invalidLoadEvent
+s:9EnergyKit0aB5ErrorO16permissionDeniedyA2CmF	swift.enum.case	EnergyKitError.permissionDenied	EnergyKitError.permissionDenied	case permissionDenied
+s:9EnergyKit0aB5ErrorO16venueUnavailableyA2CmF	swift.enum.case	EnergyKitError.venueUnavailable	EnergyKitError.venueUnavailable	case venueUnavailable
+s:9EnergyKit0aB5ErrorO17rateLimitExceededyA2CmF	swift.enum.case	EnergyKitError.rateLimitExceeded	EnergyKitError.rateLimitExceeded	case rateLimitExceeded
+s:9EnergyKit0aB5ErrorO17unsupportedRegionyA2CmF	swift.enum.case	EnergyKitError.unsupportedRegion	EnergyKitError.unsupportedRegion	case unsupportedRegion
+s:9EnergyKit0aB5ErrorO18recoverySuggestionSSSgvp	swift.property	recoverySuggestion	EnergyKitError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:9EnergyKit0aB5ErrorO18serviceUnavailableyA2CmF	swift.enum.case	EnergyKitError.serviceUnavailable	EnergyKitError.serviceUnavailable	case serviceUnavailable
+s:9EnergyKit0aB5ErrorO19guidanceUnavailableyA2CmF	swift.enum.case	EnergyKitError.guidanceUnavailable	EnergyKitError.guidanceUnavailable	case guidanceUnavailable
+s:9EnergyKit0aB5ErrorO22locationServicesDeniedyA2CmF	swift.enum.case	EnergyKitError.locationServicesDenied	EnergyKitError.locationServicesDenied	case locationServicesDenied
+s:9EnergyKit0aB5ErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	EnergyKitError.==(_:_:)	static func == (a: EnergyKitError, b: EnergyKitError) -> Bool
+s:9EnergyKit0aB5ErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	EnergyKitError.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit0aB5ErrorO9hashValueSivp	swift.property	hashValue	EnergyKitError.hashValue	var hashValue: Int { get }
+s:9EnergyKit19ElectricityGuidanceV	swift.struct	ElectricityGuidance	ElectricityGuidance	struct ElectricityGuidance
+s:9EnergyKit19ElectricityGuidanceV13energyVenueID10Foundation4UUIDVvp	swift.property	energyVenueID	ElectricityGuidance.energyVenueID	let energyVenueID: UUID
+s:9EnergyKit19ElectricityGuidanceV13guidanceToken10Foundation4UUIDVvp	swift.property	guidanceToken	ElectricityGuidance.guidanceToken	let guidanceToken: UUID
+s:9EnergyKit19ElectricityGuidanceV13sharedServiceAC0F0CvpZ	swift.type.property	sharedService	ElectricityGuidance.sharedService	static let sharedService: ElectricityGuidance.Service
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO	swift.enum	ElectricityGuidance.SuggestedAction	ElectricityGuidance.SuggestedAction	enum SuggestedAction
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ElectricityGuidance.SuggestedAction.==(_:_:)	static func == (a: ElectricityGuidance.SuggestedAction, b: ElectricityGuidance.SuggestedAction) -> Bool
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityGuidance.SuggestedAction.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ElectricityGuidance.SuggestedAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO5shiftyA2EmF	swift.enum.case	ElectricityGuidance.SuggestedAction.shift	ElectricityGuidance.SuggestedAction.shift	case shift
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityGuidance.SuggestedAction.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO6reduceyA2EmF	swift.enum.case	ElectricityGuidance.SuggestedAction.reduce	ElectricityGuidance.SuggestedAction.reduce	case reduce
+s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO9hashValueSivp	swift.property	hashValue	ElectricityGuidance.SuggestedAction.hashValue	var hashValue: Int { get }
+s:9EnergyKit19ElectricityGuidanceV15suggestedActionAC09SuggestedF0Ovp	swift.property	suggestedAction	ElectricityGuidance.suggestedAction	let suggestedAction: ElectricityGuidance.SuggestedAction
+s:9EnergyKit19ElectricityGuidanceV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityGuidance.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit19ElectricityGuidanceV5QueryV	swift.struct	ElectricityGuidance.Query	ElectricityGuidance.Query	struct Query
+s:9EnergyKit19ElectricityGuidanceV5QueryV15suggestedActionAeC09SuggestedG0O_tcfc	swift.init	init(suggestedAction:)	ElectricityGuidance.Query.init(suggestedAction:)	init(suggestedAction: ElectricityGuidance.SuggestedAction)
+s:9EnergyKit19ElectricityGuidanceV5QueryV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityGuidance.Query.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit19ElectricityGuidanceV5QueryV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityGuidance.Query.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit19ElectricityGuidanceV5ValueV	swift.struct	ElectricityGuidance.Value	ElectricityGuidance.Value	struct Value
+s:9EnergyKit19ElectricityGuidanceV5ValueV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityGuidance.Value.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit19ElectricityGuidanceV5ValueV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityGuidance.Value.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit19ElectricityGuidanceV5ValueV6ratingSdvp	swift.property	rating	ElectricityGuidance.Value.rating	let rating: Double
+s:9EnergyKit19ElectricityGuidanceV5ValueV8interval10Foundation12DateIntervalVvp	swift.property	interval	ElectricityGuidance.Value.interval	let interval: DateInterval
+s:9EnergyKit19ElectricityGuidanceV5ValueV8interval6ratingAE10Foundation12DateIntervalV_Sdtcfc	swift.init	init(interval:rating:)	ElectricityGuidance.Value.init(interval:rating:)	init(interval: DateInterval, rating: Double)
+s:9EnergyKit19ElectricityGuidanceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityGuidance.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit19ElectricityGuidanceV6valuesSayAC5ValueVGvp	swift.property	values	ElectricityGuidance.values	let values: [ElectricityGuidance.Value]
+s:9EnergyKit19ElectricityGuidanceV7OptionsO	swift.enum	ElectricityGuidance.Options	ElectricityGuidance.Options	enum Options
+s:9EnergyKit19ElectricityGuidanceV7OptionsO19locationHasRatePlanyA2EmF	swift.enum.case	ElectricityGuidance.Options.locationHasRatePlan	ElectricityGuidance.Options.locationHasRatePlan	case locationHasRatePlan
+s:9EnergyKit19ElectricityGuidanceV7OptionsO28guidanceIncorporatesRatePlanyA2EmF	swift.enum.case	ElectricityGuidance.Options.guidanceIncorporatesRatePlan	ElectricityGuidance.Options.guidanceIncorporatesRatePlan	case guidanceIncorporatesRatePlan
+s:9EnergyKit19ElectricityGuidanceV7OptionsO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ElectricityGuidance.Options.==(_:_:)	static func == (a: ElectricityGuidance.Options, b: ElectricityGuidance.Options) -> Bool
+s:9EnergyKit19ElectricityGuidanceV7OptionsO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityGuidance.Options.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit19ElectricityGuidanceV7OptionsO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ElectricityGuidance.Options.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit19ElectricityGuidanceV7OptionsO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityGuidance.Options.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit19ElectricityGuidanceV7OptionsO8AllCasesa	swift.typealias	ElectricityGuidance.Options.AllCases	ElectricityGuidance.Options.AllCases	typealias AllCases = [ElectricityGuidance.Options]
+s:9EnergyKit19ElectricityGuidanceV7OptionsO8allCasesSayAEGvpZ	swift.type.property	allCases	ElectricityGuidance.Options.allCases	nonisolated static var allCases: [ElectricityGuidance.Options] { get }
+s:9EnergyKit19ElectricityGuidanceV7OptionsO9hashValueSivp	swift.property	hashValue	ElectricityGuidance.Options.hashValue	var hashValue: Int { get }
+s:9EnergyKit19ElectricityGuidanceV7ServiceC	swift.class	ElectricityGuidance.Service	ElectricityGuidance.Service	final class Service
+s:9EnergyKit19ElectricityGuidanceV7ServiceC8guidance5using2atQrAC5QueryV_10Foundation4UUIDVtF	swift.method	guidance(using:at:)	ElectricityGuidance.Service.guidance(using:at:)	final func guidance(using query: ElectricityGuidance.Query, at energyVenueID: UUID) -> some AsyncSequence<ElectricityGuidance, any Error>\n
+s:9EnergyKit19ElectricityGuidanceV7optionsShyAC7OptionsOGvp	swift.property	options	ElectricityGuidance.options	let options: Set<ElectricityGuidance.Options>
+s:9EnergyKit19ElectricityGuidanceV8interval10Foundation12DateIntervalVvp	swift.property	interval	ElectricityGuidance.interval	let interval: DateInterval
+s:9EnergyKit21ElectricHVACLoadEventV	swift.struct	ElectricHVACLoadEvent	ElectricHVACLoadEvent	struct ElectricHVACLoadEvent
+s:9EnergyKit21ElectricHVACLoadEventV11measurementAC21ElectricalMeasurementVvp	swift.property	measurement	ElectricHVACLoadEvent.measurement	let measurement: ElectricHVACLoadEvent.ElectricalMeasurement
+s:9EnergyKit21ElectricHVACLoadEventV21ElectricalMeasurementV	swift.struct	ElectricHVACLoadEvent.ElectricalMeasurement	ElectricHVACLoadEvent.ElectricalMeasurement	struct ElectricalMeasurement
+s:9EnergyKit21ElectricHVACLoadEventV21ElectricalMeasurementV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricHVACLoadEvent.ElectricalMeasurement.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV21ElectricalMeasurementV5stageAESi_tcfc	swift.init	init(stage:)	ElectricHVACLoadEvent.ElectricalMeasurement.init(stage:)	init(stage: Int)
+s:9EnergyKit21ElectricHVACLoadEventV21ElectricalMeasurementV5stageSivp	swift.property	stage	ElectricHVACLoadEvent.ElectricalMeasurement.stage	let stage: Int
+s:9EnergyKit21ElectricHVACLoadEventV21ElectricalMeasurementV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricHVACLoadEvent.ElectricalMeasurement.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV2IDa	swift.typealias	ElectricHVACLoadEvent.ID	ElectricHVACLoadEvent.ID	typealias ID = UUID
+s:9EnergyKit21ElectricHVACLoadEventV2id10Foundation4UUIDVvp	swift.property	id	ElectricHVACLoadEvent.id	let id: UUID
+s:9EnergyKit21ElectricHVACLoadEventV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricHVACLoadEvent.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricHVACLoadEvent.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV	swift.struct	ElectricHVACLoadEvent.Session	ElectricHVACLoadEvent.Session	struct Session
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13GuidanceStateV	swift.struct	ElectricHVACLoadEvent.Session.GuidanceState	ElectricHVACLoadEvent.Session.GuidanceState	struct GuidanceState
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13GuidanceStateV012wasFollowingG013guidanceTokenAGSb_10Foundation4UUIDVtcfc	swift.init	init(wasFollowingGuidance:guidanceToken:)	ElectricHVACLoadEvent.Session.GuidanceState.init(wasFollowingGuidance:guidanceToken:)	init(wasFollowingGuidance: Bool, guidanceToken: UUID)
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13GuidanceStateV012wasFollowingG0Sbvp	swift.property	wasFollowingGuidance	ElectricHVACLoadEvent.Session.GuidanceState.wasFollowingGuidance	let wasFollowingGuidance: Bool
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13GuidanceStateV13guidanceToken10Foundation4UUIDVvp	swift.property	guidanceToken	ElectricHVACLoadEvent.Session.GuidanceState.guidanceToken	var guidanceToken: UUID
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13GuidanceStateV4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricHVACLoadEvent.Session.GuidanceState.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13GuidanceStateV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricHVACLoadEvent.Session.GuidanceState.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV13guidanceStateAE08GuidanceH0Vvp	swift.property	guidanceState	ElectricHVACLoadEvent.Session.guidanceState	let guidanceState: ElectricHVACLoadEvent.Session.GuidanceState
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV2id10Foundation4UUIDVvp	swift.property	id	ElectricHVACLoadEvent.Session.id	let id: UUID
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV2id5state13guidanceStateAE10Foundation4UUIDV_AE0J0OAE08GuidanceJ0Vtcfc	swift.init	init(id:state:guidanceState:)	ElectricHVACLoadEvent.Session.init(id:state:guidanceState:)	init(id: UUID, state: ElectricHVACLoadEvent.Session.State, guidanceState: ElectricHVACLoadEvent.Session.GuidanceState)
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricHVACLoadEvent.Session.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO	swift.enum	ElectricHVACLoadEvent.Session.State	ElectricHVACLoadEvent.Session.State	enum State
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	ElectricHVACLoadEvent.Session.State.==(_:_:)	static func == (a: ElectricHVACLoadEvent.Session.State, b: ElectricHVACLoadEvent.Session.State) -> Bool
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO3endyA2GmF	swift.enum.case	ElectricHVACLoadEvent.Session.State.end	ElectricHVACLoadEvent.Session.State.end	case end
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricHVACLoadEvent.Session.State.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ElectricHVACLoadEvent.Session.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO5beginyA2GmF	swift.enum.case	ElectricHVACLoadEvent.Session.State.begin	ElectricHVACLoadEvent.Session.State.begin	case begin
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO6activeyA2GmF	swift.enum.case	ElectricHVACLoadEvent.Session.State.active	ElectricHVACLoadEvent.Session.State.active	case active
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricHVACLoadEvent.Session.State.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO9hashValueSivp	swift.property	hashValue	ElectricHVACLoadEvent.Session.State.hashValue	var hashValue: Int { get }
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV5stateAE5StateOvp	swift.property	state	ElectricHVACLoadEvent.Session.state	let state: ElectricHVACLoadEvent.Session.State
+s:9EnergyKit21ElectricHVACLoadEventV7SessionV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricHVACLoadEvent.Session.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit21ElectricHVACLoadEventV7sessionAC7SessionVvp	swift.property	session	ElectricHVACLoadEvent.session	let session: ElectricHVACLoadEvent.Session
+s:9EnergyKit21ElectricHVACLoadEventV8deviceIDSSvp	swift.property	deviceID	ElectricHVACLoadEvent.deviceID	let deviceID: String
+s:9EnergyKit21ElectricHVACLoadEventV9timestamp10Foundation4DateVvp	swift.property	timestamp	ElectricHVACLoadEvent.timestamp	let timestamp: Date
+s:9EnergyKit21ElectricHVACLoadEventV9timestamp11measurement7session8deviceIDAC10Foundation4DateV_AC21ElectricalMeasurementVAC7SessionVSStcfc	swift.init	init(timestamp:measurement:session:deviceID:)	ElectricHVACLoadEvent.init(timestamp:measurement:session:deviceID:)	init(timestamp: Date, measurement: ElectricHVACLoadEvent.ElectricalMeasurement, session: ElectricHVACLoadEvent.Session, deviceID: String)
+s:9EnergyKit23ElectricityInsightQueryV	swift.struct	ElectricityInsightQuery	ElectricityInsightQuery	struct ElectricityInsightQuery
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO	swift.enum	ElectricityInsightQuery.Granularity	ElectricityInsightQuery.Granularity	enum Granularity
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	ElectricityInsightQuery.Granularity.==(_:_:)	static func == (a: ElectricityInsightQuery.Granularity, b: ElectricityInsightQuery.Granularity) -> Bool
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityInsightQuery.Granularity.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ElectricityInsightQuery.Granularity.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO5dailyyA2EmF	swift.enum.case	ElectricityInsightQuery.Granularity.daily	ElectricityInsightQuery.Granularity.daily	case daily
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityInsightQuery.Granularity.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO6hourlyyA2EmF	swift.enum.case	ElectricityInsightQuery.Granularity.hourly	ElectricityInsightQuery.Granularity.hourly	case hourly
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO6weeklyyA2EmF	swift.enum.case	ElectricityInsightQuery.Granularity.weekly	ElectricityInsightQuery.Granularity.weekly	case weekly
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO6yearlyyA2EmF	swift.enum.case	ElectricityInsightQuery.Granularity.yearly	ElectricityInsightQuery.Granularity.yearly	case yearly
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO7monthlyyA2EmF	swift.enum.case	ElectricityInsightQuery.Granularity.monthly	ElectricityInsightQuery.Granularity.monthly	case monthly
+s:9EnergyKit23ElectricityInsightQueryV11GranularityO9hashValueSivp	swift.property	hashValue	ElectricityInsightQuery.Granularity.hashValue	var hashValue: Int { get }
+s:9EnergyKit23ElectricityInsightQueryV11granularityAC11GranularityOvp	swift.property	granularity	ElectricityInsightQuery.granularity	let granularity: ElectricityInsightQuery.Granularity
+s:9EnergyKit23ElectricityInsightQueryV13flowDirectionAA0c4FlowG0Ovp	swift.property	flowDirection	ElectricityInsightQuery.flowDirection	let flowDirection: ElectricityFlowDirection
+s:9EnergyKit23ElectricityInsightQueryV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityInsightQuery.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit23ElectricityInsightQueryV5range10Foundation12DateIntervalVvp	swift.property	range	ElectricityInsightQuery.range	let range: DateInterval
+s:9EnergyKit23ElectricityInsightQueryV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityInsightQuery.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.struct	ElectricityInsightQuery.Options	ElectricityInsightQuery.Options	struct Options
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV11cleanlinessAEvpZ	swift.type.property	cleanliness	ElectricityInsightQuery.Options.cleanliness	static let cleanliness: ElectricityInsightQuery.Options
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV19ArrayLiteralElementa	swift.typealias	ElectricityInsightQuery.Options.ArrayLiteralElement	ElectricityInsightQuery.Options.ArrayLiteralElement	typealias ArrayLiteralElement = ElectricityInsightQuery.Options
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV6tariffAEvpZ	swift.type.property	tariff	ElectricityInsightQuery.Options.tariff	static let tariff: ElectricityInsightQuery.Options
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV7Elementa	swift.typealias	ElectricityInsightQuery.Options.Element	ElectricityInsightQuery.Options.Element	typealias Element = ElectricityInsightQuery.Options
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV8RawValuea	swift.typealias	ElectricityInsightQuery.Options.RawValue	ElectricityInsightQuery.Options.RawValue	typealias RawValue = UInt
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV8rawValueAESu_tcfc	swift.init	init(rawValue:)	ElectricityInsightQuery.Options.init(rawValue:)	init(rawValue: UInt)
+s:9EnergyKit23ElectricityInsightQueryV7OptionsV8rawValueSuvp	swift.property	rawValue	ElectricityInsightQuery.Options.rawValue	let rawValue: UInt
+s:9EnergyKit23ElectricityInsightQueryV7options5range11granularity13flowDirectionA2C7OptionsV_10Foundation12DateIntervalVAC11GranularityOAA0c4FlowJ0Otcfc	swift.init	init(options:range:granularity:flowDirection:)	ElectricityInsightQuery.init(options:range:granularity:flowDirection:)	init(options: ElectricityInsightQuery.Options, range: DateInterval, granularity: ElectricityInsightQuery.Granularity, flowDirection: ElectricityFlowDirection)
+s:9EnergyKit23ElectricityInsightQueryV7optionsAC7OptionsVvp	swift.property	options	ElectricityInsightQuery.options	let options: ElectricityInsightQuery.Options
+s:9EnergyKit24ElectricVehicleLoadEventV	swift.struct	ElectricVehicleLoadEvent	ElectricVehicleLoadEvent	struct ElectricVehicleLoadEvent
+s:9EnergyKit24ElectricVehicleLoadEventV11measurementAC21ElectricalMeasurementVvp	swift.property	measurement	ElectricVehicleLoadEvent.measurement	let measurement: ElectricVehicleLoadEvent.ElectricalMeasurement
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV	swift.struct	ElectricVehicleLoadEvent.ElectricalMeasurement	ElectricVehicleLoadEvent.ElectricalMeasurement	struct ElectricalMeasurement
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV13stateOfCharge9direction5power6energyAESi_AA24ElectricityFlowDirectionO10Foundation0H0VySo11NSUnitPowerCGANySo0sA0CGtcfc	swift.init	init(stateOfCharge:direction:power:energy:)	ElectricVehicleLoadEvent.ElectricalMeasurement.init(stateOfCharge:direction:power:energy:)	init(stateOfCharge: Int, direction: ElectricityFlowDirection, power: Measurement<UnitPower>, energy: Measurement<UnitEnergy>)
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV13stateOfChargeSivp	swift.property	stateOfCharge	ElectricVehicleLoadEvent.ElectricalMeasurement.stateOfCharge	let stateOfCharge: Int
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricVehicleLoadEvent.ElectricalMeasurement.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV5power10Foundation0H0VySo11NSUnitPowerCGvp	swift.property	power	ElectricVehicleLoadEvent.ElectricalMeasurement.power	let power: Measurement<UnitPower>
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricVehicleLoadEvent.ElectricalMeasurement.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV6energy10Foundation0H0VySo06NSUnitA0CGvp	swift.property	energy	ElectricVehicleLoadEvent.ElectricalMeasurement.energy	let energy: Measurement<UnitEnergy>
+s:9EnergyKit24ElectricVehicleLoadEventV21ElectricalMeasurementV9directionAA24ElectricityFlowDirectionOvp	swift.property	direction	ElectricVehicleLoadEvent.ElectricalMeasurement.direction	let direction: ElectricityFlowDirection
+s:9EnergyKit24ElectricVehicleLoadEventV2IDa	swift.typealias	ElectricVehicleLoadEvent.ID	ElectricVehicleLoadEvent.ID	typealias ID = UUID
+s:9EnergyKit24ElectricVehicleLoadEventV2id10Foundation4UUIDVvp	swift.property	id	ElectricVehicleLoadEvent.id	let id: UUID
+s:9EnergyKit24ElectricVehicleLoadEventV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricVehicleLoadEvent.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricVehicleLoadEvent.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV	swift.struct	ElectricVehicleLoadEvent.Session	ElectricVehicleLoadEvent.Session	struct Session
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13GuidanceStateV	swift.struct	ElectricVehicleLoadEvent.Session.GuidanceState	ElectricVehicleLoadEvent.Session.GuidanceState	struct GuidanceState
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13GuidanceStateV012wasFollowingH013guidanceTokenAGSb_10Foundation4UUIDVtcfc	swift.init	init(wasFollowingGuidance:guidanceToken:)	ElectricVehicleLoadEvent.Session.GuidanceState.init(wasFollowingGuidance:guidanceToken:)	init(wasFollowingGuidance: Bool, guidanceToken: UUID)
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13GuidanceStateV012wasFollowingH0Sbvp	swift.property	wasFollowingGuidance	ElectricVehicleLoadEvent.Session.GuidanceState.wasFollowingGuidance	let wasFollowingGuidance: Bool
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13GuidanceStateV13guidanceToken10Foundation4UUIDVvp	swift.property	guidanceToken	ElectricVehicleLoadEvent.Session.GuidanceState.guidanceToken	var guidanceToken: UUID
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13GuidanceStateV4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricVehicleLoadEvent.Session.GuidanceState.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13GuidanceStateV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricVehicleLoadEvent.Session.GuidanceState.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV13guidanceStateAE08GuidanceI0Vvp	swift.property	guidanceState	ElectricVehicleLoadEvent.Session.guidanceState	let guidanceState: ElectricVehicleLoadEvent.Session.GuidanceState
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV2id10Foundation4UUIDVvp	swift.property	id	ElectricVehicleLoadEvent.Session.id	let id: UUID
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV2id5state13guidanceStateAE10Foundation4UUIDV_AE0K0OAE08GuidanceK0Vtcfc	swift.init	init(id:state:guidanceState:)	ElectricVehicleLoadEvent.Session.init(id:state:guidanceState:)	init(id: UUID, state: ElectricVehicleLoadEvent.Session.State, guidanceState: ElectricVehicleLoadEvent.Session.GuidanceState)
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricVehicleLoadEvent.Session.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO	swift.enum	ElectricVehicleLoadEvent.Session.State	ElectricVehicleLoadEvent.Session.State	enum State
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	ElectricVehicleLoadEvent.Session.State.==(_:_:)	static func == (a: ElectricVehicleLoadEvent.Session.State, b: ElectricVehicleLoadEvent.Session.State) -> Bool
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO3endyA2GmF	swift.enum.case	ElectricVehicleLoadEvent.Session.State.end	ElectricVehicleLoadEvent.Session.State.end	case end
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricVehicleLoadEvent.Session.State.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ElectricVehicleLoadEvent.Session.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO5beginyA2GmF	swift.enum.case	ElectricVehicleLoadEvent.Session.State.begin	ElectricVehicleLoadEvent.Session.State.begin	case begin
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO6activeyA2GmF	swift.enum.case	ElectricVehicleLoadEvent.Session.State.active	ElectricVehicleLoadEvent.Session.State.active	case active
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricVehicleLoadEvent.Session.State.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO9hashValueSivp	swift.property	hashValue	ElectricVehicleLoadEvent.Session.State.hashValue	var hashValue: Int { get }
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5stateAE5StateOvp	swift.property	state	ElectricVehicleLoadEvent.Session.state	let state: ElectricVehicleLoadEvent.Session.State
+s:9EnergyKit24ElectricVehicleLoadEventV7SessionV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricVehicleLoadEvent.Session.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit24ElectricVehicleLoadEventV7sessionAC7SessionVvp	swift.property	session	ElectricVehicleLoadEvent.session	let session: ElectricVehicleLoadEvent.Session
+s:9EnergyKit24ElectricVehicleLoadEventV8deviceIDSSvp	swift.property	deviceID	ElectricVehicleLoadEvent.deviceID	let deviceID: String
+s:9EnergyKit24ElectricVehicleLoadEventV9timestamp10Foundation4DateVvp	swift.property	timestamp	ElectricVehicleLoadEvent.timestamp	let timestamp: Date
+s:9EnergyKit24ElectricVehicleLoadEventV9timestamp11measurement7session8deviceIDAC10Foundation4DateV_AC21ElectricalMeasurementVAC7SessionVSStcfc	swift.init	init(timestamp:measurement:session:deviceID:)	ElectricVehicleLoadEvent.init(timestamp:measurement:session:deviceID:)	init(timestamp: Date, measurement: ElectricVehicleLoadEvent.ElectricalMeasurement, session: ElectricVehicleLoadEvent.Session, deviceID: String)
+s:9EnergyKit24ElectricityFlowDirectionO	swift.enum	ElectricityFlowDirection	ElectricityFlowDirection	enum ElectricityFlowDirection
+s:9EnergyKit24ElectricityFlowDirectionO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	ElectricityFlowDirection.==(_:_:)	static func == (a: ElectricityFlowDirection, b: ElectricityFlowDirection) -> Bool
+s:9EnergyKit24ElectricityFlowDirectionO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	ElectricityFlowDirection.init(from:)	init(from decoder: any Decoder) throws
+s:9EnergyKit24ElectricityFlowDirectionO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	ElectricityFlowDirection.hash(into:)	func hash(into hasher: inout Hasher)
+s:9EnergyKit24ElectricityFlowDirectionO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	ElectricityFlowDirection.encode(to:)	func encode(to encoder: any Encoder) throws
+s:9EnergyKit24ElectricityFlowDirectionO8exportedyA2CmF	swift.enum.case	ElectricityFlowDirection.exported	ElectricityFlowDirection.exported	case exported
+s:9EnergyKit24ElectricityFlowDirectionO8importedyA2CmF	swift.enum.case	ElectricityFlowDirection.imported	ElectricityFlowDirection.imported	case imported
+s:9EnergyKit24ElectricityFlowDirectionO9hashValueSivp	swift.property	hashValue	ElectricityFlowDirection.hashValue	var hashValue: Int { get }
+s:9EnergyKit24ElectricityInsightRecordV	swift.struct	ElectricityInsightRecord	ElectricityInsightRecord	struct ElectricityInsightRecord<Measure> where Measure : ElectricityInsightMeasure
+s:9EnergyKit24ElectricityInsightRecordV05totalA010Foundation11MeasurementVySo06NSUnitA0CGSgvp	swift.property	totalEnergy	ElectricityInsightRecord.totalEnergy	var totalEnergy: Measurement<UnitEnergy>?
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV	swift.struct	ElectricityInsightRecord.TariffPeak	ElectricityInsightRecord.TariffPeak	struct TariffPeak
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV02onG0xSgvp	swift.property	onPeak	ElectricityInsightRecord.TariffPeak.onPeak	var onPeak: Measure?
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV03offG0xSgvp	swift.property	offPeak	ElectricityInsightRecord.TariffPeak.offPeak	var offPeak: Measure?
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV07partialG0xSgvp	swift.property	partialPeak	ElectricityInsightRecord.TariffPeak.partialPeak	var partialPeak: Measure?
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV08criticalG0xSgvp	swift.property	criticalPeak	ElectricityInsightRecord.TariffPeak.criticalPeak	var criticalPeak: Measure?
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV08superOffG003offG007partialG002onG008criticalG07unknownAEyx_GxSg_A5Mtcfc	swift.init	init(superOffPeak:offPeak:partialPeak:onPeak:criticalPeak:unknown:)	ElectricityInsightRecord.TariffPeak.init(superOffPeak:offPeak:partialPeak:onPeak:criticalPeak:unknown:)	init(superOffPeak: Measure?, offPeak: Measure?, partialPeak: Measure?, onPeak: Measure?, criticalPeak: Measure?, unknown: Measure?)
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV08superOffG0xSgvp	swift.property	superOffPeak	ElectricityInsightRecord.TariffPeak.superOffPeak	var superOffPeak: Measure?
+s:9EnergyKit24ElectricityInsightRecordV10TariffPeakV7unknownxSgvp	swift.property	unknown	ElectricityInsightRecord.TariffPeak.unknown	var unknown: Measure?
+s:9EnergyKit24ElectricityInsightRecordV12totalRuntimes8DurationVSgvp	swift.property	totalRuntime	ElectricityInsightRecord.totalRuntime	var totalRuntime: Duration?
+s:9EnergyKit24ElectricityInsightRecordV15GridCleanlinessV	swift.struct	ElectricityInsightRecord.GridCleanliness	ElectricityInsightRecord.GridCleanliness	struct GridCleanliness
+s:9EnergyKit24ElectricityInsightRecordV15GridCleanlinessV5avoidxSgvp	swift.property	avoid	ElectricityInsightRecord.GridCleanliness.avoid	var avoid: Measure?
+s:9EnergyKit24ElectricityInsightRecordV15GridCleanlinessV7cleaner9lessClean5avoid7unknownAEyx_GxSg_A3Ktcfc	swift.init	init(cleaner:lessClean:avoid:unknown:)	ElectricityInsightRecord.GridCleanliness.init(cleaner:lessClean:avoid:unknown:)	init(cleaner: Measure?, lessClean: Measure?, avoid: Measure?, unknown: Measure?)
+s:9EnergyKit24ElectricityInsightRecordV15GridCleanlinessV7cleanerxSgvp	swift.property	cleaner	ElectricityInsightRecord.GridCleanliness.cleaner	var cleaner: Measure?
+s:9EnergyKit24ElectricityInsightRecordV15GridCleanlinessV7unknownxSgvp	swift.property	unknown	ElectricityInsightRecord.GridCleanliness.unknown	var unknown: Measure?
+s:9EnergyKit24ElectricityInsightRecordV15GridCleanlinessV9lessCleanxSgvp	swift.property	lessClean	ElectricityInsightRecord.GridCleanliness.lessClean	var lessClean: Measure?
+s:9EnergyKit24ElectricityInsightRecordV16dataByTariffPeakAC0hI0Vyx_GSgvp	swift.property	dataByTariffPeak	ElectricityInsightRecord.dataByTariffPeak	var dataByTariffPeak: ElectricityInsightRecord<Measure>.TariffPeak?
+s:9EnergyKit24ElectricityInsightRecordV21dataByGridCleanlinessAC0hI0Vyx_GSgvp	swift.property	dataByGridCleanliness	ElectricityInsightRecord.dataByGridCleanliness	var dataByGridCleanliness: ElectricityInsightRecord<Measure>.GridCleanliness?
+s:9EnergyKit24ElectricityInsightRecordV5range10Foundation12DateIntervalVvp	swift.property	range	ElectricityInsightRecord.range	let range: DateInterval
+s:9EnergyKit25ElectricityInsightMeasureP	swift.protocol	ElectricityInsightMeasure	ElectricityInsightMeasure	protocol ElectricityInsightMeasure
+s:9EnergyKit25ElectricityInsightServiceC	swift.class	ElectricityInsightService	ElectricityInsightService	final actor ElectricityInsightService
+s:9EnergyKit25ElectricityInsightServiceC14energyInsights11forDeviceID5using7atVenueScSyAA0cD6RecordVy10Foundation11MeasurementVySo06NSUnitA0CGGGSS_AA0cD5QueryVAJ4UUIDVtYaKF	swift.method	energyInsights(forDeviceID:using:atVenue:)	ElectricityInsightService.energyInsights(forDeviceID:using:atVenue:)	final func energyInsights(forDeviceID deviceID: String, using query: ElectricityInsightQuery, atVenue energyVenueID: UUID) async throws -> AsyncStream<ElectricityInsightRecord<Measurement<UnitEnergy>>>
+s:9EnergyKit25ElectricityInsightServiceC15runtimeInsights11forDeviceID5using7atVenueScSyAA0cD6RecordVys8DurationVGGSS_AA0cD5QueryV10Foundation4UUIDVtYaKF	swift.method	runtimeInsights(forDeviceID:using:atVenue:)	ElectricityInsightService.runtimeInsights(forDeviceID:using:atVenue:)	final func runtimeInsights(forDeviceID deviceID: String, using query: ElectricityInsightQuery, atVenue energyVenueID: UUID) async throws -> AsyncStream<ElectricityInsightRecord<Duration>>
+s:9EnergyKit25ElectricityInsightServiceC15unownedExecutorScevp	swift.property	unownedExecutor	ElectricityInsightService.unownedExecutor	nonisolated final var unownedExecutor: UnownedSerialExecutor { get }
+s:9EnergyKit25ElectricityInsightServiceC6sharedACvpZ	swift.type.property	shared	ElectricityInsightService.shared	static let shared: ElectricityInsightService
+s:9EnergyKit27ElectricalLoadEventProtocolP	swift.protocol	ElectricalLoadEventProtocol	ElectricalLoadEventProtocol	protocol ElectricalLoadEventProtocol : Decodable, Encodable, Identifiable, Sendable
+s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	>(_:_:)	Measurement.>(_:_:)	static func > (lhs: Self, rhs: Self) -> Bool
+s:SLsE2geoiySbx_xtFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	>=(_:_:)	Measurement.>=(_:_:)	static func >= (lhs: Self, rhs: Self) -> Bool
+s:SLsE2leoiySbx_xtFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	<=(_:_:)	Measurement.<=(_:_:)	static func <= (lhs: Self, rhs: Self) -> Bool
+s:SLsE3zzloiySnyxGx_xtFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	..<(_:_:)	Measurement...<(_:_:)	static func ..< (minimum: Self, maximum: Self) -> Range<Self>
+s:SLsE3zzlopys16PartialRangeUpToVyxGxFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	..<(_:)	Measurement...<(_:)	static func ..< (maximum: Self) -> PartialRangeUpTo<Self>
+s:SLsE3zzzoPys16PartialRangeFromVyxGxFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	...(_:)	Measurement....(_:)	static func ... (minimum: Self) -> PartialRangeFrom<Self>
+s:SLsE3zzzoiySNyxGx_xtFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	...(_:_:)	Measurement....(_:_:)	static func ... (minimum: Self, maximum: Self) -> ClosedRange<Self>
+s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	...(_:)	Measurement....(_:)	static func ... (maximum: Self) -> PartialRangeThrough<Self>
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Foundation11MeasurementV	swift.func.op	!=(_:_:)	Measurement.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit0aB5ErrorO	swift.func.op	!=(_:_:)	EnergyKitError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit19ElectricityGuidanceV15SuggestedActionO	swift.func.op	!=(_:_:)	ElectricityGuidance.SuggestedAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit19ElectricityGuidanceV7OptionsO	swift.func.op	!=(_:_:)	ElectricityGuidance.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit21ElectricHVACLoadEventV7SessionV5StateO	swift.func.op	!=(_:_:)	ElectricHVACLoadEvent.Session.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV11GranularityO	swift.func.op	!=(_:_:)	ElectricityInsightQuery.Granularity.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.func.op	!=(_:_:)	ElectricityInsightQuery.Options.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit24ElectricVehicleLoadEventV7SessionV5StateO	swift.func.op	!=(_:_:)	ElectricVehicleLoadEvent.Session.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:9EnergyKit24ElectricityFlowDirectionO	swift.func.op	!=(_:_:)	ElectricityFlowDirection.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzSu8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	encode(to:)	ElectricityInsightQuery.Options.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.property	hashValue	ElectricityInsightQuery.Options.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	hash(into:)	ElectricityInsightQuery.Options.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzSu8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.init	init(from:)	ElectricityInsightQuery.Options.init(from:)	init(from decoder: any Decoder) throws
+s:ScA12_ConcurrencyE14assertIsolated_4file4lineySSyXK_s12StaticStringVSutF::SYNTHESIZED::s:9EnergyKit25ElectricityInsightServiceC	swift.method	assertIsolated(_:file:line:)	ElectricityInsightService.assertIsolated(_:file:line:)	@backDeployed(before: macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0)\nnonisolated func assertIsolated(_ message: @autoclosure () -> String = String(), file: StaticString = #fileID, line: UInt = #line)
+s:ScA12_ConcurrencyE14assumeIsolated_4file4lineqd__qd__xYiKXE_s12StaticStringVSutKs8SendableRd__lF::SYNTHESIZED::s:9EnergyKit25ElectricityInsightServiceC	swift.method	assumeIsolated(_:file:line:)	ElectricityInsightService.assumeIsolated(_:file:line:)	nonisolated func assumeIsolated<T>(_ operation: (isolated Self) throws -> T, file: StaticString = #fileID, line: UInt = #line) rethrows -> T where T : Sendable
+s:ScA12_ConcurrencyE20preconditionIsolated_4file4lineySSyXK_s12StaticStringVSutF::SYNTHESIZED::s:9EnergyKit25ElectricityInsightServiceC	swift.method	preconditionIsolated(_:file:line:)	ElectricityInsightService.preconditionIsolated(_:file:line:)	@backDeployed(before: macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0)\nnonisolated func preconditionIsolated(_ message: @autoclosure () -> String = String(), file: StaticString = #fileID, line: UInt = #line)
+s:So12NSUnitEnergyC0B3KitEACC	swift.class	UnitEnergy.EnergyKit	UnitEnergy.EnergyKit	@objc class EnergyKit
+s:So12NSUnitEnergyC0B3KitEACC14milliwattHoursABvpZ	swift.type.property	milliwattHours	UnitEnergy.EnergyKit.milliwattHours	static let milliwattHours: UnitEnergy
+s:So12NSUnitEnergyC0B3KitEACC5coderADSgSo7NSCoderC_tcfc	swift.init	init(coder:)	UnitEnergy.EnergyKit.init(coder:)	required dynamic init?(coder: NSCoder)
+s:So12NSUnitEnergyC0B3KitEACC6symbolADSS_tcfc	swift.init	init(symbol:)	UnitEnergy.EnergyKit.init(symbol:)	override dynamic init(symbol: String)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.init	init(arrayLiteral:)	ElectricityInsightQuery.Options.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	isDisjoint(with:)	ElectricityInsightQuery.Options.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	isSuperset(of:)	ElectricityInsightQuery.Options.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	subtracting(_:)	ElectricityInsightQuery.Options.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	isStrictSubset(of:)	ElectricityInsightQuery.Options.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	isStrictSuperset(of:)	ElectricityInsightQuery.Options.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.property	isEmpty	ElectricityInsightQuery.Options.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	isSubset(of:)	ElectricityInsightQuery.Options.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	subtract(_:)	ElectricityInsightQuery.Options.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.init	init(_:)	ElectricityInsightQuery.Options.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:9EnergyKit0aB5ErrorO	swift.property	localizedDescription	EnergyKitError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	insert(_:)	ElectricityInsightQuery.Options.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	remove(_:)	ElectricityInsightQuery.Options.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	update(with:)	ElectricityInsightQuery.Options.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	contains(_:)	ElectricityInsightQuery.Options.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	intersection(_:)	ElectricityInsightQuery.Options.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	symmetricDifference(_:)	ElectricityInsightQuery.Options.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	union(_:)	ElectricityInsightQuery.Options.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	formIntersection(_:)	ElectricityInsightQuery.Options.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	formSymmetricDifference(_:)	ElectricityInsightQuery.Options.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.method	formUnion(_:)	ElectricityInsightQuery.Options.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:9EnergyKit23ElectricityInsightQueryV7OptionsV	swift.init	init()	ElectricityInsightQuery.Options.init()	init()

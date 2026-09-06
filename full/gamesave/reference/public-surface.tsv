@@ -1,0 +1,63 @@
+precise	kind	title	path	declaration
+c:@E@GSSyncState	swift.enum	GSSyncState	GSSyncState	enum GSSyncState
+c:@E@GSSyncState@GSSyncStateClosed	swift.enum.case	GSSyncState.closed	GSSyncState.closed	case closed
+c:@E@GSSyncState@GSSyncStateConflicted	swift.enum.case	GSSyncState.conflicted	GSSyncState.conflicted	case conflicted
+c:@E@GSSyncState@GSSyncStateError	swift.enum.case	GSSyncState.error	GSSyncState.error	case error
+c:@E@GSSyncState@GSSyncStateLocal	swift.enum.case	GSSyncState.local	GSSyncState.local	case local
+c:@E@GSSyncState@GSSyncStateOffline	swift.enum.case	GSSyncState.offline	GSSyncState.offline	case offline
+c:@E@GSSyncState@GSSyncStateReady	swift.enum.case	GSSyncState.ready	GSSyncState.ready	case ready
+c:@E@GSSyncState@GSSyncStateSyncing	swift.enum.case	GSSyncState.syncing	GSSyncState.syncing	case syncing
+c:objc(cs)GSSyncedDirectory	swift.class	GSSyncedDirectory	GSSyncedDirectory	class GSSyncedDirectory
+c:objc(cs)GSSyncedDirectory(cm)openDirectoryForContainerIdentifier:	swift.type.method	open(forContainerIdentifier:)	GSSyncedDirectory.open(forContainerIdentifier:)	class func open(forContainerIdentifier containerIdentifier: String?) -> GSSyncedDirectory
+c:objc(cs)GSSyncedDirectory(im)close	swift.method	close()	GSSyncedDirectory.close()	func close()
+c:objc(cs)GSSyncedDirectory(im)finishSyncing:completionHandler:	swift.method	finishSyncing(_:)	GSSyncedDirectory.finishSyncing(_:)	func finishSyncing(_ statusDisplay: UIWindow) async
+c:objc(cs)GSSyncedDirectory(im)finishSyncingWithCompletionHandler:	swift.method	finishSyncing(completionHandler:)	GSSyncedDirectory.finishSyncing(completionHandler:)	func finishSyncing(completionHandler completion: @escaping () -> Void)
+c:objc(cs)GSSyncedDirectory(im)resolveConflictsWithVersion:	swift.method	resolveConflicts(with:)	GSSyncedDirectory.resolveConflicts(with:)	func resolveConflicts(with version: GSSyncedDirectoryVersion)
+c:objc(cs)GSSyncedDirectory(im)triggerPendingUploadWithCompletionHandler:	swift.method	triggerPendingUpload(completionHandler:)	GSSyncedDirectory.triggerPendingUpload(completionHandler:)	func triggerPendingUpload(completionHandler completion: @escaping (Bool) -> Void)
+c:objc(cs)GSSyncedDirectory(py)directoryState	swift.property	directoryState	GSSyncedDirectory.directoryState	var directoryState: GSSyncedDirectoryState { get }
+c:objc(cs)GSSyncedDirectoryState	swift.class	GSSyncedDirectoryState	GSSyncedDirectoryState	class GSSyncedDirectoryState
+c:objc(cs)GSSyncedDirectoryState(py)conflictedVersions	swift.property	conflictedVersions	GSSyncedDirectoryState.conflictedVersions	var conflictedVersions: [GSSyncedDirectoryVersion]? { get }
+c:objc(cs)GSSyncedDirectoryState(py)error	swift.property	error	GSSyncedDirectoryState.error	var error: (any Error)? { get }
+c:objc(cs)GSSyncedDirectoryState(py)state	swift.property	state	GSSyncedDirectoryState.state	var state: GSSyncState { get }
+c:objc(cs)GSSyncedDirectoryState(py)url	swift.property	url	GSSyncedDirectoryState.url	var url: URL? { get }
+c:objc(cs)GSSyncedDirectoryVersion	swift.class	GSSyncedDirectoryVersion	GSSyncedDirectoryVersion	class GSSyncedDirectoryVersion
+c:objc(cs)GSSyncedDirectoryVersion(py)description	swift.property	description	GSSyncedDirectoryVersion.description	var description: String { get }
+c:objc(cs)GSSyncedDirectoryVersion(py)isLocal	swift.property	isLocal	GSSyncedDirectoryVersion.isLocal	var isLocal: Bool { get }
+c:objc(cs)GSSyncedDirectoryVersion(py)localizedNameOfSavingComputer	swift.property	localizedNameOfSavingComputer	GSSyncedDirectoryVersion.localizedNameOfSavingComputer	var localizedNameOfSavingComputer: String { get }
+c:objc(cs)GSSyncedDirectoryVersion(py)modifiedDate	swift.property	modifiedDate	GSSyncedDirectoryVersion.modifiedDate	var modifiedDate: Date { get }
+c:objc(cs)GSSyncedDirectoryVersion(py)url	swift.property	url	GSSyncedDirectoryVersion.url	var url: URL { get }
+s:7SwiftUI4ViewP8GameSaveE04gameE12SyncingAlert9directory15finishedLoadingQrAA7BindingVyAD0dE15SyncedDirectoryCSgG_yyctF	swift.method	gameSaveSyncingAlert(directory:finishedLoading:)	View.gameSaveSyncingAlert(directory:finishedLoading:)	@MainActor @preconcurrency func gameSaveSyncingAlert(directory: Binding<GameSaveSyncedDirectory?>, finishedLoading: @escaping @MainActor () -> Void) -> some View\n
+s:8GameSave0aB11ErrorDomainSSvp	swift.var	GameSaveErrorDomain	GameSaveErrorDomain	let GameSaveErrorDomain: String
+s:8GameSave0aB15SyncedDirectoryC	swift.class	GameSaveSyncedDirectory	GameSaveSyncedDirectory	class GameSaveSyncedDirectory
+s:8GameSave0aB15SyncedDirectoryC04openD019containerIdentifierACSSSg_tFZ	swift.type.method	openDirectory(containerIdentifier:)	GameSaveSyncedDirectory.openDirectory(containerIdentifier:)	class func openDirectory(containerIdentifier: String? = nil) -> GameSaveSyncedDirectory
+s:8GameSave0aB15SyncedDirectoryC13finishSyncing13statusDisplayySo8UIWindowC_tYaF	swift.method	finishSyncing(statusDisplay:)	GameSaveSyncedDirectory.finishSyncing(statusDisplay:)	func finishSyncing(statusDisplay window: UIWindow) async
+s:8GameSave0aB15SyncedDirectoryC13finishSyncingyyYaF	swift.method	finishSyncing()	GameSaveSyncedDirectory.finishSyncing()	func finishSyncing() async
+s:8GameSave0aB15SyncedDirectoryC16resolveConflicts4withyAC7VersionC_tF	swift.method	resolveConflicts(with:)	GameSaveSyncedDirectory.resolveConflicts(with:)	func resolveConflicts(with version: GameSaveSyncedDirectory.Version)
+s:8GameSave0aB15SyncedDirectoryC20triggerPendingUploadSbyYaF	swift.method	triggerPendingUpload()	GameSaveSyncedDirectory.triggerPendingUpload()	func triggerPendingUpload() async -> Bool
+s:8GameSave0aB15SyncedDirectoryC2IDa	swift.typealias	GameSaveSyncedDirectory.ID	GameSaveSyncedDirectory.ID	typealias ID = String
+s:8GameSave0aB15SyncedDirectoryC2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	GameSaveSyncedDirectory.==(_:_:)	static func == (lhs: GameSaveSyncedDirectory, rhs: GameSaveSyncedDirectory) -> Bool
+s:8GameSave0aB15SyncedDirectoryC2idSSvp	swift.property	id	GameSaveSyncedDirectory.id	var id: String { get }
+s:8GameSave0aB15SyncedDirectoryC5StateO	swift.enum	GameSaveSyncedDirectory.State	GameSaveSyncedDirectory.State	enum State
+s:8GameSave0aB15SyncedDirectoryC5StateO10conflictedyAESayAC7VersionCG_tcAEmF	swift.enum.case	GameSaveSyncedDirectory.State.conflicted(versions:)	GameSaveSyncedDirectory.State.conflicted(versions:)	case conflicted(versions: [GameSaveSyncedDirectory.Version])
+s:8GameSave0aB15SyncedDirectoryC5StateO11descriptionSSvp	swift.property	description	GameSaveSyncedDirectory.State.description	var description: String { get }
+s:8GameSave0aB15SyncedDirectoryC5StateO5erroryAEs5Error_pcAEmF	swift.enum.case	GameSaveSyncedDirectory.State.error(_:)	GameSaveSyncedDirectory.State.error(_:)	case error(any Error)
+s:8GameSave0aB15SyncedDirectoryC5StateO5localyAE10Foundation3URLVcAEmF	swift.enum.case	GameSaveSyncedDirectory.State.local(_:)	GameSaveSyncedDirectory.State.local(_:)	case local(URL)
+s:8GameSave0aB15SyncedDirectoryC5StateO5readyyAE10Foundation3URLVcAEmF	swift.enum.case	GameSaveSyncedDirectory.State.ready(_:)	GameSaveSyncedDirectory.State.ready(_:)	case ready(URL)
+s:8GameSave0aB15SyncedDirectoryC5StateO6closedyA2EmF	swift.enum.case	GameSaveSyncedDirectory.State.closed	GameSaveSyncedDirectory.State.closed	case closed
+s:8GameSave0aB15SyncedDirectoryC5StateO7offlineyAE10Foundation3URLVcAEmF	swift.enum.case	GameSaveSyncedDirectory.State.offline(_:)	GameSaveSyncedDirectory.State.offline(_:)	case offline(URL)
+s:8GameSave0aB15SyncedDirectoryC5StateO7syncingyA2EmF	swift.enum.case	GameSaveSyncedDirectory.State.syncing	GameSaveSyncedDirectory.State.syncing	case syncing
+s:8GameSave0aB15SyncedDirectoryC5closeyyF	swift.method	close()	GameSaveSyncedDirectory.close()	func close()
+s:8GameSave0aB15SyncedDirectoryC5stateAC5StateOvp	swift.property	state	GameSaveSyncedDirectory.state	var state: GameSaveSyncedDirectory.State { get }
+s:8GameSave0aB15SyncedDirectoryC7VersionC	swift.class	GameSaveSyncedDirectory.Version	GameSaveSyncedDirectory.Version	class Version
+s:8GameSave0aB15SyncedDirectoryC7VersionC11descriptionSSvp	swift.property	description	GameSaveSyncedDirectory.Version.description	var description: String { get }
+s:8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvp	swift.property	modifiedDate	GameSaveSyncedDirectory.Version.modifiedDate	var modifiedDate: Date
+s:8GameSave0aB15SyncedDirectoryC7VersionC29localizedNameOfSavingComputerSSvp	swift.property	localizedNameOfSavingComputer	GameSaveSyncedDirectory.Version.localizedNameOfSavingComputer	var localizedNameOfSavingComputer: String { get }
+s:8GameSave0aB15SyncedDirectoryC7VersionC2IDa	swift.typealias	GameSaveSyncedDirectory.Version.ID	GameSaveSyncedDirectory.Version.ID	typealias ID = URL
+s:8GameSave0aB15SyncedDirectoryC7VersionC2id10Foundation3URLVvp	swift.property	id	GameSaveSyncedDirectory.Version.id	var id: URL { get }
+s:8GameSave0aB15SyncedDirectoryC7VersionC3url10Foundation3URLVvp	swift.property	url	GameSaveSyncedDirectory.Version.url	var url: URL { get }
+s:8GameSave0aB15SyncedDirectoryC7VersionC7isLocalSbvp	swift.property	isLocal	GameSaveSyncedDirectory.Version.isLocal	var isLocal: Bool { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GSSyncState	swift.func.op	!=(_:_:)	GSSyncState.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8GameSave0aB15SyncedDirectoryC	swift.func.op	!=(_:_:)	GameSaveSyncedDirectory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GSSyncState	swift.property	hashValue	GSSyncState.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GSSyncState	swift.method	hash(into:)	GSSyncState.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11GSSyncStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	GSSyncState.init(rawValue:)	init?(rawValue: Int)

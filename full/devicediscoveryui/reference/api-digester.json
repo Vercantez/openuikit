@@ -1,0 +1,936 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "DeviceDiscoveryUI.DeviceDiscoveryUIDefines",
+        "printedName": "DeviceDiscoveryUI.DeviceDiscoveryUIDefines"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "DeviceDiscoveryUI.DDDevicePickerViewController",
+        "printedName": "DeviceDiscoveryUI.DDDevicePickerViewController"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "Combine",
+        "printedName": "Combine"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "DeviceDiscoveryUI",
+        "printedName": "DeviceDiscoveryUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "ExtensionKit",
+        "printedName": "ExtensionKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "Network",
+        "printedName": "Network"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declAttributes": [
+          "Prefix"
+        ],
+        "declKind": "PrefixOperator",
+        "kind": "OperatorDecl",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": ">>",
+        "printedName": ">>"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ListenerProvider",
+                "printedName": "any Network.ListenerProvider",
+                "usr": "s:7Network16ListenerProviderP"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17DeviceDiscoveryUI29DDDevicePairingViewControllerC11isSupportedySb7Network16ListenerProvider_pFZ",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "isSupported",
+            "printedName": "isSupported(_:)",
+            "static": true,
+            "usr": "s:17DeviceDiscoveryUI29DDDevicePairingViewControllerC11isSupportedySb7Network16ListenerProvider_pFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DDDevicePairingViewController",
+                "printedName": "DeviceDiscoveryUI.DDDevicePairingViewController",
+                "usr": "c:@M@DeviceDiscoveryUI@objc(cs)DDDevicePairingViewController"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ListenerProvider",
+                "printedName": "any Network.ListenerProvider",
+                "usr": "s:7Network16ListenerProviderP"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "DDDevicePairingAccess",
+                "printedName": "DeviceDiscoveryUI.DDDevicePairingAccess",
+                "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s17DeviceDiscoveryUI29DDDevicePairingViewControllerC16listenerProvider6accessAC7Network08ListenerI0_p_AA0dE6AccessVtcfc",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "init",
+            "printedName": "init(listenerProvider:access:)",
+            "usr": "s:17DeviceDiscoveryUI29DDDevicePairingViewControllerC16listenerProvider6accessAC7Network08ListenerI0_p_AA0dE6AccessVtcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Final",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17DeviceDiscoveryUI29DDDevicePairingViewControllerC11viewDidLoadyyF",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "viewDidLoad",
+            "objc_name": "viewDidLoad",
+            "overriding": true,
+            "printedName": "viewDidLoad()",
+            "usr": "c:@M@DeviceDiscoveryUI@objc(cs)DDDevicePairingViewController(im)viewDidLoad"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIContentContainer",
+            "printedName": "UIContentContainer",
+            "usr": "c:objc(pl)UIContentContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSExtensionRequestHandling",
+            "printedName": "NSExtensionRequestHandling",
+            "usr": "c:objc(pl)NSExtensionRequestHandling"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIStateRestoring",
+            "printedName": "UIStateRestoring",
+            "usr": "c:objc(pl)UIStateRestoring"
+          }
+        ],
+        "declAttributes": [
+          "Final",
+          "Preconcurrency",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "ObjC",
+          "Custom"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s17DeviceDiscoveryUI29DDDevicePairingViewControllerC",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "DDDevicePairingViewController",
+        "printedName": "DDDevicePairingViewController",
+        "superclassNames": [
+          "UIKit.UIViewController",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIViewController",
+        "usr": "c:@M@DeviceDiscoveryUI@objc(cs)DDDevicePairingViewController"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DDDevicePairingAccess",
+                    "printedName": "DeviceDiscoveryUI.DDDevicePairingAccess",
+                    "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s17DeviceDiscoveryUI21DDDevicePairingAccessV7defaultACvgZ",
+                "moduleName": "DeviceDiscoveryUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV7defaultACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DDDevicePairingAccess",
+                "printedName": "DeviceDiscoveryUI.DDDevicePairingAccess",
+                "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s17DeviceDiscoveryUI21DDDevicePairingAccessV7defaultACvpZ",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "default",
+            "printedName": "default",
+            "static": true,
+            "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV7defaultACvpZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DDDevicePairingAccess",
+                    "printedName": "DeviceDiscoveryUI.DDDevicePairingAccess",
+                    "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s17DeviceDiscoveryUI21DDDevicePairingAccessV9permanentACvgZ",
+                "moduleName": "DeviceDiscoveryUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV9permanentACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "DDDevicePairingAccess",
+                "printedName": "DeviceDiscoveryUI.DDDevicePairingAccess",
+                "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s17DeviceDiscoveryUI21DDDevicePairingAccessV9permanentACvpZ",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "permanent",
+            "printedName": "permanent",
+            "static": true,
+            "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV9permanentACvpZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s17DeviceDiscoveryUI21DDDevicePairingAccessV",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "DDDevicePairingAccess",
+        "printedName": "DDDevicePairingAccess",
+        "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Descriptor",
+                "printedName": "Network.NWBrowser.Descriptor",
+                "usr": "s:7Network9NWBrowserC10DescriptorO"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NWParameters",
+                    "printedName": "Network.NWParameters",
+                    "usr": "s:7Network12NWParametersC"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Network.NWParameters?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "Preconcurrency",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_tvOS": "16.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo28DDDevicePickerViewControllerC17DeviceDiscoveryUIE11isSupported_5usingSb7Network9NWBrowserC10DescriptorO_AF12NWParametersCSgtFZ",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "isSupported",
+            "printedName": "isSupported(_:using:)",
+            "static": true,
+            "usr": "s:So28DDDevicePickerViewControllerC17DeviceDiscoveryUIE11isSupported_5usingSb7Network9NWBrowserC10DescriptorO_AF12NWParametersCSgtFZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DDDevicePickerViewController",
+                    "printedName": "DeviceDiscoveryUI.DDDevicePickerViewController",
+                    "usr": "c:objc(cs)DDDevicePickerViewController"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "DeviceDiscoveryUI.DDDevicePickerViewController?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Descriptor",
+                "printedName": "Network.NWBrowser.Descriptor",
+                "usr": "s:7Network9NWBrowserC10DescriptorO"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NWParameters",
+                    "printedName": "Network.NWParameters",
+                    "usr": "s:7Network12NWParametersC"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Network.NWParameters?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "16.0",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo28DDDevicePickerViewControllerC17DeviceDiscoveryUIE16browseDescriptor10parametersABSg7Network9NWBrowserC0I0O_AG12NWParametersCSgtcfc",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "init",
+            "printedName": "init(browseDescriptor:parameters:)",
+            "usr": "s:So28DDDevicePickerViewControllerC17DeviceDiscoveryUIE16browseDescriptor10parametersABSg7Network9NWBrowserC0I0O_AG12NWParametersCSgtcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DDDevicePickerViewController",
+                    "printedName": "DeviceDiscoveryUI.DDDevicePickerViewController",
+                    "usr": "c:objc(cs)DDDevicePickerViewController"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "DeviceDiscoveryUI.DDDevicePickerViewController?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Descriptor",
+                "printedName": "Network.NWBrowser.Descriptor",
+                "usr": "s:7Network9NWBrowserC10DescriptorO"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NWParameters",
+                    "printedName": "Network.NWParameters",
+                    "usr": "s:7Network12NWParametersC"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Network.NWParameters?",
+                "usr": "s:Sq"
+              },
+              {
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "DDDevicePairingAccess",
+                "printedName": "DeviceDiscoveryUI.DDDevicePairingAccess",
+                "usr": "s:17DeviceDiscoveryUI21DDDevicePairingAccessV"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Convenience",
+            "intro_iOS": "26.0",
+            "isFromExtension": true,
+            "kind": "Constructor",
+            "mangledName": "$sSo28DDDevicePickerViewControllerC17DeviceDiscoveryUIE16browseDescriptor10parameters6accessABSg7Network9NWBrowserC0I0O_AH12NWParametersCSgAC0A13PairingAccessVtcfc",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "init",
+            "printedName": "init(browseDescriptor:parameters:access:)",
+            "usr": "s:So28DDDevicePickerViewControllerC17DeviceDiscoveryUIE16browseDescriptor10parameters6accessABSg7Network9NWBrowserC0I0O_AH12NWParametersCSgAC0A13PairingAccessVtcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NWEndpoint",
+                    "printedName": "Network.NWEndpoint",
+                    "usr": "s:7Network10NWEndpointO"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo28DDDevicePickerViewControllerC17DeviceDiscoveryUIE8endpoint7Network10NWEndpointOvg",
+                "moduleName": "DeviceDiscoveryUI",
+                "name": "Get",
+                "printedName": "Get()",
+                "throwing": true,
+                "usr": "s:So28DDDevicePickerViewControllerC17DeviceDiscoveryUIE8endpoint7Network10NWEndpointOvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NWEndpoint",
+                "printedName": "Network.NWEndpoint",
+                "usr": "s:7Network10NWEndpointO"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Available",
+              "Available",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "intro_iOS": "26.0",
+            "intro_tvOS": "16.0",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo28DDDevicePickerViewControllerC17DeviceDiscoveryUIE8endpoint7Network10NWEndpointOvp",
+            "moduleName": "DeviceDiscoveryUI",
+            "name": "endpoint",
+            "printedName": "endpoint",
+            "usr": "s:So28DDDevicePickerViewControllerC17DeviceDiscoveryUIE8endpoint7Network10NWEndpointOvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIContentContainer",
+            "printedName": "UIContentContainer",
+            "usr": "c:objc(pl)UIContentContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSExtensionRequestHandling",
+            "printedName": "NSExtensionRequestHandling",
+            "usr": "c:objc(pl)NSExtensionRequestHandling"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIStateRestoring",
+            "printedName": "UIStateRestoring",
+            "usr": "c:objc(pl)UIStateRestoring"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "26.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "DeviceDiscoveryUI",
+        "name": "DDDevicePickerViewController",
+        "objc_name": "DDDevicePickerViewController",
+        "printedName": "DDDevicePickerViewController",
+        "superclassNames": [
+          "UIKit.UIViewController",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIViewController",
+        "usr": "c:objc(cs)DDDevicePickerViewController"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "DeviceDiscoveryUI",
+    "printedName": "DeviceDiscoveryUI"
+  }
+}

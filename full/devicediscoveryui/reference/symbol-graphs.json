@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/DeviceDiscoveryUI.symbols.json",
+      "relationshipCount": 50,
+      "sha256": "447f1d9af451cb3965d6ba766c522dac40c2519180fe40882e40a8e299eb8fe8",
+      "symbolCount": 12
+    },
+    {
+      "path": "reference/symbol-graphs/_DeviceDiscoveryUI_SwiftUI@DeviceDiscoveryUI.symbols.json",
+      "relationshipCount": 1550,
+      "sha256": "b387959562127073736f3c5c062686ae7f2ea0d1760be2b0eb37646380caa439",
+      "symbolCount": 1544
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "DeviceDiscoveryUI",
+  "relationshipCount": 1600,
+  "relationshipMultisetSHA256": "fd28c52defc0b61093fbde26d8db3d6d25d89f6e36082d282d28b08f0b4663e8",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 1556,
+  "symbolMultisetSHA256": "4d30054ce8ff905238950f9e709ac7741777621ace76bc27b26866d9b04cac66",
+  "target": "arm64-apple-ios26.0"
+}

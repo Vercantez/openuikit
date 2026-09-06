@@ -1,0 +1,5 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/DockKit.framework/DockKit.tbd	33448	8a1f86655a44afc692030f88edf6ff174446ca078dfda7cda50c5ac58189f576
+header	System/Library/Frameworks/DockKit.framework/Headers/DockKit.h	127	50232a2007faa3084bfc97b84a1a810a3b94d237abc2462b8eb71cf215990ba2
+swiftinterface	System/Library/Frameworks/DockKit.framework/Modules/DockKit.swiftmodule/arm64e-apple-ios.swiftinterface	19867	7af3c8746e6bf330bb5f70853a974a5edb07b68f5f3cdbe82f5e72ad47dd585b
+modulemap	System/Library/Frameworks/DockKit.framework/Modules/module.modulemap	95	7fa0c0974af4d51392e9edece443b2fe1a5e82450ffd99c5424e186849106b17

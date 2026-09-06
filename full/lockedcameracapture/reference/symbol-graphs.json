@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/LockedCameraCapture.symbols.json",
+      "relationshipCount": 60,
+      "sha256": "9fb2bd588f5753803872fd30ea501946c3cc4768893e9edde27d61f8b2df1254",
+      "symbolCount": 43
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "LockedCameraCapture",
+  "relationshipCount": 60,
+  "relationshipMultisetSHA256": "04c631a6665e7b6e8835ffb441b283a2b8ac2f3ac724a753b99eddf258d75252",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 43,
+  "symbolMultisetSHA256": "a7a1cf58646c7a02d5b8d733a0041ed1976f11b8a0511846b781cd9d8430ac75",
+  "target": "arm64-apple-ios26.0"
+}
