@@ -1,0 +1,151 @@
+precise	kind	title	path	declaration
+c:@E@ILClassificationAction	swift.enum	ILClassificationAction	ILClassificationAction	enum ILClassificationAction
+c:@E@ILClassificationAction@ILClassificationActionNone	swift.enum.case	ILClassificationAction.none	ILClassificationAction.none	case none
+c:@E@ILClassificationAction@ILClassificationActionReportJunk	swift.enum.case	ILClassificationAction.reportJunk	ILClassificationAction.reportJunk	case reportJunk
+c:@E@ILClassificationAction@ILClassificationActionReportJunkAndBlockSender	swift.enum.case	ILClassificationAction.reportJunkAndBlockSender	ILClassificationAction.reportJunkAndBlockSender	case reportJunkAndBlockSender
+c:@E@ILClassificationAction@ILClassificationActionReportNotJunk	swift.enum.case	ILClassificationAction.reportNotJunk	ILClassificationAction.reportNotJunk	case reportNotJunk
+c:@E@ILMessageFilterAction	swift.enum	ILMessageFilterAction	ILMessageFilterAction	enum ILMessageFilterAction
+c:@E@ILMessageFilterAction@ILMessageFilterActionAllow	swift.enum.case	ILMessageFilterAction.allow	ILMessageFilterAction.allow	case allow
+c:@E@ILMessageFilterAction@ILMessageFilterActionFilter	swift.type.property	filter	ILMessageFilterAction.filter	static var filter: ILMessageFilterAction { get }
+c:@E@ILMessageFilterAction@ILMessageFilterActionJunk	swift.enum.case	ILMessageFilterAction.junk	ILMessageFilterAction.junk	case junk
+c:@E@ILMessageFilterAction@ILMessageFilterActionNone	swift.enum.case	ILMessageFilterAction.none	ILMessageFilterAction.none	case none
+c:@E@ILMessageFilterAction@ILMessageFilterActionPromotion	swift.enum.case	ILMessageFilterAction.promotion	ILMessageFilterAction.promotion	case promotion
+c:@E@ILMessageFilterAction@ILMessageFilterActionTransaction	swift.enum.case	ILMessageFilterAction.transaction	ILMessageFilterAction.transaction	case transaction
+c:@E@ILMessageFilterError	swift.enum	ILMessageFilterError.Code	ILMessageFilterError.Code	enum Code
+c:@E@ILMessageFilterError@ILMessageFilterErrorInvalidNetworkURL	swift.enum.case	ILMessageFilterError.Code.invalidNetworkURL	ILMessageFilterError.Code.invalidNetworkURL	case invalidNetworkURL
+c:@E@ILMessageFilterError@ILMessageFilterErrorNetworkRequestFailed	swift.enum.case	ILMessageFilterError.Code.networkRequestFailed	ILMessageFilterError.Code.networkRequestFailed	case networkRequestFailed
+c:@E@ILMessageFilterError@ILMessageFilterErrorNetworkURLUnauthorized	swift.enum.case	ILMessageFilterError.Code.networkURLUnauthorized	ILMessageFilterError.Code.networkURLUnauthorized	case networkURLUnauthorized
+c:@E@ILMessageFilterError@ILMessageFilterErrorRedundantNetworkDeferral	swift.enum.case	ILMessageFilterError.Code.redundantNetworkDeferral	ILMessageFilterError.Code.redundantNetworkDeferral	case redundantNetworkDeferral
+c:@E@ILMessageFilterError@ILMessageFilterErrorSystem	swift.enum.case	ILMessageFilterError.Code.system	ILMessageFilterError.Code.system	case system
+c:@E@ILMessageFilterSubAction	swift.enum	ILMessageFilterSubAction	ILMessageFilterSubAction	enum ILMessageFilterSubAction
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionNone	swift.enum.case	ILMessageFilterSubAction.none	ILMessageFilterSubAction.none	case none
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionPromotionalCoupons	swift.enum.case	ILMessageFilterSubAction.promotionalCoupons	ILMessageFilterSubAction.promotionalCoupons	case promotionalCoupons
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionPromotionalOffers	swift.enum.case	ILMessageFilterSubAction.promotionalOffers	ILMessageFilterSubAction.promotionalOffers	case promotionalOffers
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionPromotionalOthers	swift.enum.case	ILMessageFilterSubAction.promotionalOthers	ILMessageFilterSubAction.promotionalOthers	case promotionalOthers
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalCarrier	swift.enum.case	ILMessageFilterSubAction.transactionalCarrier	ILMessageFilterSubAction.transactionalCarrier	case transactionalCarrier
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalFinance	swift.enum.case	ILMessageFilterSubAction.transactionalFinance	ILMessageFilterSubAction.transactionalFinance	case transactionalFinance
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalHealth	swift.enum.case	ILMessageFilterSubAction.transactionalHealth	ILMessageFilterSubAction.transactionalHealth	case transactionalHealth
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalOrders	swift.enum.case	ILMessageFilterSubAction.transactionalOrders	ILMessageFilterSubAction.transactionalOrders	case transactionalOrders
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalOthers	swift.enum.case	ILMessageFilterSubAction.transactionalOthers	ILMessageFilterSubAction.transactionalOthers	case transactionalOthers
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalPublicServices	swift.enum.case	ILMessageFilterSubAction.transactionalPublicServices	ILMessageFilterSubAction.transactionalPublicServices	case transactionalPublicServices
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalReminders	swift.enum.case	ILMessageFilterSubAction.transactionalReminders	ILMessageFilterSubAction.transactionalReminders	case transactionalReminders
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalRewards	swift.enum.case	ILMessageFilterSubAction.transactionalRewards	ILMessageFilterSubAction.transactionalRewards	case transactionalRewards
+c:@E@ILMessageFilterSubAction@ILMessageFilterSubActionTransactionalWeather	swift.enum.case	ILMessageFilterSubAction.transactionalWeather	ILMessageFilterSubAction.transactionalWeather	case transactionalWeather
+c:@ILMessageFilterErrorDomain	swift.var	ILMessageFilterErrorDomain	ILMessageFilterErrorDomain	let ILMessageFilterErrorDomain: String
+c:objc(cs)ILCallClassificationRequest	swift.class	ILCallClassificationRequest	ILCallClassificationRequest	class ILCallClassificationRequest
+c:objc(cs)ILCallClassificationRequest(py)callCommunications	swift.property	callCommunications	ILCallClassificationRequest.callCommunications	var callCommunications: [ILCallCommunication] { get }
+c:objc(cs)ILCallCommunication	swift.class	ILCallCommunication	ILCallCommunication	class ILCallCommunication
+c:objc(cs)ILClassificationRequest	swift.class	ILClassificationRequest	ILClassificationRequest	class ILClassificationRequest
+c:objc(cs)ILClassificationResponse	swift.class	ILClassificationResponse	ILClassificationResponse	class ILClassificationResponse
+c:objc(cs)ILClassificationResponse(im)initWithClassificationAction:	swift.init	init(action:)	ILClassificationResponse.init(action:)	init(action: ILClassificationAction)
+c:objc(cs)ILClassificationResponse(im)initWithClassificationAction:::SYNTHESIZED::c:objc(cs)ILClassificationResponse	swift.init	init(classificationAction:)	ILClassificationResponse.init(classificationAction:)	init(classificationAction action: ILClassificationAction)
+c:objc(cs)ILClassificationResponse(py)action	swift.property	action	ILClassificationResponse.action	var action: ILClassificationAction { get }
+c:objc(cs)ILClassificationResponse(py)userInfo	swift.property	userInfo	ILClassificationResponse.userInfo	var userInfo: [String : Any]? { get set }
+c:objc(cs)ILClassificationResponse(py)userString	swift.property	userString	ILClassificationResponse.userString	var userString: String? { get set }
+c:objc(cs)ILCommunication	swift.class	ILCommunication	ILCommunication	class ILCommunication
+c:objc(cs)ILCommunication(py)dateReceived	swift.property	dateReceived	ILCommunication.dateReceived	var dateReceived: Date { get }
+c:objc(cs)ILCommunication(py)sender	swift.property	sender	ILCommunication.sender	var sender: String? { get }
+c:objc(cs)ILMessageClassificationRequest	swift.class	ILMessageClassificationRequest	ILMessageClassificationRequest	class ILMessageClassificationRequest
+c:objc(cs)ILMessageClassificationRequest(py)messageCommunications	swift.property	messageCommunications	ILMessageClassificationRequest.messageCommunications	var messageCommunications: [ILMessageCommunication] { get }
+c:objc(cs)ILMessageCommunication	swift.class	ILMessageCommunication	ILMessageCommunication	class ILMessageCommunication
+c:objc(cs)ILMessageCommunication(py)messageBody	swift.property	messageBody	ILMessageCommunication.messageBody	var messageBody: String? { get }
+c:objc(cs)ILMessageFilterCapabilitiesQueryRequest	swift.class	ILMessageFilterCapabilitiesQueryRequest	ILMessageFilterCapabilitiesQueryRequest	class ILMessageFilterCapabilitiesQueryRequest
+c:objc(cs)ILMessageFilterCapabilitiesQueryResponse	swift.class	ILMessageFilterCapabilitiesQueryResponse	ILMessageFilterCapabilitiesQueryResponse	class ILMessageFilterCapabilitiesQueryResponse
+c:objc(cs)ILMessageFilterExtension	swift.class	ILMessageFilterExtension	ILMessageFilterExtension	class ILMessageFilterExtension
+c:objc(cs)ILMessageFilterExtensionContext	swift.class	ILMessageFilterExtensionContext	ILMessageFilterExtensionContext	class ILMessageFilterExtensionContext
+c:objc(cs)ILMessageFilterExtensionContext(im)deferQueryRequestToNetworkWithCompletion:	swift.method	deferQueryRequestToNetwork(completion:)	ILMessageFilterExtensionContext.deferQueryRequestToNetwork(completion:)	func deferQueryRequestToNetwork(completion: @escaping (ILNetworkResponse?, (any Error)?) -> Void)
+c:objc(cs)ILMessageFilterQueryRequest	swift.class	ILMessageFilterQueryRequest	ILMessageFilterQueryRequest	class ILMessageFilterQueryRequest
+c:objc(cs)ILMessageFilterQueryRequest(py)messageBody	swift.property	messageBody	ILMessageFilterQueryRequest.messageBody	var messageBody: String? { get }
+c:objc(cs)ILMessageFilterQueryRequest(py)receiverISOCountryCode	swift.property	receiverISOCountryCode	ILMessageFilterQueryRequest.receiverISOCountryCode	var receiverISOCountryCode: String? { get }
+c:objc(cs)ILMessageFilterQueryRequest(py)sender	swift.property	sender	ILMessageFilterQueryRequest.sender	var sender: String? { get }
+c:objc(cs)ILMessageFilterQueryResponse	swift.class	ILMessageFilterQueryResponse	ILMessageFilterQueryResponse	class ILMessageFilterQueryResponse
+c:objc(cs)ILMessageFilterQueryResponse(py)action	swift.property	action	ILMessageFilterQueryResponse.action	var action: ILMessageFilterAction { get set }
+c:objc(cs)ILMessageFilterQueryResponse(py)subAction	swift.property	subAction	ILMessageFilterQueryResponse.subAction	var subAction: ILMessageFilterSubAction { get set }
+c:objc(cs)ILNetworkResponse	swift.class	ILNetworkResponse	ILNetworkResponse	class ILNetworkResponse
+c:objc(cs)ILNetworkResponse(py)data	swift.property	data	ILNetworkResponse.data	var data: Data { get }
+c:objc(cs)ILNetworkResponse(py)urlResponse	swift.property	urlResponse	ILNetworkResponse.urlResponse	var urlResponse: HTTPURLResponse { get }
+c:objc(pl)ILMessageFilterCapabilitiesQueryHandling	swift.protocol	ILMessageFilterCapabilitiesQueryHandling	ILMessageFilterCapabilitiesQueryHandling	protocol ILMessageFilterCapabilitiesQueryHandling : NSObjectProtocol
+c:objc(pl)ILMessageFilterCapabilitiesQueryHandling(im)handleCapabilitiesQueryRequest:context:completion:	swift.method	handle(_:context:)	ILMessageFilterCapabilitiesQueryHandling.handle(_:context:)	func handle(_ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest, context: ILMessageFilterExtensionContext) async -> ILMessageFilterCapabilitiesQueryResponse
+c:objc(pl)ILMessageFilterQueryHandling	swift.protocol	ILMessageFilterQueryHandling	ILMessageFilterQueryHandling	protocol ILMessageFilterQueryHandling : NSObjectProtocol
+c:objc(pl)ILMessageFilterQueryHandling(im)handleQueryRequest:context:completion:	swift.method	handle(_:context:)	ILMessageFilterQueryHandling.handle(_:context:)	func handle(_ queryRequest: ILMessageFilterQueryRequest, context: ILMessageFilterExtensionContext) async -> ILMessageFilterQueryResponse
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILClassificationRequest	swift.init	init(coder:)	ILClassificationRequest.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILClassificationResponse	swift.init	init(coder:)	ILClassificationResponse.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILCommunication	swift.init	init(coder:)	ILCommunication.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILMessageFilterCapabilitiesQueryRequest	swift.init	init(coder:)	ILMessageFilterCapabilitiesQueryRequest.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILMessageFilterCapabilitiesQueryResponse	swift.init	init(coder:)	ILMessageFilterCapabilitiesQueryResponse.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILMessageFilterQueryRequest	swift.init	init(coder:)	ILMessageFilterQueryRequest.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILMessageFilterQueryResponse	swift.init	init(coder:)	ILMessageFilterQueryResponse.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)ILNetworkResponse	swift.init	init(coder:)	ILNetworkResponse.init(coder:)	init?(coder: NSCoder)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ILMessageFilterError	swift.type.property	errorDomain	ILMessageFilterError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	errorUserInfo	ILMessageFilterError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	errorCode	ILMessageFilterError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ILMessageFilterError	swift.func.op	~=(_:_:)	ILMessageFilterError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	errorUserInfo	ILMessageFilterError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ILMessageFilterError	swift.func.op	==(_:_:)	ILMessageFilterError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	code	ILMessageFilterError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ILMessageFilterError	swift.method	hash(into:)	ILMessageFilterError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	userInfo	ILMessageFilterError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	errorCode	ILMessageFilterError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	hashValue	ILMessageFilterError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ILMessageFilterError	swift.init	init(_:userInfo:)	ILMessageFilterError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:14IdentityLookup04CallB15ExtensionStatusO	swift.enum	CallLookupExtensionStatus	CallLookupExtensionStatus	enum CallLookupExtensionStatus
+s:14IdentityLookup04CallB15ExtensionStatusO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CallLookupExtensionStatus.==(_:_:)	static func == (a: CallLookupExtensionStatus, b: CallLookupExtensionStatus) -> Bool
+s:14IdentityLookup04CallB15ExtensionStatusO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CallLookupExtensionStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:14IdentityLookup04CallB15ExtensionStatusO7enabledyA2CmF	swift.enum.case	CallLookupExtensionStatus.enabled	CallLookupExtensionStatus.enabled	case enabled
+s:14IdentityLookup04CallB15ExtensionStatusO8disabledyA2CmF	swift.enum.case	CallLookupExtensionStatus.disabled	CallLookupExtensionStatus.disabled	case disabled
+s:14IdentityLookup04CallB15ExtensionStatusO9hashValueSivp	swift.property	hashValue	CallLookupExtensionStatus.hashValue	var hashValue: Int { get }
+s:14IdentityLookup04LiveB27StoreFoundationFrameworkSeta	swift.typealias	LiveLookupStoreFoundationFrameworkSet	LiveLookupStoreFoundationFrameworkSet	typealias LiveLookupStoreFoundationFrameworkSet = NSSet
+s:14IdentityLookup04LiveB32DBExtensionCoreDataPropertiesSeta	swift.typealias	LiveLookupDBExtensionCoreDataPropertiesSet	LiveLookupDBExtensionCoreDataPropertiesSet	typealias LiveLookupDBExtensionCoreDataPropertiesSet = NSSet
+s:14IdentityLookup04LiveB35StoreCoreDataFrameworkManagedObjecta	swift.typealias	LiveLookupStoreCoreDataFrameworkManagedObject	LiveLookupStoreCoreDataFrameworkManagedObject	typealias LiveLookupStoreCoreDataFrameworkManagedObject = NSManagedObject
+s:14IdentityLookup0A25InfoCoreDataPropertiesSeta	swift.typealias	IdentityInfoCoreDataPropertiesSet	IdentityInfoCoreDataPropertiesSet	typealias IdentityInfoCoreDataPropertiesSet = NSSet
+s:14IdentityLookup18extensionPointNameSSvp	swift.var	extensionPointName	extensionPointName	let extensionPointName: String
+s:14IdentityLookup25LiveCallerIDLookupManagerC	swift.class	LiveCallerIDLookupManager	LiveCallerIDLookupManager	class LiveCallerIDLookupManager
+s:14IdentityLookup25LiveCallerIDLookupManagerC12openSettingsyyYaKF	swift.method	openSettings()	LiveCallerIDLookupManager.openSettings()	func openSettings() async throws
+s:14IdentityLookup25LiveCallerIDLookupManagerC20refreshPIRParameters26forExtensionWithIdentifierySS_tYaKF	swift.method	refreshPIRParameters(forExtensionWithIdentifier:)	LiveCallerIDLookupManager.refreshPIRParameters(forExtensionWithIdentifier:)	func refreshPIRParameters(forExtensionWithIdentifier identifier: String) async throws
+s:14IdentityLookup25LiveCallerIDLookupManagerC23refreshExtensionContext03forH14WithIdentifierySS_tYaKF	swift.method	refreshExtensionContext(forExtensionWithIdentifier:)	LiveCallerIDLookupManager.refreshExtensionContext(forExtensionWithIdentifier:)	func refreshExtensionContext(forExtensionWithIdentifier identifier: String) async throws
+s:14IdentityLookup25LiveCallerIDLookupManagerC5reset26forExtensionWithIdentifierySS_tYaKF	swift.method	reset(forExtensionWithIdentifier:)	LiveCallerIDLookupManager.reset(forExtensionWithIdentifier:)	func reset(forExtensionWithIdentifier identifier: String) async throws
+s:14IdentityLookup25LiveCallerIDLookupManagerC6sharedACvpZ	swift.type.property	shared	LiveCallerIDLookupManager.shared	static let shared: LiveCallerIDLookupManager
+s:14IdentityLookup25LiveCallerIDLookupManagerC6status26forExtensionWithIdentifierAA04CallbI6StatusOSS_tF	swift.method	status(forExtensionWithIdentifier:)	LiveCallerIDLookupManager.status(forExtensionWithIdentifier:)	func status(forExtensionWithIdentifier identifier: String) -> CallLookupExtensionStatus
+s:14IdentityLookup26LiveCallerIDLookupProtocolP	swift.protocol	LiveCallerIDLookupProtocol	LiveCallerIDLookupProtocol	protocol LiveCallerIDLookupProtocol : AppExtension
+s:14IdentityLookup26LiveCallerIDLookupProtocolP7contextAA0cdE16ExtensionContextVvp	swift.property	context	LiveCallerIDLookupProtocol.context	var context: LiveCallerIDLookupExtensionContext { get }
+s:14IdentityLookup26LiveCallerIDLookupProtocolPAAE13configurationQrvp	swift.property	configuration	LiveCallerIDLookupProtocol.configuration	var configuration: some LiveCallerIDLookupExtensionConfiguration { get }
+s:14IdentityLookup33BlockingInfoCoreDataPropertiesSeta	swift.typealias	BlockingInfoCoreDataPropertiesSet	BlockingInfoCoreDataPropertiesSet	typealias BlockingInfoCoreDataPropertiesSet = NSSet
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV	swift.struct	LiveCallerIDLookupExtensionContext	LiveCallerIDLookupExtensionContext	struct LiveCallerIDLookupExtensionContext
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL011tokenIssuerI013userTierTokenAC10Foundation0I0V_AiG4DataVtcfc	swift.init	init(serviceURL:tokenIssuerURL:userTierToken:)	LiveCallerIDLookupExtensionContext.init(serviceURL:tokenIssuerURL:userTierToken:)	init(serviceURL: URL, tokenIssuerURL: URL, userTierToken: Data)
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL10Foundation0I0Vvp	swift.property	serviceURL	LiveCallerIDLookupExtensionContext.serviceURL	let serviceURL: URL
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV13userTierToken10Foundation4DataVvp	swift.property	userTierToken	LiveCallerIDLookupExtensionContext.userTierToken	let userTierToken: Data
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV14tokenIssuerURL10Foundation0J0Vvp	swift.property	tokenIssuerURL	LiveCallerIDLookupExtensionContext.tokenIssuerURL	let tokenIssuerURL: URL
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	LiveCallerIDLookupExtensionContext.==(_:_:)	static func == (a: LiveCallerIDLookupExtensionContext, b: LiveCallerIDLookupExtensionContext) -> Bool
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	LiveCallerIDLookupExtensionContext.init(from:)	init(from decoder: any Decoder) throws
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	LiveCallerIDLookupExtensionContext.hash(into:)	func hash(into hasher: inout Hasher)
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	LiveCallerIDLookupExtensionContext.encode(to:)	func encode(to encoder: any Encoder) throws
+s:14IdentityLookup34LiveCallerIDLookupExtensionContextV9hashValueSivp	swift.property	hashValue	LiveCallerIDLookupExtensionContext.hashValue	var hashValue: Int { get }
+s:14IdentityLookup40LiveCallerIDLookupExtensionConfigurationP	swift.protocol	LiveCallerIDLookupExtensionConfiguration	LiveCallerIDLookupExtensionConfiguration	protocol LiveCallerIDLookupExtensionConfiguration : AppExtensionConfiguration
+s:SC20ILMessageFilterErrorLeV	swift.struct	ILMessageFilterError	ILMessageFilterError	struct ILMessageFilterError
+s:SC20ILMessageFilterErrorLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ILMessageFilterError.errorDomain	static var errorDomain: String { get }
+s:SC20ILMessageFilterErrorLeV17invalidNetworkURLSoAAVvpZ	swift.type.property	invalidNetworkURL	ILMessageFilterError.invalidNetworkURL	static var invalidNetworkURL: ILMessageFilterError.Code { get }
+s:SC20ILMessageFilterErrorLeV20networkRequestFailedSoAAVvpZ	swift.type.property	networkRequestFailed	ILMessageFilterError.networkRequestFailed	static var networkRequestFailed: ILMessageFilterError.Code { get }
+s:SC20ILMessageFilterErrorLeV22networkURLUnauthorizedSoAAVvpZ	swift.type.property	networkURLUnauthorized	ILMessageFilterError.networkURLUnauthorized	static var networkURLUnauthorized: ILMessageFilterError.Code { get }
+s:SC20ILMessageFilterErrorLeV24redundantNetworkDeferralSoAAVvpZ	swift.type.property	redundantNetworkDeferral	ILMessageFilterError.redundantNetworkDeferral	static var redundantNetworkDeferral: ILMessageFilterError.Code { get }
+s:SC20ILMessageFilterErrorLeV6systemSoAAVvpZ	swift.type.property	system	ILMessageFilterError.system	static var system: ILMessageFilterError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ILClassificationAction	swift.func.op	!=(_:_:)	ILClassificationAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ILMessageFilterAction	swift.func.op	!=(_:_:)	ILMessageFilterAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ILMessageFilterError	swift.func.op	!=(_:_:)	ILMessageFilterError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ILMessageFilterSubAction	swift.func.op	!=(_:_:)	ILMessageFilterSubAction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14IdentityLookup04CallB15ExtensionStatusO	swift.func.op	!=(_:_:)	CallLookupExtensionStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:14IdentityLookup34LiveCallerIDLookupExtensionContextV	swift.func.op	!=(_:_:)	LiveCallerIDLookupExtensionContext.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ILClassificationAction	swift.property	hashValue	ILClassificationAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ILMessageFilterAction	swift.property	hashValue	ILMessageFilterAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	hashValue	ILMessageFilterError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ILMessageFilterSubAction	swift.property	hashValue	ILMessageFilterSubAction.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ILClassificationAction	swift.method	hash(into:)	ILClassificationAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ILMessageFilterAction	swift.method	hash(into:)	ILMessageFilterAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ILMessageFilterError	swift.method	hash(into:)	ILMessageFilterError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ILMessageFilterSubAction	swift.method	hash(into:)	ILMessageFilterSubAction.hash(into:)	func hash(into hasher: inout Hasher)
+s:So20ILMessageFilterErrorV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ILMessageFilterError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So21ILMessageFilterActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ILMessageFilterAction.init(rawValue:)	init?(rawValue: Int)
+s:So22ILClassificationActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ILClassificationAction.init(rawValue:)	init?(rawValue: Int)
+s:So24ILMessageFilterSubActionV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ILMessageFilterSubAction.init(rawValue:)	init?(rawValue: Int)
+s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvp	swift.property	promotionalSubActions	ILMessageFilterCapabilitiesQueryResponse.promotionalSubActions	final var promotionalSubActions: [ILMessageFilterSubAction] { get set }
+s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvp	swift.property	transactionalSubActions	ILMessageFilterCapabilitiesQueryResponse.transactionalSubActions	@nonobjc final var transactionalSubActions: [ILMessageFilterSubAction] { get set }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ILMessageFilterError	swift.property	localizedDescription	ILMessageFilterError.localizedDescription	var localizedDescription: String { get }

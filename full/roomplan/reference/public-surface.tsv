@@ -1,0 +1,482 @@
+precise	kind	title	path	declaration
+c:@M@RoomPlan@objc(cs)RoomCaptureView	swift.class	RoomCaptureView	RoomCaptureView	@MainActor @objc @preconcurrency class RoomCaptureView
+c:@M@RoomPlan@objc(cs)RoomCaptureView(im)encodeWithCoder:	swift.method	encode(with:)	RoomCaptureView.encode(with:)	@MainActor @preconcurrency override dynamic func encode(with coder: NSCoder)
+c:@M@RoomPlan@objc(cs)RoomCaptureView(im)initWithCoder:	swift.init	init(coder:)	RoomCaptureView.init(coder:)	@MainActor @preconcurrency required dynamic init?(coder: NSCoder)
+c:@M@RoomPlan@objc(cs)RoomCaptureView(im)initWithFrame:	swift.init	init(frame:)	RoomCaptureView.init(frame:)	@MainActor @preconcurrency override dynamic init(frame: CGRect)
+c:@M@RoomPlan@objc(cs)RoomCaptureView(im)layoutSubviews	swift.method	layoutSubviews()	RoomCaptureView.layoutSubviews()	@MainActor @preconcurrency override dynamic func layoutSubviews()
+c:@M@RoomPlan@objc(cs)RoomCaptureView(im)traitCollectionDidChange:	swift.method	traitCollectionDidChange(_:)	RoomCaptureView.traitCollectionDidChange(_:)	@MainActor @preconcurrency override dynamic func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?)
+c:@M@RoomPlan@objc(cs)RoomCaptureView(py)subviews	swift.property	subviews	RoomCaptureView.subviews	@MainActor @preconcurrency override dynamic var subviews: [UIView] { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO	swift.property	helpAnchor	CapturedRoom.ModelProvider.Error.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V5ErrorO	swift.property	helpAnchor	CapturedRoom.Error.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8RoomPlan0A14CaptureSessionC0C5ErrorO	swift.property	helpAnchor	RoomCaptureSession.CaptureError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8RoomPlan0A7BuilderC10BuildErrorO	swift.property	helpAnchor	RoomBuilder.BuildError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:8RoomPlan16StructureBuilderC10BuildErrorO	swift.property	helpAnchor	StructureBuilder.BuildError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO	swift.property	failureReason	CapturedRoom.ModelProvider.Error.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V5ErrorO	swift.property	failureReason	CapturedRoom.Error.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8RoomPlan0A14CaptureSessionC0C5ErrorO	swift.property	failureReason	RoomCaptureSession.CaptureError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8RoomPlan0A7BuilderC10BuildErrorO	swift.property	failureReason	RoomBuilder.BuildError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE13failureReasonSSSgvp::SYNTHESIZED::s:8RoomPlan16StructureBuilderC10BuildErrorO	swift.property	failureReason	StructureBuilder.BuildError.failureReason	var failureReason: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO	swift.property	recoverySuggestion	CapturedRoom.ModelProvider.Error.recoverySuggestion	var recoverySuggestion: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V5ErrorO	swift.property	recoverySuggestion	CapturedRoom.Error.recoverySuggestion	var recoverySuggestion: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8RoomPlan0A14CaptureSessionC0C5ErrorO	swift.property	recoverySuggestion	RoomCaptureSession.CaptureError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8RoomPlan0A7BuilderC10BuildErrorO	swift.property	recoverySuggestion	RoomBuilder.BuildError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:8RoomPlan16StructureBuilderC10BuildErrorO	swift.property	recoverySuggestion	StructureBuilder.BuildError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:8RoomPlan08CapturedA0V	swift.struct	CapturedRoom	CapturedRoom	struct CapturedRoom
+s:8RoomPlan08CapturedA0V10ConfidenceO	swift.enum	CapturedRoom.Confidence	CapturedRoom.Confidence	enum Confidence
+s:8RoomPlan08CapturedA0V10ConfidenceO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	CapturedRoom.Confidence.==(_:_:)	static func == (a: CapturedRoom.Confidence, b: CapturedRoom.Confidence) -> Bool
+s:8RoomPlan08CapturedA0V10ConfidenceO3lowyA2EmF	swift.enum.case	CapturedRoom.Confidence.low	CapturedRoom.Confidence.low	case low
+s:8RoomPlan08CapturedA0V10ConfidenceO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Confidence.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V10ConfidenceO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CapturedRoom.Confidence.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan08CapturedA0V10ConfidenceO4highyA2EmF	swift.enum.case	CapturedRoom.Confidence.high	CapturedRoom.Confidence.high	case high
+s:8RoomPlan08CapturedA0V10ConfidenceO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Confidence.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V10ConfidenceO6mediumyA2EmF	swift.enum.case	CapturedRoom.Confidence.medium	CapturedRoom.Confidence.medium	case medium
+s:8RoomPlan08CapturedA0V10ConfidenceO9hashValueSivp	swift.property	hashValue	CapturedRoom.Confidence.hashValue	var hashValue: Int { get }
+s:8RoomPlan08CapturedA0V10identifier10Foundation4UUIDVvp	swift.property	identifier	CapturedRoom.identifier	var identifier: UUID { get }
+s:8RoomPlan08CapturedA0V13ModelProviderV	swift.struct	CapturedRoom.ModelProvider	CapturedRoom.ModelProvider	struct ModelProvider
+s:8RoomPlan08CapturedA0V13ModelProviderV03setD7FileURL_3fory10Foundation0H0VSg_AC6ObjectV8CategoryOtKF	swift.method	setModelFileURL(_:for:)	CapturedRoom.ModelProvider.setModelFileURL(_:for:)	mutating func setModelFileURL(_ url: URL?, for category: CapturedRoom.Object.Category) throws
+s:8RoomPlan08CapturedA0V13ModelProviderV03setD7FileURL_3fory10Foundation0H0VSg_SayAA0cA9Attribute_pGtKF	swift.method	setModelFileURL(_:for:)	CapturedRoom.ModelProvider.setModelFileURL(_:for:)	mutating func setModelFileURL(_ url: URL?, for attributes: [any CapturedRoomAttribute]) throws
+s:8RoomPlan08CapturedA0V13ModelProviderV12modelFileURL3for10Foundation0H0VSgAC6ObjectV8CategoryO_tKF	swift.method	modelFileURL(for:)	CapturedRoom.ModelProvider.modelFileURL(for:)	func modelFileURL(for category: CapturedRoom.Object.Category) throws -> URL?
+s:8RoomPlan08CapturedA0V13ModelProviderV12modelFileURL3for10Foundation0H0VSgAC6ObjectV_tKF	swift.method	modelFileURL(for:)	CapturedRoom.ModelProvider.modelFileURL(for:)	func modelFileURL(for object: CapturedRoom.Object) throws -> URL?
+s:8RoomPlan08CapturedA0V13ModelProviderV12modelFileURL3for10Foundation0H0VSgSayAA0cA9Attribute_pG_tKF	swift.method	modelFileURL(for:)	CapturedRoom.ModelProvider.modelFileURL(for:)	func modelFileURL(for attributes: [any CapturedRoomAttribute]) throws -> URL?
+s:8RoomPlan08CapturedA0V13ModelProviderV13modelFileURLsSay10Foundation3URLVGvp	swift.property	modelFileURLs	CapturedRoom.ModelProvider.modelFileURLs	var modelFileURLs: [URL] { get }
+s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO	swift.enum	CapturedRoom.ModelProvider.Error	CapturedRoom.ModelProvider.Error	enum Error
+s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO15nonExistingFileyAG10Foundation3URLV_tcAGmF	swift.enum.case	CapturedRoom.ModelProvider.Error.nonExistingFile(url:)	CapturedRoom.ModelProvider.Error.nonExistingFile(url:)	case nonExistingFile(url: URL)
+s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	CapturedRoom.ModelProvider.Error.errorDescription	var errorDescription: String? { get }
+s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO32attributeCombinationNotSupportedyA2GmF	swift.enum.case	CapturedRoom.ModelProvider.Error.attributeCombinationNotSupported	CapturedRoom.ModelProvider.Error.attributeCombinationNotSupported	case attributeCombinationNotSupported
+s:8RoomPlan08CapturedA0V13ModelProviderVAEycfc	swift.init	init()	CapturedRoom.ModelProvider.init()	init()
+s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.struct	CapturedRoom.USDExportOptions	CapturedRoom.USDExportOptions	struct USDExportOptions
+s:8RoomPlan08CapturedA0V16USDExportOptionsV10parametricAEvpZ	swift.type.property	parametric	CapturedRoom.USDExportOptions.parametric	static let parametric: CapturedRoom.USDExportOptions
+s:8RoomPlan08CapturedA0V16USDExportOptionsV19ArrayLiteralElementa	swift.typealias	CapturedRoom.USDExportOptions.ArrayLiteralElement	CapturedRoom.USDExportOptions.ArrayLiteralElement	typealias ArrayLiteralElement = CapturedRoom.USDExportOptions
+s:8RoomPlan08CapturedA0V16USDExportOptionsV4meshAEvpZ	swift.type.property	mesh	CapturedRoom.USDExportOptions.mesh	static let mesh: CapturedRoom.USDExportOptions
+s:8RoomPlan08CapturedA0V16USDExportOptionsV5modelAEvpZ	swift.type.property	model	CapturedRoom.USDExportOptions.model	static let model: CapturedRoom.USDExportOptions
+s:8RoomPlan08CapturedA0V16USDExportOptionsV7Elementa	swift.typealias	CapturedRoom.USDExportOptions.Element	CapturedRoom.USDExportOptions.Element	typealias Element = CapturedRoom.USDExportOptions
+s:8RoomPlan08CapturedA0V16USDExportOptionsV8RawValuea	swift.typealias	CapturedRoom.USDExportOptions.RawValue	CapturedRoom.USDExportOptions.RawValue	typealias RawValue = Int32
+s:8RoomPlan08CapturedA0V16USDExportOptionsV8rawValueAEs5Int32V_tcfc	swift.init	init(rawValue:)	CapturedRoom.USDExportOptions.init(rawValue:)	init(rawValue: Int32)
+s:8RoomPlan08CapturedA0V16USDExportOptionsV8rawValues5Int32Vvp	swift.property	rawValue	CapturedRoom.USDExportOptions.rawValue	let rawValue: Int32
+s:8RoomPlan08CapturedA0V31AttributesCodableRepresentationV	swift.struct	CapturedRoom.AttributesCodableRepresentation	CapturedRoom.AttributesCodableRepresentation	struct AttributesCodableRepresentation
+s:8RoomPlan08CapturedA0V31AttributesCodableRepresentationV10attributesAESayAA0cA9Attribute_pG_tcfc	swift.init	init(attributes:)	CapturedRoom.AttributesCodableRepresentation.init(attributes:)	init(attributes: [any CapturedRoomAttribute])
+s:8RoomPlan08CapturedA0V31AttributesCodableRepresentationV10attributesSayAA0cA9Attribute_pGvp	swift.property	attributes	CapturedRoom.AttributesCodableRepresentation.attributes	let attributes: [any CapturedRoomAttribute]
+s:8RoomPlan08CapturedA0V31AttributesCodableRepresentationV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.AttributesCodableRepresentation.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V31AttributesCodableRepresentationV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.AttributesCodableRepresentation.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V5ErrorO	swift.enum	CapturedRoom.Error	CapturedRoom.Error	enum Error
+s:8RoomPlan08CapturedA0V5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	CapturedRoom.Error.errorDescription	var errorDescription: String? { get }
+s:8RoomPlan08CapturedA0V5ErrorO16urlInvalidSchemeyA2EmF	swift.enum.case	CapturedRoom.Error.urlInvalidScheme	CapturedRoom.Error.urlInvalidScheme	case urlInvalidScheme
+s:8RoomPlan08CapturedA0V5ErrorO18deviceNotSupportedyA2EmF	swift.enum.case	CapturedRoom.Error.deviceNotSupported	CapturedRoom.Error.deviceNotSupported	case deviceNotSupported
+s:8RoomPlan08CapturedA0V5ErrorO18urlInvalidFilePathyA2EmF	swift.enum.case	CapturedRoom.Error.urlInvalidFilePath	CapturedRoom.Error.urlInvalidFilePath	case urlInvalidFilePath
+s:8RoomPlan08CapturedA0V5ErrorO23urlInvalidFileExtensionyA2EmF	swift.enum.case	CapturedRoom.Error.urlInvalidFileExtension	CapturedRoom.Error.urlInvalidFileExtension	case urlInvalidFileExtension
+s:8RoomPlan08CapturedA0V5ErrorO23urlMissingFileExtensionyA2EmF	swift.enum.case	CapturedRoom.Error.urlMissingFileExtension	CapturedRoom.Error.urlMissingFileExtension	case urlMissingFileExtension
+s:8RoomPlan08CapturedA0V5ErrorO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	CapturedRoom.Error.==(_:_:)	static func == (a: CapturedRoom.Error, b: CapturedRoom.Error) -> Bool
+s:8RoomPlan08CapturedA0V5ErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CapturedRoom.Error.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan08CapturedA0V5ErrorO9hashValueSivp	swift.property	hashValue	CapturedRoom.Error.hashValue	var hashValue: Int { get }
+s:8RoomPlan08CapturedA0V5doorsSayAC7SurfaceVGvp	swift.property	doors	CapturedRoom.doors	var doors: [CapturedRoom.Surface] { get }
+s:8RoomPlan08CapturedA0V5storySivp	swift.property	story	CapturedRoom.story	var story: Int { get }
+s:8RoomPlan08CapturedA0V5wallsSayAC7SurfaceVGvp	swift.property	walls	CapturedRoom.walls	var walls: [CapturedRoom.Surface] { get }
+s:8RoomPlan08CapturedA0V6ObjectV	swift.struct	CapturedRoom.Object	CapturedRoom.Object	struct Object
+s:8RoomPlan08CapturedA0V6ObjectV10attributesSayAA0cA9Attribute_pGvp	swift.property	attributes	CapturedRoom.Object.attributes	var attributes: [any CapturedRoomAttribute] { get }
+s:8RoomPlan08CapturedA0V6ObjectV10confidenceAC10ConfidenceOvp	swift.property	confidence	CapturedRoom.Object.confidence	var confidence: CapturedRoom.Confidence { get }
+s:8RoomPlan08CapturedA0V6ObjectV10dimensionss5SIMD3VySfGvp	swift.property	dimensions	CapturedRoom.Object.dimensions	var dimensions: simd_float3 { get }
+s:8RoomPlan08CapturedA0V6ObjectV10identifier10Foundation4UUIDVvp	swift.property	identifier	CapturedRoom.Object.identifier	var identifier: UUID { get }
+s:8RoomPlan08CapturedA0V6ObjectV16parentIdentifier10Foundation4UUIDVSgvp	swift.property	parentIdentifier	CapturedRoom.Object.parentIdentifier	var parentIdentifier: UUID? { get }
+s:8RoomPlan08CapturedA0V6ObjectV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Object.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V6ObjectV5storySivp	swift.property	story	CapturedRoom.Object.story	var story: Int { get }
+s:8RoomPlan08CapturedA0V6ObjectV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Object.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO	swift.enum	CapturedRoom.Object.Category	CapturedRoom.Object.Category	enum Category
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO10dishwasheryA2GmF	swift.enum.case	CapturedRoom.Object.Category.dishwasher	CapturedRoom.Object.Category.dishwasher	case dishwasher
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO10televisionyA2GmF	swift.enum.case	CapturedRoom.Object.Category.television	CapturedRoom.Object.Category.television	case television
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO11washerDryeryA2GmF	swift.enum.case	CapturedRoom.Object.Category.washerDryer	CapturedRoom.Object.Category.washerDryer	case washerDryer
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO12refrigeratoryA2GmF	swift.enum.case	CapturedRoom.Object.Category.refrigerator	CapturedRoom.Object.Category.refrigerator	case refrigerator
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO19supportsCombinationySbSayAA0cA9Attribute_pGF	swift.method	supportsCombination(_:)	CapturedRoom.Object.Category.supportsCombination(_:)	func supportsCombination(_ attributes: [any CapturedRoomAttribute]) -> Bool
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO21supportedCombinationsSaySayAA0cA9Attribute_pGGvp	swift.property	supportedCombinations	CapturedRoom.Object.Category.supportedCombinations	var supportedCombinations: [[any CapturedRoomAttribute]] { get }
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO23supportedAttributeTypesSayAA0caG0_pXpGvp	swift.property	supportedAttributeTypes	CapturedRoom.Object.Category.supportedAttributeTypes	var supportedAttributeTypes: [any CapturedRoomAttribute.Type] { get }
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	CapturedRoom.Object.Category.==(_:_:)	static func == (a: CapturedRoom.Object.Category, b: CapturedRoom.Object.Category) -> Bool
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO3bedyA2GmF	swift.enum.case	CapturedRoom.Object.Category.bed	CapturedRoom.Object.Category.bed	case bed
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Object.Category.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CapturedRoom.Object.Category.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO4ovenyA2GmF	swift.enum.case	CapturedRoom.Object.Category.oven	CapturedRoom.Object.Category.oven	case oven
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO4sinkyA2GmF	swift.enum.case	CapturedRoom.Object.Category.sink	CapturedRoom.Object.Category.sink	case sink
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO4sofayA2GmF	swift.enum.case	CapturedRoom.Object.Category.sofa	CapturedRoom.Object.Category.sofa	case sofa
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO5chairyA2GmF	swift.enum.case	CapturedRoom.Object.Category.chair	CapturedRoom.Object.Category.chair	case chair
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO5stoveyA2GmF	swift.enum.case	CapturedRoom.Object.Category.stove	CapturedRoom.Object.Category.stove	case stove
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO5tableyA2GmF	swift.enum.case	CapturedRoom.Object.Category.table	CapturedRoom.Object.Category.table	case table
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Object.Category.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO6stairsyA2GmF	swift.enum.case	CapturedRoom.Object.Category.stairs	CapturedRoom.Object.Category.stairs	case stairs
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO6toiletyA2GmF	swift.enum.case	CapturedRoom.Object.Category.toilet	CapturedRoom.Object.Category.toilet	case toilet
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO7bathtubyA2GmF	swift.enum.case	CapturedRoom.Object.Category.bathtub	CapturedRoom.Object.Category.bathtub	case bathtub
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO7storageyA2GmF	swift.enum.case	CapturedRoom.Object.Category.storage	CapturedRoom.Object.Category.storage	case storage
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO8AllCasesa	swift.typealias	CapturedRoom.Object.Category.AllCases	CapturedRoom.Object.Category.AllCases	typealias AllCases = [CapturedRoom.Object.Category]
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO8allCasesSayAGGvpZ	swift.type.property	allCases	CapturedRoom.Object.Category.allCases	nonisolated static var allCases: [CapturedRoom.Object.Category] { get }
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO9fireplaceyA2GmF	swift.enum.case	CapturedRoom.Object.Category.fireplace	CapturedRoom.Object.Category.fireplace	case fireplace
+s:8RoomPlan08CapturedA0V6ObjectV8CategoryO9hashValueSivp	swift.property	hashValue	CapturedRoom.Object.Category.hashValue	var hashValue: Int { get }
+s:8RoomPlan08CapturedA0V6ObjectV8categoryAE8CategoryOvp	swift.property	category	CapturedRoom.Object.category	var category: CapturedRoom.Object.Category { get }
+s:8RoomPlan08CapturedA0V6ObjectV9attribute2ofxSgxm_tAA0cA9AttributeRzlF	swift.method	attribute(of:)	CapturedRoom.Object.attribute(of:)	func attribute<T>(of attributeType: T.Type) -> T? where T : CapturedRoomAttribute
+s:8RoomPlan08CapturedA0V6ObjectV9transformSo13simd_float4x4avp	swift.property	transform	CapturedRoom.Object.transform	var transform: simd_float4x4 { get }
+s:8RoomPlan08CapturedA0V6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V6export2to0D7Optionsy10Foundation3URLV_AC09USDExportF0VtKF	swift.method	export(to:exportOptions:)	CapturedRoom.export(to:exportOptions:)	func export(to url: URL, exportOptions: CapturedRoom.USDExportOptions = .mesh) throws
+s:8RoomPlan08CapturedA0V6export2to11metadataURL13modelProvider0D7Optionsy10Foundation0G0V_AKSgAC05ModelI0VSgAC09USDExportJ0VtKF	swift.method	export(to:metadataURL:modelProvider:exportOptions:)	CapturedRoom.export(to:metadataURL:modelProvider:exportOptions:)	func export(to url: URL, metadataURL: URL? = nil, modelProvider: CapturedRoom.ModelProvider? = nil, exportOptions: CapturedRoom.USDExportOptions = .mesh) throws
+s:8RoomPlan08CapturedA0V6floorsSayAC7SurfaceVGvp	swift.property	floors	CapturedRoom.floors	var floors: [CapturedRoom.Surface] { get }
+s:8RoomPlan08CapturedA0V7SectionV	swift.struct	CapturedRoom.Section	CapturedRoom.Section	struct Section
+s:8RoomPlan08CapturedA0V7SectionV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Section.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V7SectionV5LabelO	swift.enum	CapturedRoom.Section.Label	CapturedRoom.Section.Label	enum Label
+s:8RoomPlan08CapturedA0V7SectionV5LabelO06diningA0yA2GmF	swift.enum.case	CapturedRoom.Section.Label.diningRoom	CapturedRoom.Section.Label.diningRoom	case diningRoom
+s:8RoomPlan08CapturedA0V7SectionV5LabelO06livingA0yA2GmF	swift.enum.case	CapturedRoom.Section.Label.livingRoom	CapturedRoom.Section.Label.livingRoom	case livingRoom
+s:8RoomPlan08CapturedA0V7SectionV5LabelO12unidentifiedyA2GmF	swift.enum.case	CapturedRoom.Section.Label.unidentified	CapturedRoom.Section.Label.unidentified	case unidentified
+s:8RoomPlan08CapturedA0V7SectionV5LabelO7bedroomyA2GmF	swift.enum.case	CapturedRoom.Section.Label.bedroom	CapturedRoom.Section.Label.bedroom	case bedroom
+s:8RoomPlan08CapturedA0V7SectionV5LabelO7kitchenyA2GmF	swift.enum.case	CapturedRoom.Section.Label.kitchen	CapturedRoom.Section.Label.kitchen	case kitchen
+s:8RoomPlan08CapturedA0V7SectionV5LabelO8RawValuea	swift.typealias	CapturedRoom.Section.Label.RawValue	CapturedRoom.Section.Label.RawValue	typealias RawValue = String
+s:8RoomPlan08CapturedA0V7SectionV5LabelO8bathroomyA2GmF	swift.enum.case	CapturedRoom.Section.Label.bathroom	CapturedRoom.Section.Label.bathroom	case bathroom
+s:8RoomPlan08CapturedA0V7SectionV5LabelO8rawValueAGSgSS_tcfc	swift.init	init(rawValue:)	CapturedRoom.Section.Label.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan08CapturedA0V7SectionV5LabelO8rawValueSSvp	swift.property	rawValue	CapturedRoom.Section.Label.rawValue	var rawValue: String { get }
+s:8RoomPlan08CapturedA0V7SectionV5labelAE5LabelOvp	swift.property	label	CapturedRoom.Section.label	var label: CapturedRoom.Section.Label { get }
+s:8RoomPlan08CapturedA0V7SectionV5storySivp	swift.property	story	CapturedRoom.Section.story	var story: Int { get }
+s:8RoomPlan08CapturedA0V7SectionV6centers5SIMD3VySfGvp	swift.property	center	CapturedRoom.Section.center	var center: simd_float3 { get }
+s:8RoomPlan08CapturedA0V7SectionV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Section.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV	swift.struct	CapturedRoom.Surface	CapturedRoom.Surface	struct Surface
+s:8RoomPlan08CapturedA0V7SurfaceV10confidenceAC10ConfidenceOvp	swift.property	confidence	CapturedRoom.Surface.confidence	var confidence: CapturedRoom.Confidence { get }
+s:8RoomPlan08CapturedA0V7SurfaceV10dimensionss5SIMD3VySfGvp	swift.property	dimensions	CapturedRoom.Surface.dimensions	var dimensions: simd_float3 { get }
+s:8RoomPlan08CapturedA0V7SurfaceV10identifier10Foundation4UUIDVvp	swift.property	identifier	CapturedRoom.Surface.identifier	var identifier: UUID { get }
+s:8RoomPlan08CapturedA0V7SurfaceV14completedEdgesShyAE4EdgeOGvp	swift.property	completedEdges	CapturedRoom.Surface.completedEdges	var completedEdges: Set<CapturedRoom.Surface.Edge> { get }
+s:8RoomPlan08CapturedA0V7SurfaceV14polygonCornersSays5SIMD3VySfGGvp	swift.property	polygonCorners	CapturedRoom.Surface.polygonCorners	var polygonCorners: [simd_float3] { get }
+s:8RoomPlan08CapturedA0V7SurfaceV16parentIdentifier10Foundation4UUIDVSgvp	swift.property	parentIdentifier	CapturedRoom.Surface.parentIdentifier	var parentIdentifier: UUID? { get }
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO	swift.enum	CapturedRoom.Surface.Edge	CapturedRoom.Surface.Edge	enum Edge
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	CapturedRoom.Surface.Edge.==(_:_:)	static func == (a: CapturedRoom.Surface.Edge, b: CapturedRoom.Surface.Edge) -> Bool
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO3topyA2GmF	swift.enum.case	CapturedRoom.Surface.Edge.top	CapturedRoom.Surface.Edge.top	case top
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Surface.Edge.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CapturedRoom.Surface.Edge.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO4leftyA2GmF	swift.enum.case	CapturedRoom.Surface.Edge.left	CapturedRoom.Surface.Edge.left	case left
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO5rightyA2GmF	swift.enum.case	CapturedRoom.Surface.Edge.right	CapturedRoom.Surface.Edge.right	case right
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO6bottomyA2GmF	swift.enum.case	CapturedRoom.Surface.Edge.bottom	CapturedRoom.Surface.Edge.bottom	case bottom
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Surface.Edge.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO8AllCasesa	swift.typealias	CapturedRoom.Surface.Edge.AllCases	CapturedRoom.Surface.Edge.AllCases	typealias AllCases = [CapturedRoom.Surface.Edge]
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO8allCasesSayAGGvpZ	swift.type.property	allCases	CapturedRoom.Surface.Edge.allCases	nonisolated static var allCases: [CapturedRoom.Surface.Edge] { get }
+s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO9hashValueSivp	swift.property	hashValue	CapturedRoom.Surface.Edge.hashValue	var hashValue: Int { get }
+s:8RoomPlan08CapturedA0V7SurfaceV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Surface.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV	swift.struct	CapturedRoom.Surface.Curve	CapturedRoom.Surface.Curve	struct Curve
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV10startAngle10Foundation11MeasurementVySo06NSUnitG0CGvp	swift.property	startAngle	CapturedRoom.Surface.Curve.startAngle	var startAngle: Measurement<UnitAngle> { get }
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Surface.Curve.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV6centers5SIMD2VySfGvp	swift.property	center	CapturedRoom.Surface.Curve.center	var center: simd_float2 { get }
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Surface.Curve.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV6radiusSfvp	swift.property	radius	CapturedRoom.Surface.Curve.radius	var radius: Float { get }
+s:8RoomPlan08CapturedA0V7SurfaceV5CurveV8endAngle10Foundation11MeasurementVySo06NSUnitG0CGvp	swift.property	endAngle	CapturedRoom.Surface.Curve.endAngle	var endAngle: Measurement<UnitAngle> { get }
+s:8RoomPlan08CapturedA0V7SurfaceV5curveAE5CurveVSgvp	swift.property	curve	CapturedRoom.Surface.curve	var curve: CapturedRoom.Surface.Curve? { get }
+s:8RoomPlan08CapturedA0V7SurfaceV5storySivp	swift.property	story	CapturedRoom.Surface.story	var story: Int { get }
+s:8RoomPlan08CapturedA0V7SurfaceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Surface.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO	swift.enum	CapturedRoom.Surface.Category	CapturedRoom.Surface.Category	enum Category
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO2eeoiySbAG_AGtFZ	swift.func.op	==(_:_:)	CapturedRoom.Surface.Category.==(_:_:)	static func == (a: CapturedRoom.Surface.Category, b: CapturedRoom.Surface.Category) -> Bool
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO4dooryAGSb_tcAGmF	swift.enum.case	CapturedRoom.Surface.Category.door(isOpen:)	CapturedRoom.Surface.Category.door(isOpen:)	case door(isOpen: Bool)
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO4fromAGs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoom.Surface.Category.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CapturedRoom.Surface.Category.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO4wallyA2GmF	swift.enum.case	CapturedRoom.Surface.Category.wall	CapturedRoom.Surface.Category.wall	case wall
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO5flooryA2GmF	swift.enum.case	CapturedRoom.Surface.Category.floor	CapturedRoom.Surface.Category.floor	case floor
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoom.Surface.Category.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO6windowyA2GmF	swift.enum.case	CapturedRoom.Surface.Category.window	CapturedRoom.Surface.Category.window	case window
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO7openingyA2GmF	swift.enum.case	CapturedRoom.Surface.Category.opening	CapturedRoom.Surface.Category.opening	case opening
+s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO9hashValueSivp	swift.property	hashValue	CapturedRoom.Surface.Category.hashValue	var hashValue: Int { get }
+s:8RoomPlan08CapturedA0V7SurfaceV8categoryAE8CategoryOvp	swift.property	category	CapturedRoom.Surface.category	var category: CapturedRoom.Surface.Category { get }
+s:8RoomPlan08CapturedA0V7SurfaceV9transformSo13simd_float4x4avp	swift.property	transform	CapturedRoom.Surface.transform	var transform: simd_float4x4 { get }
+s:8RoomPlan08CapturedA0V7objectsSayAC6ObjectVGvp	swift.property	objects	CapturedRoom.objects	var objects: [CapturedRoom.Object] { get }
+s:8RoomPlan08CapturedA0V7versionSivp	swift.property	version	CapturedRoom.version	var version: Int { get }
+s:8RoomPlan08CapturedA0V7windowsSayAC7SurfaceVGvp	swift.property	windows	CapturedRoom.windows	var windows: [CapturedRoom.Surface] { get }
+s:8RoomPlan08CapturedA0V8openingsSayAC7SurfaceVGvp	swift.property	openings	CapturedRoom.openings	var openings: [CapturedRoom.Surface] { get }
+s:8RoomPlan08CapturedA0V8sectionsSayAC7SectionVGvp	swift.property	sections	CapturedRoom.sections	var sections: [CapturedRoom.Section] { get }
+s:8RoomPlan08CapturedA4DataV	swift.struct	CapturedRoomData	CapturedRoomData	struct CapturedRoomData
+s:8RoomPlan08CapturedA4DataV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedRoomData.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan08CapturedA4DataV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedRoomData.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan08CapturedA9AttributeP	swift.protocol	CapturedRoomAttribute	CapturedRoomAttribute	protocol CapturedRoomAttribute : CaseIterable, RawRepresentable, Sendable where Self.RawValue == String
+s:8RoomPlan08CapturedA9AttributeP14parentCategoryAA0c7ElementF0OSgvpZ	swift.type.property	parentCategory	CapturedRoomAttribute.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan08CapturedA9AttributeP15shortIdentifierSSvp	swift.property	shortIdentifier	CapturedRoomAttribute.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan0A11CaptureViewC14captureSessionAA0acF0CSgvp	swift.property	captureSession	RoomCaptureView.captureSession	@MainActor @preconcurrency var captureSession: RoomCaptureSession! { get }
+s:8RoomPlan0A11CaptureViewC14isModelEnabledSbvp	swift.property	isModelEnabled	RoomCaptureView.isModelEnabled	@MainActor @preconcurrency var isModelEnabled: Bool { get set }
+s:8RoomPlan0A11CaptureViewC5frame9arSessionACSo6CGRectV_So9ARSessionCtcfc	swift.init	init(frame:arSession:)	RoomCaptureView.init(frame:arSession:)	@MainActor @preconcurrency init(frame: CGRect, arSession: ARSession)
+s:8RoomPlan0A11CaptureViewC8delegateAA0acD8Delegate_pSgvp	swift.property	delegate	RoomCaptureView.delegate	@MainActor @preconcurrency weak var delegate: (any RoomCaptureViewDelegate)?
+s:8RoomPlan0A14CaptureSessionC	swift.class	RoomCaptureSession	RoomCaptureSession	class RoomCaptureSession
+s:8RoomPlan0A14CaptureSessionC02arD0ACSo9ARSessionCSg_tcfc	swift.init	init(arSession:)	RoomCaptureSession.init(arSession:)	init(arSession: ARSession? = nil)
+s:8RoomPlan0A14CaptureSessionC02arD0So9ARSessionCvp	swift.property	arSession	RoomCaptureSession.arSession	var arSession: ARSession
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO	swift.enum	RoomCaptureSession.CaptureError	RoomCaptureSession.CaptureError	enum CaptureError
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO08internalE0yA2EmF	swift.enum.case	RoomCaptureSession.CaptureError.internalError	RoomCaptureSession.CaptureError.internalError	case internalError
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO12deviceTooHotyA2EmF	swift.enum.case	RoomCaptureSession.CaptureError.deviceTooHot	RoomCaptureSession.CaptureError.deviceTooHot	case deviceTooHot
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	RoomCaptureSession.CaptureError.errorDescription	var errorDescription: String? { get }
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO18deviceNotSupportedyA2EmF	swift.enum.case	RoomCaptureSession.CaptureError.deviceNotSupported	RoomCaptureSession.CaptureError.deviceNotSupported	case deviceNotSupported
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO20exceedSceneSizeLimityA2EmF	swift.enum.case	RoomCaptureSession.CaptureError.exceedSceneSizeLimit	RoomCaptureSession.CaptureError.exceedSceneSizeLimit	case exceedSceneSizeLimit
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO20worldTrackingFailureyA2EmF	swift.enum.case	RoomCaptureSession.CaptureError.worldTrackingFailure	RoomCaptureSession.CaptureError.worldTrackingFailure	case worldTrackingFailure
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO22invalidARConfigurationyA2EmF	swift.enum.case	RoomCaptureSession.CaptureError.invalidARConfiguration	RoomCaptureSession.CaptureError.invalidARConfiguration	case invalidARConfiguration
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	RoomCaptureSession.CaptureError.==(_:_:)	static func == (a: RoomCaptureSession.CaptureError, b: RoomCaptureSession.CaptureError) -> Bool
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	RoomCaptureSession.CaptureError.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan0A14CaptureSessionC0C5ErrorO9hashValueSivp	swift.property	hashValue	RoomCaptureSession.CaptureError.hashValue	var hashValue: Int { get }
+s:8RoomPlan0A14CaptureSessionC11InstructionO	swift.enum	RoomCaptureSession.Instruction	RoomCaptureSession.Instruction	enum Instruction
+s:8RoomPlan0A14CaptureSessionC11InstructionO10lowTextureyA2EmF	swift.enum.case	RoomCaptureSession.Instruction.lowTexture	RoomCaptureSession.Instruction.lowTexture	case lowTexture
+s:8RoomPlan0A14CaptureSessionC11InstructionO11turnOnLightyA2EmF	swift.enum.case	RoomCaptureSession.Instruction.turnOnLight	RoomCaptureSession.Instruction.turnOnLight	case turnOnLight
+s:8RoomPlan0A14CaptureSessionC11InstructionO15moveCloseToWallyA2EmF	swift.enum.case	RoomCaptureSession.Instruction.moveCloseToWall	RoomCaptureSession.Instruction.moveCloseToWall	case moveCloseToWall
+s:8RoomPlan0A14CaptureSessionC11InstructionO16moveAwayFromWallyA2EmF	swift.enum.case	RoomCaptureSession.Instruction.moveAwayFromWall	RoomCaptureSession.Instruction.moveAwayFromWall	case moveAwayFromWall
+s:8RoomPlan0A14CaptureSessionC11InstructionO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	RoomCaptureSession.Instruction.==(_:_:)	static func == (a: RoomCaptureSession.Instruction, b: RoomCaptureSession.Instruction) -> Bool
+s:8RoomPlan0A14CaptureSessionC11InstructionO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	RoomCaptureSession.Instruction.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan0A14CaptureSessionC11InstructionO6normalyA2EmF	swift.enum.case	RoomCaptureSession.Instruction.normal	RoomCaptureSession.Instruction.normal	case normal
+s:8RoomPlan0A14CaptureSessionC11InstructionO8slowDownyA2EmF	swift.enum.case	RoomCaptureSession.Instruction.slowDown	RoomCaptureSession.Instruction.slowDown	case slowDown
+s:8RoomPlan0A14CaptureSessionC11InstructionO9hashValueSivp	swift.property	hashValue	RoomCaptureSession.Instruction.hashValue	var hashValue: Int { get }
+s:8RoomPlan0A14CaptureSessionC11isSupportedSbvpZ	swift.type.property	isSupported	RoomCaptureSession.isSupported	static var isSupported: Bool { get }
+s:8RoomPlan0A14CaptureSessionC13ConfigurationV	swift.struct	RoomCaptureSession.Configuration	RoomCaptureSession.Configuration	struct Configuration
+s:8RoomPlan0A14CaptureSessionC13ConfigurationV17isCoachingEnabledSbvp	swift.property	isCoachingEnabled	RoomCaptureSession.Configuration.isCoachingEnabled	var isCoachingEnabled: Bool
+s:8RoomPlan0A14CaptureSessionC13ConfigurationVAEycfc	swift.init	init()	RoomCaptureSession.Configuration.init()	init()
+s:8RoomPlan0A14CaptureSessionC3run13configurationyAC13ConfigurationV_tF	swift.method	run(configuration:)	RoomCaptureSession.run(configuration:)	func run(configuration: RoomCaptureSession.Configuration)
+s:8RoomPlan0A14CaptureSessionC4stop14pauseARSessionySb_tF	swift.method	stop(pauseARSession:)	RoomCaptureSession.stop(pauseARSession:)	func stop(pauseARSession: Bool = true)
+s:8RoomPlan0A14CaptureSessionC4stopyyF	swift.method	stop()	RoomCaptureSession.stop()	func stop()
+s:8RoomPlan0A14CaptureSessionC8delegateAA0acD8Delegate_pSgvp	swift.property	delegate	RoomCaptureSession.delegate	weak var delegate: (any RoomCaptureSessionDelegate)?
+s:8RoomPlan0A14CaptureSessionCACycfc	swift.init	init()	RoomCaptureSession.init()	init()
+s:8RoomPlan0A19CaptureViewDelegateP	swift.protocol	RoomCaptureViewDelegate	RoomCaptureViewDelegate	protocol RoomCaptureViewDelegate : NSCoding
+s:8RoomPlan0A19CaptureViewDelegateP07captureD010didPresent5erroryAA08CapturedA0V_s5Error_pSgtF	swift.method	captureView(didPresent:error:)	RoomCaptureViewDelegate.captureView(didPresent:error:)	func captureView(didPresent processedResult: CapturedRoom, error: (any Error)?)
+s:8RoomPlan0A19CaptureViewDelegateP07captureD013shouldPresent5errorSbAA08CapturedA4DataV_s5Error_pSgtF	swift.method	captureView(shouldPresent:error:)	RoomCaptureViewDelegate.captureView(shouldPresent:error:)	func captureView(shouldPresent roomDataForProcessing: CapturedRoomData, error: (any Error)?) -> Bool
+s:8RoomPlan0A19CaptureViewDelegatePAAE07captureD010didPresent5erroryAA08CapturedA0V_s5Error_pSgtF	swift.method	captureView(didPresent:error:)	RoomCaptureViewDelegate.captureView(didPresent:error:)	func captureView(didPresent processedResult: CapturedRoom, error: (any Error)?)
+s:8RoomPlan0A19CaptureViewDelegatePAAE07captureD013shouldPresent5errorSbAA08CapturedA4DataV_s5Error_pSgtF	swift.method	captureView(shouldPresent:error:)	RoomCaptureViewDelegate.captureView(shouldPresent:error:)	func captureView(shouldPresent roomDataForProcessing: CapturedRoomData, error: (any Error)?) -> Bool
+s:8RoomPlan0A22CaptureSessionDelegateP	swift.protocol	RoomCaptureSessionDelegate	RoomCaptureSessionDelegate	protocol RoomCaptureSessionDelegate : AnyObject
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_10didEndWith5erroryAA0acD0C_AA08CapturedA4DataVs5Error_pSgtF	swift.method	captureSession(_:didEndWith:error:)	RoomCaptureSessionDelegate.captureSession(_:didEndWith:error:)	func captureSession(_ session: RoomCaptureSession, didEndWith data: CapturedRoomData, error: (any Error)?)
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_10didProvideyAA0acD0C_AG11InstructionOtF	swift.method	captureSession(_:didProvide:)	RoomCaptureSessionDelegate.captureSession(_:didProvide:)	func captureSession(_ session: RoomCaptureSession, didProvide instruction: RoomCaptureSession.Instruction)
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_12didStartWithyAA0acD0C_AG13ConfigurationVtF	swift.method	captureSession(_:didStartWith:)	RoomCaptureSessionDelegate.captureSession(_:didStartWith:)	func captureSession(_ session: RoomCaptureSession, didStartWith configuration: RoomCaptureSession.Configuration)
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_6didAddyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didAdd:)	RoomCaptureSessionDelegate.captureSession(_:didAdd:)	func captureSession(_ session: RoomCaptureSession, didAdd room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_9didChangeyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didChange:)	RoomCaptureSessionDelegate.captureSession(_:didChange:)	func captureSession(_ session: RoomCaptureSession, didChange room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_9didRemoveyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didRemove:)	RoomCaptureSessionDelegate.captureSession(_:didRemove:)	func captureSession(_ session: RoomCaptureSession, didRemove room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegateP07captureD0_9didUpdateyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didUpdate:)	RoomCaptureSessionDelegate.captureSession(_:didUpdate:)	func captureSession(_ session: RoomCaptureSession, didUpdate room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_10didEndWith5erroryAA0acD0C_AA08CapturedA4DataVs5Error_pSgtF	swift.method	captureSession(_:didEndWith:error:)	RoomCaptureSessionDelegate.captureSession(_:didEndWith:error:)	func captureSession(_ session: RoomCaptureSession, didEndWith data: CapturedRoomData, error: (any Error)?)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_10didProvideyAA0acD0C_AG11InstructionOtF	swift.method	captureSession(_:didProvide:)	RoomCaptureSessionDelegate.captureSession(_:didProvide:)	func captureSession(_ session: RoomCaptureSession, didProvide instruction: RoomCaptureSession.Instruction)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_12didStartWithyAA0acD0C_AG13ConfigurationVtF	swift.method	captureSession(_:didStartWith:)	RoomCaptureSessionDelegate.captureSession(_:didStartWith:)	func captureSession(_ session: RoomCaptureSession, didStartWith configuration: RoomCaptureSession.Configuration)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_6didAddyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didAdd:)	RoomCaptureSessionDelegate.captureSession(_:didAdd:)	func captureSession(_ session: RoomCaptureSession, didAdd room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_9didChangeyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didChange:)	RoomCaptureSessionDelegate.captureSession(_:didChange:)	func captureSession(_ session: RoomCaptureSession, didChange room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_9didRemoveyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didRemove:)	RoomCaptureSessionDelegate.captureSession(_:didRemove:)	func captureSession(_ session: RoomCaptureSession, didRemove room: CapturedRoom)
+s:8RoomPlan0A22CaptureSessionDelegatePAAE07captureD0_9didUpdateyAA0acD0C_AA08CapturedA0VtF	swift.method	captureSession(_:didUpdate:)	RoomCaptureSessionDelegate.captureSession(_:didUpdate:)	func captureSession(_ session: RoomCaptureSession, didUpdate room: CapturedRoom)
+s:8RoomPlan0A7BuilderC	swift.class	RoomBuilder	RoomBuilder	class RoomBuilder
+s:8RoomPlan0A7BuilderC08capturedA04fromAA08CapturedA0VAA0fA4DataV_tYaKF	swift.method	capturedRoom(from:)	RoomBuilder.capturedRoom(from:)	func capturedRoom(from capturedRoomData: CapturedRoomData) async throws -> CapturedRoom
+s:8RoomPlan0A7BuilderC10BuildErrorO	swift.enum	RoomBuilder.BuildError	RoomBuilder.BuildError	enum BuildError
+s:8RoomPlan0A7BuilderC10BuildErrorO08internalE0yA2EmF	swift.enum.case	RoomBuilder.BuildError.internalError	RoomBuilder.BuildError.internalError	case internalError
+s:8RoomPlan0A7BuilderC10BuildErrorO12invalidInputyA2EmF	swift.enum.case	RoomBuilder.BuildError.invalidInput	RoomBuilder.BuildError.invalidInput	case invalidInput
+s:8RoomPlan0A7BuilderC10BuildErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	RoomBuilder.BuildError.errorDescription	var errorDescription: String? { get }
+s:8RoomPlan0A7BuilderC10BuildErrorO17insufficientInputyA2EmF	swift.enum.case	RoomBuilder.BuildError.insufficientInput	RoomBuilder.BuildError.insufficientInput	case insufficientInput
+s:8RoomPlan0A7BuilderC10BuildErrorO18deviceNotSupportedyA2EmF	swift.enum.case	RoomBuilder.BuildError.deviceNotSupported	RoomBuilder.BuildError.deviceNotSupported	case deviceNotSupported
+s:8RoomPlan0A7BuilderC10BuildErrorO20exceedSceneSizeLimityA2EmF	swift.enum.case	RoomBuilder.BuildError.exceedSceneSizeLimit	RoomBuilder.BuildError.exceedSceneSizeLimit	case exceedSceneSizeLimit
+s:8RoomPlan0A7BuilderC10BuildErrorO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	RoomBuilder.BuildError.==(_:_:)	static func == (a: RoomBuilder.BuildError, b: RoomBuilder.BuildError) -> Bool
+s:8RoomPlan0A7BuilderC10BuildErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	RoomBuilder.BuildError.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan0A7BuilderC10BuildErrorO9hashValueSivp	swift.property	hashValue	RoomBuilder.BuildError.hashValue	var hashValue: Int { get }
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.struct	RoomBuilder.ConfigurationOptions	RoomBuilder.ConfigurationOptions	struct ConfigurationOptions
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV15beautifyObjectsAEvpZ	swift.type.property	beautifyObjects	RoomBuilder.ConfigurationOptions.beautifyObjects	static let beautifyObjects: RoomBuilder.ConfigurationOptions
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV19ArrayLiteralElementa	swift.typealias	RoomBuilder.ConfigurationOptions.ArrayLiteralElement	RoomBuilder.ConfigurationOptions.ArrayLiteralElement	typealias ArrayLiteralElement = RoomBuilder.ConfigurationOptions
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV7Elementa	swift.typealias	RoomBuilder.ConfigurationOptions.Element	RoomBuilder.ConfigurationOptions.Element	typealias Element = RoomBuilder.ConfigurationOptions
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV8RawValuea	swift.typealias	RoomBuilder.ConfigurationOptions.RawValue	RoomBuilder.ConfigurationOptions.RawValue	typealias RawValue = Int
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV8rawValueAESi_tcfc	swift.init	init(rawValue:)	RoomBuilder.ConfigurationOptions.init(rawValue:)	init(rawValue: Int)
+s:8RoomPlan0A7BuilderC20ConfigurationOptionsV8rawValueSivp	swift.property	rawValue	RoomBuilder.ConfigurationOptions.rawValue	let rawValue: Int
+s:8RoomPlan0A7BuilderC7optionsA2C20ConfigurationOptionsV_tcfc	swift.init	init(options:)	RoomBuilder.init(options:)	init(options: RoomBuilder.ConfigurationOptions)
+s:8RoomPlan11StorageTypeO	swift.enum	StorageType	StorageType	enum StorageType
+s:8RoomPlan11StorageTypeO14parentCategoryAA015CapturedElementF0OSgvpZ	swift.type.property	parentCategory	StorageType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan11StorageTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	StorageType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan11StorageTypeO5shelfyA2CmF	swift.enum.case	StorageType.shelf	StorageType.shelf	case shelf
+s:8RoomPlan11StorageTypeO7cabinetyA2CmF	swift.enum.case	StorageType.cabinet	StorageType.cabinet	case cabinet
+s:8RoomPlan11StorageTypeO8AllCasesa	swift.typealias	StorageType.AllCases	StorageType.AllCases	typealias AllCases = [StorageType]
+s:8RoomPlan11StorageTypeO8RawValuea	swift.typealias	StorageType.RawValue	StorageType.RawValue	typealias RawValue = String
+s:8RoomPlan11StorageTypeO8allCasesSayACGvpZ	swift.type.property	allCases	StorageType.allCases	nonisolated static var allCases: [StorageType] { get }
+s:8RoomPlan11StorageTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	StorageType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan11StorageTypeO8rawValueSSvp	swift.property	rawValue	StorageType.rawValue	var rawValue: String { get }
+s:8RoomPlan12ChairArmTypeO	swift.enum	ChairArmType	ChairArmType	enum ChairArmType
+s:8RoomPlan12ChairArmTypeO14parentCategoryAA015CapturedElementG0OSgvpZ	swift.type.property	parentCategory	ChairArmType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan12ChairArmTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	ChairArmType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan12ChairArmTypeO7missingyA2CmF	swift.enum.case	ChairArmType.missing	ChairArmType.missing	case missing
+s:8RoomPlan12ChairArmTypeO8AllCasesa	swift.typealias	ChairArmType.AllCases	ChairArmType.AllCases	typealias AllCases = [ChairArmType]
+s:8RoomPlan12ChairArmTypeO8RawValuea	swift.typealias	ChairArmType.RawValue	ChairArmType.RawValue	typealias RawValue = String
+s:8RoomPlan12ChairArmTypeO8allCasesSayACGvpZ	swift.type.property	allCases	ChairArmType.allCases	nonisolated static var allCases: [ChairArmType] { get }
+s:8RoomPlan12ChairArmTypeO8existingyA2CmF	swift.enum.case	ChairArmType.existing	ChairArmType.existing	case existing
+s:8RoomPlan12ChairArmTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	ChairArmType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan12ChairArmTypeO8rawValueSSvp	swift.property	rawValue	ChairArmType.rawValue	var rawValue: String { get }
+s:8RoomPlan12ChairLegTypeO	swift.enum	ChairLegType	ChairLegType	enum ChairLegType
+s:8RoomPlan12ChairLegTypeO12unidentifiedyA2CmF	swift.enum.case	ChairLegType.unidentified	ChairLegType.unidentified	case unidentified
+s:8RoomPlan12ChairLegTypeO14parentCategoryAA015CapturedElementG0OSgvpZ	swift.type.property	parentCategory	ChairLegType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan12ChairLegTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	ChairLegType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan12ChairLegTypeO4fouryA2CmF	swift.enum.case	ChairLegType.four	ChairLegType.four	case four
+s:8RoomPlan12ChairLegTypeO4staryA2CmF	swift.enum.case	ChairLegType.star	ChairLegType.star	case star
+s:8RoomPlan12ChairLegTypeO8AllCasesa	swift.typealias	ChairLegType.AllCases	ChairLegType.AllCases	typealias AllCases = [ChairLegType]
+s:8RoomPlan12ChairLegTypeO8RawValuea	swift.typealias	ChairLegType.RawValue	ChairLegType.RawValue	typealias RawValue = String
+s:8RoomPlan12ChairLegTypeO8allCasesSayACGvpZ	swift.type.property	allCases	ChairLegType.allCases	nonisolated static var allCases: [ChairLegType] { get }
+s:8RoomPlan12ChairLegTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	ChairLegType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan12ChairLegTypeO8rawValueSSvp	swift.property	rawValue	ChairLegType.rawValue	var rawValue: String { get }
+s:8RoomPlan13ChairBackTypeO	swift.enum	ChairBackType	ChairBackType	enum ChairBackType
+s:8RoomPlan13ChairBackTypeO14parentCategoryAA015CapturedElementG0OSgvpZ	swift.type.property	parentCategory	ChairBackType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan13ChairBackTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	ChairBackType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan13ChairBackTypeO7missingyA2CmF	swift.enum.case	ChairBackType.missing	ChairBackType.missing	case missing
+s:8RoomPlan13ChairBackTypeO8AllCasesa	swift.typealias	ChairBackType.AllCases	ChairBackType.AllCases	typealias AllCases = [ChairBackType]
+s:8RoomPlan13ChairBackTypeO8RawValuea	swift.typealias	ChairBackType.RawValue	ChairBackType.RawValue	typealias RawValue = String
+s:8RoomPlan13ChairBackTypeO8allCasesSayACGvpZ	swift.type.property	allCases	ChairBackType.allCases	nonisolated static var allCases: [ChairBackType] { get }
+s:8RoomPlan13ChairBackTypeO8existingyA2CmF	swift.enum.case	ChairBackType.existing	ChairBackType.existing	case existing
+s:8RoomPlan13ChairBackTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	ChairBackType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan13ChairBackTypeO8rawValueSSvp	swift.property	rawValue	ChairBackType.rawValue	var rawValue: String { get }
+s:8RoomPlan14TableShapeTypeO	swift.enum	TableShapeType	TableShapeType	enum TableShapeType
+s:8RoomPlan14TableShapeTypeO11rectangularyA2CmF	swift.enum.case	TableShapeType.rectangular	TableShapeType.rectangular	case rectangular
+s:8RoomPlan14TableShapeTypeO12unidentifiedyA2CmF	swift.enum.case	TableShapeType.unidentified	TableShapeType.unidentified	case unidentified
+s:8RoomPlan14TableShapeTypeO14parentCategoryAA015CapturedElementG0OSgvpZ	swift.type.property	parentCategory	TableShapeType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan14TableShapeTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	TableShapeType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan14TableShapeTypeO16circularEllipticyA2CmF	swift.enum.case	TableShapeType.circularElliptic	TableShapeType.circularElliptic	case circularElliptic
+s:8RoomPlan14TableShapeTypeO7lShapedyA2CmF	swift.enum.case	TableShapeType.lShaped	TableShapeType.lShaped	case lShaped
+s:8RoomPlan14TableShapeTypeO8AllCasesa	swift.typealias	TableShapeType.AllCases	TableShapeType.AllCases	typealias AllCases = [TableShapeType]
+s:8RoomPlan14TableShapeTypeO8RawValuea	swift.typealias	TableShapeType.RawValue	TableShapeType.RawValue	typealias RawValue = String
+s:8RoomPlan14TableShapeTypeO8allCasesSayACGvpZ	swift.type.property	allCases	TableShapeType.allCases	nonisolated static var allCases: [TableShapeType] { get }
+s:8RoomPlan14TableShapeTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	TableShapeType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan14TableShapeTypeO8rawValueSSvp	swift.property	rawValue	TableShapeType.rawValue	var rawValue: String { get }
+s:8RoomPlan16StructureBuilderC	swift.class	StructureBuilder	StructureBuilder	class StructureBuilder
+s:8RoomPlan16StructureBuilderC08capturedC04fromAA08CapturedC0VSayAA0gA0VG_tYaKF	swift.method	capturedStructure(from:)	StructureBuilder.capturedStructure(from:)	func capturedStructure(from rooms: [CapturedRoom]) async throws -> CapturedStructure
+s:8RoomPlan16StructureBuilderC10BuildErrorO	swift.enum	StructureBuilder.BuildError	StructureBuilder.BuildError	enum BuildError
+s:8RoomPlan16StructureBuilderC10BuildErrorO07invalidA8LocationyA2EmF	swift.enum.case	StructureBuilder.BuildError.invalidRoomLocation	StructureBuilder.BuildError.invalidRoomLocation	case invalidRoomLocation
+s:8RoomPlan16StructureBuilderC10BuildErrorO08internalF0yA2EmF	swift.enum.case	StructureBuilder.BuildError.internalError	StructureBuilder.BuildError.internalError	case internalError
+s:8RoomPlan16StructureBuilderC10BuildErrorO12invalidInputyA2EmF	swift.enum.case	StructureBuilder.BuildError.invalidInput	StructureBuilder.BuildError.invalidInput	case invalidInput
+s:8RoomPlan16StructureBuilderC10BuildErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	StructureBuilder.BuildError.errorDescription	var errorDescription: String? { get }
+s:8RoomPlan16StructureBuilderC10BuildErrorO17insufficientInputyA2EmF	swift.enum.case	StructureBuilder.BuildError.insufficientInput	StructureBuilder.BuildError.insufficientInput	case insufficientInput
+s:8RoomPlan16StructureBuilderC10BuildErrorO18deviceNotSupportedyA2EmF	swift.enum.case	StructureBuilder.BuildError.deviceNotSupported	StructureBuilder.BuildError.deviceNotSupported	case deviceNotSupported
+s:8RoomPlan16StructureBuilderC10BuildErrorO20exceedSceneSizeLimityA2EmF	swift.enum.case	StructureBuilder.BuildError.exceedSceneSizeLimit	StructureBuilder.BuildError.exceedSceneSizeLimit	case exceedSceneSizeLimit
+s:8RoomPlan16StructureBuilderC10BuildErrorO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	StructureBuilder.BuildError.==(_:_:)	static func == (a: StructureBuilder.BuildError, b: StructureBuilder.BuildError) -> Bool
+s:8RoomPlan16StructureBuilderC10BuildErrorO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	StructureBuilder.BuildError.hash(into:)	func hash(into hasher: inout Hasher)
+s:8RoomPlan16StructureBuilderC10BuildErrorO9hashValueSivp	swift.property	hashValue	StructureBuilder.BuildError.hashValue	var hashValue: Int { get }
+s:8RoomPlan16StructureBuilderC20ConfigurationOptionsa	swift.typealias	StructureBuilder.ConfigurationOptions	StructureBuilder.ConfigurationOptions	typealias ConfigurationOptions = RoomBuilder.ConfigurationOptions
+s:8RoomPlan16StructureBuilderC7optionsAcA0aD0C20ConfigurationOptionsV_tcfc	swift.init	init(options:)	StructureBuilder.init(options:)	init(options: StructureBuilder.ConfigurationOptions)
+s:8RoomPlan17CapturedStructureV	swift.struct	CapturedStructure	CapturedStructure	struct CapturedStructure
+s:8RoomPlan17CapturedStructureV10identifier10Foundation4UUIDVvp	swift.property	identifier	CapturedStructure.identifier	var identifier: UUID { get }
+s:8RoomPlan17CapturedStructureV13ModelProvidera	swift.typealias	CapturedStructure.ModelProvider	CapturedStructure.ModelProvider	typealias ModelProvider = CapturedRoom.ModelProvider
+s:8RoomPlan17CapturedStructureV16USDExportOptionsa	swift.typealias	CapturedStructure.USDExportOptions	CapturedStructure.USDExportOptions	typealias USDExportOptions = CapturedRoom.USDExportOptions
+s:8RoomPlan17CapturedStructureV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedStructure.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan17CapturedStructureV5Errora	swift.typealias	CapturedStructure.Error	CapturedStructure.Error	typealias Error = CapturedRoom.Error
+s:8RoomPlan17CapturedStructureV5doorsSayAA0cA0V7SurfaceVGvp	swift.property	doors	CapturedStructure.doors	var doors: [CapturedStructure.Surface] { get }
+s:8RoomPlan17CapturedStructureV5roomsSayAA0cA0VGvp	swift.property	rooms	CapturedStructure.rooms	var rooms: [CapturedRoom] { get }
+s:8RoomPlan17CapturedStructureV5wallsSayAA0cA0V7SurfaceVGvp	swift.property	walls	CapturedStructure.walls	var walls: [CapturedStructure.Surface] { get }
+s:8RoomPlan17CapturedStructureV6Objecta	swift.typealias	CapturedStructure.Object	CapturedStructure.Object	typealias Object = CapturedRoom.Object
+s:8RoomPlan17CapturedStructureV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedStructure.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan17CapturedStructureV6export2to11metadataURL13modelProvider0E7Optionsy10Foundation0H0V_AKSgAA0cA0V05ModelJ0VSgAN09USDExportK0VtKF	swift.method	export(to:metadataURL:modelProvider:exportOptions:)	CapturedStructure.export(to:metadataURL:modelProvider:exportOptions:)	func export(to url: URL, metadataURL: URL? = nil, modelProvider: CapturedStructure.ModelProvider? = nil, exportOptions: CapturedStructure.USDExportOptions = .mesh) throws
+s:8RoomPlan17CapturedStructureV6floorsSayAA0cA0V7SurfaceVGvp	swift.property	floors	CapturedStructure.floors	var floors: [CapturedStructure.Surface] { get }
+s:8RoomPlan17CapturedStructureV7Sectiona	swift.typealias	CapturedStructure.Section	CapturedStructure.Section	typealias Section = CapturedRoom.Section
+s:8RoomPlan17CapturedStructureV7Surfacea	swift.typealias	CapturedStructure.Surface	CapturedStructure.Surface	typealias Surface = CapturedRoom.Surface
+s:8RoomPlan17CapturedStructureV7objectsSayAA0cA0V6ObjectVGvp	swift.property	objects	CapturedStructure.objects	var objects: [CapturedStructure.Object] { get }
+s:8RoomPlan17CapturedStructureV7versionSivp	swift.property	version	CapturedStructure.version	var version: Int { get }
+s:8RoomPlan17CapturedStructureV7windowsSayAA0cA0V7SurfaceVGvp	swift.property	windows	CapturedStructure.windows	var windows: [CapturedStructure.Surface] { get }
+s:8RoomPlan17CapturedStructureV8openingsSayAA0cA0V7SurfaceVGvp	swift.property	openings	CapturedStructure.openings	var openings: [CapturedStructure.Surface] { get }
+s:8RoomPlan17CapturedStructureV8sectionsSayAA0cA0V7SectionVGvp	swift.property	sections	CapturedStructure.sections	var sections: [CapturedStructure.Section] { get }
+s:8RoomPlan23CapturedElementCategoryO	swift.enum	CapturedElementCategory	CapturedElementCategory	enum CapturedElementCategory
+s:8RoomPlan23CapturedElementCategoryO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CapturedElementCategory.==(_:_:)	static func == (a: CapturedElementCategory, b: CapturedElementCategory) -> Bool
+s:8RoomPlan23CapturedElementCategoryO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	CapturedElementCategory.init(from:)	init(from decoder: any Decoder) throws
+s:8RoomPlan23CapturedElementCategoryO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CapturedElementCategory.encode(to:)	func encode(to encoder: any Encoder) throws
+s:8RoomPlan23CapturedElementCategoryO6objectyAcA0cA0V6ObjectV0E0OcACmF	swift.enum.case	CapturedElementCategory.object(_:)	CapturedElementCategory.object(_:)	case object(CapturedRoom.Object.Category)
+s:8RoomPlan23CapturedElementCategoryO7surfaceyAcA0cA0V7SurfaceV0E0OcACmF	swift.enum.case	CapturedElementCategory.surface(_:)	CapturedElementCategory.surface(_:)	case surface(CapturedRoom.Surface.Category)
+s:8RoomPlan8SofaTypeO	swift.enum	SofaType	SofaType	enum SofaType
+s:8RoomPlan8SofaTypeO10singleSeatyA2CmF	swift.enum.case	SofaType.singleSeat	SofaType.singleSeat	case singleSeat
+s:8RoomPlan8SofaTypeO11rectangularyA2CmF	swift.enum.case	SofaType.rectangular	SofaType.rectangular	case rectangular
+s:8RoomPlan8SofaTypeO12unidentifiedyA2CmF	swift.enum.case	SofaType.unidentified	SofaType.unidentified	case unidentified
+s:8RoomPlan8SofaTypeO14parentCategoryAA015CapturedElementF0OSgvpZ	swift.type.property	parentCategory	SofaType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan8SofaTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	SofaType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan8SofaTypeO16lShapedExtensionyA2CmF	swift.enum.case	SofaType.lShapedExtension	SofaType.lShapedExtension	case lShapedExtension
+s:8RoomPlan8SofaTypeO7lShapedyA2CmF	swift.enum.case	SofaType.lShaped	SofaType.lShaped	case lShaped
+s:8RoomPlan8SofaTypeO8AllCasesa	swift.typealias	SofaType.AllCases	SofaType.AllCases	typealias AllCases = [SofaType]
+s:8RoomPlan8SofaTypeO8RawValuea	swift.typealias	SofaType.RawValue	SofaType.RawValue	typealias RawValue = String
+s:8RoomPlan8SofaTypeO8allCasesSayACGvpZ	swift.type.property	allCases	SofaType.allCases	nonisolated static var allCases: [SofaType] { get }
+s:8RoomPlan8SofaTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	SofaType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan8SofaTypeO8rawValueSSvp	swift.property	rawValue	SofaType.rawValue	var rawValue: String { get }
+s:8RoomPlan9ChairTypeO	swift.enum	ChairType	ChairType	enum ChairType
+s:8RoomPlan9ChairTypeO12unidentifiedyA2CmF	swift.enum.case	ChairType.unidentified	ChairType.unidentified	case unidentified
+s:8RoomPlan9ChairTypeO14parentCategoryAA015CapturedElementF0OSgvpZ	swift.type.property	parentCategory	ChairType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan9ChairTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	ChairType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan9ChairTypeO5stoolyA2CmF	swift.enum.case	ChairType.stool	ChairType.stool	case stool
+s:8RoomPlan9ChairTypeO6diningyA2CmF	swift.enum.case	ChairType.dining	ChairType.dining	case dining
+s:8RoomPlan9ChairTypeO6swivelyA2CmF	swift.enum.case	ChairType.swivel	ChairType.swivel	case swivel
+s:8RoomPlan9ChairTypeO8AllCasesa	swift.typealias	ChairType.AllCases	ChairType.AllCases	typealias AllCases = [ChairType]
+s:8RoomPlan9ChairTypeO8RawValuea	swift.typealias	ChairType.RawValue	ChairType.RawValue	typealias RawValue = String
+s:8RoomPlan9ChairTypeO8allCasesSayACGvpZ	swift.type.property	allCases	ChairType.allCases	nonisolated static var allCases: [ChairType] { get }
+s:8RoomPlan9ChairTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	ChairType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan9ChairTypeO8rawValueSSvp	swift.property	rawValue	ChairType.rawValue	var rawValue: String { get }
+s:8RoomPlan9TableTypeO	swift.enum	TableType	TableType	enum TableType
+s:8RoomPlan9TableTypeO12unidentifiedyA2CmF	swift.enum.case	TableType.unidentified	TableType.unidentified	case unidentified
+s:8RoomPlan9TableTypeO14parentCategoryAA015CapturedElementF0OSgvpZ	swift.type.property	parentCategory	TableType.parentCategory	static var parentCategory: CapturedElementCategory? { get }
+s:8RoomPlan9TableTypeO15shortIdentifierSSvp	swift.property	shortIdentifier	TableType.shortIdentifier	var shortIdentifier: String { get }
+s:8RoomPlan9TableTypeO6coffeeyA2CmF	swift.enum.case	TableType.coffee	TableType.coffee	case coffee
+s:8RoomPlan9TableTypeO6diningyA2CmF	swift.enum.case	TableType.dining	TableType.dining	case dining
+s:8RoomPlan9TableTypeO8AllCasesa	swift.typealias	TableType.AllCases	TableType.AllCases	typealias AllCases = [TableType]
+s:8RoomPlan9TableTypeO8RawValuea	swift.typealias	TableType.RawValue	TableType.RawValue	typealias RawValue = String
+s:8RoomPlan9TableTypeO8allCasesSayACGvpZ	swift.type.property	allCases	TableType.allCases	nonisolated static var allCases: [TableType] { get }
+s:8RoomPlan9TableTypeO8rawValueACSgSS_tcfc	swift.init	init(rawValue:)	TableType.init(rawValue:)	init?(rawValue: String)
+s:8RoomPlan9TableTypeO8rawValueSSvp	swift.property	rawValue	TableType.rawValue	var rawValue: String { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V10ConfidenceO	swift.func.op	!=(_:_:)	CapturedRoom.Confidence.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.func.op	!=(_:_:)	CapturedRoom.USDExportOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V5ErrorO	swift.func.op	!=(_:_:)	CapturedRoom.Error.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V6ObjectV8CategoryO	swift.func.op	!=(_:_:)	CapturedRoom.Object.Category.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SectionV5LabelO	swift.func.op	!=(_:_:)	CapturedRoom.Section.Label.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SurfaceV4EdgeO	swift.func.op	!=(_:_:)	CapturedRoom.Surface.Edge.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SurfaceV8CategoryO	swift.func.op	!=(_:_:)	CapturedRoom.Surface.Category.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan0A14CaptureSessionC0C5ErrorO	swift.func.op	!=(_:_:)	RoomCaptureSession.CaptureError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan0A14CaptureSessionC11InstructionO	swift.func.op	!=(_:_:)	RoomCaptureSession.Instruction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan0A7BuilderC10BuildErrorO	swift.func.op	!=(_:_:)	RoomBuilder.BuildError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.func.op	!=(_:_:)	RoomBuilder.ConfigurationOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan11StorageTypeO	swift.func.op	!=(_:_:)	StorageType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan12ChairArmTypeO	swift.func.op	!=(_:_:)	ChairArmType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan12ChairLegTypeO	swift.func.op	!=(_:_:)	ChairLegType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan13ChairBackTypeO	swift.func.op	!=(_:_:)	ChairBackType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan14TableShapeTypeO	swift.func.op	!=(_:_:)	TableShapeType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan16StructureBuilderC10BuildErrorO	swift.func.op	!=(_:_:)	StructureBuilder.BuildError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan23CapturedElementCategoryO	swift.func.op	!=(_:_:)	CapturedElementCategory.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan8SofaTypeO	swift.func.op	!=(_:_:)	SofaType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan9ChairTypeO	swift.func.op	!=(_:_:)	ChairType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8RoomPlan9TableTypeO	swift.func.op	!=(_:_:)	TableType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzSS8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SectionV5LabelO	swift.method	encode(to:)	CapturedRoom.Section.Label.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SectionV5LabelO	swift.property	hashValue	CapturedRoom.Section.Label.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan11StorageTypeO	swift.property	hashValue	StorageType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan12ChairArmTypeO	swift.property	hashValue	ChairArmType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan12ChairLegTypeO	swift.property	hashValue	ChairLegType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan13ChairBackTypeO	swift.property	hashValue	ChairBackType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan14TableShapeTypeO	swift.property	hashValue	TableShapeType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan8SofaTypeO	swift.property	hashValue	SofaType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan9ChairTypeO	swift.property	hashValue	ChairType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:8RoomPlan9TableTypeO	swift.property	hashValue	TableType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SectionV5LabelO	swift.method	hash(into:)	CapturedRoom.Section.Label.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan11StorageTypeO	swift.method	hash(into:)	StorageType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan12ChairArmTypeO	swift.method	hash(into:)	ChairArmType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan12ChairLegTypeO	swift.method	hash(into:)	ChairLegType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan13ChairBackTypeO	swift.method	hash(into:)	ChairBackType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan14TableShapeTypeO	swift.method	hash(into:)	TableShapeType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan8SofaTypeO	swift.method	hash(into:)	SofaType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan9ChairTypeO	swift.method	hash(into:)	ChairType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:8RoomPlan9TableTypeO	swift.method	hash(into:)	TableType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzSS8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:8RoomPlan08CapturedA0V7SectionV5LabelO	swift.init	init(from:)	CapturedRoom.Section.Label.init(from:)	init(from decoder: any Decoder) throws
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.init	init(arrayLiteral:)	CapturedRoom.USDExportOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.init	init(arrayLiteral:)	RoomBuilder.ConfigurationOptions.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	isDisjoint(with:)	CapturedRoom.USDExportOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	isDisjoint(with:)	RoomBuilder.ConfigurationOptions.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	isSuperset(of:)	CapturedRoom.USDExportOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	isSuperset(of:)	RoomBuilder.ConfigurationOptions.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	subtracting(_:)	CapturedRoom.USDExportOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	subtracting(_:)	RoomBuilder.ConfigurationOptions.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	isStrictSubset(of:)	CapturedRoom.USDExportOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	isStrictSubset(of:)	RoomBuilder.ConfigurationOptions.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	isStrictSuperset(of:)	CapturedRoom.USDExportOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	isStrictSuperset(of:)	RoomBuilder.ConfigurationOptions.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.property	isEmpty	CapturedRoom.USDExportOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.property	isEmpty	RoomBuilder.ConfigurationOptions.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	isSubset(of:)	CapturedRoom.USDExportOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	isSubset(of:)	RoomBuilder.ConfigurationOptions.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	subtract(_:)	CapturedRoom.USDExportOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	subtract(_:)	RoomBuilder.ConfigurationOptions.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.init	init(_:)	CapturedRoom.USDExportOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.init	init(_:)	RoomBuilder.ConfigurationOptions.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V13ModelProviderV5ErrorO	swift.property	localizedDescription	CapturedRoom.ModelProvider.Error.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8RoomPlan08CapturedA0V5ErrorO	swift.property	localizedDescription	CapturedRoom.Error.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8RoomPlan0A14CaptureSessionC0C5ErrorO	swift.property	localizedDescription	RoomCaptureSession.CaptureError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8RoomPlan0A7BuilderC10BuildErrorO	swift.property	localizedDescription	RoomBuilder.BuildError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:8RoomPlan16StructureBuilderC10BuildErrorO	swift.property	localizedDescription	StructureBuilder.BuildError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	insert(_:)	CapturedRoom.USDExportOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	insert(_:)	RoomBuilder.ConfigurationOptions.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	remove(_:)	CapturedRoom.USDExportOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	remove(_:)	RoomBuilder.ConfigurationOptions.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	update(with:)	CapturedRoom.USDExportOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	update(with:)	RoomBuilder.ConfigurationOptions.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	contains(_:)	CapturedRoom.USDExportOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	contains(_:)	RoomBuilder.ConfigurationOptions.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	intersection(_:)	CapturedRoom.USDExportOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	intersection(_:)	RoomBuilder.ConfigurationOptions.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	symmetricDifference(_:)	CapturedRoom.USDExportOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	symmetricDifference(_:)	RoomBuilder.ConfigurationOptions.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	union(_:)	CapturedRoom.USDExportOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	union(_:)	RoomBuilder.ConfigurationOptions.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	formIntersection(_:)	CapturedRoom.USDExportOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	formIntersection(_:)	RoomBuilder.ConfigurationOptions.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	formSymmetricDifference(_:)	CapturedRoom.USDExportOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	formSymmetricDifference(_:)	RoomBuilder.ConfigurationOptions.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.method	formUnion(_:)	CapturedRoom.USDExportOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.method	formUnion(_:)	RoomBuilder.ConfigurationOptions.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:8RoomPlan08CapturedA0V16USDExportOptionsV	swift.init	init()	CapturedRoom.USDExportOptions.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::s:8RoomPlan0A7BuilderC20ConfigurationOptionsV	swift.init	init()	RoomBuilder.ConfigurationOptions.init()	init()

@@ -1,0 +1,1313 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit.CAInterAppAudioSwitcherView",
+        "printedName": "CoreAudioKit.CAInterAppAudioSwitcherView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit.CAInterAppAudioTransportView",
+        "printedName": "CoreAudioKit.CAInterAppAudioTransportView"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit.CABTMIDILocalPeripheralViewController",
+        "printedName": "CoreAudioKit.CABTMIDILocalPeripheralViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit.CABTMIDICentralViewController",
+        "printedName": "CoreAudioKit.CABTMIDICentralViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit.AUViewController",
+        "printedName": "CoreAudioKit.AUViewController"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit.AUGenericViewController",
+        "printedName": "CoreAudioKit.AUGenericViewController"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "AVFoundation",
+        "printedName": "AVFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "AudioToolbox",
+        "printedName": "AudioToolbox"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "AudioUnit",
+        "printedName": "AudioUnit"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreAudioKit",
+        "printedName": "CoreAudioKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "CoreFoundation",
+        "printedName": "CoreFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "DeveloperToolsSupport",
+        "printedName": "DeveloperToolsSupport"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "UIKit",
+        "printedName": "UIKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CoreAudioKit",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "UIView",
+            "printedName": "UIKit.UIView",
+            "usr": "c:objc(cs)UIView"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s12CoreAudioKit25AUGenericViewInternalBasea",
+        "moduleName": "CoreAudioKit",
+        "name": "AUGenericViewInternalBase",
+        "printedName": "AUGenericViewInternalBase",
+        "usr": "s:12CoreAudioKit25AUGenericViewInternalBasea"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AUAudioUnit",
+                        "printedName": "AudioToolbox.AUAudioUnit",
+                        "usr": "c:objc(cs)AUAudioUnit"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AudioToolbox.AUAudioUnit?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC02auB4UnitSo07AUAudioH0CSgvg",
+                "moduleName": "CoreAudioKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)auAudioUnit"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "AUAudioUnit",
+                        "printedName": "AudioToolbox.AUAudioUnit",
+                        "usr": "c:objc(cs)AUAudioUnit"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AudioToolbox.AUAudioUnit?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC02auB4UnitSo07AUAudioH0CSgvs",
+                "moduleName": "CoreAudioKit",
+                "name": "Set",
+                "objc_name": "setAuAudioUnit:",
+                "printedName": "Set()",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)setAuAudioUnit:"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AUAudioUnit",
+                    "printedName": "AudioToolbox.AUAudioUnit",
+                    "usr": "c:objc(cs)AUAudioUnit"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AudioToolbox.AUAudioUnit?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "ObjC",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC02auB4UnitSo07AUAudioH0CSgvp",
+            "moduleName": "CoreAudioKit",
+            "name": "auAudioUnit",
+            "printedName": "auAudioUnit",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(py)auAudioUnit"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIViewController",
+                        "printedName": "UIKit.UIViewController",
+                        "usr": "c:objc(cs)UIViewController"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.UIViewController?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC16owningControllerSo06UIViewH0CSgvg",
+                "moduleName": "CoreAudioKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)owningController"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UIViewController",
+                        "printedName": "UIKit.UIViewController",
+                        "usr": "c:objc(cs)UIViewController"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "UIKit.UIViewController?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC16owningControllerSo06UIViewH0CSgvs",
+                "moduleName": "CoreAudioKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)setOwningController:"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIViewController",
+                    "printedName": "UIKit.UIViewController",
+                    "usr": "c:objc(cs)UIViewController"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIViewController?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "Preconcurrency",
+              "ObjC",
+              "HasStorage",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC16owningControllerSo06UIViewH0CSgvp",
+            "moduleName": "CoreAudioKit",
+            "name": "owningController",
+            "printedName": "owningController",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(py)owningController"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UnsafeMutableRawPointer",
+                            "printedName": "Swift.UnsafeMutableRawPointer",
+                            "usr": "s:Sv"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AUParameterObserverToken",
+                        "printedName": "AudioToolbox.AUParameterObserverToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AudioToolbox.AUParameterObserverToken?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC18paramObserverTokenSvSgvg",
+                "moduleName": "CoreAudioKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)paramObserverToken"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "UnsafeMutableRawPointer",
+                            "printedName": "Swift.UnsafeMutableRawPointer",
+                            "usr": "s:Sv"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "AUParameterObserverToken",
+                        "printedName": "AudioToolbox.AUParameterObserverToken"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AudioToolbox.AUParameterObserverToken?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC18paramObserverTokenSvSgvs",
+                "moduleName": "CoreAudioKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)setParamObserverToken:"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UnsafeMutableRawPointer",
+                        "printedName": "Swift.UnsafeMutableRawPointer",
+                        "usr": "s:Sv"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "AUParameterObserverToken",
+                    "printedName": "AudioToolbox.AUParameterObserverToken"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AudioToolbox.AUParameterObserverToken?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasInitialValue",
+              "Preconcurrency",
+              "ObjC",
+              "HasStorage",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "kind": "Var",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC18paramObserverTokenSvSgvp",
+            "moduleName": "CoreAudioKit",
+            "name": "paramObserverToken",
+            "printedName": "paramObserverToken",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(py)paramObserverToken"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvg",
+                "moduleName": "CoreAudioKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvs",
+                "moduleName": "CoreAudioKit",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvp",
+            "moduleName": "CoreAudioKit",
+            "name": "showSingleClumpIndex",
+            "printedName": "showSingleClumpIndex",
+            "usr": "s:12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AUGenericViewInternal",
+                "printedName": "CoreAudioKit.AUGenericViewInternal",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CGRect",
+                "printedName": "CoreFoundation.CGRect",
+                "usr": "c:@S@CGRect"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC5frameACSo6CGRectV_tcfc",
+            "moduleName": "CoreAudioKit",
+            "name": "init",
+            "objc_name": "initWithFrame:",
+            "overriding": true,
+            "printedName": "init(frame:)",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)initWithFrame:"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AUGenericViewInternal",
+                    "printedName": "CoreAudioKit.AUGenericViewInternal",
+                    "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "CoreAudioKit.AUGenericViewInternal?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSCoder",
+                "printedName": "Foundation.NSCoder",
+                "usr": "c:objc(cs)NSCoder"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Required",
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC5coderACSgSo7NSCoderC_tcfc",
+            "moduleName": "CoreAudioKit",
+            "name": "init",
+            "objc_name": "initWithCoder:",
+            "overriding": true,
+            "printedName": "init(coder:)",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)initWithCoder:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UITraitCollection",
+                    "printedName": "UIKit.UITraitCollection",
+                    "usr": "c:objc(cs)UITraitCollection"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UITraitCollection?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC24traitCollectionDidChangeyySo07UITraitH0CSgF",
+            "moduleName": "CoreAudioKit",
+            "name": "traitCollectionDidChange",
+            "objc_name": "traitCollectionDidChange:",
+            "overriding": true,
+            "printedName": "traitCollectionDidChange(_:)",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)traitCollectionDidChange:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Override",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC19removeFromSuperviewyyF",
+            "moduleName": "CoreAudioKit",
+            "name": "removeFromSuperview",
+            "objc_name": "removeFromSuperview",
+            "overriding": true,
+            "printedName": "removeFromSuperview()",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)removeFromSuperview"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Preconcurrency",
+              "ObjC",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC27removeScheduledUpdatesTimeryyF",
+            "moduleName": "CoreAudioKit",
+            "name": "removeScheduledUpdatesTimer",
+            "printedName": "removeScheduledUpdatesTimer()",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)removeScheduledUpdatesTimer"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UICollectionView",
+                "printedName": "UIKit.UICollectionView",
+                "usr": "c:objc(cs)UICollectionView"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UICollectionReusableView",
+                "printedName": "UIKit.UICollectionReusableView",
+                "usr": "c:objc(cs)UICollectionReusableView"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "StringLiteralType",
+                "printedName": "Swift.StringLiteralType"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IndexPath",
+                "printedName": "Foundation.IndexPath",
+                "usr": "s:10Foundation9IndexPathV"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC010collectionE0_024willDisplaySupplementaryE014forElementKind2atySo012UICollectionE0C_So0o8ReusableE0CSS10Foundation9IndexPathVtF",
+            "moduleName": "CoreAudioKit",
+            "name": "collectionView",
+            "objc_name": "collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:",
+            "printedName": "collectionView(_:willDisplaySupplementaryView:forElementKind:at:)",
+            "usr": "c:@CM@CoreAudioKit@objc(cs)AUGenericViewInternal(im)collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UICollectionView",
+                "printedName": "UIKit.UICollectionView",
+                "usr": "c:objc(cs)UICollectionView"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UICollectionViewCell",
+                "printedName": "UIKit.UICollectionViewCell",
+                "usr": "c:objc(cs)UICollectionViewCell"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "IndexPath",
+                "printedName": "Foundation.IndexPath",
+                "usr": "s:10Foundation9IndexPathV"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Preconcurrency",
+              "Custom"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC010collectionE0_11willDisplay9forItemAtySo012UICollectionE0C_So0mE4CellC10Foundation9IndexPathVtF",
+            "moduleName": "CoreAudioKit",
+            "name": "collectionView",
+            "objc_name": "collectionView:willDisplayCell:forItemAtIndexPath:",
+            "printedName": "collectionView(_:willDisplay:forItemAt:)",
+            "usr": "c:@CM@CoreAudioKit@objc(cs)AUGenericViewInternal(im)collectionView:willDisplayCell:forItemAtIndexPath:"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearance",
+            "printedName": "UIAppearance",
+            "usr": "c:objc(pl)UIAppearance"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAppearanceContainer",
+            "printedName": "UIAppearanceContainer",
+            "usr": "c:objc(pl)UIAppearanceContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIDynamicItem",
+            "printedName": "UIDynamicItem",
+            "usr": "c:objc(pl)UIDynamicItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UITraitEnvironment",
+            "printedName": "UITraitEnvironment",
+            "usr": "c:objc(pl)UITraitEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UICoordinateSpace",
+            "printedName": "UICoordinateSpace",
+            "usr": "c:objc(pl)UICoordinateSpace"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItem",
+            "printedName": "UIFocusItem",
+            "usr": "c:objc(pl)UIFocusItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusEnvironment",
+            "printedName": "UIFocusEnvironment",
+            "usr": "c:objc(pl)UIFocusEnvironment"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIFocusItemContainer",
+            "printedName": "UIFocusItemContainer",
+            "usr": "c:objc(pl)UIFocusItemContainer"
+          },
+          {
+            "kind": "Conformance",
+            "name": "CALayerDelegate",
+            "printedName": "CALayerDelegate",
+            "usr": "c:objc(pl)CALayerDelegate"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIResponderStandardEditActions",
+            "printedName": "UIResponderStandardEditActions",
+            "usr": "c:objc(pl)UIResponderStandardEditActions"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIActivityItemsConfigurationProviding",
+            "printedName": "UIActivityItemsConfigurationProviding",
+            "usr": "c:objc(pl)UIActivityItemsConfigurationProviding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPasteConfigurationSupporting",
+            "printedName": "UIPasteConfigurationSupporting",
+            "usr": "c:objc(pl)UIPasteConfigurationSupporting"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIUserActivityRestoring",
+            "printedName": "UIUserActivityRestoring",
+            "usr": "c:objc(pl)UIUserActivityRestoring"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s5UIKit23UITraitChangeObservableP",
+            "name": "UITraitChangeObservable",
+            "printedName": "UITraitChangeObservable",
+            "usr": "s:5UIKit23UITraitChangeObservableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIPopoverPresentationControllerSourceItem",
+            "printedName": "UIPopoverPresentationControllerSourceItem",
+            "usr": "c:objc(pl)UIPopoverPresentationControllerSourceItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UILargeContentViewerItem",
+            "printedName": "UILargeContentViewerItem",
+            "usr": "c:objc(pl)UILargeContentViewerItem"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIAccessibilityIdentification",
+            "printedName": "UIAccessibilityIdentification",
+            "usr": "c:objc(pl)UIAccessibilityIdentification"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UICollectionViewDelegate",
+            "printedName": "UICollectionViewDelegate",
+            "usr": "c:objc(pl)UICollectionViewDelegate"
+          },
+          {
+            "kind": "Conformance",
+            "name": "UIScrollViewDelegate",
+            "printedName": "UIScrollViewDelegate",
+            "usr": "c:objc(pl)UIScrollViewDelegate"
+          }
+        ],
+        "declAttributes": [
+          "Preconcurrency",
+          "ObjC",
+          "Available",
+          "Available",
+          "Custom"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_Macosx": "13.0",
+        "intro_iOS": "14.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s12CoreAudioKit21AUGenericViewInternalC",
+        "moduleName": "CoreAudioKit",
+        "name": "AUGenericViewInternal",
+        "printedName": "AUGenericViewInternal",
+        "superclassNames": [
+          "UIKit.UIView",
+          "UIKit.UIResponder",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)UIView",
+        "usr": "c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UIViewController",
+                    "printedName": "UIKit.UIViewController",
+                    "usr": "c:objc(cs)UIViewController"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "UIKit.UIViewController?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "AudioComponentDescription",
+                "printedName": "AudioToolbox.AudioComponentDescription",
+                "usr": "c:@S@AudioComponentDescription"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "OpaquePointer",
+                        "printedName": "Swift.OpaquePointer",
+                        "usr": "s:s13OpaquePointerV"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "AudioComponentInstance",
+                    "printedName": "AudioToolbox.AudioComponentInstance"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "AudioUnit",
+                "printedName": "AudioToolbox.AudioUnit"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "AUAudioUnit",
+                    "printedName": "AudioToolbox.AUAudioUnit",
+                    "usr": "c:objc(cs)AUAudioUnit"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "AudioToolbox.AUAudioUnit?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "ObjC"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s12CoreAudioKit23AUAppleCustomViewLoaderC06customF10Controller3for9audioUnit4v3AUSo06UIViewI0CSgSo0B20ComponentDescriptionV_s13OpaquePointerVSo07AUAudioL0CSgtF",
+            "moduleName": "CoreAudioKit",
+            "name": "customViewController",
+            "objc_name": "customViewControllerFor:audioUnit:v3AU:",
+            "printedName": "customViewController(for:audioUnit:v3AU:)",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader(im)customViewControllerFor:audioUnit:v3AU:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "AUAppleCustomViewLoader",
+                "printedName": "CoreAudioKit.AUAppleCustomViewLoader",
+                "usr": "c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "Override"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s12CoreAudioKit23AUAppleCustomViewLoaderCACycfc",
+            "moduleName": "CoreAudioKit",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "usr": "c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "17",
+        "kind": "TypeDecl",
+        "mangledName": "$s12CoreAudioKit23AUAppleCustomViewLoaderC",
+        "moduleName": "CoreAudioKit",
+        "name": "AUAppleCustomViewLoader",
+        "printedName": "AUAppleCustomViewLoader",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CoreAudioKit",
+    "printedName": "CoreAudioKit"
+  }
+}

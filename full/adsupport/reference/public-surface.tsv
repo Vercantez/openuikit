@@ -1,0 +1,5 @@
+precise	kind	title	path	declaration
+c:objc(cs)ASIdentifierManager	swift.class	ASIdentifierManager	ASIdentifierManager	class ASIdentifierManager
+c:objc(cs)ASIdentifierManager(cm)sharedManager	swift.type.method	shared()	ASIdentifierManager.shared()	class func shared() -> ASIdentifierManager
+c:objc(cs)ASIdentifierManager(py)advertisingIdentifier	swift.property	advertisingIdentifier	ASIdentifierManager.advertisingIdentifier	var advertisingIdentifier: UUID { get }
+c:objc(cs)ASIdentifierManager(py)advertisingTrackingEnabled	swift.property	isAdvertisingTrackingEnabled	ASIdentifierManager.isAdvertisingTrackingEnabled	var isAdvertisingTrackingEnabled: Bool { get }

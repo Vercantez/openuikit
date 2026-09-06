@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 11,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/FinanceKit.symbols.json",
+      "relationshipCount": 478,
+      "sha256": "3f0bdc6769b3e0b8f19139b438651ce2b6599a7be8f278b3db6434a42551b1a1",
+      "symbolCount": 331
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "FinanceKit",
+  "relationshipCount": 478,
+  "relationshipMultisetSHA256": "5c4889c7c707f5e5983e607ae6efb3e726c9f48f3fca2d8ebb8f6b1df2e110dd",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 331,
+  "symbolMultisetSHA256": "1b5c8fa38cbabe2ef86e54d69bd49b6f15dff3af202d5da7defa10fb9d6121ad",
+  "target": "arm64-apple-ios26.0"
+}

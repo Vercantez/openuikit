@@ -1,0 +1,376 @@
+precise	kind	title	path	declaration
+c:@E@TKErrorCode	swift.enum	TKError.Code	TKError.Code	enum Code
+c:@E@TKErrorCode@TKErrorCodeAuthenticationFailed	swift.enum.case	TKError.Code.authenticationFailed	TKError.Code.authenticationFailed	case authenticationFailed
+c:@E@TKErrorCode@TKErrorCodeAuthenticationNeeded	swift.enum.case	TKError.Code.authenticationNeeded	TKError.Code.authenticationNeeded	case authenticationNeeded
+c:@E@TKErrorCode@TKErrorCodeBadParameter	swift.enum.case	TKError.Code.badParameter	TKError.Code.badParameter	case badParameter
+c:@E@TKErrorCode@TKErrorCodeCanceledByUser	swift.enum.case	TKError.Code.canceledByUser	TKError.Code.canceledByUser	case canceledByUser
+c:@E@TKErrorCode@TKErrorCodeCommunicationError	swift.enum.case	TKError.Code.communicationError	TKError.Code.communicationError	case communicationError
+c:@E@TKErrorCode@TKErrorCodeCorruptedData	swift.enum.case	TKError.Code.corruptedData	TKError.Code.corruptedData	case corruptedData
+c:@E@TKErrorCode@TKErrorCodeNotImplemented	swift.enum.case	TKError.Code.notImplemented	TKError.Code.notImplemented	case notImplemented
+c:@E@TKErrorCode@TKErrorCodeObjectNotFound	swift.enum.case	TKError.Code.objectNotFound	TKError.Code.objectNotFound	case objectNotFound
+c:@E@TKErrorCode@TKErrorCodeTokenNotFound	swift.enum.case	TKError.Code.tokenNotFound	TKError.Code.tokenNotFound	case tokenNotFound
+c:@E@TKSmartCardPINCharset	swift.enum	TKSmartCardPINFormat.Charset	TKSmartCardPINFormat.Charset	enum Charset
+c:@E@TKSmartCardPINCharset@TKSmartCardPINCharsetAlphanumeric	swift.enum.case	TKSmartCardPINFormat.Charset.alphanumeric	TKSmartCardPINFormat.Charset.alphanumeric	case alphanumeric
+c:@E@TKSmartCardPINCharset@TKSmartCardPINCharsetNumeric	swift.enum.case	TKSmartCardPINFormat.Charset.numeric	TKSmartCardPINFormat.Charset.numeric	case numeric
+c:@E@TKSmartCardPINCharset@TKSmartCardPINCharsetUpperAlphanumeric	swift.enum.case	TKSmartCardPINFormat.Charset.upperAlphanumeric	TKSmartCardPINFormat.Charset.upperAlphanumeric	case upperAlphanumeric
+c:@E@TKSmartCardPINCompletion	swift.struct	TKSmartCardUserInteractionForPINOperation.Completion	TKSmartCardUserInteractionForPINOperation.Completion	struct Completion
+c:@E@TKSmartCardPINCompletion@TKSmartCardPINCompletionKey	swift.type.property	key	TKSmartCardUserInteractionForPINOperation.Completion.key	static var key: TKSmartCardUserInteractionForPINOperation.Completion { get }
+c:@E@TKSmartCardPINCompletion@TKSmartCardPINCompletionMaxLength	swift.type.property	maxLength	TKSmartCardUserInteractionForPINOperation.Completion.maxLength	static var maxLength: TKSmartCardUserInteractionForPINOperation.Completion { get }
+c:@E@TKSmartCardPINCompletion@TKSmartCardPINCompletionTimeout	swift.type.property	timeout	TKSmartCardUserInteractionForPINOperation.Completion.timeout	static var timeout: TKSmartCardUserInteractionForPINOperation.Completion { get }
+c:@E@TKSmartCardPINConfirmation	swift.struct	TKSmartCardUserInteractionForSecurePINChange.Confirmation	TKSmartCardUserInteractionForSecurePINChange.Confirmation	struct Confirmation
+c:@E@TKSmartCardPINConfirmation@TKSmartCardPINConfirmationCurrent	swift.type.property	current	TKSmartCardUserInteractionForSecurePINChange.Confirmation.current	static var current: TKSmartCardUserInteractionForSecurePINChange.Confirmation { get }
+c:@E@TKSmartCardPINConfirmation@TKSmartCardPINConfirmationNew	swift.type.property	new	TKSmartCardUserInteractionForSecurePINChange.Confirmation.new	static var new: TKSmartCardUserInteractionForSecurePINChange.Confirmation { get }
+c:@E@TKSmartCardPINEncoding	swift.enum	TKSmartCardPINFormat.Encoding	TKSmartCardPINFormat.Encoding	enum Encoding
+c:@E@TKSmartCardPINEncoding@TKSmartCardPINEncodingASCII	swift.enum.case	TKSmartCardPINFormat.Encoding.ascii	TKSmartCardPINFormat.Encoding.ascii	case ascii
+c:@E@TKSmartCardPINEncoding@TKSmartCardPINEncodingBCD	swift.enum.case	TKSmartCardPINFormat.Encoding.bcd	TKSmartCardPINFormat.Encoding.bcd	case bcd
+c:@E@TKSmartCardPINEncoding@TKSmartCardPINEncodingBinary	swift.enum.case	TKSmartCardPINFormat.Encoding.binary	TKSmartCardPINFormat.Encoding.binary	case binary
+c:@E@TKSmartCardPINJustification	swift.enum	TKSmartCardPINFormat.Justification	TKSmartCardPINFormat.Justification	enum Justification
+c:@E@TKSmartCardPINJustification@TKSmartCardPINJustificationLeft	swift.enum.case	TKSmartCardPINFormat.Justification.left	TKSmartCardPINFormat.Justification.left	case left
+c:@E@TKSmartCardPINJustification@TKSmartCardPINJustificationRight	swift.enum.case	TKSmartCardPINFormat.Justification.right	TKSmartCardPINFormat.Justification.right	case right
+c:@E@TKSmartCardProtocol	swift.struct	TKSmartCardProtocol	TKSmartCardProtocol	struct TKSmartCardProtocol
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolAny	swift.type.property	any	TKSmartCardProtocol.any	static var any: TKSmartCardProtocol { get }
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolT0	swift.type.property	t0	TKSmartCardProtocol.t0	static var t0: TKSmartCardProtocol { get }
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolT1	swift.type.property	t1	TKSmartCardProtocol.t1	static var t1: TKSmartCardProtocol { get }
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolT15	swift.type.property	t15	TKSmartCardProtocol.t15	static var t15: TKSmartCardProtocol { get }
+c:@E@TKSmartCardSlotState	swift.enum	TKSmartCardSlot.State	TKSmartCardSlot.State	enum State
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateEmpty	swift.enum.case	TKSmartCardSlot.State.empty	TKSmartCardSlot.State.empty	case empty
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateMissing	swift.enum.case	TKSmartCardSlot.State.missing	TKSmartCardSlot.State.missing	case missing
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateMuteCard	swift.enum.case	TKSmartCardSlot.State.muteCard	TKSmartCardSlot.State.muteCard	case muteCard
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateProbing	swift.enum.case	TKSmartCardSlot.State.probing	TKSmartCardSlot.State.probing	case probing
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateValidCard	swift.enum.case	TKSmartCardSlot.State.validCard	TKSmartCardSlot.State.validCard	case validCard
+c:@E@TKTokenOperation	swift.enum	TKTokenOperation	TKTokenOperation	enum TKTokenOperation
+c:@E@TKTokenOperation@TKTokenOperationDecryptData	swift.enum.case	TKTokenOperation.decryptData	TKTokenOperation.decryptData	case decryptData
+c:@E@TKTokenOperation@TKTokenOperationNone	swift.enum.case	TKTokenOperation.none	TKTokenOperation.none	case none
+c:@E@TKTokenOperation@TKTokenOperationPerformKeyExchange	swift.enum.case	TKTokenOperation.performKeyExchange	TKTokenOperation.performKeyExchange	case performKeyExchange
+c:@E@TKTokenOperation@TKTokenOperationReadData	swift.enum.case	TKTokenOperation.readData	TKTokenOperation.readData	case readData
+c:@E@TKTokenOperation@TKTokenOperationSignData	swift.enum.case	TKTokenOperation.signData	TKTokenOperation.signData	case signData
+c:@T@TKTLVTag	swift.typealias	TKTLVTag	TKTLVTag	typealias TKTLVTag = UInt64
+c:@T@TKTokenDriverClassID	swift.typealias	TKTokenDriver.ClassID	TKTokenDriver.ClassID	typealias ClassID = String
+c:@T@TKTokenInstanceID	swift.typealias	TKToken.InstanceID	TKToken.InstanceID	typealias InstanceID = String
+c:@T@TKTokenObjectID	swift.typealias	TKToken.ObjectID	TKToken.ObjectID	typealias ObjectID = Any
+c:@T@TKTokenOperationConstraint	swift.typealias	TKTokenOperationConstraint	TKTokenOperationConstraint	typealias TKTokenOperationConstraint = AnyObject
+c:@TKErrorDomain	swift.var	TKErrorDomain	TKErrorDomain	let TKErrorDomain: String
+c:objc(cs)TKBERTLVRecord	swift.class	TKBERTLVRecord	TKBERTLVRecord	class TKBERTLVRecord
+c:objc(cs)TKBERTLVRecord(cm)dataForTag:	swift.type.method	data(forTag:)	TKBERTLVRecord.data(forTag:)	class func data(forTag tag: TKTLVTag) -> Data
+c:objc(cs)TKBERTLVRecord(im)initWithTag:records:	swift.init	init(tag:records:)	TKBERTLVRecord.init(tag:records:)	init(tag: TKTLVTag, records: [TKTLVRecord])
+c:objc(cs)TKBERTLVRecord(im)initWithTag:value:	swift.init	init(tag:value:)	TKBERTLVRecord.init(tag:value:)	init(tag: TKTLVTag, value: Data)
+c:objc(cs)TKCompactTLVRecord	swift.class	TKCompactTLVRecord	TKCompactTLVRecord	class TKCompactTLVRecord
+c:objc(cs)TKCompactTLVRecord(im)initWithTag:value:	swift.init	init(tag:value:)	TKCompactTLVRecord.init(tag:value:)	init(tag: UInt8, value: Data)
+c:objc(cs)TKSimpleTLVRecord	swift.class	TKSimpleTLVRecord	TKSimpleTLVRecord	class TKSimpleTLVRecord
+c:objc(cs)TKSimpleTLVRecord(im)initWithTag:value:	swift.init	init(tag:value:)	TKSimpleTLVRecord.init(tag:value:)	init(tag: UInt8, value: Data)
+c:objc(cs)TKSmartCard	swift.class	TKSmartCard	TKSmartCard	class TKSmartCard
+c:objc(cs)TKSmartCard(im)beginSessionWithReply:	swift.method	beginSession(reply:)	TKSmartCard.beginSession(reply:)	func beginSession(reply: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)TKSmartCard(im)endSession	swift.method	endSession()	TKSmartCard.endSession()	func endSession()
+c:objc(cs)TKSmartCard(im)transmitRequest:reply:	swift.method	transmit(_:)	TKSmartCard.transmit(_:)	func transmit(_ request: Data) async throws -> Data
+c:objc(cs)TKSmartCard(im)userInteractionForSecurePINChangeWithPINFormat:APDU:currentPINByteOffset:newPINByteOffset:	swift.method	userInteractionForSecurePINChange(_:apdu:currentPINByteOffset:newPINByteOffset:)	TKSmartCard.userInteractionForSecurePINChange(_:apdu:currentPINByteOffset:newPINByteOffset:)	func userInteractionForSecurePINChange(_ PINFormat: TKSmartCardPINFormat, apdu APDU: Data, currentPINByteOffset: Int, newPINByteOffset: Int) -> TKSmartCardUserInteractionForSecurePINChange?
+c:objc(cs)TKSmartCard(im)userInteractionForSecurePINVerificationWithPINFormat:APDU:PINByteOffset:	swift.method	userInteractionForSecurePINVerification(_:apdu:pinByteOffset:)	TKSmartCard.userInteractionForSecurePINVerification(_:apdu:pinByteOffset:)	func userInteractionForSecurePINVerification(_ PINFormat: TKSmartCardPINFormat, apdu APDU: Data, pinByteOffset PINByteOffset: Int) -> TKSmartCardUserInteractionForSecurePINVerification?
+c:objc(cs)TKSmartCard(py)allowedProtocols	swift.property	allowedProtocols	TKSmartCard.allowedProtocols	var allowedProtocols: TKSmartCardProtocol { get set }
+c:objc(cs)TKSmartCard(py)cla	swift.property	cla	TKSmartCard.cla	var cla: UInt8 { get set }
+c:objc(cs)TKSmartCard(py)context	swift.property	context	TKSmartCard.context	var context: Any? { get set }
+c:objc(cs)TKSmartCard(py)currentProtocol	swift.property	currentProtocol	TKSmartCard.currentProtocol	var currentProtocol: TKSmartCardProtocol { get }
+c:objc(cs)TKSmartCard(py)sensitive	swift.property	isSensitive	TKSmartCard.isSensitive	var isSensitive: Bool { get set }
+c:objc(cs)TKSmartCard(py)slot	swift.property	slot	TKSmartCard.slot	var slot: TKSmartCardSlot { get }
+c:objc(cs)TKSmartCard(py)useCommandChaining	swift.property	useCommandChaining	TKSmartCard.useCommandChaining	var useCommandChaining: Bool { get set }
+c:objc(cs)TKSmartCard(py)useExtendedLength	swift.property	useExtendedLength	TKSmartCard.useExtendedLength	var useExtendedLength: Bool { get set }
+c:objc(cs)TKSmartCard(py)valid	swift.property	isValid	TKSmartCard.isValid	var isValid: Bool { get }
+c:objc(cs)TKSmartCardATR	swift.class	TKSmartCardATR	TKSmartCardATR	class TKSmartCardATR
+c:objc(cs)TKSmartCardATR(im)initWithBytes:	swift.init	init(bytes:)	TKSmartCardATR.init(bytes:)	init?(bytes: Data)
+c:objc(cs)TKSmartCardATR(im)initWithSource:	swift.init	init(source:)	TKSmartCardATR.init(source:)	init?(source: @escaping () -> Int32)
+c:objc(cs)TKSmartCardATR(im)interfaceGroupAtIndex:	swift.method	interfaceGroup(at:)	TKSmartCardATR.interfaceGroup(at:)	func interfaceGroup(at index: Int) -> TKSmartCardATR.InterfaceGroup?
+c:objc(cs)TKSmartCardATR(im)interfaceGroupForProtocol:	swift.method	interfaceGroup(for:)	TKSmartCardATR.interfaceGroup(for:)	func interfaceGroup(for protocol: TKSmartCardProtocol) -> TKSmartCardATR.InterfaceGroup?
+c:objc(cs)TKSmartCardATR(py)bytes	swift.property	bytes	TKSmartCardATR.bytes	var bytes: Data { get }
+c:objc(cs)TKSmartCardATR(py)historicalBytes	swift.property	historicalBytes	TKSmartCardATR.historicalBytes	var historicalBytes: Data { get }
+c:objc(cs)TKSmartCardATR(py)historicalRecords	swift.property	historicalRecords	TKSmartCardATR.historicalRecords	var historicalRecords: [TKCompactTLVRecord]? { get }
+c:objc(cs)TKSmartCardATR(py)protocols	swift.property	protocols	TKSmartCardATR.protocols	var protocols: [NSNumber] { get }
+c:objc(cs)TKSmartCardATRInterfaceGroup	swift.class	TKSmartCardATR.InterfaceGroup	TKSmartCardATR.InterfaceGroup	class InterfaceGroup
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)TA	swift.property	ta	TKSmartCardATR.InterfaceGroup.ta	var ta: NSNumber? { get }
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)TB	swift.property	tb	TKSmartCardATR.InterfaceGroup.tb	var tb: NSNumber? { get }
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)TC	swift.property	tc	TKSmartCardATR.InterfaceGroup.tc	var tc: NSNumber? { get }
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)protocol	swift.property	protocol	TKSmartCardATR.InterfaceGroup.protocol	var `protocol`: NSNumber? { get }
+c:objc(cs)TKSmartCardPINFormat	swift.class	TKSmartCardPINFormat	TKSmartCardPINFormat	class TKSmartCardPINFormat
+c:objc(cs)TKSmartCardPINFormat(py)PINBitOffset	swift.property	pinBitOffset	TKSmartCardPINFormat.pinBitOffset	var pinBitOffset: Int { get set }
+c:objc(cs)TKSmartCardPINFormat(py)PINBlockByteLength	swift.property	pinBlockByteLength	TKSmartCardPINFormat.pinBlockByteLength	var pinBlockByteLength: Int { get set }
+c:objc(cs)TKSmartCardPINFormat(py)PINJustification	swift.property	pinJustification	TKSmartCardPINFormat.pinJustification	var pinJustification: TKSmartCardPINFormat.Justification { get set }
+c:objc(cs)TKSmartCardPINFormat(py)PINLengthBitOffset	swift.property	pinLengthBitOffset	TKSmartCardPINFormat.pinLengthBitOffset	var pinLengthBitOffset: Int { get set }
+c:objc(cs)TKSmartCardPINFormat(py)PINLengthBitSize	swift.property	pinLengthBitSize	TKSmartCardPINFormat.pinLengthBitSize	var pinLengthBitSize: Int { get set }
+c:objc(cs)TKSmartCardPINFormat(py)charset	swift.property	charset	TKSmartCardPINFormat.charset	var charset: TKSmartCardPINFormat.Charset { get set }
+c:objc(cs)TKSmartCardPINFormat(py)encoding	swift.property	encoding	TKSmartCardPINFormat.encoding	var encoding: TKSmartCardPINFormat.Encoding { get set }
+c:objc(cs)TKSmartCardPINFormat(py)maxPINLength	swift.property	maxPINLength	TKSmartCardPINFormat.maxPINLength	var maxPINLength: Int { get set }
+c:objc(cs)TKSmartCardPINFormat(py)minPINLength	swift.property	minPINLength	TKSmartCardPINFormat.minPINLength	var minPINLength: Int { get set }
+c:objc(cs)TKSmartCardSlot	swift.class	TKSmartCardSlot	TKSmartCardSlot	class TKSmartCardSlot
+c:objc(cs)TKSmartCardSlot(im)makeSmartCard	swift.method	makeSmartCard()	TKSmartCardSlot.makeSmartCard()	func makeSmartCard() -> TKSmartCard?
+c:objc(cs)TKSmartCardSlot(py)ATR	swift.property	atr	TKSmartCardSlot.atr	var atr: TKSmartCardATR? { get }
+c:objc(cs)TKSmartCardSlot(py)maxInputLength	swift.property	maxInputLength	TKSmartCardSlot.maxInputLength	var maxInputLength: Int { get }
+c:objc(cs)TKSmartCardSlot(py)maxOutputLength	swift.property	maxOutputLength	TKSmartCardSlot.maxOutputLength	var maxOutputLength: Int { get }
+c:objc(cs)TKSmartCardSlot(py)name	swift.property	name	TKSmartCardSlot.name	var name: String { get }
+c:objc(cs)TKSmartCardSlot(py)state	swift.property	state	TKSmartCardSlot.state	var state: TKSmartCardSlot.State { get }
+c:objc(cs)TKSmartCardSlotManager	swift.class	TKSmartCardSlotManager	TKSmartCardSlotManager	class TKSmartCardSlotManager
+c:objc(cs)TKSmartCardSlotManager(cpy)defaultManager	swift.type.property	default	TKSmartCardSlotManager.default	class var `default`: TKSmartCardSlotManager? { get }
+c:objc(cs)TKSmartCardSlotManager(im)createNFCSlotWithMessage:completion:	swift.method	createNFCSlot(message:)	TKSmartCardSlotManager.createNFCSlot(message:)	func createNFCSlot(message: String?) async throws -> TKSmartCardSlotNFCSession
+c:objc(cs)TKSmartCardSlotManager(im)getSlotWithName:reply:	swift.method	getSlot(withName:)	TKSmartCardSlotManager.getSlot(withName:)	func getSlot(withName name: String) async -> TKSmartCardSlot?
+c:objc(cs)TKSmartCardSlotManager(im)isNFCSupported	swift.method	isNFCSupported()	TKSmartCardSlotManager.isNFCSupported()	func isNFCSupported() -> Bool
+c:objc(cs)TKSmartCardSlotManager(im)slotNamed:	swift.method	slotNamed(_:)	TKSmartCardSlotManager.slotNamed(_:)	func slotNamed(_ name: String) -> TKSmartCardSlot?
+c:objc(cs)TKSmartCardSlotManager(py)slotNames	swift.property	slotNames	TKSmartCardSlotManager.slotNames	var slotNames: [String] { get }
+c:objc(cs)TKSmartCardSlotNFCSession	swift.class	TKSmartCardSlotNFCSession	TKSmartCardSlotNFCSession	class TKSmartCardSlotNFCSession
+c:objc(cs)TKSmartCardSlotNFCSession(im)endSession	swift.method	end()	TKSmartCardSlotNFCSession.end()	func end()
+c:objc(cs)TKSmartCardSlotNFCSession(im)updateWithMessage:error:	swift.method	update(message:)	TKSmartCardSlotNFCSession.update(message:)	func update(message: String) throws
+c:objc(cs)TKSmartCardSlotNFCSession(py)slotName	swift.property	slotName	TKSmartCardSlotNFCSession.slotName	var slotName: String? { get }
+c:objc(cs)TKSmartCardToken	swift.class	TKSmartCardToken	TKSmartCardToken	class TKSmartCardToken
+c:objc(cs)TKSmartCardToken(im)initWithSmartCard:AID:instanceID:tokenDriver:	swift.init	init(smartCard:aid:instanceID:tokenDriver:)	TKSmartCardToken.init(smartCard:aid:instanceID:tokenDriver:)	init(smartCard: TKSmartCard, aid AID: Data?, instanceID: String, tokenDriver: TKSmartCardTokenDriver)
+c:objc(cs)TKSmartCardToken(im)initWithSmartCard:AID:instanceID:tokenDriver:::SYNTHESIZED::c:objc(cs)TKSmartCardToken	swift.init	init(smartCard:AID:instanceID:tokenDriver:)	TKSmartCardToken.init(smartCard:AID:instanceID:tokenDriver:)	init(smartCard: TKSmartCard, AID: Data?, instanceID: String, tokenDriver: TKSmartCardTokenDriver)
+c:objc(cs)TKSmartCardToken(py)AID	swift.property	aid	TKSmartCardToken.aid	var aid: Data? { get }
+c:objc(cs)TKSmartCardTokenDriver	swift.class	TKSmartCardTokenDriver	TKSmartCardTokenDriver	class TKSmartCardTokenDriver
+c:objc(cs)TKSmartCardTokenRegistrationManager	swift.class	TKSmartCardTokenRegistrationManager	TKSmartCardTokenRegistrationManager	class TKSmartCardTokenRegistrationManager
+c:objc(cs)TKSmartCardTokenRegistrationManager(cpy)defaultManager	swift.type.property	default	TKSmartCardTokenRegistrationManager.default	class var `default`: TKSmartCardTokenRegistrationManager { get }
+c:objc(cs)TKSmartCardTokenRegistrationManager(im)registerSmartCardWithTokenID:promptMessage:error:	swift.method	registerSmartCard(tokenID:promptMessage:)	TKSmartCardTokenRegistrationManager.registerSmartCard(tokenID:promptMessage:)	func registerSmartCard(tokenID: String, promptMessage: String) throws
+c:objc(cs)TKSmartCardTokenRegistrationManager(im)unregisterSmartCardWithTokenID:error:	swift.method	unregisterSmartCard(tokenID:)	TKSmartCardTokenRegistrationManager.unregisterSmartCard(tokenID:)	func unregisterSmartCard(tokenID: String) throws
+c:objc(cs)TKSmartCardTokenRegistrationManager(py)registeredSmartCardTokens	swift.property	registeredSmartCardTokens	TKSmartCardTokenRegistrationManager.registeredSmartCardTokens	var registeredSmartCardTokens: [String] { get }
+c:objc(cs)TKSmartCardTokenSession	swift.class	TKSmartCardTokenSession	TKSmartCardTokenSession	class TKSmartCardTokenSession
+c:objc(cs)TKSmartCardTokenSession(im)getSmartCardWithError:	swift.method	getSmartCard()	TKSmartCardTokenSession.getSmartCard()	func getSmartCard() throws -> TKSmartCard
+c:objc(cs)TKSmartCardTokenSession(py)smartCard	swift.property	smartCard	TKSmartCardTokenSession.smartCard	var smartCard: TKSmartCard { get }
+c:objc(cs)TKSmartCardUserInteraction	swift.class	TKSmartCardUserInteraction	TKSmartCardUserInteraction	class TKSmartCardUserInteraction
+c:objc(cs)TKSmartCardUserInteraction(im)cancel	swift.method	cancel()	TKSmartCardUserInteraction.cancel()	func cancel() -> Bool
+c:objc(cs)TKSmartCardUserInteraction(im)runWithReply:	swift.method	run(reply:)	TKSmartCardUserInteraction.run(reply:)	func run(reply: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)TKSmartCardUserInteraction(py)delegate	swift.property	delegate	TKSmartCardUserInteraction.delegate	weak var delegate: (any TKSmartCardUserInteractionDelegate)? { get set }
+c:objc(cs)TKSmartCardUserInteraction(py)initialTimeout	swift.property	initialTimeout	TKSmartCardUserInteraction.initialTimeout	var initialTimeout: TimeInterval { get set }
+c:objc(cs)TKSmartCardUserInteraction(py)interactionTimeout	swift.property	interactionTimeout	TKSmartCardUserInteraction.interactionTimeout	var interactionTimeout: TimeInterval { get set }
+c:objc(cs)TKSmartCardUserInteractionForPINOperation	swift.class	TKSmartCardUserInteractionForPINOperation	TKSmartCardUserInteractionForPINOperation	class TKSmartCardUserInteractionForPINOperation
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)PINCompletion	swift.property	pinCompletion	TKSmartCardUserInteractionForPINOperation.pinCompletion	var pinCompletion: TKSmartCardUserInteractionForPINOperation.Completion { get set }
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)PINMessageIndices	swift.property	pinMessageIndices	TKSmartCardUserInteractionForPINOperation.pinMessageIndices	var pinMessageIndices: [NSNumber]? { get set }
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)locale	swift.property	locale	TKSmartCardUserInteractionForPINOperation.locale	var locale: Locale! { get set }
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)resultData	swift.property	resultData	TKSmartCardUserInteractionForPINOperation.resultData	var resultData: Data? { get set }
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)resultSW	swift.property	resultSW	TKSmartCardUserInteractionForPINOperation.resultSW	var resultSW: UInt16 { get set }
+c:objc(cs)TKSmartCardUserInteractionForSecurePINChange	swift.class	TKSmartCardUserInteractionForSecurePINChange	TKSmartCardUserInteractionForSecurePINChange	class TKSmartCardUserInteractionForSecurePINChange
+c:objc(cs)TKSmartCardUserInteractionForSecurePINChange(py)PINConfirmation	swift.property	pinConfirmation	TKSmartCardUserInteractionForSecurePINChange.pinConfirmation	var pinConfirmation: TKSmartCardUserInteractionForSecurePINChange.Confirmation { get set }
+c:objc(cs)TKSmartCardUserInteractionForSecurePINVerification	swift.class	TKSmartCardUserInteractionForSecurePINVerification	TKSmartCardUserInteractionForSecurePINVerification	class TKSmartCardUserInteractionForSecurePINVerification
+c:objc(cs)TKTLVRecord	swift.class	TKTLVRecord	TKTLVRecord	class TKTLVRecord
+c:objc(cs)TKTLVRecord(cm)recordFromData:	swift.init	init(from:)	TKTLVRecord.init(from:)	convenience init?(from data: Data)
+c:objc(cs)TKTLVRecord(cm)recordFromData:::SYNTHESIZED::c:objc(cs)TKTLVRecord	swift.init	init(fromData:)	TKTLVRecord.init(fromData:)	convenience init?(fromData data: Data)
+c:objc(cs)TKTLVRecord(cm)sequenceOfRecordsFromData:	swift.type.method	sequenceOfRecords(from:)	TKTLVRecord.sequenceOfRecords(from:)	class func sequenceOfRecords(from data: Data) -> [TKTLVRecord]?
+c:objc(cs)TKTLVRecord(py)data	swift.property	data	TKTLVRecord.data	var data: Data { get }
+c:objc(cs)TKTLVRecord(py)tag	swift.property	tag	TKTLVRecord.tag	var tag: TKTLVTag { get }
+c:objc(cs)TKTLVRecord(py)value	swift.property	value	TKTLVRecord.value	var value: Data { get }
+c:objc(cs)TKToken	swift.class	TKToken	TKToken	class TKToken
+c:objc(cs)TKToken(im)initWithTokenDriver:instanceID:	swift.init	init(tokenDriver:instanceID:)	TKToken.init(tokenDriver:instanceID:)	init(tokenDriver: TKTokenDriver, instanceID: TKToken.InstanceID)
+c:objc(cs)TKToken(py)configuration	swift.property	configuration	TKToken.configuration	var configuration: TKToken.Configuration { get }
+c:objc(cs)TKToken(py)delegate	swift.property	delegate	TKToken.delegate	weak var delegate: (any TKTokenDelegate)? { get set }
+c:objc(cs)TKToken(py)keychainContents	swift.property	keychainContents	TKToken.keychainContents	var keychainContents: TKTokenKeychainContents? { get }
+c:objc(cs)TKToken(py)tokenDriver	swift.property	tokenDriver	TKToken.tokenDriver	var tokenDriver: TKTokenDriver { get }
+c:objc(cs)TKTokenAuthOperation	swift.class	TKTokenAuthOperation	TKTokenAuthOperation	class TKTokenAuthOperation
+c:objc(cs)TKTokenAuthOperation(im)finishWithError:	swift.method	finish()	TKTokenAuthOperation.finish()	func finish() throws
+c:objc(cs)TKTokenConfiguration	swift.class	TKToken.Configuration	TKToken.Configuration	class Configuration
+c:objc(cs)TKTokenConfiguration(im)certificateForObjectID:error:	swift.method	certificate(for:)	TKToken.Configuration.certificate(for:)	func certificate(for objectID: TKToken.ObjectID) throws -> TKTokenKeychainCertificate
+c:objc(cs)TKTokenConfiguration(im)keyForObjectID:error:	swift.method	key(for:)	TKToken.Configuration.key(for:)	func key(for objectID: TKToken.ObjectID) throws -> TKTokenKeychainKey
+c:objc(cs)TKTokenConfiguration(py)configurationData	swift.property	configurationData	TKToken.Configuration.configurationData	var configurationData: Data? { get set }
+c:objc(cs)TKTokenConfiguration(py)instanceID	swift.property	instanceID	TKToken.Configuration.instanceID	var instanceID: TKToken.InstanceID { get }
+c:objc(cs)TKTokenConfiguration(py)keychainItems	swift.property	keychainItems	TKToken.Configuration.keychainItems	var keychainItems: [TKTokenKeychainItem] { get set }
+c:objc(cs)TKTokenDriver	swift.class	TKTokenDriver	TKTokenDriver	class TKTokenDriver
+c:objc(cs)TKTokenDriver(py)delegate	swift.property	delegate	TKTokenDriver.delegate	weak var delegate: (any TKTokenDriverDelegate)? { get set }
+c:objc(cs)TKTokenDriverConfiguration	swift.class	TKTokenDriver.Configuration	TKTokenDriver.Configuration	class Configuration
+c:objc(cs)TKTokenDriverConfiguration(cpy)driverConfigurations	swift.type.property	driverConfigurations	TKTokenDriver.Configuration.driverConfigurations	class var driverConfigurations: [TKTokenDriver.ClassID : TKTokenDriver.Configuration] { get }
+c:objc(cs)TKTokenDriverConfiguration(im)addTokenConfigurationForTokenInstanceID:	swift.method	addTokenConfiguration(for:)	TKTokenDriver.Configuration.addTokenConfiguration(for:)	func addTokenConfiguration(for instanceID: TKToken.InstanceID) -> TKToken.Configuration
+c:objc(cs)TKTokenDriverConfiguration(im)removeTokenConfigurationForTokenInstanceID:	swift.method	removeTokenConfiguration(for:)	TKTokenDriver.Configuration.removeTokenConfiguration(for:)	func removeTokenConfiguration(for instanceID: TKToken.InstanceID)
+c:objc(cs)TKTokenDriverConfiguration(py)classID	swift.property	classID	TKTokenDriver.Configuration.classID	var classID: TKTokenDriver.ClassID { get }
+c:objc(cs)TKTokenDriverConfiguration(py)tokenConfigurations	swift.property	tokenConfigurations	TKTokenDriver.Configuration.tokenConfigurations	var tokenConfigurations: [TKToken.InstanceID : TKToken.Configuration] { get }
+c:objc(cs)TKTokenKeyAlgorithm	swift.class	TKTokenKeyAlgorithm	TKTokenKeyAlgorithm	class TKTokenKeyAlgorithm
+c:objc(cs)TKTokenKeyAlgorithm(im)isAlgorithm:	swift.method	isAlgorithm(_:)	TKTokenKeyAlgorithm.isAlgorithm(_:)	func isAlgorithm(_ algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)TKTokenKeyAlgorithm(im)supportsAlgorithm:	swift.method	supportsAlgorithm(_:)	TKTokenKeyAlgorithm.supportsAlgorithm(_:)	func supportsAlgorithm(_ algorithm: SecKeyAlgorithm) -> Bool
+c:objc(cs)TKTokenKeyExchangeParameters	swift.class	TKTokenKeyExchangeParameters	TKTokenKeyExchangeParameters	class TKTokenKeyExchangeParameters
+c:objc(cs)TKTokenKeyExchangeParameters(py)requestedSize	swift.property	requestedSize	TKTokenKeyExchangeParameters.requestedSize	var requestedSize: Int { get }
+c:objc(cs)TKTokenKeyExchangeParameters(py)sharedInfo	swift.property	sharedInfo	TKTokenKeyExchangeParameters.sharedInfo	var sharedInfo: Data? { get }
+c:objc(cs)TKTokenKeychainCertificate	swift.class	TKTokenKeychainCertificate	TKTokenKeychainCertificate	class TKTokenKeychainCertificate
+c:objc(cs)TKTokenKeychainCertificate(im)initWithCertificate:objectID:	swift.init	init(certificate:objectID:)	TKTokenKeychainCertificate.init(certificate:objectID:)	init?(certificate certificateRef: SecCertificate, objectID: TKToken.ObjectID)
+c:objc(cs)TKTokenKeychainCertificate(py)data	swift.property	data	TKTokenKeychainCertificate.data	var data: Data { get }
+c:objc(cs)TKTokenKeychainContents	swift.class	TKTokenKeychainContents	TKTokenKeychainContents	class TKTokenKeychainContents
+c:objc(cs)TKTokenKeychainContents(im)certificateForObjectID:error:	swift.method	certificate(forObjectID:)	TKTokenKeychainContents.certificate(forObjectID:)	func certificate(forObjectID objectID: TKToken.ObjectID) throws -> TKTokenKeychainCertificate
+c:objc(cs)TKTokenKeychainContents(im)fillWithItems:	swift.method	fill(with:)	TKTokenKeychainContents.fill(with:)	func fill(with items: [TKTokenKeychainItem])
+c:objc(cs)TKTokenKeychainContents(im)keyForObjectID:error:	swift.method	key(forObjectID:)	TKTokenKeychainContents.key(forObjectID:)	func key(forObjectID objectID: TKToken.ObjectID) throws -> TKTokenKeychainKey
+c:objc(cs)TKTokenKeychainContents(py)items	swift.property	items	TKTokenKeychainContents.items	var items: [TKTokenKeychainItem] { get }
+c:objc(cs)TKTokenKeychainItem	swift.class	TKTokenKeychainItem	TKTokenKeychainItem	class TKTokenKeychainItem
+c:objc(cs)TKTokenKeychainItem(im)initWithObjectID:	swift.init	init(objectID:)	TKTokenKeychainItem.init(objectID:)	init(objectID: TKToken.ObjectID)
+c:objc(cs)TKTokenKeychainItem(py)constraints	swift.property	constraints	TKTokenKeychainItem.constraints	var constraints: [NSNumber : Any]? { get set }
+c:objc(cs)TKTokenKeychainItem(py)label	swift.property	label	TKTokenKeychainItem.label	var label: String? { get set }
+c:objc(cs)TKTokenKeychainItem(py)objectID	swift.property	objectID	TKTokenKeychainItem.objectID	var objectID: TKToken.ObjectID { get }
+c:objc(cs)TKTokenKeychainKey	swift.class	TKTokenKeychainKey	TKTokenKeychainKey	class TKTokenKeychainKey
+c:objc(cs)TKTokenKeychainKey(im)initWithCertificate:objectID:	swift.init	init(certificate:objectID:)	TKTokenKeychainKey.init(certificate:objectID:)	init?(certificate certificateRef: SecCertificate?, objectID: TKToken.ObjectID)
+c:objc(cs)TKTokenKeychainKey(py)applicationTag	swift.property	applicationTag	TKTokenKeychainKey.applicationTag	var applicationTag: Data? { get set }
+c:objc(cs)TKTokenKeychainKey(py)canDecrypt	swift.property	canDecrypt	TKTokenKeychainKey.canDecrypt	var canDecrypt: Bool { get set }
+c:objc(cs)TKTokenKeychainKey(py)canPerformKeyExchange	swift.property	canPerformKeyExchange	TKTokenKeychainKey.canPerformKeyExchange	var canPerformKeyExchange: Bool { get set }
+c:objc(cs)TKTokenKeychainKey(py)canSign	swift.property	canSign	TKTokenKeychainKey.canSign	var canSign: Bool { get set }
+c:objc(cs)TKTokenKeychainKey(py)keySizeInBits	swift.property	keySizeInBits	TKTokenKeychainKey.keySizeInBits	var keySizeInBits: Int { get set }
+c:objc(cs)TKTokenKeychainKey(py)keyType	swift.property	keyType	TKTokenKeychainKey.keyType	var keyType: String { get set }
+c:objc(cs)TKTokenKeychainKey(py)publicKeyData	swift.property	publicKeyData	TKTokenKeychainKey.publicKeyData	var publicKeyData: Data? { get set }
+c:objc(cs)TKTokenKeychainKey(py)publicKeyHash	swift.property	publicKeyHash	TKTokenKeychainKey.publicKeyHash	var publicKeyHash: Data? { get set }
+c:objc(cs)TKTokenKeychainKey(py)suitableForLogin	swift.property	isSuitableForLogin	TKTokenKeychainKey.isSuitableForLogin	var isSuitableForLogin: Bool { get set }
+c:objc(cs)TKTokenPasswordAuthOperation	swift.class	TKTokenPasswordAuthOperation	TKTokenPasswordAuthOperation	class TKTokenPasswordAuthOperation
+c:objc(cs)TKTokenPasswordAuthOperation(py)password	swift.property	password	TKTokenPasswordAuthOperation.password	var password: String? { get set }
+c:objc(cs)TKTokenSession	swift.class	TKTokenSession	TKTokenSession	class TKTokenSession
+c:objc(cs)TKTokenSession(im)initWithToken:	swift.init	init(token:)	TKTokenSession.init(token:)	init(token: TKToken)
+c:objc(cs)TKTokenSession(py)delegate	swift.property	delegate	TKTokenSession.delegate	weak var delegate: (any TKTokenSessionDelegate)? { get set }
+c:objc(cs)TKTokenSession(py)token	swift.property	token	TKTokenSession.token	var token: TKToken { get }
+c:objc(cs)TKTokenSmartCardPINAuthOperation	swift.class	TKTokenSmartCardPINAuthOperation	TKTokenSmartCardPINAuthOperation	class TKTokenSmartCardPINAuthOperation
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)APDUTemplate	swift.property	apduTemplate	TKTokenSmartCardPINAuthOperation.apduTemplate	var apduTemplate: Data? { get set }
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)PIN	swift.property	pin	TKTokenSmartCardPINAuthOperation.pin	var pin: String? { get set }
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)PINByteOffset	swift.property	pinByteOffset	TKTokenSmartCardPINAuthOperation.pinByteOffset	var pinByteOffset: Int { get set }
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)PINFormat	swift.property	pinFormat	TKTokenSmartCardPINAuthOperation.pinFormat	var pinFormat: TKSmartCardPINFormat { get set }
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)smartCard	swift.property	smartCard	TKTokenSmartCardPINAuthOperation.smartCard	var smartCard: TKSmartCard? { get set }
+c:objc(cs)TKTokenWatcher	swift.class	TKTokenWatcher	TKTokenWatcher	class TKTokenWatcher
+c:objc(cs)TKTokenWatcher(im)addRemovalHandler:forTokenID:	swift.method	addRemovalHandler(_:forTokenID:)	TKTokenWatcher.addRemovalHandler(_:forTokenID:)	func addRemovalHandler(_ removalHandler: @escaping (String) -> Void, forTokenID tokenID: String)
+c:objc(cs)TKTokenWatcher(im)init	swift.init	init()	TKTokenWatcher.init()	init()
+c:objc(cs)TKTokenWatcher(im)initWithInsertionHandler:	swift.init	init(insertionHandler:)	TKTokenWatcher.init(insertionHandler:)	init(insertionHandler: @escaping (String) -> Void)
+c:objc(cs)TKTokenWatcher(im)setInsertionHandler:	swift.method	setInsertionHandler(_:)	TKTokenWatcher.setInsertionHandler(_:)	func setInsertionHandler(_ insertionHandler: @escaping (String) -> Void)
+c:objc(cs)TKTokenWatcher(im)tokenInfoForTokenID:	swift.method	tokenInfo(forTokenID:)	TKTokenWatcher.tokenInfo(forTokenID:)	func tokenInfo(forTokenID tokenID: String) -> TKTokenWatcher.TokenInfo?
+c:objc(cs)TKTokenWatcher(py)tokenIDs	swift.property	tokenIDs	TKTokenWatcher.tokenIDs	var tokenIDs: [String] { get }
+c:objc(cs)TKTokenWatcherTokenInfo	swift.class	TKTokenWatcher.TokenInfo	TKTokenWatcher.TokenInfo	class TokenInfo
+c:objc(cs)TKTokenWatcherTokenInfo(py)driverName	swift.property	driverName	TKTokenWatcher.TokenInfo.driverName	var driverName: String? { get }
+c:objc(cs)TKTokenWatcherTokenInfo(py)slotName	swift.property	slotName	TKTokenWatcher.TokenInfo.slotName	var slotName: String? { get }
+c:objc(cs)TKTokenWatcherTokenInfo(py)tokenID	swift.property	tokenID	TKTokenWatcher.TokenInfo.tokenID	var tokenID: String { get }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)TKTokenAuthOperation	swift.init	init(coder:)	TKTokenAuthOperation.init(coder:)	init?(coder: NSCoder)
+c:objc(pl)TKSmartCardTokenDriverDelegate	swift.protocol	TKSmartCardTokenDriverDelegate	TKSmartCardTokenDriverDelegate	protocol TKSmartCardTokenDriverDelegate : TKTokenDriverDelegate
+c:objc(pl)TKSmartCardTokenDriverDelegate(im)tokenDriver:createTokenForSmartCard:AID:error:	swift.method	tokenDriver(_:createTokenFor:aid:)	TKSmartCardTokenDriverDelegate.tokenDriver(_:createTokenFor:aid:)	func tokenDriver(_ driver: TKSmartCardTokenDriver, createTokenFor smartCard: TKSmartCard, aid AID: Data?) throws -> TKSmartCardToken
+c:objc(pl)TKSmartCardUserInteractionDelegate	swift.protocol	TKSmartCardUserInteractionDelegate	TKSmartCardUserInteractionDelegate	protocol TKSmartCardUserInteractionDelegate
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)characterEnteredInUserInteraction:	swift.method	characterEntered(in:)	TKSmartCardUserInteractionDelegate.characterEntered(in:)	optional func characterEntered(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)correctionKeyPressedInUserInteraction:	swift.method	correctionKeyPressed(in:)	TKSmartCardUserInteractionDelegate.correctionKeyPressed(in:)	optional func correctionKeyPressed(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)invalidCharacterEnteredInUserInteraction:	swift.method	invalidCharacterEntered(in:)	TKSmartCardUserInteractionDelegate.invalidCharacterEntered(in:)	optional func invalidCharacterEntered(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)newPINConfirmationRequestedInUserInteraction:	swift.method	newPINConfirmationRequested(in:)	TKSmartCardUserInteractionDelegate.newPINConfirmationRequested(in:)	optional func newPINConfirmationRequested(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)newPINRequestedInUserInteraction:	swift.method	newPINRequested(in:)	TKSmartCardUserInteractionDelegate.newPINRequested(in:)	optional func newPINRequested(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)oldPINRequestedInUserInteraction:	swift.method	oldPINRequested(in:)	TKSmartCardUserInteractionDelegate.oldPINRequested(in:)	optional func oldPINRequested(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)validationKeyPressedInUserInteraction:	swift.method	validationKeyPressed(in:)	TKSmartCardUserInteractionDelegate.validationKeyPressed(in:)	optional func validationKeyPressed(in interaction: TKSmartCardUserInteraction)
+c:objc(pl)TKTokenDelegate	swift.protocol	TKTokenDelegate	TKTokenDelegate	protocol TKTokenDelegate : NSObjectProtocol
+c:objc(pl)TKTokenDelegate(im)token:createSessionWithError:	swift.method	createSession(_:)	TKTokenDelegate.createSession(_:)	func createSession(_ token: TKToken) throws -> TKTokenSession
+c:objc(pl)TKTokenDelegate(im)token:terminateSession:	swift.method	token(_:terminateSession:)	TKTokenDelegate.token(_:terminateSession:)	optional func token(_ token: TKToken, terminateSession session: TKTokenSession)
+c:objc(pl)TKTokenDriverDelegate	swift.protocol	TKTokenDriverDelegate	TKTokenDriverDelegate	protocol TKTokenDriverDelegate : NSObjectProtocol
+c:objc(pl)TKTokenDriverDelegate(im)tokenDriver:terminateToken:	swift.method	tokenDriver(_:terminateToken:)	TKTokenDriverDelegate.tokenDriver(_:terminateToken:)	optional func tokenDriver(_ driver: TKTokenDriver, terminateToken token: TKToken)
+c:objc(pl)TKTokenDriverDelegate(im)tokenDriver:tokenForConfiguration:error:	swift.method	tokenDriver(_:tokenFor:)	TKTokenDriverDelegate.tokenDriver(_:tokenFor:)	optional func tokenDriver(_ driver: TKTokenDriver, tokenFor configuration: TKToken.Configuration) throws -> TKToken
+c:objc(pl)TKTokenSessionDelegate	swift.protocol	TKTokenSessionDelegate	TKTokenSessionDelegate	protocol TKTokenSessionDelegate : NSObjectProtocol
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:beginAuthForOperation:constraint:error:	swift.method	tokenSession(_:beginAuthFor:constraint:)	TKTokenSessionDelegate.tokenSession(_:beginAuthFor:constraint:)	optional func tokenSession(_ session: TKTokenSession, beginAuthFor operation: TKTokenOperation, constraint: Any) throws -> TKTokenAuthOperation
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:decryptData:usingKey:algorithm:error:	swift.method	tokenSession(_:decrypt:keyObjectID:algorithm:)	TKTokenSessionDelegate.tokenSession(_:decrypt:keyObjectID:algorithm:)	optional func tokenSession(_ session: TKTokenSession, decrypt ciphertext: Data, keyObjectID: TKToken.ObjectID, algorithm: TKTokenKeyAlgorithm) throws -> Data
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:performKeyExchangeWithPublicKey:usingKey:algorithm:parameters:error:	swift.method	tokenSession(_:performKeyExchange:keyObjectID:algorithm:parameters:)	TKTokenSessionDelegate.tokenSession(_:performKeyExchange:keyObjectID:algorithm:parameters:)	optional func tokenSession(_ session: TKTokenSession, performKeyExchange otherPartyPublicKeyData: Data, keyObjectID objectID: TKToken.ObjectID, algorithm: TKTokenKeyAlgorithm, parameters: TKTokenKeyExchangeParameters) throws -> Data
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:signData:usingKey:algorithm:error:	swift.method	tokenSession(_:sign:keyObjectID:algorithm:)	TKTokenSessionDelegate.tokenSession(_:sign:keyObjectID:algorithm:)	optional func tokenSession(_ session: TKTokenSession, sign dataToSign: Data, keyObjectID: TKToken.ObjectID, algorithm: TKTokenKeyAlgorithm) throws -> Data
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:supportsOperation:usingKey:algorithm:	swift.method	tokenSession(_:supports:keyObjectID:algorithm:)	TKTokenSessionDelegate.tokenSession(_:supports:keyObjectID:algorithm:)	optional func tokenSession(_ session: TKTokenSession, supports operation: TKTokenOperation, keyObjectID: TKToken.ObjectID, algorithm: TKTokenKeyAlgorithm) -> Bool
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@TKErrorCode	swift.type.property	errorDomain	TKError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	errorUserInfo	TKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	errorCode	TKError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@TKErrorCode	swift.func.op	~=(_:_:)	TKError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	errorUserInfo	TKError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@TKErrorCode	swift.func.op	==(_:_:)	TKError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	code	TKError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKErrorCode	swift.method	hash(into:)	TKError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	userInfo	TKError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	errorCode	TKError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	hashValue	TKError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@TKErrorCode	swift.init	init(_:userInfo:)	TKError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11TKErrorCodeLeV	swift.struct	TKError	TKError	struct TKError
+s:SC11TKErrorCodeLeV0A13TokenNotFoundSoAAVvpZ	swift.type.property	TKErrorTokenNotFound	TKError.TKErrorTokenNotFound	static var TKErrorTokenNotFound: TKError.Code { get }
+s:SC11TKErrorCodeLeV0A14ObjectNotFoundSoAAVvpZ	swift.type.property	TKErrorObjectNotFound	TKError.TKErrorObjectNotFound	static var TKErrorObjectNotFound: TKError.Code { get }
+s:SC11TKErrorCodeLeV0A20AuthenticationFailedSoAAVvpZ	swift.type.property	TKErrorAuthenticationFailed	TKError.TKErrorAuthenticationFailed	static var TKErrorAuthenticationFailed: TKError.Code { get }
+s:SC11TKErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	TKError.errorDomain	static var errorDomain: String { get }
+s:SC11TKErrorCodeLeV12badParameterSoAAVvpZ	swift.type.property	badParameter	TKError.badParameter	static var badParameter: TKError.Code { get }
+s:SC11TKErrorCodeLeV13corruptedDataSoAAVvpZ	swift.type.property	corruptedData	TKError.corruptedData	static var corruptedData: TKError.Code { get }
+s:SC11TKErrorCodeLeV13tokenNotFoundSoAAVvpZ	swift.type.property	tokenNotFound	TKError.tokenNotFound	static var tokenNotFound: TKError.Code { get }
+s:SC11TKErrorCodeLeV14canceledByUserSoAAVvpZ	swift.type.property	canceledByUser	TKError.canceledByUser	static var canceledByUser: TKError.Code { get }
+s:SC11TKErrorCodeLeV14notImplementedSoAAVvpZ	swift.type.property	notImplemented	TKError.notImplemented	static var notImplemented: TKError.Code { get }
+s:SC11TKErrorCodeLeV14objectNotFoundSoAAVvpZ	swift.type.property	objectNotFound	TKError.objectNotFound	static var objectNotFound: TKError.Code { get }
+s:SC11TKErrorCodeLeV18communicationErrorSoAAVvpZ	swift.type.property	communicationError	TKError.communicationError	static var communicationError: TKError.Code { get }
+s:SC11TKErrorCodeLeV20authenticationFailedSoAAVvpZ	swift.type.property	authenticationFailed	TKError.authenticationFailed	static var authenticationFailed: TKError.Code { get }
+s:SC11TKErrorCodeLeV20authenticationNeededSoAAVvpZ	swift.type.property	authenticationNeeded	TKError.authenticationNeeded	static var authenticationNeeded: TKError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKErrorCode	swift.func.op	!=(_:_:)	TKError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCharset	swift.func.op	!=(_:_:)	TKSmartCardPINFormat.Charset.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.func.op	!=(_:_:)	TKSmartCardUserInteractionForPINOperation.Completion.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.func.op	!=(_:_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	swift.func.op	!=(_:_:)	TKSmartCardPINFormat.Encoding.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINJustification	swift.func.op	!=(_:_:)	TKSmartCardPINFormat.Justification.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.func.op	!=(_:_:)	TKSmartCardProtocol.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardSlotState	swift.func.op	!=(_:_:)	TKSmartCardSlot.State.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKTokenOperation	swift.func.op	!=(_:_:)	TKTokenOperation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	hashValue	TKError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINCharset	swift.property	hashValue	TKSmartCardPINFormat.Charset.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	swift.property	hashValue	TKSmartCardPINFormat.Encoding.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINJustification	swift.property	hashValue	TKSmartCardPINFormat.Justification.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardSlotState	swift.property	hashValue	TKSmartCardSlot.State.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKTokenOperation	swift.property	hashValue	TKTokenOperation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKErrorCode	swift.method	hash(into:)	TKError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINCharset	swift.method	hash(into:)	TKSmartCardPINFormat.Charset.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	swift.method	hash(into:)	TKSmartCardPINFormat.Encoding.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINJustification	swift.method	hash(into:)	TKSmartCardPINFormat.Justification.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardSlotState	swift.method	hash(into:)	TKSmartCardSlot.State.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKTokenOperation	swift.method	hash(into:)	TKTokenOperation.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11TKErrorCodeV0A13TokenNotFoundABvpZ	swift.type.property	TKErrorTokenNotFound	TKError.Code.TKErrorTokenNotFound	static var TKErrorTokenNotFound: TKError.Code { get }
+s:So11TKErrorCodeV0A14ObjectNotFoundABvpZ	swift.type.property	TKErrorObjectNotFound	TKError.Code.TKErrorObjectNotFound	static var TKErrorObjectNotFound: TKError.Code { get }
+s:So11TKErrorCodeV0A20AuthenticationFailedABvpZ	swift.type.property	TKErrorAuthenticationFailed	TKError.Code.TKErrorAuthenticationFailed	static var TKErrorAuthenticationFailed: TKError.Code { get }
+s:So11TKErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TKError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So11TKSmartCardC14CryptoTokenKitE11withSessionyxxyKcKlF	swift.method	withSession(_:)	TKSmartCard.withSession(_:)	func withSession<T>(_ body: @escaping () throws -> T) throws -> T
+s:So11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2le5replyys5UInt8V_A2L10Foundation4DataVSgSiSgyAP_s6UInt16Vs5Error_pSgtctF	swift.method	send(ins:p1:p2:data:le:reply:)	TKSmartCard.send(ins:p1:p2:data:le:reply:)	func send(ins: UInt8, p1: UInt8, p2: UInt8, data: Data? = nil, le: Int? = nil, reply: @escaping (Data?, UInt16, (any Error)?) -> Void)
+s:So11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2les6UInt16V2sw_10Foundation4DataV8responsets5UInt8V_A2rOSgSiSgtKF	swift.method	send(ins:p1:p2:data:le:)	TKSmartCard.send(ins:p1:p2:data:le:)	func send(ins: UInt8, p1: UInt8, p2: UInt8, data: Data? = nil, le: Int? = nil) throws -> (sw: UInt16, response: Data)
+s:So16TKTokenOperationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TKTokenOperation.init(rawValue:)	init?(rawValue: Int)
+s:So19TKSmartCardProtocolV8rawValueABSu_tcfc	swift.init	init(rawValue:)	TKSmartCardProtocol.init(rawValue:)	init(rawValue: UInt)
+s:So20TKSmartCardSlotStateV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TKSmartCardSlot.State.init(rawValue:)	init?(rawValue: Int)
+s:So21TKSmartCardPINCharsetV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TKSmartCardPINFormat.Charset.init(rawValue:)	init?(rawValue: Int)
+s:So22TKSmartCardPINEncodingV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TKSmartCardPINFormat.Encoding.init(rawValue:)	init?(rawValue: Int)
+s:So24TKSmartCardPINCompletionV8rawValueABSu_tcfc	swift.init	init(rawValue:)	TKSmartCardUserInteractionForPINOperation.Completion.init(rawValue:)	init(rawValue: UInt)
+s:So26TKSmartCardPINConfirmationV8rawValueABSu_tcfc	swift.init	init(rawValue:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.init(rawValue:)	init(rawValue: UInt)
+s:So27TKSmartCardPINJustificationV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	TKSmartCardPINFormat.Justification.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.init	init(arrayLiteral:)	TKSmartCardUserInteractionForPINOperation.Completion.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.init	init(arrayLiteral:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.init	init(arrayLiteral:)	TKSmartCardProtocol.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	isDisjoint(with:)	TKSmartCardUserInteractionForPINOperation.Completion.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	isDisjoint(with:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	isDisjoint(with:)	TKSmartCardProtocol.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	isSuperset(of:)	TKSmartCardUserInteractionForPINOperation.Completion.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	isSuperset(of:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	isSuperset(of:)	TKSmartCardProtocol.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	subtracting(_:)	TKSmartCardUserInteractionForPINOperation.Completion.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	subtracting(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	subtracting(_:)	TKSmartCardProtocol.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	isStrictSubset(of:)	TKSmartCardUserInteractionForPINOperation.Completion.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	isStrictSubset(of:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	isStrictSubset(of:)	TKSmartCardProtocol.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	isStrictSuperset(of:)	TKSmartCardUserInteractionForPINOperation.Completion.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	isStrictSuperset(of:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	isStrictSuperset(of:)	TKSmartCardProtocol.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.property	isEmpty	TKSmartCardUserInteractionForPINOperation.Completion.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.property	isEmpty	TKSmartCardUserInteractionForSecurePINChange.Confirmation.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.property	isEmpty	TKSmartCardProtocol.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	isSubset(of:)	TKSmartCardUserInteractionForPINOperation.Completion.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	isSubset(of:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	isSubset(of:)	TKSmartCardProtocol.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	subtract(_:)	TKSmartCardUserInteractionForPINOperation.Completion.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	subtract(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	subtract(_:)	TKSmartCardProtocol.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.init	init(_:)	TKSmartCardUserInteractionForPINOperation.Completion.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.init	init(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.init	init(_:)	TKSmartCardProtocol.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@TKErrorCode	swift.property	localizedDescription	TKError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	insert(_:)	TKSmartCardUserInteractionForPINOperation.Completion.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	insert(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	insert(_:)	TKSmartCardProtocol.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	remove(_:)	TKSmartCardUserInteractionForPINOperation.Completion.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	remove(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	remove(_:)	TKSmartCardProtocol.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	update(with:)	TKSmartCardUserInteractionForPINOperation.Completion.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	update(with:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	update(with:)	TKSmartCardProtocol.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	contains(_:)	TKSmartCardUserInteractionForPINOperation.Completion.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	contains(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	contains(_:)	TKSmartCardProtocol.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	intersection(_:)	TKSmartCardUserInteractionForPINOperation.Completion.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	intersection(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	intersection(_:)	TKSmartCardProtocol.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	symmetricDifference(_:)	TKSmartCardUserInteractionForPINOperation.Completion.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	symmetricDifference(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	symmetricDifference(_:)	TKSmartCardProtocol.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	union(_:)	TKSmartCardUserInteractionForPINOperation.Completion.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	union(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	union(_:)	TKSmartCardProtocol.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	formIntersection(_:)	TKSmartCardUserInteractionForPINOperation.Completion.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	formIntersection(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	formIntersection(_:)	TKSmartCardProtocol.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	formSymmetricDifference(_:)	TKSmartCardUserInteractionForPINOperation.Completion.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	formSymmetricDifference(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	formSymmetricDifference(_:)	TKSmartCardProtocol.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.method	formUnion(_:)	TKSmartCardUserInteractionForPINOperation.Completion.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.method	formUnion(_:)	TKSmartCardUserInteractionForSecurePINChange.Confirmation.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.method	formUnion(_:)	TKSmartCardProtocol.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	swift.init	init()	TKSmartCardUserInteractionForPINOperation.Completion.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	swift.init	init()	TKSmartCardUserInteractionForSecurePINChange.Confirmation.init()	init()
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardProtocol	swift.init	init()	TKSmartCardProtocol.init()	init()

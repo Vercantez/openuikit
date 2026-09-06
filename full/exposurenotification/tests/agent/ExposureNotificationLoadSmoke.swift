@@ -1,0 +1,3 @@
+import ExposureNotification
+
+let frameworkLoadSmokeMarker = "EXPOSURENOTIFICATION_AGENT_RUNTIME_OK"

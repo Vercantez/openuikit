@@ -1,0 +1,5 @@
+precise	status	evidence	notes
+c:objc(cs)ASIdentifierManager	implemented	test:full/adsupport/tests/agent/ASIdentifierManagerTests.swift#testASIdentifierManagerClassIdentity	open NSObject subclass. No fabricated IDFA.
+c:objc(cs)ASIdentifierManager(cm)sharedManager	implemented	test:full/adsupport/tests/agent/ASIdentifierManagerTests.swift#testSharedReturnsProcessWideSingleton	class func shared() returns one process-wide instance.
+c:objc(cs)ASIdentifierManager(py)advertisingIdentifier	implemented	test:full/adsupport/tests/agent/ASIdentifierManagerTests.swift#testAdvertisingIdentifierIsZeroUUID	Always the all-zero UUID. Never a random IDFA.
+c:objc(cs)ASIdentifierManager(py)advertisingTrackingEnabled	implemented	test:full/adsupport/tests/agent/ASIdentifierManagerTests.swift#testAdvertisingTrackingEnabledIsFalse	Always false. Deprecated iOS 14 ATT replacement is unobserved.

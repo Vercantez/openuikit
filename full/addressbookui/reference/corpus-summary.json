@@ -1,0 +1,17 @@
+{
+  "module": "AddressBookUI",
+  "moduleRecord": {
+    "roadmap": "none (operator override)"
+  },
+  "rankings": {
+    "byAppCoverage": null,
+    "byFocusLaunchBuildRelevance": null
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}
