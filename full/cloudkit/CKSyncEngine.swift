@@ -957,6 +957,10 @@ public final class CKSyncEngine: CustomStringConvertible, @unchecked Sendable {
     }
 
     public func cancelOperations() async {
+        markCancelled()
+    }
+
+    private func markCancelled() {
         lock.lock()
         cancelled = true
         lock.unlock()

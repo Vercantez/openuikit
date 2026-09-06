@@ -213,12 +213,31 @@ No non-enum test exceeds 40% of the new implemented rows.
 
 ### Tests run
 
-`bash full/cloudkit/tests/acceptance/test_host.sh` (gate output recorded
-after the sealed run). `.cursor/verify-cloud-environment.sh` still fails
-on this snapshot with `missing corpus checkout: scratch/ladder-corpus/focus-ios`.
-Active Cursor Build is `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`
-versus seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`. `swiftc`
-is Swift 6.2.4 / linux.
+`bash full/cloudkit/tests/acceptance/test_host.sh` on this Linux host
+(no docker). Exact sealed-gate output:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+CLOUDKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CloudKit dylib=libCloudKit.dylib
+```
+
+Host inventory (not printed by the sealed schema-v1 gate):
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+```
+
+`.cursor/verify-cloud-environment.sh` still fails on this snapshot with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios`. Active Cursor
+Build is `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` versus seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`. `swift --version`:
+Swift 6.2.4, target `x86_64-unknown-linux-gnu`. The gate compiled with a
+clean product tree (`products=clean`). Starting commit
+`39dc25a2769fb88a50f0853964137a4f96d50322` matched.
+
+Only `full/cloudkit/tests/acceptance/test_host.sh` exists under
+`full/cloudkit/tests/`; it was run until `FRAMEWORK_FANOUT_HOST_OK`.
 
 ### Unresolved behavioral questions
 

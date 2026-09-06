@@ -1502,6 +1502,10 @@ final class CKSyncEngineRecordingDelegate: CKSyncEngineDelegate, @unchecked Send
 
     func handleEvent(_ event: CKSyncEngine.Event, syncEngine: CKSyncEngine) async {
         _ = syncEngine
+        record(event)
+    }
+
+    private func record(_ event: CKSyncEngine.Event) {
         lock.lock()
         storedEvents.append(event)
         lock.unlock()
@@ -1692,7 +1696,7 @@ func testCKSyncEngineSyncReasonAndScopes() {
     precondition(records == .recordIDs([recordA]))
     precondition(!records.description.isEmpty)
 
-    let send = CKSyncEngine.SendChangesOptions(scope: zones, operationGroup: CKOperationGroup())
+    var send = CKSyncEngine.SendChangesOptions(scope: zones, operationGroup: CKOperationGroup())
     send.scope = .all
     send.operationGroup.name = "send-group"
     precondition(send.scope == .all)
