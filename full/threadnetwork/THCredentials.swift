@@ -14,10 +14,12 @@ private enum THCredentialsCodingKey {
 }
 
 private func thDecodeString(_ coder: NSCoder, key: String) -> String? {
-    coder.decodeObject(of: NSString.self, forKey: key) as String?
+    guard coder.containsValue(forKey: key) else { return nil }
+    return coder.decodeObject(of: NSString.self, forKey: key) as String?
 }
 
 private func thDecodeData(_ coder: NSCoder, key: String) -> Data? {
+    guard coder.containsValue(forKey: key) else { return nil }
     guard let data = coder.decodeObject(of: NSData.self, forKey: key) else {
         return nil
     }
@@ -25,6 +27,7 @@ private func thDecodeData(_ coder: NSCoder, key: String) -> Data? {
 }
 
 private func thDecodeDate(_ coder: NSCoder, key: String) -> Date? {
+    guard coder.containsValue(forKey: key) else { return nil }
     guard let date = coder.decodeObject(of: NSDate.self, forKey: key) else {
         return nil
     }
