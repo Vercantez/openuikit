@@ -29,6 +29,10 @@ final class EnergyKitBox<Value>: @unchecked Sendable {
 func energyKitAwait<T: Sendable>(
     _ body: @escaping @Sendable () async throws -> T
 ) -> Result<T, Error> {
+    var fds: [Int32] = [0, 0]
+    precondition(pipe(&fds) == 0, "pipe")
+    let readFd = fds[0]
+    let writeFd = fds[1]
     let box = EnergyKitBox<Result<T, Error>?>(nil)
     Task {
         do {
@@ -36,18 +40,17 @@ func energyKitAwait<T: Sendable>(
         } catch {
             box.store(.failure(error))
         }
+        var token: UInt8 = 1
+        _ = write(writeFd, &token, 1)
+        close(writeFd)
     }
-    var spins = 0
-    while true {
-        if let result = box.load() {
-            return result
-        }
-        spins += 1
-        if spins > 5_000_000 {
-            preconditionFailure("async probe did not complete")
-        }
-        sched_yield()
+    var token: UInt8 = 0
+    _ = read(readFd, &token, 1)
+    close(readFd)
+    guard let result = box.load() else {
+        preconditionFailure("async probe did not complete")
     }
+    return result
 }
 
 func energyKitExpectError(_ result: Result<some Any, Error>, _ expected: EnergyKitError) {
