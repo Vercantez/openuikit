@@ -58,5 +58,24 @@ See `oracle-questions.tsv`: Darwin CFString payloads for transform
 option keys without CFSTR comments, Apple CMM code-fragment shape,
 exact `EstimateGamma` / `IsWideGamut` thresholds, and CFError domain.
 
+## Sealed gate
+
+`bash tests/acceptance/test_host.sh` in this Linux environment ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=ColorSync lane=medium-full symbols=207
+FRAMEWORK_FANOUT_REFERENCE_OK
+COLORSYNC_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ColorSync dylib=libColorSync.dylib
+```
+
+`swiftc` is Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The campaign
+inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this
+snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`;
+Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed gate
+compiled with a clean product tree and did not weaken the host script.
+
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep
 generated products out of the tree.
