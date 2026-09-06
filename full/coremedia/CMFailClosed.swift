@@ -122,21 +122,20 @@ public func CMSampleBufferGetSampleTimingInfoArray(
     entriesNeededOut timingArrayEntriesNeededOut: UnsafeMutablePointer<CMItemCount>?
 ) -> OSStatus {
     guard sbuf.isValid else { return kCMSampleBufferError_Invalidated }
-    var needed: CMItemCount = 0
-    if let info = try? sbuf.sampleTimingInfo(at: 0) {
-        needed = 1
-        timingArrayEntriesNeededOut?.pointee = needed
-        if numSampleTimingEntries > 0, let timingArrayOut {
-            timingArrayOut.pointee = info
-        } else if numSampleTimingEntries == 0 {
-            return 0
-        } else if needed > numSampleTimingEntries {
-            return kCMSampleBufferError_ArrayTooSmall
-        }
-        return 0
+    let snapshot = sbuf.copyTimingsAndSizes()
+    if snapshot.timings.isEmpty {
+        timingArrayEntriesNeededOut?.pointee = 0
+        return kCMSampleBufferError_BufferHasNoSampleTimingInfo
     }
-    timingArrayEntriesNeededOut?.pointee = 0
-    return kCMSampleBufferError_BufferHasNoSampleTimingInfo
+    let needed = CMItemCount(snapshot.timings.count)
+    timingArrayEntriesNeededOut?.pointee = needed
+    if numSampleTimingEntries == 0 { return 0 }
+    if numSampleTimingEntries < needed { return kCMSampleBufferError_ArrayTooSmall }
+    guard let timingArrayOut else { return kCMSampleBufferError_RequiredParameterMissing }
+    for index in 0..<Int(needed) {
+        timingArrayOut.advanced(by: index).pointee = snapshot.timings[index]
+    }
+    return 0
 }
 
 public func CMSampleBufferGetOutputSampleTimingInfoArray(
@@ -164,16 +163,18 @@ public func CMSampleBufferCopySampleBufferForRange(
         sampleBufferOut.pointee = nil
         return kCMSampleBufferError_Invalidated
     }
-    if sampleRange.location < 0 || sampleRange.length < 0 {
-        sampleBufferOut.pointee = nil
-        return kCMSampleBufferError_SampleIndexOutOfRange
-    }
     do {
-        sampleBufferOut.pointee = try CMSampleBuffer(referencing: sbuf)
+        sampleBufferOut.pointee = try sbuf.slicedCopy(
+            location: Int(sampleRange.location),
+            length: Int(sampleRange.length)
+        )
         return 0
+    } catch let error as NSError {
+        sampleBufferOut.pointee = nil
+        return OSStatus(error.code)
     } catch {
         sampleBufferOut.pointee = nil
-        return kCMSampleBufferError_AllocationFailed
+        return kCMSampleBufferError_SampleIndexOutOfRange
     }
 }
 
@@ -189,7 +190,10 @@ public func CMSampleBufferCreateCopyWithNewTiming(
         sampleBuffer: originalSBuf,
         sampleBufferOut: sampleBufferOut
     )
-    _ = (numSampleTimingEntries, sampleTimingArray)
+    if status == 0, let sample = sampleBufferOut.pointee, let sampleTimingArray, numSampleTimingEntries > 0 {
+        let timings = Array(UnsafeBufferPointer(start: sampleTimingArray, count: Int(numSampleTimingEntries)))
+        sample.replaceTimings(timings)
+    }
     return status
 }
 
@@ -895,4 +899,192 @@ public func CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout(
     _ = soundDescriptionBlockBuffer
     _ = flavor
     return false
+}
+
+public func CMAudioFormatDescriptionEqual(
+    _ formatDescription: CMAudioFormatDescription,
+    otherFormatDescription: CMAudioFormatDescription,
+    equalityMask: CMAudioFormatDescriptionMask,
+    equalityMaskOut: UnsafeMutablePointer<CMAudioFormatDescriptionMask>?
+) -> Bool {
+    var matched: CMAudioFormatDescriptionMask = 0
+    if (equalityMask & kCMAudioFormatDescriptionMask_StreamBasicDescription) != 0 {
+        if formatDescription.mediaType == otherFormatDescription.mediaType
+            && formatDescription.mediaSubType == otherFormatDescription.mediaSubType
+        {
+            matched |= kCMAudioFormatDescriptionMask_StreamBasicDescription
+        }
+    }
+    if (equalityMask & kCMAudioFormatDescriptionMask_MagicCookie) != 0 {
+        if formatDescription.magicCookieBytes == otherFormatDescription.magicCookieBytes {
+            matched |= kCMAudioFormatDescriptionMask_MagicCookie
+        }
+    }
+    if (equalityMask & kCMAudioFormatDescriptionMask_ChannelLayout) != 0 {
+        matched |= kCMAudioFormatDescriptionMask_ChannelLayout
+    }
+    if (equalityMask & kCMAudioFormatDescriptionMask_Extensions) != 0 {
+        if CMFormatDescriptionEqual(formatDescription, otherFormatDescription: otherFormatDescription) {
+            matched |= kCMAudioFormatDescriptionMask_Extensions
+        }
+    }
+    equalityMaskOut?.pointee = matched
+    let requested = equalityMask == 0 ? kCMAudioFormatDescriptionMask_All : equalityMask
+    return (matched & requested) == requested
+}
+
+public func CMAudioFormatDescriptionCreateSummary(
+    allocator: CFAllocator?,
+    formatDescriptionArray: CFArray,
+    flags: UInt32,
+    formatDescriptionOut: UnsafeMutablePointer<CMAudioFormatDescription?>
+) -> OSStatus {
+    _ = flags
+    let count = Int(CFArrayGetCount(formatDescriptionArray))
+    if count <= 0 {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+    guard let first = CFArrayGetValueAtIndex(formatDescriptionArray, 0) else {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+    let source = unsafeBitCast(first, to: CMFormatDescription.self)
+    return CMFormatDescriptionCreate(
+        allocator: allocator,
+        mediaType: source.mediaType.rawValue,
+        mediaSubType: source.mediaSubType.rawValue,
+        extensions: source.copyExtensions(),
+        formatDescriptionOut: formatDescriptionOut
+    )
+}
+
+public func CMAudioFormatDescriptionGetMagicCookie(
+    _ desc: CMAudioFormatDescription,
+    sizeOut: UnsafeMutablePointer<Int>?
+) -> UnsafeRawPointer? {
+    desc.magicCookiePointer(sizeOut: sizeOut)
+}
+
+public func CMAudioFormatDescriptionCopyAsBigEndianSoundDescriptionBlockBuffer(
+    allocator: CFAllocator?,
+    audioFormatDescription: CMAudioFormatDescription,
+    flavor: CMSoundDescriptionFlavor?,
+    blockBufferOut: UnsafeMutablePointer<CMBlockBuffer?>
+) -> OSStatus {
+    _ = (allocator, audioFormatDescription, flavor)
+    return cmFailBridge(bufferOut: blockBufferOut)
+}
+
+public func CMAudioFormatDescriptionCreateFromBigEndianSoundDescriptionBlockBuffer(
+    allocator: CFAllocator?,
+    bigEndianSoundDescriptionBlockBuffer soundDescriptionBlockBuffer: CMBlockBuffer,
+    flavor: CMSoundDescriptionFlavor?,
+    formatDescriptionOut: UnsafeMutablePointer<CMAudioFormatDescription?>
+) -> OSStatus {
+    _ = (allocator, soundDescriptionBlockBuffer, flavor)
+    return cmFailBridge(formatDescriptionOut)
+}
+
+public func CMAudioFormatDescriptionCreateFromBigEndianSoundDescriptionData(
+    allocator: CFAllocator?,
+    bigEndianSoundDescriptionData soundDescriptionData: UnsafePointer<UInt8>,
+    size: Int,
+    flavor: CMSoundDescriptionFlavor?,
+    formatDescriptionOut: UnsafeMutablePointer<CMAudioFormatDescription?>
+) -> OSStatus {
+    _ = (allocator, soundDescriptionData, size, flavor)
+    return cmFailBridge(formatDescriptionOut)
+}
+
+private func cmSwapDescriptionFailClosed(
+    _ data: UnsafeMutablePointer<UInt8>,
+    _ size: Int
+) -> OSStatus {
+    _ = (data, size)
+    return kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor
+}
+
+public func CMSwapBigEndianClosedCaptionDescriptionToHost(
+    _ closedCaptionDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ closedCaptionDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(closedCaptionDescriptionData, closedCaptionDescriptionSize)
+}
+
+public func CMSwapBigEndianImageDescriptionToHost(
+    _ imageDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ imageDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(imageDescriptionData, imageDescriptionSize)
+}
+
+public func CMSwapBigEndianMetadataDescriptionToHost(
+    _ metadataDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ metadataDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(metadataDescriptionData, metadataDescriptionSize)
+}
+
+public func CMSwapBigEndianSoundDescriptionToHost(
+    _ soundDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ soundDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(soundDescriptionData, soundDescriptionSize)
+}
+
+public func CMSwapBigEndianTextDescriptionToHost(
+    _ textDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ textDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(textDescriptionData, textDescriptionSize)
+}
+
+public func CMSwapBigEndianTimeCodeDescriptionToHost(
+    _ timeCodeDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ timeCodeDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(timeCodeDescriptionData, timeCodeDescriptionSize)
+}
+
+public func CMSwapHostEndianClosedCaptionDescriptionToBig(
+    _ closedCaptionDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ closedCaptionDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(closedCaptionDescriptionData, closedCaptionDescriptionSize)
+}
+
+public func CMSwapHostEndianImageDescriptionToBig(
+    _ imageDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ imageDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(imageDescriptionData, imageDescriptionSize)
+}
+
+public func CMSwapHostEndianMetadataDescriptionToBig(
+    _ metadataDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ metadataDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(metadataDescriptionData, metadataDescriptionSize)
+}
+
+public func CMSwapHostEndianSoundDescriptionToBig(
+    _ soundDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ soundDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(soundDescriptionData, soundDescriptionSize)
+}
+
+public func CMSwapHostEndianTextDescriptionToBig(
+    _ textDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ textDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(textDescriptionData, textDescriptionSize)
+}
+
+public func CMSwapHostEndianTimeCodeDescriptionToBig(
+    _ timeCodeDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ timeCodeDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(timeCodeDescriptionData, timeCodeDescriptionSize)
 }

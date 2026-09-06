@@ -889,6 +889,52 @@ public struct ConfirmationActionName: Hashable, Sendable {
     public static let ok = ConfirmationActionName(rawValue: "ok")
     public static let confirm = ConfirmationActionName(rawValue: "confirm")
     public static let destructive = ConfirmationActionName(rawValue: "destructive")
+    public static let startNavigation = ConfirmationActionName(rawValue: "startNavigation")
+    public static let `do` = ConfirmationActionName(rawValue: "do")
+    public static let go = ConfirmationActionName(rawValue: "go")
+    public static let add = ConfirmationActionName(rawValue: "add")
+    public static let buy = ConfirmationActionName(rawValue: "buy")
+    public static let get = ConfirmationActionName(rawValue: "get")
+    public static let log = ConfirmationActionName(rawValue: "log")
+    public static let pay = ConfirmationActionName(rawValue: "pay")
+    public static let run = ConfirmationActionName(rawValue: "run")
+    public static let set = ConfirmationActionName(rawValue: "set")
+    public static let book = ConfirmationActionName(rawValue: "book")
+    public static let call = ConfirmationActionName(rawValue: "call")
+    public static let find = ConfirmationActionName(rawValue: "find")
+    public static let open = ConfirmationActionName(rawValue: "open")
+    public static let play = ConfirmationActionName(rawValue: "play")
+    public static let post = ConfirmationActionName(rawValue: "post")
+    public static let send = ConfirmationActionName(rawValue: "send")
+    public static let view = ConfirmationActionName(rawValue: "view")
+    public static let order = ConfirmationActionName(rawValue: "order")
+    public static let share = ConfirmationActionName(rawValue: "share")
+    public static let start = ConfirmationActionName(rawValue: "start")
+    public static let create = ConfirmationActionName(rawValue: "create")
+    public static let filter = ConfirmationActionName(rawValue: "filter")
+    public static let search = ConfirmationActionName(rawValue: "search")
+    public static let toggle = ConfirmationActionName(rawValue: "toggle")
+    public static let turnOn = ConfirmationActionName(rawValue: "turnOn")
+    public static let addData = ConfirmationActionName(rawValue: "addData")
+    public static let checkIn = ConfirmationActionName(rawValue: "checkIn")
+    public static let request = ConfirmationActionName(rawValue: "request")
+    public static let turnOff = ConfirmationActionName(rawValue: "turnOff")
+    public static let download = ConfirmationActionName(rawValue: "download")
+    public static let playSound = ConfirmationActionName(rawValue: "playSound")
+
+    public static func custom(
+        acceptLabel: LocalizedStringResource,
+        acceptAlternatives: [LocalizedStringResource],
+        denyLabel: LocalizedStringResource,
+        denyAlternatives: [LocalizedStringResource],
+        destructive: Bool = false
+    ) -> ConfirmationActionName {
+        _ = acceptAlternatives
+        _ = denyLabel
+        _ = denyAlternatives
+        _ = destructive
+        return ConfirmationActionName(rawValue: "custom:" + appIntentsString(acceptLabel))
+    }
 }
 
 public struct ConfirmationConditions: OptionSet, Hashable, Sendable {
@@ -974,8 +1020,17 @@ public final class IntentParameter<Value>: @unchecked Sendable
     var storedInputOptionsBox: Any?
     var storedResolvedOptions: [Any] = []
     var optionsProviderAttached = false
+    var storedMeasurementDefaultUnit: Any?
+    var storedMeasurementUnit: Any?
+    var storedUnitAdjustForLocale: Bool?
+    var storedSupportsNegativeNumbers: Bool?
+    var storedRequestDisambiguationDialog: IntentDialog?
+    var storedSupportedValues: [Any] = []
 
     public var dateKind: DateKind? { storedDateKind }
+
+    public var requestDisambiguationDialog: IntentDialog? { storedRequestDisambiguationDialog }
+    public var supportedValues: [Any] { storedSupportedValues }
 
     public var wrappedValue: Value {
         get {
@@ -1370,7 +1425,49 @@ public protocol FileEntity: AppEntity where ID == FileEntityIdentifier {}
 
 public struct FileEntityIdentifier: Hashable, Sendable, EntityIdentifierConvertible {
     public let url: URL
-    public init(_ url: URL) { self.url = url }
+    public let draftIdentifier: String?
+
+    public var isDraft: Bool { draftIdentifier != nil }
+
+    public var entityIdentifierString: String {
+        if let draftIdentifier {
+            return "draft:" + draftIdentifier
+        }
+        return url.absoluteString
+    }
+
+    public init(_ url: URL) {
+        self.url = url
+        self.draftIdentifier = nil
+    }
+
+    private init(draft identifier: String) {
+        self.url = URL(fileURLWithPath: "/tmp/appintents-draft/" + identifier)
+        self.draftIdentifier = identifier
+    }
+
+    public static func file(url: URL) throws -> FileEntityIdentifier {
+        FileEntityIdentifier(url)
+    }
+
+    public static func draft(identifier: String) -> FileEntityIdentifier {
+        FileEntityIdentifier(draft: identifier)
+    }
+
+    public static func entityIdentifier(for entityIdentifierString: String) -> FileEntityIdentifier? {
+        if entityIdentifierString.hasPrefix("draft:") {
+            let token = String(entityIdentifierString.dropFirst(6))
+            guard !token.isEmpty else { return nil }
+            return .draft(identifier: token)
+        }
+        if entityIdentifierString.hasPrefix("/") {
+            return FileEntityIdentifier(URL(fileURLWithPath: entityIdentifierString))
+        }
+        if let url = URL(string: entityIdentifierString), url.scheme != nil {
+            return FileEntityIdentifier(url)
+        }
+        return nil
+    }
 }
 
 public protocol IndexedEntity: AppEntity {}
@@ -1574,6 +1671,25 @@ extension AttributedString: _IntentValue {}
 extension DateComponents: _IntentValue {}
 extension IntentFile: _IntentValue {}
 extension IntentDialog: _IntentValue {}
+
+/// File-backed entity property value (`EntityProperty` where `Value.ValueType == File`).
+/// Linux stores URL and bytes in-process. Security-scoped bookmarks are unobserved.
+public final class File: NSObject, _IntentValue, @unchecked Sendable {
+    public var url: URL?
+    public var data: Data
+    public var filename: String?
+
+    public init(url: URL? = nil, data: Data = Data(), filename: String? = nil) {
+        self.url = url
+        self.data = data
+        self.filename = filename
+        super.init()
+    }
+
+    public convenience init(url: URL) {
+        self.init(url: url, data: Data(), filename: url.lastPathComponent)
+    }
+}
 extension Optional: _IntentValue where Wrapped: _IntentValue {}
 extension Array: _IntentValue where Element: _IntentValue {}
 

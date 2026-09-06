@@ -1,0 +1,31 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave14-repair-1",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "systemextensions": {
+      "agentId": "bc-4487f60e-7699-5022-a723-419e9d101e85",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T06:05:12Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/247",
+      "expectedPriorHead": "64ec4557665b48a028606cbf31bf8f8f69a5abef",
+      "idempotencyKey": "0ae14a23-0238-5f86-95aa-3bd4f6c66313",
+      "launchStatus": "SENT",
+      "module": "SystemExtensions",
+      "promptBytes": 1547,
+      "promptSha256": "ae42f22f5313a690e3af5d42906ef385f1a2b76d9e9d303ff91812908f2aa28a",
+      "runId": "run-769ecd19-10d2-4652-acd8-6e8a412550a2",
+      "runStatus": "running",
+      "slug": "systemextensions"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

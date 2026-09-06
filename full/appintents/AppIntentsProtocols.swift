@@ -31,13 +31,19 @@ extension OpenIntent {
     public static var openAppWhenRun: Bool { true }
 }
 
-public protocol DeleteIntent: SystemIntent {}
+public protocol DeleteIntent: SystemIntent {
+    associatedtype Entity: AppEntity
+    var entities: [Entity] { get }
+}
 
 public protocol AnyIntentValue: Sendable {}
 
 public protocol SearchCriteria: _IntentValue, Hashable, Sendable {}
 
-public protocol SetValueIntent: AppIntent {}
+public protocol SetValueIntent: AppIntent {
+    associatedtype ValueType: _IntentValue
+    var value: ValueType { get set }
+}
 
 public protocol UndoableIntent: SystemIntent {}
 
@@ -86,11 +92,28 @@ extension EntityPropertyQuery {
         sortedBy: [EntityQuerySort<Entity>],
         limit: Int?
     ) async throws -> [Entity] {
-        _ = comparators
         _ = mode
         _ = sortedBy
-        _ = limit
-        return try await suggestedEntities()
+        var results = try await suggestedEntities()
+        if !comparators.isEmpty, let tokens = comparators as? [String] {
+            results = results.filter { entity in
+                let ident = String(describing: entity.id)
+                let title = appIntentsString(entity.displayRepresentation.title)
+                switch mode {
+                case .or:
+                    return tokens.contains { ident.hasPrefix($0) || title.hasPrefix($0) }
+                case .and:
+                    return tokens.allSatisfy { ident.hasPrefix($0) || title.hasPrefix($0) }
+                }
+            }
+        }
+        if let first = sortedBy.first, first.order == .descending {
+            results.reverse()
+        }
+        if let limit {
+            results = Array(results.prefix(limit))
+        }
+        return results
     }
     public typealias QueryProperties = EntityQueryProperties<Entity, ComparatorMappingType>
     public typealias ComparatorMode = EntityQueryComparatorMode
@@ -114,7 +137,15 @@ public protocol URLRepresentableEntity: AppEntity, CustomURLRepresentationParame
 
 public protocol URLRepresentableIntent: AppIntent {}
 
-public protocol ProgressReportingIntent: AppIntent {}
+public protocol ProgressReportingIntent: AppIntent {
+    var progress: Progress { get }
+}
+
+extension ProgressReportingIntent {
+    public var progress: Progress {
+        ProgressReportingHost.progress(for: String(describing: Self.self))
+    }
+}
 
 public protocol RangeComparableProperty: _IntentValue {}
 

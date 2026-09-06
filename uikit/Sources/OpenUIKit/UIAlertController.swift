@@ -922,6 +922,9 @@ final class _UIAlertAnimator: UIViewControllerAnimatedTransitioning {
         UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 1,
                        initialSpringVelocity: 0, options: [], animations: {
             dim?.alpha = target
+            if let c = ctx as? _UIModalTransitionContext {
+                c.coordinator?.performAlongsideAnimations()
+            }
         }, completion: { _ in ctx.completeTransition(true) })
     }
 }

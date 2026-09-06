@@ -25,10 +25,51 @@ public protocol MTLResidencySet: NSObjectProtocol, Sendable {
     var label: String? { get set }
 }
 
-public protocol MTLResourceStateCommandEncoder: MTLCommandEncoder {}
+public protocol MTLResourceStateCommandEncoder: MTLCommandEncoder {
+    func update(_ fence: any MTLFence)
+    func wait(for fence: any MTLFence)
+    func updateTextureMapping(
+        _ texture: any MTLTexture,
+        mode: MTLSparseTextureMappingMode,
+        region: MTLRegion,
+        mipLevel: Int,
+        slice: Int
+    )
+    func updateTextureMapping(
+        _ texture: any MTLTexture,
+        mode: MTLSparseTextureMappingMode,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    )
+    func updateTextureMappings(
+        _ texture: any MTLTexture,
+        mode: MTLSparseTextureMappingMode,
+        regions: UnsafePointer<MTLRegion>,
+        mipLevels: UnsafePointer<Int>,
+        slices: UnsafePointer<Int>,
+        numRegions: Int
+    )
+    func moveTextureMappings(
+        sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin
+    )
+}
 
 public protocol MTLParallelRenderCommandEncoder: MTLCommandEncoder {
     func makeRenderCommandEncoder() -> (any MTLRenderCommandEncoder)?
+    func setColorStoreAction(_ storeAction: MTLStoreAction, index colorAttachmentIndex: Int)
+    func setColorStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions, index colorAttachmentIndex: Int)
+    func setDepthStoreAction(_ storeAction: MTLStoreAction)
+    func setDepthStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions)
+    func setStencilStoreAction(_ storeAction: MTLStoreAction)
+    func setStencilStoreActionOptions(_ storeActionOptions: MTLStoreActionOptions)
 }
 
 public protocol MTLFunctionHandle: NSObjectProtocol, Sendable {
@@ -82,22 +123,87 @@ open class MTL4RenderPipelineBinaryFunctionsDescriptor: NSObject, @unchecked Sen
 public protocol MTLIndirectComputeCommand: NSObjectProtocol {
     func reset()
     func setComputePipelineState(_ pipelineState: any MTLComputePipelineState)
+    func setKernelBuffer(_ buffer: any MTLBuffer, offset: Int, at index: Int)
+    func setKernelBuffer(_ buffer: any MTLBuffer, offset: Int, attributeStride stride: Int, at index: Int)
     func setKernelBuffer(_ buffer: any MTLBuffer, offset: Int, index: Int)
     func concurrentDispatchThreadgroups(_ threadgroupsPerGrid: MTLSize, threadsPerThreadgroup: MTLSize)
     func concurrentDispatchThreads(_ threadsPerGrid: MTLSize, threadsPerThreadgroup: MTLSize)
+    func setBarrier()
+    func clearBarrier()
+    func setImageblockWidth(_ width: Int, height: Int)
+    func setStageInRegion(_ region: MTLRegion)
+    func setThreadgroupMemoryLength(_ length: Int, index: Int)
 }
 
 public protocol MTLIndirectRenderCommand: NSObjectProtocol {
     func reset()
     func setRenderPipelineState(_ pipelineState: any MTLRenderPipelineState)
     func setVertexBuffer(_ buffer: any MTLBuffer, offset: Int, at index: Int)
+    func setVertexBuffer(_ buffer: any MTLBuffer, offset: Int, attributeStride stride: Int, at index: Int)
     func setFragmentBuffer(_ buffer: any MTLBuffer, offset: Int, at index: Int)
+    func setMeshBuffer(_ buffer: any MTLBuffer, offset: Int, at index: Int)
+    func setObjectBuffer(_ buffer: any MTLBuffer, offset: Int, at index: Int)
+    func setObjectThreadgroupMemoryLength(_ length: Int, index: Int)
+    func setCullMode(_ cullMode: MTLCullMode)
+    func setDepthBias(_ depthBias: Float, slopeScale: Float, clamp: Float)
+    func setDepthClipMode(_ depthClipMode: MTLDepthClipMode)
+    func setDepthStencilState(_ depthStencilState: (any MTLDepthStencilState)?)
+    func setFrontFacing(_ frontFacingWindning: MTLWinding)
+    func setTriangleFillMode(_ fillMode: MTLTriangleFillMode)
+    func setBarrier()
+    func clearBarrier()
     func drawPrimitives(
         _ primitiveType: MTLPrimitiveType,
         vertexStart: Int,
         vertexCount: Int,
         instanceCount: Int,
         baseInstance: Int
+    )
+    func drawIndexedPrimitives(
+        _ primitiveType: MTLPrimitiveType,
+        indexCount: Int,
+        indexType: MTLIndexType,
+        indexBuffer: any MTLBuffer,
+        indexBufferOffset: Int,
+        instanceCount: Int,
+        baseVertex: Int,
+        baseInstance: Int
+    )
+    func drawPatches(
+        _ numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int,
+        tessellationFactorBuffer buffer: any MTLBuffer,
+        tessellationFactorBufferOffset offset: Int,
+        tessellationFactorBufferInstanceStride instanceStride: Int
+    )
+    func drawIndexedPatches(
+        _ numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int,
+        tessellationFactorBuffer buffer: any MTLBuffer,
+        tessellationFactorBufferOffset offset: Int,
+        tessellationFactorBufferInstanceStride instanceStride: Int
+    )
+    func drawMeshThreadgroups(
+        _ threadgroupsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    )
+    func drawMeshThreads(
+        _ threadsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
     )
 }
 

@@ -28,14 +28,14 @@ func testRegisteredStoreClass() {
             try withUniqueTempDirectory { directory in
                 do {
                     _ = try coordinator.addPersistentStore(
-                        ofType: NSSQLiteStoreType,
+                        ofType: NSBinaryStoreType,
                         configurationName: nil,
-                        at: directory.appendingPathComponent("unregistered.sqlite"),
+                        at: directory.appendingPathComponent("unregistered.binary"),
                         options: nil
                     )
-                    throw ProbeFailure.message("unregistered SQLite store type must stay unsupported")
+                    throw ProbeFailure.message("unregistered binary store type must stay unsupported")
                 } catch is ProbeFailure {
-                    throw ProbeFailure.message("unregistered SQLite store type must stay unsupported")
+                    throw ProbeFailure.message("unregistered binary store type must stay unsupported")
                 } catch {
                     // expected platform blocker
                 }

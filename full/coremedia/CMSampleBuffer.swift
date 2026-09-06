@@ -18,11 +18,16 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
         public static let invalidSampleData = cmNSError(code: -12742)
         public static let invalidMediaFormat = cmNSError(code: -12743)
         public static let invalidated = cmNSError(code: -12744)
+        public static let dataFailed = cmNSError(code: Int(kCMSampleBufferError_DataFailed))
+        public static let dataCanceled = cmNSError(code: Int(kCMSampleBufferError_DataCanceled))
     }
 
     public struct Flags: OptionSet, Sendable, Hashable {
         public let rawValue: UInt32
         public init(rawValue: UInt32) { self.rawValue = rawValue }
+        public static let audioBufferListAssure16ByteAlignment = Flags(
+            rawValue: kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment
+        )
     }
 
     public typealias T = CMSampleBuffer
@@ -37,6 +42,8 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     private var invalidateCallback: CMSampleBufferInvalidateCallback?
     private var invalidateRefcon: UInt64 = 0
     private var invalidateFired = false
+    fileprivate var makeDataReadyCallback: CMSampleBufferMakeDataReadyCallback?
+    fileprivate var makeDataReadyRefcon: UnsafeMutableRawPointer?
     fileprivate var ownedDataBuffer: CMBlockBuffer?
     fileprivate var ownedFormat: CMFormatDescription?
     fileprivate var timings: [CMSampleTimingInfo]
@@ -217,9 +224,32 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     }
 
     public func makeDataReady() throws {
+        var callback: CMSampleBufferMakeDataReadyCallback?
+        var refcon: UnsafeMutableRawPointer?
+        try lock.locked {
+            if !valid { throw Error.invalidated }
+            callback = makeDataReadyCallback
+            refcon = makeDataReadyRefcon
+        }
+        if let callback {
+            let status = callback(self, refcon)
+            if status != 0 {
+                throw cmNSError(code: Int(status))
+            }
+        }
         try lock.locked {
             if !valid { throw Error.invalidated }
             ready = true
+        }
+    }
+
+    fileprivate func installMakeDataReadyCallback(
+        _ callback: CMSampleBufferMakeDataReadyCallback?,
+        refcon: UnsafeMutableRawPointer?
+    ) {
+        lock.locked {
+            makeDataReadyCallback = callback
+            makeDataReadyRefcon = refcon
         }
     }
 
@@ -262,6 +292,47 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
             if !ready { throw Error.bufferNotReady }
             guard let buffer = ownedDataBuffer else { throw Error.requiredParameterMissing }
             return try buffer.dataBytes()
+        }
+    }
+
+    internal func copyTimingsAndSizes() -> (timings: [CMSampleTimingInfo], sizes: [Int], count: Int) {
+        lock.locked { (timings, sizes, sampleCount) }
+    }
+
+    internal func replaceTimings(_ newTimings: [CMSampleTimingInfo]) {
+        lock.locked { timings = newTimings }
+    }
+
+    internal func slicedCopy(location: Int, length: Int) throws -> CMSampleBuffer {
+        try lock.locked {
+            if !valid { throw Error.invalidated }
+            if location < 0 || length < 0 || location + length > sampleCount {
+                throw Error.sampleIndexOutOfRange
+            }
+            var slicedTimings: [CMSampleTimingInfo] = []
+            if !timings.isEmpty {
+                if timings.count == 1 {
+                    slicedTimings = [timings[0]]
+                } else {
+                    slicedTimings = Array(timings[location..<(location + length)])
+                }
+            }
+            var slicedSizes: [Int] = []
+            if !sizes.isEmpty {
+                if sizes.count == 1 {
+                    slicedSizes = [sizes[0]]
+                } else {
+                    slicedSizes = Array(sizes[location..<(location + length)])
+                }
+            }
+            return try CMSampleBuffer(
+                dataBuffer: ownedDataBuffer,
+                formatDescription: ownedFormat,
+                numSamples: length,
+                sampleTimings: slicedTimings,
+                sampleSizes: slicedSizes,
+                dataReady: ready
+            )
         }
     }
 }
@@ -374,7 +445,6 @@ public func CMSampleBufferCreate(
     sampleSizeArray: UnsafePointer<Int>?,
     sampleBufferOut: UnsafeMutablePointer<CMSampleBuffer?>
 ) -> OSStatus {
-    _ = (makeDataReadyCallback, makeDataReadyRefcon)
     let status = CMSampleBufferCreateReady(
         allocator: allocator,
         dataBuffer: dataBuffer,
@@ -386,8 +456,11 @@ public func CMSampleBufferCreate(
         sampleSizeArray: sampleSizeArray,
         sampleBufferOut: sampleBufferOut
     )
-    if status == 0, !dataReady, let sample = sampleBufferOut.pointee {
-        sample.forceNotReady()
+    if status == 0, let sample = sampleBufferOut.pointee {
+        sample.installMakeDataReadyCallback(makeDataReadyCallback, refcon: makeDataReadyRefcon)
+        if !dataReady {
+            sample.forceNotReady()
+        }
     }
     return status
 }
@@ -508,6 +581,31 @@ public func CMPropagateAttachments(_ source: CMAttachmentBearer, destination: CM
           let dst = destination as? CMAttachmentBearerProtocol
     else { return }
     src.propagateAttachments(to: dst)
+}
+
+public func CMSetAttachments(
+    _ target: CMAttachmentBearer,
+    attachments theAttachments: CFDictionary,
+    attachmentMode: CMAttachmentMode
+) {
+    let count = Int(CFDictionaryGetCount(theAttachments))
+    if count <= 0 { return }
+    var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+    var values = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+    keys.withUnsafeMutableBufferPointer { keyBuf in
+        values.withUnsafeMutableBufferPointer { valBuf in
+            CFDictionaryGetKeysAndValues(theAttachments, keyBuf.baseAddress, valBuf.baseAddress)
+        }
+    }
+    for index in 0..<count {
+        guard let keyPtr = keys[index], let valPtr = values[index] else { continue }
+        CMSetAttachment(
+            target,
+            key: unsafeBitCast(keyPtr, to: CFString.self),
+            value: unsafeBitCast(valPtr, to: CFTypeRef.self),
+            attachmentMode: attachmentMode
+        )
+    }
 }
 
 public func CMCopyDictionaryOfAttachments(

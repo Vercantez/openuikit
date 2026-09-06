@@ -89,6 +89,14 @@ public func AudioConverterReset(_ inAudioConverter: AudioConverterRef?) -> Int32
     return 0
 }
 
+public func AudioConverterPrepare(_ inAudioConverter: AudioConverterRef?) -> Int32 {
+    guard let converter = ATRegistry.shared.lookup(inAudioConverter, as: ATAudioConverterObject.self) else {
+        return kAudioConverterErr_UnspecifiedError
+    }
+    converter.primed = true
+    return 0
+}
+
 public func AudioConverterConvertBuffer(
     _ inAudioConverter: AudioConverterRef?,
     _ inInputDataSize: UInt32,

@@ -266,7 +266,7 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         public static let timeCode = MediaSubType(rawValue: kCMTimeCodeFormatType_TimeCode32)
     }
 
-    public struct Extensions: Equatable {
+    public struct Extensions: Equatable, Hashable {
         public struct Key: RawRepresentable, Hashable, Sendable {
             public typealias RawValue = String
             public var rawValue: String
@@ -359,8 +359,38 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
             }
         }
 
+        internal var pairs: [(Key, Value)] = []
+
         public init() {}
         public init(base: CMFormatDescription.Extensions) { self = base }
+        public init(base: CFDictionary?) {
+            if let base {
+                let count = Int(CFDictionaryGetCount(base))
+                if count <= 0 { return }
+                var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+                var values = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+                keys.withUnsafeMutableBufferPointer { keyBuf in
+                    values.withUnsafeMutableBufferPointer { valBuf in
+                        CFDictionaryGetKeysAndValues(base, keyBuf.baseAddress, valBuf.baseAddress)
+                    }
+                }
+                for index in 0..<count {
+                    guard let keyPtr = keys[index], let valPtr = values[index] else { continue }
+                    let key = unsafeBitCast(keyPtr, to: CFString.self)
+                    let name = unsafeBitCast(key, to: NSString.self) as String
+                    pairs.append((Key(rawValue: name), Value(unsafeBitCast(valPtr, to: CFTypeRef.self))))
+                }
+            }
+        }
+
+        public static func == (lhs: Extensions, rhs: Extensions) -> Bool {
+            if lhs.pairs.count != rhs.pairs.count { return false }
+            for (left, right) in zip(lhs.pairs, rhs.pairs) {
+                if left.0.rawValue != right.0.rawValue { return false }
+                if left.1 != right.1 { return false }
+            }
+            return true
+        }
     }
 
     public typealias T = CMFormatDescription
@@ -386,6 +416,8 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
     internal var timeCodeFlagBits: UInt32 = 0
     internal var metadataIdentifiers: [CFString] = []
     internal var magicCookieBytes: Data? = nil
+    private var magicCookieCache: UnsafeMutableRawPointer?
+    private var magicCookieCacheCount: Int = 0
 
     public init(
         mediaType: MediaType,
@@ -440,6 +472,10 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         self.timeCodeFlagBits = object.timeCodeFlagBits
         self.metadataIdentifiers = object.metadataIdentifiers
         self.magicCookieBytes = object.magicCookieBytes
+    }
+
+    deinit {
+        magicCookieCache?.deallocate()
     }
 
     public func equalTo(
@@ -722,6 +758,42 @@ extension CMFormatDescription {
         }
         if status != 0 { throw Error.valueNotAvailable }
         return (Int(fontID), bold, italic, underline, fontSize, color)
+    }
+
+    public func withMagicCookie<R>(_ body: (UnsafeRawBufferPointer?) throws -> R) rethrows -> R {
+        guard let data = magicCookieBytes, !data.isEmpty else {
+            return try body(nil)
+        }
+        return try data.withUnsafeBytes { try body($0) }
+    }
+
+    internal func storeMagicCookie(_ data: Data?) {
+        magicCookieCache?.deallocate()
+        magicCookieCache = nil
+        magicCookieCacheCount = 0
+        if let data, !data.isEmpty {
+            magicCookieBytes = data
+        } else {
+            magicCookieBytes = nil
+        }
+    }
+
+    internal func magicCookiePointer(sizeOut: UnsafeMutablePointer<Int>?) -> UnsafeRawPointer? {
+        guard let data = magicCookieBytes, !data.isEmpty else {
+            sizeOut?.pointee = 0
+            return nil
+        }
+        if magicCookieCache == nil || magicCookieCacheCount != data.count {
+            magicCookieCache?.deallocate()
+            let pointer = UnsafeMutableRawPointer.allocate(byteCount: data.count, alignment: 1)
+            data.withUnsafeBytes { source in
+                pointer.copyMemory(from: source.baseAddress!, byteCount: data.count)
+            }
+            magicCookieCache = pointer
+            magicCookieCacheCount = data.count
+        }
+        sizeOut?.pointee = data.count
+        return UnsafeRawPointer(magicCookieCache)
     }
 }
 

@@ -143,7 +143,7 @@ public enum AppStore {
     }
 }
 
-public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvertible, LocalizedError {
+public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvertible, LocalizedError, CustomNSError {
     public enum Code: Int, Sendable, Hashable {
         case unknown = 0
         case clientInvalid = 1
@@ -166,6 +166,10 @@ public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvert
         case ineligibleForOffer = 18
         case unsupportedPlatform = 19
         case overlayPresentedInBackgroundScene = 20
+
+        public static func ~= (match: Code, error: any Error) -> Bool {
+            (error as? SKError)?.code == match
+        }
     }
 
     public static var errorDomain: String { SKErrorDomain }
@@ -203,6 +207,9 @@ public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvert
     public var errorUserInfo: [String: Any] { userInfo }
     public var description: String { "StoreKit error \(code.rawValue)" }
     public var errorDescription: String? { description }
+    public var failureReason: String? { errorDescription }
+    public var recoverySuggestion: String? { nil }
+    public var helpAnchor: String? { nil }
 
     public static func == (lhs: SKError, rhs: SKError) -> Bool {
         lhs.code == rhs.code
@@ -211,6 +218,7 @@ public struct SKError: Error, Hashable, @unchecked Sendable, CustomStringConvert
     public func hash(into hasher: inout Hasher) {
         hasher.combine(code)
     }
+
 }
 
 public let SKErrorDomain = "SKErrorDomain"
@@ -701,6 +709,36 @@ public final class SKPaymentQueue: NSObject {
     public func presentCodeRedemptionSheet() {}
     public func showPriceConsentIfNeeded() {}
 
+    /// Linux has no App Store promoted-IAP delivery. Tests and the local
+    /// testing store call this to exercise `shouldAddStorePayment`.
+    public func portableAskShouldAddStorePayment(
+        _ payment: SKPayment,
+        for product: SKProduct
+    ) -> Bool {
+        var allowed = false
+        for observer in observers {
+            if observer.paymentQueue(self, shouldAddStorePayment: payment, for: product) {
+                allowed = true
+            }
+        }
+        return allowed
+    }
+
+    func notifyStorefrontDidChange() {
+        for observer in observers {
+            observer.paymentQueueDidChangeStorefront(self)
+        }
+    }
+
+    func notifyRevokedEntitlements(productIdentifiers: [String]) {
+        for observer in observers {
+            observer.paymentQueue(
+                self,
+                didRevokeEntitlementsForProductIdentifiers: productIdentifiers
+            )
+        }
+    }
+
     private func notify(_ transactions: [SKPaymentTransaction]) {
         for observer in observers {
             observer.paymentQueue(self, updatedTransactions: transactions)
@@ -775,6 +813,34 @@ open class SKAdNetwork: NSObject {
     public class func endImpression(_ impression: SKAdImpression) async throws {
         _ = impression
         throw StoreKitPortableError(.serviceUnavailable)
+    }
+
+    public class func startImpression(
+        _ impression: SKAdImpression,
+        completionHandler: ((Error?) -> Void)? = nil
+    ) {
+        _ = impression
+        completionHandler?(StoreKitPortableError(.serviceUnavailable))
+    }
+
+    public class func endImpression(
+        _ impression: SKAdImpression,
+        completionHandler: ((Error?) -> Void)? = nil
+    ) {
+        _ = impression
+        completionHandler?(StoreKitPortableError(.serviceUnavailable))
+    }
+
+    public class func updatePostbackConversionValue(
+        _ fineValue: Int,
+        coarseValue: CoarseConversionValue,
+        lockWindow: Bool,
+        completionHandler: ((Error?) -> Void)? = nil
+    ) {
+        _ = fineValue
+        _ = coarseValue
+        _ = lockWindow
+        completionHandler?(StoreKitPortableError(.serviceUnavailable))
     }
 }
 

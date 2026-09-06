@@ -19,7 +19,7 @@ func testCConnectionCopyAndBatch() {
     _ = copiedParameters
     expect(nw_connection_copy_current_path(connection) != nil, "copy_current_path")
     let description = nw_connection_copy_description(connection)
-    expect(description.pointee == 0, "copy_description empty")
+    expect(String(cString: description) == "127.0.0.1", "copy_description hostname")
     expect(nw_connection_get_maximum_datagram_size(connection) == 0, "maximum_datagram_size")
     var batched = false
     nw_connection_batch(connection) { batched = true }

@@ -471,6 +471,15 @@ func _scnQuatNormalize(_ q: SCNQuaternion) -> SCNQuaternion {
     return SCNQuaternion(x: q.x / len, y: q.y / len, z: q.z / len, w: q.w / len)
 }
 
+func _scnQuatMul(_ a: SCNQuaternion, _ b: SCNQuaternion) -> SCNQuaternion {
+    _scnQuatNormalize(SCNQuaternion(
+        x: a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y,
+        y: a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x,
+        z: a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w,
+        w: a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
+    ))
+}
+
 func _scnQuatFromAxisAngle(_ aa: SCNVector4) -> SCNQuaternion {
     let axis = _scnNormalize(SCNVector3(x: aa.x, y: aa.y, z: aa.z))
     let half = aa.w * 0.5

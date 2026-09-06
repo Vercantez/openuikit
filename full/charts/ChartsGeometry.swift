@@ -50,8 +50,10 @@ public func chartNumericScalar<Value: Plottable>(_ value: Value) -> Double? {
     case let value as UInt32: return Double(value)
     case let value as UInt64: return Double(value)
     case let value as Float: return Double(value)
+    case let value as Float16: return Double(value)
     case let value as Double: return value
     case let value as Date: return value.timeIntervalSinceReferenceDate
+    case let value as Decimal: return NSDecimalNumber(decimal: value).doubleValue
     default: return nil
     }
 }
@@ -76,6 +78,8 @@ public func chartDecode<Value: Plottable>(
 private func chartDecodeNumeric<Value: Plottable>(_ scalar: Double, as type: Value.Type) -> Value? {
     if type == Double.self { return scalar as? Value }
     if type == Float.self { return Float(scalar) as? Value }
+    if type == Float16.self { return Float16(scalar) as? Value }
+    if type == Decimal.self { return Decimal(scalar) as? Value }
     if type == Int.self { return Int(scalar.rounded()) as? Value }
     if type == Int8.self { return Int8(scalar.rounded()) as? Value }
     if type == Int16.self { return Int16(scalar.rounded()) as? Value }
@@ -122,6 +126,7 @@ public struct ChartPlotRecord: Equatable, Sendable {
     public var annotationPosition: String?
     public var annotationAlignment: String?
     public var opacity: Double?
+    public var layout: ChartLayoutAttributes
 
     public init(
         kind: Kind,
@@ -142,7 +147,8 @@ public struct ChartPlotRecord: Equatable, Sendable {
         foregroundStyleName: String? = nil,
         annotationPosition: String? = nil,
         annotationAlignment: String? = nil,
-        opacity: Double? = nil
+        opacity: Double? = nil,
+        layout: ChartLayoutAttributes = ChartLayoutAttributes()
     ) {
         self.kind = kind
         self.x = x
@@ -163,6 +169,92 @@ public struct ChartPlotRecord: Equatable, Sendable {
         self.annotationPosition = annotationPosition
         self.annotationAlignment = annotationAlignment
         self.opacity = opacity
+        self.layout = layout
+    }
+}
+
+/// Pixel and authored mark attributes applied after scale mapping.
+public struct ChartLayoutAttributes: Equatable, Sendable {
+    public var offsetX: Double
+    public var offsetY: Double
+    public var offsetXStart: Double
+    public var offsetXEnd: Double
+    public var offsetYStart: Double
+    public var offsetYEnd: Double
+    public var cornerRadius: Double?
+    public var zIndex: Double?
+    public var symbolSize: Double?
+    public var blurRadius: Double?
+    public var shadowRadius: Double?
+    public var clipShapeName: String?
+    public var accessibilityLabel: String?
+    public var accessibilityValue: String?
+    public var accessibilityHidden: Bool?
+    public var accessibilityIdentifier: String?
+    public var compositing: String?
+    public var alignsMarkStyles: Bool?
+    public var positionBy: String?
+    public var maskName: String?
+    public var symbolBy: String?
+    public var lineStyleBy: String?
+
+    public init(
+        offsetX: Double = 0,
+        offsetY: Double = 0,
+        offsetXStart: Double = 0,
+        offsetXEnd: Double = 0,
+        offsetYStart: Double = 0,
+        offsetYEnd: Double = 0,
+        cornerRadius: Double? = nil,
+        zIndex: Double? = nil,
+        symbolSize: Double? = nil,
+        blurRadius: Double? = nil,
+        shadowRadius: Double? = nil,
+        clipShapeName: String? = nil,
+        accessibilityLabel: String? = nil,
+        accessibilityValue: String? = nil,
+        accessibilityHidden: Bool? = nil,
+        accessibilityIdentifier: String? = nil,
+        compositing: String? = nil,
+        alignsMarkStyles: Bool? = nil,
+        positionBy: String? = nil,
+        maskName: String? = nil,
+        symbolBy: String? = nil,
+        lineStyleBy: String? = nil
+    ) {
+        self.offsetX = offsetX
+        self.offsetY = offsetY
+        self.offsetXStart = offsetXStart
+        self.offsetXEnd = offsetXEnd
+        self.offsetYStart = offsetYStart
+        self.offsetYEnd = offsetYEnd
+        self.cornerRadius = cornerRadius
+        self.zIndex = zIndex
+        self.symbolSize = symbolSize
+        self.blurRadius = blurRadius
+        self.shadowRadius = shadowRadius
+        self.clipShapeName = clipShapeName
+        self.accessibilityLabel = accessibilityLabel
+        self.accessibilityValue = accessibilityValue
+        self.accessibilityHidden = accessibilityHidden
+        self.accessibilityIdentifier = accessibilityIdentifier
+        self.compositing = compositing
+        self.alignsMarkStyles = alignsMarkStyles
+        self.positionBy = positionBy
+        self.maskName = maskName
+        self.symbolBy = symbolBy
+        self.lineStyleBy = lineStyleBy
+    }
+}
+
+public func chartStampRecords(
+    _ records: [ChartPlotRecord],
+    _ mutate: (inout ChartPlotRecord) -> Void
+) -> [ChartPlotRecord] {
+    records.map { record in
+        var copy = record
+        mutate(&copy)
+        return copy
     }
 }
 
@@ -763,18 +855,26 @@ public enum ChartLayout {
             switch record.kind {
             case .bar, .rectangle:
                 let frame = barFrame(record, xScale: xScale, yScale: yScale, stacked: stackedByIdentity)
-                placed.append(ChartPlacedMark(kind: record.kind, frame: frame, series: record.series))
+                placed.append(
+                    applyLayout(
+                        record,
+                        to: ChartPlacedMark(kind: record.kind, frame: frame, series: record.series)
+                    )
+                )
             case .point:
                 guard let x = xPosition(record, scale: xScale),
                       let y = yPosition(record, scale: yScale)
                 else { continue }
-                let size = defaultPointSize
+                let size = record.layout.symbolSize ?? defaultPointSize
                 placed.append(
-                    ChartPlacedMark(
-                        kind: .point,
-                        frame: CGRect(x: x - size / 2, y: y - size / 2, width: size, height: size),
-                        points: [CGPoint(x: x, y: y)],
-                        series: record.series
+                    applyLayout(
+                        record,
+                        to: ChartPlacedMark(
+                            kind: .point,
+                            frame: CGRect(x: x - size / 2, y: y - size / 2, width: size, height: size),
+                            points: [CGPoint(x: x, y: y)],
+                            series: record.series
+                        )
                     )
                 )
             case .rule:
@@ -782,28 +882,34 @@ public enum ChartLayout {
                     let y0 = min(yScale.rangeStart, yScale.rangeEnd)
                     let y1 = max(yScale.rangeStart, yScale.rangeEnd)
                     placed.append(
-                        ChartPlacedMark(
-                            kind: .rule,
-                            frame: CGRect(x: x, y: y0, width: 1, height: y1 - y0),
-                            points: [
-                                CGPoint(x: x, y: y0),
-                                CGPoint(x: x, y: y1),
-                            ],
-                            series: record.series
+                        applyLayout(
+                            record,
+                            to: ChartPlacedMark(
+                                kind: .rule,
+                                frame: CGRect(x: x, y: y0, width: 1, height: y1 - y0),
+                                points: [
+                                    CGPoint(x: x, y: y0),
+                                    CGPoint(x: x, y: y1),
+                                ],
+                                series: record.series
+                            )
                         )
                     )
                 } else if let y = yPosition(record, scale: yScale) {
                     let x0 = min(xScale.rangeStart, xScale.rangeEnd)
                     let x1 = max(xScale.rangeStart, xScale.rangeEnd)
                     placed.append(
-                        ChartPlacedMark(
-                            kind: .rule,
-                            frame: CGRect(x: x0, y: y, width: x1 - x0, height: 1),
-                            points: [
-                                CGPoint(x: x0, y: y),
-                                CGPoint(x: x1, y: y),
-                            ],
-                            series: record.series
+                        applyLayout(
+                            record,
+                            to: ChartPlacedMark(
+                                kind: .rule,
+                                frame: CGRect(x: x0, y: y, width: x1 - x0, height: 1),
+                                points: [
+                                    CGPoint(x: x0, y: y),
+                                    CGPoint(x: x1, y: y),
+                                ],
+                                series: record.series
+                            )
                         )
                     )
                 }
@@ -812,7 +918,9 @@ public enum ChartLayout {
                       let y = yPosition(record, scale: yScale)
                 else { continue }
                 let key = record.series ?? "_"
-                linePoints[key, default: []].append(CGPoint(x: x, y: y))
+                linePoints[key, default: []].append(
+                    CGPoint(x: x + record.layout.offsetX, y: y + record.layout.offsetY)
+                )
                 lineKind[key] = record.kind
             case .sector:
                 continue
@@ -826,6 +934,37 @@ public enum ChartLayout {
             placed.append(ChartPlacedMark(kind: kind, points: sampled, series: series))
         }
         return placed
+    }
+
+    private static func applyLayout(
+        _ record: ChartPlotRecord,
+        to mark: ChartPlacedMark
+    ) -> ChartPlacedMark {
+        var copy = mark
+        let dx = record.layout.offsetX
+        let dy = record.layout.offsetY
+        if dx != 0 || dy != 0 {
+            copy.frame = CGRect(
+                x: copy.frame.minX + dx,
+                y: copy.frame.minY + dy,
+                width: copy.frame.width,
+                height: copy.frame.height
+            )
+            copy.points = copy.points.map { CGPoint(x: $0.x + dx, y: $0.y + dy) }
+        }
+        let xStart = record.layout.offsetXStart
+        let xEnd = record.layout.offsetXEnd
+        let yStart = record.layout.offsetYStart
+        let yEnd = record.layout.offsetYEnd
+        if xStart != 0 || xEnd != 0 || yStart != 0 || yEnd != 0 {
+            copy.frame = CGRect(
+                x: copy.frame.minX + xStart,
+                y: copy.frame.minY + yStart,
+                width: max(0, copy.frame.width + xEnd - xStart),
+                height: max(0, copy.frame.height + yEnd - yStart)
+            )
+        }
+        return copy
     }
 
     private static func xPosition(_ record: ChartPlotRecord, scale: ChartScale) -> Double? {

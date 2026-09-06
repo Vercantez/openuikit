@@ -89,10 +89,35 @@ internal final class ATAudioUnitObject: ATObject {
     var lastRenderError: Int32 = 0
     var maximumFrames: UInt32 = 4096
     var parameters: [UInt32: Float32] = [:]
+    var scopedParameters: [UInt64: Float32] = [:]
     var connections: [UInt32: ATUnitConnection] = [:]
     var inputCallbacks: [UInt32: AURenderCallbackStruct] = [:]
     var renderCallback = AURenderCallbackStruct()
+    var renderNotifies: [AURenderCallbackStruct] = []
     var sampleCounter: Int64 = 0
+    var propertyListeners: [(id: AudioUnitPropertyID, proc: AudioUnitPropertyListenerProc, userData: UnsafeMutableRawPointer?)] = []
+
+    func parameterKey(scope: AudioUnitScope, element: AudioUnitElement, id: AudioUnitParameterID) -> UInt64 {
+        (UInt64(scope) << 48) | (UInt64(element) << 32) | UInt64(id)
+    }
+
+    func mixerGain(element: AudioUnitElement) -> Float {
+        let enable = scopedParameters[parameterKey(scope: kAudioUnitScope_Input, element: element, id: kMultiChannelMixerParam_Enable)]
+            ?? parameters[kMultiChannelMixerParam_Enable]
+            ?? 1
+        if enable <= 0 {
+            return 0
+        }
+        return scopedParameters[parameterKey(scope: kAudioUnitScope_Input, element: element, id: kMultiChannelMixerParam_Volume)]
+            ?? parameters[kMultiChannelMixerParam_Volume]
+            ?? 1
+    }
+
+    func mixerPan(element: AudioUnitElement) -> Float {
+        scopedParameters[parameterKey(scope: kAudioUnitScope_Input, element: element, id: kMultiChannelMixerParam_Pan)]
+            ?? parameters[kMultiChannelMixerParam_Pan]
+            ?? 0
+    }
 
     var isRemoteIO: Bool {
         description.componentSubType == kAudioUnitSubType_RemoteIO
@@ -318,6 +343,37 @@ public func AudioComponentValidate(
     _ = inValidationParameters
     outValidationResult?.pointee = .failed
     return kAudioComponentErr_NotPermitted
+}
+
+public func AudioOutputUnitPublish(
+    _ inDesc: UnsafePointer<AudioComponentDescription>?,
+    _ inName: CFString?,
+    _ inVersion: UInt32,
+    _ inOutputUnit: AudioUnit?
+) -> Int32 {
+    _ = inDesc
+    _ = inName
+    _ = inVersion
+    _ = inOutputUnit
+    return kAudioComponentErr_NotPermitted
+}
+
+public func AudioComponentCopyIcon(
+    _ comp: AudioComponent?,
+    _ outIcon: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = comp
+    _ = outIcon
+    return kAudioComponentErr_NotPermitted
+}
+
+public func AudioOutputUnitGetHostIcon(
+    _ inUnit: AudioUnit?,
+    _ midHeight: Float32
+) -> OpaquePointer? {
+    _ = inUnit
+    _ = midHeight
+    return nil
 }
 #endif
 

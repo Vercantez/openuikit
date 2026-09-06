@@ -173,3 +173,217 @@ extension AppIntentsHost {
 extension ForegroundContinuableIntent {
     public static var authenticationPolicy: IntentAuthenticationPolicy { .alwaysAllowed }
 }
+
+extension IntentParameter where Value == Date {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Date? = nil,
+        kind: DateKind = .dateTime,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedDateKind = kind
+    }
+}
+
+extension IntentParameter where Value == Bool {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Bool? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+    }
+}
+
+extension IntentParameter where Value == URL {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: URL? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+    }
+}
+
+extension IntentParameter where Value == IntentFile {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: IntentFile? = nil,
+        supportedContentTypes: [IntentFileContentType] = [],
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            supportedContentTypes: supportedContentTypes,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+    }
+}
+
+/// Process-local Progress values for ProgressReportingIntent. Linux has no
+/// system progress UI; completedUnitCount is host-owned.
+public enum ProgressReportingHost {
+    private static let lock = NSLock()
+    private static var values: [String: Progress] = [:]
+
+    public static func reset() {
+        lock.lock()
+        values.removeAll()
+        lock.unlock()
+    }
+
+    public static func progress(for typeName: String) -> Progress {
+        lock.lock()
+        defer { lock.unlock() }
+        if let existing = values[typeName] {
+            return existing
+        }
+        let created = Progress(totalUnitCount: 100)
+        values[typeName] = created
+        return created
+    }
+
+    public static func setCompleted(_ completed: Int64, for typeName: String) {
+        let progress = progress(for: typeName)
+        progress.completedUnitCount = completed
+    }
+}
+
+extension IntentParameter where Value: AppEnum {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = []
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedRequestDisambiguationDialog = requestDisambiguationDialog
+        storedSupportedValues = supportedValues
+    }
+
+    public convenience init(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = []
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            requestDisambiguationDialog: requestDisambiguationDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            supportedValues: supportedValues
+        )
+    }
+
+    public convenience init<Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = [],
+        optionsProvider: Provider
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            requestDisambiguationDialog: requestDisambiguationDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            supportedValues: supportedValues
+        )
+        optionsProviderAttached = true
+        _ = optionsProvider
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        supportedValues: [Value] = [],
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            requestDisambiguationDialog: requestDisambiguationDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            supportedValues: supportedValues
+        )
+        _ = resolvers
+    }
+}
+
+extension IntentParameter where Value: AppEntity {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        requestDisambiguationDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        query: some EntityQuery = Value.DefaultQuery()
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedRequestDisambiguationDialog = requestDisambiguationDialog
+        _ = query
+    }
+}
+
