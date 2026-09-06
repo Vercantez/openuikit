@@ -30,9 +30,10 @@ private func wave10Person(_ name: String = "Ada") -> INPerson {
 }
 
 private func wave10ExerciseOptionSet<T: OptionSet>(_ first: T, _ second: T)
-where T.RawValue: FixedWidthInteger, T.Element == T {
+where T.RawValue: FixedWidthInteger, T.Element == T, T.ArrayLiteralElement == T {
     precondition(T().isEmpty)
-    var working: T = [first]
+    var working = first
+    working.formUnion(second)
     let inserted = working.insert(second)
     _ = inserted.inserted
     _ = inserted.memberAfterInsert
