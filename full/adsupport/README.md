@@ -73,3 +73,20 @@ Top-5 evidence distribution among 4 implemented rows:
 | 1 | `ASIdentifierManagerTests.swift#testAdvertisingTrackingEnabledIsFalse` |
 
 No test cites more than 1 of 4 implemented rows (40% cap is 2).
+
+The sealed host gate was run as `bash full/adsupport/tests/acceptance/test_host.sh`
+and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AdSupport lane=leaf-full symbols=4
+FRAMEWORK_FANOUT_REFERENCE_OK
+ADSUPPORT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AdSupport dylib=libAdSupport.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
+snapshot (`scratch/ladder-corpus/focus-ios` is missing). That campaign token
+is the host-inventory stamp; the sealed framework gate prints the four lines
+above.
