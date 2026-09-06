@@ -1,0 +1,1999 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKBase",
+        "printedName": "CryptoTokenKit.TKBase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKError",
+        "printedName": "CryptoTokenKit.TKError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKTLVRecord",
+        "printedName": "CryptoTokenKit.TKTLVRecord"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKToken",
+        "printedName": "CryptoTokenKit.TKToken"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKTokenConfiguration",
+        "printedName": "CryptoTokenKit.TKTokenConfiguration"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKTokenKeychainItem",
+        "printedName": "CryptoTokenKit.TKTokenKeychainItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKSmartCardToken",
+        "printedName": "CryptoTokenKit.TKSmartCardToken"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKTokenWatcher",
+        "printedName": "CryptoTokenKit.TKTokenWatcher"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKSmartCard",
+        "printedName": "CryptoTokenKit.TKSmartCard"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKSmartCardATR",
+        "printedName": "CryptoTokenKit.TKSmartCardATR"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKSmartCardSlotNFCSession",
+        "printedName": "CryptoTokenKit.TKSmartCardSlotNFCSession"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit.TKSmartCardTokenRegistrationManager",
+        "printedName": "CryptoTokenKit.TKSmartCardTokenRegistrationManager"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11TKErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11TKErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "CryptoTokenKit",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11TKErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "TKError",
+                "printedName": "CryptoTokenKit.TKError",
+                "usr": "c:@E@TKErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11TKErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "CryptoTokenKit",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11TKErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11TKErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "CryptoTokenKit",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11TKErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "CryptoTokenKit.TKError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11TKErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "CryptoTokenKit",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11TKErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11TKErrorCodeV8rawValueSivg",
+                    "moduleName": "CryptoTokenKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11TKErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11TKErrorCodeV8rawValueSivp",
+                "moduleName": "CryptoTokenKit",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11TKErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11TKErrorCodeV8RawValuea",
+                "moduleName": "CryptoTokenKit",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11TKErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "TKError",
+                    "printedName": "CryptoTokenKit.TKError",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "CryptoTokenKit",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@TKErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "notImplemented",
+                "printedName": "notImplemented",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeNotImplemented"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "communicationError",
+                "printedName": "communicationError",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeCommunicationError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "corruptedData",
+                "printedName": "corruptedData",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeCorruptedData"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "canceledByUser",
+                "printedName": "canceledByUser",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeCanceledByUser"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "authenticationFailed",
+                "printedName": "authenticationFailed",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeAuthenticationFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "objectNotFound",
+                "printedName": "objectNotFound",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeObjectNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "tokenNotFound",
+                "printedName": "tokenNotFound",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeTokenNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "badParameter",
+                "printedName": "badParameter",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeBadParameter"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "CryptoTokenKit.TKError.Code",
+                            "usr": "c:@E@TKErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CryptoTokenKit.TKError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CryptoTokenKit.TKError.Code.Type) -> CryptoTokenKit.TKError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "authenticationNeeded",
+                "printedName": "authenticationNeeded",
+                "usr": "c:@E@TKErrorCode@TKErrorCodeAuthenticationNeeded"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11TKErrorCodeV0A20AuthenticationFailedABvgZ",
+                    "moduleName": "CryptoTokenKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So11TKErrorCodeV0A20AuthenticationFailedABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "deprecated": true,
+                "intro_iOS": "9.0",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "TKErrorAuthenticationFailed",
+                "printedName": "TKErrorAuthenticationFailed",
+                "static": true,
+                "usr": "c:@E@TKErrorCode@TKErrorAuthenticationFailed"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11TKErrorCodeV0A14ObjectNotFoundABvgZ",
+                    "moduleName": "CryptoTokenKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So11TKErrorCodeV0A14ObjectNotFoundABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "deprecated": true,
+                "intro_iOS": "9.0",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "TKErrorObjectNotFound",
+                "printedName": "TKErrorObjectNotFound",
+                "static": true,
+                "usr": "c:@E@TKErrorCode@TKErrorObjectNotFound"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "CryptoTokenKit.TKError.Code",
+                        "usr": "c:@E@TKErrorCode"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Transparent"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11TKErrorCodeV0A13TokenNotFoundABvgZ",
+                    "moduleName": "CryptoTokenKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "static": true,
+                    "usr": "s:So11TKErrorCodeV0A13TokenNotFoundABvgZ"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Available",
+                  "Nonisolated"
+                ],
+                "declKind": "Var",
+                "deprecated": true,
+                "intro_iOS": "9.0",
+                "kind": "Var",
+                "moduleName": "CryptoTokenKit",
+                "name": "TKErrorTokenNotFound",
+                "printedName": "TKErrorTokenNotFound",
+                "static": true,
+                "usr": "c:@E@TKErrorCode@TKErrorTokenNotFound"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "CryptoTokenKit.TKError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "9.0",
+            "kind": "TypeDecl",
+            "moduleName": "CryptoTokenKit",
+            "name": "Code",
+            "objc_name": "TKErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@TKErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV14notImplementedSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV14notImplementedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "notImplemented",
+            "printedName": "notImplemented",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeNotImplemented"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV18communicationErrorSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV18communicationErrorSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "communicationError",
+            "printedName": "communicationError",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeCommunicationError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV13corruptedDataSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV13corruptedDataSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "corruptedData",
+            "printedName": "corruptedData",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeCorruptedData"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV14canceledByUserSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV14canceledByUserSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "canceledByUser",
+            "printedName": "canceledByUser",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeCanceledByUser"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV20authenticationFailedSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV20authenticationFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "authenticationFailed",
+            "printedName": "authenticationFailed",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeAuthenticationFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV14objectNotFoundSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV14objectNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "objectNotFound",
+            "printedName": "objectNotFound",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeObjectNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV13tokenNotFoundSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV13tokenNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "tokenNotFound",
+            "printedName": "tokenNotFound",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeTokenNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV12badParameterSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV12badParameterSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "badParameter",
+            "printedName": "badParameter",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeBadParameter"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV20authenticationNeededSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV20authenticationNeededSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "authenticationNeeded",
+            "printedName": "authenticationNeeded",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorCodeAuthenticationNeeded"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV0A20AuthenticationFailedSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV0A20AuthenticationFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "intro_iOS": "9.0",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "TKErrorAuthenticationFailed",
+            "printedName": "TKErrorAuthenticationFailed",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorAuthenticationFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV0A14ObjectNotFoundSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV0A14ObjectNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "intro_iOS": "9.0",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "TKErrorObjectNotFound",
+            "printedName": "TKErrorObjectNotFound",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorObjectNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "CryptoTokenKit.TKError.Code",
+                    "usr": "c:@E@TKErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11TKErrorCodeLeV0A13TokenNotFoundSoAAVvgZ",
+                "moduleName": "CryptoTokenKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11TKErrorCodeLeV0A13TokenNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "CryptoTokenKit.TKError.Code",
+                "usr": "c:@E@TKErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "deprecated": true,
+            "intro_iOS": "9.0",
+            "kind": "Var",
+            "moduleName": "CryptoTokenKit",
+            "name": "TKErrorTokenNotFound",
+            "printedName": "TKErrorTokenNotFound",
+            "static": true,
+            "usr": "c:@E@TKErrorCode@TKErrorTokenNotFound"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "9.0",
+        "kind": "TypeDecl",
+        "moduleName": "CryptoTokenKit",
+        "name": "TKError",
+        "printedName": "TKError",
+        "usr": "c:@E@TKErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "CryptoTokenKit",
+        "printedName": "CryptoTokenKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CryptoTokenKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.Data?",
+                        "usr": "s:Sq"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "UInt16",
+                        "printedName": "Swift.UInt16",
+                        "usr": "s:s6UInt16V"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Error",
+                            "printedName": "any Swift.Error",
+                            "usr": "s:s5ErrorP"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "(any Swift.Error)?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Tuple",
+                    "printedName": "(Foundation.Data?, Swift.UInt16, (any Swift.Error)?)"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(Foundation.Data?, Swift.UInt16, (any Swift.Error)?) -> Swift.Void"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2le5replyys5UInt8V_A2L10Foundation4DataVSgSiSgyAP_s6UInt16Vs5Error_pSgtctF",
+            "moduleName": "CryptoTokenKit",
+            "name": "send",
+            "printedName": "send(ins:p1:p2:data:le:reply:)",
+            "usr": "s:So11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2le5replyys5UInt8V_A2L10Foundation4DataVSgSiSgyAP_s6UInt16Vs5Error_pSgtctF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "UInt16",
+                    "printedName": "Swift.UInt16",
+                    "usr": "s:s6UInt16V"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Tuple",
+                "printedName": "(sw: Swift.UInt16, response: Foundation.Data)"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "UInt8",
+                "printedName": "Swift.UInt8",
+                "usr": "s:s5UInt8V"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "10.12",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2les6UInt16V2sw_10Foundation4DataV8responsets5UInt8V_A2rOSgSiSgtKF",
+            "moduleName": "CryptoTokenKit",
+            "name": "send",
+            "printedName": "send(ins:p1:p2:data:le:)",
+            "throwing": true,
+            "usr": "s:So11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2les6UInt16V2sw_10Foundation4DataV8responsets5UInt8V_A2rOSgSiSgtKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "GenericTypeParam",
+                "printedName": "T"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "GenericTypeParam",
+                    "printedName": "T"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "() throws -> T"
+              }
+            ],
+            "declAttributes": [
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<T>",
+            "intro_Macosx": "10.12",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$sSo11TKSmartCardC14CryptoTokenKitE11withSessionyxxyKcKlF",
+            "moduleName": "CryptoTokenKit",
+            "name": "withSession",
+            "printedName": "withSession(_:)",
+            "throwing": true,
+            "usr": "s:So11TKSmartCardC14CryptoTokenKitE11withSessionyxxyKcKlF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "CryptoTokenKit",
+        "name": "TKSmartCard",
+        "objc_name": "TKSmartCard",
+        "printedName": "TKSmartCard",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)TKSmartCard"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CryptoTokenKit",
+    "printedName": "CryptoTokenKit"
+  }
+}

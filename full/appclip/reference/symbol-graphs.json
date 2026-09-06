@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 2,
+  "duplicateOccurrenceCount": 2,
+  "duplicateRelationshipOccurrenceCount": 1,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/AppClip.symbols.json",
+      "relationshipCount": 50,
+      "sha256": "93186ba5e1891764e273f2410f984d3511a365a5a5978f0f2510303b455afb6f",
+      "symbolCount": 31
+    },
+    {
+      "path": "reference/symbol-graphs/AppClip@Foundation.symbols.json",
+      "relationshipCount": 1,
+      "sha256": "be60d427803d246795a62a500bc4efc0100f365e7afc64c52c11af3a47ce9911",
+      "symbolCount": 1
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "AppClip",
+  "relationshipCount": 51,
+  "relationshipMultisetSHA256": "87a23d53102300573e55d44d3725587671331b8eea309d706c7a56bb69995281",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 30,
+  "symbolMultisetSHA256": "a479b1b745f4d854113cc64d4d10a1db077523e096422917797e3aca6f6f16b6",
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,23 @@
+precise	kind	title	path	declaration
+c:@E@FPUIExtensionErrorCode	swift.enum	FPUIExtensionErrorCode	FPUIExtensionErrorCode	enum FPUIExtensionErrorCode
+c:@E@FPUIExtensionErrorCode@FPUIExtensionErrorCodeFailed	swift.enum.case	FPUIExtensionErrorCode.failed	FPUIExtensionErrorCode.failed	case failed
+c:@E@FPUIExtensionErrorCode@FPUIExtensionErrorCodeUserCancelled	swift.enum.case	FPUIExtensionErrorCode.userCancelled	FPUIExtensionErrorCode.userCancelled	case userCancelled
+c:@FPUIErrorDomain	swift.var	FPUIErrorDomain	FPUIErrorDomain	let FPUIErrorDomain: String
+c:@T@FPUIActionIdentifier	swift.struct	FPUIActionIdentifier	FPUIActionIdentifier	struct FPUIActionIdentifier
+c:objc(cs)FPUIActionExtensionContext	swift.class	FPUIActionExtensionContext	FPUIActionExtensionContext	class FPUIActionExtensionContext
+c:objc(cs)FPUIActionExtensionContext(im)cancelRequestWithError:	swift.method	cancelRequest(withError:)	FPUIActionExtensionContext.cancelRequest(withError:)	func cancelRequest(withError error: any Error)
+c:objc(cs)FPUIActionExtensionContext(im)completeRequest	swift.method	completeRequest()	FPUIActionExtensionContext.completeRequest()	func completeRequest()
+c:objc(cs)FPUIActionExtensionContext(py)domainIdentifier	swift.property	domainIdentifier	FPUIActionExtensionContext.domainIdentifier	var domainIdentifier: NSFileProviderDomainIdentifier? { get }
+c:objc(cs)FPUIActionExtensionViewController	swift.class	FPUIActionExtensionViewController	FPUIActionExtensionViewController	@MainActor class FPUIActionExtensionViewController
+c:objc(cs)FPUIActionExtensionViewController(im)prepareForActionWithIdentifier:itemIdentifiers:	swift.method	prepare(forAction:itemIdentifiers:)	FPUIActionExtensionViewController.prepare(forAction:itemIdentifiers:)	@MainActor func prepare(forAction actionIdentifier: String, itemIdentifiers: [NSFileProviderItemIdentifier])
+c:objc(cs)FPUIActionExtensionViewController(im)prepareForError:	swift.method	prepare(forError:)	FPUIActionExtensionViewController.prepare(forError:)	@MainActor func prepare(forError error: any Error)
+c:objc(cs)FPUIActionExtensionViewController(py)extensionContext	swift.property	extensionContext	FPUIActionExtensionViewController.extensionContext	@MainActor var extensionContext: FPUIActionExtensionContext { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@FPUIExtensionErrorCode	swift.func.op	!=(_:_:)	FPUIExtensionErrorCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@FPUIActionIdentifier	swift.func.op	!=(_:_:)	FPUIActionIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@FPUIExtensionErrorCode	swift.property	hashValue	FPUIExtensionErrorCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@FPUIExtensionErrorCode	swift.method	hash(into:)	FPUIExtensionErrorCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:So20FPUIActionIdentifiera8rawValueABSS_tcfc	swift.init	init(rawValue:)	FPUIActionIdentifier.init(rawValue:)	init(rawValue: String)
+s:So20FPUIActionIdentifierayABSScfc	swift.init	init(_:)	FPUIActionIdentifier.init(_:)	init(_ rawValue: String)
+s:So22FPUIExtensionErrorCodeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	FPUIExtensionErrorCode.init(rawValue:)	init?(rawValue: UInt)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@FPUIActionIdentifier	swift.property	hashValue	FPUIActionIdentifier.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@FPUIActionIdentifier	swift.method	hash(into:)	FPUIActionIdentifier.hash(into:)	func hash(into hasher: inout Hasher)
