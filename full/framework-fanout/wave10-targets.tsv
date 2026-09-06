@@ -1,0 +1,17 @@
+module	slug	lane	priority	risks	dependencies
+AdSupport	adsupport	leaf-full	100	privacy,advertising,fail-closed	Foundation
+AppClip	appclip	leaf-full	100	os-service,fail-closed	Foundation
+AddressBookUI	addressbookui	legacy-adapter	100	legacy,ui,privacy,contacts	AddressBook,Foundation,UIKit
+OpenGLES	opengles	legacy-adapter	100	legacy,c-abi,graphics,fail-closed	CoreFoundation
+CoreAudioKit	coreaudiokit	medium-full	100	audio,ui,fail-closed	AudioToolbox,Foundation,UIKit
+CryptoTokenKit	cryptotokenkit	medium-full	100	security,hardware,fail-closed	Foundation
+ExposureNotification	exposurenotification	medium-full	100	privacy,os-service,fail-closed	Foundation
+FileProviderUI	fileproviderui	leaf-full	100	ui,extension,fail-closed	FileProvider,Foundation,UIKit
+FinanceKit	financekit	medium-full	100	privacy,finance,fail-closed	Foundation
+HealthKitUI	healthkitui	leaf-full	100	ui,health,privacy,fail-closed	Foundation,HealthKit,UIKit
+IdentityLookup	identitylookup	medium-full	100	extension,messaging,fail-closed	Foundation
+ImageCaptureCore	imagecapturecore	medium-full	100	hardware,camera,fail-closed	Foundation
+MediaToolbox	mediatoolbox	medium-full	100	c-abi,audio,callbacks,fail-closed	CoreFoundation,CoreMedia
+ProximityReader	proximityreader	medium-full	100	payments,hardware,fail-closed	Foundation
+RoomPlan	roomplan	large-partitioned	100	arkit,scanning,fail-closed	Foundation
+ScreenTime	screentime	leaf-full	100	privacy,os-service,fail-closed	Foundation

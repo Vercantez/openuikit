@@ -1,0 +1,4 @@
+full/cryptotokenkit/CryptoTokenKit.swift
+full/cryptotokenkit/TKSmartCard.swift
+full/cryptotokenkit/TKTLVRecord.swift
+full/cryptotokenkit/TKToken.swift

@@ -1,0 +1,332 @@
+precise	kind	title	path	declaration
+s:10FinanceKit0A5ErrorO	swift.enum	FinanceError	FinanceError	enum FinanceError
+s:10FinanceKit0A5ErrorO11errorDomainSSvpZ	swift.type.property	errorDomain	FinanceError.errorDomain	static var errorDomain: String { get }
+s:10FinanceKit0A5ErrorO13errorUserInfoSDySSypGvp	swift.property	errorUserInfo	FinanceError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10FinanceKit0A5ErrorO13failureReasonSSSgvp	swift.property	failureReason	FinanceError.failureReason	var failureReason: String? { get }
+s:10FinanceKit0A5ErrorO14dataRestrictedyAcA0A5StoreC8DataTypeOcACmF	swift.enum.case	FinanceError.dataRestricted(_:)	FinanceError.dataRestricted(_:)	case dataRestricted(FinanceStore.DataType)
+s:10FinanceKit0A5ErrorO16errorDescriptionSSSgvp	swift.property	errorDescription	FinanceError.errorDescription	var errorDescription: String? { get }
+s:10FinanceKit0A5ErrorO19historyTokenInvalidyA2CmF	swift.enum.case	FinanceError.historyTokenInvalid	FinanceError.historyTokenInvalid	case historyTokenInvalid
+s:10FinanceKit0A5ErrorO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	FinanceError.==(_:_:)	static func == (a: FinanceError, b: FinanceError) -> Bool
+s:10FinanceKit0A5ErrorO7unknownyA2CmF	swift.enum.case	FinanceError.unknown	FinanceError.unknown	case unknown
+s:10FinanceKit0A5ErrorO9errorCodeSivp	swift.property	errorCode	FinanceError.errorCode	var errorCode: Int { get }
+s:10FinanceKit0A5StoreC	swift.class	FinanceStore	FinanceStore	class FinanceStore
+s:10FinanceKit0A5StoreC12HistoryTokenV	swift.struct	FinanceStore.HistoryToken	FinanceStore.HistoryToken	struct HistoryToken
+s:10FinanceKit0A5StoreC12HistoryTokenV4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	FinanceStore.HistoryToken.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit0A5StoreC12HistoryTokenV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	FinanceStore.HistoryToken.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit0A5StoreC12transactions5querySayAA11TransactionVGAA0F5QueryV_tYaKF	swift.method	transactions(query:)	FinanceStore.transactions(query:)	func transactions(query: TransactionQuery) async throws -> [Transaction]
+s:10FinanceKit0A5StoreC13containsOrder8matching11updatedDateAC08ContainsE6ResultOAA014FullyQualifiedE10IdentifierV_10Foundation0H0VSgtYaKF	swift.method	containsOrder(matching:updatedDate:)	FinanceStore.containsOrder(matching:updatedDate:)	func containsOrder(matching fqoid: FullyQualifiedOrderIdentifier, updatedDate: Date? = nil) async throws -> FinanceStore.ContainsOrderResult
+s:10FinanceKit0A5StoreC14accountHistory5since12isMonitoringAC0E0Vy_AA7AccountOGAC0E5TokenVSg_SbtF	swift.method	accountHistory(since:isMonitoring:)	FinanceStore.accountHistory(since:isMonitoring:)	func accountHistory(since token: FinanceStore.HistoryToken? = nil, isMonitoring: Bool = true) -> FinanceStore.History<Account>
+s:10FinanceKit0A5StoreC15SaveOrderResultO	swift.enum	FinanceStore.SaveOrderResult	FinanceStore.SaveOrderResult	enum SaveOrderResult
+s:10FinanceKit0A5StoreC15SaveOrderResultO13newerExistingyA2EmF	swift.enum.case	FinanceStore.SaveOrderResult.newerExisting	FinanceStore.SaveOrderResult.newerExisting	case newerExisting
+s:10FinanceKit0A5StoreC15SaveOrderResultO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	FinanceStore.SaveOrderResult.==(_:_:)	static func == (a: FinanceStore.SaveOrderResult, b: FinanceStore.SaveOrderResult) -> Bool
+s:10FinanceKit0A5StoreC15SaveOrderResultO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FinanceStore.SaveOrderResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit0A5StoreC15SaveOrderResultO5addedyA2EmF	swift.enum.case	FinanceStore.SaveOrderResult.added	FinanceStore.SaveOrderResult.added	case added
+s:10FinanceKit0A5StoreC15SaveOrderResultO8AllCasesa	swift.typealias	FinanceStore.SaveOrderResult.AllCases	FinanceStore.SaveOrderResult.AllCases	typealias AllCases = [FinanceStore.SaveOrderResult]
+s:10FinanceKit0A5StoreC15SaveOrderResultO8allCasesSayAEGvpZ	swift.type.property	allCases	FinanceStore.SaveOrderResult.allCases	nonisolated static var allCases: [FinanceStore.SaveOrderResult] { get }
+s:10FinanceKit0A5StoreC15SaveOrderResultO9cancelledyA2EmF	swift.enum.case	FinanceStore.SaveOrderResult.cancelled	FinanceStore.SaveOrderResult.cancelled	case cancelled
+s:10FinanceKit0A5StoreC15SaveOrderResultO9hashValueSivp	swift.property	hashValue	FinanceStore.SaveOrderResult.hashValue	var hashValue: Int { get }
+s:10FinanceKit0A5StoreC15UpdateFrequencyO	swift.enum	FinanceStore.UpdateFrequency	FinanceStore.UpdateFrequency	enum UpdateFrequency
+s:10FinanceKit0A5StoreC15UpdateFrequencyO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	FinanceStore.UpdateFrequency.==(_:_:)	static func == (a: FinanceStore.UpdateFrequency, b: FinanceStore.UpdateFrequency) -> Bool
+s:10FinanceKit0A5StoreC15UpdateFrequencyO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	FinanceStore.UpdateFrequency.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit0A5StoreC15UpdateFrequencyO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FinanceStore.UpdateFrequency.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit0A5StoreC15UpdateFrequencyO5dailyyA2EmF	swift.enum.case	FinanceStore.UpdateFrequency.daily	FinanceStore.UpdateFrequency.daily	case daily
+s:10FinanceKit0A5StoreC15UpdateFrequencyO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	FinanceStore.UpdateFrequency.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit0A5StoreC15UpdateFrequencyO6hourlyyA2EmF	swift.enum.case	FinanceStore.UpdateFrequency.hourly	FinanceStore.UpdateFrequency.hourly	case hourly
+s:10FinanceKit0A5StoreC15UpdateFrequencyO6weeklyyA2EmF	swift.enum.case	FinanceStore.UpdateFrequency.weekly	FinanceStore.UpdateFrequency.weekly	case weekly
+s:10FinanceKit0A5StoreC15UpdateFrequencyO9hashValueSivp	swift.property	hashValue	FinanceStore.UpdateFrequency.hashValue	var hashValue: Int { get }
+s:10FinanceKit0A5StoreC15accountBalances5querySayAA14AccountBalanceVGAA0gH5QueryV_tYaKF	swift.method	accountBalances(query:)	FinanceStore.accountBalances(query:)	func accountBalances(query: AccountBalanceQuery) async throws -> [AccountBalance]
+s:10FinanceKit0A5StoreC15isDataAvailableySbAC0E4TypeOFZ	swift.type.method	isDataAvailable(_:)	FinanceStore.isDataAvailable(_:)	static func isDataAvailable(_ type: FinanceStore.DataType) -> Bool
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO	swift.enum	FinanceStore.BackgroundDataType	FinanceStore.BackgroundDataType	enum BackgroundDataType
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO12transactionsyA2EmF	swift.enum.case	FinanceStore.BackgroundDataType.transactions	FinanceStore.BackgroundDataType.transactions	case transactions
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO15accountBalancesyA2EmF	swift.enum.case	FinanceStore.BackgroundDataType.accountBalances	FinanceStore.BackgroundDataType.accountBalances	case accountBalances
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	FinanceStore.BackgroundDataType.==(_:_:)	static func == (a: FinanceStore.BackgroundDataType, b: FinanceStore.BackgroundDataType) -> Bool
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO4fromAEs7Decoder_p_tKcfc	swift.init	init(from:)	FinanceStore.BackgroundDataType.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FinanceStore.BackgroundDataType.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	FinanceStore.BackgroundDataType.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO8accountsyA2EmF	swift.enum.case	FinanceStore.BackgroundDataType.accounts	FinanceStore.BackgroundDataType.accounts	case accounts
+s:10FinanceKit0A5StoreC18BackgroundDataTypeO9hashValueSivp	swift.property	hashValue	FinanceStore.BackgroundDataType.hashValue	var hashValue: Int { get }
+s:10FinanceKit0A5StoreC18transactionHistory12forAccountID5since12isMonitoringAC0E0Vy_AA11TransactionVG10Foundation4UUIDV_AC0E5TokenVSgSbtF	swift.method	transactionHistory(forAccountID:since:isMonitoring:)	FinanceStore.transactionHistory(forAccountID:since:isMonitoring:)	func transactionHistory(forAccountID accountID: UUID, since token: FinanceStore.HistoryToken? = nil, isMonitoring: Bool = true) -> FinanceStore.History<Transaction>
+s:10FinanceKit0A5StoreC19ContainsOrderResultO	swift.enum	FinanceStore.ContainsOrderResult	FinanceStore.ContainsOrderResult	enum ContainsOrderResult
+s:10FinanceKit0A5StoreC19ContainsOrderResultO11newerExistsyA2EmF	swift.enum.case	FinanceStore.ContainsOrderResult.newerExists	FinanceStore.ContainsOrderResult.newerExists	case newerExists
+s:10FinanceKit0A5StoreC19ContainsOrderResultO11olderExistsyA2EmF	swift.enum.case	FinanceStore.ContainsOrderResult.olderExists	FinanceStore.ContainsOrderResult.olderExists	case olderExists
+s:10FinanceKit0A5StoreC19ContainsOrderResultO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	FinanceStore.ContainsOrderResult.==(_:_:)	static func == (a: FinanceStore.ContainsOrderResult, b: FinanceStore.ContainsOrderResult) -> Bool
+s:10FinanceKit0A5StoreC19ContainsOrderResultO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FinanceStore.ContainsOrderResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit0A5StoreC19ContainsOrderResultO6existsyA2EmF	swift.enum.case	FinanceStore.ContainsOrderResult.exists	FinanceStore.ContainsOrderResult.exists	case exists
+s:10FinanceKit0A5StoreC19ContainsOrderResultO8AllCasesa	swift.typealias	FinanceStore.ContainsOrderResult.AllCases	FinanceStore.ContainsOrderResult.AllCases	typealias AllCases = [FinanceStore.ContainsOrderResult]
+s:10FinanceKit0A5StoreC19ContainsOrderResultO8allCasesSayAEGvpZ	swift.type.property	allCases	FinanceStore.ContainsOrderResult.allCases	nonisolated static var allCases: [FinanceStore.ContainsOrderResult] { get }
+s:10FinanceKit0A5StoreC19ContainsOrderResultO8notFoundyA2EmF	swift.enum.case	FinanceStore.ContainsOrderResult.notFound	FinanceStore.ContainsOrderResult.notFound	case notFound
+s:10FinanceKit0A5StoreC19ContainsOrderResultO9hashValueSivp	swift.property	hashValue	FinanceStore.ContainsOrderResult.hashValue	var hashValue: Int { get }
+s:10FinanceKit0A5StoreC19authorizationStatusAA013AuthorizationE0OyYaKF	swift.method	authorizationStatus()	FinanceStore.authorizationStatus()	func authorizationStatus() async throws -> AuthorizationStatus
+s:10FinanceKit0A5StoreC20requestAuthorizationAA0E6StatusOyYaKF	swift.method	requestAuthorization()	FinanceStore.requestAuthorization()	func requestAuthorization() async throws -> AuthorizationStatus
+s:10FinanceKit0A5StoreC21accountBalanceHistory12forAccountID5since12isMonitoringAC0F0Vy_AA0hE0VG10Foundation4UUIDV_AC0F5TokenVSgSbtF	swift.method	accountBalanceHistory(forAccountID:since:isMonitoring:)	FinanceStore.accountBalanceHistory(forAccountID:since:isMonitoring:)	func accountBalanceHistory(forAccountID accountID: UUID, since token: FinanceStore.HistoryToken? = nil, isMonitoring: Bool = true) -> FinanceStore.History<AccountBalance>
+s:10FinanceKit0A5StoreC24enableBackgroundDelivery3for9frequencyySayAC0E8DataTypeOG_AC15UpdateFrequencyOtF	swift.method	enableBackgroundDelivery(for:frequency:)	FinanceStore.enableBackgroundDelivery(for:frequency:)	func enableBackgroundDelivery(for types: [FinanceStore.BackgroundDataType], frequency: FinanceStore.UpdateFrequency)
+s:10FinanceKit0A5StoreC25disableBackgroundDelivery3forySayAC0E8DataTypeOG_tF	swift.method	disableBackgroundDelivery(for:)	FinanceStore.disableBackgroundDelivery(for:)	func disableBackgroundDelivery(for types: [FinanceStore.BackgroundDataType])
+s:10FinanceKit0A5StoreC28disableAllBackgroundDeliveryyyF	swift.method	disableAllBackgroundDelivery()	FinanceStore.disableAllBackgroundDelivery()	func disableAllBackgroundDelivery()
+s:10FinanceKit0A5StoreC6sharedACvpZ	swift.type.property	shared	FinanceStore.shared	static let shared: FinanceStore
+s:10FinanceKit0A5StoreC7ChangesV	swift.struct	FinanceStore.Changes	FinanceStore.Changes	struct Changes<Model> where Model : Identifiable
+s:10FinanceKit0A5StoreC7ChangesV7deletedSay2IDQzGvp	swift.property	deleted	FinanceStore.Changes.deleted	let deleted: [Model.ID]
+s:10FinanceKit0A5StoreC7ChangesV7updatedSayxGvp	swift.property	updated	FinanceStore.Changes.updated	let updated: [Model]
+s:10FinanceKit0A5StoreC7ChangesV8insertedSayxGvp	swift.property	inserted	FinanceStore.Changes.inserted	let inserted: [Model]
+s:10FinanceKit0A5StoreC7ChangesV8newTokenAC07HistoryF0Vvp	swift.property	newToken	FinanceStore.Changes.newToken	let newToken: FinanceStore.HistoryToken
+s:10FinanceKit0A5StoreC7HistoryV	swift.struct	FinanceStore.History	FinanceStore.History	struct History<Model> where Model : Identifiable
+s:10FinanceKit0A5StoreC7HistoryV13AsyncIteratora	swift.typealias	FinanceStore.History.AsyncIterator	FinanceStore.History.AsyncIterator	typealias AsyncIterator = FinanceStore.History<Model>.Iterator
+s:10FinanceKit0A5StoreC7HistoryV17makeAsyncIteratorAE0G0Vy_x_GyF	swift.method	makeAsyncIterator()	FinanceStore.History.makeAsyncIterator()	func makeAsyncIterator() -> FinanceStore.History<Model>.Iterator
+s:10FinanceKit0A5StoreC7HistoryV7Elementa	swift.typealias	FinanceStore.History.Element	FinanceStore.History.Element	typealias Element = FinanceStore.Changes<Model>
+s:10FinanceKit0A5StoreC7HistoryV8IteratorV	swift.struct	FinanceStore.History.Iterator	FinanceStore.History.Iterator	struct Iterator
+s:10FinanceKit0A5StoreC7HistoryV8IteratorV4nextAC7ChangesVy_xGSgyYaKF	swift.method	next()	FinanceStore.History.Iterator.next()	func next() async throws -> FinanceStore.Changes<Model>?
+s:10FinanceKit0A5StoreC7HistoryV8IteratorV7Elementa	swift.typealias	FinanceStore.History.Iterator.Element	FinanceStore.History.Iterator.Element	typealias Element = FinanceStore.Changes<Model>
+s:10FinanceKit0A5StoreC8DataTypeO	swift.enum	FinanceStore.DataType	FinanceStore.DataType	enum DataType
+s:10FinanceKit0A5StoreC8DataTypeO09financialD0yA2EmF	swift.enum.case	FinanceStore.DataType.financialData	FinanceStore.DataType.financialData	case financialData
+s:10FinanceKit0A5StoreC8DataTypeO2eeoiySbAE_AEtFZ	swift.func.op	==(_:_:)	FinanceStore.DataType.==(_:_:)	static func == (a: FinanceStore.DataType, b: FinanceStore.DataType) -> Bool
+s:10FinanceKit0A5StoreC8DataTypeO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FinanceStore.DataType.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit0A5StoreC8DataTypeO6ordersyA2EmF	swift.enum.case	FinanceStore.DataType.orders	FinanceStore.DataType.orders	case orders
+s:10FinanceKit0A5StoreC8DataTypeO9hashValueSivp	swift.property	hashValue	FinanceStore.DataType.hashValue	var hashValue: Int { get }
+s:10FinanceKit0A5StoreC8accounts5querySayAA7AccountOGAA0F5QueryV_tYaKF	swift.method	accounts(query:)	FinanceStore.accounts(query:)	func accounts(query: AccountQuery) async throws -> [Account]
+s:10FinanceKit0A5StoreC9saveOrder13signedArchiveAC04SaveE6ResultO10Foundation4DataV_tYaKF	swift.method	saveOrder(signedArchive:)	FinanceStore.saveOrder(signedArchive:)	func saveOrder(signedArchive: Data) async throws -> FinanceStore.SaveOrderResult
+s:10FinanceKit11TransactionV	swift.struct	Transaction	Transaction	struct Transaction
+s:10FinanceKit11TransactionV08originalC11DescriptionSSvp	swift.property	originalTransactionDescription	Transaction.originalTransactionDescription	let originalTransactionDescription: String
+s:10FinanceKit11TransactionV10postedDate10Foundation0E0VSgvp	swift.property	postedDate	Transaction.postedDate	let postedDate: Date?
+s:10FinanceKit11TransactionV12merchantNameSSSgvp	swift.property	merchantName	Transaction.merchantName	let merchantName: String?
+s:10FinanceKit11TransactionV15transactionDate10Foundation0E0Vvp	swift.property	transactionDate	Transaction.transactionDate	let transactionDate: Date
+s:10FinanceKit11TransactionV15transactionTypeAA0cE0Ovp	swift.property	transactionType	Transaction.transactionType	let transactionType: TransactionType
+s:10FinanceKit11TransactionV17transactionAmountAA08CurrencyE0Vvp	swift.property	transactionAmount	Transaction.transactionAmount	let transactionAmount: CurrencyAmount
+s:10FinanceKit11TransactionV20creditDebitIndicatorAA06CrediteF0Ovp	swift.property	creditDebitIndicator	Transaction.creditDebitIndicator	let creditDebitIndicator: CreditDebitIndicator
+s:10FinanceKit11TransactionV20merchantCategoryCodeAA08MerchanteF0VSgvp	swift.property	merchantCategoryCode	Transaction.merchantCategoryCode	let merchantCategoryCode: MerchantCategoryCode?
+s:10FinanceKit11TransactionV21foreignCurrencyAmountAA0eF0VSgvp	swift.property	foreignCurrencyAmount	Transaction.foreignCurrencyAmount	let foreignCurrencyAmount: CurrencyAmount?
+s:10FinanceKit11TransactionV22transactionDescriptionSSvp	swift.property	transactionDescription	Transaction.transactionDescription	let transactionDescription: String
+s:10FinanceKit11TransactionV27foreignCurrencyExchangeRateSo9NSDecimalaSgvp	swift.property	foreignCurrencyExchangeRate	Transaction.foreignCurrencyExchangeRate	let foreignCurrencyExchangeRate: Decimal?
+s:10FinanceKit11TransactionV2IDa	swift.typealias	Transaction.ID	Transaction.ID	typealias ID = UUID
+s:10FinanceKit11TransactionV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	Transaction.==(_:_:)	static func == (a: Transaction, b: Transaction) -> Bool
+s:10FinanceKit11TransactionV2id10Foundation4UUIDVvp	swift.property	id	Transaction.id	let id: UUID
+s:10FinanceKit11TransactionV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	Transaction.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit11TransactionV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	Transaction.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit11TransactionV6statusAA0C6StatusOvp	swift.property	status	Transaction.status	let status: TransactionStatus
+s:10FinanceKit11TransactionV9accountID10Foundation4UUIDVvp	swift.property	accountID	Transaction.accountID	let accountID: UUID
+s:10FinanceKit12AccountQueryV	swift.struct	AccountQuery	AccountQuery	struct AccountQuery
+s:10FinanceKit12AccountQueryV15sortDescriptors9predicate5limit6offsetACSay10Foundation14SortDescriptorVyAA0C0OGG_AH9PredicateVyAL_QPGSgSiSgAStcfc	swift.init	init(sortDescriptors:predicate:limit:offset:)	AccountQuery.init(sortDescriptors:predicate:limit:offset:)	init(sortDescriptors: [SortDescriptor<Account>] = [], predicate: Predicate<Account>? = nil, limit: Int? = nil, offset: Int? = nil)
+s:10FinanceKit12AssetAccountV	swift.struct	AssetAccount	AssetAccount	struct AssetAccount
+s:10FinanceKit12AssetAccountV11displayNameSSvp	swift.property	displayName	AssetAccount.displayName	let displayName: String
+s:10FinanceKit12AssetAccountV11openingDate10Foundation0F0VSgvp	swift.property	openingDate	AssetAccount.openingDate	let openingDate: Date?
+s:10FinanceKit12AssetAccountV12currencyCodeSSvp	swift.property	currencyCode	AssetAccount.currencyCode	let currencyCode: String
+s:10FinanceKit12AssetAccountV15institutionNameSSvp	swift.property	institutionName	AssetAccount.institutionName	let institutionName: String
+s:10FinanceKit12AssetAccountV18accountDescriptionSSSgvp	swift.property	accountDescription	AssetAccount.accountDescription	let accountDescription: String?
+s:10FinanceKit12AssetAccountV2IDa	swift.typealias	AssetAccount.ID	AssetAccount.ID	typealias ID = UUID
+s:10FinanceKit12AssetAccountV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AssetAccount.==(_:_:)	static func == (a: AssetAccount, b: AssetAccount) -> Bool
+s:10FinanceKit12AssetAccountV2id10Foundation4UUIDVvp	swift.property	id	AssetAccount.id	let id: UUID
+s:10FinanceKit12AssetAccountV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	AssetAccount.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit12AssetAccountV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AssetAccount.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit14AccountBalanceV	swift.struct	AccountBalance	AccountBalance	struct AccountBalance
+s:10FinanceKit14AccountBalanceV07currentD0AA07CurrentD0Ovp	swift.property	currentBalance	AccountBalance.currentBalance	let currentBalance: CurrentBalance
+s:10FinanceKit14AccountBalanceV12currencyCodeSSvp	swift.property	currencyCode	AccountBalance.currencyCode	var currencyCode: String { get }
+s:10FinanceKit14AccountBalanceV2IDa	swift.typealias	AccountBalance.ID	AccountBalance.ID	typealias ID = UUID
+s:10FinanceKit14AccountBalanceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AccountBalance.==(_:_:)	static func == (a: AccountBalance, b: AccountBalance) -> Bool
+s:10FinanceKit14AccountBalanceV2id10Foundation4UUIDVvp	swift.property	id	AccountBalance.id	let id: UUID
+s:10FinanceKit14AccountBalanceV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	AccountBalance.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit14AccountBalanceV6bookedAA0D0VSgvp	swift.property	booked	AccountBalance.booked	var booked: Balance? { get }
+s:10FinanceKit14AccountBalanceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AccountBalance.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit14AccountBalanceV9accountID10Foundation4UUIDVvp	swift.property	accountID	AccountBalance.accountID	let accountID: UUID
+s:10FinanceKit14AccountBalanceV9availableAA0D0VSgvp	swift.property	available	AccountBalance.available	var available: Balance? { get }
+s:10FinanceKit14CurrencyAmountV	swift.struct	CurrencyAmount	CurrencyAmount	struct CurrencyAmount
+s:10FinanceKit14CurrencyAmountV12currencyCodeSSvp	swift.property	currencyCode	CurrencyAmount.currencyCode	let currencyCode: String
+s:10FinanceKit14CurrencyAmountV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CurrencyAmount.==(_:_:)	static func == (a: CurrencyAmount, b: CurrencyAmount) -> Bool
+s:10FinanceKit14CurrencyAmountV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CurrencyAmount.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit14CurrencyAmountV6amountSo9NSDecimalavp	swift.property	amount	CurrencyAmount.amount	let amount: Decimal
+s:10FinanceKit14CurrencyAmountV9hashValueSivp	swift.property	hashValue	CurrencyAmount.hashValue	var hashValue: Int { get }
+s:10FinanceKit14CurrentBalanceO	swift.enum	CurrentBalance	CurrentBalance	enum CurrentBalance
+s:10FinanceKit14CurrentBalanceO18availableAndBookedyAcA0D0V_AFtcACmF	swift.enum.case	CurrentBalance.availableAndBooked(available:booked:)	CurrentBalance.availableAndBooked(available:booked:)	case availableAndBooked(available: Balance, booked: Balance)
+s:10FinanceKit14CurrentBalanceO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	CurrentBalance.==(_:_:)	static func == (a: CurrentBalance, b: CurrentBalance) -> Bool
+s:10FinanceKit14CurrentBalanceO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	CurrentBalance.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit14CurrentBalanceO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	CurrentBalance.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit14CurrentBalanceO6bookedyAcA0D0VcACmF	swift.enum.case	CurrentBalance.booked(_:)	CurrentBalance.booked(_:)	case booked(Balance)
+s:10FinanceKit14CurrentBalanceO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	CurrentBalance.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit14CurrentBalanceO9availableyAcA0D0VcACmF	swift.enum.case	CurrentBalance.available(_:)	CurrentBalance.available(_:)	case available(Balance)
+s:10FinanceKit14CurrentBalanceO9hashValueSivp	swift.property	hashValue	CurrentBalance.hashValue	var hashValue: Int { get }
+s:10FinanceKit15TransactionTypeO	swift.enum	TransactionType	TransactionType	enum TransactionType
+s:10FinanceKit15TransactionTypeO10adjustmentyA2CmF	swift.enum.case	TransactionType.adjustment	TransactionType.adjustment	case adjustment
+s:10FinanceKit15TransactionTypeO10withdrawalyA2CmF	swift.enum.case	TransactionType.withdrawal	TransactionType.withdrawal	case withdrawal
+s:10FinanceKit15TransactionTypeO11billPaymentyA2CmF	swift.enum.case	TransactionType.billPayment	TransactionType.billPayment	case billPayment
+s:10FinanceKit15TransactionTypeO11directDebityA2CmF	swift.enum.case	TransactionType.directDebit	TransactionType.directDebit	case directDebit
+s:10FinanceKit15TransactionTypeO11pointOfSaleyA2CmF	swift.enum.case	TransactionType.pointOfSale	TransactionType.pointOfSale	case pointOfSale
+s:10FinanceKit15TransactionTypeO13directDeposityA2CmF	swift.enum.case	TransactionType.directDeposit	TransactionType.directDeposit	case directDeposit
+s:10FinanceKit15TransactionTypeO13standingOrderyA2CmF	swift.enum.case	TransactionType.standingOrder	TransactionType.standingOrder	case standingOrder
+s:10FinanceKit15TransactionTypeO3atmyA2CmF	swift.enum.case	TransactionType.atm	TransactionType.atm	case atm
+s:10FinanceKit15TransactionTypeO3feeyA2CmF	swift.enum.case	TransactionType.fee	TransactionType.fee	case fee
+s:10FinanceKit15TransactionTypeO4loanyA2CmF	swift.enum.case	TransactionType.loan	TransactionType.loan	case loan
+s:10FinanceKit15TransactionTypeO5checkyA2CmF	swift.enum.case	TransactionType.check	TransactionType.check	case check
+s:10FinanceKit15TransactionTypeO6refundyA2CmF	swift.enum.case	TransactionType.refund	TransactionType.refund	case refund
+s:10FinanceKit15TransactionTypeO7deposityA2CmF	swift.enum.case	TransactionType.deposit	TransactionType.deposit	case deposit
+s:10FinanceKit15TransactionTypeO7unknownyA2CmF	swift.enum.case	TransactionType.unknown	TransactionType.unknown	case unknown
+s:10FinanceKit15TransactionTypeO8AllCasesa	swift.typealias	TransactionType.AllCases	TransactionType.AllCases	typealias AllCases = [TransactionType]
+s:10FinanceKit15TransactionTypeO8RawValuea	swift.typealias	TransactionType.RawValue	TransactionType.RawValue	typealias RawValue = Int16
+s:10FinanceKit15TransactionTypeO8allCasesSayACGvpZ	swift.type.property	allCases	TransactionType.allCases	nonisolated static var allCases: [TransactionType] { get }
+s:10FinanceKit15TransactionTypeO8dividendyA2CmF	swift.enum.case	TransactionType.dividend	TransactionType.dividend	case dividend
+s:10FinanceKit15TransactionTypeO8interestyA2CmF	swift.enum.case	TransactionType.interest	TransactionType.interest	case interest
+s:10FinanceKit15TransactionTypeO8rawValueACSgs5Int16V_tcfc	swift.init	init(rawValue:)	TransactionType.init(rawValue:)	init?(rawValue: Int16)
+s:10FinanceKit15TransactionTypeO8rawValues5Int16Vvp	swift.property	rawValue	TransactionType.rawValue	var rawValue: Int16 { get }
+s:10FinanceKit15TransactionTypeO8transferyA2CmF	swift.enum.case	TransactionType.transfer	TransactionType.transfer	case transfer
+s:10FinanceKit16LiabilityAccountV	swift.struct	LiabilityAccount	LiabilityAccount	struct LiabilityAccount
+s:10FinanceKit16LiabilityAccountV11displayNameSSvp	swift.property	displayName	LiabilityAccount.displayName	let displayName: String
+s:10FinanceKit16LiabilityAccountV11openingDate10Foundation0F0VSgvp	swift.property	openingDate	LiabilityAccount.openingDate	let openingDate: Date?
+s:10FinanceKit16LiabilityAccountV12currencyCodeSSvp	swift.property	currencyCode	LiabilityAccount.currencyCode	let currencyCode: String
+s:10FinanceKit16LiabilityAccountV15institutionNameSSvp	swift.property	institutionName	LiabilityAccount.institutionName	let institutionName: String
+s:10FinanceKit16LiabilityAccountV17creditInformationAA0d6CreditF0Vvp	swift.property	creditInformation	LiabilityAccount.creditInformation	let creditInformation: AccountCreditInformation
+s:10FinanceKit16LiabilityAccountV18accountDescriptionSSSgvp	swift.property	accountDescription	LiabilityAccount.accountDescription	let accountDescription: String?
+s:10FinanceKit16LiabilityAccountV2IDa	swift.typealias	LiabilityAccount.ID	LiabilityAccount.ID	typealias ID = UUID
+s:10FinanceKit16LiabilityAccountV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	LiabilityAccount.==(_:_:)	static func == (a: LiabilityAccount, b: LiabilityAccount) -> Bool
+s:10FinanceKit16LiabilityAccountV2id10Foundation4UUIDVvp	swift.property	id	LiabilityAccount.id	let id: UUID
+s:10FinanceKit16LiabilityAccountV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	LiabilityAccount.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit16LiabilityAccountV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	LiabilityAccount.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit16TransactionQueryV	swift.struct	TransactionQuery	TransactionQuery	struct TransactionQuery
+s:10FinanceKit16TransactionQueryV15sortDescriptors9predicate5limit6offsetACSay10Foundation14SortDescriptorVyAA0C0VGG_AH9PredicateVyAL_QPGSgSiSgAStcfc	swift.init	init(sortDescriptors:predicate:limit:offset:)	TransactionQuery.init(sortDescriptors:predicate:limit:offset:)	init(sortDescriptors: [SortDescriptor<Transaction>] = [], predicate: Predicate<Transaction>? = nil, limit: Int? = nil, offset: Int? = nil)
+s:10FinanceKit16TransactionQueryV9predicate03forC5Types10Foundation9PredicateVyAA0C0V_QPGSayAA0C4TypeOG_tFZ	swift.type.method	predicate(forTransactionTypes:)	TransactionQuery.predicate(forTransactionTypes:)	static func predicate(forTransactionTypes transactionTypes: [TransactionType]) -> Predicate<Transaction>
+s:10FinanceKit16TransactionQueryV9predicate11forStatuses10Foundation9PredicateVyAA0C0V_QPGSayAA0C6StatusOG_tFZ	swift.type.method	predicate(forStatuses:)	TransactionQuery.predicate(forStatuses:)	static func predicate(forStatuses statuses: [TransactionStatus]) -> Predicate<Transaction>
+s:10FinanceKit16TransactionQueryV9predicate24forMerchantCategoryCodes10Foundation9PredicateVyAA0C0V_QPGSayAA0gH4CodeVG_tFZ	swift.type.method	predicate(forMerchantCategoryCodes:)	TransactionQuery.predicate(forMerchantCategoryCodes:)	static func predicate(forMerchantCategoryCodes merchantCategoryCodes: [MerchantCategoryCode]) -> Predicate<Transaction>
+s:10FinanceKit17TransactionStatusO	swift.enum	TransactionStatus	TransactionStatus	enum TransactionStatus
+s:10FinanceKit17TransactionStatusO10authorizedyA2CmF	swift.enum.case	TransactionStatus.authorized	TransactionStatus.authorized	case authorized
+s:10FinanceKit17TransactionStatusO4memoyA2CmF	swift.enum.case	TransactionStatus.memo	TransactionStatus.memo	case memo
+s:10FinanceKit17TransactionStatusO6bookedyA2CmF	swift.enum.case	TransactionStatus.booked	TransactionStatus.booked	case booked
+s:10FinanceKit17TransactionStatusO7pendingyA2CmF	swift.enum.case	TransactionStatus.pending	TransactionStatus.pending	case pending
+s:10FinanceKit17TransactionStatusO8AllCasesa	swift.typealias	TransactionStatus.AllCases	TransactionStatus.AllCases	typealias AllCases = [TransactionStatus]
+s:10FinanceKit17TransactionStatusO8RawValuea	swift.typealias	TransactionStatus.RawValue	TransactionStatus.RawValue	typealias RawValue = Int16
+s:10FinanceKit17TransactionStatusO8allCasesSayACGvpZ	swift.type.property	allCases	TransactionStatus.allCases	nonisolated static var allCases: [TransactionStatus] { get }
+s:10FinanceKit17TransactionStatusO8rawValueACSgs5Int16V_tcfc	swift.init	init(rawValue:)	TransactionStatus.init(rawValue:)	init?(rawValue: Int16)
+s:10FinanceKit17TransactionStatusO8rawValues5Int16Vvp	swift.property	rawValue	TransactionStatus.rawValue	var rawValue: Int16 { get }
+s:10FinanceKit17TransactionStatusO8rejectedyA2CmF	swift.enum.case	TransactionStatus.rejected	TransactionStatus.rejected	case rejected
+s:10FinanceKit19AccountBalanceQueryV	swift.struct	AccountBalanceQuery	AccountBalanceQuery	struct AccountBalanceQuery
+s:10FinanceKit19AccountBalanceQueryV15sortDescriptors9predicate5limit6offsetACSay10Foundation14SortDescriptorVyAA0cD0VGG_AH9PredicateVyAL_QPGSgSiSgAStcfc	swift.init	init(sortDescriptors:predicate:limit:offset:)	AccountBalanceQuery.init(sortDescriptors:predicate:limit:offset:)	init(sortDescriptors: [SortDescriptor<AccountBalance>] = [], predicate: Predicate<AccountBalance>? = nil, limit: Int? = nil, offset: Int? = nil)
+s:10FinanceKit19AccountBalanceQueryV9predicate11bookedSince5until10Foundation9PredicateVyAA0cD0V_QPGAG4DateV_ANSgtFZ	swift.type.method	predicate(bookedSince:until:)	AccountBalanceQuery.predicate(bookedSince:until:)	static func predicate(bookedSince startDate: Date, until endDate: Date? = nil) -> Predicate<AccountBalance>
+s:10FinanceKit19AccountBalanceQueryV9predicate14availableSince5until10Foundation9PredicateVyAA0cD0V_QPGAG4DateV_ANSgtFZ	swift.type.method	predicate(availableSince:until:)	AccountBalanceQuery.predicate(availableSince:until:)	static func predicate(availableSince startDate: Date, until endDate: Date? = nil) -> Predicate<AccountBalance>
+s:10FinanceKit19AuthorizationStatusO	swift.enum	AuthorizationStatus	AuthorizationStatus	enum AuthorizationStatus
+s:10FinanceKit19AuthorizationStatusO10authorizedyA2CmF	swift.enum.case	AuthorizationStatus.authorized	AuthorizationStatus.authorized	case authorized
+s:10FinanceKit19AuthorizationStatusO13notDeterminedyA2CmF	swift.enum.case	AuthorizationStatus.notDetermined	AuthorizationStatus.notDetermined	case notDetermined
+s:10FinanceKit19AuthorizationStatusO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AuthorizationStatus.==(_:_:)	static func == (a: AuthorizationStatus, b: AuthorizationStatus) -> Bool
+s:10FinanceKit19AuthorizationStatusO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	AuthorizationStatus.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit19AuthorizationStatusO4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit19AuthorizationStatusO6deniedyA2CmF	swift.enum.case	AuthorizationStatus.denied	AuthorizationStatus.denied	case denied
+s:10FinanceKit19AuthorizationStatusO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AuthorizationStatus.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit19AuthorizationStatusO9hashValueSivp	swift.property	hashValue	AuthorizationStatus.hashValue	var hashValue: Int { get }
+s:10FinanceKit20CreditDebitIndicatorO	swift.enum	CreditDebitIndicator	CreditDebitIndicator	enum CreditDebitIndicator
+s:10FinanceKit20CreditDebitIndicatorO5debityA2CmF	swift.enum.case	CreditDebitIndicator.debit	CreditDebitIndicator.debit	case debit
+s:10FinanceKit20CreditDebitIndicatorO6credityA2CmF	swift.enum.case	CreditDebitIndicator.credit	CreditDebitIndicator.credit	case credit
+s:10FinanceKit20CreditDebitIndicatorO8AllCasesa	swift.typealias	CreditDebitIndicator.AllCases	CreditDebitIndicator.AllCases	typealias AllCases = [CreditDebitIndicator]
+s:10FinanceKit20CreditDebitIndicatorO8RawValuea	swift.typealias	CreditDebitIndicator.RawValue	CreditDebitIndicator.RawValue	typealias RawValue = Int16
+s:10FinanceKit20CreditDebitIndicatorO8allCasesSayACGvpZ	swift.type.property	allCases	CreditDebitIndicator.allCases	nonisolated static var allCases: [CreditDebitIndicator] { get }
+s:10FinanceKit20CreditDebitIndicatorO8rawValueACSgs5Int16V_tcfc	swift.init	init(rawValue:)	CreditDebitIndicator.init(rawValue:)	init?(rawValue: Int16)
+s:10FinanceKit20CreditDebitIndicatorO8rawValues5Int16Vvp	swift.property	rawValue	CreditDebitIndicator.rawValue	var rawValue: Int16 { get }
+s:10FinanceKit20MerchantCategoryCodeV	swift.struct	MerchantCategoryCode	MerchantCategoryCode	struct MerchantCategoryCode
+s:10FinanceKit20MerchantCategoryCodeV11descriptionSSvp	swift.property	description	MerchantCategoryCode.description	var description: String { get }
+s:10FinanceKit20MerchantCategoryCodeV8RawValuea	swift.typealias	MerchantCategoryCode.RawValue	MerchantCategoryCode.RawValue	typealias RawValue = Int16
+s:10FinanceKit20MerchantCategoryCodeV8rawValueACs5Int16V_tcfc	swift.init	init(rawValue:)	MerchantCategoryCode.init(rawValue:)	init(rawValue: Int16)
+s:10FinanceKit20MerchantCategoryCodeV8rawValues5Int16Vvp	swift.property	rawValue	MerchantCategoryCode.rawValue	let rawValue: Int16
+s:10FinanceKit20MerchantCategoryCodeVyACSgSScfc	swift.init	init(_:)	MerchantCategoryCode.init(_:)	init?(_ description: String)
+s:10FinanceKit24AccountCreditInformationV	swift.struct	AccountCreditInformation	AccountCreditInformation	struct AccountCreditInformation
+s:10FinanceKit24AccountCreditInformationV11creditLimitAA14CurrencyAmountVSgvp	swift.property	creditLimit	AccountCreditInformation.creditLimit	let creditLimit: CurrencyAmount?
+s:10FinanceKit24AccountCreditInformationV18nextPaymentDueDate10Foundation0I0VSgvp	swift.property	nextPaymentDueDate	AccountCreditInformation.nextPaymentDueDate	let nextPaymentDueDate: Date?
+s:10FinanceKit24AccountCreditInformationV20overduePaymentAmountAA08CurrencyH0VSgvp	swift.property	overduePaymentAmount	AccountCreditInformation.overduePaymentAmount	let overduePaymentAmount: CurrencyAmount?
+s:10FinanceKit24AccountCreditInformationV24minimumNextPaymentAmountAA08CurrencyI0VSgvp	swift.property	minimumNextPaymentAmount	AccountCreditInformation.minimumNextPaymentAmount	let minimumNextPaymentAmount: CurrencyAmount?
+s:10FinanceKit24AccountCreditInformationV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	AccountCreditInformation.==(_:_:)	static func == (a: AccountCreditInformation, b: AccountCreditInformation) -> Bool
+s:10FinanceKit24AccountCreditInformationV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	AccountCreditInformation.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit24AccountCreditInformationV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	AccountCreditInformation.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit24AccountCreditInformationV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	AccountCreditInformation.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit24AccountCreditInformationV9hashValueSivp	swift.property	hashValue	AccountCreditInformation.hashValue	var hashValue: Int { get }
+s:10FinanceKit27BackgroundDeliveryExtensionP	swift.protocol	BackgroundDeliveryExtension	BackgroundDeliveryExtension	protocol BackgroundDeliveryExtension : AppExtension, BackgroundDeliveryExtensionProviding
+s:10FinanceKit27BackgroundDeliveryExtensionPAAE13configurationQrvp	swift.property	configuration	BackgroundDeliveryExtension.configuration	@MainActor @preconcurrency var configuration: some AppExtensionConfiguration { get }
+s:10FinanceKit29FullyQualifiedOrderIdentifierV	swift.struct	FullyQualifiedOrderIdentifier	FullyQualifiedOrderIdentifier	struct FullyQualifiedOrderIdentifier
+s:10FinanceKit29FullyQualifiedOrderIdentifierV05orderF0SSvp	swift.property	orderIdentifier	FullyQualifiedOrderIdentifier.orderIdentifier	var orderIdentifier: String
+s:10FinanceKit29FullyQualifiedOrderIdentifierV09orderTypeF00gF0ACSS_SStcfc	swift.init	init(orderTypeIdentifier:orderIdentifier:)	FullyQualifiedOrderIdentifier.init(orderTypeIdentifier:orderIdentifier:)	init(orderTypeIdentifier: String, orderIdentifier: String)
+s:10FinanceKit29FullyQualifiedOrderIdentifierV09orderTypeF0SSvp	swift.property	orderTypeIdentifier	FullyQualifiedOrderIdentifier.orderTypeIdentifier	var orderTypeIdentifier: String
+s:10FinanceKit29FullyQualifiedOrderIdentifierV11descriptionSSvp	swift.property	description	FullyQualifiedOrderIdentifier.description	var description: String { get }
+s:10FinanceKit29FullyQualifiedOrderIdentifierV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	FullyQualifiedOrderIdentifier.==(_:_:)	static func == (a: FullyQualifiedOrderIdentifier, b: FullyQualifiedOrderIdentifier) -> Bool
+s:10FinanceKit29FullyQualifiedOrderIdentifierV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	FullyQualifiedOrderIdentifier.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit29FullyQualifiedOrderIdentifierV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	FullyQualifiedOrderIdentifier.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit29FullyQualifiedOrderIdentifierV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	FullyQualifiedOrderIdentifier.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit29FullyQualifiedOrderIdentifierV9hashValueSivp	swift.property	hashValue	FullyQualifiedOrderIdentifier.hashValue	var hashValue: Int { get }
+s:10FinanceKit36BackgroundDeliveryExtensionProvidingP	swift.protocol	BackgroundDeliveryExtensionProviding	BackgroundDeliveryExtensionProviding	protocol BackgroundDeliveryExtensionProviding
+s:10FinanceKit36BackgroundDeliveryExtensionProvidingP13willTerminateyyYaF	swift.method	willTerminate()	BackgroundDeliveryExtensionProviding.willTerminate()	func willTerminate() async
+s:10FinanceKit36BackgroundDeliveryExtensionProvidingP14didReceiveData3forySayAA0A5StoreC0cI4TypeOG_tYaF	swift.method	didReceiveData(for:)	BackgroundDeliveryExtensionProviding.didReceiveData(for:)	func didReceiveData(for types: [FinanceStore.BackgroundDataType]) async
+s:10FinanceKit7AccountO	swift.enum	Account	Account	enum Account
+s:10FinanceKit7AccountO05assetC0AA05AssetC0VSgvp	swift.property	assetAccount	Account.assetAccount	var assetAccount: AssetAccount? { get }
+s:10FinanceKit7AccountO09liabilityC0AA09LiabilityC0VSgvp	swift.property	liabilityAccount	Account.liabilityAccount	var liabilityAccount: LiabilityAccount? { get }
+s:10FinanceKit7AccountO11displayNameSSvp	swift.property	displayName	Account.displayName	var displayName: String { get }
+s:10FinanceKit7AccountO11openingDate10Foundation0E0VSgvp	swift.property	openingDate	Account.openingDate	var openingDate: Date? { get }
+s:10FinanceKit7AccountO12currencyCodeSSvp	swift.property	currencyCode	Account.currencyCode	var currencyCode: String { get }
+s:10FinanceKit7AccountO15institutionNameSSvp	swift.property	institutionName	Account.institutionName	var institutionName: String { get }
+s:10FinanceKit7AccountO18accountDescriptionSSSgvp	swift.property	accountDescription	Account.accountDescription	var accountDescription: String? { get }
+s:10FinanceKit7AccountO2IDa	swift.typealias	Account.ID	Account.ID	typealias ID = UUID
+s:10FinanceKit7AccountO2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	Account.==(_:_:)	static func == (a: Account, b: Account) -> Bool
+s:10FinanceKit7AccountO2id10Foundation4UUIDVvp	swift.property	id	Account.id	var id: UUID { get }
+s:10FinanceKit7AccountO4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	Account.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit7AccountO5assetyAcA05AssetC0VcACmF	swift.enum.case	Account.asset(_:)	Account.asset(_:)	case asset(AssetAccount)
+s:10FinanceKit7AccountO6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	Account.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit7AccountO9liabilityyAcA09LiabilityC0VcACmF	swift.enum.case	Account.liability(_:)	Account.liability(_:)	case liability(LiabilityAccount)
+s:10FinanceKit7BalanceV	swift.struct	Balance	Balance	struct Balance
+s:10FinanceKit7BalanceV20creditDebitIndicatorAA06CrediteF0Ovp	swift.property	creditDebitIndicator	Balance.creditDebitIndicator	let creditDebitIndicator: CreditDebitIndicator
+s:10FinanceKit7BalanceV2eeoiySbAC_ACtFZ	swift.func.op	==(_:_:)	Balance.==(_:_:)	static func == (a: Balance, b: Balance) -> Bool
+s:10FinanceKit7BalanceV4fromACs7Decoder_p_tKcfc	swift.init	init(from:)	Balance.init(from:)	init(from decoder: any Decoder) throws
+s:10FinanceKit7BalanceV4hash4intoys6HasherVz_tF	swift.method	hash(into:)	Balance.hash(into:)	func hash(into hasher: inout Hasher)
+s:10FinanceKit7BalanceV6amountAA14CurrencyAmountVvp	swift.property	amount	Balance.amount	let amount: CurrencyAmount
+s:10FinanceKit7BalanceV6encode2toys7Encoder_p_tKF	swift.method	encode(to:)	Balance.encode(to:)	func encode(to encoder: any Encoder) throws
+s:10FinanceKit7BalanceV8asOfDate10Foundation0F0Vvp	swift.property	asOfDate	Balance.asOfDate	let asOfDate: Date
+s:10FinanceKit7BalanceV9hashValueSivp	swift.property	hashValue	Balance.hashValue	var hashValue: Int { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::s:10FinanceKit0A5ErrorO	swift.type.property	errorDomain	FinanceError.errorDomain	static var errorDomain: String { get }
+s:10Foundation14LocalizedErrorPAAE10helpAnchorSSSgvp::SYNTHESIZED::s:10FinanceKit0A5ErrorO	swift.property	helpAnchor	FinanceError.helpAnchor	var helpAnchor: String? { get }
+s:10Foundation14LocalizedErrorPAAE18recoverySuggestionSSSgvp::SYNTHESIZED::s:10FinanceKit0A5ErrorO	swift.property	recoverySuggestion	FinanceError.recoverySuggestion	var recoverySuggestion: String? { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit0A5ErrorO	swift.func.op	!=(_:_:)	FinanceError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit0A5StoreC15SaveOrderResultO	swift.func.op	!=(_:_:)	FinanceStore.SaveOrderResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit0A5StoreC15UpdateFrequencyO	swift.func.op	!=(_:_:)	FinanceStore.UpdateFrequency.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit0A5StoreC18BackgroundDataTypeO	swift.func.op	!=(_:_:)	FinanceStore.BackgroundDataType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit0A5StoreC19ContainsOrderResultO	swift.func.op	!=(_:_:)	FinanceStore.ContainsOrderResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit0A5StoreC8DataTypeO	swift.func.op	!=(_:_:)	FinanceStore.DataType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit11TransactionV	swift.func.op	!=(_:_:)	Transaction.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit12AssetAccountV	swift.func.op	!=(_:_:)	AssetAccount.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit14AccountBalanceV	swift.func.op	!=(_:_:)	AccountBalance.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit14CurrencyAmountV	swift.func.op	!=(_:_:)	CurrencyAmount.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit14CurrentBalanceO	swift.func.op	!=(_:_:)	CurrentBalance.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit15TransactionTypeO	swift.func.op	!=(_:_:)	TransactionType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit16LiabilityAccountV	swift.func.op	!=(_:_:)	LiabilityAccount.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit17TransactionStatusO	swift.func.op	!=(_:_:)	TransactionStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit19AuthorizationStatusO	swift.func.op	!=(_:_:)	AuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit20CreditDebitIndicatorO	swift.func.op	!=(_:_:)	CreditDebitIndicator.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit20MerchantCategoryCodeV	swift.func.op	!=(_:_:)	MerchantCategoryCode.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit24AccountCreditInformationV	swift.func.op	!=(_:_:)	AccountCreditInformation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit29FullyQualifiedOrderIdentifierV	swift.func.op	!=(_:_:)	FullyQualifiedOrderIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit7AccountO	swift.func.op	!=(_:_:)	Account.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10FinanceKit7BalanceV	swift.func.op	!=(_:_:)	Balance.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSERzs5Int16V8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:10FinanceKit15TransactionTypeO	swift.method	encode(to:)	TransactionType.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSERzs5Int16V8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:10FinanceKit17TransactionStatusO	swift.method	encode(to:)	TransactionStatus.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSERzs5Int16V8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:10FinanceKit20CreditDebitIndicatorO	swift.method	encode(to:)	CreditDebitIndicator.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSERzs5Int16V8RawValueSYRtzrlE6encode2toys7Encoder_p_tKF::SYNTHESIZED::s:10FinanceKit20MerchantCategoryCodeV	swift.method	encode(to:)	MerchantCategoryCode.encode(to:)	func encode(to encoder: any Encoder) throws
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:10FinanceKit15TransactionTypeO	swift.property	hashValue	TransactionType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:10FinanceKit17TransactionStatusO	swift.property	hashValue	TransactionStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:10FinanceKit20CreditDebitIndicatorO	swift.property	hashValue	CreditDebitIndicator.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::s:10FinanceKit20MerchantCategoryCodeV	swift.property	hashValue	MerchantCategoryCode.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:10FinanceKit15TransactionTypeO	swift.method	hash(into:)	TransactionType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:10FinanceKit17TransactionStatusO	swift.method	hash(into:)	TransactionStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:10FinanceKit20CreditDebitIndicatorO	swift.method	hash(into:)	CreditDebitIndicator.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:10FinanceKit20MerchantCategoryCodeV	swift.method	hash(into:)	MerchantCategoryCode.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSeRzs5Int16V8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:10FinanceKit15TransactionTypeO	swift.init	init(from:)	TransactionType.init(from:)	init(from decoder: any Decoder) throws
+s:SYsSeRzs5Int16V8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:10FinanceKit17TransactionStatusO	swift.init	init(from:)	TransactionStatus.init(from:)	init(from decoder: any Decoder) throws
+s:SYsSeRzs5Int16V8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:10FinanceKit20CreditDebitIndicatorO	swift.init	init(from:)	CreditDebitIndicator.init(from:)	init(from decoder: any Decoder) throws
+s:SYsSeRzs5Int16V8RawValueSYRtzrlE4fromxs7Decoder_p_tKcfc::SYNTHESIZED::s:10FinanceKit20MerchantCategoryCodeV	swift.init	init(from:)	MerchantCategoryCode.init(from:)	init(from decoder: any Decoder) throws
+s:ScI12_ConcurrencyE4next9isolation7ElementQzSgScA_pSgYi_tYa7FailureQzYKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV8IteratorV	swift.method	next(isolation:)	FinanceStore.History.Iterator.next(isolation:)	mutating func next(isolation actor: isolated (any Actor)?) async throws(Self.Failure) -> Self.Element?
+s:Sci12_ConcurrencyE10allSatisfyyS2b7ElementQzYaKXEYaKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	allSatisfy(_:)	FinanceStore.History.allSatisfy(_:)	func allSatisfy(_ predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE10compactMapyAA012AsyncCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaclF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	compactMap(_:)	FinanceStore.History.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async -> ElementOfResult?) -> AsyncCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE10compactMapyAA020AsyncThrowingCompactC8SequenceVyxqd__Gqd__Sg7ElementQzYaKclF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	compactMap(_:)	FinanceStore.History.compactMap(_:)	@preconcurrency func compactMap<ElementOfResult>(_ transform: @escaping (Self.Element) async throws -> ElementOfResult?) -> AsyncThrowingCompactMapSequence<Self, ElementOfResult>
+s:Sci12_ConcurrencyE3mapyAA16AsyncMapSequenceVyxqd__Gqd__7ElementQzYaclF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	map(_:)	FinanceStore.History.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async -> Transformed) -> AsyncMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3mapyAA24AsyncThrowingMapSequenceVyxqd__Gqd__7ElementQzYaKclF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	map(_:)	FinanceStore.History.map(_:)	@preconcurrency func map<Transformed>(_ transform: @escaping (Self.Element) async throws -> Transformed) -> AsyncThrowingMapSequence<Self, Transformed>
+s:Sci12_ConcurrencyE3max2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	max(by:)	FinanceStore.History.max(by:)	@warn_unqualified_access func max(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE3min2by7ElementQzSgSbAE_AEtYaKXE_tYaKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	min(by:)	FinanceStore.History.min(by:)	@warn_unqualified_access func min(by areInIncreasingOrder: (Self.Element, Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE4drop5whileAA22AsyncDropWhileSequenceVyxGSb7ElementQzYac_tF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	drop(while:)	FinanceStore.History.drop(while:)	@preconcurrency func drop(while predicate: @escaping (Self.Element) async -> Bool) -> AsyncDropWhileSequence<Self>
+s:Sci12_ConcurrencyE5first5where7ElementQzSgSbAEYaKXE_tYaKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	first(where:)	FinanceStore.History.first(where:)	func first(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Self.Element?
+s:Sci12_ConcurrencyE6filteryAA19AsyncFilterSequenceVyxGSb7ElementQzYacF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	filter(_:)	FinanceStore.History.filter(_:)	@preconcurrency func filter(_ isIncluded: @escaping (Self.Element) async -> Bool) -> AsyncFilterSequence<Self>
+s:Sci12_ConcurrencyE6prefix5whileAA24AsyncPrefixWhileSequenceVyxGSb7ElementQzYac_tKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	prefix(while:)	FinanceStore.History.prefix(while:)	@preconcurrency func prefix(while predicate: @escaping (Self.Element) async -> Bool) rethrows -> AsyncPrefixWhileSequence<Self>
+s:Sci12_ConcurrencyE6prefixyAA19AsyncPrefixSequenceVyxGSiF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	prefix(_:)	FinanceStore.History.prefix(_:)	func prefix(_ count: Int) -> AsyncPrefixSequence<Self>
+s:Sci12_ConcurrencyE6reduce4into_qd__qd__n_yqd__z_7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	reduce(into:_:)	FinanceStore.History.reduce(into:_:)	func reduce<Result>(into initialResult: Result, _ updateAccumulatingResult: (inout Result, Self.Element) async throws -> Void) async rethrows -> Result
+s:Sci12_ConcurrencyE6reduceyqd__qd___qd__qd___7ElementQztYaKXEtYaKlF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	reduce(_:_:)	FinanceStore.History.reduce(_:_:)	func reduce<Result>(_ initialResult: Result, _ nextPartialResult: (Result, Self.Element) async throws -> Result) async rethrows -> Result
+s:Sci12_ConcurrencyE7flatMapyAA017AsyncThrowingFlatC8SequenceVyxqd__Gqd__7ElementQzYaKcSciRd__lF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	flatMap(_:)	FinanceStore.History.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async throws -> SegmentOfResult) -> AsyncThrowingFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__7FailureQyd__AHRtzlF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	flatMap(_:)	FinanceStore.History.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == SegmentOfResult.Failure
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtd__lF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	flatMap(_:)	FinanceStore.History.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE7flatMapyAA09AsyncFlatC8SequenceVyxqd__Gqd__7ElementQzYacSciRd__s5NeverO7FailureRtzAiJRtd__lF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	flatMap(_:)	FinanceStore.History.flatMap(_:)	@preconcurrency func flatMap<SegmentOfResult>(_ transform: @escaping (Self.Element) async -> SegmentOfResult) -> AsyncFlatMapSequence<Self, SegmentOfResult> where SegmentOfResult : AsyncSequence, Self.Failure == Never, SegmentOfResult.Failure == Never
+s:Sci12_ConcurrencyE8contains5whereS2b7ElementQzYaKXE_tYaKF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	contains(where:)	FinanceStore.History.contains(where:)	func contains(where predicate: (Self.Element) async throws -> Bool) async rethrows -> Bool
+s:Sci12_ConcurrencyE9dropFirstyAA09AsyncDropC8SequenceVyxGSiF::SYNTHESIZED::s:10FinanceKit0A5StoreC7HistoryV	swift.method	dropFirst(_:)	FinanceStore.History.dropFirst(_:)	func dropFirst(_ count: Int = 1) -> AsyncDropFirstSequence<Self>
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10FinanceKit0A5ErrorO	swift.property	localizedDescription	FinanceError.localizedDescription	var localizedDescription: String { get }

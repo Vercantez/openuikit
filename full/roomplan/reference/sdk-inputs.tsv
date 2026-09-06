@@ -1,0 +1,5 @@
+category	sdkRelativePath	size	sha256
+header	System/Library/Frameworks/RoomPlan.framework/Headers/RoomPlan.h	464	5fe5ebe577656b097366dcb135f3e8497a03c5e561cd462cf4050e2dcb14c025
+swiftinterface	System/Library/Frameworks/RoomPlan.framework/Modules/RoomPlan.swiftmodule/arm64e-apple-ios.swiftinterface	31041	dde6a36420154d96f5ae7b807d04056868fd26abec9ad52c0eece4842f1afc76
+modulemap	System/Library/Frameworks/RoomPlan.framework/Modules/module.modulemap	97	375503d82d661ced371af2014f64357be7fe1b246875b3471956e9fbcd3317fb
+tbd	System/Library/Frameworks/RoomPlan.framework/RoomPlan.tbd	119017	24a95c5befa6f70767e381b6da4e7ab6687aff02848d9ace1082036d27240a9c

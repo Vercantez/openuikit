@@ -1,0 +1,265 @@
+precise	kind	title	path	declaration
+c:@E@ENActivityFlags	swift.struct	ENActivityFlags	ENActivityFlags	struct ENActivityFlags
+c:@E@ENActivityFlags@ENActivityFlagsPeriodicRun	swift.type.property	periodicRun	ENActivityFlags.periodicRun	static var periodicRun: ENActivityFlags { get }
+c:@E@ENActivityFlags@ENActivityFlagsPreAuthorizedKeyReleaseNotificationTapped	swift.type.property	preAuthorizedKeyReleaseNotificationTapped	ENActivityFlags.preAuthorizedKeyReleaseNotificationTapped	static var preAuthorizedKeyReleaseNotificationTapped: ENActivityFlags { get }
+c:@E@ENActivityFlags@ENActivityFlagsReserved1	swift.type.property	reserved1	ENActivityFlags.reserved1	static var reserved1: ENActivityFlags { get }
+c:@E@ENActivityFlags@ENActivityFlagsReserved2	swift.type.property	reserved2	ENActivityFlags.reserved2	static var reserved2: ENActivityFlags { get }
+c:@E@ENAuthorizationStatus	swift.enum	ENAuthorizationStatus	ENAuthorizationStatus	enum ENAuthorizationStatus
+c:@E@ENAuthorizationStatus@ENAuthorizationStatusAuthorized	swift.enum.case	ENAuthorizationStatus.authorized	ENAuthorizationStatus.authorized	case authorized
+c:@E@ENAuthorizationStatus@ENAuthorizationStatusNotAuthorized	swift.enum.case	ENAuthorizationStatus.notAuthorized	ENAuthorizationStatus.notAuthorized	case notAuthorized
+c:@E@ENAuthorizationStatus@ENAuthorizationStatusRestricted	swift.enum.case	ENAuthorizationStatus.restricted	ENAuthorizationStatus.restricted	case restricted
+c:@E@ENAuthorizationStatus@ENAuthorizationStatusUnknown	swift.enum.case	ENAuthorizationStatus.unknown	ENAuthorizationStatus.unknown	case unknown
+c:@E@ENCalibrationConfidence	swift.enum	ENCalibrationConfidence	ENCalibrationConfidence	enum ENCalibrationConfidence
+c:@E@ENCalibrationConfidence@ENCalibrationConfidenceHigh	swift.enum.case	ENCalibrationConfidence.high	ENCalibrationConfidence.high	case high
+c:@E@ENCalibrationConfidence@ENCalibrationConfidenceLow	swift.enum.case	ENCalibrationConfidence.low	ENCalibrationConfidence.low	case low
+c:@E@ENCalibrationConfidence@ENCalibrationConfidenceLowest	swift.enum.case	ENCalibrationConfidence.lowest	ENCalibrationConfidence.lowest	case lowest
+c:@E@ENCalibrationConfidence@ENCalibrationConfidenceMedium	swift.enum.case	ENCalibrationConfidence.medium	ENCalibrationConfidence.medium	case medium
+c:@E@ENDiagnosisReportType	swift.enum	ENDiagnosisReportType	ENDiagnosisReportType	enum ENDiagnosisReportType
+c:@E@ENDiagnosisReportType@ENDiagnosisReportTypeConfirmedClinicalDiagnosis	swift.enum.case	ENDiagnosisReportType.confirmedClinicalDiagnosis	ENDiagnosisReportType.confirmedClinicalDiagnosis	case confirmedClinicalDiagnosis
+c:@E@ENDiagnosisReportType@ENDiagnosisReportTypeConfirmedTest	swift.enum.case	ENDiagnosisReportType.confirmedTest	ENDiagnosisReportType.confirmedTest	case confirmedTest
+c:@E@ENDiagnosisReportType@ENDiagnosisReportTypeRecursive	swift.enum.case	ENDiagnosisReportType.recursive	ENDiagnosisReportType.recursive	case recursive
+c:@E@ENDiagnosisReportType@ENDiagnosisReportTypeRevoked	swift.enum.case	ENDiagnosisReportType.revoked	ENDiagnosisReportType.revoked	case revoked
+c:@E@ENDiagnosisReportType@ENDiagnosisReportTypeSelfReported	swift.enum.case	ENDiagnosisReportType.selfReported	ENDiagnosisReportType.selfReported	case selfReported
+c:@E@ENDiagnosisReportType@ENDiagnosisReportTypeUnknown	swift.enum.case	ENDiagnosisReportType.unknown	ENDiagnosisReportType.unknown	case unknown
+c:@E@ENErrorCode	swift.enum	ENError.Code	ENError.Code	enum Code
+c:@E@ENErrorCode@ENErrorCodeAPIMisuse	swift.enum.case	ENError.Code.apiMisuse	ENError.Code.apiMisuse	case apiMisuse
+c:@E@ENErrorCode@ENErrorCodeBadFormat	swift.enum.case	ENError.Code.badFormat	ENError.Code.badFormat	case badFormat
+c:@E@ENErrorCode@ENErrorCodeBadParameter	swift.enum.case	ENError.Code.badParameter	ENError.Code.badParameter	case badParameter
+c:@E@ENErrorCode@ENErrorCodeBluetoothOff	swift.enum.case	ENError.Code.bluetoothOff	ENError.Code.bluetoothOff	case bluetoothOff
+c:@E@ENErrorCode@ENErrorCodeDataInaccessible	swift.enum.case	ENError.Code.dataInaccessible	ENError.Code.dataInaccessible	case dataInaccessible
+c:@E@ENErrorCode@ENErrorCodeInsufficientMemory	swift.enum.case	ENError.Code.insufficientMemory	ENError.Code.insufficientMemory	case insufficientMemory
+c:@E@ENErrorCode@ENErrorCodeInsufficientStorage	swift.enum.case	ENError.Code.insufficientStorage	ENError.Code.insufficientStorage	case insufficientStorage
+c:@E@ENErrorCode@ENErrorCodeInternal	swift.enum.case	ENError.Code.internal	ENError.Code.internal	case `internal`
+c:@E@ENErrorCode@ENErrorCodeInvalidated	swift.enum.case	ENError.Code.invalidated	ENError.Code.invalidated	case invalidated
+c:@E@ENErrorCode@ENErrorCodeNotAuthorized	swift.enum.case	ENError.Code.notAuthorized	ENError.Code.notAuthorized	case notAuthorized
+c:@E@ENErrorCode@ENErrorCodeNotEnabled	swift.enum.case	ENError.Code.notEnabled	ENError.Code.notEnabled	case notEnabled
+c:@E@ENErrorCode@ENErrorCodeNotEntitled	swift.enum.case	ENError.Code.notEntitled	ENError.Code.notEntitled	case notEntitled
+c:@E@ENErrorCode@ENErrorCodeRateLimited	swift.enum.case	ENError.Code.rateLimited	ENError.Code.rateLimited	case rateLimited
+c:@E@ENErrorCode@ENErrorCodeRestricted	swift.enum.case	ENError.Code.restricted	ENError.Code.restricted	case restricted
+c:@E@ENErrorCode@ENErrorCodeTravelStatusNotAvailable	swift.enum.case	ENError.Code.travelStatusNotAvailable	ENError.Code.travelStatusNotAvailable	case travelStatusNotAvailable
+c:@E@ENErrorCode@ENErrorCodeUnknown	swift.enum.case	ENError.Code.unknown	ENError.Code.unknown	case unknown
+c:@E@ENErrorCode@ENErrorCodeUnsupported	swift.enum.case	ENError.Code.unsupported	ENError.Code.unsupported	case unsupported
+c:@E@ENInfectiousness	swift.enum	ENInfectiousness	ENInfectiousness	enum ENInfectiousness
+c:@E@ENInfectiousness@ENInfectiousnessHigh	swift.enum.case	ENInfectiousness.high	ENInfectiousness.high	case high
+c:@E@ENInfectiousness@ENInfectiousnessNone	swift.enum.case	ENInfectiousness.none	ENInfectiousness.none	case none
+c:@E@ENInfectiousness@ENInfectiousnessStandard	swift.enum.case	ENInfectiousness.standard	ENInfectiousness.standard	case standard
+c:@E@ENStatus	swift.enum	ENStatus	ENStatus	enum ENStatus
+c:@E@ENStatus@ENStatusActive	swift.enum.case	ENStatus.active	ENStatus.active	case active
+c:@E@ENStatus@ENStatusBluetoothOff	swift.enum.case	ENStatus.bluetoothOff	ENStatus.bluetoothOff	case bluetoothOff
+c:@E@ENStatus@ENStatusDisabled	swift.enum.case	ENStatus.disabled	ENStatus.disabled	case disabled
+c:@E@ENStatus@ENStatusPaused	swift.enum.case	ENStatus.paused	ENStatus.paused	case paused
+c:@E@ENStatus@ENStatusRestricted	swift.enum.case	ENStatus.restricted	ENStatus.restricted	case restricted
+c:@E@ENStatus@ENStatusUnauthorized	swift.enum.case	ENStatus.unauthorized	ENStatus.unauthorized	case unauthorized
+c:@E@ENStatus@ENStatusUnknown	swift.enum.case	ENStatus.unknown	ENStatus.unknown	case unknown
+c:@E@ENVariantOfConcernType	swift.enum	ENVariantOfConcernType	ENVariantOfConcernType	enum ENVariantOfConcernType
+c:@E@ENVariantOfConcernType@ENVariantOfConcernType1	swift.enum.case	ENVariantOfConcernType.type1	ENVariantOfConcernType.type1	case type1
+c:@E@ENVariantOfConcernType@ENVariantOfConcernType2	swift.enum.case	ENVariantOfConcernType.type2	ENVariantOfConcernType.type2	case type2
+c:@E@ENVariantOfConcernType@ENVariantOfConcernType3	swift.enum.case	ENVariantOfConcernType.type3	ENVariantOfConcernType.type3	case type3
+c:@E@ENVariantOfConcernType@ENVariantOfConcernType4	swift.enum.case	ENVariantOfConcernType.type4	ENVariantOfConcernType.type4	case type4
+c:@E@ENVariantOfConcernType@ENVariantOfConcernTypeUnknown	swift.enum.case	ENVariantOfConcernType.typeUnknown	ENVariantOfConcernType.typeUnknown	case typeUnknown
+c:@ENDaysSinceOnsetOfSymptomsUnknown	swift.var	ENDaysSinceOnsetOfSymptomsUnknown	ENDaysSinceOnsetOfSymptomsUnknown	let ENDaysSinceOnsetOfSymptomsUnknown: Int
+c:@ENErrorDomain	swift.var	ENErrorDomain	ENErrorDomain	let ENErrorDomain: String
+c:@Ea@ENAttenuationMin@ENAttenuationMax	swift.var	ENAttenuationMax	ENAttenuationMax	var ENAttenuationMax: Int { get }
+c:@Ea@ENAttenuationMin@ENAttenuationMin	swift.var	ENAttenuationMin	ENAttenuationMin	var ENAttenuationMin: Int { get }
+c:@Ea@ENRiskLevelMin@ENRiskLevelMax	swift.var	ENRiskLevelMax	ENRiskLevelMax	var ENRiskLevelMax: Int { get }
+c:@Ea@ENRiskLevelMin@ENRiskLevelMin	swift.var	ENRiskLevelMin	ENRiskLevelMin	var ENRiskLevelMin: Int { get }
+c:@Ea@ENRiskLevelValueMin@ENRiskLevelValueMax	swift.var	ENRiskLevelValueMax	ENRiskLevelValueMax	var ENRiskLevelValueMax: Int { get }
+c:@Ea@ENRiskLevelValueMin@ENRiskLevelValueMin	swift.var	ENRiskLevelValueMin	ENRiskLevelValueMin	var ENRiskLevelValueMin: Int { get }
+c:@Ea@ENRiskScoreMin@ENRiskScoreMax	swift.var	ENRiskScoreMax	ENRiskScoreMax	var ENRiskScoreMax: Int { get }
+c:@Ea@ENRiskScoreMin@ENRiskScoreMin	swift.var	ENRiskScoreMin	ENRiskScoreMin	var ENRiskScoreMin: Int { get }
+c:@Ea@ENRiskWeightDefault@ENRiskWeightDefault	swift.var	ENRiskWeightDefault	ENRiskWeightDefault	var ENRiskWeightDefault: Int { get }
+c:@Ea@ENRiskWeightDefault@ENRiskWeightDefaultV2	swift.var	ENRiskWeightDefaultV2	ENRiskWeightDefaultV2	var ENRiskWeightDefaultV2: Int { get }
+c:@Ea@ENRiskWeightDefault@ENRiskWeightMax	swift.var	ENRiskWeightMax	ENRiskWeightMax	var ENRiskWeightMax: Int { get }
+c:@Ea@ENRiskWeightDefault@ENRiskWeightMaxV2	swift.var	ENRiskWeightMaxV2	ENRiskWeightMaxV2	var ENRiskWeightMaxV2: Int { get }
+c:@Ea@ENRiskWeightDefault@ENRiskWeightMin	swift.var	ENRiskWeightMin	ENRiskWeightMin	var ENRiskWeightMin: Int { get }
+c:@T@ENActivityHandler	swift.typealias	ENActivityHandler	ENActivityHandler	typealias ENActivityHandler = (ENActivityFlags) -> Void
+c:@T@ENAttenuation	swift.typealias	ENAttenuation	ENAttenuation	typealias ENAttenuation = UInt8
+c:@T@ENDetectExposuresHandler	swift.typealias	ENDetectExposuresHandler	ENDetectExposuresHandler	typealias ENDetectExposuresHandler = (ENExposureDetectionSummary?, (any Error)?) -> Void
+c:@T@ENDiagnosisKeysAvailableHandler	swift.typealias	ENDiagnosisKeysAvailableHandler	ENDiagnosisKeysAvailableHandler	typealias ENDiagnosisKeysAvailableHandler = ([ENTemporaryExposureKey]) -> Void
+c:@T@ENErrorHandler	swift.typealias	ENErrorHandler	ENErrorHandler	typealias ENErrorHandler = ((any Error)?) -> Void
+c:@T@ENErrorOutType	swift.typealias	ENErrorOutType	ENErrorOutType	typealias ENErrorOutType = AutoreleasingUnsafeMutablePointer<NSError?>
+c:@T@ENGetDiagnosisKeysHandler	swift.typealias	ENGetDiagnosisKeysHandler	ENGetDiagnosisKeysHandler	typealias ENGetDiagnosisKeysHandler = ([ENTemporaryExposureKey]?, (any Error)?) -> Void
+c:@T@ENGetExposureInfoHandler	swift.typealias	ENGetExposureInfoHandler	ENGetExposureInfoHandler	typealias ENGetExposureInfoHandler = ([ENExposureInfo]?, (any Error)?) -> Void
+c:@T@ENGetExposureWindowsHandler	swift.typealias	ENGetExposureWindowsHandler	ENGetExposureWindowsHandler	typealias ENGetExposureWindowsHandler = ([ENExposureWindow]?, (any Error)?) -> Void
+c:@T@ENGetUserTraveledHandler	swift.typealias	ENGetUserTraveledHandler	ENGetUserTraveledHandler	typealias ENGetUserTraveledHandler = (Bool, (any Error)?) -> Void
+c:@T@ENIntervalNumber	swift.typealias	ENIntervalNumber	ENIntervalNumber	typealias ENIntervalNumber = UInt32
+c:@T@ENRiskLevel	swift.typealias	ENRiskLevel	ENRiskLevel	typealias ENRiskLevel = UInt8
+c:@T@ENRiskLevelValue	swift.typealias	ENRiskLevelValue	ENRiskLevelValue	typealias ENRiskLevelValue = UInt8
+c:@T@ENRiskScore	swift.typealias	ENRiskScore	ENRiskScore	typealias ENRiskScore = UInt8
+c:@macro@EN_FEATURE_GENERAL	swift.var	EN_FEATURE_GENERAL	EN_FEATURE_GENERAL	var EN_FEATURE_GENERAL: Int32 { get }
+c:objc(cs)ENExposureConfiguration	swift.class	ENExposureConfiguration	ENExposureConfiguration	class ENExposureConfiguration
+c:objc(cs)ENExposureConfiguration(py)attenuationDurationThresholds	swift.property	attenuationDurationThresholds	ENExposureConfiguration.attenuationDurationThresholds	var attenuationDurationThresholds: [NSNumber] { get set }
+c:objc(cs)ENExposureConfiguration(py)attenuationLevelValues	swift.property	attenuationLevelValues	ENExposureConfiguration.attenuationLevelValues	var attenuationLevelValues: [NSNumber] { get set }
+c:objc(cs)ENExposureConfiguration(py)attenuationWeight	swift.property	attenuationWeight	ENExposureConfiguration.attenuationWeight	var attenuationWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)daysSinceLastExposureLevelValues	swift.property	daysSinceLastExposureLevelValues	ENExposureConfiguration.daysSinceLastExposureLevelValues	var daysSinceLastExposureLevelValues: [NSNumber] { get set }
+c:objc(cs)ENExposureConfiguration(py)daysSinceLastExposureThreshold	swift.property	daysSinceLastExposureThreshold	ENExposureConfiguration.daysSinceLastExposureThreshold	var daysSinceLastExposureThreshold: Int { get set }
+c:objc(cs)ENExposureConfiguration(py)daysSinceLastExposureWeight	swift.property	daysSinceLastExposureWeight	ENExposureConfiguration.daysSinceLastExposureWeight	var daysSinceLastExposureWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)durationLevelValues	swift.property	durationLevelValues	ENExposureConfiguration.durationLevelValues	var durationLevelValues: [NSNumber] { get set }
+c:objc(cs)ENExposureConfiguration(py)durationWeight	swift.property	durationWeight	ENExposureConfiguration.durationWeight	var durationWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)immediateDurationWeight	swift.property	immediateDurationWeight	ENExposureConfiguration.immediateDurationWeight	var immediateDurationWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)infectiousnessForDaysSinceOnsetOfSymptoms	swift.property	infectiousnessForDaysSinceOnsetOfSymptoms	ENExposureConfiguration.infectiousnessForDaysSinceOnsetOfSymptoms	var infectiousnessForDaysSinceOnsetOfSymptoms: [NSNumber : NSNumber]? { get set }
+c:objc(cs)ENExposureConfiguration(py)infectiousnessHighWeight	swift.property	infectiousnessHighWeight	ENExposureConfiguration.infectiousnessHighWeight	var infectiousnessHighWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)infectiousnessStandardWeight	swift.property	infectiousnessStandardWeight	ENExposureConfiguration.infectiousnessStandardWeight	var infectiousnessStandardWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)mediumDurationWeight	swift.property	mediumDurationWeight	ENExposureConfiguration.mediumDurationWeight	var mediumDurationWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)metadata	swift.property	metadata	ENExposureConfiguration.metadata	var metadata: [AnyHashable : Any]? { get set }
+c:objc(cs)ENExposureConfiguration(py)minimumRiskScore	swift.property	minimumRiskScore	ENExposureConfiguration.minimumRiskScore	var minimumRiskScore: ENRiskScore { get set }
+c:objc(cs)ENExposureConfiguration(py)minimumRiskScoreFullRange	swift.property	minimumRiskScoreFullRange	ENExposureConfiguration.minimumRiskScoreFullRange	var minimumRiskScoreFullRange: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)nearDurationWeight	swift.property	nearDurationWeight	ENExposureConfiguration.nearDurationWeight	var nearDurationWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)otherDurationWeight	swift.property	otherDurationWeight	ENExposureConfiguration.otherDurationWeight	var otherDurationWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)reportTypeConfirmedClinicalDiagnosisWeight	swift.property	reportTypeConfirmedClinicalDiagnosisWeight	ENExposureConfiguration.reportTypeConfirmedClinicalDiagnosisWeight	var reportTypeConfirmedClinicalDiagnosisWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)reportTypeConfirmedTestWeight	swift.property	reportTypeConfirmedTestWeight	ENExposureConfiguration.reportTypeConfirmedTestWeight	var reportTypeConfirmedTestWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)reportTypeNoneMap	swift.property	reportTypeNoneMap	ENExposureConfiguration.reportTypeNoneMap	var reportTypeNoneMap: ENDiagnosisReportType { get set }
+c:objc(cs)ENExposureConfiguration(py)reportTypeRecursiveWeight	swift.property	reportTypeRecursiveWeight	ENExposureConfiguration.reportTypeRecursiveWeight	var reportTypeRecursiveWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)reportTypeSelfReportedWeight	swift.property	reportTypeSelfReportedWeight	ENExposureConfiguration.reportTypeSelfReportedWeight	var reportTypeSelfReportedWeight: Double { get set }
+c:objc(cs)ENExposureConfiguration(py)transmissionRiskLevelValues	swift.property	transmissionRiskLevelValues	ENExposureConfiguration.transmissionRiskLevelValues	var transmissionRiskLevelValues: [NSNumber] { get set }
+c:objc(cs)ENExposureConfiguration(py)transmissionRiskWeight	swift.property	transmissionRiskWeight	ENExposureConfiguration.transmissionRiskWeight	var transmissionRiskWeight: Double { get set }
+c:objc(cs)ENExposureDaySummary	swift.class	ENExposureDaySummary	ENExposureDaySummary	class ENExposureDaySummary
+c:objc(cs)ENExposureDaySummary(py)confirmedClinicalDiagnosisSummary	swift.property	confirmedClinicalDiagnosisSummary	ENExposureDaySummary.confirmedClinicalDiagnosisSummary	var confirmedClinicalDiagnosisSummary: ENExposureSummaryItem? { get }
+c:objc(cs)ENExposureDaySummary(py)confirmedTestSummary	swift.property	confirmedTestSummary	ENExposureDaySummary.confirmedTestSummary	var confirmedTestSummary: ENExposureSummaryItem? { get }
+c:objc(cs)ENExposureDaySummary(py)date	swift.property	date	ENExposureDaySummary.date	var date: Date { get }
+c:objc(cs)ENExposureDaySummary(py)daySummary	swift.property	daySummary	ENExposureDaySummary.daySummary	var daySummary: ENExposureSummaryItem { get }
+c:objc(cs)ENExposureDaySummary(py)recursiveSummary	swift.property	recursiveSummary	ENExposureDaySummary.recursiveSummary	var recursiveSummary: ENExposureSummaryItem? { get }
+c:objc(cs)ENExposureDaySummary(py)selfReportedSummary	swift.property	selfReportedSummary	ENExposureDaySummary.selfReportedSummary	var selfReportedSummary: ENExposureSummaryItem? { get }
+c:objc(cs)ENExposureDetectionSummary	swift.class	ENExposureDetectionSummary	ENExposureDetectionSummary	class ENExposureDetectionSummary
+c:objc(cs)ENExposureDetectionSummary(py)attenuationDurations	swift.property	attenuationDurations	ENExposureDetectionSummary.attenuationDurations	var attenuationDurations: [NSNumber] { get }
+c:objc(cs)ENExposureDetectionSummary(py)daySummaries	swift.property	daySummaries	ENExposureDetectionSummary.daySummaries	var daySummaries: [ENExposureDaySummary] { get }
+c:objc(cs)ENExposureDetectionSummary(py)daysSinceLastExposure	swift.property	daysSinceLastExposure	ENExposureDetectionSummary.daysSinceLastExposure	var daysSinceLastExposure: Int { get }
+c:objc(cs)ENExposureDetectionSummary(py)matchedKeyCount	swift.property	matchedKeyCount	ENExposureDetectionSummary.matchedKeyCount	var matchedKeyCount: UInt64 { get }
+c:objc(cs)ENExposureDetectionSummary(py)maximumRiskScore	swift.property	maximumRiskScore	ENExposureDetectionSummary.maximumRiskScore	var maximumRiskScore: ENRiskScore { get }
+c:objc(cs)ENExposureDetectionSummary(py)maximumRiskScoreFullRange	swift.property	maximumRiskScoreFullRange	ENExposureDetectionSummary.maximumRiskScoreFullRange	var maximumRiskScoreFullRange: Double { get }
+c:objc(cs)ENExposureDetectionSummary(py)metadata	swift.property	metadata	ENExposureDetectionSummary.metadata	var metadata: [AnyHashable : Any]? { get }
+c:objc(cs)ENExposureDetectionSummary(py)riskScoreSumFullRange	swift.property	riskScoreSumFullRange	ENExposureDetectionSummary.riskScoreSumFullRange	var riskScoreSumFullRange: Double { get }
+c:objc(cs)ENExposureInfo	swift.class	ENExposureInfo	ENExposureInfo	class ENExposureInfo
+c:objc(cs)ENExposureInfo(py)attenuationDurations	swift.property	attenuationDurations	ENExposureInfo.attenuationDurations	var attenuationDurations: [NSNumber] { get }
+c:objc(cs)ENExposureInfo(py)attenuationValue	swift.property	attenuationValue	ENExposureInfo.attenuationValue	var attenuationValue: ENAttenuation { get }
+c:objc(cs)ENExposureInfo(py)date	swift.property	date	ENExposureInfo.date	var date: Date { get }
+c:objc(cs)ENExposureInfo(py)daysSinceOnsetOfSymptoms	swift.property	daysSinceOnsetOfSymptoms	ENExposureInfo.daysSinceOnsetOfSymptoms	var daysSinceOnsetOfSymptoms: Int { get }
+c:objc(cs)ENExposureInfo(py)diagnosisReportType	swift.property	diagnosisReportType	ENExposureInfo.diagnosisReportType	var diagnosisReportType: ENDiagnosisReportType { get }
+c:objc(cs)ENExposureInfo(py)duration	swift.property	duration	ENExposureInfo.duration	var duration: TimeInterval { get }
+c:objc(cs)ENExposureInfo(py)metadata	swift.property	metadata	ENExposureInfo.metadata	var metadata: [AnyHashable : Any]? { get }
+c:objc(cs)ENExposureInfo(py)totalRiskScore	swift.property	totalRiskScore	ENExposureInfo.totalRiskScore	var totalRiskScore: ENRiskScore { get }
+c:objc(cs)ENExposureInfo(py)totalRiskScoreFullRange	swift.property	totalRiskScoreFullRange	ENExposureInfo.totalRiskScoreFullRange	var totalRiskScoreFullRange: Double { get }
+c:objc(cs)ENExposureInfo(py)transmissionRiskLevel	swift.property	transmissionRiskLevel	ENExposureInfo.transmissionRiskLevel	var transmissionRiskLevel: ENRiskLevel { get }
+c:objc(cs)ENExposureSummaryItem	swift.class	ENExposureSummaryItem	ENExposureSummaryItem	class ENExposureSummaryItem
+c:objc(cs)ENExposureSummaryItem(py)maximumScore	swift.property	maximumScore	ENExposureSummaryItem.maximumScore	var maximumScore: Double { get }
+c:objc(cs)ENExposureSummaryItem(py)scoreSum	swift.property	scoreSum	ENExposureSummaryItem.scoreSum	var scoreSum: Double { get }
+c:objc(cs)ENExposureSummaryItem(py)weightedDurationSum	swift.property	weightedDurationSum	ENExposureSummaryItem.weightedDurationSum	var weightedDurationSum: TimeInterval { get }
+c:objc(cs)ENExposureWindow	swift.class	ENExposureWindow	ENExposureWindow	class ENExposureWindow
+c:objc(cs)ENExposureWindow(py)calibrationConfidence	swift.property	calibrationConfidence	ENExposureWindow.calibrationConfidence	var calibrationConfidence: ENCalibrationConfidence { get }
+c:objc(cs)ENExposureWindow(py)date	swift.property	date	ENExposureWindow.date	var date: Date { get }
+c:objc(cs)ENExposureWindow(py)diagnosisReportType	swift.property	diagnosisReportType	ENExposureWindow.diagnosisReportType	var diagnosisReportType: ENDiagnosisReportType { get }
+c:objc(cs)ENExposureWindow(py)infectiousness	swift.property	infectiousness	ENExposureWindow.infectiousness	var infectiousness: ENInfectiousness { get }
+c:objc(cs)ENExposureWindow(py)scanInstances	swift.property	scanInstances	ENExposureWindow.scanInstances	var scanInstances: [ENScanInstance] { get }
+c:objc(cs)ENExposureWindow(py)variantOfConcernType	swift.property	variantOfConcernType	ENExposureWindow.variantOfConcernType	var variantOfConcernType: ENVariantOfConcernType { get }
+c:objc(cs)ENManager	swift.class	ENManager	ENManager	class ENManager
+c:objc(cs)ENManager(cpy)authorizationStatus	swift.type.property	authorizationStatus	ENManager.authorizationStatus	class var authorizationStatus: ENAuthorizationStatus { get }
+c:objc(cs)ENManager(im)activateWithCompletionHandler:	swift.method	activate(completionHandler:)	ENManager.activate(completionHandler:)	func activate(completionHandler: @escaping ((any Error)?) -> Void)
+c:objc(cs)ENManager(im)detectExposuresWithConfiguration:completionHandler:	swift.method	detectExposures(configuration:completionHandler:)	ENManager.detectExposures(configuration:completionHandler:)	func detectExposures(configuration: ENExposureConfiguration, completionHandler: @escaping ENDetectExposuresHandler) -> Progress
+c:objc(cs)ENManager(im)detectExposuresWithConfiguration:diagnosisKeyURLs:completionHandler:	swift.method	detectExposures(configuration:diagnosisKeyURLs:completionHandler:)	ENManager.detectExposures(configuration:diagnosisKeyURLs:completionHandler:)	func detectExposures(configuration: ENExposureConfiguration, diagnosisKeyURLs: [URL], completionHandler: @escaping ENDetectExposuresHandler) -> Progress
+c:objc(cs)ENManager(im)getDiagnosisKeysWithCompletionHandler:	swift.method	diagnosisKeys()	ENManager.diagnosisKeys()	func diagnosisKeys() async throws -> [ENTemporaryExposureKey]
+c:objc(cs)ENManager(im)getExposureInfoFromSummary:userExplanation:completionHandler:	swift.method	getExposureInfo(summary:userExplanation:completionHandler:)	ENManager.getExposureInfo(summary:userExplanation:completionHandler:)	func getExposureInfo(summary: ENExposureDetectionSummary, userExplanation: String, completionHandler: @escaping ENGetExposureInfoHandler) -> Progress
+c:objc(cs)ENManager(im)getExposureWindowsFromSummary:completionHandler:	swift.method	getExposureWindows(summary:completionHandler:)	ENManager.getExposureWindows(summary:completionHandler:)	func getExposureWindows(summary: ENExposureDetectionSummary, completionHandler: @escaping ENGetExposureWindowsHandler) -> Progress
+c:objc(cs)ENManager(im)getTestDiagnosisKeysWithCompletionHandler:	swift.method	getTestDiagnosisKeys(completionHandler:)	ENManager.getTestDiagnosisKeys(completionHandler:)	func getTestDiagnosisKeys(completionHandler: @escaping ([ENTemporaryExposureKey]?, (any Error)?) -> Void)
+c:objc(cs)ENManager(im)getUserTraveledWithCompletionHandler:	swift.method	getUserTraveled(completionHandler:)	ENManager.getUserTraveled(completionHandler:)	func getUserTraveled(completionHandler: @escaping (Bool, (any Error)?) -> Void)
+c:objc(cs)ENManager(im)invalidate	swift.method	invalidate()	ENManager.invalidate()	func invalidate()
+c:objc(cs)ENManager(im)preAuthorizeDiagnosisKeysWithCompletionHandler:	swift.method	preAuthorizeDiagnosisKeys(completionHandler:)	ENManager.preAuthorizeDiagnosisKeys(completionHandler:)	func preAuthorizeDiagnosisKeys(completionHandler: @escaping ((any Error)?) -> Void)
+c:objc(cs)ENManager(im)requestPreAuthorizedDiagnosisKeysWithCompletionHandler:	swift.method	requestPreAuthorizedDiagnosisKeys(completionHandler:)	ENManager.requestPreAuthorizedDiagnosisKeys(completionHandler:)	func requestPreAuthorizedDiagnosisKeys(completionHandler: @escaping ((any Error)?) -> Void)
+c:objc(cs)ENManager(im)setExposureNotificationEnabled:completionHandler:	swift.method	setExposureNotificationEnabled(_:)	ENManager.setExposureNotificationEnabled(_:)	func setExposureNotificationEnabled(_ enabled: Bool) async throws
+c:objc(cs)ENManager(py)activityHandler	swift.property	activityHandler	ENManager.activityHandler	var activityHandler: ENActivityHandler? { get set }
+c:objc(cs)ENManager(py)diagnosisKeysAvailableHandler	swift.property	diagnosisKeysAvailableHandler	ENManager.diagnosisKeysAvailableHandler	var diagnosisKeysAvailableHandler: ENDiagnosisKeysAvailableHandler? { get set }
+c:objc(cs)ENManager(py)dispatchQueue	swift.property	dispatchQueue	ENManager.dispatchQueue	var dispatchQueue: dispatch_queue_t { get set }
+c:objc(cs)ENManager(py)exposureNotificationEnabled	swift.property	exposureNotificationEnabled	ENManager.exposureNotificationEnabled	var exposureNotificationEnabled: Bool { get }
+c:objc(cs)ENManager(py)exposureNotificationStatus	swift.property	exposureNotificationStatus	ENManager.exposureNotificationStatus	var exposureNotificationStatus: ENStatus { get }
+c:objc(cs)ENManager(py)invalidationHandler	swift.property	invalidationHandler	ENManager.invalidationHandler	var invalidationHandler: (() -> Void)? { get set }
+c:objc(cs)ENScanInstance	swift.class	ENScanInstance	ENScanInstance	class ENScanInstance
+c:objc(cs)ENScanInstance(py)minimumAttenuation	swift.property	minimumAttenuation	ENScanInstance.minimumAttenuation	var minimumAttenuation: ENAttenuation { get }
+c:objc(cs)ENScanInstance(py)secondsSinceLastScan	swift.property	secondsSinceLastScan	ENScanInstance.secondsSinceLastScan	var secondsSinceLastScan: Int { get }
+c:objc(cs)ENScanInstance(py)typicalAttenuation	swift.property	typicalAttenuation	ENScanInstance.typicalAttenuation	var typicalAttenuation: ENAttenuation { get }
+c:objc(cs)ENTemporaryExposureKey	swift.class	ENTemporaryExposureKey	ENTemporaryExposureKey	class ENTemporaryExposureKey
+c:objc(cs)ENTemporaryExposureKey(py)keyData	swift.property	keyData	ENTemporaryExposureKey.keyData	var keyData: Data { get set }
+c:objc(cs)ENTemporaryExposureKey(py)rollingPeriod	swift.property	rollingPeriod	ENTemporaryExposureKey.rollingPeriod	var rollingPeriod: ENIntervalNumber { get set }
+c:objc(cs)ENTemporaryExposureKey(py)rollingStartNumber	swift.property	rollingStartNumber	ENTemporaryExposureKey.rollingStartNumber	var rollingStartNumber: ENIntervalNumber { get set }
+c:objc(cs)ENTemporaryExposureKey(py)transmissionRiskLevel	swift.property	transmissionRiskLevel	ENTemporaryExposureKey.transmissionRiskLevel	var transmissionRiskLevel: ENRiskLevel { get set }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ENErrorCode	swift.type.property	errorDomain	ENError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	errorUserInfo	ENError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	errorCode	ENError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ENErrorCode	swift.func.op	~=(_:_:)	ENError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	errorUserInfo	ENError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ENErrorCode	swift.func.op	==(_:_:)	ENError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	code	ENError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENErrorCode	swift.method	hash(into:)	ENError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	userInfo	ENError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	errorCode	ENError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	hashValue	ENError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ENErrorCode	swift.init	init(_:userInfo:)	ENError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC11ENErrorCodeLeV	swift.struct	ENError	ENError	struct ENError
+s:SC11ENErrorCodeLeV10notEnabledSoAAVvpZ	swift.type.property	notEnabled	ENError.notEnabled	static var notEnabled: ENError.Code { get }
+s:SC11ENErrorCodeLeV10restrictedSoAAVvpZ	swift.type.property	restricted	ENError.restricted	static var restricted: ENError.Code { get }
+s:SC11ENErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ENError.errorDomain	static var errorDomain: String { get }
+s:SC11ENErrorCodeLeV11invalidatedSoAAVvpZ	swift.type.property	invalidated	ENError.invalidated	static var invalidated: ENError.Code { get }
+s:SC11ENErrorCodeLeV11notEntitledSoAAVvpZ	swift.type.property	notEntitled	ENError.notEntitled	static var notEntitled: ENError.Code { get }
+s:SC11ENErrorCodeLeV11rateLimitedSoAAVvpZ	swift.type.property	rateLimited	ENError.rateLimited	static var rateLimited: ENError.Code { get }
+s:SC11ENErrorCodeLeV11unsupportedSoAAVvpZ	swift.type.property	unsupported	ENError.unsupported	static var unsupported: ENError.Code { get }
+s:SC11ENErrorCodeLeV12badParameterSoAAVvpZ	swift.type.property	badParameter	ENError.badParameter	static var badParameter: ENError.Code { get }
+s:SC11ENErrorCodeLeV12bluetoothOffSoAAVvpZ	swift.type.property	bluetoothOff	ENError.bluetoothOff	static var bluetoothOff: ENError.Code { get }
+s:SC11ENErrorCodeLeV13notAuthorizedSoAAVvpZ	swift.type.property	notAuthorized	ENError.notAuthorized	static var notAuthorized: ENError.Code { get }
+s:SC11ENErrorCodeLeV16dataInaccessibleSoAAVvpZ	swift.type.property	dataInaccessible	ENError.dataInaccessible	static var dataInaccessible: ENError.Code { get }
+s:SC11ENErrorCodeLeV18insufficientMemorySoAAVvpZ	swift.type.property	insufficientMemory	ENError.insufficientMemory	static var insufficientMemory: ENError.Code { get }
+s:SC11ENErrorCodeLeV19insufficientStorageSoAAVvpZ	swift.type.property	insufficientStorage	ENError.insufficientStorage	static var insufficientStorage: ENError.Code { get }
+s:SC11ENErrorCodeLeV24travelStatusNotAvailableSoAAVvpZ	swift.type.property	travelStatusNotAvailable	ENError.travelStatusNotAvailable	static var travelStatusNotAvailable: ENError.Code { get }
+s:SC11ENErrorCodeLeV7unknownSoAAVvpZ	swift.type.property	unknown	ENError.unknown	static var unknown: ENError.Code { get }
+s:SC11ENErrorCodeLeV8internalSoAAVvpZ	swift.type.property	internal	ENError.internal	static var `internal`: ENError.Code { get }
+s:SC11ENErrorCodeLeV9apiMisuseSoAAVvpZ	swift.type.property	apiMisuse	ENError.apiMisuse	static var apiMisuse: ENError.Code { get }
+s:SC11ENErrorCodeLeV9badFormatSoAAVvpZ	swift.type.property	badFormat	ENError.badFormat	static var badFormat: ENError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENActivityFlags	swift.func.op	!=(_:_:)	ENActivityFlags.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENAuthorizationStatus	swift.func.op	!=(_:_:)	ENAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENCalibrationConfidence	swift.func.op	!=(_:_:)	ENCalibrationConfidence.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENDiagnosisReportType	swift.func.op	!=(_:_:)	ENDiagnosisReportType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENErrorCode	swift.func.op	!=(_:_:)	ENError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENInfectiousness	swift.func.op	!=(_:_:)	ENInfectiousness.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENStatus	swift.func.op	!=(_:_:)	ENStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ENVariantOfConcernType	swift.func.op	!=(_:_:)	ENVariantOfConcernType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENAuthorizationStatus	swift.property	hashValue	ENAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENCalibrationConfidence	swift.property	hashValue	ENCalibrationConfidence.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENDiagnosisReportType	swift.property	hashValue	ENDiagnosisReportType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	hashValue	ENError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENInfectiousness	swift.property	hashValue	ENInfectiousness.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENStatus	swift.property	hashValue	ENStatus.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ENVariantOfConcernType	swift.property	hashValue	ENVariantOfConcernType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENAuthorizationStatus	swift.method	hash(into:)	ENAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENCalibrationConfidence	swift.method	hash(into:)	ENCalibrationConfidence.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENDiagnosisReportType	swift.method	hash(into:)	ENDiagnosisReportType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENErrorCode	swift.method	hash(into:)	ENError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENInfectiousness	swift.method	hash(into:)	ENInfectiousness.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENStatus	swift.method	hash(into:)	ENStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ENVariantOfConcernType	swift.method	hash(into:)	ENVariantOfConcernType.hash(into:)	func hash(into hasher: inout Hasher)
+s:So11ENErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ENError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So15ENActivityFlagsV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	ENActivityFlags.init(rawValue:)	init(rawValue: UInt32)
+s:So16ENInfectiousnessV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	ENInfectiousness.init(rawValue:)	init?(rawValue: UInt32)
+s:So21ENAuthorizationStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ENAuthorizationStatus.init(rawValue:)	init?(rawValue: Int)
+s:So21ENDiagnosisReportTypeV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	ENDiagnosisReportType.init(rawValue:)	init?(rawValue: UInt32)
+s:So22ENVariantOfConcernTypeV8rawValueABSgs6UInt32V_tcfc	swift.init	init(rawValue:)	ENVariantOfConcernType.init(rawValue:)	init?(rawValue: UInt32)
+s:So23ENCalibrationConfidenceV8rawValueABSgs5UInt8V_tcfc	swift.init	init(rawValue:)	ENCalibrationConfidence.init(rawValue:)	init?(rawValue: UInt8)
+s:So8ENStatusV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ENStatus.init(rawValue:)	init?(rawValue: Int)
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@ENActivityFlags	swift.init	init(arrayLiteral:)	ENActivityFlags.init(arrayLiteral:)	init(arrayLiteral: Self.Element...)
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	isDisjoint(with:)	ENActivityFlags.isDisjoint(with:)	func isDisjoint(with other: Self) -> Bool
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	isSuperset(of:)	ENActivityFlags.isSuperset(of:)	func isSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	subtracting(_:)	ENActivityFlags.subtracting(_:)	func subtracting(_ other: Self) -> Self
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	isStrictSubset(of:)	ENActivityFlags.isStrictSubset(of:)	func isStrictSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	isStrictSuperset(of:)	ENActivityFlags.isStrictSuperset(of:)	func isStrictSuperset(of other: Self) -> Bool
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@ENActivityFlags	swift.property	isEmpty	ENActivityFlags.isEmpty	var isEmpty: Bool { get }
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	isSubset(of:)	ENActivityFlags.isSubset(of:)	func isSubset(of other: Self) -> Bool
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	subtract(_:)	ENActivityFlags.subtract(_:)	mutating func subtract(_ other: Self)
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@ENActivityFlags	swift.init	init(_:)	ENActivityFlags.init(_:)	init<S>(_ sequence: S) where S : Sequence, Self.Element == S.Element
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ENErrorCode	swift.property	localizedDescription	ENError.localizedDescription	var localizedDescription: String { get }
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	insert(_:)	ENActivityFlags.insert(_:)	@discardableResult mutating func insert(_ newMember: Self.Element) -> (inserted: Bool, memberAfterInsert: Self.Element)
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	remove(_:)	ENActivityFlags.remove(_:)	@discardableResult mutating func remove(_ member: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	update(with:)	ENActivityFlags.update(with:)	@discardableResult mutating func update(with newMember: Self.Element) -> Self.Element?
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	contains(_:)	ENActivityFlags.contains(_:)	func contains(_ member: Self) -> Bool
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	intersection(_:)	ENActivityFlags.intersection(_:)	func intersection(_ other: Self) -> Self
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	symmetricDifference(_:)	ENActivityFlags.symmetricDifference(_:)	func symmetricDifference(_ other: Self) -> Self
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	union(_:)	ENActivityFlags.union(_:)	func union(_ other: Self) -> Self
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	formIntersection(_:)	ENActivityFlags.formIntersection(_:)	mutating func formIntersection(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	formSymmetricDifference(_:)	ENActivityFlags.formSymmetricDifference(_:)	mutating func formSymmetricDifference(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@ENActivityFlags	swift.method	formUnion(_:)	ENActivityFlags.formUnion(_:)	mutating func formUnion(_ other: Self)
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@ENActivityFlags	swift.init	init()	ENActivityFlags.init()	init()

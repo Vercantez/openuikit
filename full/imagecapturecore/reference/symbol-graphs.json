@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 21,
+  "duplicateOccurrenceCount": 21,
+  "duplicateRelationshipOccurrenceCount": 13,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ImageCaptureCore.symbols.json",
+      "relationshipCount": 884,
+      "sha256": "e5c3f6bb231d374f45250e53c153db265dd8a8eb4493c6431b39f9944a9238f0",
+      "symbolCount": 676
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ImageCaptureCore",
+  "relationshipCount": 884,
+  "relationshipMultisetSHA256": "92f1c403bd17f654d595cc1661ce03be2c152fb20232ac0423f84d94eddf2942",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 655,
+  "symbolMultisetSHA256": "e13d6e5c322db38975a9572ed1b5943a66bab79a6d0330c5592954b79b2d1b56",
+  "target": "arm64-apple-ios26.0"
+}

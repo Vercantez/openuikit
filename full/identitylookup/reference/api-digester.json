@@ -1,0 +1,2600 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILBase",
+        "printedName": "IdentityLookup.ILBase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterAction",
+        "printedName": "IdentityLookup.ILMessageFilterAction"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterError",
+        "printedName": "IdentityLookup.ILMessageFilterError"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILNetworkResponse",
+        "printedName": "IdentityLookup.ILNetworkResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterExtension",
+        "printedName": "IdentityLookup.ILMessageFilterExtension"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterExtensionContext",
+        "printedName": "IdentityLookup.ILMessageFilterExtensionContext"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterQueryHandling",
+        "printedName": "IdentityLookup.ILMessageFilterQueryHandling"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterQueryRequest",
+        "printedName": "IdentityLookup.ILMessageFilterQueryRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterQueryResponse",
+        "printedName": "IdentityLookup.ILMessageFilterQueryResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterCapabilitiesQueryHandling",
+        "printedName": "IdentityLookup.ILMessageFilterCapabilitiesQueryHandling"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterCapabilitiesQueryRequest",
+        "printedName": "IdentityLookup.ILMessageFilterCapabilitiesQueryRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageFilterCapabilitiesQueryResponse",
+        "printedName": "IdentityLookup.ILMessageFilterCapabilitiesQueryResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILCommunication",
+        "printedName": "IdentityLookup.ILCommunication"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILCallCommunication",
+        "printedName": "IdentityLookup.ILCallCommunication"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageCommunication",
+        "printedName": "IdentityLookup.ILMessageCommunication"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILClassificationRequest",
+        "printedName": "IdentityLookup.ILClassificationRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILClassificationResponse",
+        "printedName": "IdentityLookup.ILClassificationResponse"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILClassificationActions",
+        "printedName": "IdentityLookup.ILClassificationActions"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILMessageClassificationRequest",
+        "printedName": "IdentityLookup.ILMessageClassificationRequest"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup.ILCallClassificationRequest",
+        "printedName": "IdentityLookup.ILCallClassificationRequest"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV03_nsC0So7NSErrorCvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC20ILMessageFilterErrorLeV03_nsC0So7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC20ILMessageFilterErrorLeV03_nsC0So7NSErrorCvp",
+            "moduleName": "IdentityLookup",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC20ILMessageFilterErrorLeV03_nsC0So7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ILMessageFilterError",
+                "printedName": "IdentityLookup.ILMessageFilterError",
+                "usr": "c:@E@ILMessageFilterError"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC20ILMessageFilterErrorLeV03_nsC0ABSo7NSErrorC_tcfc",
+            "moduleName": "IdentityLookup",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC20ILMessageFilterErrorLeV03_nsC0ABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV11errorDomainSSvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20ILMessageFilterErrorLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC20ILMessageFilterErrorLeV11errorDomainSSvpZ",
+            "moduleName": "IdentityLookup",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC20ILMessageFilterErrorLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                        "usr": "c:@E@ILMessageFilterError"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "IdentityLookup.ILMessageFilterError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo20ILMessageFilterErrorV8rawValueABSgSi_tcfc",
+                "moduleName": "IdentityLookup",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So20ILMessageFilterErrorV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo20ILMessageFilterErrorV8rawValueSivg",
+                    "moduleName": "IdentityLookup",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So20ILMessageFilterErrorV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo20ILMessageFilterErrorV8rawValueSivp",
+                "moduleName": "IdentityLookup",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So20ILMessageFilterErrorV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo20ILMessageFilterErrorV8RawValuea",
+                "moduleName": "IdentityLookup",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So20ILMessageFilterErrorV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ILMessageFilterError",
+                    "printedName": "IdentityLookup.ILMessageFilterError",
+                    "usr": "c:@E@ILMessageFilterError"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "IdentityLookup",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@ILMessageFilterError"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                        "usr": "c:@E@ILMessageFilterError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                            "usr": "c:@E@ILMessageFilterError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityLookup.ILMessageFilterError.Code.Type) -> IdentityLookup.ILMessageFilterError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "IdentityLookup",
+                "name": "system",
+                "printedName": "system",
+                "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorSystem"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                        "usr": "c:@E@ILMessageFilterError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                            "usr": "c:@E@ILMessageFilterError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityLookup.ILMessageFilterError.Code.Type) -> IdentityLookup.ILMessageFilterError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "IdentityLookup",
+                "name": "invalidNetworkURL",
+                "printedName": "invalidNetworkURL",
+                "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorInvalidNetworkURL"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                        "usr": "c:@E@ILMessageFilterError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                            "usr": "c:@E@ILMessageFilterError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityLookup.ILMessageFilterError.Code.Type) -> IdentityLookup.ILMessageFilterError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "IdentityLookup",
+                "name": "networkURLUnauthorized",
+                "printedName": "networkURLUnauthorized",
+                "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorNetworkURLUnauthorized"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                        "usr": "c:@E@ILMessageFilterError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                            "usr": "c:@E@ILMessageFilterError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityLookup.ILMessageFilterError.Code.Type) -> IdentityLookup.ILMessageFilterError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "IdentityLookup",
+                "name": "networkRequestFailed",
+                "printedName": "networkRequestFailed",
+                "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorNetworkRequestFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                        "usr": "c:@E@ILMessageFilterError"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                            "usr": "c:@E@ILMessageFilterError"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(IdentityLookup.ILMessageFilterError.Code.Type) -> IdentityLookup.ILMessageFilterError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "IdentityLookup",
+                "name": "redundantNetworkDeferral",
+                "printedName": "redundantNetworkDeferral",
+                "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorRedundantNetworkDeferral"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "IdentityLookup.ILMessageFilterError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "11.0",
+            "kind": "TypeDecl",
+            "moduleName": "IdentityLookup",
+            "name": "Code",
+            "objc_name": "ILMessageFilterError",
+            "printedName": "Code",
+            "usr": "c:@E@ILMessageFilterError"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                    "usr": "c:@E@ILMessageFilterError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV6systemSoAAVvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20ILMessageFilterErrorLeV6systemSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                "usr": "c:@E@ILMessageFilterError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "IdentityLookup",
+            "name": "system",
+            "printedName": "system",
+            "static": true,
+            "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorSystem"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                    "usr": "c:@E@ILMessageFilterError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV17invalidNetworkURLSoAAVvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20ILMessageFilterErrorLeV17invalidNetworkURLSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                "usr": "c:@E@ILMessageFilterError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "IdentityLookup",
+            "name": "invalidNetworkURL",
+            "printedName": "invalidNetworkURL",
+            "static": true,
+            "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorInvalidNetworkURL"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                    "usr": "c:@E@ILMessageFilterError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV22networkURLUnauthorizedSoAAVvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20ILMessageFilterErrorLeV22networkURLUnauthorizedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                "usr": "c:@E@ILMessageFilterError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "IdentityLookup",
+            "name": "networkURLUnauthorized",
+            "printedName": "networkURLUnauthorized",
+            "static": true,
+            "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorNetworkURLUnauthorized"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                    "usr": "c:@E@ILMessageFilterError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV20networkRequestFailedSoAAVvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20ILMessageFilterErrorLeV20networkRequestFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                "usr": "c:@E@ILMessageFilterError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "IdentityLookup",
+            "name": "networkRequestFailed",
+            "printedName": "networkRequestFailed",
+            "static": true,
+            "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorNetworkRequestFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                    "usr": "c:@E@ILMessageFilterError"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC20ILMessageFilterErrorLeV24redundantNetworkDeferralSoAAVvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC20ILMessageFilterErrorLeV24redundantNetworkDeferralSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "IdentityLookup.ILMessageFilterError.Code",
+                "usr": "c:@E@ILMessageFilterError"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "IdentityLookup",
+            "name": "redundantNetworkDeferral",
+            "printedName": "redundantNetworkDeferral",
+            "static": true,
+            "usr": "c:@E@ILMessageFilterError@ILMessageFilterErrorRedundantNetworkDeferral"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "11.0",
+        "kind": "TypeDecl",
+        "moduleName": "IdentityLookup",
+        "name": "ILMessageFilterError",
+        "printedName": "ILMessageFilterError",
+        "usr": "c:@E@ILMessageFilterError"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "CoreData",
+        "printedName": "CoreData"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "ExtensionFoundation",
+        "printedName": "ExtensionFoundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityLookup",
+        "printedName": "IdentityLookup"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "IdentityLookup",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declAttributes": [
+          "Prefix"
+        ],
+        "declKind": "PrefixOperator",
+        "kind": "OperatorDecl",
+        "moduleName": "IdentityLookup",
+        "name": ">>",
+        "printedName": ">>"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LiveCallerIDLookupExtensionContext",
+                    "printedName": "IdentityLookup.LiveCallerIDLookupExtensionContext",
+                    "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : IdentityLookup.LiveCallerIDLookupProtocol>",
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup26LiveCallerIDLookupProtocolP7contextAA0cdE16ExtensionContextVvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "protocolReq": true,
+                "reqNewWitnessTableEntry": true,
+                "usr": "s:14IdentityLookup26LiveCallerIDLookupProtocolP7contextAA0cdE16ExtensionContextVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LiveCallerIDLookupExtensionContext",
+                "printedName": "IdentityLookup.LiveCallerIDLookupExtensionContext",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup26LiveCallerIDLookupProtocolP7contextAA0cdE16ExtensionContextVvp",
+            "moduleName": "IdentityLookup",
+            "name": "context",
+            "printedName": "context",
+            "protocolReq": true,
+            "usr": "s:14IdentityLookup26LiveCallerIDLookupProtocolP7contextAA0cdE16ExtensionContextVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "LiveCallerIDLookupExtensionConfiguration",
+                        "printedName": "IdentityLookup.LiveCallerIDLookupExtensionConfiguration",
+                        "usr": "s:14IdentityLookup40LiveCallerIDLookupExtensionConfigurationP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some IdentityLookup.LiveCallerIDLookupExtensionConfiguration"
+                  }
+                ],
+                "declKind": "Accessor",
+                "genericSig": "<Self where Self : IdentityLookup.LiveCallerIDLookupProtocol>",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup26LiveCallerIDLookupProtocolPAAE13configurationQrvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14IdentityLookup26LiveCallerIDLookupProtocolPAAE13configurationQrvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LiveCallerIDLookupExtensionConfiguration",
+                    "printedName": "IdentityLookup.LiveCallerIDLookupExtensionConfiguration",
+                    "usr": "s:14IdentityLookup40LiveCallerIDLookupExtensionConfigurationP"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some IdentityLookup.LiveCallerIDLookupExtensionConfiguration"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup26LiveCallerIDLookupProtocolPAAE13configurationQrvp",
+            "moduleName": "IdentityLookup",
+            "name": "configuration",
+            "printedName": "configuration",
+            "usr": "s:14IdentityLookup26LiveCallerIDLookupProtocolPAAE13configurationQrvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA0P",
+            "name": "AppExtension",
+            "printedName": "AppExtension",
+            "usr": "s:19ExtensionFoundation03AppA0P"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtension>",
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14IdentityLookup26LiveCallerIDLookupProtocolP",
+        "moduleName": "IdentityLookup",
+        "name": "LiveCallerIDLookupProtocol",
+        "printedName": "LiveCallerIDLookupProtocol",
+        "usr": "s:14IdentityLookup26LiveCallerIDLookupProtocolP"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CallLookupExtensionStatus",
+                    "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                    "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CallLookupExtensionStatus",
+                        "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                        "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "IdentityLookup.CallLookupExtensionStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(IdentityLookup.CallLookupExtensionStatus.Type) -> IdentityLookup.CallLookupExtensionStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO8disabledyA2CmF",
+            "moduleName": "IdentityLookup",
+            "name": "disabled",
+            "printedName": "disabled",
+            "usr": "s:14IdentityLookup04CallB15ExtensionStatusO8disabledyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CallLookupExtensionStatus",
+                    "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                    "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CallLookupExtensionStatus",
+                        "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                        "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "IdentityLookup.CallLookupExtensionStatus.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(IdentityLookup.CallLookupExtensionStatus.Type) -> IdentityLookup.CallLookupExtensionStatus"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO7enabledyA2CmF",
+            "moduleName": "IdentityLookup",
+            "name": "enabled",
+            "printedName": "enabled",
+            "usr": "s:14IdentityLookup04CallB15ExtensionStatusO7enabledyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CallLookupExtensionStatus",
+                "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CallLookupExtensionStatus",
+                "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO2eeoiySbAC_ACtFZ",
+            "moduleName": "IdentityLookup",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:14IdentityLookup04CallB15ExtensionStatusO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO4hash4intoys6HasherVz_tF",
+            "moduleName": "IdentityLookup",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:14IdentityLookup04CallB15ExtensionStatusO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO9hashValueSivg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14IdentityLookup04CallB15ExtensionStatusO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO9hashValueSivp",
+            "moduleName": "IdentityLookup",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:14IdentityLookup04CallB15ExtensionStatusO9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14IdentityLookup04CallB15ExtensionStatusO",
+        "moduleName": "IdentityLookup",
+        "name": "CallLookupExtensionStatus",
+        "printedName": "CallLookupExtensionStatus",
+        "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "LiveCallerIDLookupManager",
+                    "printedName": "IdentityLookup.LiveCallerIDLookupManager",
+                    "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC6sharedACvgZ",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC6sharedACvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LiveCallerIDLookupManager",
+                "printedName": "IdentityLookup.LiveCallerIDLookupManager",
+                "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC6sharedACvpZ",
+            "moduleName": "IdentityLookup",
+            "name": "shared",
+            "printedName": "shared",
+            "static": true,
+            "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC6sharedACvpZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CallLookupExtensionStatus",
+                "printedName": "IdentityLookup.CallLookupExtensionStatus",
+                "usr": "s:14IdentityLookup04CallB15ExtensionStatusO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC6status26forExtensionWithIdentifierAA04CallbI6StatusOSS_tF",
+            "moduleName": "IdentityLookup",
+            "name": "status",
+            "printedName": "status(forExtensionWithIdentifier:)",
+            "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC6status26forExtensionWithIdentifierAA04CallbI6StatusOSS_tF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC12openSettingsyyYaKF",
+            "moduleName": "IdentityLookup",
+            "name": "openSettings",
+            "printedName": "openSettings()",
+            "throwing": true,
+            "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC12openSettingsyyYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC5reset26forExtensionWithIdentifierySS_tYaKF",
+            "moduleName": "IdentityLookup",
+            "name": "reset",
+            "printedName": "reset(forExtensionWithIdentifier:)",
+            "throwing": true,
+            "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC5reset26forExtensionWithIdentifierySS_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC20refreshPIRParameters26forExtensionWithIdentifierySS_tYaKF",
+            "moduleName": "IdentityLookup",
+            "name": "refreshPIRParameters",
+            "printedName": "refreshPIRParameters(forExtensionWithIdentifier:)",
+            "throwing": true,
+            "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC20refreshPIRParameters26forExtensionWithIdentifierySS_tYaKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "15.1",
+            "intro_iOS": "18.1",
+            "intro_watchOS": "11.1",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC23refreshExtensionContext03forH14WithIdentifierySS_tYaKF",
+            "moduleName": "IdentityLookup",
+            "name": "refreshExtensionContext",
+            "printedName": "refreshExtensionContext(forExtensionWithIdentifier:)",
+            "throwing": true,
+            "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC23refreshExtensionContext03forH14WithIdentifierySS_tYaKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14IdentityLookup25LiveCallerIDLookupManagerC",
+        "moduleName": "IdentityLookup",
+        "name": "LiveCallerIDLookupManager",
+        "printedName": "LiveCallerIDLookupManager",
+        "usr": "s:14IdentityLookup25LiveCallerIDLookupManagerC"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "NSSet",
+            "printedName": "Foundation.NSSet",
+            "usr": "c:objc(cs)NSSet"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s14IdentityLookup04LiveB32DBExtensionCoreDataPropertiesSeta",
+        "moduleName": "IdentityLookup",
+        "name": "LiveLookupDBExtensionCoreDataPropertiesSet",
+        "printedName": "LiveLookupDBExtensionCoreDataPropertiesSet",
+        "usr": "s:14IdentityLookup04LiveB32DBExtensionCoreDataPropertiesSeta"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL10Foundation0I0Vvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL10Foundation0I0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL10Foundation0I0Vvp",
+            "moduleName": "IdentityLookup",
+            "name": "serviceURL",
+            "printedName": "serviceURL",
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL10Foundation0I0Vvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "URL",
+                    "printedName": "Foundation.URL",
+                    "usr": "s:10Foundation3URLV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV14tokenIssuerURL10Foundation0J0Vvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV14tokenIssuerURL10Foundation0J0Vvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV14tokenIssuerURL10Foundation0J0Vvp",
+            "moduleName": "IdentityLookup",
+            "name": "tokenIssuerURL",
+            "printedName": "tokenIssuerURL",
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV14tokenIssuerURL10Foundation0J0Vvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV13userTierToken10Foundation4DataVvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV13userTierToken10Foundation4DataVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV13userTierToken10Foundation4DataVvp",
+            "moduleName": "IdentityLookup",
+            "name": "userTierToken",
+            "printedName": "userTierToken",
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV13userTierToken10Foundation4DataVvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LiveCallerIDLookupExtensionContext",
+                "printedName": "IdentityLookup.LiveCallerIDLookupExtensionContext",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "URL",
+                "printedName": "Foundation.URL",
+                "usr": "s:10Foundation3URLV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL011tokenIssuerI013userTierTokenAC10Foundation0I0V_AiG4DataVtcfc",
+            "moduleName": "IdentityLookup",
+            "name": "init",
+            "printedName": "init(serviceURL:tokenIssuerURL:userTierToken:)",
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV10serviceURL011tokenIssuerI013userTierTokenAC10Foundation0I0V_AiG4DataVtcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "LiveCallerIDLookupExtensionContext",
+                "printedName": "IdentityLookup.LiveCallerIDLookupExtensionContext",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "LiveCallerIDLookupExtensionContext",
+                "printedName": "IdentityLookup.LiveCallerIDLookupExtensionContext",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV2eeoiySbAC_ACtFZ",
+            "moduleName": "IdentityLookup",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV6encode2toys7Encoder_p_tKF",
+            "moduleName": "IdentityLookup",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV4hash4intoys6HasherVz_tF",
+            "moduleName": "IdentityLookup",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV9hashValueSivg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV9hashValueSivp",
+            "moduleName": "IdentityLookup",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV9hashValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "LiveCallerIDLookupExtensionContext",
+                "printedName": "IdentityLookup.LiveCallerIDLookupExtensionContext",
+                "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "IdentityLookup",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV4fromACs7Decoder_p_tKcfc"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14IdentityLookup34LiveCallerIDLookupExtensionContextV",
+        "moduleName": "IdentityLookup",
+        "name": "LiveCallerIDLookupExtensionContext",
+        "printedName": "LiveCallerIDLookupExtensionContext",
+        "usr": "s:14IdentityLookup34LiveCallerIDLookupExtensionContextV"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Accessor",
+            "implicit": true,
+            "kind": "Accessor",
+            "mangledName": "$s14IdentityLookup18extensionPointNameSSvg",
+            "moduleName": "IdentityLookup",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:14IdentityLookup18extensionPointNameSSvg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "String",
+            "printedName": "Swift.String",
+            "usr": "s:SS"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "HasStorage"
+        ],
+        "declKind": "Var",
+        "hasStorage": true,
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "isLet": true,
+        "kind": "Var",
+        "mangledName": "$s14IdentityLookup18extensionPointNameSSvp",
+        "moduleName": "IdentityLookup",
+        "name": "extensionPointName",
+        "printedName": "extensionPointName",
+        "usr": "s:14IdentityLookup18extensionPointNameSSvp"
+      },
+      {
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s19ExtensionFoundation03AppA13ConfigurationP",
+            "name": "AppExtensionConfiguration",
+            "printedName": "AppExtensionConfiguration",
+            "usr": "s:19ExtensionFoundation03AppA13ConfigurationP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "genericSig": "<Self : ExtensionFoundation.AppExtensionConfiguration>",
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s14IdentityLookup40LiveCallerIDLookupExtensionConfigurationP",
+        "moduleName": "IdentityLookup",
+        "name": "LiveCallerIDLookupExtensionConfiguration",
+        "printedName": "LiveCallerIDLookupExtensionConfiguration",
+        "usr": "s:14IdentityLookup40LiveCallerIDLookupExtensionConfigurationP"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "NSSet",
+            "printedName": "Foundation.NSSet",
+            "usr": "c:objc(cs)NSSet"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s14IdentityLookup33BlockingInfoCoreDataPropertiesSeta",
+        "moduleName": "IdentityLookup",
+        "name": "BlockingInfoCoreDataPropertiesSet",
+        "printedName": "BlockingInfoCoreDataPropertiesSet",
+        "usr": "s:14IdentityLookup33BlockingInfoCoreDataPropertiesSeta"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "NSSet",
+            "printedName": "Foundation.NSSet",
+            "usr": "c:objc(cs)NSSet"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s14IdentityLookup0A25InfoCoreDataPropertiesSeta",
+        "moduleName": "IdentityLookup",
+        "name": "IdentityInfoCoreDataPropertiesSet",
+        "printedName": "IdentityInfoCoreDataPropertiesSet",
+        "usr": "s:14IdentityLookup0A25InfoCoreDataPropertiesSeta"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "NSSet",
+            "printedName": "Foundation.NSSet",
+            "usr": "c:objc(cs)NSSet"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s14IdentityLookup04LiveB27StoreFoundationFrameworkSeta",
+        "moduleName": "IdentityLookup",
+        "name": "LiveLookupStoreFoundationFrameworkSet",
+        "printedName": "LiveLookupStoreFoundationFrameworkSet",
+        "usr": "s:14IdentityLookup04LiveB27StoreFoundationFrameworkSeta"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "NSManagedObject",
+            "printedName": "CoreData.NSManagedObject",
+            "usr": "c:objc(cs)NSManagedObject"
+          }
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "mangledName": "$s14IdentityLookup04LiveB35StoreCoreDataFrameworkManagedObjecta",
+        "moduleName": "IdentityLookup",
+        "name": "LiveLookupStoreCoreDataFrameworkManagedObject",
+        "printedName": "LiveLookupStoreCoreDataFrameworkManagedObject",
+        "usr": "s:14IdentityLookup04LiveB35StoreCoreDataFrameworkManagedObjecta"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ILMessageFilterSubAction",
+                        "printedName": "IdentityLookup.ILMessageFilterSubAction",
+                        "usr": "c:@E@ILMessageFilterSubAction"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityLookup.ILMessageFilterSubAction]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ILMessageFilterSubAction",
+                        "printedName": "IdentityLookup.ILMessageFilterSubAction",
+                        "usr": "c:@E@ILMessageFilterSubAction"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityLookup.ILMessageFilterSubAction]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvs",
+                "moduleName": "IdentityLookup",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ILMessageFilterSubAction",
+                    "printedName": "IdentityLookup.ILMessageFilterSubAction",
+                    "usr": "c:@E@ILMessageFilterSubAction"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityLookup.ILMessageFilterSubAction]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "NonObjC"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvp",
+            "moduleName": "IdentityLookup",
+            "name": "transactionalSubActions",
+            "printedName": "transactionalSubActions",
+            "usr": "s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE23transactionalSubActionsSaySo0abI6ActionVGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ILMessageFilterSubAction",
+                        "printedName": "IdentityLookup.ILMessageFilterSubAction",
+                        "usr": "c:@E@ILMessageFilterSubAction"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityLookup.ILMessageFilterSubAction]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvg",
+                "moduleName": "IdentityLookup",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvg"
+              },
+              {
+                "accessorKind": "set",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ILMessageFilterSubAction",
+                        "printedName": "IdentityLookup.ILMessageFilterSubAction",
+                        "usr": "c:@E@ILMessageFilterSubAction"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[IdentityLookup.ILMessageFilterSubAction]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvs",
+                "moduleName": "IdentityLookup",
+                "name": "Set",
+                "printedName": "Set()",
+                "usr": "s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvs"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ILMessageFilterSubAction",
+                    "printedName": "IdentityLookup.ILMessageFilterSubAction",
+                    "usr": "c:@E@ILMessageFilterSubAction"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[IdentityLookup.ILMessageFilterSubAction]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvp",
+            "moduleName": "IdentityLookup",
+            "name": "promotionalSubActions",
+            "printedName": "promotionalSubActions",
+            "usr": "s:So40ILMessageFilterCapabilitiesQueryResponseC14IdentityLookupE21promotionalSubActionsSaySo0abI6ActionVGvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "NSSecureCoding",
+            "printedName": "NSSecureCoding",
+            "usr": "c:objc(pl)NSSecureCoding"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSCoding",
+            "printedName": "NSCoding",
+            "usr": "c:objc(pl)NSCoding"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "16.0",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "IdentityLookup",
+        "name": "ILMessageFilterCapabilitiesQueryResponse",
+        "objc_name": "ILMessageFilterCapabilitiesQueryResponse",
+        "printedName": "ILMessageFilterCapabilitiesQueryResponse",
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:objc(cs)ILMessageFilterCapabilitiesQueryResponse"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "IdentityLookup",
+    "printedName": "IdentityLookup"
+  }
+}

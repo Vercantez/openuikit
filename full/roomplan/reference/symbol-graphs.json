@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 35,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/RoomPlan.symbols.json",
+      "relationshipCount": 714,
+      "sha256": "716e15cec5b006ac1cb20ccfe035301341085421b76d381b949c9eefbd2e0b91",
+      "symbolCount": 481
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "RoomPlan",
+  "relationshipCount": 714,
+  "relationshipMultisetSHA256": "f422eb4b18e84a195a21985365667acb1cf6789af5ddf7c2784463e9e3c4450a",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 481,
+  "symbolMultisetSHA256": "f508ce03b45fb350cab28d0bf52557b69d34cf8d0c04b75ac657dddfdf4377cb",
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,57 @@
+{
+  "module": "OpenGLES",
+  "moduleRecord": {
+    "app_coverage_count": 2,
+    "category": "apple_first_party",
+    "classification_confidence": "high",
+    "classification_reason": "fixed iPhoneOS SDK/system-module runtime-port allowlist",
+    "file_count": 11,
+    "focus": {
+      "launch_anchor_file_count": 0,
+      "launch_anchor_paths": [],
+      "main_target_evidence_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "main_target_file_count": 0,
+      "repository_file_count": 0
+    },
+    "iphoneos_runtime_app_coverage_rank": 84,
+    "iphoneos_runtime_focus_launch_build_rank": 89,
+    "module": "OpenGLES",
+    "occurrence_count": 17,
+    "per_app": {
+      "Telegram-iOS": {
+        "evidence_sha256": "ef619a4279ba141517d5d42aebb854e954ee7762ed092f4acd89b9e3d3350611",
+        "file_count": 10,
+        "occurrence_count": 16,
+        "sample_paths": [
+          "submodules/LegacyComponents/PublicHeaders/LegacyComponents/TGPaintShader.h",
+          "submodules/LegacyComponents/PublicHeaders/LegacyComponents/TGPaintUtils.h",
+          "submodules/LegacyComponents/Sources/GLProgram.h",
+          "submodules/LegacyComponents/Sources/GPUImageContext.m",
+          "submodules/LegacyComponents/Sources/GPUImageFramebuffer.h",
+          "submodules/LegacyComponents/Sources/PGPhotoEditorView.m",
+          "submodules/LegacyComponents/Sources/TGPaintShader.m",
+          "submodules/LegacyComponents/Sources/TGVideoCameraGLRenderer.m"
+        ]
+      },
+      "eigen": {
+        "evidence_sha256": "69ea711a6d3b57c23b74b19966540e13c9b800008081000c9045927dfb9ee6d2",
+        "file_count": 1,
+        "occurrence_count": 1,
+        "sample_paths": [
+          "ios/Artsy/View_Controllers/ARVIR/AR/ARVIRHorizontalPlaneInteractionController.m"
+        ]
+      }
+    }
+  },
+  "rankings": {
+    "byAppCoverage": 84,
+    "byFocusLaunchBuildRelevance": 89
+  },
+  "requestedFamilies": [],
+  "schema": 1,
+  "source": {
+    "path": "full/framework-roadmap/framework-roadmap.json",
+    "schema": 2,
+    "sha256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a"
+  }
+}

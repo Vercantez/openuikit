@@ -1,0 +1,9 @@
+full/coreaudiokit/AUAppleCustomViewLoader.swift
+full/coreaudiokit/AUAudioUnitViewConfiguration.swift
+full/coreaudiokit/AUAudioUnitViewExtensions.swift
+full/coreaudiokit/AUGenericViewInternal.swift
+full/coreaudiokit/AUViewControllers.swift
+full/coreaudiokit/CABTMIDIViewControllers.swift
+full/coreaudiokit/CAInterAppAudioViews.swift
+full/coreaudiokit/CoreAudioKit.swift
+full/coreaudiokit/CoreAudioKitLookalikes.swift
