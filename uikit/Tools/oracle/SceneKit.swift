@@ -19,6 +19,14 @@ func numArray(_ v: Any?) -> [CGFloat]? {
     return a.compactMap { num($0) }
 }
 
+func sceneJSONHasListAppearance(_ json: JSON) -> Bool {
+    if json["listAppearance"] != nil { return true }
+    for child in json["subviews"] as? [JSON] ?? [] {
+        if sceneJSONHasListAppearance(child) { return true }
+    }
+    return false
+}
+
 // MARK: - Colors
 
 let systemColorNames: [(String, UIColor)] = [
@@ -394,6 +402,115 @@ final class SceneCollectionDriver: NSObject, UICollectionViewDataSource,
         sections[s].footer == nil
             ? .zero : (layout as! UICollectionViewFlowLayout).footerReferenceSize
     }
+}
+
+var sceneListDrivers: [SceneListDriver] = []
+
+final class SceneListDriver: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
+    struct Item {
+        let text: String
+        let secondaryText: String?
+        let style: String
+        let accessories: [String]
+        let selected: Bool
+    }
+    struct Section {
+        let header: String?
+        let items: [Item]
+    }
+    let sections: [Section]
+    let trailingSwipe: [(title: String, style: String)]
+
+    init(j: JSON) {
+        trailingSwipe = (j["trailingSwipe"] as? [JSON] ?? []).map { row in
+            (row["title"] as? String ?? "", row["style"] as? String ?? "destructive")
+        }
+        sections = (j["sections"] as? [JSON] ?? []).map { s in
+            let items = (s["items"] as? [JSON] ?? []).map { i -> Item in
+                Item(text: i["text"] as? String ?? "",
+                     secondaryText: i["secondaryText"] as? String,
+                     style: i["style"] as? String ?? "cell",
+                     accessories: i["accessories"] as? [String] ?? [],
+                     selected: i["selected"] as? Bool == true)
+            }
+            return Section(header: s["header"] as? String, items: items)
+        }
+    }
+
+    func numberOfSections(in cv: UICollectionView) -> Int { sections.count }
+    func collectionView(_ cv: UICollectionView, numberOfItemsInSection s: Int) -> Int {
+        sections[s].items.count
+    }
+    func collectionView(_ cv: UICollectionView,
+                        cellForItemAt ip: IndexPath) -> UICollectionViewCell {
+        let cell = cv.dequeueReusableCell(withReuseIdentifier: "list", for: ip)
+            as! UICollectionViewListCell
+        let item = sections[ip.section].items[ip.item]
+        var cfg: UIListContentConfiguration
+        switch item.style {
+        case "subtitle": cfg = .subtitleCell()
+        case "value": cfg = .valueCell()
+        default: cfg = .cell()
+        }
+        cfg.text = item.text
+        cfg.secondaryText = item.secondaryText
+        cell.contentConfiguration = cfg
+        var accessories: [UICellAccessory] = []
+        for name in item.accessories {
+            switch name {
+            case "disclosureIndicator": accessories.append(.disclosureIndicator())
+            case "checkmark": accessories.append(.checkmark())
+            case "delete": accessories.append(.delete(displayed: .always))
+            case "insert": accessories.append(.insert(displayed: .always))
+            case "reorder": accessories.append(.reorder(displayed: .always))
+            case "multiselect": accessories.append(.multiselect(displayed: .always))
+            case "outlineDisclosure": accessories.append(.outlineDisclosure())
+            default: break
+            }
+        }
+        cell.accessories = accessories
+        if item.selected { cell.isSelected = true }
+        return cell
+    }
+}
+
+func makeListCollectionView(_ j: JSON, appearanceName: String,
+                            traits: UITraitCollection) -> UICollectionView {
+    let appearance: UICollectionLayoutListConfiguration.Appearance
+    switch appearanceName {
+    case "plain": appearance = .plain
+    case "grouped": appearance = .grouped
+    case "insetGrouped": appearance = .insetGrouped
+    case "sidebar": appearance = .sidebar
+    case "sidebarPlain": appearance = .sidebarPlain
+    case let s: fatalError("bad listAppearance '\(s)'")
+    }
+    var config = UICollectionLayoutListConfiguration(appearance: appearance)
+    if let shows = j["showsSeparators"] as? Bool { config.showsSeparators = shows }
+    let driver = SceneListDriver(j: j)
+    if !driver.trailingSwipe.isEmpty {
+        config.trailingSwipeActionsConfigurationProvider = { _ in
+            let actions = driver.trailingSwipe.map { row -> UIContextualAction in
+                let style: UIContextualAction.Style =
+                    row.style == "destructive" ? .destructive : .normal
+                return UIContextualAction(style: style, title: row.title) { _, _, done in
+                    done(true)
+                }
+            }
+            return UISwipeActionsConfiguration(actions: actions)
+        }
+    }
+    let layout = UICollectionViewCompositionalLayout.list(using: config)
+    let c = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    c.contentInsetAdjustmentBehavior = .never
+    c.showsVerticalScrollIndicator = false
+    c.showsHorizontalScrollIndicator = false
+    c.traitOverrides.horizontalSizeClass = .compact
+    c.register(UICollectionViewListCell.self, forCellWithReuseIdentifier: "list")
+    sceneListDrivers.append(driver)
+    c.dataSource = driver
+    c.delegate = driver
+    return c
 }
 
 /// Root-only chrome containers (spec v5). Plain UIViews named exactly like
@@ -989,6 +1106,10 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         t.delegate = driver
         v = t
     case "UICollectionView":
+        if let appearanceName = j["listAppearance"] as? String {
+            v = makeListCollectionView(j, appearanceName: appearanceName, traits: traits)
+            break
+        }
         let layout = UICollectionViewFlowLayout()
         switch j["scrollDirection"] as? String ?? "vertical" {
         case "vertical": layout.scrollDirection = .vertical
@@ -1829,7 +1950,15 @@ func buildContainer(_ spec: SceneSpec) -> UIView {
         if let cs = spec.constraints { activateConstraints(cs, container: container) }
         container.overrideUserInterfaceStyle = spec.style
         container.setNeedsLayout()
-        container.layoutIfNeeded()
+        // MEASURED collection_list_plain, iPhone SE 2x / iOS 26.1: a list
+        // collection view self-sizes the first row 52 → 70.5
+        // (headerTopPadding 18.5). The model dump has 70.5 immediately;
+        // the presentation/PNG stays on 52 through SimScene's 0.5 s delay
+        // and shifts every later row. Freeze the jump so the capture is
+        // the rest state.
+        UIView.performWithoutAnimation {
+            container.layoutIfNeeded()
+        }
     }
     return container
 }

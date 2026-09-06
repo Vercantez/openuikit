@@ -353,6 +353,16 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
     /// avoids with `preparedCrossExtent`).
     private var preparedBoundsSize: CGSize = CGSize(width: -1, height: -1)
 
+    private var fittedListHeights: [IndexPath: CGFloat] = [:]
+    private var fittedListWidth: CGFloat = -1
+
+    func _noteFittedListHeight(_ height: CGFloat, at indexPath: IndexPath) -> Bool {
+        let h = snap(height)
+        if fittedListHeights[indexPath] == h { return false }
+        fittedListHeights[indexPath] = h
+        return true
+    }
+
     open override var collectionViewContentSize: CGSize { contentSize }
 
     open override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
@@ -397,6 +407,10 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         guard let cv = collectionView else { return }
 
         preparedBoundsSize = cv.bounds.size
+        if cv.bounds.width != fittedListWidth {
+            fittedListHeights.removeAll()
+            fittedListWidth = cv.bounds.width
+        }
         let container = NSCollectionLayoutContainer(contentSize: cv.bounds.size,
                                                       contentInsets: .zero)
         let env = NSCollectionLayoutEnvironment(container: container,
@@ -419,7 +433,17 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                                originY: CGFloat, env: NSCollectionLayoutEnvironment,
                                collectionView cv: UICollectionView,
                                orthogonalOffset: CGFloat) -> SectionCache {
-        let insets = spec.contentInsets
+        var insets = spec.contentInsets
+        if index == 0,
+           let list = spec._listConfiguration,
+           list.appearance == .insetGrouped || list.appearance == .grouped {
+            // MEASURED collection_list_inset (no bar): collection abs.y 0,
+            // first cell y 35. MEASURED TableEditor t5800 (large-title
+            // bar 10+106): collection abs.y 116, first cell y 116 — flush,
+            // inter-section still 35 (Foxtrot 461 → Starred 496).
+            let windowY = cv.convert(.zero, to: nil).y
+            if windowY > 1 { insets.top = 0 }
+        }
         let containerW = env.container.effectiveContentSize.width
         let contentW = max(0, containerW - insets.leading - insets.trailing)
         // MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: NSDirectionalEdgeInsets
@@ -464,6 +488,32 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         var cursor: CGFloat = 0
         var nextItem = 0
 
+        if let listCfg = spec._listConfiguration, !orthogonal {
+            // MEASURED collection_list_plain / collection_list_inset, iPhone
+            // SE 2x / iOS 26.1: list items are independently sized (52 /
+            // 68.5 / first-plain 70.5). The estimated group height is only
+            // the first guess; fittedListHeights is filled from
+            // preferredLayoutAttributesFitting after the cell is configured.
+            var y: CGFloat = 0
+            for i in 0..<itemCount {
+                let path = IndexPath(item: i, section: index)
+                var h = fittedListHeights[path]
+                    ?? UICollectionViewListCell.estimatedRowHeight(for: listCfg.appearance)
+                if fittedListHeights[path] == nil, i == 0 {
+                    h += UICollectionViewListCell.headerTopPadding(for: listCfg.appearance)
+                }
+                h = snap(h)
+                items.append(Placed(
+                    indexPath: path,
+                    kind: nil,
+                    localFrame: CGRect(x: snap(physicalLeading),
+                                       y: snap(originY + groupsY + y),
+                                       width: snap(contentW),
+                                       height: h)))
+                y += h
+            }
+            cursor = y
+        } else {
         for g in 0..<groupCount {
             let origin: CGPoint
             if orthogonal {
@@ -483,6 +533,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                 cursor += groupSize.height
                 if g + 1 < groupCount { cursor += spec.interGroupSpacing }
             }
+        }
         }
 
         let groupsExtent: CGFloat
