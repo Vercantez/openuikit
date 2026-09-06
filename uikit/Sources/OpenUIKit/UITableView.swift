@@ -573,6 +573,8 @@ open class UITableView: UIScrollView {
                 // iOS 26.1: a plain subtitle cell is 62 pt at `.large`.
                 // MEASURED TableEditor t200.ax1: **117** at
                 // `.accessibilityLarge` (33/30 pt labels, 15+39.5+6+36+20.5).
+                // MEASURED TableEditor t200.xxxl: **83** at
+                // `.extraExtraExtraLarge` (23/21 pt labels, 11+27.5+4+25.5+15).
                 height = cell.iOSPlainSubtitleFittingHeight()
             } else if LayoutEngine.installedConstraintCount > 0,
                let fitted = constraintFittingHeight(of: cell.contentView) {
