@@ -131,6 +131,18 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     public var outputDuration: CMTime { duration }
     public var outputDecodeTimeStamp: CMTime { decodeTimeStamp }
 
+    internal func replaceTimingField(_ keyPath: WritableKeyPath<CMSampleTimingInfo, CMTime>, with time: CMTime) {
+        lock.locked {
+            if timings.isEmpty {
+                var info = CMSampleTimingInfo.invalid
+                info[keyPath: keyPath] = time
+                timings = [info]
+            } else {
+                timings[0][keyPath: keyPath] = time
+            }
+        }
+    }
+
     private var outputPTS: CMTime?
 
     public init(referencing object: CMSampleBuffer) throws {
