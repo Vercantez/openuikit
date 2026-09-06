@@ -44,10 +44,13 @@ public struct MusicSubscription: Hashable, Sendable, CustomStringConvertible {
         public typealias Element = MusicSubscription
         public typealias AsyncIterator = Iterator
 
+        public init() {}
+
         public func makeAsyncIterator() -> Iterator { Iterator() }
 
         public struct Iterator: AsyncIteratorProtocol {
             public typealias Element = MusicSubscription
+            public init() {}
             public mutating func next() async -> MusicSubscription? { nil }
         }
     }

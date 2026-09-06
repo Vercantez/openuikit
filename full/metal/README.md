@@ -56,19 +56,19 @@ iPhoneOS 26.1 symbol graph. It is not wired into the shared guest package.
   `MTLCommandBufferError.notPermitted` (this CPU device is not sparse).
 - Shared-event listeners fire on the signaling thread, not the listener
   dispatch queue (no run loop).
-- Ray tracing, Metal 4 command queues, tensors, IO command queues,
-  acceleration structures, and IOSurface-backed textures are not implemented.
-  `MTL4RenderPassDescriptor` exists as a nominal type so MetalKit can compile
-  `currentMTL4RenderPassDescriptor`; it does not encode GPU work.
+- Ray tracing, tensors, and IOSurface-backed textures are not implemented.
+  Metal 4 command queues exist as a CPU command stream: copies and mipgen run
+  on commit; draws/dispatches fail closed. IO command queues exist but `load*`
+  fails closed. Acceleration structures are zero-size resources (no BLAS/TLAS).
 - Compressed / unknown pixel formats cannot be CPU-copied; `replace`/`getBytes`
   no-op when bytes-per-pixel is unknown. `MTLPixelFormat.unspecialized` is
   omitted rather than guessing an ABI value.
 
 ## Still deferred
 
-Most remaining identifiers are Metal 4 compiler/queue/encoder APIs, ray
-tracing, sparse textures, counters, tessellation/mesh draws, residency sets,
-and IO command queues. See `coverage.tsv`.
+Most remaining identifiers are Metal 4 machine-learning encoders, GPU
+tessellation/mesh rasterization, sparse page mapping, residency sets, tensors,
+and Apple IO command processors. See `coverage.tsv`.
 
 IOSurface is a declared seed dependency but is not imported; this module
 compiles standalone against Foundation.
@@ -265,4 +265,52 @@ Fail-closed this pass: mesh/tile `makeRenderPipelineState` throws
 `MTLLibraryError.compileFailure` + `"no shader compiler"`; `makeLibrary(data:)`
 throws `.fileNotFound`; `accelerationStructureSizes` and `sparseTileSize`
 return zeros (no RT/sparse GPU). Metal 4 command encoders remain deferred.
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r17`, framework `Metal`, lane `large-partitioned`.
+Fourth pass on the existing CPU reference: keep prior tests green, then add a
+software Metal 4 command stream (CPU buffer/texture copies and box-filter
+mipgen, fail-closed shader dispatch), Metal 4 pipeline/function descriptors,
+IO command buffers that fail closed at load, a host-clock timestamp counter
+heap, curve/motion-curve/indirect-instance acceleration descriptors, and
+`MTLArgument` reflection value objects.
+
+| Status | Before (wave-8 r16 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 2658 | 3448 |
+| declared | 275 | 249 |
+| deferred | 1611 | 847 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+790**. Evidence is `test:full/metal/tests/agent/<File>Tests.swift#testName`
+naming a real synchronous `test*` function.
+
+Top-5 implemented evidence distribution (of 3448):
+
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 1908 (enum / option-set / C constant table)
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 222
+3. `MetalCommandTests.swift#testMetal4CommandEncoders` — 202
+4. `MetalDescriptorTests.swift#testMetal4PipelineDescriptors` — 190
+5. `MetalGeometryTests.swift#testGeometryHelpers` — 106
+
+No non-table test exceeds 40% of the remaining 1540 implemented rows
+(cap 616; largest family test is 222). New focused tests:
+`testMetal4CommandEncoders`, `testMetal4PipelineDescriptors`,
+`testAccelerationStructureGeometryDescriptors`, `testDeviceFailClosedFactories`,
+`testIOCommandBufferFailClosed`, `testRenderPipelineStateMeshProperties`.
+
+Fail-closed this pass: Metal 4 compiler/dynamic-library/binary-function APIs
+throw `MTLLibraryError.compileFailure` + `"no shader compiler"`; Metal 4
+draws/dispatches complete with `MTL4CommandQueueError.notPermitted`; IO
+`load*` commits with `MTLIOError.internal`; `makeIOFileHandle` / `makeArchive`
+throw; pipeline-data-set serialize throws `"no GPU pipeline cache"`.
+GPU families, AIR execution, and Apple IO command processors remain absent.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
+linux and the sealed gate compiles with a clean product tree (`products=clean`).
 

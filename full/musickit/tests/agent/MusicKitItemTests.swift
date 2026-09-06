@@ -46,6 +46,10 @@ func testAlbumDecoding() {
     let constructed = Album(id: "9", title: "T", artistName: "A", trackCount: 8)
     precondition(constructed.playParameters != nil)
     precondition(constructed.description == "T")
+    precondition(constructed == constructed)
+    var hasher = Hasher()
+    constructed.hash(into: &hasher)
+    _ = constructed.hashValue
 }
 
 func testArtistGenreStation() {
@@ -56,6 +60,16 @@ func testArtistGenreStation() {
     precondition(genre.parent?.name == "Root")
     let station = Station(id: "s1", name: "Apple Music 1", isLive: true)
     precondition(station.isLive)
+    precondition(artist == artist)
+    precondition(genre == genre)
+    precondition(station == station)
+    var hasher = Hasher()
+    artist.hash(into: &hasher)
+    genre.hash(into: &hasher)
+    station.hash(into: &hasher)
+    _ = artist.hashValue
+    _ = genre.hashValue
+    _ = station.hashValue
 }
 
 func testPlaylistAndVideo() {
@@ -68,6 +82,24 @@ func testPlaylistAndVideo() {
     let track = Track.song(Song(id: "1", title: "Song", artistName: "Art"))
     precondition(track.title == "Song")
     precondition(track.artistName == "Art")
+    let entryItem = Playlist.Entry.Item.song(Song(id: "1", title: "Song", artistName: "Art"))
+    precondition(entryItem.artistName == "Art")
+    precondition(playlist == playlist)
+    precondition(entry == entry)
+    precondition(video == video)
+    precondition(track == track)
+    precondition(entryItem == entryItem)
+    var hasher = Hasher()
+    playlist.hash(into: &hasher)
+    entry.hash(into: &hasher)
+    video.hash(into: &hasher)
+    track.hash(into: &hasher)
+    entryItem.hash(into: &hasher)
+    _ = playlist.hashValue
+    _ = entry.hashValue
+    _ = video.hashValue
+    _ = track.hashValue
+    _ = entryItem.hashValue
 }
 
 func testCuratorLabelShow() {
@@ -80,6 +112,19 @@ func testCuratorLabelShow() {
     let recent = RecentlyPlayedMusicItem.album(Album(id: "9", title: "HB", artistName: "FF"))
     precondition(recent.title == "HB")
     precondition(recent.subtitle == "FF")
+    precondition(curator == curator)
+    precondition(label == label)
+    precondition(show == show)
+    precondition(recent == recent)
+    var hasher = Hasher()
+    curator.hash(into: &hasher)
+    label.hash(into: &hasher)
+    show.hash(into: &hasher)
+    recent.hash(into: &hasher)
+    _ = curator.hashValue
+    _ = label.hashValue
+    _ = show.hashValue
+    _ = recent.hashValue
 }
 
 func testMusicItemCollection() {
@@ -109,6 +154,9 @@ func testMusicItemCollection() {
     precondition(collection == collection)
     collection.title = "Hits"
     precondition(collection.description.contains("Hits"))
+    var hasher = Hasher()
+    collection.hash(into: &hasher)
+    _ = collection.hashValue
 }
 
 func testSupportingTypes() {
@@ -124,4 +172,20 @@ func testSupportingTypes() {
     precondition(PartialMusicProperty<Song>.albums.name == "albums")
     precondition(PartialMusicProperty<Album>.tracks.name == "tracks")
     precondition(PartialMusicProperty<Artist>.topSongs.name == "top-songs")
+    let property: AnyMusicProperty = PartialMusicProperty<Song>.albums
+    precondition(notes == notes)
+    precondition(preview == preview)
+    precondition(titled == titled)
+    precondition(property == property)
+    var hasher = Hasher()
+    notes.hash(into: &hasher)
+    preview.hash(into: &hasher)
+    params.hash(into: &hasher)
+    titled.hash(into: &hasher)
+    property.hash(into: &hasher)
+    _ = notes.hashValue
+    _ = preview.hashValue
+    _ = params.hashValue
+    _ = titled.hashValue
+    _ = property.hashValue
 }

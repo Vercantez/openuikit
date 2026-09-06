@@ -643,3 +643,147 @@ public enum MTLMotionBorderMode: UInt32, Equatable, Hashable, Sendable {
     case clamp = 0
     case vanish = 1
 }
+
+/// Sequential values matching the documented Metal.h blocks where known.
+/// Later Metal 4 cases without integer payloads are recorded in
+/// `oracle-questions.tsv` until an Apple-oracle probe confirms them.
+public enum MTL4AlphaToCoverageState: Int, Equatable, Hashable, Sendable {
+    case disabled = 0
+    case enabled = 1
+}
+
+public enum MTL4AlphaToOneState: Int, Equatable, Hashable, Sendable {
+    case disabled = 0
+    case enabled = 1
+}
+
+public enum MTL4BlendState: Int, Equatable, Hashable, Sendable {
+    case disabled = 0
+    case enabled = 1
+    case unspecialized = 2
+}
+
+public enum MTL4IndirectCommandBufferSupportState: Int, Equatable, Hashable, Sendable {
+    case disabled = 0
+    case enabled = 1
+}
+
+public enum MTL4LogicalToPhysicalColorAttachmentMappingState: Int, Equatable, Hashable, Sendable {
+    case identity = 0
+    case inherited = 1
+}
+
+public enum MTL4CompilerTaskStatus: Int, Equatable, Hashable, Sendable {
+    case none = 0
+    case scheduled = 1
+    case compiling = 2
+    case finished = 3
+}
+
+public enum MTL4TimestampGranularity: Int, Equatable, Hashable, Sendable {
+    case relaxed = 0
+    case precise = 1
+}
+
+public enum MTLCurveType: Int, Equatable, Hashable, Sendable {
+    case round = 0
+    case flat = 1
+}
+
+public enum MTLCurveBasis: Int, Equatable, Hashable, Sendable {
+    case bSpline = 0
+    case linear = 1
+    case bezier = 2
+    case catmullRom = 3
+}
+
+public enum MTLCurveEndCaps: Int, Equatable, Hashable, Sendable {
+    case none = 0
+    case disk = 1
+    case sphere = 2
+}
+
+public enum MTLIOPriority: Int, Equatable, Hashable, Sendable {
+    case high = 0
+    case normal = 1
+    case low = 2
+}
+
+public enum MTLIOStatus: Int, Equatable, Hashable, Sendable {
+    case pending = 0
+    case cancelled = 1
+    case error = 2
+    case complete = 3
+}
+
+public enum MTLIOCompressionMethod: Int, Equatable, Hashable, Sendable {
+    case zlib = 0
+    case lzfse = 1
+    case lz4 = 2
+    case lzma = 3
+    case lzBitmap = 4
+}
+
+public enum MTLIOCommandQueueType: Int, Equatable, Hashable, Sendable {
+    case concurrent = 0
+    case serial = 1
+}
+
+public enum MTLMatrixLayout: Int, Equatable, Hashable, Sendable {
+    case columnMajor = 0
+    case rowMajor = 1
+}
+
+public enum MTLPrimitiveTopologyClass: UInt, Equatable, Hashable, Sendable {
+    case unspecified = 0
+    case point = 1
+    case line = 2
+    case triangle = 3
+}
+
+public enum MTLTessellationControlPointIndexType: UInt, Equatable, Hashable, Sendable {
+    case none = 0
+    case uint16 = 1
+    case uint32 = 2
+}
+
+public enum MTLTessellationFactorFormat: UInt, Equatable, Hashable, Sendable {
+    case half = 0
+}
+
+public enum MTLTessellationFactorStepFunction: UInt, Equatable, Hashable, Sendable {
+    case constant = 0
+    case perPatch = 1
+    case perInstance = 2
+    case perPatchAndPerInstance = 3
+}
+
+public enum MTLTessellationPartitionMode: UInt, Equatable, Hashable, Sendable {
+    case pow2 = 0
+    case integer = 1
+    case fractionalOdd = 2
+    case fractionalEven = 3
+}
+
+public enum MTLTransformType: Int, Equatable, Hashable, Sendable {
+    case packedFloat4x3 = 0
+    case component = 1
+}
+
+public enum MTLAccelerationStructureInstanceDescriptorType: UInt, Equatable, Hashable, Sendable {
+    case `default` = 0
+    case userID = 1
+    case motion = 2
+    case indirect = 3
+    case indirectMotion = 4
+}
+
+public enum MTLSparseTextureRegionAlignmentMode: UInt, Equatable, Hashable, Sendable {
+    case outward = 0
+    case inward = 1
+}
+
+public enum MTL4CounterHeapType: Int, Equatable, Hashable, Sendable {
+    case invalid = 0
+    case timestamp = 1
+}

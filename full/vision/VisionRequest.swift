@@ -277,6 +277,32 @@ open class VNDetectHumanHandPoseRequest: VNImageBasedRequest {
         IndexSet(integer: VNDetectHumanHandPoseRequestRevision1)
     }
 
+    public var maximumHandCount: Int = 2
+
+    public class func supportedJointNames(forRevision revision: Int) throws -> [VNHumanHandPoseObservation.JointName] {
+        _ = revision
+        throw visionUnavailableModel("VNDetectHumanHandPoseRequest.supportedJointNames")
+    }
+
+    public class func supportedJointsGroupNames(
+        forRevision revision: Int
+    ) throws -> [VNHumanHandPoseObservation.JointsGroupName] {
+        _ = revision
+        throw visionUnavailableModel("VNDetectHumanHandPoseRequest.supportedJointsGroupNames")
+    }
+
+    public var supportedJointNames: [VNHumanHandPoseObservation.JointName] {
+        get throws {
+            throw visionUnavailableModel("VNDetectHumanHandPoseRequest.supportedJointNames")
+        }
+    }
+
+    public var supportedJointsGroupNames: [VNHumanHandPoseObservation.JointsGroupName] {
+        get throws {
+            throw visionUnavailableModel("VNDetectHumanHandPoseRequest.supportedJointsGroupNames")
+        }
+    }
+
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
         throw visionUnavailableModel("VNDetectHumanHandPoseRequest")
@@ -290,6 +316,18 @@ open class VNDetectAnimalBodyPoseRequest: VNImageBasedRequest {
         IndexSet(integer: VNDetectAnimalBodyPoseRequestRevision1)
     }
 
+    public var supportedJointNames: [VNAnimalBodyPoseObservation.JointName] {
+        get throws {
+            throw visionUnavailableModel("VNDetectAnimalBodyPoseRequest.supportedJointNames")
+        }
+    }
+
+    public var supportedJointsGroupNames: [VNAnimalBodyPoseObservation.JointsGroupName] {
+        get throws {
+            throw visionUnavailableModel("VNDetectAnimalBodyPoseRequest.supportedJointsGroupNames")
+        }
+    }
+
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
         throw visionUnavailableModel("VNDetectAnimalBodyPoseRequest")
@@ -301,6 +339,18 @@ open class VNDetectHumanBodyPose3DRequest: VNImageBasedRequest {
     public override class var defaultRevision: Int { VNDetectHumanBodyPose3DRequestRevision1 }
     public override class var supportedRevisions: IndexSet {
         IndexSet(integer: VNDetectHumanBodyPose3DRequestRevision1)
+    }
+
+    public var supportedJointNames: [VNHumanBodyPose3DObservation.JointName] {
+        get throws {
+            throw visionUnavailableModel("VNDetectHumanBodyPose3DRequest.supportedJointNames")
+        }
+    }
+
+    public var supportedJointsGroupNames: [VNHumanBodyPose3DObservation.JointsGroupName] {
+        get throws {
+            throw visionUnavailableModel("VNDetectHumanBodyPose3DRequest.supportedJointsGroupNames")
+        }
     }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
@@ -317,6 +367,86 @@ open class VNDetectTextRectanglesRequest: VNImageBasedRequest {
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
         throw visionUnavailableModel("VNDetectTextRectanglesRequest")
+    }
+}
+
+open class VNRecognizeAnimalsRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNRecognizeAnimalsRequestRevision2 }
+    public override class var defaultRevision: Int { VNRecognizeAnimalsRequestRevision2 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integersIn: VNRecognizeAnimalsRequestRevision1...VNRecognizeAnimalsRequestRevision2)
+    }
+
+    public class func knownAnimalIdentifiers(forRevision requestRevision: Int) throws -> [VNAnimalIdentifier] {
+        _ = requestRevision
+        throw visionUnavailableModel("VNRecognizeAnimalsRequest.knownAnimalIdentifiers")
+    }
+
+    public func supportedIdentifiers() throws -> [VNAnimalIdentifier] {
+        throw visionUnavailableModel("VNRecognizeAnimalsRequest.supportedIdentifiers")
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNRecognizeAnimalsRequest")
+    }
+}
+
+open class VNStatefulRequest: VNImageBasedRequest {
+    public let frameAnalysisSpacing: CMTime
+    public var minimumLatencyFrameCount: Int { 0 }
+
+    public init(
+        frameAnalysisSpacing: CMTime,
+        completionHandler: VNRequestCompletionHandler? = nil
+    ) {
+        self.frameAnalysisSpacing = frameAnalysisSpacing
+        super.init(completionHandler: completionHandler)
+    }
+
+    public required override init(completionHandler: VNRequestCompletionHandler? = nil) {
+        self.frameAnalysisSpacing = .zero
+        super.init(completionHandler: completionHandler)
+    }
+}
+
+open class VNDetectTrajectoriesRequest: VNStatefulRequest {
+    public override class var currentRevision: Int { VNDetectTrajectoriesRequestRevision1 }
+    public override class var defaultRevision: Int { VNDetectTrajectoriesRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNDetectTrajectoriesRequestRevision1)
+    }
+
+    public let trajectoryLength: Int
+    public var targetFrameTime: CMTime = .zero
+    public var objectMinimumNormalizedRadius: Float = 0
+    public var objectMaximumNormalizedRadius: Float = 1
+    public var minimumObjectSize: Float {
+        get { objectMinimumNormalizedRadius }
+        set { objectMinimumNormalizedRadius = newValue }
+    }
+    public var maximumObjectSize: Float {
+        get { objectMaximumNormalizedRadius }
+        set { objectMaximumNormalizedRadius = newValue }
+    }
+
+    public init(
+        frameAnalysisSpacing: CMTime,
+        trajectoryLength: Int,
+        completionHandler: VNRequestCompletionHandler? = nil
+    ) {
+        self.trajectoryLength = max(1, trajectoryLength)
+        super.init(frameAnalysisSpacing: frameAnalysisSpacing, completionHandler: completionHandler)
+    }
+
+    public required init(completionHandler: VNRequestCompletionHandler? = nil) {
+        self.trajectoryLength = 5
+        super.init(frameAnalysisSpacing: .zero, completionHandler: completionHandler)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectTrajectoriesRequest")
     }
 }
 
@@ -487,7 +617,18 @@ open class VNGeneratePersonSegmentationRequest: VNImageBasedRequest {
         case fast = 2
     }
 
+    public override class var currentRevision: Int { VNGeneratePersonSegmentationRequestRevision1 }
+    public override class var defaultRevision: Int { VNGeneratePersonSegmentationRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNGeneratePersonSegmentationRequestRevision1)
+    }
+
     public var qualityLevel: QualityLevel = .balanced
+    public var outputPixelFormat: OSType = kCVPixelFormatType_32BGRA
+
+    public func supportedOutputPixelFormats() throws -> [NSNumber] {
+        [NSNumber(value: kCVPixelFormatType_32BGRA)]
+    }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
@@ -501,6 +642,8 @@ open class VNTrackingRequest: VNImageBasedRequest {
     public var inputObservation: VNDetectedObjectObservation = VNDetectedObjectObservation(
         boundingBox: VNNormalizedIdentityRect
     )
+    var templateGray: [UInt8]?
+    var templateSize: (Int, Int) = (0, 0)
 
     public func supportedNumber(ofTrackersAndReturnError error: UnsafeMutablePointer<NSError?>?) -> Int {
         error?.pointee = nil
@@ -514,9 +657,6 @@ open class VNTrackObjectRequest: VNTrackingRequest {
     public override class var supportedRevisions: IndexSet {
         IndexSet(integersIn: VNTrackObjectRequestRevision1...VNTrackObjectRequestRevision2)
     }
-
-    var templateGray: [UInt8]?
-    var templateSize: (Int, Int) = (0, 0)
 
     public init(detectedObjectObservation observation: VNDetectedObjectObservation) {
         super.init(completionHandler: nil)
@@ -540,7 +680,48 @@ open class VNTrackObjectRequest: VNTrackingRequest {
     }
 }
 
-open class VNTrackRectangleRequest: VNTrackingRequest {}
+open class VNTrackRectangleRequest: VNTrackingRequest {
+    public override class var currentRevision: Int { VNTrackRectangleRequestRevision1 }
+    public override class var defaultRevision: Int { VNTrackRectangleRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNTrackRectangleRequestRevision1)
+    }
+
+    public convenience init(rectangleObservation observation: VNRectangleObservation) {
+        self.init(rectangleObservation: observation, completionHandler: nil)
+    }
+
+    public init(
+        rectangleObservation observation: VNRectangleObservation,
+        completionHandler: VNRequestCompletionHandler? = nil
+    ) {
+        super.init(completionHandler: completionHandler)
+        inputObservation = observation
+    }
+
+    public required override init(completionHandler: VNRequestCompletionHandler? = nil) {
+        super.init(completionHandler: completionHandler)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        let tracked = visionTrackObject(
+            in: context.rasterForROI(regionOfInterest),
+            request: self
+        )
+        let box = tracked.boundingBox
+        return [
+            VNRectangleObservation(
+                requestRevision: VNTrackRectangleRequestRevision1,
+                topLeft: CGPoint(x: box.minX, y: box.maxY),
+                topRight: CGPoint(x: box.maxX, y: box.maxY),
+                bottomRight: CGPoint(x: box.maxX, y: box.minY),
+                bottomLeft: CGPoint(x: box.minX, y: box.minY),
+                confidence: tracked.confidence,
+                uuid: tracked.uuid
+            )
+        ]
+    }
+}
 
 open class VNTrackOpticalFlowRequest: VNTrackingRequest {
     public enum ComputationAccuracy: UInt, CaseIterable, Sendable {

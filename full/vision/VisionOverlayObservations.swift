@@ -185,7 +185,7 @@ func overlayCompositeType(_ type: VNBarcodeCompositeType) -> BarcodeObservation.
     }
 }
 
-public struct ContoursObservation: VisionObservation {
+public struct ContoursObservation: VisionObservation, BoundingRegionProviding, Codable {
     public struct Contour: Hashable, Sendable, Codable, CustomStringConvertible {
         public var points: [NormalizedPoint]
         public var childContours: [Contour]
@@ -261,6 +261,9 @@ public struct ContoursObservation: VisionObservation {
     public let originatingRequestDescriptor: RequestDescriptor?
     public var contourCount: Int { topLevelContours.reduce(0) { $0 + 1 + $1.childContours.count } }
     public var description: String { "ContoursObservation \(contourCount)" }
+    public var boundingRegion: NormalizedRegion {
+        topLevelContours.first ?? Contour(points: [], indexPath: IndexPath(index: 0))
+    }
     public var normalizedPath: CGPath {
         let path = CGPath()
         for contour in topLevelContours {
@@ -342,7 +345,7 @@ public struct TextObservation: VisionObservation, QuadrilateralProviding {
     }
 }
 
-public struct RecognizedText: Hashable, Sendable, CustomStringConvertible {
+public struct RecognizedText: Hashable, Sendable, Codable, CustomStringConvertible {
     public let string: String
     public let confidence: Float
     public var description: String { string }
@@ -358,7 +361,7 @@ public struct RecognizedText: Hashable, Sendable, CustomStringConvertible {
     }
 }
 
-public struct RecognizedTextObservation: VisionObservation, QuadrilateralProviding {
+public struct RecognizedTextObservation: VisionObservation, QuadrilateralProviding, Codable {
     public enum Direction: String, Hashable, Sendable, Codable {
         case leftToRight, rightToLeft, topToBottom, bottomToTop
     }
@@ -429,6 +432,44 @@ public struct RecognizedTextObservation: VisionObservation, QuadrilateralProvidi
 
     public func topCandidates(_ maxCandidateCount: Int) -> [RecognizedText] {
         Array(candidates.prefix(max(0, maxCandidateCount)))
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case topLeft, topRight, bottomRight, bottomLeft, confidence, uuid, timeRange
+        case originatingRequestDescriptor, textDirection, shouldWrapToNextLine, isTitle, candidates
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        topLeft = try container.decode(NormalizedPoint.self, forKey: .topLeft)
+        topRight = try container.decode(NormalizedPoint.self, forKey: .topRight)
+        bottomRight = try container.decode(NormalizedPoint.self, forKey: .bottomRight)
+        bottomLeft = try container.decode(NormalizedPoint.self, forKey: .bottomLeft)
+        confidence = try container.decode(Float.self, forKey: .confidence)
+        uuid = try container.decode(UUID.self, forKey: .uuid)
+        timeRange = try container.decodeIfPresent(CMTimeRange.self, forKey: .timeRange)
+        originatingRequestDescriptor = try container.decodeIfPresent(RequestDescriptor.self, forKey: .originatingRequestDescriptor)
+        textDirection = try container.decodeIfPresent(Direction.self, forKey: .textDirection)
+        shouldWrapToNextLine = try container.decodeIfPresent(Bool.self, forKey: .shouldWrapToNextLine)
+        isTitle = try container.decode(Bool.self, forKey: .isTitle)
+        candidates = try container.decode([RecognizedText].self, forKey: .candidates)
+        recognitionLanguages = []
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(topLeft, forKey: .topLeft)
+        try container.encode(topRight, forKey: .topRight)
+        try container.encode(bottomRight, forKey: .bottomRight)
+        try container.encode(bottomLeft, forKey: .bottomLeft)
+        try container.encode(confidence, forKey: .confidence)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encodeIfPresent(timeRange, forKey: .timeRange)
+        try container.encodeIfPresent(originatingRequestDescriptor, forKey: .originatingRequestDescriptor)
+        try container.encodeIfPresent(textDirection, forKey: .textDirection)
+        try container.encodeIfPresent(shouldWrapToNextLine, forKey: .shouldWrapToNextLine)
+        try container.encode(isTitle, forKey: .isTitle)
+        try container.encode(candidates, forKey: .candidates)
     }
 }
 
@@ -1095,16 +1136,51 @@ public struct RecognizedObjectObservation: VisionObservation, BoundingBoxProvidi
     public var description: String { "RecognizedObjectObservation" }
 }
 
-public struct TrajectoryObservation: VisionObservation {
+public struct TrajectoryObservation: VisionObservation, Codable {
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
-    public var description: String { "TrajectoryObservation" }
+    public let detectedPoints: [NormalizedPoint]
+    public let projectedPoints: [NormalizedPoint]
+    public let equationCoefficients: SIMD3<Float>
+    public let movingAverageRadius: CGFloat
+    public var description: String { "TrajectoryObservation \(detectedPoints.count)" }
+
+    public init(
+        detectedPoints: [NormalizedPoint],
+        projectedPoints: [NormalizedPoint] = [],
+        equationCoefficients: SIMD3<Float> = SIMD3<Float>(0, 0, 0),
+        movingAverageRadius: CGFloat = 0,
+        confidence: Float = 1,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.detectedPoints = detectedPoints
+        self.projectedPoints = projectedPoints
+        self.equationCoefficients = equationCoefficients
+        self.movingAverageRadius = movingAverageRadius
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
+
+    public init(_ observation: VNTrajectoryObservation) {
+        self.detectedPoints = observation.detectedPoints.map { NormalizedPoint(x: $0.x, y: $0.y) }
+        self.projectedPoints = observation.projectedPoints.map { NormalizedPoint(x: $0.x, y: $0.y) }
+        self.equationCoefficients = observation.equationCoefficients
+        self.movingAverageRadius = observation.movingAverageRadius
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+    }
 }
 
-public struct DocumentObservation: VisionObservation {
-    public struct Container: Hashable, Sendable {
+public struct DocumentObservation: VisionObservation, Codable {
+    public struct Container: Hashable, Sendable, Codable {
         public struct DataDetectorMatch: Hashable, Sendable, Codable {
             public var boundingRegion: NormalizedRegion
             public var match: DataDetector.Match
@@ -1118,12 +1194,12 @@ public struct DocumentObservation: VisionObservation {
             }
         }
 
-        public struct List: Hashable, Sendable {
+        public struct List: Hashable, Sendable, Codable {
             public enum Marker: String, Hashable, Sendable, Codable, CaseIterable {
                 case lowercaseLatin, uppercaseLatin, compositeDecimal, decorativeDecimal, bullet, hyphen, decimal
             }
 
-            public struct Item: Hashable, Sendable {
+            public struct Item: Hashable, Sendable, Codable {
                 public var itemString: String
                 public var markerType: Marker?
                 public var markerString: String
@@ -1154,7 +1230,7 @@ public struct DocumentObservation: VisionObservation {
             }
         }
 
-        public struct Text: Hashable, Sendable {
+        public struct Text: Hashable, Sendable, Codable {
             public enum Alignment: String, Hashable, Sendable, Codable {
                 case center, leading, trailing
             }
@@ -1188,8 +1264,8 @@ public struct DocumentObservation: VisionObservation {
             }
         }
 
-        public struct Table: Hashable, Sendable {
-            public struct Cell: Hashable, Sendable {
+        public struct Table: Hashable, Sendable, Codable {
+            public struct Cell: Hashable, Sendable, Codable {
                 public var columnRange: ClosedRange<Int>
                 public var rowRange: ClosedRange<Int>
                 public var content: DocumentObservation.Container
@@ -1268,12 +1344,51 @@ public struct DocumentObservation: VisionObservation {
     }
 }
 
-public struct DetectedDocumentObservation: VisionObservation {
+public struct DetectedDocumentObservation: VisionObservation, QuadrilateralProviding, Codable {
+    public var topLeft: NormalizedPoint
+    public var topRight: NormalizedPoint
+    public var bottomRight: NormalizedPoint
+    public var bottomLeft: NormalizedPoint
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public var globalSegmentationMask: PixelBufferObservation
     public var description: String { "DetectedDocumentObservation" }
+
+    public init(
+        topLeft: NormalizedPoint,
+        topRight: NormalizedPoint,
+        bottomRight: NormalizedPoint,
+        bottomLeft: NormalizedPoint,
+        confidence: Float = 1,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil,
+        globalSegmentationMask: PixelBufferObservation = PixelBufferObservation()
+    ) {
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomRight = bottomRight
+        self.bottomLeft = bottomLeft
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+        self.globalSegmentationMask = globalSegmentationMask
+    }
+
+    public init?(_ observation: VNRectangleObservation) {
+        self.topLeft = NormalizedPoint(normalizedPoint: observation.topLeft)
+        self.topRight = NormalizedPoint(normalizedPoint: observation.topRight)
+        self.bottomRight = NormalizedPoint(normalizedPoint: observation.bottomRight)
+        self.bottomLeft = NormalizedPoint(normalizedPoint: observation.bottomLeft)
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.globalSegmentationMask = PixelBufferObservation()
+    }
 }
 
 public struct InstanceMaskObservation: VisionObservation {
@@ -1284,23 +1399,111 @@ public struct InstanceMaskObservation: VisionObservation {
     public var description: String { "InstanceMaskObservation" }
 }
 
-public struct PixelBufferObservation: VisionObservation {
+public struct PixelBufferObservation: VisionObservation, Codable {
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
-    public var description: String { "PixelBufferObservation" }
+    public let pixelBuffer: CVPixelBuffer?
+    public var description: String {
+        "PixelBufferObservation \(Int(size.width))x\(Int(size.height))"
+    }
+    public var pixelFormat: OSType { kCVPixelFormatType_32BGRA }
+    public var size: CGSize {
+        CGSize(width: CGFloat(pixelBuffer?.width ?? 0), height: CGFloat(pixelBuffer?.height ?? 0))
+    }
+    public var cgImage: CGImage {
+        get throws {
+            guard let buffer = pixelBuffer, buffer.width > 0, buffer.height > 0 else {
+                throw VisionError.invalidImage("empty pixel buffer")
+            }
+            return CGImage(width: buffer.width, height: buffer.height, pixels: buffer.pixels)
+        }
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case confidence, uuid, timeRange, originatingRequestDescriptor, width, height
+    }
 
     public init(
         confidence: Float = 0,
         uuid: UUID = UUID(),
         timeRange: CMTimeRange? = nil,
-        originatingRequestDescriptor: RequestDescriptor? = nil
+        originatingRequestDescriptor: RequestDescriptor? = nil,
+        pixelBuffer: CVPixelBuffer? = nil
     ) {
         self.confidence = confidence
         self.uuid = uuid
         self.timeRange = timeRange
         self.originatingRequestDescriptor = originatingRequestDescriptor
+        self.pixelBuffer = pixelBuffer
+    }
+
+    public init?(_ observation: VNPixelBufferObservation) {
+        self.init(
+            confidence: observation.confidence,
+            uuid: observation.uuid,
+            timeRange: observation.timeRange,
+            originatingRequestDescriptor: nil,
+            pixelBuffer: observation.pixelBuffer
+        )
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        confidence = try container.decode(Float.self, forKey: .confidence)
+        uuid = try container.decode(UUID.self, forKey: .uuid)
+        timeRange = try container.decodeIfPresent(CMTimeRange.self, forKey: .timeRange)
+        originatingRequestDescriptor = try container.decodeIfPresent(
+            RequestDescriptor.self,
+            forKey: .originatingRequestDescriptor
+        )
+        let width = try container.decodeIfPresent(Int.self, forKey: .width) ?? 0
+        let height = try container.decodeIfPresent(Int.self, forKey: .height) ?? 0
+        pixelBuffer = (width > 0 && height > 0) ? CVPixelBuffer(width: width, height: height) : nil
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(confidence, forKey: .confidence)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encodeIfPresent(timeRange, forKey: .timeRange)
+        try container.encodeIfPresent(originatingRequestDescriptor, forKey: .originatingRequestDescriptor)
+        try container.encode(pixelBuffer?.width ?? 0, forKey: .width)
+        try container.encode(pixelBuffer?.height ?? 0, forKey: .height)
+    }
+
+    public func pixel(at point: NormalizedPoint) -> Float {
+        guard let buffer = pixelBuffer, buffer.width > 0, buffer.height > 0 else { return 0 }
+        let x = min(max(Int((point.x * CGFloat(buffer.width)).rounded(.down)), 0), buffer.width - 1)
+        let y = min(max(Int(((1 - point.y) * CGFloat(buffer.height)).rounded(.down)), 0), buffer.height - 1)
+        let index = (y * buffer.width + x) * 4
+        guard index + 2 < buffer.pixels.count else { return 0 }
+        let blue = Float(buffer.pixels[index])
+        let green = Float(buffer.pixels[index + 1])
+        let red = Float(buffer.pixels[index + 2])
+        return (red + green + blue) / (3 * 255)
+    }
+
+    public func withUnsafePointer<R>(_ body: (UnsafeRawPointer) -> R) -> R {
+        let pixels = pixelBuffer?.pixels ?? [0]
+        return pixels.withUnsafeBytes { raw in
+            body(raw.baseAddress!)
+        }
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
+        hasher.combine(confidence)
+        hasher.combine(pixelBuffer?.width ?? 0)
+        hasher.combine(pixelBuffer?.height ?? 0)
+    }
+
+    public static func == (lhs: PixelBufferObservation, rhs: PixelBufferObservation) -> Bool {
+        lhs.uuid == rhs.uuid
+            && lhs.confidence == rhs.confidence
+            && lhs.pixelBuffer?.width == rhs.pixelBuffer?.width
+            && lhs.pixelBuffer?.height == rhs.pixelBuffer?.height
     }
 }
 

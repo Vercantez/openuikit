@@ -13,6 +13,7 @@ import Foundation
 #if canImport(Foundation)
 import Foundation
 import class Foundation.NSObject
+import class Foundation.NSPredicate
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #endif
@@ -88,7 +89,9 @@ open class UIFontPickerViewControllerConfiguration: NSObject {
     public var includeFaces: Bool = false
     public var displayUsingSystemFont: Bool = false
     public var filteredTraits: UIFontDescriptor.SymbolicTraits = []
+#if canImport(Foundation)
     public var filteredLanguagesPredicate: NSPredicate?
+#endif
 
     public override init() { super.init() }
 
@@ -97,12 +100,16 @@ open class UIFontPickerViewControllerConfiguration: NSObject {
         copied.includeFaces = includeFaces
         copied.displayUsingSystemFont = displayUsingSystemFont
         copied.filteredTraits = filteredTraits
+#if canImport(Foundation)
         copied.filteredLanguagesPredicate = filteredLanguagesPredicate
+#endif
         return copied
     }
 
+#if canImport(Foundation)
     public class func filterPredicate(forFilteredLanguages filteredLanguages: [String]) -> NSPredicate? {
         _ = filteredLanguages
         return nil
     }
+#endif
 }
