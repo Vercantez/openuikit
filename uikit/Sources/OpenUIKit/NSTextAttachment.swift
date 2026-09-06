@@ -22,6 +22,11 @@ import struct Foundation.Data
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #endif
+#if !canImport(Foundation) && canImport(FoundationEssentials)
+// Guest library route (x86 cycle c4dce839 stopped at picker URL/Data; this
+// file's `contents: Data?` is the same miss). FoundationEssentials.Data.
+import struct FoundationEssentials.Data
+#endif
 
 #if canImport(CoreGraphics)
 import struct CoreFoundation.CGFloat

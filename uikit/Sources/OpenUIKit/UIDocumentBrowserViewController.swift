@@ -15,6 +15,9 @@ import class Foundation.NSObject
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #endif
+#if !canImport(Foundation) && canImport(FoundationEssentials)
+import struct FoundationEssentials.URL
+#endif
 
 public let UIDocumentBrowserErrorDomain: String = "UIDocumentBrowserErrorDomain"
 
@@ -111,23 +114,35 @@ open class UIDocumentBrowserViewController: UIViewController {
 
     public func revealDocument(at url: URL, importIfNeeded: Bool,
                                completion: ((URL?, Error?) -> Void)?) {
-        completion?(nil, NSError(domain: UIDocumentBrowserErrorDomain,
-                                  code: UIDocumentBrowserErrorCode.noLocationAvailable.rawValue,
-                                  userInfo: nil))
+        _ = url
+        _ = importIfNeeded
+        completion?(nil, Self.unavailableError(.noLocationAvailable))
     }
 
     public func importDocument(at documentURL: URL, nextToDocumentAt neighbourURL: URL,
                                mode: ImportMode, completionHandler: @escaping (URL?, Error?) -> Void) {
-        completionHandler(nil, NSError(domain: UIDocumentBrowserErrorDomain,
-                                        code: UIDocumentBrowserErrorCode.generic.rawValue,
-                                        userInfo: nil))
+        _ = documentURL
+        _ = neighbourURL
+        _ = mode
+        completionHandler(nil, Self.unavailableError(.generic))
     }
 
     public func renameDocument(at documentURL: URL, proposedName: String,
                                completionHandler: @escaping (URL?, Error?) -> Void) {
-        completionHandler(nil, NSError(domain: UIDocumentBrowserErrorDomain,
-                                        code: UIDocumentBrowserErrorCode.generic.rawValue,
-                                        userInfo: nil))
+        _ = documentURL
+        _ = proposedName
+        completionHandler(nil, Self.unavailableError(.generic))
+    }
+
+    // Guest library route: NSError is not in FoundationEssentials (x86 cycle
+    // c4dce839 stopped at URL/Data; NSError is the next miss on this file).
+    // UIDocumentBrowserErrorCode already conforms to Error.
+    private static func unavailableError(_ code: UIDocumentBrowserErrorCode) -> Error {
+#if canImport(Foundation)
+        NSError(domain: UIDocumentBrowserErrorDomain, code: code.rawValue, userInfo: nil)
+#else
+        code
+#endif
     }
 
     public func transitionController(forDocumentAt documentURL: URL) -> UIDocumentBrowserTransitionController {
@@ -168,7 +183,11 @@ open class UIDocumentBrowserAction: NSObject {
 
 @preconcurrency @MainActor
 open class UIDocumentBrowserTransitionController: NSObject, UIViewControllerAnimatedTransitioning {
+    // Progress is Foundation-only (not FoundationEssentials). Hide it on the
+    // guest library route the way UISceneActivationConditions hides NSPredicate.
+#if canImport(Foundation)
     public var loadingProgress: Progress?
+#endif
     public weak var targetView: UIView?
 
     init(documentURL: URL) {
