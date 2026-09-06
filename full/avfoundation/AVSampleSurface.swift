@@ -142,12 +142,26 @@ open class AVSampleBufferVideoRenderer: NSObject, @unchecked Sendable {
 
 open class AVSampleCursor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public func stepInDecodeOrder(byCount stepCount: Int64) -> Int64 { 0 }
-  public func stepInPresentationOrder(byCount stepCount: Int64) -> Int64 { 0 }
-  public func step(byDecodeTime deltaDecodeTime: CMTime, wasPinned outWasPinned: UnsafeMutablePointer<Bool>?) -> CMTime { .zero }
-  public func step(byPresentationTime deltaPresentationTime: CMTime, wasPinned outWasPinned: UnsafeMutablePointer<Bool>?) -> CMTime { .zero }
-  public var presentationTimeStamp: CMTime { .zero }
-  public var decodeTimeStamp: CMTime { .zero }
+  public func stepInDecodeOrder(byCount stepCount: Int64) -> Int64 {
+    _ = stepCount
+    return 0
+  }
+  public func stepInPresentationOrder(byCount stepCount: Int64) -> Int64 {
+    _ = stepCount
+    return 0
+  }
+  public func step(byDecodeTime deltaDecodeTime: CMTime, wasPinned outWasPinned: UnsafeMutablePointer<Bool>?) -> CMTime {
+    _ = deltaDecodeTime
+    outWasPinned?.pointee = true
+    return .zero
+  }
+  public func step(byPresentationTime deltaPresentationTime: CMTime, wasPinned outWasPinned: UnsafeMutablePointer<Bool>?) -> CMTime {
+    _ = deltaPresentationTime
+    outWasPinned?.pointee = true
+    return .zero
+  }
+  public var presentationTimeStamp: CMTime { .invalid }
+  public var decodeTimeStamp: CMTime { .invalid }
   public func maySamplesWithEarlierDecodeTimeStampsHavePresentationTimeStamps(laterThan cursor: AVSampleCursor) -> Bool { false }
   public func maySamplesWithLaterDecodeTimeStampsHavePresentationTimeStamps(earlierThan cursor: AVSampleCursor) -> Bool { false }
   public var currentSampleDuration: CMTime { .zero }
@@ -166,14 +180,22 @@ open class AVSampleCursor: NSObject, @unchecked Sendable {
 
 public struct AVSampleCursorAudioDependencyInfo: Sendable {
   public init() {}
-  public init(audioSampleIsIndependentlyDecodable: Bool, audioSamplePacketRefreshCount: Int) {}
+  public init(audioSampleIsIndependentlyDecodable: Bool, audioSamplePacketRefreshCount: Int) {
+    self.audioSampleIsIndependentlyDecodable = audioSampleIsIndependentlyDecodable
+    self.audioSamplePacketRefreshCount = audioSamplePacketRefreshCount
+  }
   public var audioSampleIsIndependentlyDecodable: Bool = false
   public var audioSamplePacketRefreshCount: Int = 0
 }
 
 public struct AVSampleCursorChunkInfo: Sendable {
   public init() {}
-  public init(chunkSampleCount: Int64, chunkHasUniformSampleSizes: Bool, chunkHasUniformSampleDurations: Bool, chunkHasUniformFormatDescriptions: Bool) {}
+  public init(chunkSampleCount: Int64, chunkHasUniformSampleSizes: Bool, chunkHasUniformSampleDurations: Bool, chunkHasUniformFormatDescriptions: Bool) {
+    self.chunkSampleCount = chunkSampleCount
+    self.chunkHasUniformSampleSizes = chunkHasUniformSampleSizes
+    self.chunkHasUniformSampleDurations = chunkHasUniformSampleDurations
+    self.chunkHasUniformFormatDescriptions = chunkHasUniformFormatDescriptions
+  }
   public var chunkSampleCount: Int64 = 0
   public var chunkHasUniformSampleSizes: Bool = false
   public var chunkHasUniformSampleDurations: Bool = false
@@ -182,7 +204,14 @@ public struct AVSampleCursorChunkInfo: Sendable {
 
 public struct AVSampleCursorDependencyInfo: Sendable {
   public init() {}
-  public init(sampleIndicatesWhetherItHasDependentSamples: Bool, sampleHasDependentSamples: Bool, sampleIndicatesWhetherItDependsOnOthers: Bool, sampleDependsOnOthers: Bool, sampleIndicatesWhetherItHasRedundantCoding: Bool, sampleHasRedundantCoding: Bool) {}
+  public init(sampleIndicatesWhetherItHasDependentSamples: Bool, sampleHasDependentSamples: Bool, sampleIndicatesWhetherItDependsOnOthers: Bool, sampleDependsOnOthers: Bool, sampleIndicatesWhetherItHasRedundantCoding: Bool, sampleHasRedundantCoding: Bool) {
+    self.sampleIndicatesWhetherItHasDependentSamples = sampleIndicatesWhetherItHasDependentSamples
+    self.sampleHasDependentSamples = sampleHasDependentSamples
+    self.sampleIndicatesWhetherItDependsOnOthers = sampleIndicatesWhetherItDependsOnOthers
+    self.sampleDependsOnOthers = sampleDependsOnOthers
+    self.sampleIndicatesWhetherItHasRedundantCoding = sampleIndicatesWhetherItHasRedundantCoding
+    self.sampleHasRedundantCoding = sampleHasRedundantCoding
+  }
   public var sampleIndicatesWhetherItHasDependentSamples: Bool = false
   public var sampleHasDependentSamples: Bool = false
   public var sampleIndicatesWhetherItDependsOnOthers: Bool = false
@@ -193,14 +222,21 @@ public struct AVSampleCursorDependencyInfo: Sendable {
 
 public struct AVSampleCursorStorageRange: Sendable {
   public init() {}
-  public init(offset: Int64, length: Int64) {}
+  public init(offset: Int64, length: Int64) {
+    self.offset = offset
+    self.length = length
+  }
   public var offset: Int64 = 0
   public var length: Int64 = 0
 }
 
 public struct AVSampleCursorSyncInfo: Sendable {
   public init() {}
-  public init(sampleIsFullSync: Bool, sampleIsPartialSync: Bool, sampleIsDroppable: Bool) {}
+  public init(sampleIsFullSync: Bool, sampleIsPartialSync: Bool, sampleIsDroppable: Bool) {
+    self.sampleIsFullSync = sampleIsFullSync
+    self.sampleIsPartialSync = sampleIsPartialSync
+    self.sampleIsDroppable = sampleIsDroppable
+  }
   public var sampleIsFullSync: Bool = false
   public var sampleIsPartialSync: Bool = false
   public var sampleIsDroppable: Bool = false

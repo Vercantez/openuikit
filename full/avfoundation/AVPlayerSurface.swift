@@ -475,83 +475,127 @@ open class AVPlayerInterstitialEvent: NSObject, @unchecked Sendable {
     case singlePoint = 0
     case fill = 1
   }
-  convenience init(primaryItem: AVPlayerItem, identifier: String?, time: CMTime, templateItems: [AVPlayerItem], restrictions: AVPlayerInterstitialEvent.Restrictions = [], resumptionOffset: CMTime = .indefinite, playoutLimit: CMTime = .invalid, userDefinedAttributes: [String : Any] = [:]) { self.init() }
-  convenience init(primaryItem: AVPlayerItem, identifier: String?, date: Date, templateItems: [AVPlayerItem], restrictions: AVPlayerInterstitialEvent.Restrictions = [], resumptionOffset: CMTime = .indefinite, playoutLimit: CMTime = .invalid, userDefinedAttributes: [String : Any] = [:]) { self.init() }
-  convenience init(primaryItem: AVPlayerItem, time: CMTime) { self.init() }
-  convenience init(primaryItem: AVPlayerItem, date: Date) { self.init() }
-  public var primaryItem: AVPlayerItem? { nil }
+  weak var storedPrimaryItem: AVPlayerItem?
+  var storedIdentifier = ""
+  var storedTime = CMTime.zero
+  var storedDate: Date?
+  var storedTemplateItems: [AVPlayerItem] = []
+  var storedRestrictions = Restrictions()
+  var storedResumptionOffset = CMTime.indefinite
+  var storedPlayoutLimit = CMTime.invalid
+  var storedUserDefinedAttributes: [AnyHashable : any Sendable] = [:]
+  var storedAlignsStart = false
+  var storedAlignsResumption = false
+  var storedCue = Cue.noCue
+  var storedWillPlayOnce = false
+  var storedTimelineOccupancy = TimelineOccupancy.singlePoint
+  var storedSupplementsPrimaryContent = false
+  var storedContentMayVary = true
+  var storedSkipControlTimeRange = CMTimeRange.zero
+  var storedSkipControlLocalizedLabelBundleKey: String?
+  var storedPlannedDuration = CMTime.invalid
+
+  public convenience init(primaryItem: AVPlayerItem, identifier: String?, time: CMTime, templateItems: [AVPlayerItem], restrictions: AVPlayerInterstitialEvent.Restrictions = [], resumptionOffset: CMTime = .indefinite, playoutLimit: CMTime = .invalid, userDefinedAttributes: [String : Any] = [:]) {
+    self.init()
+    storedPrimaryItem = primaryItem
+    storedIdentifier = identifier ?? UUID().uuidString
+    storedTime = time
+    storedTemplateItems = templateItems
+    storedRestrictions = restrictions
+    storedResumptionOffset = resumptionOffset
+    storedPlayoutLimit = playoutLimit
+    storedUserDefinedAttributes = Dictionary(uniqueKeysWithValues: userDefinedAttributes.map { ($0.key as AnyHashable, $0.value as any Sendable) })
+  }
+  public convenience init(primaryItem: AVPlayerItem, identifier: String?, date: Date, templateItems: [AVPlayerItem], restrictions: AVPlayerInterstitialEvent.Restrictions = [], resumptionOffset: CMTime = .indefinite, playoutLimit: CMTime = .invalid, userDefinedAttributes: [String : Any] = [:]) {
+    self.init()
+    storedPrimaryItem = primaryItem
+    storedIdentifier = identifier ?? UUID().uuidString
+    storedDate = date
+    storedTemplateItems = templateItems
+    storedRestrictions = restrictions
+    storedResumptionOffset = resumptionOffset
+    storedPlayoutLimit = playoutLimit
+    storedUserDefinedAttributes = Dictionary(uniqueKeysWithValues: userDefinedAttributes.map { ($0.key as AnyHashable, $0.value as any Sendable) })
+  }
+  public convenience init(primaryItem: AVPlayerItem, time: CMTime) {
+    self.init(primaryItem: primaryItem, identifier: nil, time: time, templateItems: [])
+  }
+  public convenience init(primaryItem: AVPlayerItem, date: Date) {
+    self.init(primaryItem: primaryItem, identifier: nil, date: date, templateItems: [])
+  }
+  public var primaryItem: AVPlayerItem? { storedPrimaryItem }
   public var identifier: String {
-      get { "" }
-      set { _ = newValue }
+      get { storedIdentifier }
+      set { storedIdentifier = newValue }
     }
   public var time: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedTime }
+      set { storedTime = newValue }
     }
   public var date: Date? {
-      get { nil }
-      set { _ = newValue }
+      get { storedDate }
+      set { storedDate = newValue }
     }
   public var templateItems: [AVPlayerItem] {
-      get { [] }
-      set { _ = newValue }
+      get { storedTemplateItems }
+      set { storedTemplateItems = newValue }
     }
   public var restrictions: AVPlayerInterstitialEvent.Restrictions {
-      get { AVPlayerInterstitialEvent.Restrictions(rawValue: 0) }
-      set { _ = newValue }
+      get { storedRestrictions }
+      set { storedRestrictions = newValue }
     }
   public var resumptionOffset: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedResumptionOffset }
+      set { storedResumptionOffset = newValue }
     }
   public var playoutLimit: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedPlayoutLimit }
+      set { storedPlayoutLimit = newValue }
     }
   public var alignsStartWithPrimarySegmentBoundary: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAlignsStart }
+      set { storedAlignsStart = newValue }
     }
   public var alignsResumptionWithPrimarySegmentBoundary: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAlignsResumption }
+      set { storedAlignsResumption = newValue }
     }
   public var cue: AVPlayerInterstitialEvent.Cue {
-      get { AVPlayerInterstitialEvent.Cue(rawValue: "") }
-      set { _ = newValue }
+      get { storedCue }
+      set { storedCue = newValue }
     }
   public var willPlayOnce: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedWillPlayOnce }
+      set { storedWillPlayOnce = newValue }
     }
   public var userDefinedAttributes: [AnyHashable : any Sendable] {
-      get { [:] }
-      set { _ = newValue }
+      get { storedUserDefinedAttributes }
+      set { storedUserDefinedAttributes = newValue }
     }
   public var assetListResponse: [AnyHashable : any Sendable]? { nil }
   public var timelineOccupancy: AVPlayerInterstitialEvent.TimelineOccupancy {
-      get { AVPlayerInterstitialEvent.TimelineOccupancy(rawValue: 0)! }
-      set { _ = newValue }
+      get { storedTimelineOccupancy }
+      set { storedTimelineOccupancy = newValue }
     }
   public var supplementsPrimaryContent: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedSupplementsPrimaryContent }
+      set { storedSupplementsPrimaryContent = newValue }
     }
   public var contentMayVary: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedContentMayVary }
+      set { storedContentMayVary = newValue }
     }
   public var skipControlTimeRange: CMTimeRange {
-      get { .zero }
-      set { _ = newValue }
+      get { storedSkipControlTimeRange }
+      set { storedSkipControlTimeRange = newValue }
     }
   public var skipControlLocalizedLabelBundleKey: String? {
-      get { nil }
-      set { _ = newValue }
+      get { storedSkipControlLocalizedLabelBundleKey }
+      set { storedSkipControlLocalizedLabelBundleKey = newValue }
     }
   public var plannedDuration: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedPlannedDuration }
+      set { storedPlannedDuration = newValue }
     }
 }
 
@@ -563,7 +607,14 @@ public enum AVPlayerInterstitialEventAssetListResponseStatus: Int, Hashable, Sen
 
 open class AVPlayerInterstitialEventController: AVPlayerInterstitialEventMonitor, @unchecked Sendable {
   public override init() { super.init() }
-  public func cancelCurrentEvent(withResumptionOffset resumptionOffset: CMTime) {}
+  public override var events: [AVPlayerInterstitialEvent] {
+    get { storedEvents }
+    set { storedEvents = newValue }
+  }
+  public func cancelCurrentEvent(withResumptionOffset resumptionOffset: CMTime) {
+    _ = resumptionOffset
+    storedEvents.removeAll()
+  }
   public func skipCurrentEvent() {}
   public var localizedStringsBundle: Bundle? {
       get { nil }
@@ -577,32 +628,37 @@ open class AVPlayerInterstitialEventController: AVPlayerInterstitialEventMonitor
 
 open class AVPlayerInterstitialEventMonitor: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(primaryPlayer: AVPlayer) { self.init() }
-  public var primaryPlayer: AVPlayer? { nil }
+  weak var storedPrimaryPlayer: AVPlayer?
+  var storedEvents: [AVPlayerInterstitialEvent] = []
+  public convenience init(primaryPlayer: AVPlayer) {
+    self.init()
+    storedPrimaryPlayer = primaryPlayer
+  }
+  public var primaryPlayer: AVPlayer? { storedPrimaryPlayer }
   public var interstitialPlayer: AVQueuePlayer { AVQueuePlayer() }
-  public var events: [AVPlayerInterstitialEvent] { [] }
+  public var events: [AVPlayerInterstitialEvent] { storedEvents }
   public var currentEvent: AVPlayerInterstitialEvent? { nil }
-  public var currentEventSkippableState: AVPlayerInterstitialEvent.SkippableEventState { AVPlayerInterstitialEvent.SkippableEventState(rawValue: 0)! }
+  public var currentEventSkippableState: AVPlayerInterstitialEvent.SkippableEventState { .notSkippable }
   public var currentEventSkipControlLabel: String? { nil }
-  public static let eventsDidChangeNotification: Notification.Name = Notification.Name("eventsDidChangeNotification")
-  public static let currentEventDidChangeNotification: Notification.Name = Notification.Name("currentEventDidChangeNotification")
-  public static let assetListResponseStatusDidChangeNotification: Notification.Name = Notification.Name("assetListResponseStatusDidChangeNotification")
-  public static let assetListResponseStatusDidChangeEventKey: String = "assetListResponseStatusDidChangeEventKey"
-  public static let assetListResponseStatusDidChangeStatusKey: String = "assetListResponseStatusDidChangeStatusKey"
-  public static let assetListResponseStatusDidChangeErrorKey: String = "assetListResponseStatusDidChangeErrorKey"
-  public static let currentEventSkippableStateDidChangeNotification: Notification.Name = Notification.Name("currentEventSkippableStateDidChangeNotification")
-  public static let currentEventSkippableStateDidChangeEventKey: String = "currentEventSkippableStateDidChangeEventKey"
-  public static let currentEventSkippableStateDidChangeStateKey: String = "currentEventSkippableStateDidChangeStateKey"
-  public static let currentEventSkippableStateDidChangeSkipControlLabelKey: String = "currentEventSkippableStateDidChangeSkipControlLabelKey"
-  public static let currentEventSkippedNotification: Notification.Name = Notification.Name("currentEventSkippedNotification")
-  public static let currentEventSkippedEventKey: String = "currentEventSkippedEventKey"
-  public static let interstitialEventWasUnscheduledNotification: Notification.Name = Notification.Name("interstitialEventWasUnscheduledNotification")
-  public static let interstitialEventWasUnscheduledEventKey: String = "interstitialEventWasUnscheduledEventKey"
-  public static let interstitialEventWasUnscheduledErrorKey: String = "interstitialEventWasUnscheduledErrorKey"
-  public static let interstitialEventDidFinishNotification: Notification.Name = Notification.Name("interstitialEventDidFinishNotification")
-  public static let interstitialEventDidFinishEventKey: String = "interstitialEventDidFinishEventKey"
-  public static let interstitialEventDidFinishPlayoutTimeKey: String = "interstitialEventDidFinishPlayoutTimeKey"
-  public static let interstitialEventDidFinishDidPlayEntireEventKey: String = "interstitialEventDidFinishDidPlayEntireEventKey"
+  public static let eventsDidChangeNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorEventsDidChangeNotification")
+  public static let currentEventDidChangeNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorCurrentEventDidChangeNotification")
+  public static let assetListResponseStatusDidChangeNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeNotification")
+  public static let assetListResponseStatusDidChangeEventKey: String = "AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeEventKey"
+  public static let assetListResponseStatusDidChangeStatusKey: String = "AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeStatusKey"
+  public static let assetListResponseStatusDidChangeErrorKey: String = "AVPlayerInterstitialEventMonitorAssetListResponseStatusDidChangeErrorKey"
+  public static let currentEventSkippableStateDidChangeNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorCurrentEventSkippableStateDidChangeNotification")
+  public static let currentEventSkippableStateDidChangeEventKey: String = "AVPlayerInterstitialEventMonitorCurrentEventSkippableStateDidChangeEventKey"
+  public static let currentEventSkippableStateDidChangeStateKey: String = "AVPlayerInterstitialEventMonitorCurrentEventSkippableStateDidChangeStateKey"
+  public static let currentEventSkippableStateDidChangeSkipControlLabelKey: String = "AVPlayerInterstitialEventMonitorCurrentEventSkippableStateDidChangeSkipControlLabelKey"
+  public static let currentEventSkippedNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorCurrentEventSkippedNotification")
+  public static let currentEventSkippedEventKey: String = "AVPlayerInterstitialEventMonitorCurrentEventSkippedEventKey"
+  public static let interstitialEventWasUnscheduledNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorInterstitialEventWasUnscheduledNotification")
+  public static let interstitialEventWasUnscheduledEventKey: String = "AVPlayerInterstitialEventMonitorInterstitialEventWasUnscheduledEventKey"
+  public static let interstitialEventWasUnscheduledErrorKey: String = "AVPlayerInterstitialEventMonitorInterstitialEventWasUnscheduledErrorKey"
+  public static let interstitialEventDidFinishNotification: Notification.Name = Notification.Name("AVPlayerInterstitialEventMonitorInterstitialEventDidFinishNotification")
+  public static let interstitialEventDidFinishEventKey: String = "AVPlayerInterstitialEventMonitorInterstitialEventDidFinishEventKey"
+  public static let interstitialEventDidFinishPlayoutTimeKey: String = "AVPlayerInterstitialEventMonitorInterstitialEventDidFinishPlayoutTimeKey"
+  public static let interstitialEventDidFinishDidPlayEntireEventKey: String = "AVPlayerInterstitialEventMonitorInterstitialEventDidFinishDidPlayEntireEventKey"
 }
 
 extension AVPlayerItem {
@@ -613,7 +669,7 @@ extension AVPlayerItem {
   }
   public convenience init(asset: AVAsset, automaticallyLoadedAssetKeys: [String]?) {
     self.init(asset: asset)
-    _ = automaticallyLoadedAssetKeys
+    portableAutomaticallyLoadedAssetKeys = automaticallyLoadedAssetKeys ?? []
   }
   public func copy(with zone: NSZone? = nil) -> Any { self }
   public var status: AVPlayerItem.Status { .readyToPlay }
@@ -630,7 +686,7 @@ extension AVPlayerItem {
     asset.tracks.first(where: { $0.mediaType == .video })?.naturalSize ?? .zero
   }
   public var timedMetadata: [AVMetadataItem]? { nil }
-  public var automaticallyLoadedAssetKeys: [String] { [] }
+  public var automaticallyLoadedAssetKeys: [String] { portableAutomaticallyLoadedAssetKeys }
   public var canPlayFastForward: Bool { false }
   public var canPlaySlowForward: Bool { false }
   public var canPlayReverse: Bool { false }
@@ -639,8 +695,8 @@ extension AVPlayerItem {
   public var canStepForward: Bool { false }
   public var canStepBackward: Bool { false }
   public var configuredTimeOffsetFromLive: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { portableConfiguredTimeOffsetFromLive }
+      set { portableConfiguredTimeOffsetFromLive = newValue }
     }
   public var recommendedTimeOffsetFromLive: CMTime { .zero }
   public var automaticallyPreservesTimeOffsetFromLive: Bool {
@@ -711,8 +767,8 @@ extension AVPlayerItem {
   public var timebase: CMTimebase? { nil }
   public var customVideoCompositor: (any AVVideoCompositing)? { nil }
   public var textStyleRules: [AVTextStyleRule]? {
-      get { nil }
-      set { _ = newValue }
+      get { portableTextStyleRules }
+      set { portableTextStyleRules = newValue }
     }
   public var appliesPerFrameHDRDisplayMetadata: Bool {
       get { false }
@@ -723,8 +779,8 @@ extension AVPlayerItem {
       set { _ = newValue }
     }
   public var allowedAudioSpatializationFormats: AVAudioSpatializationFormats {
-      get { AVAudioSpatializationFormats(rawValue: 0) }
-      set { _ = newValue }
+      get { portableAllowedAudioSpatializationFormats }
+      set { portableAllowedAudioSpatializationFormats = newValue }
     }
   public var canUseNetworkResourcesForLiveStreamingWhilePaused: Bool {
       get { false }
@@ -751,21 +807,35 @@ extension AVPlayerItem {
       set { portableStartsOnFirstEligibleVariant = newValue }
     }
   public var variantPreferences: AVVariantPreferences {
-      get { AVVariantPreferences(rawValue: 0) }
-      set { _ = newValue }
+      get { portableVariantPreferences }
+      set { portableVariantPreferences = newValue }
     }
   public func select(_ mediaSelectionOption: AVMediaSelectionOption?, in mediaSelectionGroup: AVMediaSelectionGroup) {}
   public func selectMediaOptionAutomatically(in mediaSelectionGroup: AVMediaSelectionGroup) {}
   public var currentMediaSelection: AVMediaSelection { AVMediaSelection() }
   public var preferredCustomMediaSelectionSchemes: [AVCustomMediaSelectionScheme] {
-      get { [] }
-      set { _ = newValue }
+      get { portablePreferredCustomMediaSelectionSchemes }
+      set { portablePreferredCustomMediaSelectionSchemes = newValue }
     }
-  public func selectMediaPresentationLanguage(_ language: String, for mediaSelectionGroup: AVMediaSelectionGroup) {}
-  public func selectedMediaPresentationLanguage(for mediaSelectionGroup: AVMediaSelectionGroup) -> String? { nil }
-  public func select(_ mediaPresentationSetting: AVMediaPresentationSetting, for mediaSelectionGroup: AVMediaSelectionGroup) {}
-  public func accessLog() -> AVPlayerItemAccessLog? { nil }
-  public func errorLog() -> AVPlayerItemErrorLog? { nil }
+  public func selectMediaPresentationLanguage(_ language: String, for mediaSelectionGroup: AVMediaSelectionGroup) {
+    portablePresentationLanguages[ObjectIdentifier(mediaSelectionGroup)] = language
+  }
+  public func selectedMediaPresentationLanguage(for mediaSelectionGroup: AVMediaSelectionGroup) -> String? {
+    portablePresentationLanguages[ObjectIdentifier(mediaSelectionGroup)]
+  }
+  public func select(_ mediaPresentationSetting: AVMediaPresentationSetting, for mediaSelectionGroup: AVMediaSelectionGroup) {
+    _ = (mediaPresentationSetting, mediaSelectionGroup)
+  }
+  public func effectiveMediaPresentationSettings(for mediaSelectionGroup: AVMediaSelectionGroup) -> [AVMediaPresentationSelector : Any] {
+    _ = mediaSelectionGroup
+    return [:]
+  }
+  public func selectedMediaPresentationSettings(for mediaSelectionGroup: AVMediaSelectionGroup) -> [AVMediaPresentationSelector : Any] {
+    _ = mediaSelectionGroup
+    return [:]
+  }
+  public func accessLog() -> AVPlayerItemAccessLog? { portableAccessLog }
+  public func errorLog() -> AVPlayerItemErrorLog? { portableErrorLog }
   public func add(_ output: AVPlayerItemOutput) {
     portableOutputs.append(output)
   }
@@ -798,19 +868,19 @@ extension AVPlayerItem {
   }
   public func seek(to date: Date) -> Bool { false }
   public func selectedMediaOption(in mediaSelectionGroup: AVMediaSelectionGroup) -> AVMediaSelectionOption? { nil }
-  public static let timeJumpedNotification: Notification.Name = Notification.Name("timeJumpedNotification")
+  public static let timeJumpedNotification: Notification.Name = Notification.Name("AVPlayerItemTimeJumpedNotification")
   public static let didPlayToEndTimeNotification: Notification.Name = Notification.Name("AVPlayerItemDidPlayToEndTimeNotification")
   public static let failedToPlayToEndTimeNotification: Notification.Name = Notification.Name("AVPlayerItemFailedToPlayToEndTimeNotification")
   public static let playbackStalledNotification: Notification.Name = Notification.Name("AVPlayerItemPlaybackStalledNotification")
-  public static let newAccessLogEntryNotification: Notification.Name = Notification.Name("newAccessLogEntryNotification")
-  public static let newErrorLogEntryNotification: Notification.Name = Notification.Name("newErrorLogEntryNotification")
-  public static let recommendedTimeOffsetFromLiveDidChangeNotification: Notification.Name = Notification.Name("recommendedTimeOffsetFromLiveDidChangeNotification")
-  public static let mediaSelectionDidChangeNotification: Notification.Name = Notification.Name("mediaSelectionDidChangeNotification")
-  public static let timeJumpedOriginatingParticipantKey: String = "timeJumpedOriginatingParticipantKey"
+  public static let newAccessLogEntryNotification: Notification.Name = Notification.Name("AVPlayerItemNewAccessLogEntryNotification")
+  public static let newErrorLogEntryNotification: Notification.Name = Notification.Name("AVPlayerItemNewErrorLogEntryNotification")
+  public static let recommendedTimeOffsetFromLiveDidChangeNotification: Notification.Name = Notification.Name("AVPlayerItemRecommendedTimeOffsetFromLiveDidChangeNotification")
+  public static let mediaSelectionDidChangeNotification: Notification.Name = Notification.Name("AVPlayerItemMediaSelectionDidChangeNotification")
+  public static let timeJumpedOriginatingParticipantKey: String = "AVPlayerItemTimeJumpedOriginatingParticipantKey"
   public var integratedTimeline: AVPlayerItemIntegratedTimeline { AVPlayerItemIntegratedTimeline() }
   public var automaticallyHandlesInterstitialEvents: Bool {
-      get { false }
-      set { _ = newValue }
+      get { portableAutomaticallyHandlesInterstitialEvents }
+      set { portableAutomaticallyHandlesInterstitialEvents = newValue }
     }
   public var template: AVPlayerItem? { nil }
 }
@@ -818,7 +888,7 @@ extension AVPlayerItem {
 open class AVPlayerItemAccessLog: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public func extendedLogData() -> Data? { nil }
-  public var extendedLogDataStringEncoding: UInt { 0 }
+  public var extendedLogDataStringEncoding: UInt { String.Encoding.utf8.rawValue }
   public var events: [AVPlayerItemAccessLogEvent] { [] }
 }
 
@@ -855,7 +925,7 @@ open class AVPlayerItemAccessLogEvent: NSObject, @unchecked Sendable {
 open class AVPlayerItemErrorLog: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   public func extendedLogData() -> Data? { nil }
-  public var extendedLogDataStringEncoding: UInt { 0 }
+  public var extendedLogDataStringEncoding: UInt { String.Encoding.utf8.rawValue }
   public var events: [AVPlayerItemErrorLogEvent] { [] }
 }
 

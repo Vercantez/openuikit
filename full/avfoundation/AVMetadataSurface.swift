@@ -370,32 +370,172 @@ public struct AVMetadataIdentifier: RawRepresentable, Hashable, Sendable, Expres
 
 open class AVMetadataItem: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public var identifier: AVMetadataIdentifier? { nil }
-  public var extendedLanguageTag: String? { nil }
-  public var locale: Locale? { nil }
-  public var time: CMTime { .zero }
-  public var duration: CMTime { .zero }
-  public var dataType: String? { nil }
-  public var value: (any NSCopying & NSObjectProtocol)? { nil }
-  public var extraAttributes: [AVMetadataExtraAttributeKey : Any]? { nil }
-  public var startDate: Date? { nil }
-  public var stringValue: String? { nil }
-  public var numberValue: NSNumber? { nil }
-  public var dateValue: Date? { nil }
-  public var dataValue: Data? { nil }
-  public class func metadataItems(from metadataItems: [AVMetadataItem], filteredAndSortedAccordingToPreferredLanguages preferredLanguages: [String]) -> [AVMetadataItem] { [] }
-  public class func metadataItems(from metadataItems: [AVMetadataItem], filteredByIdentifier identifier: AVMetadataIdentifier) -> [AVMetadataItem] { [] }
-  public class func metadataItems(from metadataItems: [AVMetadataItem], filteredBy metadataItemFilter: AVMetadataItemFilter) -> [AVMetadataItem] { [] }
-  public class func identifier(forKey key: Any, keySpace: AVMetadataKeySpace) -> AVMetadataIdentifier? { nil }
-  public class func keySpace(forIdentifier identifier: AVMetadataIdentifier) -> AVMetadataKeySpace? { nil }
-  public class func key(forIdentifier identifier: AVMetadataIdentifier) -> Any? { nil }
-  public var key: (any NSCopying & NSObjectProtocol)? { nil }
-  public var commonKey: AVMetadataKey? { nil }
-  public var keySpace: AVMetadataKeySpace? { nil }
-  convenience init(propertiesOf metadataItem: AVMetadataItem, valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void) { self.init() }
-  convenience init(propertiesOfMetadataItem metadataItem: AVMetadataItem, valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void) { self.init() }
-  public class func metadataItems(from metadataItems: [AVMetadataItem], with locale: Locale) -> [AVMetadataItem] { [] }
-  public class func metadataItems(from metadataItems: [AVMetadataItem], withKey key: Any?, keySpace: AVMetadataKeySpace?) -> [AVMetadataItem] { [] }
+
+  var storedIdentifier: AVMetadataIdentifier?
+  var storedExtendedLanguageTag: String?
+  var storedLocale: Locale?
+  var storedTime: CMTime = .zero
+  var storedDuration: CMTime = .zero
+  var storedDataType: String?
+  var storedValue: (any NSCopying & NSObjectProtocol)?
+  var storedExtraAttributes: [AVMetadataExtraAttributeKey : Any]?
+  var storedStartDate: Date?
+  var storedKey: (any NSCopying & NSObjectProtocol)?
+  var storedCommonKey: AVMetadataKey?
+  var storedKeySpace: AVMetadataKeySpace?
+
+  public var identifier: AVMetadataIdentifier? { storedIdentifier }
+  public var extendedLanguageTag: String? { storedExtendedLanguageTag }
+  public var locale: Locale? { storedLocale }
+  public var time: CMTime { storedTime }
+  public var duration: CMTime { storedDuration }
+  public var dataType: String? { storedDataType }
+  public var value: (any NSCopying & NSObjectProtocol)? { storedValue }
+  public var extraAttributes: [AVMetadataExtraAttributeKey : Any]? { storedExtraAttributes }
+  public var startDate: Date? { storedStartDate }
+  public var stringValue: String? {
+    (storedValue as? NSString).map { $0 as String }
+  }
+  public var numberValue: NSNumber? { storedValue as? NSNumber }
+  public var dateValue: Date? {
+    if let date = storedValue as? NSDate { return date as Date }
+    return storedStartDate
+  }
+  public var dataValue: Data? {
+    (storedValue as? NSData).map { $0 as Data }
+  }
+  public var key: (any NSCopying & NSObjectProtocol)? { storedKey }
+  public var commonKey: AVMetadataKey? { storedCommonKey }
+  public var keySpace: AVMetadataKeySpace? { storedKeySpace }
+
+  public class func metadataItems(
+    from metadataItems: [AVMetadataItem],
+    filteredAndSortedAccordingToPreferredLanguages preferredLanguages: [String]
+  ) -> [AVMetadataItem] {
+    let preferred = preferredLanguages.map { $0.lowercased() }
+    func language(of item: AVMetadataItem) -> String? {
+      if let tag = item.extendedLanguageTag?.lowercased() { return tag }
+      return item.locale?.identifier.lowercased()
+    }
+    let matched = metadataItems.filter { item in
+      guard let tag = language(of: item) else { return false }
+      return preferred.contains(where: { tag.hasPrefix($0) || $0.hasPrefix(tag) })
+    }
+    return matched.sorted { left, right in
+      let leftTag = language(of: left) ?? ""
+      let rightTag = language(of: right) ?? ""
+      let leftIndex = preferred.firstIndex(where: { leftTag.hasPrefix($0) || $0.hasPrefix(leftTag) }) ?? Int.max
+      let rightIndex = preferred.firstIndex(where: { rightTag.hasPrefix($0) || $0.hasPrefix(rightTag) }) ?? Int.max
+      return leftIndex < rightIndex
+    }
+  }
+
+  public class func metadataItems(
+    from metadataItems: [AVMetadataItem],
+    filteredByIdentifier identifier: AVMetadataIdentifier
+  ) -> [AVMetadataItem] {
+    metadataItems.filter { $0.identifier == identifier }
+  }
+
+  public class func metadataItems(
+    from metadataItems: [AVMetadataItem],
+    filteredBy metadataItemFilter: AVMetadataItemFilter
+  ) -> [AVMetadataItem] {
+    _ = metadataItemFilter
+    // Linux has no private-metadata stripper; `forSharing()` is an identity filter.
+    return metadataItems
+  }
+
+  public class func identifier(forKey key: Any, keySpace: AVMetadataKeySpace) -> AVMetadataIdentifier? {
+    let keyString: String
+    if let metadataKey = key as? AVMetadataKey {
+      keyString = metadataKey.rawValue
+    } else if let string = key as? String {
+      keyString = string
+    } else if let string = key as? NSString {
+      keyString = string as String
+    } else {
+      return nil
+    }
+    if keySpace == .common, keyString.hasPrefix("commonKey") {
+      let suffix = String(keyString.dropFirst("commonKey".count))
+      return AVMetadataIdentifier(rawValue: "commonIdentifier" + suffix)
+    }
+    return AVMetadataIdentifier(rawValue: "\(keySpace.rawValue)/\(keyString)")
+  }
+
+  public class func keySpace(forIdentifier identifier: AVMetadataIdentifier) -> AVMetadataKeySpace? {
+    if identifier.rawValue.hasPrefix("commonIdentifier") {
+      return .common
+    }
+    guard let slash = identifier.rawValue.firstIndex(of: "/") else { return nil }
+    return AVMetadataKeySpace(rawValue: String(identifier.rawValue[..<slash]))
+  }
+
+  public class func key(forIdentifier identifier: AVMetadataIdentifier) -> Any? {
+    if identifier.rawValue.hasPrefix("commonIdentifier") {
+      let suffix = String(identifier.rawValue.dropFirst("commonIdentifier".count))
+      return AVMetadataKey(rawValue: "commonKey" + suffix)
+    }
+    guard let slash = identifier.rawValue.firstIndex(of: "/") else { return identifier.rawValue }
+    return String(identifier.rawValue[identifier.rawValue.index(after: slash)...])
+  }
+
+  public convenience init(
+    propertiesOf metadataItem: AVMetadataItem,
+    valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void
+  ) {
+    self.init(propertiesOfMetadataItem: metadataItem, valueLoadingHandler: handler)
+  }
+
+  public convenience init(
+    propertiesOfMetadataItem metadataItem: AVMetadataItem,
+    valueLoadingHandler handler: @escaping (AVMetadataItemValueRequest) -> Void
+  ) {
+    self.init()
+    storedIdentifier = metadataItem.identifier
+    storedExtendedLanguageTag = metadataItem.extendedLanguageTag
+    storedLocale = metadataItem.locale
+    storedTime = metadataItem.time
+    storedDuration = metadataItem.duration
+    storedDataType = metadataItem.dataType
+    storedExtraAttributes = metadataItem.extraAttributes
+    storedStartDate = metadataItem.startDate
+    storedKey = metadataItem.key
+    storedCommonKey = metadataItem.commonKey
+    storedKeySpace = metadataItem.keySpace
+    let request = AVMetadataItemValueRequest()
+    request.portableItem = self
+    handler(request)
+  }
+
+  public class func metadataItems(from metadataItems: [AVMetadataItem], with locale: Locale) -> [AVMetadataItem] {
+    metadataItems.filter { $0.locale == locale }
+  }
+
+  public class func metadataItems(
+    from metadataItems: [AVMetadataItem],
+    withKey key: Any?,
+    keySpace: AVMetadataKeySpace?
+  ) -> [AVMetadataItem] {
+    metadataItems.filter { item in
+      if let keySpace, item.keySpace != keySpace { return false }
+      guard let key else { return true }
+      if let metadataKey = key as? AVMetadataKey {
+        if item.commonKey == metadataKey { return true }
+        if let itemKey = item.key as? NSString {
+          return (itemKey as String) == metadataKey.rawValue
+        }
+        return false
+      }
+      if let string = (key as? String) ?? (key as? NSString).map({ $0 as String }) {
+        if item.commonKey?.rawValue == string { return true }
+        if let itemKey = item.key as? NSString { return (itemKey as String) == string }
+        return false
+      }
+      return false
+    }
+  }
 }
 
 open class AVMetadataItemFilter: NSObject, @unchecked Sendable {
@@ -405,9 +545,14 @@ open class AVMetadataItemFilter: NSObject, @unchecked Sendable {
 
 open class AVMetadataItemValueRequest: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public var metadataItem: AVMetadataItem? { nil }
-  public func respond(value: any NSCopying & NSObjectProtocol) {}
-  public func respond(error: any Error) {}
+  weak var portableItem: AVMetadataItem?
+  public var metadataItem: AVMetadataItem? { portableItem }
+  public func respond(value: any NSCopying & NSObjectProtocol) {
+    portableItem?.storedValue = value
+  }
+  public func respond(error: any Error) {
+    _ = error
+  }
 }
 
 public struct AVMetadataKey: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
