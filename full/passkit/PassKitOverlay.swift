@@ -298,6 +298,13 @@ public struct VerifyIdentityWithWalletButton<Fallback: View>: View {
 
     public init(
         _ label: VerifyIdentityWithWalletButtonLabel = .verifyIdentity,
+        action: @escaping () -> Void
+    ) {
+        _ = (label, action)
+    }
+
+    public init(
+        _ label: VerifyIdentityWithWalletButtonLabel = .verifyIdentity,
         request: PKIdentityRequest,
         onCompletion: @escaping (Result<PKIdentityDocument, any Error>) -> Void
     ) {
@@ -340,5 +347,9 @@ public struct PayLaterView: View {
 
     public init(amount: Decimal, action: PayLaterViewAction, displayStyle: PayLaterViewDisplayStyle = .standard) {
         _ = (amount, action, displayStyle)
+    }
+
+    public init(amount: Decimal, currency: Locale.Currency) {
+        _ = (amount, currency)
     }
 }
