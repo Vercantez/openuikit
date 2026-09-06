@@ -2,7 +2,8 @@
 // that the portable core did not yet export. Each type or member is a
 // compile-time name from that target (MEASURED `swift build --target
 // Blockzilla` 2026-09-06, 139 unique diagnostics / 129 sources). Fail-closed:
-// drag/drop, print, and the old UIMenuController never present chrome.
+// print and the old UIMenuController never present chrome. Drag/drop uses
+// the shared measured family in UIDragDrop.swift.
 
 #if canImport(Foundation)
 import Foundation
@@ -71,98 +72,9 @@ open class UIMenuController: NSObject {
 }
 
 // MARK: - Drag and drop (URLBar.swift:1134, BrowserViewController.swift:275)
-
-@preconcurrency @MainActor
-public protocol UIDragSession: AnyObject {}
-@preconcurrency @MainActor
-public protocol UIDropSession: AnyObject {
-    func canLoadObjects<T>(ofClass aClass: T.Type) -> Bool
-    func loadObjects<T>(ofClass aClass: T.Type, completion: @escaping ([T]) -> Void)
-}
-
-@preconcurrency @MainActor
-open class UIDragItem: NSObject {
-    public var localObject: Any?
-#if canImport(Foundation) && !os(Linux)
-    /// Darwin host: Foundation.NSItemProvider (URLBar.swift:1134).
-    /// Linux keeps `Any` (OpenUIKit's NSItemProvider is Linux-only);
-    /// the Foundation-hidden Darwin guest has neither. MEASURED
-    /// scripts/guest_route_check.sh: `cannot find type 'NSItemProvider'`.
-    public init(itemProvider: NSItemProvider) {
-        _ = itemProvider
-        super.init()
-    }
-#else
-    public init(itemProvider: Any) {
-        _ = itemProvider
-        super.init()
-    }
-#endif
-}
-
-@preconcurrency @MainActor
-open class UIDragInteraction: NSObject {
-    public weak var delegate: UIDragInteractionDelegate?
-    public init(delegate: UIDragInteractionDelegate) {
-        self.delegate = delegate
-        super.init()
-    }
-}
-
-@preconcurrency @MainActor
-public protocol UIDragInteractionDelegate: AnyObject {
-    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem]
-}
-
-@preconcurrency @MainActor
-open class UIDropProposal: NSObject {
-    public enum Operation: Int, Sendable {
-        case cancel = 0
-        case forbidden = 1
-        case copy = 2
-        case move = 3
-    }
-    public let operation: Operation
-    public init(operation: Operation) {
-        self.operation = operation
-        super.init()
-    }
-}
-
-@preconcurrency @MainActor
-open class UIDropInteraction: NSObject {
-    public weak var delegate: UIDropInteractionDelegate?
-    public init(delegate: UIDropInteractionDelegate) {
-        self.delegate = delegate
-        super.init()
-    }
-}
-
-@preconcurrency @MainActor
-public protocol UIDropInteractionDelegate: AnyObject {
-    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool
-    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal
-    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession)
-}
-
-public extension UIDropInteractionDelegate {
-    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-        _ = (interaction, session)
-        return false
-    }
-    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
-        _ = (interaction, session)
-        return UIDropProposal(operation: .cancel)
-    }
-    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-        _ = (interaction, session)
-    }
-}
-
-extension UIView {
-    public func addInteraction(_ interaction: UIDragInteraction) { _ = interaction }
-    public func addInteraction(_ interaction: UIDropInteraction) { _ = interaction }
-}
+// The measured family now lives in UIDragDrop.swift. Focus uses those same
+// provider/session/interaction types and UIView.addInteraction(UIInteraction);
+// keeping the former placeholder overloads here would discard its interactions.
 
 // MARK: - Share / print
 // UIActivityItemProvider lives on UIActivityViewController.swift (main
