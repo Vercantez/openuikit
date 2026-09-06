@@ -63,6 +63,65 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         if let decoded = inDecodeString(coder, "filename") { value.filename = decoded }
         value.typeIdentifier = inDecodeString(coder, "typeIdentifier")
         if let data = inDecodeData(coder, "data") { value.data = data }
+        if let urlString = inDecodeString(coder, "fileURL"), let url = URL(string: urlString) {
+            value.fileURL = url
+        }
+        if coder.containsValue(forKey: "removedOnCompletion") {
+            value.removedOnCompletion = coder.decodeBool(forKey: "removedOnCompletion")
+        }
+        return
+    }
+    if let value = object as? INBusTrip {
+        value.provider = inDecodeString(coder, "provider")
+        value.busName = inDecodeString(coder, "busName")
+        value.busNumber = inDecodeString(coder, "busNumber")
+        value.departurePlatform = inDecodeString(coder, "departurePlatform")
+        value.arrivalPlatform = inDecodeString(coder, "arrivalPlatform")
+        return
+    }
+    if let value = object as? INBoatTrip {
+        value.provider = inDecodeString(coder, "provider")
+        value.boatName = inDecodeString(coder, "boatName")
+        value.boatNumber = inDecodeString(coder, "boatNumber")
+        return
+    }
+    if let value = object as? INBalanceAmount {
+        value.currencyCode = inDecodeString(coder, "currencyCode")
+        if let amount = coder.decodeObject(of: NSDecimalNumber.self, forKey: "amount") {
+            value.amount = amount
+        }
+        if coder.containsValue(forKey: "balanceType") {
+            value.balanceType = INBalanceType(rawValue: Int(coder.decodeInt64(forKey: "balanceType")))
+        }
+        return
+    }
+    if let value = object as? INRideFareLineItem {
+        if let decoded = inDecodeString(coder, "title") { value.title = decoded }
+        if let decoded = inDecodeString(coder, "currencyCode") { value.currencyCode = decoded }
+        if let price = coder.decodeObject(of: NSDecimalNumber.self, forKey: "price") {
+            value.price = price
+        }
+        return
+    }
+    if let value = object as? INSendMessageIntentDonationMetadata {
+        if coder.containsValue(forKey: "mentionsCurrentUser") {
+            value.mentionsCurrentUser = coder.decodeBool(forKey: "mentionsCurrentUser")
+        }
+        if coder.containsValue(forKey: "notifyRecipientAnyway") {
+            value.notifyRecipientAnyway = coder.decodeBool(forKey: "notifyRecipientAnyway")
+        }
+        if coder.containsValue(forKey: "isReplyToCurrentUser") {
+            value.isReplyToCurrentUser = coder.decodeBool(forKey: "isReplyToCurrentUser")
+        }
+        if coder.containsValue(forKey: "recipientCount") {
+            value.recipientCount = Int(coder.decodeInt64(forKey: "recipientCount"))
+        }
+        return
+    }
+    if let value = object as? INReservationAction {
+        if coder.containsValue(forKey: "type") {
+            value.type = INReservationActionType(rawValue: Int(coder.decodeInt64(forKey: "type")))
+        }
         return
     }
     if let value = object as? INFlight {
@@ -176,6 +235,10 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         value.seatingType = inDecodeString(coder, "seatingType")
         return
     }
+    if let value = object as? INTicketedEvent {
+        if let decoded = inDecodeString(coder, "name") { value.name = decoded }
+        return
+    }
     if let value = object as? INSticker {
         value.emoji = inDecodeString(coder, "emoji")
         return
@@ -187,7 +250,11 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         return
     }
     if let value = object as? INTrainTrip {
+        value.provider = inDecodeString(coder, "provider")
+        value.trainName = inDecodeString(coder, "trainName")
         value.trainNumber = inDecodeString(coder, "trainNumber")
+        value.departurePlatform = inDecodeString(coder, "departurePlatform")
+        value.arrivalPlatform = inDecodeString(coder, "arrivalPlatform")
         return
     }
     if let value = object as? INDateComponentsRange {
@@ -259,7 +326,11 @@ extension INAirportGate: NSSecureCoding {
 extension INBalanceAmount: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("currencyCode", currencyCode)])
+        coder.encode(amount, forKey: "amount")
+        if let balanceType {
+            coder.encode(Int64(balanceType.rawValue), forKey: "balanceType")
+        }
     }
 }
 
@@ -280,14 +351,24 @@ extension INBillPayee: NSSecureCoding {
 extension INBoatTrip: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [
+            ("provider", provider),
+            ("boatName", boatName),
+            ("boatNumber", boatNumber),
+        ])
     }
 }
 
 extension INBusTrip: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [
+            ("provider", provider),
+            ("busName", busName),
+            ("busNumber", busNumber),
+            ("departurePlatform", departurePlatform),
+            ("arrivalPlatform", arrivalPlatform),
+        ])
     }
 }
 
@@ -368,8 +449,13 @@ extension INDefaultCardTemplate: NSSecureCoding {
 extension INFile: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        inLinuxEncodeStrings(coder, [("filename", filename), ("typeIdentifier", typeIdentifier)])
+        inLinuxEncodeStrings(coder, [
+            ("filename", filename),
+            ("typeIdentifier", typeIdentifier),
+            ("fileURL", fileURL?.absoluteString),
+        ])
         coder.encode(data as NSData?, forKey: "data")
+        coder.encode(removedOnCompletion, forKey: "removedOnCompletion")
     }
 }
 
@@ -384,6 +470,12 @@ extension INIntentDonationMetadata: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
         coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        if let metadata = self as? INSendMessageIntentDonationMetadata {
+            coder.encode(metadata.mentionsCurrentUser, forKey: "mentionsCurrentUser")
+            coder.encode(metadata.notifyRecipientAnyway, forKey: "notifyRecipientAnyway")
+            coder.encode(metadata.isReplyToCurrentUser, forKey: "isReplyToCurrentUser")
+            coder.encode(Int64(metadata.recipientCount), forKey: "recipientCount")
+        }
     }
 }
 
@@ -533,6 +625,9 @@ extension INReservationAction: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
         coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        if let type {
+            coder.encode(Int64(type.rawValue), forKey: "type")
+        }
     }
 }
 
@@ -604,7 +699,8 @@ extension INRideCompletionStatus: NSSecureCoding {
 extension INRideFareLineItem: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("title", title), ("currencyCode", currencyCode)])
+        coder.encode(price, forKey: "price")
     }
 }
 
@@ -690,14 +786,20 @@ extension INTermsAndConditions: NSSecureCoding {
 extension INTicketedEvent: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("name", name)])
     }
 }
 
 extension INTrainTrip: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        inLinuxEncodeStrings(coder, [("trainNumber", trainNumber)])
+        inLinuxEncodeStrings(coder, [
+            ("provider", provider),
+            ("trainName", trainName),
+            ("trainNumber", trainNumber),
+            ("departurePlatform", departurePlatform),
+            ("arrivalPlatform", arrivalPlatform),
+        ])
     }
 }
 

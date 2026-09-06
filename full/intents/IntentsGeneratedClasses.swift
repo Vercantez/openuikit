@@ -318,19 +318,36 @@ open class INBillTypeResolutionResult: INIntentResolutionResult, @unchecked Send
     }
 }
 
-open class INBoatReservation: NSObject, @unchecked Sendable {
+open class INBoatReservation: INReservation, @unchecked Sendable {
     open var boatTrip: INBoatTrip? = nil
     open var reservedSeat: INSeat? = nil
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, boatTrip: INBoatTrip?) {
         self.init()
+        inLinuxApplyReservation(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL
+        )
         self.reservedSeat = reservedSeat
         self.boatTrip = boatTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, boatTrip: INBoatTrip?) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.boatTrip = boatTrip
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL,
+            reservedSeat: reservedSeat,
+            boatTrip: boatTrip
+        )
     }
 }
 
@@ -340,6 +357,18 @@ open class INBoatTrip: NSObject, @unchecked Sendable {
     open var provider: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
+    public convenience init(
+        provider: String?,
+        boatName: String?,
+        boatNumber: String?,
+        tripDuration: INDateComponentsRange?
+    ) {
+        self.init()
+        self.provider = provider
+        self.boatName = boatName
+        self.boatNumber = boatNumber
+        self.tripDuration = tripDuration
+    }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
@@ -388,19 +417,36 @@ open class INBookRestaurantReservationIntentResponse: INIntentResponse, @uncheck
     }
 }
 
-open class INBusReservation: NSObject, @unchecked Sendable {
+open class INBusReservation: INReservation, @unchecked Sendable {
     open var busTrip: INBusTrip?
     open var reservedSeat: INSeat? = nil
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, busTrip: INBusTrip?) {
         self.init()
+        inLinuxApplyReservation(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL
+        )
         self.reservedSeat = reservedSeat
         self.busTrip = busTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, busTrip: INBusTrip?) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.busTrip = busTrip
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL,
+            reservedSeat: reservedSeat,
+            busTrip: busTrip
+        )
     }
 }
 
@@ -412,6 +458,22 @@ open class INBusTrip: NSObject, @unchecked Sendable {
     open var provider: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
+    public convenience init(
+        provider: String?,
+        busName: String?,
+        busNumber: String?,
+        tripDuration: INDateComponentsRange?,
+        departurePlatform: String?,
+        arrivalPlatform: String?
+    ) {
+        self.init()
+        self.provider = provider
+        self.busName = busName
+        self.busNumber = busNumber
+        self.tripDuration = tripDuration
+        self.departurePlatform = departurePlatform
+        self.arrivalPlatform = arrivalPlatform
+    }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
@@ -969,6 +1031,20 @@ open class INFile: NSObject, @unchecked Sendable {
         self.filename = filename ?? ""
         self.typeIdentifier = typeIdentifier
     }
+    open class func file(withFileURL fileURL: URL, filename: String?, typeIdentifier: String?) -> Self {
+        let file = self.init()
+        file.fileURL = fileURL
+        file.filename = filename ?? fileURL.lastPathComponent
+        file.typeIdentifier = typeIdentifier
+        return file
+    }
+    open class func file(with data: Data, filename: String, typeIdentifier: String?) -> Self {
+        let file = self.init()
+        file.data = data
+        file.filename = filename
+        file.typeIdentifier = typeIdentifier
+        return file
+    }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
@@ -1007,24 +1083,49 @@ open class INFlight: NSObject, @unchecked Sendable {
     }
 }
 
-open class INFlightReservation: NSObject, @unchecked Sendable {
+open class INFlightReservation: INReservation, @unchecked Sendable {
     open var flight: INFlight?
     open var reservedSeat: INSeat? = nil
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, flight: INFlight) {
         self.init()
+        inLinuxApplyReservation(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL
+        )
         self.reservedSeat = reservedSeat
         self.flight = flight
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, flight: INFlight) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.flight = flight
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL,
+            reservedSeat: reservedSeat,
+            flight: flight
+        )
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, reservedSeat: INSeat?, flight: INFlight) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.flight = flight
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: nil,
+            reservedSeat: reservedSeat,
+            flight: flight
+        )
     }
 }
 
@@ -1115,6 +1216,7 @@ open class INGetCarLockStatusIntent: INIntent, @unchecked Sendable {
 
 open class INGetCarLockStatusIntentResponse: INIntentResponse, @unchecked Sendable {
     open var code: INGetCarLockStatusIntentResponseCode?
+    @nonobjc public var locked: Bool? = nil
     public required override init() { super.init() }
     public convenience init(code: INGetCarLockStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
@@ -2209,10 +2311,34 @@ open class INRentalCar: NSObject, @unchecked Sendable {
     }
 }
 
-open class INRentalCarReservation: NSObject, @unchecked Sendable {
+open class INRentalCarReservation: INReservation, @unchecked Sendable {
     open var rentalCar: INRentalCar?
     open var rentalDuration: INDateComponentsRange?
     public required override init() { super.init() }
+    public convenience init(
+        itemReference: INSpeakableString,
+        reservationNumber: String?,
+        bookingTime: Date?,
+        reservationStatus: INReservationStatus,
+        reservationHolderName: String?,
+        actions: [INReservationAction]?,
+        url: URL?,
+        rentalCar: INRentalCar?,
+        rentalDuration: INDateComponentsRange?
+    ) {
+        self.init()
+        inLinuxApplyReservation(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: url
+        )
+        self.rentalCar = rentalCar
+        self.rentalDuration = rentalDuration
+    }
 }
 
 open class INRequestPaymentCurrencyAmountResolutionResult: INIntentResolutionResult, @unchecked Sendable {
@@ -2289,6 +2415,24 @@ open class INReservation: NSObject, @unchecked Sendable {
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
+    }
+
+    func inLinuxApplyReservation(
+        itemReference: INSpeakableString?,
+        reservationNumber: String?,
+        bookingTime: Date?,
+        reservationStatus: INReservationStatus,
+        reservationHolderName: String?,
+        actions: [INReservationAction]?,
+        url: URL?
+    ) {
+        self.itemReference = itemReference
+        self.reservationNumber = reservationNumber
+        self.bookingTime = bookingTime
+        self.reservationStatus = reservationStatus
+        self.reservationHolderName = reservationHolderName
+        self.actions = actions
+        self.url = url
     }
 }
 
@@ -2572,7 +2716,16 @@ open class INRideDriver: NSObject, @unchecked Sendable {
 }
 
 open class INRideFareLineItem: NSObject, @unchecked Sendable {
+    open var currencyCode: String = ""
+    open var price: NSDecimalNumber?
+    open var title: String = ""
     public required override init() { super.init() }
+    public convenience init(title: String, price: NSDecimalNumber, currencyCode: String) {
+        self.init()
+        self.title = title
+        self.price = price
+        self.currencyCode = currencyCode
+    }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
@@ -2655,7 +2808,14 @@ open class INRideVehicle: NSObject, @unchecked Sendable {
 open class INSaveProfileInCarIntent: INIntent, @unchecked Sendable {
     open var profileLabel: String? = nil
     open var profileName: String? = nil
+    @nonobjc public var profileNumber: Int? = nil
     public required override init() { super.init() }
+    @nonobjc
+    public convenience init(profileNumber: Int?, profileLabel: String?) {
+        self.init()
+        self.profileNumber = profileNumber
+        self.profileLabel = profileLabel
+    }
 }
 
 open class INSaveProfileInCarIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -3015,7 +3175,7 @@ open class INSendMessageIntent: INIntent, @unchecked Sendable {
 }
 
 
-open class INSendMessageIntentDonationMetadata: NSObject, @unchecked Sendable {
+open class INSendMessageIntentDonationMetadata: INIntentDonationMetadata, @unchecked Sendable {
     open var mentionsCurrentUser: Bool = false
     open var notifyRecipientAnyway: Bool = false
     open var recipientCount: Int = 0
@@ -3134,7 +3294,14 @@ open class INSetAudioSourceInCarIntentResponse: INIntentResponse, @unchecked Sen
 
 open class INSetCarLockStatusIntent: INIntent, @unchecked Sendable {
     open var carName: INSpeakableString? = nil
+    @nonobjc public var locked: Bool? = nil
     public required override init() { super.init() }
+    @nonobjc
+    public convenience init(locked: Bool?, carName: INSpeakableString?) {
+        self.init()
+        self.locked = locked
+        self.carName = carName
+    }
 }
 
 open class INSetCarLockStatusIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -3484,7 +3651,15 @@ open class INShortcutReference: NSObject, @unchecked Sendable {
 open class INSnoozeTasksIntent: INIntent, @unchecked Sendable {
     open var nextTriggerTime: INDateComponentsRange? = nil
     open var tasks: [INTask]? = nil
+    @nonobjc public var all: Bool? = nil
     public required override init() { super.init() }
+    @nonobjc
+    public convenience init(tasks: [INTask]?, nextTriggerTime: INDateComponentsRange?, all: Bool?) {
+        self.init()
+        self.tasks = tasks
+        self.nextTriggerTime = nextTriggerTime
+        self.all = all
+    }
 }
 
 open class INSnoozeTasksIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -3901,30 +4076,61 @@ open class INTicketedEvent: NSObject, @unchecked Sendable {
     open var eventDuration: INDateComponentsRange?
     open var name: String = ""
     public required override init() { super.init() }
+    public convenience init(category: INTicketedEventCategory, name: String, eventDuration: INDateComponentsRange?) {
+        self.init()
+        self.category = category
+        self.name = name
+        self.eventDuration = eventDuration
+    }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
     }
 }
 
-open class INTicketedEventReservation: NSObject, @unchecked Sendable {
+open class INTicketedEventReservation: INReservation, @unchecked Sendable {
     open var event: INTicketedEvent?
     open var reservedSeat: INSeat? = nil
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, event: INTicketedEvent) {
         self.init()
+        inLinuxApplyReservation(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL
+        )
         self.reservedSeat = reservedSeat
         self.event = event
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, event: INTicketedEvent) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.event = event
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL,
+            reservedSeat: reservedSeat,
+            event: event
+        )
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, reservedSeat: INSeat?, event: INTicketedEvent) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.event = event
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: nil,
+            reservedSeat: reservedSeat,
+            event: event
+        )
     }
 }
 
@@ -3936,24 +4142,49 @@ open class INTimeIntervalResolutionResult: INIntentResolutionResult, @unchecked 
     }
 }
 
-open class INTrainReservation: NSObject, @unchecked Sendable {
+open class INTrainReservation: INReservation, @unchecked Sendable {
     open var reservedSeat: INSeat? = nil
     open var trainTrip: INTrainTrip?
     public required override init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
         self.init()
+        inLinuxApplyReservation(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL
+        )
         self.reservedSeat = reservedSeat
         self.trainTrip = trainTrip
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, URL: URL?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.trainTrip = trainTrip
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: URL,
+            reservedSeat: reservedSeat,
+            trainTrip: trainTrip
+        )
     }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
-        self.init()
-        self.reservedSeat = reservedSeat
-        self.trainTrip = trainTrip
+        self.init(
+            itemReference: itemReference,
+            reservationNumber: reservationNumber,
+            bookingTime: bookingTime,
+            reservationStatus: reservationStatus,
+            reservationHolderName: reservationHolderName,
+            actions: actions,
+            url: nil,
+            reservedSeat: reservedSeat,
+            trainTrip: trainTrip
+        )
     }
 }
 
@@ -3965,6 +4196,22 @@ open class INTrainTrip: NSObject, @unchecked Sendable {
     open var trainNumber: String? = nil
     open var tripDuration: INDateComponentsRange?
     public required override init() { super.init() }
+    public convenience init(
+        provider: String?,
+        trainName: String?,
+        trainNumber: String?,
+        tripDuration: INDateComponentsRange?,
+        departurePlatform: String?,
+        arrivalPlatform: String?
+    ) {
+        self.init()
+        self.provider = provider
+        self.trainName = trainName
+        self.trainNumber = trainNumber
+        self.tripDuration = tripDuration
+        self.departurePlatform = departurePlatform
+        self.arrivalPlatform = arrivalPlatform
+    }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)

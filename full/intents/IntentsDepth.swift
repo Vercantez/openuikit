@@ -231,6 +231,132 @@ public enum INHostIntentDispatcher {
             typed.handle(intent: addMedia) { response = $0 }
             return response ?? INAddMediaIntentResponse(code: .failure, userActivity: nil)
         }
+        if let activate = intent as? INActivateCarSignalIntent,
+           let typed = handler as? any INActivateCarSignalIntentHandling {
+            var response: INActivateCarSignalIntentResponse?
+            typed.handle(intent: activate) { response = $0 }
+            return response ?? INActivateCarSignalIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let answer = intent as? INAnswerCallIntent,
+           let typed = handler as? any INAnswerCallIntentHandling {
+            var response: INAnswerCallIntentResponse?
+            typed.handle(intent: answer) { response = $0 }
+            return response ?? INAnswerCallIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let append = intent as? INAppendToNoteIntent,
+           let typed = handler as? any INAppendToNoteIntentHandling {
+            var response: INAppendToNoteIntentResponse?
+            typed.handle(intent: append) { response = $0 }
+            return response ?? INAppendToNoteIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let cancelRide = intent as? INCancelRideIntent,
+           let typed = handler as? any INCancelRideIntentHandling {
+            var response: INCancelRideIntentResponse?
+            typed.handle(cancelRide: cancelRide) { response = $0 }
+            return response ?? INCancelRideIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let cancelWorkout = intent as? INCancelWorkoutIntent,
+           let typed = handler as? any INCancelWorkoutIntentHandling {
+            var response: INCancelWorkoutIntentResponse?
+            typed.handle(intent: cancelWorkout) { response = $0 }
+            return response ?? INCancelWorkoutIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let edit = intent as? INEditMessageIntent,
+           let typed = handler as? any INEditMessageIntentHandling {
+            var response: INEditMessageIntentResponse?
+            typed.handle(intent: edit) { response = $0 }
+            return response ?? INEditMessageIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let endWorkout = intent as? INEndWorkoutIntent,
+           let typed = handler as? any INEndWorkoutIntentHandling {
+            var response: INEndWorkoutIntentResponse?
+            typed.handle(intent: endWorkout) { response = $0 }
+            return response ?? INEndWorkoutIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let lockStatus = intent as? INGetCarLockStatusIntent,
+           let typed = handler as? any INGetCarLockStatusIntentHandling {
+            var response: INGetCarLockStatusIntentResponse?
+            typed.handle(intent: lockStatus) { response = $0 }
+            return response ?? INGetCarLockStatusIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let visual = intent as? INGetVisualCodeIntent,
+           let typed = handler as? any INGetVisualCodeIntentHandling {
+            var response: INGetVisualCodeIntentResponse?
+            typed.handle(intent: visual) { response = $0 }
+            return response ?? INGetVisualCodeIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let pause = intent as? INPauseWorkoutIntent,
+           let typed = handler as? any INPauseWorkoutIntentHandling {
+            var response: INPauseWorkoutIntentResponse?
+            typed.handle(intent: pause) { response = $0 }
+            return response ?? INPauseWorkoutIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let resume = intent as? INResumeWorkoutIntent,
+           let typed = handler as? any INResumeWorkoutIntentHandling {
+            var response: INResumeWorkoutIntentResponse?
+            typed.handle(intent: resume) { response = $0 }
+            return response ?? INResumeWorkoutIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let saveProfile = intent as? INSaveProfileInCarIntent,
+           let typed = handler as? any INSaveProfileInCarIntentHandling {
+            var response: INSaveProfileInCarIntentResponse?
+            typed.handle(intent: saveProfile) { response = $0 }
+            return response ?? INSaveProfileInCarIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let searchMedia = intent as? INSearchForMediaIntent,
+           let typed = handler as? any INSearchForMediaIntentHandling {
+            var response: INSearchForMediaIntentResponse?
+            typed.handle(intent: searchMedia) { response = $0 }
+            return response ?? INSearchForMediaIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let rideFeedback = intent as? INSendRideFeedbackIntent,
+           let typed = handler as? any INSendRideFeedbackIntentHandling {
+            var response: INSendRideFeedbackIntentResponse?
+            typed.handle(sendRideFeedback: rideFeedback) { response = $0 }
+            return response ?? INSendRideFeedbackIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let audioSource = intent as? INSetAudioSourceInCarIntent,
+           let typed = handler as? any INSetAudioSourceInCarIntentHandling {
+            var response: INSetAudioSourceInCarIntentResponse?
+            typed.handle(intent: audioSource) { response = $0 }
+            return response ?? INSetAudioSourceInCarIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let lock = intent as? INSetCarLockStatusIntent,
+           let typed = handler as? any INSetCarLockStatusIntentHandling {
+            var response: INSetCarLockStatusIntentResponse?
+            typed.handle(intent: lock) { response = $0 }
+            return response ?? INSetCarLockStatusIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let attribute = intent as? INSetMessageAttributeIntent,
+           let typed = handler as? any INSetMessageAttributeIntentHandling {
+            var response: INSetMessageAttributeIntentResponse?
+            typed.handle(intent: attribute) { response = $0 }
+            return response ?? INSetMessageAttributeIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let snooze = intent as? INSnoozeTasksIntent,
+           let typed = handler as? any INSnoozeTasksIntentHandling {
+            var response: INSnoozeTasksIntentResponse?
+            typed.handle(intent: snooze) { response = $0 }
+            return response ?? INSnoozeTasksIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let audioCall = intent as? INStartAudioCallIntent,
+           let typed = handler as? any INStartAudioCallIntentHandling {
+            var response: INStartAudioCallIntentResponse?
+            typed.handle(intent: audioCall) { response = $0 }
+            return response ?? INStartAudioCallIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let videoCall = intent as? INStartVideoCallIntent,
+           let typed = handler as? any INStartVideoCallIntentHandling {
+            var response: INStartVideoCallIntentResponse?
+            typed.handle(intent: videoCall) { response = $0 }
+            return response ?? INStartVideoCallIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let affinity = intent as? INUpdateMediaAffinityIntent,
+           let typed = handler as? any INUpdateMediaAffinityIntentHandling {
+            var response: INUpdateMediaAffinityIntentResponse?
+            typed.handle(intent: affinity) { response = $0 }
+            return response ?? INUpdateMediaAffinityIntentResponse(code: .failure, userActivity: nil)
+        }
         return INIntentResponse()
     }
 
@@ -438,6 +564,132 @@ public enum INHostIntentDispatcher {
             var response: INAddMediaIntentResponse?
             typed.confirm(intent: addMedia) { response = $0 }
             return response ?? INAddMediaIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let activate = intent as? INActivateCarSignalIntent,
+           let typed = handler as? any INActivateCarSignalIntentHandling {
+            var response: INActivateCarSignalIntentResponse?
+            typed.confirm(intent: activate) { response = $0 }
+            return response ?? INActivateCarSignalIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let answer = intent as? INAnswerCallIntent,
+           let typed = handler as? any INAnswerCallIntentHandling {
+            var response: INAnswerCallIntentResponse?
+            typed.confirm(intent: answer) { response = $0 }
+            return response ?? INAnswerCallIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let append = intent as? INAppendToNoteIntent,
+           let typed = handler as? any INAppendToNoteIntentHandling {
+            var response: INAppendToNoteIntentResponse?
+            typed.confirm(intent: append) { response = $0 }
+            return response ?? INAppendToNoteIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let cancelRide = intent as? INCancelRideIntent,
+           let typed = handler as? any INCancelRideIntentHandling {
+            var response: INCancelRideIntentResponse?
+            typed.confirm(cancelRide: cancelRide) { response = $0 }
+            return response ?? INCancelRideIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let cancelWorkout = intent as? INCancelWorkoutIntent,
+           let typed = handler as? any INCancelWorkoutIntentHandling {
+            var response: INCancelWorkoutIntentResponse?
+            typed.confirm(intent: cancelWorkout) { response = $0 }
+            return response ?? INCancelWorkoutIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let edit = intent as? INEditMessageIntent,
+           let typed = handler as? any INEditMessageIntentHandling {
+            var response: INEditMessageIntentResponse?
+            typed.confirm(intent: edit) { response = $0 }
+            return response ?? INEditMessageIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let endWorkout = intent as? INEndWorkoutIntent,
+           let typed = handler as? any INEndWorkoutIntentHandling {
+            var response: INEndWorkoutIntentResponse?
+            typed.confirm(intent: endWorkout) { response = $0 }
+            return response ?? INEndWorkoutIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let lockStatus = intent as? INGetCarLockStatusIntent,
+           let typed = handler as? any INGetCarLockStatusIntentHandling {
+            var response: INGetCarLockStatusIntentResponse?
+            typed.confirm(intent: lockStatus) { response = $0 }
+            return response ?? INGetCarLockStatusIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let visual = intent as? INGetVisualCodeIntent,
+           let typed = handler as? any INGetVisualCodeIntentHandling {
+            var response: INGetVisualCodeIntentResponse?
+            typed.confirm(intent: visual) { response = $0 }
+            return response ?? INGetVisualCodeIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let pause = intent as? INPauseWorkoutIntent,
+           let typed = handler as? any INPauseWorkoutIntentHandling {
+            var response: INPauseWorkoutIntentResponse?
+            typed.confirm(intent: pause) { response = $0 }
+            return response ?? INPauseWorkoutIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let resume = intent as? INResumeWorkoutIntent,
+           let typed = handler as? any INResumeWorkoutIntentHandling {
+            var response: INResumeWorkoutIntentResponse?
+            typed.confirm(intent: resume) { response = $0 }
+            return response ?? INResumeWorkoutIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let saveProfile = intent as? INSaveProfileInCarIntent,
+           let typed = handler as? any INSaveProfileInCarIntentHandling {
+            var response: INSaveProfileInCarIntentResponse?
+            typed.confirm(intent: saveProfile) { response = $0 }
+            return response ?? INSaveProfileInCarIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let searchMedia = intent as? INSearchForMediaIntent,
+           let typed = handler as? any INSearchForMediaIntentHandling {
+            var response: INSearchForMediaIntentResponse?
+            typed.confirm(intent: searchMedia) { response = $0 }
+            return response ?? INSearchForMediaIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let rideFeedback = intent as? INSendRideFeedbackIntent,
+           let typed = handler as? any INSendRideFeedbackIntentHandling {
+            var response: INSendRideFeedbackIntentResponse?
+            typed.confirm(sendRideFeedback: rideFeedback) { response = $0 }
+            return response ?? INSendRideFeedbackIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let audioSource = intent as? INSetAudioSourceInCarIntent,
+           let typed = handler as? any INSetAudioSourceInCarIntentHandling {
+            var response: INSetAudioSourceInCarIntentResponse?
+            typed.confirm(intent: audioSource) { response = $0 }
+            return response ?? INSetAudioSourceInCarIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let lock = intent as? INSetCarLockStatusIntent,
+           let typed = handler as? any INSetCarLockStatusIntentHandling {
+            var response: INSetCarLockStatusIntentResponse?
+            typed.confirm(intent: lock) { response = $0 }
+            return response ?? INSetCarLockStatusIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let attribute = intent as? INSetMessageAttributeIntent,
+           let typed = handler as? any INSetMessageAttributeIntentHandling {
+            var response: INSetMessageAttributeIntentResponse?
+            typed.confirm(intent: attribute) { response = $0 }
+            return response ?? INSetMessageAttributeIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let snooze = intent as? INSnoozeTasksIntent,
+           let typed = handler as? any INSnoozeTasksIntentHandling {
+            var response: INSnoozeTasksIntentResponse?
+            typed.confirm(intent: snooze) { response = $0 }
+            return response ?? INSnoozeTasksIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let audioCall = intent as? INStartAudioCallIntent,
+           let typed = handler as? any INStartAudioCallIntentHandling {
+            var response: INStartAudioCallIntentResponse?
+            typed.confirm(intent: audioCall) { response = $0 }
+            return response ?? INStartAudioCallIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let videoCall = intent as? INStartVideoCallIntent,
+           let typed = handler as? any INStartVideoCallIntentHandling {
+            var response: INStartVideoCallIntentResponse?
+            typed.confirm(intent: videoCall) { response = $0 }
+            return response ?? INStartVideoCallIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let affinity = intent as? INUpdateMediaAffinityIntent,
+           let typed = handler as? any INUpdateMediaAffinityIntentHandling {
+            var response: INUpdateMediaAffinityIntentResponse?
+            typed.confirm(intent: affinity) { response = $0 }
+            return response ?? INUpdateMediaAffinityIntentResponse(code: .ready, userActivity: nil)
         }
         return INIntentResponse()
     }
@@ -718,6 +970,122 @@ public enum INHostIntentDispatcher {
             var results: [INIntentResolutionResult] = []
             typed.resolveMediaDestination(for: addMedia) { results.append($0) }
             typed.resolveMediaItems(for: addMedia) { results.append(contentsOf: $0) }
+            return results
+        }
+        if let activate = intent as? INActivateCarSignalIntent,
+           let typed = handler as? any INActivateCarSignalIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveCarName(for: activate) { results.append($0) }
+            typed.resolveSignals(for: activate) { results.append($0) }
+            return results
+        }
+        if let append = intent as? INAppendToNoteIntent,
+           let typed = handler as? any INAppendToNoteIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveContent(for: append) { results.append($0) }
+            typed.resolveTargetNote(for: append) { results.append($0) }
+            return results
+        }
+        if let cancelWorkout = intent as? INCancelWorkoutIntent,
+           let typed = handler as? any INCancelWorkoutIntentHandling {
+            var result: INSpeakableStringResolutionResult?
+            typed.resolveWorkoutName(for: cancelWorkout) { result = $0 }
+            return [result ?? INSpeakableStringResolutionResult.needsValue()]
+        }
+        if let edit = intent as? INEditMessageIntent,
+           let typed = handler as? any INEditMessageIntentHandling {
+            var result: INStringResolutionResult?
+            typed.resolveEditedContent(for: edit) { result = $0 }
+            return [result ?? INStringResolutionResult.needsValue()]
+        }
+        if let endWorkout = intent as? INEndWorkoutIntent,
+           let typed = handler as? any INEndWorkoutIntentHandling {
+            var result: INSpeakableStringResolutionResult?
+            typed.resolveWorkoutName(for: endWorkout) { result = $0 }
+            return [result ?? INSpeakableStringResolutionResult.needsValue()]
+        }
+        if let lockStatus = intent as? INGetCarLockStatusIntent,
+           let typed = handler as? any INGetCarLockStatusIntentHandling {
+            var result: INSpeakableStringResolutionResult?
+            typed.resolveCarName(for: lockStatus) { result = $0 }
+            return [result ?? INSpeakableStringResolutionResult.needsValue()]
+        }
+        if let visual = intent as? INGetVisualCodeIntent,
+           let typed = handler as? any INGetVisualCodeIntentHandling {
+            var result: INVisualCodeTypeResolutionResult?
+            typed.resolveVisualCodeType(for: visual) { result = $0 }
+            return [result ?? INVisualCodeTypeResolutionResult.needsValue()]
+        }
+        if let pause = intent as? INPauseWorkoutIntent,
+           let typed = handler as? any INPauseWorkoutIntentHandling {
+            var result: INSpeakableStringResolutionResult?
+            typed.resolveWorkoutName(for: pause) { result = $0 }
+            return [result ?? INSpeakableStringResolutionResult.needsValue()]
+        }
+        if let resume = intent as? INResumeWorkoutIntent,
+           let typed = handler as? any INResumeWorkoutIntentHandling {
+            var result: INSpeakableStringResolutionResult?
+            typed.resolveWorkoutName(for: resume) { result = $0 }
+            return [result ?? INSpeakableStringResolutionResult.needsValue()]
+        }
+        if let saveProfile = intent as? INSaveProfileInCarIntent,
+           let typed = handler as? any INSaveProfileInCarIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveProfileName(for: saveProfile) { results.append($0) }
+            typed.resolveProfileNumber(for: saveProfile) { results.append($0) }
+            return results
+        }
+        if let searchMedia = intent as? INSearchForMediaIntent,
+           let typed = handler as? any INSearchForMediaIntentHandling {
+            var results: [INSearchForMediaMediaItemResolutionResult] = []
+            typed.resolveMediaItems(for: searchMedia) { results = $0 }
+            return results
+        }
+        if let audioSource = intent as? INSetAudioSourceInCarIntent,
+           let typed = handler as? any INSetAudioSourceInCarIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveAudioSource(for: audioSource) { results.append($0) }
+            typed.resolveRelativeAudioSourceReference(for: audioSource) { results.append($0) }
+            return results
+        }
+        if let lock = intent as? INSetCarLockStatusIntent,
+           let typed = handler as? any INSetCarLockStatusIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveCarName(for: lock) { results.append($0) }
+            typed.resolveLocked(for: lock) { results.append($0) }
+            return results
+        }
+        if let attribute = intent as? INSetMessageAttributeIntent,
+           let typed = handler as? any INSetMessageAttributeIntentHandling {
+            var result: INMessageAttributeResolutionResult?
+            typed.resolveAttribute(for: attribute) { result = $0 }
+            return [result ?? INMessageAttributeResolutionResult.needsValue()]
+        }
+        if let snooze = intent as? INSnoozeTasksIntent,
+           let typed = handler as? any INSnoozeTasksIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveNextTriggerTime(for: snooze) { results.append($0) }
+            typed.resolveTasks(for: snooze) { results.append(contentsOf: $0) }
+            return results
+        }
+        if let audioCall = intent as? INStartAudioCallIntent,
+           let typed = handler as? any INStartAudioCallIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveContacts(for: audioCall) { results.append(contentsOf: $0) }
+            typed.resolveDestinationType(for: audioCall) { results.append($0) }
+            return results
+        }
+        if let videoCall = intent as? INStartVideoCallIntent,
+           let typed = handler as? any INStartVideoCallIntentHandling {
+            var results: [INPersonResolutionResult] = []
+            typed.resolveContacts(for: videoCall) { results = $0 }
+            return results
+        }
+        if let affinity = intent as? INUpdateMediaAffinityIntent,
+           let typed = handler as? any INUpdateMediaAffinityIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveAffinityType(for: affinity) { results.append($0) }
+            typed.resolveMediaItems(for: affinity) { results.append(contentsOf: $0) }
             return results
         }
         return [INIntentResolutionResult.needsValue()]

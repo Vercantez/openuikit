@@ -268,10 +268,12 @@ public extension NSUserActivity {
 
 // MARK: - Objects and resolution
 
-open class INSpeakableString: NSObject, @unchecked Sendable {
+open class INSpeakableString: NSObject, INSpeakable, @unchecked Sendable {
     public let spokenPhrase: String
     public let pronunciationHint: String?
     public let vocabularyIdentifier: String?
+    public var identifier: String? { vocabularyIdentifier }
+    open var alternativeSpeakableMatches: [INSpeakable]?
 
     public init(
         vocabularyIdentifier: String? = nil,
