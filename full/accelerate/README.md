@@ -24,7 +24,11 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
   LAPACK `sgesv_`/`dgesv_`/`sgels_`/`sposv_`/`sgetrf_` via reference algorithms
 - vImage buffer geometry, scaling, histogram, alpha compositing, and
   `PixelBuffer` operations on the documented planar/interleaved formats
-- BNNS filter creation returns `nil` (fail-closed; no BNNS runtime on Linux)
+- BNNS filter creation returns `nil` (fail-closed; no BNNS runtime on Linux);
+  packed-float `BNNSCopy` / `BNNSClipByValue` / `BNNSCompareTensor` / `BNNSMatMul`
+  / `BNNSTranspose` / `BNNSTile` run on host arrays
+- Sparse CSC convert/multiply and Float/Double `SparseFactor`/`SparseSolve`
+  via dense Gaussian elimination (not Apple sparse factorizations)
 
 `libAccelerate.dylib` compiles with `-warnings-as-errors`.
 
@@ -35,10 +39,16 @@ constructors return `nil`, and Linear Algebra objects are inert
 
 ## Fail-closed boundaries
 
-- BNNS graph compile/execute, sparse solvers, and Quadrature callbacks have no
-  Linux provider. Create APIs return `nil`; throwing overlay inits throw
-  `AccelerateLinuxError.failClosed`. Apply APIs that return `0` are not treated
-  as success and stay `declared`.
+- BNNS graph compile/execute has no Linux provider. `BNNSGraph.makeContext`
+  throws `.unableToCreateContext`. Graph C execute/get APIs return
+  `BNNSLinuxFailClosedStatus` (`-1`). Filter create APIs return `nil`.
+- BNNS apply/backward APIs that need a BNNS runtime return
+  `BNNSLinuxFailClosedStatus` rather than `0`. Packed-float `BNNSCopy`,
+  `BNNSClipByValue`, `BNNSCompareTensor`, `BNNSMatMul`, `BNNSTranspose`, and
+  `BNNSTile` are implemented on Linux.
+- Complex sparse multiply/factor/solve stay empty or return
+  `SparseIterativeParameterError`. Float/Double sparse iterative and
+  factorization solve use dense Gaussian elimination on the CSC clone.
 - vImage APIs that take `CGImage`, `CGColorSpace`, `CVPixelBuffer`, or
   `CGAffineTransform` are **deferred**: those types are not declared
   dependencies, and this lane does not introduce public lookalikes.
@@ -50,9 +60,10 @@ constructors return `nil`, and Linear Algebra objects are inert
 
 ## Deferred
 
-Sparse factorization, BNNS Apply success, CoreGraphics/CoreVideo conversion,
-and overlay properties that `preconditionFailure` remain deferred until an
-Apple-runtime oracle or a real Linux implementation exists.
+Sparse subfactor objects, complex sparse factor/solve, BNNS Apply success,
+CoreGraphics/CoreVideo conversion, and overlay properties that
+`preconditionFailure` remain deferred until an Apple-runtime oracle or a real
+Linux implementation exists.
 
 ## Tests
 
@@ -84,34 +95,33 @@ No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling.
 
 ## Depth pass 2026-09 (wave 8)
 
-Second depth pass for campaign `ios26.1-fwdepth-r15`, lane `medium-full`, 6856 exact IDs. The first-pass Linux sources and tests stay in tree; this pass adds real quadrature, sparse CSC multiply, extra BLAS/LAPACK, biquad DF2T, interleaved double DFT, and pixel-exact vImage affine/rotate/tent/permute.
+Next depth pass for campaign `ios26.1-fwdepth-r16`, lane `medium-full`, 6856 exact IDs. Earlier passes in this tree stay green (quadrature, CSC multiply, BLAS/LAPACK, vImage affine/rotate/tent). This pass adds packed-float BNNS tensor ops (`BNNSCopy` / `ClipByValue` / `CompareTensor` / `MatMul` / `Transpose` / `Tile`), fail-closed BNNS apply/graph execute (`BNNSLinuxFailClosedStatus = -1`), overlay `Equatable`/`Hashable` for BNNS/vDSP/vImage/BNNSGraph enums plus `BNNSGraph.CompileOptions` and `BLAS.threadingModel`, and Float/Double `SparseFactor` + `SparseSolve` via dense Gaussian elimination (including ApplyOperator column reconstruction). Complex sparse factor/solve stays parameter-error fail-closed.
 
-A follow-up ledger repair split the combined depth-pass runtime probes into focused `func test*()` functions per family. Every remaining `implemented` row cites `test:full/accelerate/tests/agent/<File>Tests.swift#testName` for a top-level synchronous no-argument test that calls that identifier. QAG interval constants and `Quadrature.Error` members share table-driven value tests; other families each have their own function.
-
-- Implemented before: **2534**
-- Implemented after: **2605** (unchanged by the ledger split)
-- Declared: 2837 (was 2901)
-- Deferred: 1414 (was 1421)
+- Implemented before: **2605**
+- Implemented after: **3181**
+- Declared: 2425 (was 2837)
+- Deferred: 1250 (was 1414)
 - Unavailable: 0
 - Not-applicable: 0
 
-Top-5 evidence distribution (share of remaining implemented rows = 2605 − 2534 = 71):
+Top-5 evidence distribution (share of remaining implemented rows = 3181 − 2605 = 576):
 
-1. `testSparseMultiplyFloatVector` / `testSparseMultiplyDoubleVector` — 8 each (11.3%) — CSC convert/multiply/add plus vector init/cleanup
-2. `testQAGPointsPerIntervalValues` — 7 (9.9%) — table-driven QAG interval constants
-3. `testQuadratureErrorHashable` — 7 (9.9%) — table-driven `Quadrature.Error` `==`/`!=`/`hash`/`localizedDescription`
-4. `testSparseMultiplyFloatMatrix` / `testSparseMultiplyDoubleMatrix` — 5 each (7.0%) — CSC matrix multiply/add plus dense-matrix init
-5. `testQuadratureIntegratePolynomial` — 4 (5.6%) — overlay init, `.nonAdaptive`, and both `integrate` overloads
+1. `testOverlayHashableBNNS0` — 56 (9.7%) — overlay BNNS enum `==`/`!=`/`hash`
+2. `testOverlayHashableBNNSGraph` — 51 (8.9%) — BNNSGraph builder/compile-option `Hashable` plus `CompileOptions` fields
+3. `testCEnumHashableBNNS0` — 51 (8.9%) — table-driven C BNNS enum `Hashable`/`!=`
+4. `testCEnumHashableBNNS1` — 51 (8.9%) — table-driven C BNNS enum `Hashable`/`!=`
+5. `testCEnumHashableSparse` — 48 (8.3%) — table-driven Sparse C enum `Hashable`/`!=`
 
-No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (largest is 8/71 = 11.3%). BNNS create stays fail-closed (`nil`). Complex sparse multiply, sparse subfactor/solve, and placeholder `QUADRATURE_*` C enumerator values stay declared or deferred.
+No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (largest overlay hash test is 56/576 = 9.7%). Enum/C-constant table-driven tests share one function per family as allowed. BNNS create stays fail-closed (`nil`). SwiftUI overlay IDs were not present. `s:s17FixedWidthI*` / Foundation `formatted` witnesses stay deferred (stdlib/Foundation, not this lane). vImage CV/CG stays deferred (no CoreVideo/CoreGraphics dependency).
 
 Sealed gate (`bash full/accelerate/tests/acceptance/test_host.sh`) ended:
 
 ```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Accelerate lane=medium-full symbols=6856
 FRAMEWORK_FANOUT_REFERENCE_OK
 ACCELERATE_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
 ```
 
-The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree. Starting commit `bff8535c68425cc39fb45cb00d447b0981b57242` matched.
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree. Starting commit `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
