@@ -990,6 +990,11 @@ open class AVPlayerItemIntegratedTimelineSnapshot: NSObject, @unchecked Sendable
 }
 
 open class AVPlayerItemLegibleOutput: AVPlayerItemOutput, @unchecked Sendable {
+  private weak var storedDelegate: (any AVPlayerItemLegibleOutputPushDelegate)?
+  private var storedDelegateQueue: DispatchQueue?
+  private var storedAdvance: TimeInterval = 0
+  private var storedSubtypes: [NSNumber] = []
+  private var storedResolution = AVPlayerItemLegibleOutput.TextStylingResolution.default
   public override init() { super.init() }
   public struct TextStylingResolution: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
     public let rawValue: String
@@ -998,17 +1003,23 @@ open class AVPlayerItemLegibleOutput: AVPlayerItemOutput, @unchecked Sendable {
     public static let `default` = TextStylingResolution(rawValue: "default")
     public static let sourceAndRulesOnly = TextStylingResolution(rawValue: "sourceAndRulesOnly")
   }
-  public func setDelegate(_ delegate: (any AVPlayerItemLegibleOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public var delegate: (any AVPlayerItemLegibleOutputPushDelegate)? { nil }
-  public var delegateQueue: DispatchQueue? { nil }
+  public func setDelegate(_ delegate: (any AVPlayerItemLegibleOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {
+    storedDelegate = delegate
+    storedDelegateQueue = delegateQueue
+  }
+  public var delegate: (any AVPlayerItemLegibleOutputPushDelegate)? { storedDelegate }
+  public var delegateQueue: DispatchQueue? { storedDelegateQueue }
   public var advanceIntervalForDelegateInvocation: TimeInterval {
-      get { 0 }
-      set { _ = newValue }
+      get { storedAdvance }
+      set { storedAdvance = newValue }
     }
-  convenience init(mediaSubtypesForNativeRepresentation subtypes: [NSNumber]) { self.init() }
+  public convenience init(mediaSubtypesForNativeRepresentation subtypes: [NSNumber]) {
+    self.init()
+    storedSubtypes = subtypes
+  }
   public var textStylingResolution: AVPlayerItemLegibleOutput.TextStylingResolution {
-      get { AVPlayerItemLegibleOutput.TextStylingResolution(rawValue: "") }
-      set { _ = newValue }
+      get { storedResolution }
+      set { storedResolution = newValue }
     }
 }
 
@@ -1016,16 +1027,33 @@ public protocol AVPlayerItemLegibleOutputPushDelegate : AVPlayerItemOutputPushDe
   func legibleOutput(_ output: AVPlayerItemLegibleOutput, didOutputAttributedStrings strings: [NSAttributedString], nativeSampleBuffers nativeSamples: [Any], forItemTime itemTime: CMTime)
 }
 
+extension AVPlayerItemLegibleOutputPushDelegate {
+  public func legibleOutput(_ output: AVPlayerItemLegibleOutput, didOutputAttributedStrings strings: [NSAttributedString], nativeSampleBuffers nativeSamples: [Any], forItemTime itemTime: CMTime) {
+    _ = (output, strings, nativeSamples, itemTime)
+  }
+}
+
 open class AVPlayerItemMediaDataCollector: NSObject, @unchecked Sendable {
   public override init() { super.init() }
 }
 
 open class AVPlayerItemMetadataCollector: AVPlayerItemMediaDataCollector, @unchecked Sendable {
+  private var storedIdentifiers: [String]?
+  private var storedLabels: [String]?
+  private weak var storedDelegate: (any AVPlayerItemMetadataCollectorPushDelegate)?
+  private var storedDelegateQueue: DispatchQueue?
   public override init() { super.init() }
-  convenience init(identifiers: [String]?, classifyingLabels: [String]?) { self.init() }
-  public func setDelegate(_ delegate: (any AVPlayerItemMetadataCollectorPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public var delegate: (any AVPlayerItemMetadataCollectorPushDelegate)? { nil }
-  public var delegateQueue: DispatchQueue? { nil }
+  public convenience init(identifiers: [String]?, classifyingLabels: [String]?) {
+    self.init()
+    storedIdentifiers = identifiers
+    storedLabels = classifyingLabels
+  }
+  public func setDelegate(_ delegate: (any AVPlayerItemMetadataCollectorPushDelegate)?, queue delegateQueue: DispatchQueue?) {
+    storedDelegate = delegate
+    storedDelegateQueue = delegateQueue
+  }
+  public var delegate: (any AVPlayerItemMetadataCollectorPushDelegate)? { storedDelegate }
+  public var delegateQueue: DispatchQueue? { storedDelegateQueue }
 }
 
 public protocol AVPlayerItemMetadataCollectorPushDelegate : AnyObject, Sendable {
@@ -1033,14 +1061,24 @@ public protocol AVPlayerItemMetadataCollectorPushDelegate : AnyObject, Sendable 
 }
 
 open class AVPlayerItemMetadataOutput: AVPlayerItemOutput, @unchecked Sendable {
+  private var storedIdentifiers: [String]?
+  private weak var storedDelegate: (any AVPlayerItemMetadataOutputPushDelegate)?
+  private var storedDelegateQueue: DispatchQueue?
+  private var storedAdvance: TimeInterval = 0
   public override init() { super.init() }
-  convenience init(identifiers: [String]?) { self.init() }
-  public func setDelegate(_ delegate: (any AVPlayerItemMetadataOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public var delegate: (any AVPlayerItemMetadataOutputPushDelegate)? { nil }
-  public var delegateQueue: DispatchQueue? { nil }
+  public convenience init(identifiers: [String]?) {
+    self.init()
+    storedIdentifiers = identifiers
+  }
+  public func setDelegate(_ delegate: (any AVPlayerItemMetadataOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {
+    storedDelegate = delegate
+    storedDelegateQueue = delegateQueue
+  }
+  public var delegate: (any AVPlayerItemMetadataOutputPushDelegate)? { storedDelegate }
+  public var delegateQueue: DispatchQueue? { storedDelegateQueue }
   public var advanceIntervalForDelegateInvocation: TimeInterval {
-      get { 0 }
-      set { _ = newValue }
+      get { storedAdvance }
+      set { storedAdvance = newValue }
     }
 }
 
@@ -1049,12 +1087,17 @@ public protocol AVPlayerItemMetadataOutputPushDelegate : AVPlayerItemOutputPushD
 }
 
 open class AVPlayerItemOutput: NSObject, @unchecked Sendable {
+  private var storedSuppresses = false
   public override init() { super.init() }
-  public func itemTime(forHostTime hostTimeInSeconds: TimeInterval) -> CMTime { .zero }
-  public func itemTime(forMachAbsoluteTime machAbsoluteTime: Int64) -> CMTime { .zero }
+  public func itemTime(forHostTime hostTimeInSeconds: TimeInterval) -> CMTime {
+    CMTime(seconds: hostTimeInSeconds, preferredTimescale: 600)
+  }
+  public func itemTime(forMachAbsoluteTime machAbsoluteTime: Int64) -> CMTime {
+    CMTime(value: machAbsoluteTime, timescale: 1_000_000_000)
+  }
   public var suppressesPlayerRendering: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedSuppresses }
+      set { storedSuppresses = newValue }
     }
 }
 
@@ -1063,23 +1106,45 @@ public protocol AVPlayerItemOutputPullDelegate : AnyObject, Sendable {
   func outputSequenceWasFlushed(_ output: AVPlayerItemOutput)
 }
 
+extension AVPlayerItemOutputPullDelegate {
+  public func outputMediaDataWillChange(_ sender: AVPlayerItemOutput) { _ = sender }
+  public func outputSequenceWasFlushed(_ output: AVPlayerItemOutput) { _ = output }
+}
+
 public protocol AVPlayerItemOutputPushDelegate : AnyObject, Sendable {
   func outputSequenceWasFlushed(_ output: AVPlayerItemOutput)
 }
 
+extension AVPlayerItemOutputPushDelegate {
+  public func outputSequenceWasFlushed(_ output: AVPlayerItemOutput) { _ = output }
+}
+
 open class AVPlayerItemRenderedLegibleOutput: AVPlayerItemOutput, @unchecked Sendable {
+  private weak var storedDelegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)?
+  private var storedDelegateQueue: DispatchQueue?
+  private var storedAdvance: TimeInterval = 0
+  private var storedDisplaySize = CGSize.zero
   public override init() { super.init() }
-  convenience init(videoDisplay videoDisplaySize: CGSize) { self.init() }
-  public func setDelegate(_ delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public var delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)? { nil }
-  public var delegateQueue: DispatchQueue? { nil }
+  public convenience init(videoDisplay videoDisplaySize: CGSize) {
+    self.init()
+    storedDisplaySize = videoDisplaySize
+  }
+  public convenience init(videoDisplaySize: CGSize) {
+    self.init(videoDisplay: videoDisplaySize)
+  }
+  public func setDelegate(_ delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)?, queue delegateQueue: DispatchQueue?) {
+    storedDelegate = delegate
+    storedDelegateQueue = delegateQueue
+  }
+  public var delegate: (any AVPlayerItemRenderedLegibleOutputPushDelegate)? { storedDelegate }
+  public var delegateQueue: DispatchQueue? { storedDelegateQueue }
   public var advanceIntervalForDelegateInvocation: TimeInterval {
-      get { 0 }
-      set { _ = newValue }
+      get { storedAdvance }
+      set { storedAdvance = newValue }
     }
   public var videoDisplaySize: CGSize {
-      get { .zero }
-      set { _ = newValue }
+      get { storedDisplaySize }
+      set { storedDisplaySize = newValue }
     }
 }
 
@@ -1103,29 +1168,56 @@ open class AVPlayerItemSegment: NSObject, @unchecked Sendable {
 open class AVPlayerItemTrack: NSObject, @unchecked Sendable {
   public override init() { super.init() }
   var portableAssetTrack: AVAssetTrack?
+  private var storedEnabled = true
   public var assetTrack: AVAssetTrack? { portableAssetTrack }
   public var isEnabled: Bool {
-      get { portableAssetTrack?.isEnabled ?? false }
-      set { _ = newValue }
+      get { storedEnabled }
+      set { storedEnabled = newValue }
     }
   public var currentVideoFrameRate: Float { portableAssetTrack?.nominalFrameRate ?? 0 }
 }
 
 open class AVPlayerItemVideoOutput: AVPlayerItemOutput, @unchecked Sendable {
+  private var storedPixelBufferAttributes: [String : any Sendable]?
+  private var storedOutputSettings: [String : any Sendable]?
+  private weak var storedDelegate: (any AVPlayerItemOutputPullDelegate)?
+  private var storedDelegateQueue: DispatchQueue?
+  private var storedAdvance: TimeInterval = 0
   public override init() { super.init() }
-  public convenience init(pixelBufferAttributes: CVPixelBufferAttributes) { self.init() }
+  public convenience init(pixelBufferAttributes: CVPixelBufferAttributes) {
+    self.init()
+    _ = pixelBufferAttributes
+  }
   public func pixelBufferAndDisplayTime(forItemTime itemTime: CMTime) -> (pixelBuffer: CVReadOnlyPixelBuffer?, itemTimeForDisplay: CMTime) {
     _ = itemTime
-    return (pixelBuffer: nil, itemTimeForDisplay: .zero)
+    return (pixelBuffer: nil, itemTimeForDisplay: .invalid)
   }
-  public convenience init(pixelBufferAttributes: [String : any Sendable]? = nil) { self.init() }
-  public convenience init(outputSettings: [String : any Sendable]?) { self.init() }
-  public func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool { false }
-  public func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { nil }
-  public func setDelegate(_ delegate: (any AVPlayerItemOutputPullDelegate)?, queue delegateQueue: DispatchQueue?) {}
-  public func requestNotificationOfMediaDataChange(withAdvanceInterval interval: TimeInterval) {}
-  public var delegate: (any AVPlayerItemOutputPullDelegate)? { nil }
-  public var delegateQueue: DispatchQueue? { nil }
+  public convenience init(pixelBufferAttributes: [String : any Sendable]? = nil) {
+    self.init()
+    storedPixelBufferAttributes = pixelBufferAttributes
+  }
+  public convenience init(outputSettings: [String : any Sendable]?) {
+    self.init()
+    storedOutputSettings = outputSettings
+  }
+  public func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool {
+    _ = itemTime
+    return false
+  }
+  public func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? {
+    _ = itemTime
+    outItemTimeForDisplay?.pointee = .invalid
+    return nil
+  }
+  public func setDelegate(_ delegate: (any AVPlayerItemOutputPullDelegate)?, queue delegateQueue: DispatchQueue?) {
+    storedDelegate = delegate
+    storedDelegateQueue = delegateQueue
+  }
+  public func requestNotificationOfMediaDataChange(withAdvanceInterval interval: TimeInterval) {
+    storedAdvance = interval
+  }
+  public var delegate: (any AVPlayerItemOutputPullDelegate)? { storedDelegate }
+  public var delegateQueue: DispatchQueue? { storedDelegateQueue }
 }
 
 open class AVPlayerLooper: NSObject, @unchecked Sendable {
