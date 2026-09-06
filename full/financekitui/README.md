@@ -37,6 +37,15 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `26f5086c5b31ba816742f18d3096152cd32280f4` matched.
 
+`bash full/financekitui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=FinanceKitUI lane=leaf-full symbols=1576
+FRAMEWORK_FANOUT_REFERENCE_OK
+FINANCEKITUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=FinanceKitUI dylib=libFinanceKitUI.dylib
+```
+
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
 
 ### What is real
