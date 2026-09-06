@@ -23,7 +23,7 @@ func testCatalogFailClosedDeviceNotManaged() {
 }
 
 func testManagedAppsMakeAsyncIterator() {
-    var iterator = ManagedAppLibrary.currentDistributor.availableApps.makeAsyncIterator()
+    let iterator = ManagedAppLibrary.currentDistributor.availableApps.makeAsyncIterator()
     _ = iterator
 }
 
