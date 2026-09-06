@@ -3,7 +3,8 @@ import Foundation
 
 func testActionExtensionContextClass() {
     let context = FPUIActionExtensionContext()
-    precondition(context is NSObject)
+    let asObject: NSObject = context
+    precondition(asObject === context)
     precondition(type(of: context) == FPUIActionExtensionContext.self)
     precondition(context.hostDisposition == .active)
     precondition(context.domainIdentifier == nil)

@@ -23,8 +23,8 @@ private final class ProbeActionViewController: FPUIActionExtensionViewController
 
 func testActionExtensionViewControllerClass() {
     let controller = FPUIActionExtensionViewController()
-    precondition(controller is NSObject)
-    precondition(controller is UIViewController)
+    let asViewController: UIViewController = controller
+    precondition(asViewController === controller)
     precondition(type(of: controller) == FPUIActionExtensionViewController.self)
     precondition(controller.hostPreparedActionIdentifier == nil)
     precondition(controller.hostPreparedItemIdentifiers == nil)

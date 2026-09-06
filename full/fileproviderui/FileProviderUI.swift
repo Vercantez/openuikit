@@ -84,10 +84,12 @@ public enum FPUIActionExtensionRequestDisposition: Equatable, Sendable {
 /// `NSExtensionContext`, so this type subclasses `NSObject`. Completing or
 /// cancelling never talks to an extension host.
 #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS) || os(macOS)
-open class FPUIActionExtensionContext: NSExtensionContext, @unchecked Sendable {
+public typealias FPUIActionExtensionContextBase = NSExtensionContext
 #else
-open class FPUIActionExtensionContext: NSObject, @unchecked Sendable {
+public typealias FPUIActionExtensionContextBase = NSObject
 #endif
+
+open class FPUIActionExtensionContext: FPUIActionExtensionContextBase, @unchecked Sendable {
     private struct State: @unchecked Sendable {
         var domainIdentifier: NSFileProviderDomainIdentifier?
         var disposition: FPUIActionExtensionRequestDisposition
