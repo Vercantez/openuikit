@@ -72,7 +72,14 @@ Top-5 implemented evidence distribution:
 static members. No non-enum test exceeds 40% of implemented rows.
 
 The sealed host gate was run as
-`bash full/managedappdistribution/tests/acceptance/test_host.sh`.
+`bash full/managedappdistribution/tests/acceptance/test_host.sh` and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=ManagedAppDistribution lane=leaf-full symbols=1664
+FRAMEWORK_FANOUT_REFERENCE_OK
+MANAGEDAPPDISTRIBUTION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ManagedAppDistribution dylib=libManagedAppDistribution.dylib
+```
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` does not print
