@@ -764,6 +764,66 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(tab.tabBar.itemViews[1].badgeView.frame.origin.y, 0)
     }
 
+    /// MEASURED Tabs t2000, iPhone SE 2x / iOS 26.1: bottom
+    /// `ScrollEdgeEffectView [0, 519.2, 375, 147.8]` = bar 83 + 64.8
+    /// overshoot. Compact t2000.landscape `[0, 246.2, 667, 128.8]`.
+    func testTabBarBottomScrollEdgeEffectMatchesDump() {
+        device(375, 667, scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .regular)
+
+        let tab = UITabBarController()
+        let scroll = UIViewController()
+        scroll.tabBarItem = UITabBarItem(title: "Scroll",
+                                         image: UIImage(systemName: "clock"), tag: 0)
+        tab.viewControllers = [scroll]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(UITabBar.bottomEdgeOvershoot, 64.8, accuracy: 1e-9)
+        guard let edge = tab.tabBar.bottomEdgeEffect else {
+            XCTFail("missing bottom ScrollEdgeEffectView")
+            return
+        }
+        XCTAssertFalse(edge.isHidden)
+        XCTAssertEqual(edge.frame.origin.x, 0, accuracy: 0.05)
+        XCTAssertEqual(edge.frame.origin.y, -64.8, accuracy: 0.05)
+        XCTAssertEqual(edge.frame.width, 375, accuracy: 0.05)
+        XCTAssertEqual(edge.frame.height, 147.8, accuracy: 0.05)
+        XCTAssertEqual(edge.frame.minY + tab.tabBar.frame.minY, 519.2,
+                       accuracy: 0.05)
+        // Light pocket paints nothing: T=247 and T=255 both dropped
+        // Notes t5000 below 97.5 (98.818 → 97.237 / 92.007).
+        XCTAssertTrue(edge.colors.allSatisfy { $0.cgColor.alpha == 0 })
+
+        device(667, 375, scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        let landVC = UIViewController()
+        landVC.tabBarItem = UITabBarItem(title: "Scroll",
+                                         image: UIImage(systemName: "clock"), tag: 0)
+        let land = UITabBarController()
+        land.viewControllers = [landVC]
+        let landWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        landWindow.rootViewController = land
+        landWindow.layoutIfNeeded()
+        XCTAssertEqual(UITabBar.barHeight, 64)
+        guard let landEdge = land.tabBar.bottomEdgeEffect else {
+            XCTFail("missing compact bottom ScrollEdgeEffectView")
+            return
+        }
+        XCTAssertEqual(landEdge.frame.origin.y, -64.8, accuracy: 0.05)
+        XCTAssertEqual(landEdge.frame.width, 667, accuracy: 0.05)
+        XCTAssertEqual(landEdge.frame.height, 128.8, accuracy: 0.05)
+        // MEASURED t2000.landscape BackdropView α=0: the view occupies
+        // the dump frame but paints nothing (painting a T=82 invert of
+        // glass-over-red dropped t200.landscape 97.70 → 80.47).
+        XCTAssertTrue(landEdge.colors.allSatisfy { $0.cgColor.alpha == 0 })
+    }
+
     /// MEASURED Notes t200.landscape, iPhone SE 2x / iOS 26.1: 2-item
     /// compact-height bar is the same 64 / platter 44 / items 36 at y 4
     /// with 4 pt side pad and 4 pt gaps (Notes + Settings).

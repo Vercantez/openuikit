@@ -296,6 +296,42 @@ public final class UITabBar: UIView {
     /// MEASURED Tabs t200.landscape, iPhone SE 2x / iOS 26.1: `UITabBar
     /// [0, 311, 667, 64]`, table `safeAreaInsets.bottom` **64**.
     static let compactBarHeight: CGFloat = 64
+    /// Bottom `ScrollEdgeEffectView` overshoot above the bar.
+    /// MEASURED Tabs t2000, iPhone SE 2x / iOS 26.1: pocket
+    /// `[0, 519.2, 375, 147.8]` = bar 83 + **64.8**. Compact
+    /// t2000.landscape `[0, 246.2, 667, 128.8]` = 64 + **64.8**.
+    static let bottomEdgeOvershoot: CGFloat = 64.8
+    /// Mix target T for the portrait-light pocket.
+    /// MEASURED Tabs t2000 dump: BackdropView is white α=0.85. Painting
+    /// that wash (T=255 or a T=247 invert of yellow at x=30) dropped
+    /// Notes t5000 **98.818 → 97.237** (T=247) / **92.007** (T=255) —
+    /// grouped cards are not 255, and no single T fits yellow scroll
+    /// blocks and Notes cards. Light pocket paints nothing.
+    static let bottomEdgeLightTint: CGFloat = 1.0
+    /// Compact-height BackdropView. MEASURED t2000.landscape dump:
+    /// `BackdropView` **alpha 0** / `popacity` 0.151. A T=82 mix
+    /// inverted from red at x=30 is glass-over-content, not this
+    /// pocket (painting it dropped t200.landscape 97.70 → 80.47).
+    static let bottomEdgeCompactTint: CGFloat = 0
+    /// Light pocket paints nothing (see `bottomEdgeLightTint`). Compact
+    /// BackdropView α=0. Dark uses `bottomEdgeDarkStops`.
+    static let bottomEdgeLightStops: [(CGFloat, CGFloat)] = [
+        (0.00, 0), (1.00, 0)
+    ]
+    /// Dark portrait: multiply toward black. MEASURED t2000.dark x=30
+    /// yellow → (97, 71, 26) at y=644, ratio 0.40 on all three
+    /// channels (α=0.598). BackdropView `alpha` 0.6, bg white — the
+    /// visible is LuminanceAdjustment, not that white fill.
+    static let bottomEdgeDarkStops: [(CGFloat, CGFloat)] = [
+        (0.00, 0), (0.20, 0.014), (0.30, 0.060), (0.41, 0.175),
+        (0.52, 0.331), (0.63, 0.484), (0.74, 0.570), (0.84, 0.598),
+        (1.00, 0.57)
+    ]
+    /// Compact pocket paints nothing. MEASURED t2000.landscape
+    /// BackdropView α=0; the view still occupies `[0, 246.2, 667, 128.8]`.
+    static let bottomEdgeCompactStops: [(CGFloat, CGFloat)] = [
+        (0.00, 0), (1.00, 0)
+    ]
     /// MEASURED Tabs t200.landscape: `_UITabBarPlatterView [205, 0, 257.5, 44]`.
     static let compactPlatterHeight: CGFloat = 44
     /// MEASURED Tabs t200.landscape: `_UITabButton [4, 4, 86.5, 36]`.
@@ -438,6 +474,13 @@ public final class UITabBar: UIView {
     let platter = UIView()
     let capsule = UIView()
     var itemViews: [_UITabBarItemView] = []
+    /// iOS 26 bottom `ScrollEdgeEffectView`. Window frame equals the
+    /// dump (`[0, bar.y − 64.8, W, barHeight + 64.8]`); parented here
+    /// so table retile cannot cover it. Behind the platter; the platter
+    /// AABB is punched out so `_UIGlassMaterial` still samples the
+    /// unwashed scroll blocks (MEASURED t2000: x=30 washed (245,233,209),
+    /// platter interior is glass (255,244,207), not that wash).
+    var bottomEdgeEffect: _UITabBarScrollEdgeEffectView?
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -510,10 +553,12 @@ public final class UITabBar: UIView {
         super.layoutSubviews()
         if UITabBar.isPad {
             layoutPadItems()
+            layoutBottomEdgeEffect()
             return
         }
         if UITabBar.isCompactHeight {
             layoutCompactHeightItems()
+            layoutBottomEdgeEffect()
             return
         }
         platter.layer.cornerRadius = UITabBar.platterHeight / 2
@@ -555,6 +600,67 @@ public final class UITabBar: UIView {
         } else {
             capsule.isHidden = true
         }
+        layoutBottomEdgeEffect()
+    }
+
+    /// Pin the bottom `ScrollEdgeEffectView` so its window frame matches
+    /// the dump. MEASURED Tabs t2000: `[0, 519.2, 375, 147.8]` = bar
+    /// `[0, 584, 375, 83]` grown by `bottomEdgeOvershoot` **64.8** above.
+    /// PocketBlur is hidden; BackdropView is white α=0.85 (light) / 0.6
+    /// (dark) / popacity 0.151 (compact). Light and compact paint
+    /// nothing (Notes t5000 / t200.landscape). Dark paints the
+    /// measured black multiply (t2000.dark x=30, α plateau 0.598).
+    func layoutBottomEdgeEffect() {
+        guard UITabBar.isIOS, !UITabBar.isPad, bounds.width > 0 else {
+            bottomEdgeEffect?.isHidden = true
+            return
+        }
+        let view: _UITabBarScrollEdgeEffectView
+        if let existing = bottomEdgeEffect {
+            view = existing
+        } else {
+            let created = _UITabBarScrollEdgeEffectView()
+            created.isOpaque = false
+            created.isUserInteractionEnabled = false
+            created.backgroundColor = .clear
+            created.accessibilityIdentifier = "ScrollEdgeEffectView"
+            insertSubview(created, at: 0)
+            bottomEdgeEffect = created
+            view = created
+        }
+        view.isHidden = false
+        insertSubview(view, at: 0)
+        let overshoot = UITabBar.bottomEdgeOvershoot
+        view.frame = CGRect(x: 0, y: -overshoot,
+                            width: bounds.width,
+                            height: bounds.height + overshoot)
+        // Platter in overlay coords: bar-local y=0 → overlay y=overshoot.
+        let pf = platter.frame
+        view.platterHole = CGRect(x: pf.minX, y: pf.minY + overshoot,
+                                  width: pf.width, height: pf.height)
+        let dark = traitCollection.userInterfaceStyle == .dark
+        let compact = UITabBar.isCompactHeight
+        let tint: CGFloat
+        let stops: [(CGFloat, CGFloat)]
+        if compact {
+            // BackdropView α=0 in the compact dump. Do not paint the
+            // portrait pocket (or a T=82 invert of glass-over-red).
+            tint = UITabBar.bottomEdgeCompactTint
+            stops = UITabBar.bottomEdgeCompactStops
+        } else if dark {
+            tint = 0
+            stops = UITabBar.bottomEdgeDarkStops
+        } else {
+            tint = UITabBar.bottomEdgeLightTint
+            stops = UITabBar.bottomEdgeLightStops
+        }
+        view.colors = stops.map { _, alpha in
+            UIColor(red: tint, green: tint, blue: tint, alpha: alpha)
+        }
+        view.locations = stops.map { $0.0 }
+        view.startPoint = CGPoint(x: 0.5, y: 0)
+        view.endPoint = CGPoint(x: 0.5, y: 1)
+        view.setNeedsDisplay()
     }
 
     /// MEASURED Tabs t200.landscape / t2000.landscape, iPhone SE 2x /
@@ -717,5 +823,63 @@ public final class UITabBar: UIView {
             i += 4
         }
         return UIImage(bitmap: out, scale: image.scale)
+    }
+}
+
+/// Bottom tab-bar `ScrollEdgeEffectView`. Not a `UIGradientView`: quartz
+/// promotes those to `QZGradientLayer` and would skip `drawContent` (and
+/// the platter hole). MEASURED Tabs t2000 x=30 vs platter interior, SE 2x.
+@preconcurrency @MainActor
+final class _UITabBarScrollEdgeEffectView: UIView {
+    var colors: [UIColor] = []
+    var locations: [CGFloat]?
+    var startPoint = CGPoint(x: 0.5, y: 0)
+    var endPoint = CGPoint(x: 0.5, y: 1)
+    var platterHole = CGRect(x: 0, y: 0, width: 0, height: 0)
+
+    public override func drawContent(in canvas: Canvas, bounds: CGRect) {
+        guard !bounds.isEmpty, colors.count >= 2 else { return }
+        let hole = platterHole
+        if hole.width < 1 || hole.height < 1 {
+            drawGradient(in: canvas, bounds: bounds)
+            return
+        }
+        let slices = [
+            CGRect(x: bounds.minX, y: bounds.minY,
+                   width: max(0, hole.minX - bounds.minX), height: bounds.height),
+            CGRect(x: hole.maxX, y: bounds.minY,
+                   width: max(0, bounds.maxX - hole.maxX), height: bounds.height),
+            CGRect(x: hole.minX, y: bounds.minY,
+                   width: hole.width, height: max(0, hole.minY - bounds.minY)),
+            CGRect(x: hole.minX, y: hole.maxY,
+                   width: hole.width, height: max(0, bounds.maxY - hole.maxY)),
+        ]
+        for r in slices where r.width > 0.5 && r.height > 0.5 {
+            canvas.save()
+            canvas.clip(to: r)
+            drawGradient(in: canvas, bounds: bounds)
+            canvas.restore()
+        }
+    }
+
+    func drawGradient(in canvas: Canvas, bounds: CGRect) {
+        let traits = traitCollection
+        let resolved = colors.map { $0.resolvedCGColor(with: traits) }
+        let n = resolved.count
+        var locs: [CGFloat]
+        if let l = locations, l.count == n {
+            locs = l.map { min(max($0, 0), 1) }
+        } else {
+            locs = (0..<n).map { CGFloat($0) / CGFloat(n - 1) }
+        }
+        let (dColors, dLocs) = _CAGradientColorSpace.densify(colors: resolved,
+                                                             locations: locs)
+        canvas.save()
+        canvas.translate(x: bounds.minX, y: bounds.minY)
+        canvas.concatenate(CGAffineTransform(scaleX: bounds.width, y: bounds.height))
+        canvas.drawLinearGradient(colors: dColors, locations: dLocs,
+                                  start: startPoint, end: endPoint,
+                                  in: CGRect(x: 0, y: 0, width: 1, height: 1))
+        canvas.restore()
     }
 }
