@@ -274,7 +274,7 @@
     "matter": {
       "agentId": "bc-eeacfda0-067f-5b33-bc42-ad6702ad1ac5",
       "agentName": "Port Matter to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-eeacfda0-067f-5b33-bc42-ad6702ad1ac5",
       "branches": [
         {
@@ -288,13 +288,13 @@
       "launchStatus": "CREATED",
       "module": "Matter",
       "priority": 100,
-      "resultBytes": 1516,
-      "resultSha256": "4cbed364fa43c4451bdf8035d4e045d54aad57b5f772e422a479ea8004689416",
+      "resultBytes": 909,
+      "resultSha256": "ef7537dddf26f9a391346e2ab8a9e5db75f44d5274a528a96ab64641962f98ae",
       "runCreatedAt": "2026-09-06T14:20:57.143Z",
-      "runDurationMs": 2858728,
+      "runDurationMs": 7072672,
       "runId": "run-4a891e8f-f239-4a17-bf06-037153f1aac8",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-06T14:20:58.365Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-06T16:18:50.808Z"
     },
     "metal": {
       "agentId": "bc-213463d8-dd0b-588d-9c18-4ee6f3400297",
@@ -432,5 +432,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-06T15:30:04Z"
+  "updatedAt": "2026-09-06T16:24:45Z"
 }
