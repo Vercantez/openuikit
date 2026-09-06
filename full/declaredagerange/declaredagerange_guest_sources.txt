@@ -1,0 +1,3 @@
+full/declaredagerange/DeclaredAgeRange.swift
+full/declaredagerange/DeclaredAgeRangeAction.swift
+full/declaredagerange/DeclaredAgeRangeLookalikes.swift
