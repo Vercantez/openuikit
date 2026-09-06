@@ -724,6 +724,8 @@ public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     public var storedUnit: Any?
     public var storedUnitAdjustForLocale: Bool?
     public var storedSupportsNegativeNumbers: Bool?
+    public var storedCurrencyCodes: [String]?
+    public var storedPersonMode: IntentPerson.ParameterMode?
 
     public init(title: LocalizedStringResource = LocalizedStringResource(""), isOptional: Bool = true) {
         self.title = title

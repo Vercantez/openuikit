@@ -16,21 +16,23 @@ isolated Linux host compiles these sources with `swiftc` and Foundation only.
 ## Depth pass 2026-09 (wave 8)
 
 SDK depth for `AppIntents` in `full/appintents/` (6,586 exact IDs). This is
-a next pass: earlier sources and tests stay green. This round adds the
-Foundation `Measurement` unit catalogs (`IntentParameter.Volume` /
-`Length` / `InformationStorage` and the other 19 nested unit enums),
-host-local `@Parameter` measurement inits that store `defaultUnit` /
-`unit` / `supportsNegativeNumbers`, `IntentParameterContext` measurement
-metadata, `EntityProperty<File>` identifier/title/getter/indexing inits,
-`IntentPerson` Codable round-trips, and `@Parameter` AppEnum
-`supportedValues` / `requestDisambiguationDialog` plus AppEntity `query`.
+a next pass: earlier sources and tests stay green. This round implements
+the remaining `@Property` specializations the ledger called out
+(`EntityProperty` where `Value` is `URL` / `Date` / `DateComponents` /
+`AttributedString` / `Calendar.RecurrenceRule` / `IntentFile` /
+`IntentPerson` / `IntentPaymentMethod` / `IntentCurrencyAmount` /
+`AppEntity`), plus typed `@Parameter` inits for DateComponents (`kind`),
+IntentCurrencyAmount (`currencyCodes` / Decimal `inclusiveRange`),
+IntentPerson (`parameterMode`), and IntentPaymentMethod. `asyncGetter`
+stays declared (no run loop). A sample `PropertyPayIntent` evaluates
+`hostResult()` from a stored currency amount.
 
 Coverage this round:
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 805 | 2730 | 1463 | 0 | 1588 | 3535 |
-| After | 1234 | 2548 | 1216 | 0 | 1588 | 3782 |
+| Before | 1234 | 2548 | 1216 | 0 | 1588 | 3782 |
+| After | 1526 | 2257 | 1215 | 0 | 1588 | 3783 |
 
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
 overlay re-exports (1,588 rows) are `not-applicable` with
@@ -40,13 +42,13 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 53 | 4.3% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
-| 41 | 3.4% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
-| 37 | 3.0% | `AppIntentsMeasurementTests.swift#testIntentParameterVolumeUnitTable` |
-| 36 | 2.9% | `AppIntentsWaveTests.swift#testIntentPersonHandleLabelsAndParameterModes` |
-| 33 | 2.7% | `AppIntentsWaveTests.swift#testConfirmationActionNameCatalogTable` |
+| 53 | 3.5% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
+| 41 | 2.7% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
+| 37 | 2.4% | `AppIntentsMeasurementTests.swift#testIntentParameterVolumeUnitTable` |
+| 36 | 2.4% | `AppIntentsWaveTests.swift#testIntentPersonHandleLabelsAndParameterModes` |
+| 33 | 2.2% | `AppIntentsWaveTests.swift#testConfirmationActionNameCatalogTable` |
 
-No test is cited by more than 4.3% of implemented rows (well under the
+No test is cited by more than 3.5% of implemented rows (well under the
 40% bulk-relabel line). New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
@@ -58,7 +60,7 @@ absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Active Cursor Build observed on this run was
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
-`2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
+`6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
 
 `bash full/appintents/tests/acceptance/test_host.sh` ended:
 
@@ -74,6 +76,27 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 `bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
 
 ### What this pass added
+
+- `@Property` (`EntityProperty`) specializations for `URL`, `Date`,
+  `DateComponents`, `AttributedString`, `Calendar.RecurrenceRule`,
+  `IntentFile`, `IntentPerson`, `IntentPaymentMethod`,
+  `IntentCurrencyAmount`, and `AppEntity` resolve identifier / title /
+  KeyPath getter / getSetter / indexingKey / customIndexingKey inits from
+  `EntityResolutionEngine.defaultResult`. `asyncGetter` stays declared.
+- `@Parameter` DateComponents stores `kind` (`date` / `time` / `dateTime`)
+  and accepts host `optionsProvider` / `resolvers` metadata.
+- `@Parameter` IntentCurrencyAmount stores `currencyCodes` and a Decimal
+  `inclusiveRange`. `IntentParameterContext.currencyCodes` is host-local.
+- `@Parameter` IntentPerson stores `parameterMode`. There is no Contacts
+  picker.
+- `@Parameter` IntentPaymentMethod applies defaults the same way as
+  String. Options providers are attached and not consulted.
+- `Calendar.RecurrenceRule` conforms to `_IntentValue`. EventKit
+  occurrence expansion is not claimed.
+- `PropertyPayIntent.hostResult()` returns the stored currency code. Linux
+  never claims a Shortcuts payment sheet.
+
+Earlier wave-8 additions that remain:
 
 - `IntentParameter.Volume` / `Length` / `InformationStorage` (and the
   other 19 Foundation measurement unit enums) are `CaseIterable`. A table
@@ -233,6 +256,17 @@ No implemented test is cited by more than 29 rows (9.7% of implemented).
   never claims a locale-adjusted Foundation unit or Shortcuts unit picker.
 - `File` entity-property values store URL and bytes in-process. They are
   not security-scoped bookmarks.
+- `EntityProperty` URL / Date / DateComponents / AttributedString /
+  RecurrenceRule / IntentFile / IntentPerson / IntentPaymentMethod /
+  IntentCurrencyAmount / AppEntity inits are process-local. Spotlight
+  indexing keys are stored and never written to `CSSearchableIndex`.
+  `asyncGetter` is not invoked.
+- IntentCurrencyAmount `currencyCodes` is a stored string list. Linux
+  does not validate ISO 4217 or format a locale amount.
+- IntentPerson `parameterMode` is stored metadata. There is no Contacts
+  picker or CNContact hydration.
+- `Calendar.RecurrenceRule` is a Foundation value. EventKit occurrence
+  expansion is unobserved.
 - UIKit `ShortcutsUIButton` / `SiriTipUIView` are NSObject subclasses on
   Linux; they do not present system UI.
 - Macros (`AppIntent(schema:)`, `ComputedProperty`, …) are deferred: there
