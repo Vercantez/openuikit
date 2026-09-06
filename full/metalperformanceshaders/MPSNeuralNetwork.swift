@@ -608,6 +608,8 @@ open class MPSCNNConvolutionGradientState: MPSState {
     public private(set) var gradientForWeights: any MTLBuffer
     public private(set) var gradientForBiases: any MTLBuffer
 
+    public var gradientForWeightsLayout: MPSCNNConvolutionWeightsLayout { .OHWI }
+
     public init(convolution: MPSCNNConvolution) {
         self.convolution = convolution
         let device = convolution.device

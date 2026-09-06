@@ -231,4 +231,59 @@ rays.encodeIntersection(
 )
 precondition(MPSHostBoundary.lastRefusedAPI != nil)
 
+let neuron = MPSMatrixNeuron(device: device)
+neuron.sourceNumberOfFeatureVectors = 1
+neuron.sourceInputFeatureChannels = 2
+neuron.setNeuronType(.reLU, parameterA: 0, parameterB: 0, parameterC: 0)
+let nIn = MPSMatrix(device: device, descriptor: MPSMatrixDescriptor(rows: 1, columns: 2, rowBytes: 8, dataType: .float32))
+let nOut = MPSMatrix(device: device, descriptor: MPSMatrixDescriptor(rows: 1, columns: 2, rowBytes: 8, dataType: .float32))
+let np = nIn.data.contents.bindMemory(to: Float.self, capacity: 2)
+np[0] = -1
+np[1] = 2
+neuron.encode(commandBuffer: commandBuffer, inputMatrix: nIn, biasVector: nil, resultMatrix: nOut)
+let no = nOut.data.contents.bindMemory(to: Float.self, capacity: 2)
+precondition(abs(no[0] - 0) < 0.001 && abs(no[1] - 2) < 0.001)
+
+let fc = MPSMatrixFullyConnected(device: device)
+fc.sourceNumberOfFeatureVectors = 1
+fc.sourceInputFeatureChannels = 2
+fc.sourceOutputFeatureChannels = 2
+let ident = MPSMatrix(device: device, descriptor: MPSMatrixDescriptor(rows: 2, columns: 2, rowBytes: 8, dataType: .float32))
+let ip = ident.data.contents.bindMemory(to: Float.self, capacity: 4)
+ip[0] = 1; ip[1] = 0; ip[2] = 0; ip[3] = 1
+let fcOut = MPSMatrix(device: device, descriptor: MPSMatrixDescriptor(rows: 1, columns: 2, rowBytes: 8, dataType: .float32))
+fc.encode(commandBuffer: commandBuffer, inputMatrix: nIn, weightMatrix: ident, biasVector: nil, resultMatrix: fcOut)
+let fo = fcOut.data.contents.bindMemory(to: Float.self, capacity: 2)
+precondition(abs(fo[0] + 1) < 0.001 && abs(fo[1] - 2) < 0.001)
+
+let bn = MPSMatrixBatchNormalization(device: device)
+bn.sourceNumberOfFeatureVectors = 2
+bn.sourceInputFeatureChannels = 1
+bn.computeStatistics = true
+bn.epsilon = 0
+let bnIn = MPSMatrix(device: device, descriptor: MPSMatrixDescriptor(rows: 2, columns: 1, rowBytes: 4, dataType: .float32))
+let bnOut = MPSMatrix(device: device, descriptor: MPSMatrixDescriptor(rows: 2, columns: 1, rowBytes: 4, dataType: .float32))
+let bnPointer = bnIn.data.contents.bindMemory(to: Float.self, capacity: 2)
+bnPointer[0] = 1
+bnPointer[1] = 3
+let mean = MPSVector(device: device, descriptor: MPSVectorDescriptor(length: 1, dataType: .float32))
+let variance = MPSVector(device: device, descriptor: MPSVectorDescriptor(length: 1, dataType: .float32))
+bn.encode(
+    commandBuffer: commandBuffer,
+    inputMatrix: bnIn,
+    meanVector: mean,
+    varianceVector: variance,
+    gammaVector: nil,
+    betaVector: nil,
+    resultMatrix: bnOut
+)
+let bo = bnOut.data.contents.bindMemory(to: Float.self, capacity: 2)
+precondition(abs(bo[0] + 1) < 0.001 && abs(bo[1] - 1) < 0.001)
+
+let accel = MPSAccelerationStructure(device: device)
+precondition(accel.status == .unbuilt)
+MPSHostBoundary.reset()
+accel.rebuild()
+precondition(MPSHostBoundary.lastRefusedAPI != nil)
+
 print("METALPERFORMANCESHADERS_AGENT_RUNTIME_OK")
