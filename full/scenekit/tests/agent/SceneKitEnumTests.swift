@@ -381,5 +381,22 @@ func testEnumOptionSetAndConstantValues() {
     _ = SCNBillboardAxis(rawValue: 1)
     _ = SCNPhysicsShape.Option(rawValue: "x")
     _ = SCNHitTestOption(rawValue: "firstFoundOnly")
+    _ = SCNPhysicsWorld.TestOption.backfaceCulling
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask
+    _ = SCNPhysicsWorld.TestOption.searchMode
+    _ = SCNPhysicsWorld.TestSearchMode.any
+    _ = SCNPhysicsWorld.TestSearchMode.closest
+    _ = SCNPhysicsWorld.TestSearchMode.all
+    _ = SCNPhysicsWorld.TestOption.self
+    _ = SCNPhysicsWorld.TestSearchMode.self
+    _ = SCNPhysicsWorld.TestOption(rawValue: "collisionBitMask")
+    _ = SCNPhysicsWorld.TestSearchMode(rawValue: "closest")
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask != .searchMode
+    _ = SCNPhysicsWorld.TestSearchMode.closest != .any
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask.hashValue
+    _ = SCNPhysicsWorld.TestSearchMode.closest.hashValue
+    var physHasher = Hasher()
+    SCNPhysicsWorld.TestOption.collisionBitMask.hash(into: &physHasher)
+    SCNPhysicsWorld.TestSearchMode.closest.hash(into: &physHasher)
 }
 

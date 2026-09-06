@@ -1,5 +1,8 @@
+import Dispatch
 import Foundation
 import Metal
+
+// --- MetalBufferTests.swift ---
 
 func testBufferStorage() {
     let device = MTLCreateSystemDefaultDevice()!
@@ -41,17 +44,46 @@ func testBufferStorage() {
     precondition(noCopy.length == 4)
     let privateBuf = device.makeBuffer(length: 4, options: .storageModePrivate)!
     precondition(privateBuf.storageMode == .private)
+    privateBuf.contents().storeBytes(of: UInt32(0xAABBCCDD), as: UInt32.self)
+    privateBuf.didModifyRange(0..<4)
+    let privateDest = device.makeBuffer(length: 4, options: .storageModeShared)!
+    let queue = device.makeCommandQueue()!
+    let copy = queue.makeCommandBuffer()!
+    let blit = copy.makeBlitCommandEncoder()!
+    blit.copy(from: privateBuf, sourceOffset: 0, to: privateDest, destinationOffset: 0, size: 4)
+    blit.endEncoding()
+    copy.commit()
+    copy.waitUntilCompleted()
+    precondition(privateDest.contents().load(as: UInt32.self) == 0xAABBCCDD)
     let viewDesc = MTLTextureDescriptor.texture2DDescriptor(
         pixelFormat: .r8Unorm,
-        width: 4,
-        height: 1,
+        width: 2,
+        height: 2,
         mipmapped: false
     )
     viewDesc.usage = [.shaderRead]
-    let view = destination.makeTexture(descriptor: viewDesc, offset: 0, bytesPerRow: 4)
-    precondition(view != nil)
+    let layout: [UInt8] = [1, 2, 0xAA, 0xBB, 3, 4, 0xCC, 0xDD]
+    layout.withUnsafeBytes { raw in
+        destination.contents().copyMemory(from: raw.baseAddress!, byteCount: 8)
+    }
+    let view = destination.makeTexture(descriptor: viewDesc, offset: 0, bytesPerRow: 4)!
+    precondition(view.buffer === destination)
+    precondition(view.bufferOffset == 0)
+    precondition(view.bufferBytesPerRow == 4)
+    var fromView = [UInt8](repeating: 0, count: 4)
+    fromView.withUnsafeMutableBytes { raw in
+        view.getBytes(
+            raw.baseAddress!,
+            bytesPerRow: 2,
+            from: MTLRegionMake2D(0, 0, 2, 2),
+            mipmapLevel: 0
+        )
+    }
+    precondition(fromView == [1, 2, 3, 4])
     _ = destination.device
 }
+
+// --- MetalCommandTests.swift ---
 
 func testCommandBufferLifecycle() {
     let device = MTLCreateSystemDefaultDevice()!
@@ -87,6 +119,7 @@ func testCommandBufferLifecycle() {
     commandBuffer.pushDebugGroup("g")
     commandBuffer.popDebugGroup()
     commandBuffer.commit()
+    commandBuffer.waitUntilScheduled()
     commandBuffer.waitUntilCompleted()
     precondition(commandBuffer.status == .completed)
     precondition(completed)
@@ -243,6 +276,196 @@ func testBlitCopyFillMipmaps() {
     copyBuffer.waitUntilCompleted()
 }
 
+func testIndirectCommandBufferAsData() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let descriptor = MTLIndirectCommandBufferDescriptor()
+    descriptor.commandTypes = [.concurrentDispatch, .draw]
+    descriptor.maxKernelBufferBindCount = 8
+    descriptor.maxVertexBufferBindCount = 4
+    let icb = device.makeIndirectCommandBuffer(descriptor: descriptor, maxCommandCount: 2, options: .storageModeShared)!
+    precondition(icb.size == 2)
+    _ = icb.gpuResourceID
+    _ = icb.allocatedSize
+    icb.label = "icb"
+    precondition(icb.label == "icb")
+    let compute = icb.indirectComputeCommandAt(0)
+    let library = MTLMakeCPUBuiltinLibrary(device)
+    let fill = library.makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    let pipeline = try! device.makeComputePipelineState(function: fill)
+    let output = device.makeBuffer(length: 16, options: [])!
+    let value = device.makeBuffer(length: 4, options: [])!
+    value.contents().storeBytes(of: UInt32(0x11), as: UInt32.self)
+    compute.reset()
+    compute.setComputePipelineState(pipeline)
+    compute.setKernelBuffer(output, offset: 0, at: 0)
+    compute.setKernelBuffer(value, offset: 0, at: 1)
+    compute.setKernelBuffer(value, offset: 0, index: 1)
+    compute.setKernelBuffer(value, offset: 0, attributeStride: 4, at: 1)
+    compute.setBarrier()
+    compute.clearBarrier()
+    compute.setImageblockWidth(1, height: 1)
+    compute.setStageInRegion(MTLRegionMake2D(0, 0, 1, 1))
+    compute.setThreadgroupMemoryLength(0, index: 0)
+    compute.concurrentDispatchThreadgroups(MTLSizeMake(4, 1, 1), threadsPerThreadgroup: MTLSizeMake(1, 1, 1))
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let encoder = commandBuffer.makeComputeCommandEncoder()!
+    encoder.executeCommandsInBuffer(icb, range: 0..<1)
+    encoder.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.error == nil)
+    for index in 0..<4 {
+        precondition(output.contents().advanced(by: index * 4).load(as: UInt32.self) == 0x11)
+    }
+    let blit = queue.makeCommandBuffer()!
+    let blitEncoder = blit.makeBlitCommandEncoder()!
+    blitEncoder.resetCommandsInBuffer(icb, range: 0..<1)
+    let clone = device.makeIndirectCommandBuffer(descriptor: descriptor, maxCommandCount: 2, options: [])!
+    blitEncoder.copyIndirectCommandBuffer(icb, sourceRange: 0..<1, destination: clone, destinationIndex: 0)
+    blitEncoder.optimizeIndirectCommandBuffer(icb, range: 0..<1)
+    blitEncoder.endEncoding()
+    blit.commit()
+    blit.waitUntilCompleted()
+    let render = icb.indirectRenderCommandAt(0)
+    let pipelineDesc = MTLRenderPipelineDescriptor()
+    pipelineDesc.colorAttachments[0].pixelFormat = .rgba8Unorm
+    let renderState = try! device.makeRenderPipelineState(descriptor: pipelineDesc)
+    let vertex = device.makeBuffer(length: 16, options: [])!
+    render.reset()
+    render.setRenderPipelineState(renderState)
+    render.setVertexBuffer(vertex, offset: 0, at: 0)
+    render.setVertexBuffer(vertex, offset: 0, attributeStride: 16, at: 0)
+    render.setFragmentBuffer(vertex, offset: 0, at: 0)
+    render.setMeshBuffer(vertex, offset: 0, at: 0)
+    render.setObjectBuffer(vertex, offset: 0, at: 0)
+    render.setObjectThreadgroupMemoryLength(0, index: 0)
+    render.setCullMode(.back)
+    render.setDepthBias(0, slopeScale: 0, clamp: 0)
+    render.setDepthClipMode(.clip)
+    render.setDepthStencilState(nil)
+    render.setFrontFacing(.clockwise)
+    render.setTriangleFillMode(.fill)
+    render.setBarrier()
+    render.clearBarrier()
+    render.drawPrimitives(.triangle, vertexStart: 0, vertexCount: 3, instanceCount: 1, baseInstance: 0)
+    render.drawIndexedPrimitives(
+        .triangle,
+        indexCount: 3,
+        indexType: .uint16,
+        indexBuffer: vertex,
+        indexBufferOffset: 0,
+        instanceCount: 1,
+        baseVertex: 0,
+        baseInstance: 0
+    )
+    render.drawPatches(
+        3,
+        patchStart: 0,
+        patchCount: 1,
+        patchIndexBuffer: nil,
+        patchIndexBufferOffset: 0,
+        instanceCount: 1,
+        baseInstance: 0,
+        tessellationFactorBuffer: vertex,
+        tessellationFactorBufferOffset: 0,
+        tessellationFactorBufferInstanceStride: 0
+    )
+    render.drawIndexedPatches(
+        3,
+        patchStart: 0,
+        patchCount: 1,
+        patchIndexBuffer: nil,
+        patchIndexBufferOffset: 0,
+        controlPointIndexBuffer: vertex,
+        controlPointIndexBufferOffset: 0,
+        instanceCount: 1,
+        baseInstance: 0,
+        tessellationFactorBuffer: vertex,
+        tessellationFactorBufferOffset: 0,
+        tessellationFactorBufferInstanceStride: 0
+    )
+    render.drawMeshThreadgroups(MTLSizeMake(1, 1, 1), threadsPerObjectThreadgroup: MTLSizeMake(1, 1, 1), threadsPerMeshThreadgroup: MTLSizeMake(1, 1, 1))
+    render.drawMeshThreads(MTLSizeMake(1, 1, 1), threadsPerObjectThreadgroup: MTLSizeMake(1, 1, 1), threadsPerMeshThreadgroup: MTLSizeMake(1, 1, 1))
+    compute.concurrentDispatchThreads(MTLSizeMake(1, 1, 1), threadsPerThreadgroup: MTLSizeMake(1, 1, 1))
+    let rangeBuffer = device.makeBuffer(length: 8, options: [])!
+    rangeBuffer.contents().storeBytes(of: UInt32(0), as: UInt32.self)
+    rangeBuffer.contents().advanced(by: 4).storeBytes(of: UInt32(0), as: UInt32.self)
+    let extra = queue.makeCommandBuffer()!
+    let extraEnc = extra.makeComputeCommandEncoder()!
+    extraEnc.executeCommandsInBuffer(icb, indirectBuffer: rangeBuffer, offset: 0)
+    extraEnc.executeCommands(in: icb, with: NSRange(location: 0, length: 0))
+    extraEnc.executeCommands(in: icb, indirectBuffer: rangeBuffer, indirectBufferOffset: 0)
+    extraEnc.endEncoding()
+    extra.commit()
+    extra.waitUntilCompleted()
+}
+
+func testResourceStateEncoder() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let pass = MTLResourceStatePassDescriptor()
+    pass.sampleBufferAttachments[0].startOfEncoderSampleIndex = 0
+    pass.sampleBufferAttachments[0].endOfEncoderSampleIndex = 0
+    let encoder = commandBuffer.resourceStateCommandEncoder(with: pass)!
+    encoder.label = "resource-state"
+    precondition(encoder.label == "resource-state")
+    precondition(encoder.device.name == device.name)
+    encoder.insertDebugSignpost("rs")
+    encoder.pushDebugGroup("rs")
+    encoder.popDebugGroup()
+    encoder.barrier(afterQueueStages: .resourceState, beforeStages: .blit)
+    let fence = device.makeFence()!
+    encoder.update(fence)
+    encoder.wait(for: fence)
+    encoder.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.error == nil)
+
+    let texture = device.makeTexture(
+        descriptor: MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: .r8Unorm,
+            width: 1,
+            height: 1,
+            mipmapped: false
+        )
+    )!
+    let failBuffer = queue.makeCommandBuffer()!
+    let failEncoder = failBuffer.makeResourceStateCommandEncoder()!
+    failEncoder.updateTextureMapping(
+        texture,
+        mode: .map,
+        region: MTLRegionMake2D(0, 0, 1, 1),
+        mipLevel: 0,
+        slice: 0
+    )
+    failEncoder.updateTextureMapping(texture, mode: .unmap, indirectBuffer: device.makeBuffer(length: 8, options: [])!, indirectBufferOffset: 0)
+    var region = MTLRegionMake2D(0, 0, 1, 1)
+    var mip = 0
+    var slice = 0
+    failEncoder.updateTextureMappings(texture, mode: .map, regions: &region, mipLevels: &mip, slices: &slice, numRegions: 1)
+    failEncoder.moveTextureMappings(
+        sourceTexture: texture,
+        sourceSlice: 0,
+        sourceLevel: 0,
+        sourceOrigin: MTLOrigin(),
+        sourceSize: MTLSizeMake(1, 1, 1),
+        destinationTexture: texture,
+        destinationSlice: 0,
+        destinationLevel: 0,
+        destinationOrigin: MTLOrigin()
+    )
+    failEncoder.endEncoding()
+    failBuffer.commit()
+    failBuffer.waitUntilCompleted()
+    precondition(failBuffer.status == .error)
+    precondition((failBuffer.error as? MTLCommandBufferError)?.code == .notPermitted)
+}
+
+// --- MetalComputeTests.swift ---
+
 func testCPUBuiltinCompute() {
     let device = MTLCreateSystemDefaultDevice()!
     let library = MTLMakeCPUBuiltinLibrary(device)
@@ -360,6 +583,8 @@ func testCPUBuiltinCompute() {
     precondition(dst.contents().load(as: UInt8.self) == 9)
     precondition(library.makeFunction(name: "kernel void k()") == nil)
 }
+
+// --- MetalDescriptorTests.swift ---
 
 func testDescriptorValueSemantics() {
     let texture = MTLTextureDescriptor.texture2DDescriptor(
@@ -537,7 +762,14 @@ func testDescriptorValueSemantics() {
     var value: Int32 = 1
     withUnsafeBytes(of: &value) { raw in
         constants.setConstantValue(raw.baseAddress!, type: .int, index: 0)
+        constants.setConstantValue(raw.baseAddress!, type: .int, withName: "k")
+        constants.setConstantValues(raw.baseAddress!, type: .int, range: 1..<2)
     }
+    constants.reset()
+    let resourceStatePass = MTLResourceStatePassDescriptor()
+    resourceStatePass.sampleBufferAttachments[0].startOfEncoderSampleIndex = 0
+    resourceStatePass.sampleBufferAttachments[0].endOfEncoderSampleIndex = 1
+    _ = resourceStatePass.sampleBufferAttachments[0].sampleBuffer
     let fnDesc = MTLFunctionDescriptor()
     fnDesc.name = "n"
     fnDesc.options = []
@@ -574,6 +806,8 @@ func testDescriptorValueSemantics() {
     metal4.renderTargetHeight = 8
     precondition(metal4.renderTargetWidth == 8)
 }
+
+// --- MetalDeviceTests.swift ---
 
 func testCPUDevice() {
     guard let device = MTLCreateSystemDefaultDevice() else {
@@ -653,6 +887,8 @@ func testCPUDevice() {
     precondition(samples.count == 1)
     precondition(device.getDefaultSamplePositions(sampleCount: 4).isEmpty)
 }
+
+// --- MetalEnumTests.swift ---
 
 func testMetalEnumOptionSetAndConstantValues() {
     _ = MTLArgumentBuffersTier.tier1
@@ -1979,6 +2215,16 @@ func testMetalEnumOptionSetAndConstantValues() {
     MTLSparsePageSizeSet.insert(.size64)
     precondition(MTLSparsePageSizeSet.count == 2)
 
+    _ = MTLSparseTextureMappingMode.map
+    precondition(MTLSparseTextureMappingMode.map.rawValue == 0)
+    precondition(MTLSparseTextureMappingMode(rawValue: 0) == MTLSparseTextureMappingMode.map)
+    precondition(MTLSparseTextureMappingMode.unmap.rawValue == 1)
+    precondition(MTLSparseTextureMappingMode(rawValue: 1) == MTLSparseTextureMappingMode.unmap)
+    precondition(MTLSparseTextureMappingMode.map != MTLSparseTextureMappingMode.unmap)
+    var MTLSparseTextureMappingModeSet: Set<MTLSparseTextureMappingMode> = [.map]
+    MTLSparseTextureMappingModeSet.insert(.unmap)
+    precondition(MTLSparseTextureMappingModeSet.count == 2)
+
     _ = MTLStencilOperation.keep
     precondition(MTLStencilOperation.keep.rawValue == 0)
     precondition(MTLStencilOperation(rawValue: 0) == MTLStencilOperation.keep)
@@ -2438,6 +2684,8 @@ func testMetalEnumOptionSetAndConstantValues() {
     precondition(MTLCommandBufferError.accessRevoked == .blacklisted)
 }
 
+// --- MetalFailClosedTests.swift ---
+
 func testLibraryFailClosed() {
     let device = MTLCreateSystemDefaultDevice()!
     do {
@@ -2530,7 +2778,7 @@ func testArgumentEncoderAndICB() {
     let encoder = device.makeArgumentEncoder(arguments: [argument])!
     encoder.label = "args"
     precondition(encoder.label == "args")
-    precondition(encoder.encodedLength == 0)
+    precondition(encoder.encodedLength == 16)
     precondition(encoder.alignment == 16)
     precondition(encoder.device.name == device.name)
     let buffer = device.makeBuffer(length: 16, options: [])!
@@ -2545,10 +2793,115 @@ func testArgumentEncoderAndICB() {
     encoder.setDepthStencilState(nil, index: 0)
     _ = encoder.constantData(at: 0)
     precondition(encoder.makeArgumentEncoderForBuffer(atIndex: 0) == nil)
-    let icb = MTLIndirectCommandBufferDescriptor()
-    icb.commandTypes = [.draw]
-    precondition(device.makeIndirectCommandBuffer(descriptor: icb, maxCommandCount: 4, options: []) == nil)
+    let payload = device.makeBuffer(length: encoder.encodedLength, options: [])!
+    encoder.setArgumentBuffer(payload, offset: 0)
+    let constant: Float = 2.5
+    encoder.constantData(at: 0).storeBytes(of: constant, as: Float.self)
+    precondition(payload.contents().load(as: Float.self) == 2.5)
+    let pointed = device.makeBuffer(length: 8, options: [])!
+    encoder.setBuffer(pointed, offset: 0, index: 0)
+    precondition(payload.contents().load(as: UInt64.self) == pointed.gpuAddress)
+    encoder.setArgumentBuffer(payload, startOffset: 0, arrayElement: 0)
+    let icbDesc = MTLIndirectCommandBufferDescriptor()
+    icbDesc.commandTypes = [.concurrentDispatch]
+    let icb = device.makeIndirectCommandBuffer(descriptor: icbDesc, maxCommandCount: 4, options: [])!
+    precondition(icb.size == 4)
+    _ = icb.gpuResourceID
+    precondition(icb.device.name == device.name)
+    encoder.setIndirectCommandBuffer(icb, index: 0)
 }
+
+func testPipelineDescriptorValidation() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let samples = MTLRenderPipelineDescriptor()
+    samples.sampleCount = 0
+    do {
+        _ = try device.makeRenderPipelineState(descriptor: samples)
+        fatalError("invalid sampleCount must fail")
+    } catch let error as MTLCPUValidationError {
+        precondition(error.reason.contains("sampleCount"))
+    } catch {
+        fatalError("expected MTLCPUValidationError")
+    }
+    let blending = MTLRenderPipelineDescriptor()
+    blending.colorAttachments[0].isBlendingEnabled = true
+    blending.colorAttachments[0].pixelFormat = .invalid
+    do {
+        _ = try device.makeRenderPipelineState(descriptor: blending)
+        fatalError("blending without a color format must fail")
+    } catch let error as MTLCPUValidationError {
+        precondition(error.reason.contains("blending"))
+    } catch {
+        fatalError("expected MTLCPUValidationError")
+    }
+    let library = MTLMakeCPUBuiltinLibrary(device)
+    let kernel = library.makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    let shaded = MTLRenderPipelineDescriptor()
+    shaded.vertexFunction = kernel
+    do {
+        _ = try device.makeRenderPipelineState(descriptor: shaded)
+        fatalError("MSL vertex functions must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+        let description = (error.userInfo[NSLocalizedDescriptionKey] as? String) ?? error.localizedDescription
+        precondition(description.contains("no shader compiler"))
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let fragmentShaded = MTLRenderPipelineDescriptor()
+    fragmentShaded.fragmentFunction = kernel
+    do {
+        _ = try device.makeRenderPipelineState(descriptor: fragmentShaded)
+        fatalError("MSL fragment functions must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    let compute = MTLComputePipelineDescriptor()
+    do {
+        _ = try device.makeComputePipelineState(descriptor: compute)
+        fatalError("compute pipeline without a function must fail")
+    } catch let error as MTLCPUValidationError {
+        precondition(error.reason.contains("compute function"))
+    } catch {
+        fatalError("expected MTLCPUValidationError")
+    }
+    let vertex = MTLVertexDescriptor()
+    vertex.layouts[0].stride = 16
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.vertexDescriptor = vertex
+    pipeline.colorAttachments[0].pixelFormat = .rgba8Unorm
+    _ = try! device.makeRenderPipelineState(descriptor: pipeline)
+}
+
+func testComputeDispatchFailClosed() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let encoder = commandBuffer.makeComputeCommandEncoder()!
+    encoder.dispatchThreads(MTLSizeMake(1, 1, 1), threadsPerThreadgroup: MTLSizeMake(1, 1, 1))
+    encoder.endEncoding()
+    var completed = false
+    commandBuffer.addCompletedHandler { buffer in
+        completed = true
+        precondition(buffer.status == .error)
+        let error = buffer.error as? MTLCommandBufferError
+        precondition(error?.code == .notPermitted)
+        precondition(MTLCommandBufferError.notPermitted ~= buffer.error!)
+        precondition(MTLCommandBufferError.errorDomain == MTLCommandBufferErrorDomain)
+        _ = error?.errorCode
+        _ = error?.errorUserInfo
+        _ = error?.hashValue
+    }
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(completed)
+    precondition(commandBuffer.status == .error)
+    precondition((commandBuffer.error as? MTLCommandBufferError)?.code == .notPermitted)
+}
+
+// --- MetalGeometryTests.swift ---
 
 func testGeometryHelpers() {
     let origin = MTLOriginMake(1, 2, 3)
@@ -2609,6 +2962,8 @@ func testGeometryHelpers() {
     precondition(resourceID._impl == 0)
 }
 
+// --- MetalHeapTests.swift ---
+
 func testHeapFenceAndEvent() {
     let device = MTLCreateSystemDefaultDevice()!
     let heapDesc = MTLHeapDescriptor()
@@ -2657,6 +3012,49 @@ func testHeapFenceAndEvent() {
     commandBuffer.commit()
     commandBuffer.waitUntilCompleted()
 }
+
+func testSharedEventHostClock() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let event = device.makeSharedEvent()!
+    event.label = "host-clock"
+    precondition(event.label == "host-clock")
+    precondition(event.device.name == device.name)
+    precondition(event.signaledValue == 0)
+    event.signaledValue = 3
+    precondition(event.signaledValue == 3)
+    event.signaledValue = 1
+    precondition(event.signaledValue == 3)
+    precondition(event.wait(untilSignaledValue: 3, timeoutMS: 0))
+    precondition(!event.wait(untilSignaledValue: 4, timeoutMS: 0))
+    var notified = false
+    let listener = MTLSharedEventListener()
+    _ = listener.dispatchQueue
+    event.notify(listener, atValue: 5) { shared, value in
+        notified = true
+        precondition(value >= 5)
+        precondition(shared.signaledValue >= 5)
+    }
+    event.signaledValue = 5
+    precondition(notified)
+    let sharedListener = MTLSharedEventListener.shared()
+    precondition(sharedListener === MTLSharedEventListener.shared())
+    let queued = MTLSharedEventListener(dispatchQueue: DispatchQueue.global())
+    _ = queued.dispatchQueue
+    let handle = event.makeSharedEventHandle()
+    handle.label = "cloned"
+    let restored = device.makeSharedEvent(handle: handle)!
+    precondition(restored.signaledValue == 5)
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    commandBuffer.encodeSignalEvent(event, value: 7)
+    commandBuffer.encodeWaitForEvent(event, value: 7)
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(event.signaledValue >= 7)
+    _ = MTLSharedEventHandle.supportsSecureCoding
+}
+
+// --- MetalRenderTests.swift ---
 
 func testRenderPassClearAndLoad() {
     let device = MTLCreateSystemDefaultDevice()!
@@ -2797,6 +3195,73 @@ func testRenderPassClearAndLoad() {
     precondition(loaded == keepSeed)
 }
 
+func testParallelRenderEncoderAndSamplerState() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let colorDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    )
+    colorDesc.usage = [.renderTarget, .shaderRead]
+    let color = device.makeTexture(descriptor: colorDesc)!
+    let pass = MTLRenderPassDescriptor()
+    pass.colorAttachments[0].texture = color
+    pass.colorAttachments[0].loadAction = .clear
+    pass.colorAttachments[0].storeAction = .store
+    pass.colorAttachments[0].clearColor = MTLClearColorMake(0, 1, 0, 1)
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.colorAttachments[0].pixelFormat = .rgba8Unorm
+    let state = try! device.makeRenderPipelineState(descriptor: pipeline)
+    let samplerDesc = MTLSamplerDescriptor()
+    samplerDesc.minFilter = .linear
+    samplerDesc.label = "cpu-sampler"
+    let sampler = device.makeSamplerState(descriptor: samplerDesc)!
+    precondition(sampler.device.name == device.name)
+    precondition(sampler.label == "cpu-sampler")
+    _ = sampler.gpuResourceID
+    let depthDesc = MTLDepthStencilDescriptor()
+    depthDesc.isDepthWriteEnabled = true
+    depthDesc.depthCompareFunction = .less
+    depthDesc.label = "cpu-depth"
+    let depthState = device.makeDepthStencilState(descriptor: depthDesc)!
+    precondition(depthState.device.name == device.name)
+    precondition(depthState.label == "cpu-depth")
+    _ = depthState.gpuResourceID
+    let queue = device.makeCommandQueue()!
+    let commandBuffer = queue.makeCommandBuffer()!
+    let parallel = commandBuffer.makeParallelRenderCommandEncoder(descriptor: pass)!
+    parallel.label = "parallel"
+    precondition(parallel.label == "parallel")
+    precondition(parallel.device.name == device.name)
+    parallel.insertDebugSignpost("child")
+    parallel.pushDebugGroup("p")
+    parallel.popDebugGroup()
+    let child = parallel.makeRenderCommandEncoder()!
+    child.setRenderPipelineState(state)
+    child.setFragmentSamplerState(sampler, index: 0)
+    child.setVertexSamplerState(sampler, index: 0)
+    child.setDepthStencilState(depthState)
+    child.endEncoding()
+    parallel.setColorStoreAction(.store, index: 0)
+    parallel.setColorStoreActionOptions([], index: 0)
+    parallel.setDepthStoreAction(.dontCare)
+    parallel.setDepthStoreActionOptions([])
+    parallel.setStencilStoreAction(.dontCare)
+    parallel.setStencilStoreActionOptions([])
+    parallel.endEncoding()
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+    precondition(commandBuffer.error == nil)
+    var pixel = [UInt8](repeating: 0, count: 4)
+    pixel.withUnsafeMutableBytes { raw in
+        color.getBytes(raw.baseAddress!, bytesPerRow: 4, from: MTLRegionMake2D(0, 0, 1, 1), mipmapLevel: 0)
+    }
+    precondition(pixel == [0, 255, 0, 255])
+}
+
+// --- MetalTextureTests.swift ---
+
 func testTextureBytesAndMips() {
     func roundTrip(_ format: MTLPixelFormat, bytesPerPixel: Int, pattern: [UInt8]) {
         let device = MTLCreateSystemDefaultDevice()!
@@ -2935,18 +3400,213 @@ func testTextureBytesAndMips() {
     precondition(sliceBytes == pixels)
 }
 
-testBufferStorage()
-testCommandBufferLifecycle()
-testBlitCopyFillMipmaps()
-testCPUBuiltinCompute()
-testDescriptorValueSemantics()
-testCPUDevice()
-testMetalEnumOptionSetAndConstantValues()
-testLibraryFailClosed()
-testCaptureFailClosed()
-testArgumentEncoderAndICB()
-testGeometryHelpers()
-testHeapFenceAndEvent()
-testRenderPassClearAndLoad()
-testTextureBytesAndMips()
+func testTextureViewsAndDimensionalLayouts() {
+    let device = MTLCreateSystemDefaultDevice()!
+
+    func roundTrip(_ format: MTLPixelFormat, bytesPerPixel: Int, pattern: [UInt8]) {
+        let descriptor = MTLTextureDescriptor.texture2DDescriptor(
+            pixelFormat: format,
+            width: 2,
+            height: 1,
+            mipmapped: false
+        )
+        let texture = device.makeTexture(descriptor: descriptor)!
+        pattern.withUnsafeBytes { raw in
+            texture.replace(
+                region: MTLRegionMake2D(0, 0, 2, 1),
+                mipmapLevel: 0,
+                withBytes: raw.baseAddress!,
+                bytesPerRow: 2 * bytesPerPixel
+            )
+        }
+        var roundTripBytes = [UInt8](repeating: 0, count: pattern.count)
+        roundTripBytes.withUnsafeMutableBytes { raw in
+            texture.getBytes(
+                raw.baseAddress!,
+                bytesPerRow: 2 * bytesPerPixel,
+                from: MTLRegionMake2D(0, 0, 2, 1),
+                mipmapLevel: 0
+            )
+        }
+        precondition(roundTripBytes == pattern)
+    }
+
+    roundTrip(.a8Unorm, bytesPerPixel: 1, pattern: [3, 7])
+    roundTrip(.r8Uint, bytesPerPixel: 1, pattern: [4, 9])
+    roundTrip(.rg8Unorm, bytesPerPixel: 2, pattern: [1, 2, 3, 4])
+    roundTrip(.r16Float, bytesPerPixel: 2, pattern: [0x00, 0x3C, 0x00, 0x40])
+    roundTrip(.rgba8Uint, bytesPerPixel: 4, pattern: [9, 8, 7, 6, 5, 4, 3, 2])
+    roundTrip(.bgra8Unorm_srgb, bytesPerPixel: 4, pattern: [11, 12, 13, 14, 15, 16, 17, 18])
+    roundTrip(.r32Float, bytesPerPixel: 4, pattern: {
+        var bytes = [UInt8](repeating: 0, count: 8)
+        var a: Float = 0.5
+        var b: Float = 1.5
+        withUnsafeBytes(of: &a) { src in bytes.replaceSubrange(0..<4, with: src) }
+        withUnsafeBytes(of: &b) { src in bytes.replaceSubrange(4..<8, with: src) }
+        return bytes
+    }())
+
+    let sourceDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .rgba8Unorm,
+        width: 2,
+        height: 2,
+        mipmapped: true
+    )
+    let source = device.makeTexture(descriptor: sourceDesc)!
+    let pixels: [UInt8] = [
+        1, 2, 3, 4,
+        5, 6, 7, 8,
+        9, 10, 11, 12,
+        13, 14, 15, 16
+    ]
+    pixels.withUnsafeBytes { raw in
+        source.replace(
+            region: MTLRegionMake2D(0, 0, 2, 2),
+            mipmapLevel: 0,
+            withBytes: raw.baseAddress!,
+            bytesPerRow: 8
+        )
+    }
+    let same = source.makeTextureView(pixelFormat: .rgba8Unorm)!
+    precondition(same.parent != nil)
+    precondition(same.pixelFormat == .rgba8Unorm)
+    let bgra = source.makeTextureView(pixelFormat: .bgra8Unorm)!
+    precondition(bgra.pixelFormat == .bgra8Unorm)
+    var viewed = [UInt8](repeating: 0, count: 16)
+    viewed.withUnsafeMutableBytes { raw in
+        bgra.getBytes(raw.baseAddress!, bytesPerRow: 8, from: MTLRegionMake2D(0, 0, 2, 2), mipmapLevel: 0)
+    }
+    precondition(viewed == pixels)
+    precondition(source.makeTextureView(pixelFormat: .r8Unorm) == nil)
+
+    let ranged = source.makeTextureView(
+        pixelFormat: .rgba8Unorm,
+        textureType: .type2D,
+        levels: 0..<1,
+        slices: 0..<1
+    )!
+    precondition(ranged.mipmapLevelCount == 1)
+    precondition(ranged.parentRelativeLevel == 0)
+    let swizzled = source.makeTextureView(
+        pixelFormat: .rgba8Unorm,
+        textureType: .type2D,
+        levels: 0..<1,
+        slices: 0..<1,
+        swizzle: MTLTextureSwizzleChannels(red: .blue, green: .green, blue: .red, alpha: .alpha)
+    )!
+    precondition(swizzled.swizzle.red == .blue)
+    let viewDesc = MTLTextureViewDescriptor()
+    viewDesc.pixelFormat = .rgba8Uint
+    viewDesc.textureType = .type2D
+    viewDesc.levelRange = 0..<1
+    viewDesc.sliceRange = 0..<1
+    viewDesc.swizzle = MTLTextureSwizzleChannels()
+    let fromDesc = source.newTextureView(with: viewDesc)!
+    precondition(fromDesc.pixelFormat == .rgba8Uint)
+
+    let arrayDesc = MTLTextureDescriptor()
+    arrayDesc.textureType = .type2DArray
+    arrayDesc.pixelFormat = .r8Unorm
+    arrayDesc.width = 2
+    arrayDesc.height = 1
+    arrayDesc.arrayLength = 2
+    let array = device.makeTexture(descriptor: arrayDesc)!
+    precondition(array.arrayLength == 2)
+    let slice0: [UInt8] = [1, 2]
+    let slice1: [UInt8] = [9, 8]
+    slice0.withUnsafeBytes { raw in
+        array.replace(
+            region: MTLRegionMake2D(0, 0, 2, 1),
+            mipmapLevel: 0,
+            slice: 0,
+            withBytes: raw.baseAddress!,
+            bytesPerRow: 2,
+            bytesPerImage: 2
+        )
+    }
+    slice1.withUnsafeBytes { raw in
+        array.replace(
+            region: MTLRegionMake2D(0, 0, 2, 1),
+            mipmapLevel: 0,
+            slice: 1,
+            withBytes: raw.baseAddress!,
+            bytesPerRow: 2,
+            bytesPerImage: 2
+        )
+    }
+    var read1 = [UInt8](repeating: 0, count: 2)
+    read1.withUnsafeMutableBytes { raw in
+        array.getBytes(
+            raw.baseAddress!,
+            bytesPerRow: 2,
+            bytesPerImage: 2,
+            from: MTLRegionMake2D(0, 0, 2, 1),
+            mipmapLevel: 0,
+            slice: 1
+        )
+    }
+    precondition(read1 == slice1)
+
+    let cube = MTLTextureDescriptor.textureCubeDescriptor(pixelFormat: .r8Unorm, size: 1, mipmapped: false)
+    let cubeTex = device.makeTexture(descriptor: cube)!
+    precondition(cube.textureType == .typeCube)
+    for face in 0..<6 {
+        var byte = UInt8(face + 1)
+        withUnsafeBytes(of: &byte) { raw in
+            cubeTex.replace(
+                region: MTLRegionMake2D(0, 0, 1, 1),
+                mipmapLevel: 0,
+                slice: face,
+                withBytes: raw.baseAddress!,
+                bytesPerRow: 1,
+                bytesPerImage: 1
+            )
+        }
+    }
+    var face5: UInt8 = 0
+    withUnsafeMutableBytes(of: &face5) { raw in
+        cubeTex.getBytes(
+            raw.baseAddress!,
+            bytesPerRow: 1,
+            bytesPerImage: 1,
+            from: MTLRegionMake2D(0, 0, 1, 1),
+            mipmapLevel: 0,
+            slice: 5
+        )
+    }
+    precondition(face5 == 6)
+
+    let volume = MTLTextureDescriptor()
+    volume.textureType = .type3D
+    volume.pixelFormat = .r8Unorm
+    volume.width = 2
+    volume.height = 1
+    volume.depth = 2
+    let tex3D = device.makeTexture(descriptor: volume)!
+    precondition(tex3D.depth == 2)
+    let voxels: [UInt8] = [1, 2, 3, 4]
+    voxels.withUnsafeBytes { raw in
+        tex3D.replace(
+            region: MTLRegionMake3D(0, 0, 0, 2, 1, 2),
+            mipmapLevel: 0,
+            slice: 0,
+            withBytes: raw.baseAddress!,
+            bytesPerRow: 2,
+            bytesPerImage: 2
+        )
+    }
+    var readVoxels = [UInt8](repeating: 0, count: 4)
+    readVoxels.withUnsafeMutableBytes { raw in
+        tex3D.getBytes(
+            raw.baseAddress!,
+            bytesPerRow: 2,
+            bytesPerImage: 2,
+            from: MTLRegionMake3D(0, 0, 0, 2, 1, 2),
+            mipmapLevel: 0,
+            slice: 0
+        )
+    }
+    precondition(readVoxels == voxels)
+}
+
 print("METAL_AGENT_RUNTIME_OK")

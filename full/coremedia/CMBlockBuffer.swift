@@ -52,6 +52,22 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     public var owner: CMBlockBuffer { self }
     public var endIndex: Int { dataLength }
 
+    public struct Slice {
+        public var owner: CMBlockBuffer
+        public var startIndex: Int
+        public var endIndex: Int
+
+        public init(owner: CMBlockBuffer, startIndex: Int, endIndex: Int) {
+            self.owner = owner
+            self.startIndex = startIndex
+            self.endIndex = endIndex
+        }
+    }
+
+    public func slice(from start: Int, to end: Int) -> Slice {
+        Slice(owner: self, startIndex: start, endIndex: end)
+    }
+
     public init() {
         self.storage = []
     }
@@ -237,7 +253,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     }
 
     public func append(
-        buffer: Slice<UnsafeMutableRawBufferPointer>,
+        buffer: Swift.Slice<UnsafeMutableRawBufferPointer>,
         deallocator: @escaping CustomBlockDeallocator,
         flags: Flags = []
     ) throws {
@@ -255,7 +271,7 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     }
 
     public func append(
-        buffer: Slice<UnsafeMutableRawBufferPointer>,
+        buffer: Swift.Slice<UnsafeMutableRawBufferPointer>,
         allocator: CFAllocator? = kCFAllocatorDefault,
         flags: Flags = []
     ) throws {

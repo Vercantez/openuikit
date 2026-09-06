@@ -158,7 +158,7 @@ public struct BarcodeObservation: VisionObservation, QuadrilateralProviding {
 }
 
 public struct ContoursObservation: VisionObservation {
-    public struct Contour: Hashable, Sendable, CustomStringConvertible {
+    public struct Contour: Hashable, Sendable, Codable, CustomStringConvertible {
         public var points: [NormalizedPoint]
         public var childContours: [Contour]
         public var indexPath: IndexPath
@@ -314,13 +314,27 @@ public struct TextObservation: VisionObservation, QuadrilateralProviding {
     }
 }
 
-public struct RecognizedText: Hashable, Sendable {
+public struct RecognizedText: Hashable, Sendable, CustomStringConvertible {
     public let string: String
     public let confidence: Float
+    public var description: String { string }
+
+    public init(string: String, confidence: Float) {
+        self.string = string
+        self.confidence = max(0, min(1, confidence))
+    }
+
+    public func boundingBox(for range: Range<String.Index>) -> RectangleObservation? {
+        _ = range
+        return nil
+    }
 }
 
 public struct RecognizedTextObservation: VisionObservation, QuadrilateralProviding {
-    public enum Direction: String, Hashable, Sendable { case leftToRight, rightToLeft, topToBottom, bottomToTop }
+    public enum Direction: String, Hashable, Sendable, Codable {
+        case leftToRight, rightToLeft, topToBottom, bottomToTop
+    }
+
     public let topLeft: NormalizedPoint
     public let topRight: NormalizedPoint
     public let bottomRight: NormalizedPoint
@@ -329,12 +343,64 @@ public struct RecognizedTextObservation: VisionObservation, QuadrilateralProvidi
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
-    public var description: String { "RecognizedTextObservation" }
+    public let textDirection: Direction?
+    public let recognitionLanguages: [Locale.Language]
+    public let shouldWrapToNextLine: Bool?
+    public let isTitle: Bool
+    private let candidates: [RecognizedText]
+    public var description: String { transcript }
+    public var transcript: String { candidates.first?.string ?? "" }
     public var boundingBox: NormalizedRect {
         RectangleObservation(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft).boundingBox
     }
     public var boundingRegion: NormalizedRegion {
         ContoursObservation.Contour(points: [topLeft, topRight, bottomRight, bottomLeft], indexPath: IndexPath(index: 0))
+    }
+
+    public init(
+        topLeft: NormalizedPoint,
+        topRight: NormalizedPoint,
+        bottomRight: NormalizedPoint,
+        bottomLeft: NormalizedPoint,
+        candidates: [RecognizedText],
+        textDirection: Direction? = .leftToRight,
+        isTitle: Bool = false
+    ) {
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomRight = bottomRight
+        self.bottomLeft = bottomLeft
+        self.candidates = candidates
+        self.confidence = candidates.first?.confidence ?? 1
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.textDirection = textDirection
+        self.recognitionLanguages = []
+        self.shouldWrapToNextLine = nil
+        self.isTitle = isTitle
+    }
+
+    public init(_ observation: VNRecognizedTextObservation) {
+        self.topLeft = NormalizedPoint(normalizedPoint: observation.topLeft)
+        self.topRight = NormalizedPoint(normalizedPoint: observation.topRight)
+        self.bottomRight = NormalizedPoint(normalizedPoint: observation.bottomRight)
+        self.bottomLeft = NormalizedPoint(normalizedPoint: observation.bottomLeft)
+        self.candidates = observation.topCandidates(10).map {
+            RecognizedText(string: $0.string, confidence: $0.confidence)
+        }
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.textDirection = .leftToRight
+        self.recognitionLanguages = []
+        self.shouldWrapToNextLine = nil
+        self.isTitle = false
+    }
+
+    public func topCandidates(_ maxCandidateCount: Int) -> [RecognizedText] {
+        Array(candidates.prefix(max(0, maxCandidateCount)))
     }
 }
 
@@ -345,23 +411,199 @@ public struct ClassificationObservation: VisionObservation {
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { identifier }
+    public var hasPrecisionRecallCurve: Bool { false }
+
+    public init(identifier: String, confidence: Float) {
+        self.identifier = identifier
+        self.confidence = max(0, min(1, confidence))
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+    }
+
+    public init(_ observation: VNClassificationObservation) {
+        self.identifier = observation.identifier
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+    }
+
+    public func hasMinimumPrecision(_ minimumPrecision: Float, forRecall recall: Float) -> Bool {
+        _ = minimumPrecision
+        _ = recall
+        return false
+    }
+
+    public func hasMinimumRecall(_ minimumRecall: Float, forPrecision precision: Float) -> Bool {
+        _ = minimumRecall
+        _ = precision
+        return false
+    }
 }
 
 public struct FaceObservation: VisionObservation, BoundingBoxProviding {
-    public struct CaptureQuality: Hashable, Sendable { public var value: Float }
-    public struct Landmarks2D: Hashable, Sendable {
-        public struct Region: Hashable, Sendable {
-            public enum PointsClassification: String, Hashable, Sendable { case closedPath, openPath, disconnected }
-            public var points: [NormalizedPoint]
+    public struct CaptureQuality: Hashable, Sendable, Codable, CustomStringConvertible {
+        public let score: Float
+        public let originatingRequestDescriptor: RequestDescriptor?
+        public var description: String { "CaptureQuality \(score)" }
+        public init(score: Float, originatingRequestDescriptor: RequestDescriptor? = nil) {
+            self.score = score
+            self.originatingRequestDescriptor = originatingRequestDescriptor
         }
-        public var allPoints: Region?
     }
+
+    public struct Landmarks2D: Hashable, Sendable, Codable, CustomStringConvertible {
+        public struct Region: Hashable, Sendable, Codable, CustomStringConvertible {
+            public enum PointsClassification: String, Hashable, Sendable, Codable {
+                case closedPath, openPath, disconnected
+            }
+
+            public let points: [NormalizedPoint]
+            public let pointsClassification: PointsClassification
+            public let precisionEstimatesPerPoint: [Float]?
+            public let originatingRequestDescriptor: RequestDescriptor?
+            public var description: String { "Region(\(points.count))" }
+
+            public init(
+                points: [NormalizedPoint],
+                pointsClassification: PointsClassification = .closedPath,
+                precisionEstimatesPerPoint: [Float]? = nil,
+                originatingRequestDescriptor: RequestDescriptor? = nil
+            ) {
+                self.points = points
+                self.pointsClassification = pointsClassification
+                self.precisionEstimatesPerPoint = precisionEstimatesPerPoint
+                self.originatingRequestDescriptor = originatingRequestDescriptor
+            }
+
+            public func pointsInImageCoordinates(_ imageSize: CGSize, origin: CoordinateOrigin = .lowerLeft) -> [CGPoint] {
+                points.map { $0.toImageCoordinates(imageSize, origin: origin) }
+            }
+        }
+
+        public var allPoints: Region
+        public var faceContour: Region
+        public var innerLips: Region
+        public var leftEye: Region
+        public var leftEyebrow: Region
+        public var leftPupil: Region
+        public var medianLine: Region
+        public var nose: Region
+        public var noseCrest: Region
+        public var outerLips: Region
+        public var rightEye: Region
+        public var rightEyebrow: Region
+        public var rightPupil: Region
+        public let originatingRequestDescriptor: RequestDescriptor?
+        public var description: String { "Landmarks2D" }
+
+        public init(
+            allPoints: Region = Region(points: []),
+            faceContour: Region = Region(points: []),
+            innerLips: Region = Region(points: []),
+            leftEye: Region = Region(points: []),
+            leftEyebrow: Region = Region(points: []),
+            leftPupil: Region = Region(points: []),
+            medianLine: Region = Region(points: []),
+            nose: Region = Region(points: []),
+            noseCrest: Region = Region(points: []),
+            outerLips: Region = Region(points: []),
+            rightEye: Region = Region(points: []),
+            rightEyebrow: Region = Region(points: []),
+            rightPupil: Region = Region(points: []),
+            originatingRequestDescriptor: RequestDescriptor? = nil
+        ) {
+            self.allPoints = allPoints
+            self.faceContour = faceContour
+            self.innerLips = innerLips
+            self.leftEye = leftEye
+            self.leftEyebrow = leftEyebrow
+            self.leftPupil = leftPupil
+            self.medianLine = medianLine
+            self.nose = nose
+            self.noseCrest = noseCrest
+            self.outerLips = outerLips
+            self.rightEye = rightEye
+            self.rightEyebrow = rightEyebrow
+            self.rightPupil = rightPupil
+            self.originatingRequestDescriptor = originatingRequestDescriptor
+        }
+    }
+
     public var boundingBox: NormalizedRect
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public var landmarks: Landmarks2D?
+    public var captureQuality: CaptureQuality?
+    public let yaw: Measurement<UnitAngle>
+    public let roll: Measurement<UnitAngle>
+    public let pitch: Measurement<UnitAngle>
     public var description: String { "FaceObservation" }
+
+    public init(boundingBox: NormalizedRect, revision: DetectFaceRectanglesRequest.Revision? = nil) {
+        _ = revision
+        self.boundingBox = boundingBox
+        self.confidence = 1
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.landmarks = nil
+        self.captureQuality = nil
+        self.yaw = Measurement(value: 0, unit: .radians)
+        self.roll = Measurement(value: 0, unit: .radians)
+        self.pitch = Measurement(value: 0, unit: .radians)
+    }
+
+    public init(_ observation: VNFaceObservation) {
+        self.boundingBox = NormalizedRect(normalizedRect: observation.boundingBox)
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        if let landmarks = observation.landmarks {
+            func region(_ source: VNFaceLandmarkRegion2D?) -> Landmarks2D.Region {
+                Landmarks2D.Region(
+                    points: (source?.normalizedPoints ?? []).map { NormalizedPoint(normalizedPoint: $0) },
+                    pointsClassification: {
+                        switch source?.pointsClassification {
+                        case .openPath: return .openPath
+                        case .disconnected: return .disconnected
+                        default: return .closedPath
+                        }
+                    }(),
+                    precisionEstimatesPerPoint: source?.precisionEstimatesPerPoint
+                )
+            }
+            self.landmarks = Landmarks2D(
+                allPoints: region(landmarks.allPoints),
+                faceContour: region(landmarks.faceContour),
+                innerLips: region(landmarks.innerLips),
+                leftEye: region(landmarks.leftEye),
+                leftEyebrow: region(landmarks.leftEyebrow),
+                leftPupil: region(landmarks.leftPupil),
+                medianLine: region(landmarks.medianLine),
+                nose: region(landmarks.nose),
+                noseCrest: region(landmarks.noseCrest),
+                outerLips: region(landmarks.outerLips),
+                rightEye: region(landmarks.rightEye),
+                rightEyebrow: region(landmarks.rightEyebrow),
+                rightPupil: region(landmarks.rightPupil)
+            )
+        } else {
+            self.landmarks = nil
+        }
+        if let quality = observation.faceCaptureQuality {
+            self.captureQuality = CaptureQuality(score: quality.floatValue)
+        } else {
+            self.captureQuality = nil
+        }
+        self.yaw = Measurement(value: observation.yaw?.doubleValue ?? 0, unit: .radians)
+        self.roll = Measurement(value: observation.roll?.doubleValue ?? 0, unit: .radians)
+        self.pitch = Measurement(value: observation.pitch?.doubleValue ?? 0, unit: .radians)
+    }
 }
 
 public struct HumanObservation: VisionObservation, BoundingBoxProviding {
@@ -374,12 +616,39 @@ public struct HumanObservation: VisionObservation, BoundingBoxProviding {
 }
 
 public struct HorizonObservation: VisionObservation {
-    public var angle: Double
+    public var angle: Measurement<UnitAngle>
+    public let transform: CGAffineTransform
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "HorizonObservation" }
+
+    public init(angle: Measurement<UnitAngle>, transform: CGAffineTransform = .identity) {
+        self.angle = angle
+        self.transform = transform
+        self.confidence = 1
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+    }
+
+    public init(_ observation: VNHorizonObservation) {
+        self.angle = Measurement(value: observation.angle, unit: .radians)
+        self.transform = observation.transform
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+    }
+
+    public func transform(for imageSize: CGSize) -> CGAffineTransform {
+        visionHorizonCenteredTransform(
+            angle: angle.value,
+            width: Int(imageSize.width),
+            height: Int(imageSize.height)
+        )
+    }
 }
 
 public struct SmudgeObservation: VisionObservation {
@@ -390,46 +659,391 @@ public struct SmudgeObservation: VisionObservation {
     public var description: String { "SmudgeObservation" }
 }
 
-public struct HumanBodyPoseObservation: VisionObservation {
-    public enum JointName: String, Hashable, Sendable { case nose, neck }
-    public enum JointsGroupName: String, Hashable, Sendable { case all }
+public struct HumanBodyPoseObservation: VisionObservation, PoseProviding {
+    public typealias PoseJointName = JointName
+    public typealias PoseJointsGroupName = JointsGroupName
+
+    public enum JointName: String, Hashable, Sendable, Codable, CaseIterable {
+        case rightAnkle, rightElbow, rightWrist, leftShoulder, rightShoulder
+        case neck, nose, root, leftEar, leftEye, leftHip, leftKnee
+        case rightEar, rightEye, rightHip, leftAnkle, leftElbow, leftWrist, rightKnee
+    }
+
+    public enum JointsGroupName: String, Hashable, Sendable, Codable, CaseIterable {
+        case face, torso, leftArm, leftLeg, rightArm, rightLeg
+    }
+
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let leftHand: HumanHandPoseObservation?
+    public let rightHand: HumanHandPoseObservation?
+    public var joints: [JointName: Joint]
     public var description: String { "HumanBodyPoseObservation" }
+    public var availableJointNames: [JointName] { Array(joints.keys) }
+    public var availableJointsGroupNames: [JointsGroupName] { JointsGroupName.allCases }
+    public var keypoints: MLMultiArray {
+        get throws {
+            throw VisionError.invalidModel("Linux has no Apple pose keypoints array")
+        }
+    }
+
+    public init(joints: [JointName: Joint] = [:], confidence: Float = 1) {
+        self.confidence = confidence
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.leftHand = nil
+        self.rightHand = nil
+        self.joints = joints
+    }
+
+    public init(_ observation: VNHumanBodyPoseObservation) {
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.leftHand = nil
+        self.rightHand = nil
+        var mapped: [JointName: Joint] = [:]
+        for name in JointName.allCases {
+            let vnName = VNHumanBodyPoseObservation.JointName(rawValue: VNRecognizedPointKey(rawValue: overlayBodyKey(name)))
+            if let point = try? observation.recognizedPoint(vnName) {
+                mapped[name] = Joint(
+                    location: NormalizedPoint(x: point.x, y: point.y),
+                    confidence: point.confidence,
+                    jointName: name.rawValue
+                )
+            }
+        }
+        self.joints = mapped
+    }
+
+    public func joint(for jointName: JointName) -> Joint? { joints[jointName] }
+
+    public func allJoints(in groupName: JointsGroupName? = nil) -> [JointName: Joint] {
+        guard let groupName else { return joints }
+        let names: [JointName]
+        switch groupName {
+        case .face: names = [.nose, .leftEye, .rightEye, .leftEar, .rightEar]
+        case .torso: names = [.root, .neck, .leftShoulder, .rightShoulder, .leftHip, .rightHip]
+        case .leftArm: names = [.leftShoulder, .leftElbow, .leftWrist]
+        case .rightArm: names = [.rightShoulder, .rightElbow, .rightWrist]
+        case .leftLeg: names = [.leftHip, .leftKnee, .leftAnkle]
+        case .rightLeg: names = [.rightHip, .rightKnee, .rightAnkle]
+        }
+        return joints.filter { names.contains($0.key) }
+    }
 }
 
-public struct HumanHandPoseObservation: VisionObservation {
-    public enum JointName: String, Hashable, Sendable { case wrist }
-    public enum JointsGroupName: String, Hashable, Sendable { case all }
-    public enum Chirality: String, Hashable, Sendable { case left, right }
+private func overlayBodyKey(_ name: HumanBodyPoseObservation.JointName) -> String {
+    switch name {
+    case .leftAnkle: return VNRecognizedPointKey.bodyLandmarkKeyLeftAnkle.rawValue
+    case .leftEar: return VNRecognizedPointKey.bodyLandmarkKeyLeftEar.rawValue
+    case .leftElbow: return VNRecognizedPointKey.bodyLandmarkKeyLeftElbow.rawValue
+    case .leftEye: return VNRecognizedPointKey.bodyLandmarkKeyLeftEye.rawValue
+    case .leftHip: return VNRecognizedPointKey.bodyLandmarkKeyLeftHip.rawValue
+    case .leftKnee: return VNRecognizedPointKey.bodyLandmarkKeyLeftKnee.rawValue
+    case .leftShoulder: return VNRecognizedPointKey.bodyLandmarkKeyLeftShoulder.rawValue
+    case .leftWrist: return VNRecognizedPointKey.bodyLandmarkKeyLeftWrist.rawValue
+    case .neck: return VNRecognizedPointKey.bodyLandmarkKeyNeck.rawValue
+    case .nose: return VNRecognizedPointKey.bodyLandmarkKeyNose.rawValue
+    case .rightAnkle: return VNRecognizedPointKey.bodyLandmarkKeyRightAnkle.rawValue
+    case .rightEar: return VNRecognizedPointKey.bodyLandmarkKeyRightEar.rawValue
+    case .rightElbow: return VNRecognizedPointKey.bodyLandmarkKeyRightElbow.rawValue
+    case .rightEye: return VNRecognizedPointKey.bodyLandmarkKeyRightEye.rawValue
+    case .rightHip: return VNRecognizedPointKey.bodyLandmarkKeyRightHip.rawValue
+    case .rightKnee: return VNRecognizedPointKey.bodyLandmarkKeyRightKnee.rawValue
+    case .rightShoulder: return VNRecognizedPointKey.bodyLandmarkKeyRightShoulder.rawValue
+    case .rightWrist: return VNRecognizedPointKey.bodyLandmarkKeyRightWrist.rawValue
+    case .root: return VNRecognizedPointKey.bodyLandmarkKeyRoot.rawValue
+    }
+}
+
+public struct HumanHandPoseObservation: VisionObservation, PoseProviding {
+    public typealias PoseJointName = JointName
+    public typealias PoseJointsGroupName = JointsGroupName
+
+    public enum JointName: String, Hashable, Sendable, Codable, CaseIterable {
+        case wrist, ringDIP, ringMCP, ringPIP, ringTip, thumbIP, thumbMP
+        case indexDIP, indexMCP, indexPIP, indexTip, thumbCMC, thumbTip
+        case littleDIP, littleMCP, littlePIP, littleTip
+        case middleDIP, middleMCP, middlePIP, middleTip
+    }
+
+    public enum JointsGroupName: String, Hashable, Sendable, Codable, CaseIterable {
+        case ringFinger, indexFinger, littleFinger, middleFinger, thumb
+    }
+
+    public enum Chirality: String, Hashable, Sendable, Codable {
+        case left, right
+    }
+
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let chirality: Chirality
+    public var joints: [JointName: Joint]
     public var description: String { "HumanHandPoseObservation" }
+    public var availableJointNames: [JointName] { Array(joints.keys) }
+    public var availableJointsGroupNames: [JointsGroupName] { JointsGroupName.allCases }
+    public var keypoints: MLMultiArray {
+        get throws {
+            throw VisionError.invalidModel("Linux has no Apple hand keypoints array")
+        }
+    }
+
+    public init(joints: [JointName: Joint] = [:], chirality: Chirality = .right, confidence: Float = 1) {
+        self.confidence = confidence
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.chirality = chirality
+        self.joints = joints
+    }
+
+    public init(_ observation: VNHumanHandPoseObservation) {
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.chirality = observation.chirality == .left ? .left : .right
+        var mapped: [JointName: Joint] = [:]
+        for name in JointName.allCases {
+            let vn = VNHumanHandPoseObservation.JointName(rawValue: VNRecognizedPointKey(rawValue: "VNHumanHandPoseObservationJointName" + overlayHandSuffix(name)))
+            if let point = try? observation.recognizedPoint(vn) {
+                mapped[name] = Joint(location: NormalizedPoint(x: point.x, y: point.y), confidence: point.confidence, jointName: name.rawValue)
+            }
+        }
+        self.joints = mapped
+    }
+
+    public func joint(for jointName: JointName) -> Joint? { joints[jointName] }
+
+    public func allJoints(in groupName: JointsGroupName? = nil) -> [JointName: Joint] {
+        guard let groupName else { return joints }
+        let names: [JointName]
+        switch groupName {
+        case .thumb: names = [.wrist, .thumbCMC, .thumbMP, .thumbIP, .thumbTip]
+        case .indexFinger: names = [.wrist, .indexMCP, .indexPIP, .indexDIP, .indexTip]
+        case .middleFinger: names = [.wrist, .middleMCP, .middlePIP, .middleDIP, .middleTip]
+        case .ringFinger: names = [.wrist, .ringMCP, .ringPIP, .ringDIP, .ringTip]
+        case .littleFinger: names = [.wrist, .littleMCP, .littlePIP, .littleDIP, .littleTip]
+        }
+        return joints.filter { names.contains($0.key) }
+    }
 }
 
-public struct AnimalBodyPoseObservation: VisionObservation {
-    public enum JointName: String, Hashable, Sendable { case head }
-    public enum JointsGroupName: String, Hashable, Sendable { case all }
+private func overlayHandSuffix(_ name: HumanHandPoseObservation.JointName) -> String {
+    switch name {
+    case .wrist: return "Wrist"
+    case .thumbCMC: return "ThumbCMC"
+    case .thumbMP: return "ThumbMP"
+    case .thumbIP: return "ThumbIP"
+    case .thumbTip: return "ThumbTip"
+    case .indexMCP: return "IndexMCP"
+    case .indexPIP: return "IndexPIP"
+    case .indexDIP: return "IndexDIP"
+    case .indexTip: return "IndexTip"
+    case .middleMCP: return "MiddleMCP"
+    case .middlePIP: return "MiddlePIP"
+    case .middleDIP: return "MiddleDIP"
+    case .middleTip: return "MiddleTip"
+    case .ringMCP: return "RingMCP"
+    case .ringPIP: return "RingPIP"
+    case .ringDIP: return "RingDIP"
+    case .ringTip: return "RingTip"
+    case .littleMCP: return "LittleMCP"
+    case .littlePIP: return "LittlePIP"
+    case .littleDIP: return "LittleDIP"
+    case .littleTip: return "LittleTip"
+    }
+}
+
+public struct AnimalBodyPoseObservation: VisionObservation, PoseProviding {
+    public typealias PoseJointName = JointName
+    public typealias PoseJointsGroupName = JointsGroupName
+
+    public enum JointName: String, Hashable, Sendable, Codable, CaseIterable {
+        case leftEarTop, tailBottom, tailMiddle, leftBackPaw, rightEarTop
+        case leftBackKnee, leftFrontPaw, rightBackPaw, leftBackElbow, leftEarBottom
+        case leftEarMiddle, leftFrontKnee, rightBackKnee, rightFrontPaw, leftFrontElbow
+        case rightBackElbow, rightEarBottom, rightEarMiddle, rightFrontKnee, rightFrontElbow
+        case neck, nose, leftEye, tailTop, rightEye
+    }
+
+    public enum JointsGroupName: String, Hashable, Sendable, Codable, CaseIterable {
+        case head, tail, trunk, forelegs, hindlegs
+    }
+
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public var joints: [JointName: Joint]
     public var description: String { "AnimalBodyPoseObservation" }
+    public var availableJointNames: [JointName] { Array(joints.keys) }
+    public var availableJointsGroupNames: [JointsGroupName] { JointsGroupName.allCases }
+
+    public init(joints: [JointName: Joint] = [:], confidence: Float = 1) {
+        self.confidence = confidence
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.joints = joints
+    }
+
+    public init(_ observation: VNAnimalBodyPoseObservation) {
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        var mapped: [JointName: Joint] = [:]
+        for name in JointName.allCases {
+            let vn = VNAnimalBodyPoseObservation.JointName(
+                rawValue: VNRecognizedPointKey(rawValue: "VNAnimalBodyPoseObservationJointName" + String(name.rawValue.prefix(1)).uppercased() + name.rawValue.dropFirst())
+            )
+            if let point = try? observation.recognizedPoint(vn) {
+                mapped[name] = Joint(location: NormalizedPoint(x: point.x, y: point.y), confidence: point.confidence, jointName: name.rawValue)
+            }
+        }
+        self.joints = mapped
+    }
+
+    public func joint(for jointName: JointName) -> Joint? { joints[jointName] }
+
+    public func allJoints(in groupName: JointsGroupName? = nil) -> [JointName: Joint] {
+        guard let groupName else { return joints }
+        let names: [JointName]
+        switch groupName {
+        case .head:
+            names = [.nose, .neck, .leftEye, .rightEye, .leftEarTop, .leftEarMiddle, .leftEarBottom, .rightEarTop, .rightEarMiddle, .rightEarBottom]
+        case .tail: names = [.tailTop, .tailMiddle, .tailBottom]
+        case .trunk: names = [.neck, .nose]
+        case .forelegs: names = [.leftFrontElbow, .leftFrontKnee, .leftFrontPaw, .rightFrontElbow, .rightFrontKnee, .rightFrontPaw]
+        case .hindlegs: names = [.leftBackElbow, .leftBackKnee, .leftBackPaw, .rightBackElbow, .rightBackKnee, .rightBackPaw]
+        }
+        return joints.filter { names.contains($0.key) }
+    }
 }
 
 public struct HumanBodyPose3DObservation: VisionObservation {
-    public enum JointName: String, Hashable, Sendable { case root }
-    public enum JointsGroupName: String, Hashable, Sendable { case all }
-    public enum EstimationTechnique: String, Hashable, Sendable { case lifted }
+    public enum JointName: String, Hashable, Sendable, Codable, CaseIterable {
+        case centerHead, rightAnkle, rightElbow, rightWrist, leftShoulder, rightShoulder
+        case centerShoulder, root, spine, leftHip, topHead, leftKnee, rightHip
+        case leftAnkle, leftElbow, leftWrist, rightKnee
+    }
+
+    public enum JointsGroupName: String, Hashable, Sendable, Codable, CaseIterable {
+        case head, torso, leftArm, leftLeg, rightArm, rightLeg
+    }
+
+    public enum EstimationTechnique: String, Hashable, Sendable, Codable {
+        case measured, reference
+    }
+
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let bodyHeight: Float
+    public let cameraOriginMatrix: simd_float4x4
+    public let heightEstimationTechnique: EstimationTechnique
+    public var joints: [JointName: Joint3D]
+    public var imagePoints: [JointName: NormalizedPoint]
     public var description: String { "HumanBodyPose3DObservation" }
+    public var availableJointNames: [JointName] { Array(joints.keys) }
+    public var availableJointsGroupNames: [JointsGroupName] { JointsGroupName.allCases }
+
+    public init(
+        joints: [JointName: Joint3D] = [:],
+        imagePoints: [JointName: NormalizedPoint] = [:],
+        bodyHeight: Float = 0,
+        heightEstimationTechnique: EstimationTechnique = .reference
+    ) {
+        self.confidence = 1
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.bodyHeight = bodyHeight
+        self.cameraOriginMatrix = .identity
+        self.heightEstimationTechnique = heightEstimationTechnique
+        self.joints = joints
+        self.imagePoints = imagePoints
+    }
+
+    public init(_ observation: VNHumanBodyPose3DObservation) {
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.bodyHeight = observation.bodyHeight
+        self.cameraOriginMatrix = observation.cameraOriginMatrix
+        self.heightEstimationTechnique = observation.heightEstimation == .measured ? .measured : .reference
+        var mapped: [JointName: Joint3D] = [:]
+        var images: [JointName: NormalizedPoint] = [:]
+        for name in JointName.allCases {
+            let vn = VNHumanBodyPose3DObservation.JointName(
+                rawValue: VNRecognizedPointKey(rawValue: "VNHumanBodyPose3DObservationJointName" + String(name.rawValue.prefix(1)).uppercased() + name.rawValue.dropFirst())
+            )
+            if let point = try? observation.recognizedPoint(vn) {
+                mapped[name] = Joint3D(
+                    position: point.position,
+                    localPosition: point.localPosition,
+                    identifer: name.rawValue,
+                    parentJoint: point.parentJoint.rawValue.rawValue
+                )
+            }
+            if let image = try? observation.pointInImage(vn) {
+                images[name] = NormalizedPoint(x: image.x, y: image.y)
+            }
+        }
+        self.joints = mapped
+        self.imagePoints = images
+    }
+
+    public func joint(for jointName: JointName) -> Joint3D? { joints[jointName] }
+
+    public func allJoints(in groupName: JointsGroupName? = nil) -> [JointName: Joint3D] {
+        guard let groupName else { return joints }
+        let names: [JointName]
+        switch groupName {
+        case .head: names = [.topHead, .centerHead]
+        case .torso: names = [.root, .spine, .centerShoulder, .leftHip, .rightHip]
+        case .leftArm: names = [.leftShoulder, .leftElbow, .leftWrist]
+        case .rightArm: names = [.rightShoulder, .rightElbow, .rightWrist]
+        case .leftLeg: names = [.leftHip, .leftKnee, .leftAnkle]
+        case .rightLeg: names = [.rightHip, .rightKnee, .rightAnkle]
+        }
+        return joints.filter { names.contains($0.key) }
+    }
+
+    public func pointInImage(for jointName: JointName) -> NormalizedPoint? { imagePoints[jointName] }
+
+    public func parentJointName(for jointName: JointName) -> JointName {
+        switch jointName {
+        case .root: return .root
+        case .spine: return .root
+        case .centerShoulder: return .spine
+        case .centerHead, .leftShoulder, .rightShoulder: return .centerShoulder
+        case .topHead: return .centerHead
+        case .leftElbow: return .leftShoulder
+        case .leftWrist: return .leftElbow
+        case .rightElbow: return .rightShoulder
+        case .rightWrist: return .rightElbow
+        case .leftHip, .rightHip: return .root
+        case .leftKnee: return .leftHip
+        case .leftAnkle: return .leftKnee
+        case .rightKnee: return .rightHip
+        case .rightAnkle: return .rightKnee
+        }
+    }
+
+    public func cameraRelativePosition(for jointName: JointName) -> simd_float4x4 {
+        joints[jointName]?.position ?? .identity
+    }
 }
 
 public struct RecognizedObjectObservation: VisionObservation, BoundingBoxProviding {
@@ -451,28 +1065,167 @@ public struct TrajectoryObservation: VisionObservation {
 
 public struct DocumentObservation: VisionObservation {
     public struct Container: Hashable, Sendable {
-        public struct DataDetectorMatch: Hashable, Sendable { public var boundingRegion: NormalizedRegion { ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)) } }
+        public struct DataDetectorMatch: Hashable, Sendable, Codable {
+            public var boundingRegion: NormalizedRegion
+            public var match: DataDetector.Match
+
+            public init(
+                boundingRegion: NormalizedRegion,
+                match: DataDetector.Match
+            ) {
+                self.boundingRegion = boundingRegion
+                self.match = match
+            }
+        }
+
         public struct List: Hashable, Sendable {
-            public enum Marker: String, Hashable, Sendable { case disc }
-            public struct Item: Hashable, Sendable {}
-            public var boundingRegion: NormalizedRegion { ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)) }
+            public enum Marker: String, Hashable, Sendable, Codable, CaseIterable {
+                case lowercaseLatin, uppercaseLatin, compositeDecimal, decorativeDecimal, bullet, hyphen, decimal
+            }
+
+            public struct Item: Hashable, Sendable {
+                public var itemString: String
+                public var markerType: Marker?
+                public var markerString: String
+                public var content: DocumentObservation.Container
+
+                public init(
+                    itemString: String,
+                    markerType: Marker? = nil,
+                    markerString: String = "",
+                    content: DocumentObservation.Container = DocumentObservation.Container()
+                ) {
+                    self.itemString = itemString
+                    self.markerType = markerType
+                    self.markerString = markerString
+                    self.content = content
+                }
+            }
+
+            public var boundingRegion: NormalizedRegion
+            public var items: [Item]
+
+            public init(
+                boundingRegion: NormalizedRegion = ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)),
+                items: [Item] = []
+            ) {
+                self.boundingRegion = boundingRegion
+                self.items = items
+            }
         }
+
         public struct Text: Hashable, Sendable {
-            public enum Alignment: String, Hashable, Sendable { case left, center, right }
-            public var boundingRegion: NormalizedRegion { ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)) }
-            public func boundingRegion(for range: Range<String.Index>) -> NormalizedRegion? { nil }
+            public enum Alignment: String, Hashable, Sendable, Codable {
+                case center, leading, trailing
+            }
+
+            public var transcript: String
+            public var detectedData: [DataDetectorMatch]
+            public var textAlignment: Alignment?
+            public var boundingRegion: NormalizedRegion
+            public var lines: [RecognizedTextObservation]
+            public var words: [RecognizedTextObservation]?
+
+            public init(
+                transcript: String = "",
+                detectedData: [DataDetectorMatch] = [],
+                textAlignment: Alignment? = .leading,
+                boundingRegion: NormalizedRegion = ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)),
+                lines: [RecognizedTextObservation] = [],
+                words: [RecognizedTextObservation]? = nil
+            ) {
+                self.transcript = transcript
+                self.detectedData = detectedData
+                self.textAlignment = textAlignment
+                self.boundingRegion = boundingRegion
+                self.lines = lines
+                self.words = words
+            }
+
+            public func boundingRegion(for range: Range<String.Index>) -> NormalizedRegion? {
+                _ = range
+                return boundingRegion
+            }
         }
+
         public struct Table: Hashable, Sendable {
-            public struct Cell: Hashable, Sendable {}
-            public var boundingRegion: NormalizedRegion { ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)) }
+            public struct Cell: Hashable, Sendable {
+                public var columnRange: ClosedRange<Int>
+                public var rowRange: ClosedRange<Int>
+                public var content: DocumentObservation.Container
+
+                public init(
+                    columnRange: ClosedRange<Int>,
+                    rowRange: ClosedRange<Int>,
+                    content: DocumentObservation.Container = DocumentObservation.Container()
+                ) {
+                    self.columnRange = columnRange
+                    self.rowRange = rowRange
+                    self.content = content
+                }
+            }
+
+            public var boundingRegion: NormalizedRegion
+            public var rows: [[Cell]]
+            public var columns: [[Cell]]
+
+            public init(
+                boundingRegion: NormalizedRegion = ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)),
+                rows: [[Cell]] = [],
+                columns: [[Cell]] = []
+            ) {
+                self.boundingRegion = boundingRegion
+                self.rows = rows
+                self.columns = columns
+            }
+
+            public func cell(row: Int, col: Int) -> Cell? {
+                guard rows.indices.contains(row), rows[row].indices.contains(col) else { return nil }
+                return rows[row][col]
+            }
         }
-        public var boundingRegion: NormalizedRegion { ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)) }
+
+        public var boundingRegion: NormalizedRegion
+        public var paragraphs: [Text]
+        public var text: Text
+        public var lists: [List]
+        public var title: Text?
+        public var tables: [Table]
+        public var barcodes: [BarcodeObservation]
+
+            public init(
+                boundingRegion: NormalizedRegion = ContoursObservation.Contour(points: [], indexPath: IndexPath(index: 0)),
+                text: Text = Text(),
+            paragraphs: [Text] = [],
+            lists: [List] = [],
+            title: Text? = nil,
+            tables: [Table] = [],
+            barcodes: [BarcodeObservation] = []
+        ) {
+            self.boundingRegion = boundingRegion
+            self.text = text
+            self.paragraphs = paragraphs
+            self.lists = lists
+            self.title = title
+            self.tables = tables
+            self.barcodes = barcodes
+        }
     }
+
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
-    public var description: String { "DocumentObservation" }
+    public let document: Container
+    public var description: String { document.text.transcript }
+
+    public init(document: Container, confidence: Float = 1) {
+        self.confidence = confidence
+        self.uuid = UUID()
+        self.timeRange = nil
+        self.originatingRequestDescriptor = nil
+        self.document = document
+    }
 }
 
 public struct DetectedDocumentObservation: VisionObservation {
@@ -674,6 +1427,44 @@ extension GenerateImageFeaturePrintRequest: ImageProcessingRequestBox {
 
 public struct TargetedImageRequestHandler: @unchecked Sendable {}
 
-public protocol PoseProviding {}
-public protocol Joint {}
-public protocol Joint3D {}
+public protocol PoseProviding {
+    associatedtype PoseJointName: Decodable, Encodable, Hashable, RawRepresentable where PoseJointName.RawValue == String
+    associatedtype PoseJointsGroupName: CaseIterable, RawRepresentable where PoseJointsGroupName.RawValue == String
+    var availableJointNames: [PoseJointName] { get }
+    var availableJointsGroupNames: [PoseJointsGroupName] { get }
+    func joint(for jointName: PoseJointName) -> Joint?
+    func allJoints(in groupName: PoseJointsGroupName?) -> [PoseJointName: Joint]
+}
+
+public struct Joint: Hashable, Sendable, Codable, CustomStringConvertible {
+    public let location: NormalizedPoint
+    public let confidence: Float
+    public let jointName: String
+    public var description: String { jointName }
+
+    public init(location: NormalizedPoint, confidence: Float, jointName: String) {
+        self.location = location
+        self.confidence = confidence
+        self.jointName = jointName
+    }
+
+    public func distance(to joint: Joint) -> CGFloat {
+        let dx = location.x - joint.location.x
+        let dy = location.y - joint.location.y
+        return (dx * dx + dy * dy).squareRoot()
+    }
+}
+
+public struct Joint3D: Hashable, Sendable {
+    public let position: simd_float4x4
+    public let localPosition: simd_float4x4
+    public let identifier: String
+    public let parentJoint: String
+
+    public init(position: simd_float4x4, localPosition: simd_float4x4, identifer: String, parentJoint: String) {
+        self.position = position
+        self.localPosition = localPosition
+        self.identifier = identifer
+        self.parentJoint = parentJoint
+    }
+}

@@ -41,6 +41,7 @@ public typealias MTLDrawablePresentedHandler = (any MTLDrawable) -> Void
 public typealias MTLNewLibraryCompletionHandler = ((any MTLLibrary)?, (any Error)?) -> Void
 public typealias MTLNewRenderPipelineStateCompletionHandler = ((any MTLRenderPipelineState)?, (any Error)?) -> Void
 public typealias MTLNewComputePipelineStateCompletionHandler = ((any MTLComputePipelineState)?, (any Error)?) -> Void
+public typealias MTLSharedEventNotificationBlock = (any MTLSharedEvent, UInt64) -> Void
 public typealias MTLCoordinate2D = MTLSamplePosition
 public typealias MTLPackedFloat3 = _MTLPackedFloat3
 public typealias MTLArgumentAccess = MTLBindingAccess
@@ -146,5 +147,43 @@ func metalBytesPerPixel(_ format: MTLPixelFormat) -> Int? {
         return 16
     default:
         return nil
+    }
+}
+
+func metalPixelFormatsAreViewCompatible(_ lhs: MTLPixelFormat, _ rhs: MTLPixelFormat) -> Bool {
+    guard let left = metalBytesPerPixel(lhs), let right = metalBytesPerPixel(rhs) else {
+        return false
+    }
+    return left == right
+}
+
+func metalSliceCount(textureType: MTLTextureType, arrayLength: Int) -> Int {
+    switch textureType {
+    case .typeCube:
+        return 6
+    case .typeCubeArray:
+        return 6 * max(arrayLength, 1)
+    default:
+        return max(arrayLength, 1)
+    }
+}
+
+func metalArgumentEncodedLength(of type: MTLDataType) -> Int {
+    switch type {
+    case .none:
+        return 0
+    case .float, .int, .uint, .bool, .half, .short, .ushort, .char, .uchar,
+         .r8Unorm, .r8Snorm:
+        return 4
+    case .float2, .int2, .uint2, .half2, .short2, .ushort2, .char2, .uchar2,
+         .rg8Unorm, .rg8Snorm, .r16Unorm, .r16Snorm:
+        return 8
+    case .float3, .float4, .int3, .int4, .uint3, .uint4, .half3, .half4,
+         .rgba8Unorm, .rgba8Unorm_srgb, .rgba8Snorm, .rgb10a2Unorm, .rg11b10Float,
+         .rgb9e5Float, .pointer, .texture, .sampler, .renderPipeline,
+         .computePipeline, .indirectCommandBuffer, .long:
+        return 16
+    default:
+        return 16
     }
 }

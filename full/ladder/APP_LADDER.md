@@ -786,11 +786,12 @@ movement can be attributed to supply rather than to a quieter import list.
 
 `dep_class.py`: `import Combine` no longer makes a dep SwiftUI/Combine-bound
 (the Combine product exists, 2026-09-05). SwiftUI still does. Networking-bound
-now uses the **unsupplied** remainder of the URLSession family: guest Foundation
-declares `URLSession` / `URLRequest` / `URLResponse` / `HTTPURLResponse` /
-`URLSessionConfiguration` / `URLCache` / `URLProtocol` / `URLError`;
-`URLSessionDataTask` and `URLComponents` are still absent. Alamofire stays
-networking-bound; Apollo, HAKit, Moya fall through to Foundation-heavy.
+now uses the **unsupplied** remainder of the URLSession family. Guest Foundation
+declares the task types (`URLSessionTask` / `URLSessionDataTask` /
+`URLSessionDownloadTask` / `URLSessionUploadTask`), `URLComponents` /
+`URLQueryItem`, and `URLCredential` / `URLAuthenticationChallenge` /
+`URLProtectionSpace`. Alamofire, Apollo, HAKit, and Moya all fall through to
+Foundation-heavy.
 
 `model_supply.py` first-match bands now include GUEST-ORACLE (guest Foundation
 type **and** a carried Darwin golden), GUEST-FOUNDATION (declared in guest
@@ -913,8 +914,11 @@ twice). Gap **2,312 uses** (was 4,925). Types referenced by ≥ 10 of 20 apps:
 
 ### 8.5 Model-layer demand, re-ranked
 
-Same 20-app demand: **130,883 references**. Supply overlay: 41 guest files /
-128 types; 417 CoreData-owned ledger type-names; 12 package-product types.
+Same 20-app demand: **130,883 references**. Supply overlay on 2026-09-14: 41 guest files /
+128 types. **2026-09-06 overlay** (this branch, same census JSON, new declarations):
+41 files / **147** types. GUEST-ORACLE **5,728 → 6,300** (`URLComponents` 18/572 now
+carries a Darwin golden). GUEST-FOUNDATION **37,513 → 38,722**. ABSENT **2,983 / 2.3 % →
+1,202 / 0.9 %**. Ledger type-names 418; package-product types 12.
 
 | band | uses | share | biggest members (apps/uses) |
 |---|---|---|---|
@@ -949,9 +953,16 @@ CharacterSet 20, NSPredicate 18, NSRegularExpression 18):
 
 `UserDefaults`, `URLSession` (the class), `CharacterSet`, `NSPredicate`,
 `NSRegularExpression`, `IndexSet`, `NSLock`, `NSCache` are **no longer
-ABSENT** — they are declared in guest Foundation. `URLSessionDataTask` and
-`URLComponents` are still ABSENT; that is why Alamofire stays networking-bound
-and why the URLSession *family* is not a completed punch-list item.
+ABSENT** — they are declared in guest Foundation. The 2026-09-06 URLSession
+family landing also moves `URLComponents`, `URLQueryItem`, `URLSessionTask`,
+`URLSessionDataTask`, `URLSessionDownloadTask`, `URLSessionUploadTask`,
+`URLSessionDataDelegate`, `URLCredential`, `URLAuthenticationChallenge`,
+`URLProtectionSpace`, and `NSURLComponents` out of ABSENT (see
+`uikit/docs/agent_reports/foundation-urlsession.md`). Alamofire is no longer
+networking-bound. Remaining ABSENT head: `Thread` 17/652, `Operation` 13/125,
+`NSKeyedArchiver` 12/82, `NSKeyedUnarchiver` 11/87. The ObjC URL-family names
+`NSURLSession` 5/10, `NSURLRequest` 4/6, `NSHTTPURLResponse` 2/2 stay ABSENT
+(no `typealias` for those classes).
 
 ### 8.6 Next rungs — the 6 route-(b) MID apps, top-3 BLOCKING each
 
