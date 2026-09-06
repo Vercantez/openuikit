@@ -347,6 +347,19 @@ PORTED_PRODUCTS = {
     "Onboarding": "Onboarding",
     "Licenses": "Licenses",
     "DesignSystem": "DesignSystem",
+    "SnapKit": "SnapKit",
+    "WebKit": "WebKit",
+    "Sentry": "Sentry",
+    "Fuzi": "Fuzi",
+    "FocusAppServices": "FocusAppServices",
+    "UIHelpers": "UIHelpers",
+    "UIComponents": "UIComponents",
+    "AppShortcuts": "AppShortcuts",
+    "LocalAuthentication": "LocalAuthentication",
+    "PassKit": "PassKit",
+    "Network": "Network",
+    "SafariServices": "SafariServices",
+    "StoreKit": "StoreKit",
 }
 
 # Toolchain modules that exist on Linux Swift without an OpenUIKit product.
@@ -1084,10 +1097,16 @@ def is_test_path(path: str) -> bool:
 def classify_module(name: str) -> dict[str, Any]:
     """Return {name, class, port, kind} for an import or package product."""
     if name in PORTED_PRODUCTS:
+        if name in LADDER_DEP_CLASS:
+            cls = LADDER_DEP_CLASS[name]
+        elif name in {"Foundation", "Dispatch", "Combine", "os"}:
+            cls = "Foundation-heavy"
+        else:
+            cls = "UIKit-bound"
         return {
             "name": name,
             "kind": "apple_framework",
-            "class": "UIKit-bound" if name not in {"Foundation", "Dispatch", "Combine", "os"} else "Foundation-heavy",
+            "class": cls,
             "port": PORTED_PRODUCTS[name],
         }
     if name in TOOLCHAIN_MODULES:
@@ -1404,19 +1423,22 @@ def build_manifest(
         if pkg.get("tools_version"):
             row["tools_version"] = pkg["tools_version"]
         if pkg.get("origin") == "local":
-            # Copied to LocalPackages/ for inspection. Not rewritten onto
-            # OpenUIKit products (Hackers' local packages are swift-tools-version
-            # 6.4 / iOS 26 — Linux Swift 6.2 cannot load them; Focus's
-            # BlockzillaPackage is 5.5 but its targets `import UIKit` from the
-            # toolchain, not the OpenUIKit product).
-            row["port"] = None
-            row["reason"] = (
-                f"local Swift package {pkg.get('package_name') or pkg['name']} "
-                f"at {pkg.get('relative_path')} (swift-tools-version "
-                f"{pkg.get('tools_version') or 'unknown'}); copied next to the "
-                "generated package, not linked — the port does not rewrite "
-                "third-party Package.swift onto OpenUIKit products"
-            )
+            if pkg["name"] in PORTED_PRODUCTS:
+                # Focus BlockzillaPackage products now exist on OpenUIKit
+                # (UIHelpers / DesignSystem / Onboarding / …). Link them.
+                row["port"] = PORTED_PRODUCTS[pkg["name"]]
+            else:
+                # Copied to LocalPackages/ for inspection. Not rewritten onto
+                # OpenUIKit products (Hackers' local packages are swift-tools-version
+                # 6.4 / iOS 26 — Linux Swift 6.2 cannot load them).
+                row["port"] = None
+                row["reason"] = (
+                    f"local Swift package {pkg.get('package_name') or pkg['name']} "
+                    f"at {pkg.get('relative_path')} (swift-tools-version "
+                    f"{pkg.get('tools_version') or 'unknown'}); copied next to the "
+                    "generated package, not linked — the port does not rewrite "
+                    "third-party Package.swift onto OpenUIKit products"
+                )
         spm_rows.append(row)
 
     framework_rows = []
@@ -1570,6 +1592,19 @@ def emit_package_swift(
         '                .product(name: "Onboarding", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Licenses", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "DesignSystem", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "SnapKit", package: "OpenUIKit")',
+        '                .product(name: "WebKit", package: "OpenUIKit")',
+        '                .product(name: "Sentry", package: "OpenUIKit")',
+        '                .product(name: "Fuzi", package: "OpenUIKit")',
+        '                .product(name: "FocusAppServices", package: "OpenUIKit")',
+        '                .product(name: "UIHelpers", package: "OpenUIKit")',
+        '                .product(name: "UIComponents", package: "OpenUIKit")',
+        '                .product(name: "AppShortcuts", package: "OpenUIKit")',
+        '                .product(name: "LocalAuthentication", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "PassKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "Network", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
+        '                .product(name: "StoreKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
     ]
     resources_block = ""
     if any(manifest["resources"].values()):

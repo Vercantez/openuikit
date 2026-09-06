@@ -110,13 +110,13 @@ class MiniAppFixtureTests(unittest.TestCase):
         self.assertEqual(info["display_name"], "Mini App")
         self.assertEqual(info["keys"]["CFBundleName"], "MiniApp")
 
-    def test_snapkit_is_uikit_bound_and_webkit_has_no_port(self) -> None:
+    def test_snapkit_and_webkit_are_ported_products(self) -> None:
         spm = {row["name"]: row for row in self.manifest["spm"]}
         self.assertEqual(spm["SnapKit"]["class"], "UIKit-bound")
-        self.assertIsNone(spm["SnapKit"]["port"])
+        self.assertEqual(spm["SnapKit"]["port"], "SnapKit")
         no_port = {row["name"] for row in self.manifest["no_port"]}
-        self.assertIn("SnapKit", no_port)
-        self.assertIn("WebKit", no_port)
+        self.assertNotIn("SnapKit", no_port)
+        self.assertNotIn("WebKit", no_port)
         self.assertNotIn("UIKit", no_port)
         self.assertNotIn("Foundation", no_port)
         self.assertNotIn("Combine", no_port)
@@ -249,9 +249,8 @@ class FocusBlockzillaTests(unittest.TestCase):
         by_name = {row["name"]: row for row in self.manifest["spm"]}
         self.assertEqual(by_name["SnapKit"]["class"], "UIKit-bound")
         self.assertEqual(by_name["Sentry"]["class"], "ObjC")
-        # Fuzi was not one of the 30 deps the ladder classified.
-        self.assertEqual(by_name["Fuzi"]["class"], "unmeasured")
-        self.assertIsNone(by_name["SnapKit"]["port"])
+        self.assertEqual(by_name["Fuzi"]["class"], "UIKit-bound")
+        self.assertEqual(by_name["SnapKit"]["port"], "SnapKit")
         self.assertEqual(by_name["DesignSystem"]["origin"], "local")
         self.assertEqual(by_name["DesignSystem"]["relative_path"], "BlockzillaPackage")
         self.assertEqual(by_name["UIHelpers"]["package_name"], "Focus")
@@ -263,9 +262,11 @@ class FocusBlockzillaTests(unittest.TestCase):
         self.assertNotIn("ObjC sources", kinds)
         self.assertEqual(self.manifest["counts"]["objc_sources"], 0)
 
-    def test_webkit_import_has_no_port(self) -> None:
+    def test_webkit_snapkit_sentry_are_ported(self) -> None:
         names = {row["name"] for row in self.manifest["no_port"]}
-        self.assertTrue({"WebKit", "SnapKit", "Sentry"} & names)
+        self.assertNotIn("WebKit", names)
+        self.assertNotIn("SnapKit", names)
+        self.assertNotIn("Sentry", names)
 
 
 @unittest.skipUnless(_corpus_available(), f"ladder corpus missing at {CORPUS}")

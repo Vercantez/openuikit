@@ -203,7 +203,7 @@ open class UINavigationController: UIViewController {
         rootViewController.didMove(toParent: self)
     }
 
-    public override init() {
+    public init() {
         super.init()
     }
 

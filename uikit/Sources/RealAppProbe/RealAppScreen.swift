@@ -85,9 +85,12 @@ public enum RealAppScreen {
         /// wrapped in a UINavigationController as BrowserViewController
         /// `showSettings` does.
         case focusSettings
-        /// mozilla-mobile/focus-ios Blockzilla/HomeViewController.swift at
-        /// a2832521 — the browser-home overlay (wordmark + tips).
+        /// mozilla-mobile/focus-ios HomeViewController at a2832521 —
+        /// the overlay BrowserViewController.createHomeView installs.
         case focusHome
+        /// mozilla-mobile/focus-ios Blockzilla AppDelegate at a2832521 —
+        /// first screen (URL bar + home) via UIApplicationMain.
+        case focusBrowser
         /// weiran/Hackers Features/Feed FeedView.swift at 83016de — the
         /// main post list, wrapped in a UINavigationController as the app's
         /// NavigationStack chrome.
@@ -149,6 +152,9 @@ public enum RealAppScreen {
     // Guest glob is RealAppProbe/*.swift (LedgerStore / List / Screens).
     // The 14th is Focus home last (focus-e2e): a guest 2x ink miss on home
     // must not drop the screens before it.
+    /// Fourteen screens plus Focus browser last (this branch). Guest
+    /// scale-2 / Linux corelibs omit the browser row (`canImport(Blockzilla)`
+    /// is false there) so a miss cannot drop the 14.
     public static let screens: [Screen] = [
         Screen(name: "realapp_history_light", variant: .listeningHistory,
                theme: .light, style: .light, contentSizeCategory: .large,
@@ -188,7 +194,7 @@ public enum RealAppScreen {
         Screen(name: "realapp_storage_light_ipad", variant: .storage,
                theme: .light, style: .light, contentSizeCategory: .large,
                presentsSheet: false, idiom: .pad),
-    ] + focusScreenTable + hackersScreenTable + ledgerScreenTable + focusHomeTable
+    ] + focusScreenTable + hackersScreenTable + ledgerScreenTable + focusHomeTable + focusBrowserTable
 
     static func makeListeningHistoryPicker(theme: Theme.ThemeType) -> OptionsPicker {
         Theme.sharedTheme.activeTheme = theme
@@ -272,6 +278,8 @@ public enum RealAppScreen {
             return makeFocusSettingsScreen()
         case .focusHome:
             return makeFocusHomeScreen()
+        case .focusBrowser:
+            return makeFocusBrowserScreen()
         case .hackersFeed:
             return makeHackersFeedScreen()
         case .ledger:
