@@ -1,0 +1,31 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave16-repair-7",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "storekit": {
+      "agentId": "bc-4731d98d-2982-5580-b3d4-50419c41c0a8",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T11:55:15Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/279",
+      "expectedPriorHead": "769cec94888e553d0d577abe27a2055033a1e0d5",
+      "idempotencyKey": "9b5de9bb-ac96-5c26-836f-18c88a43c150",
+      "launchStatus": "SENT",
+      "module": "StoreKit",
+      "promptBytes": 1399,
+      "promptSha256": "683b5f7f2284ccdf5f21f2d2ae478d7d4476a3b5057d1ab75edf48afa7175be9",
+      "runId": "run-af668f39-2368-4abe-a998-8b557bc050c6",
+      "runStatus": "running",
+      "slug": "storekit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

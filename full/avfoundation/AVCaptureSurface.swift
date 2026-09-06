@@ -923,7 +923,7 @@ open class AVCaptureOutput: NSObject, @unchecked Sendable {
 
 open class AVCapturePhoto: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public var timestamp: CMTime { .zero }
+  public var timestamp: CMTime { .invalid }
   public var isRawPhoto: Bool { false }
   public var pixelBuffer: CVPixelBuffer? { nil }
   public var previewPixelBuffer: CVPixelBuffer? { nil }
@@ -1012,6 +1012,29 @@ public protocol AVCapturePhotoFileDataRepresentationCustomizer : AnyObject {
   func replacementPortraitEffectsMatte(for photo: AVCapturePhoto) -> AVPortraitEffectsMatte?
   func replacementSemanticSegmentationMatte(ofType semanticSegmentationMatteType: AVSemanticSegmentationMatte.MatteType, for photo: AVCapturePhoto) -> AVSemanticSegmentationMatte?
   func replacementAppleProRAWCompressionSettings(for photo: AVCapturePhoto, defaultSettings: [String : Any], maximumBitDepth: Int) -> [String : Any]
+}
+
+extension AVCapturePhotoFileDataRepresentationCustomizer {
+  public func replacementMetadata(for photo: AVCapturePhoto) -> [String : Any]? {
+    _ = photo
+    return nil
+  }
+  public func replacementDepthData(for photo: AVCapturePhoto) -> AVDepthData? {
+    _ = photo
+    return nil
+  }
+  public func replacementPortraitEffectsMatte(for photo: AVCapturePhoto) -> AVPortraitEffectsMatte? {
+    _ = photo
+    return nil
+  }
+  public func replacementSemanticSegmentationMatte(ofType semanticSegmentationMatteType: AVSemanticSegmentationMatte.MatteType, for photo: AVCapturePhoto) -> AVSemanticSegmentationMatte? {
+    _ = (semanticSegmentationMatteType, photo)
+    return nil
+  }
+  public func replacementAppleProRAWCompressionSettings(for photo: AVCapturePhoto, defaultSettings: [String : Any], maximumBitDepth: Int) -> [String : Any] {
+    _ = (photo, maximumBitDepth)
+    return defaultSettings
+  }
 }
 
 open class AVCapturePhotoOutput: AVCaptureOutput, @unchecked Sendable {
@@ -1559,6 +1582,11 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   private var storedConfiguresBluetoothHQ = false
   private var storedAutomaticallyConfiguresWideColor = true
   private var storedMultitaskingCameraAccessEnabled = false
+  private var storedAutomaticallyRunsDeferredStart = false
+  weak var storedControlsDelegate: (any AVCaptureSessionControlsDelegate)?
+  var storedControlsDelegateQueue: DispatchQueue?
+  weak var storedDeferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)?
+  var storedDeferredStartDelegateQueue: DispatchQueue?
   public func canSetSessionPreset(_ preset: AVCaptureSession.Preset) -> Bool {
     _ = preset
     return false
@@ -1589,11 +1617,17 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   public func removeConnection(_ connection: AVCaptureConnection) { _ = connection }
   public var supportsControls: Bool { false }
   public var maxControlsCount: Int { 0 }
-  public func setControlsDelegate(_ controlsDelegate: (any AVCaptureSessionControlsDelegate)?, queue controlsDelegateCallbackQueue: DispatchQueue?) {}
-  public var controlsDelegate: (any AVCaptureSessionControlsDelegate)? { nil }
-  public var controlsDelegateCallbackQueue: DispatchQueue? { nil }
+  public func setControlsDelegate(_ controlsDelegate: (any AVCaptureSessionControlsDelegate)?, queue controlsDelegateCallbackQueue: DispatchQueue?) {
+    storedControlsDelegate = controlsDelegate
+    storedControlsDelegateQueue = controlsDelegateCallbackQueue
+  }
+  public var controlsDelegate: (any AVCaptureSessionControlsDelegate)? { storedControlsDelegate }
+  public var controlsDelegateCallbackQueue: DispatchQueue? { storedControlsDelegateQueue }
   public var controls: [AVCaptureControl] { [] }
-  public func canAddControl(_ control: AVCaptureControl) -> Bool { false }
+  public func canAddControl(_ control: AVCaptureControl) -> Bool {
+    _ = control
+    return false
+  }
   public func addControl(_ control: AVCaptureControl) { _ = control }
   public func removeControl(_ control: AVCaptureControl) { _ = control }
   public func beginConfiguration() {}
@@ -1633,13 +1667,16 @@ open class AVCaptureSession: NSObject, @unchecked Sendable {
   public var hardwareCost: Float { 0 }
   public var isManualDeferredStartSupported: Bool { false }
   public var automaticallyRunsDeferredStart: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAutomaticallyRunsDeferredStart }
+      set { storedAutomaticallyRunsDeferredStart = newValue }
     }
   public func runDeferredStartWhenNeeded() {}
-  public var deferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)? { nil }
-  public var deferredStartDelegateCallbackQueue: DispatchQueue? { nil }
-  public func setDeferredStartDelegate(_ deferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)?, deferredStartDelegateCallbackQueue: DispatchQueue?) {}
+  public var deferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)? { storedDeferredStartDelegate }
+  public var deferredStartDelegateCallbackQueue: DispatchQueue? { storedDeferredStartDelegateQueue }
+  public func setDeferredStartDelegate(_ deferredStartDelegate: (any AVCaptureSessionDeferredStartDelegate)?, deferredStartDelegateCallbackQueue: DispatchQueue?) {
+    storedDeferredStartDelegate = deferredStartDelegate
+    storedDeferredStartDelegateQueue = deferredStartDelegateCallbackQueue
+  }
   public static let runtimeErrorNotification: Notification.Name = Notification.Name("AVCaptureSessionRuntimeErrorNotification")
   public static let didStartRunningNotification: Notification.Name = Notification.Name("AVCaptureSessionDidStartRunningNotification")
   public static let didStopRunningNotification: Notification.Name = Notification.Name("AVCaptureSessionDidStopRunningNotification")
@@ -1856,40 +1893,66 @@ public protocol AVCaptureTimecodeGeneratorDelegate : AnyObject {
 
 open class AVCaptureVideoDataOutput: AVCaptureOutput, @unchecked Sendable {
   public override init() { super.init() }
+  private var storedVideoSettings: [String : Any] = [:]
+  private var storedAlwaysDiscardsLateVideoFrames = true
+  private var storedAutomaticallyConfiguresOutputBufferDimensions = true
+  private var storedDeliversPreviewSizedOutputBuffers = false
+  private var storedPreparesCellularRadioForNetworkConnection = false
+  private var storedPreservesDynamicHDRMetadata = false
+  weak var storedSampleBufferDelegate: (any AVCaptureVideoDataOutputSampleBufferDelegate)?
+  var storedSampleBufferCallbackQueue: DispatchQueue?
   public var availableVideoPixelFormatTypes: [OSType] { [] }
-  public func setSampleBufferDelegate(_ sampleBufferDelegate: (any AVCaptureVideoDataOutputSampleBufferDelegate)?, queue sampleBufferCallbackQueue: DispatchQueue?) {}
-  public var sampleBufferDelegate: (any AVCaptureVideoDataOutputSampleBufferDelegate)? { nil }
-  public var sampleBufferCallbackQueue: DispatchQueue? { nil }
+  public func setSampleBufferDelegate(_ sampleBufferDelegate: (any AVCaptureVideoDataOutputSampleBufferDelegate)?, queue sampleBufferCallbackQueue: DispatchQueue?) {
+    storedSampleBufferDelegate = sampleBufferDelegate
+    storedSampleBufferCallbackQueue = sampleBufferCallbackQueue
+  }
+  public var sampleBufferDelegate: (any AVCaptureVideoDataOutputSampleBufferDelegate)? { storedSampleBufferDelegate }
+  public var sampleBufferCallbackQueue: DispatchQueue? { storedSampleBufferCallbackQueue }
   public var videoSettings: [String : Any]! {
-      get { [:] }
-      set { _ = newValue }
+      get { storedVideoSettings }
+      set { storedVideoSettings = newValue ?? [:] }
     }
-  public func recommendedVideoSettingsForAssetWriter(writingTo outputFileType: AVFileType) -> [String : Any]? { nil }
-  public func availableVideoCodecTypesForAssetWriter(writingTo outputFileType: AVFileType) -> [AVVideoCodecType] { [] }
-  public func recommendedVideoSettings(forVideoCodecType videoCodecType: AVVideoCodecType, assetWriterOutputFileType outputFileType: AVFileType) -> [String : Any]? { nil }
-  public func recommendedVideoSettings(forVideoCodecType videoCodecType: AVVideoCodecType, assetWriterOutputFileType outputFileType: AVFileType, outputFileURL: URL?) -> [String : Any]? { nil }
-  public func recommendedMovieMetadata(forVideoCodecType videoCodecType: AVVideoCodecType, assetWriterOutputFileType outputFileType: AVFileType) -> [AVMetadataItem]? { nil }
+  public func recommendedVideoSettingsForAssetWriter(writingTo outputFileType: AVFileType) -> [String : Any]? {
+    _ = outputFileType
+    return nil
+  }
+  public func availableVideoCodecTypesForAssetWriter(writingTo outputFileType: AVFileType) -> [AVVideoCodecType] {
+    _ = outputFileType
+    return []
+  }
+  public func recommendedVideoSettings(forVideoCodecType videoCodecType: AVVideoCodecType, assetWriterOutputFileType outputFileType: AVFileType) -> [String : Any]? {
+    _ = (videoCodecType, outputFileType)
+    return nil
+  }
+  public func recommendedVideoSettings(forVideoCodecType videoCodecType: AVVideoCodecType, assetWriterOutputFileType outputFileType: AVFileType, outputFileURL: URL?) -> [String : Any]? {
+    _ = (videoCodecType, outputFileType, outputFileURL)
+    return nil
+  }
+  public func recommendedMovieMetadata(forVideoCodecType videoCodecType: AVVideoCodecType, assetWriterOutputFileType outputFileType: AVFileType) -> [AVMetadataItem]? {
+    _ = (videoCodecType, outputFileType)
+    return nil
+  }
   public var recommendedMediaTimeScaleForAssetWriter: CMTimeScale { 0 }
   public var availableVideoCodecTypes: [AVVideoCodecType] { [] }
   public var alwaysDiscardsLateVideoFrames: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAlwaysDiscardsLateVideoFrames }
+      set { storedAlwaysDiscardsLateVideoFrames = newValue }
     }
   public var automaticallyConfiguresOutputBufferDimensions: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedAutomaticallyConfiguresOutputBufferDimensions }
+      set { storedAutomaticallyConfiguresOutputBufferDimensions = newValue }
     }
   public var deliversPreviewSizedOutputBuffers: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedDeliversPreviewSizedOutputBuffers }
+      set { storedDeliversPreviewSizedOutputBuffers = newValue }
     }
   public var preparesCellularRadioForNetworkConnection: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedPreparesCellularRadioForNetworkConnection }
+      set { storedPreparesCellularRadioForNetworkConnection = newValue }
     }
   public var preservesDynamicHDRMetadata: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedPreservesDynamicHDRMetadata }
+      set { storedPreservesDynamicHDRMetadata = newValue }
     }
 }
 

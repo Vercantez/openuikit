@@ -86,3 +86,51 @@ crop/transform/composite/`applyingFilter`, CIContext working-space
 `createCGImage` / PNG / JPEG, named-filter keys and attributes, per-filter
 pixel formulas, ISO 18004 QR data codewords, Code 128, and
 CIKernel / CIDetector fail-closed paths.
+
+## Depth pass 2026-09 (wave 8)
+
+Third SDK-depth pass on `cursor/port-coreimage-to-linux-83c8`. Kept the
+existing CPU pipeline and pass-2 tests green, then implemented real
+behaviour for the remaining declared families (CIImage sampling/Lab/
+premultiply, CIRAWFilter property state, feature geometry, render
+destination/info, XMP, processor-kernel ROI defaults) instead of
+relabelling them.
+
+| | before (wave 8) | after (wave 8) |
+|---|---|---|
+| `implemented` | 621 | 765 |
+| `declared` | 144 | 0 |
+| `deferred` | 0 | 0 |
+| `unavailable` | 90 | 90 |
+| `not-applicable` | 0 | 0 |
+| nondeferred | 765 | 765 |
+
+Top-5 `implemented` evidence distribution after this pass (table-driven
+C-constant / option-set / enum tests may share a value test; no other
+single test exceeds 40% of implemented rows):
+
+| citations | test |
+|---|---|
+| 172 | `testCIAllOptionStatics` (option-set / format members) |
+| 133 | `testCIAllStringConstants` (C `kCI*` / detector keys) |
+| 44 | `testCIRAWFilterPropertyStateMachine` |
+| 37 | `testCIFormatConstants` |
+| 28 | `testCIEnums` |
+
+New behavioural coverage: premultiply/unpremultiply and settingAlphaOne
+pixel math, bilinear vs nearest sampling, CIE Lab round-trip and sRGB↔linear
+matching, EXIF orientation matrices, CIRAWFilter 0…1 amount clamping with
+fail-closed decode, feature corner geometry, CIFilter XMP name/key
+round-trip (Linux-local schema), CIWarpKernel ROI callback invocation,
+and CIImageProcessorKernel identity ROI / RGBA8 format defaults. HEIF /
+TIFF / OpenEXR writers, RAW URL/data initializers, Metal/IOSurface/
+CVPixelBuffer/AVDepth constructors, and `CIImageProcessorInput`/`Output`
+stay unavailable with a hardware/daemon reason per row.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift
+6.2.4 / linux and the sealed gate compiles with a clean product tree
+(`products=clean`). Starting commit
+`6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.

@@ -12,6 +12,8 @@ import protocol Foundation.NSCopying
 import class Foundation.NSObject
 import protocol Foundation.NSSecureCoding
 import struct Foundation.NSZone
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 #if canImport(CoreGraphics)

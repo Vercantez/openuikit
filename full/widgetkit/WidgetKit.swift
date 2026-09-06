@@ -481,7 +481,7 @@ public struct WidgetInfo: Hashable, Identifiable, @unchecked Sendable,
 
     public func widgetConfigurationIntent<Intent>(of intentType: Intent.Type) -> Intent? {
         _ = intentType
-        return nil
+        return configuration as? Intent
     }
 
     public static func == (lhs: WidgetInfo, rhs: WidgetInfo) -> Bool {
@@ -520,12 +520,14 @@ private final class _WidgetCenterStorage: @unchecked Sendable {
     var requests: [WidgetReloadRequest] = []
     var nextSequence: UInt64 = 1
     var recommendationInvalidations: UInt64 = 0
+    var pushInfo: WidgetPushInfo?
 
     func reset() {
         configurations = []
         requests = []
         nextSequence = 1
         recommendationInvalidations = 0
+        pushInfo = nil
     }
 }
 
@@ -569,7 +571,7 @@ public final class WidgetCenter: @unchecked Sendable {
     }
 
     public var currentPushInfo: WidgetPushInfo? {
-        get async { nil }
+        get async { portableCurrentPushInfo }
     }
 
     public func getCurrentConfigurations(
@@ -630,7 +632,26 @@ public final class WidgetCenter: @unchecked Sendable {
     }
 
     @_spi(OpenUIKitHost)
-    public var portableCurrentPushInfo: WidgetPushInfo? { nil }
+    public var portableCurrentPushInfo: WidgetPushInfo? {
+        storage.lock.lock()
+        let info = storage.pushInfo
+        storage.lock.unlock()
+        return info
+    }
+
+    /// Delivers a process-local push token to `handler`. Linux has no `apsd`;
+    /// this never claims an Apple push token was accepted.
+    @_spi(OpenUIKitHost)
+    public func deliverPushToken(
+        _ pushInfo: WidgetPushInfo,
+        to handler: any WidgetPushHandler
+    ) {
+        storage.lock.lock()
+        storage.pushInfo = pushInfo
+        let widgets = storage.configurations
+        storage.lock.unlock()
+        handler.pushTokenDidChange(pushInfo, widgets: widgets)
+    }
 
     private func currentConfigurationsSnapshot() -> [WidgetInfo] {
         storage.lock.lock()
@@ -1316,8 +1337,8 @@ public extension EnvironmentValues {
     }
 
     var supportedActivityFamilies: Set<ActivityFamily> {
-        get { self[_SupportedActivityFamiliesEnvironmentKey.self] }
-        set { self[_SupportedActivityFamiliesEnvironmentKey.self] = newValue }
+        get { self[SupportedActivityFamiliesEnvironmentKey.self] }
+        set { self[SupportedActivityFamiliesEnvironmentKey.self] = newValue }
     }
 }
 
@@ -1343,10 +1364,6 @@ private enum _LevelOfDetailEnvironmentKey: EnvironmentKey {
 
 private enum _ActivityFamilyEnvironmentKey: EnvironmentKey {
     static let defaultValue = ActivityFamily.small
-}
-
-private enum _SupportedActivityFamiliesEnvironmentKey: EnvironmentKey {
-    static let defaultValue = Set<ActivityFamily>()
 }
 
 /// Host-visible chrome applied by WidgetKit `View` modifiers. Linux does not

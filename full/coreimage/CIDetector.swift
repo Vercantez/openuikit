@@ -57,6 +57,10 @@ public class CITextFeature: CIFeature, @unchecked Sendable {
 
     public init(bounds: CGRect = .zero) {
         super.init(bounds: bounds, type: CIFeatureTypeText)
+        topLeft = CGPoint(x: bounds.minX, y: bounds.maxY)
+        topRight = CGPoint(x: bounds.maxX, y: bounds.maxY)
+        bottomLeft = CGPoint(x: bounds.minX, y: bounds.minY)
+        bottomRight = CGPoint(x: bounds.maxX, y: bounds.minY)
     }
 }
 
@@ -72,6 +76,10 @@ public class CIQRCodeFeature: CIFeature, NSSecureCoding, @unchecked Sendable {
 
     public init(bounds: CGRect = .zero) {
         super.init(bounds: bounds, type: CIFeatureTypeQRCode)
+        topLeft = CGPoint(x: bounds.minX, y: bounds.maxY)
+        topRight = CGPoint(x: bounds.maxX, y: bounds.maxY)
+        bottomLeft = CGPoint(x: bounds.minX, y: bounds.minY)
+        bottomRight = CGPoint(x: bounds.maxX, y: bounds.minY)
     }
 
     public required init?(coder: NSCoder) {

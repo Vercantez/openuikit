@@ -103,68 +103,58 @@ defaults remain deferred or listed in `oracle-questions.tsv`.
 
 ## Depth pass 2026-09 (wave 8)
 
-Second pass on the existing Linux starting point. The first-pass surface
-and tests stay; this pass adds a fail-closed controller runtime and the
-largest unimplemented cluster families.
+Next pass on the existing Linux starting point. Earlier passes and their
+tests stay green; this pass extends fail-closed cluster I/O and the
+in-memory `MTRCluster*` expected-value cache.
 
-**Coverage before:** 11913 implemented / 1039 declared / 15470 deferred / 40 unavailable / 0 not-applicable
+**Coverage before:** 15645 implemented / 854 declared / 11923 deferred / 40 unavailable / 0 not-applicable
 
-**Coverage after:** 15645 implemented / 854 declared / 11923 deferred / 40 unavailable / 0 not-applicable
-(+3732 implemented; 16499 nondeferred; floor 150).
+**Coverage after:** 19372 implemented / 834 declared / 8216 deferred / 40 unavailable / 0 not-applicable
+(+3727 implemented; 20206 nondeferred; floor 150).
 
 **Top-5 implemented evidence distribution**
 
 | rows | share | evidence |
 | ---: | ---: | --- |
-| 3788 | 24.2% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
-| 3212 | 20.5% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
-| 2541 | 16.2% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
-| 906 | 5.8% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
-| 906 | 5.8% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
+| 3788 | 19.6% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
+| 3212 | 16.6% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2541 | 13.1% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 4.7% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 4.7% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
 
-Largest new family tests: cluster Params/Response/Event/Struct value
-types (split per family; see evidence repair below),
-`MTRBaseClusterElectricalMeasurement` fail-closed I/O (read/subscribe/command),
-Thread Network Diagnostics, UnitTesting cache reads, Thermostat,
-ColorControl, DoorLock.
+Largest new families this pass: OccupancySensing, FanControl, BarrierControl,
+MediaPlayback, OnOff, WiFiNetworkDiagnostics, BinaryInputBasic,
+NetworkCommissioning (full `MTRBaseCluster*` completion I/O + `MTRCluster*`
+cache), plus class-func attribute-cache readers and remaining instance writes
+on ElectricalMeasurement, TestCluster/UnitTesting, Thermostat, ColorControl,
+DoorLock, ThreadNetworkDiagnostics, and `MTRClusterThermostat` /
+`MTRClusterDoorLock` / `MTRClusterColorControl` device-cache read/write.
 
 ### Evidence repair (merge refusal at 08c2f15c)
 
-The checked merge refused `testClusterParamsInitCodingDescription` as
-evidence concentration (899 of 4659 remaining implemented rows). This
-repair keeps the same implemented count and splits that bulk citation:
+The earlier checked merge refused `testClusterParamsInitCodingDescription` as
+evidence concentration (899 of 4659 remaining implemented rows). That repair
+is kept: Params/Response/Event/Struct rows still cite per-family tests.
 
-- Params/Response/Event/Struct rows now cite a **per-family** test
-  (`testColorControlParams`, `testDoorLockParamsGroup1`/`Group2`,
-  `testUnitTestingParamsGroup1`/`Group2`, …). Each test inits the type,
-  writes and reads every stored field, checks `description`, and calls
-  `init(responseValue:)` where the graph has it.
-- `MTRBaseClusterElectricalMeasurement` fail-closed I/O is split into
-  read / subscribe / command tests so it is no longer a 541-row blob.
-
-**Coverage after repair:** 15645 implemented / 854 declared / 11923 deferred / 40 unavailable / 0 not-applicable
-(implemented count unchanged; 16499 nondeferred).
-
-**Top remaining (non table-driven) evidence** — 4292 rows after excluding
-enum/option-set/C-constant table tests; largest share 6.5% (cap 40%):
+**Top remaining (non table-driven) evidence** — 8019 rows after excluding
+enum/option-set/C-constant table tests; largest share 3.5% (cap 40%):
 
 | rows | share | evidence |
 | ---: | ---: | --- |
-| 277 | 6.5% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
-| 266 | 6.2% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
-| 266 | 6.2% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
-| 253 | 5.9% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
-| 245 | 5.7% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
+| 277 | 3.5% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
+| 266 | 3.3% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
+| 266 | 3.3% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
+| 253 | 3.2% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
+| 245 | 3.1% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
 `CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
 absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Starting commit
-`2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
+`6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
 
-**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`, exit 0,
-~1802s):
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`):
 
 ```
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
@@ -178,24 +168,27 @@ Host inventory token expected by the campaign (not printed by the gate):
 
 ### Added this pass
 
-- **Controller startup params.** `MTRDeviceControllerStartupParams` stores
-  IPK / fabric / nocSigner / operational certificates. IPK must be 16 bytes;
-  fabricID 0 is rejected unless an operational certificate is supplied. Factory
-  `createController(onNewFabric:)` / `onExistingFabric:` validate then throw
-  `invalidState` (no fabric daemon).
-- **Device state machine.** `setDelegate` / `add` dispatch `stateChanged`
-  first on the calling thread (queue is stored, not hopped — no run loop).
-  Local `writeAttribute` expected-value cache then dispatches
-  `receivedAttributeReport`. `readAttribute` on `MTRDevice` returns the
-  cached data-value dictionary.
-- **Cluster I/O.** Generated `MTRBaseCluster*` completion/subscribe methods
-  for ElectricalMeasurement, Thermostat, UnitTesting/TestCluster,
-  ColorControl, ThreadNetworkDiagnostics, DoorLock, PowerSource,
-  WindowCovering, PumpConfigurationAndControl, LevelControl, and
-  BallastConfiguration fail closed synchronously. `MTRClusterElectricalMeasurement`
-  and `MTRClusterUnitTesting` sync reads/writes use the in-memory cache.
-- **Params / Response / Event / Struct** value classes: `init`, stored
-  fields, `description`, and `init(responseValue:)` where the graph has it.
+- **New cluster I/O.** `MTRBaseClusterOccupancySensing`, `FanControl`,
+  `BarrierControl`, `MediaPlayback`, `OnOff`, `WiFiNetworkDiagnostics`,
+  `BinaryInputBasic`, and `NetworkCommissioning` now have documented inits,
+  completion/subscribe/write/command methods. Completions run synchronously
+  with `MTRError.invalidState` (no radio).
+- **Class-func cache readers.** ObjC `readAttribute*WithAttributeCache:` /
+  `WithClusterStateCache:` selectors on ElectricalMeasurement, UnitTesting,
+  TestCluster, Thermostat, ColorControl, DoorLock, ThreadNetworkDiagnostics,
+  and the new clusters are implemented as completion-handler fail-closed
+  class methods (the canonical surface row is often the Swift async overlay
+  of the same USR; tests call the completion spelling).
+- **MTRCluster* device cache.** OccupancySensing, FanControl, BarrierControl,
+  MediaPlayback, Thermostat, DoorLock, ColorControl, ThreadNetworkDiagnostics,
+  OnOff, WiFiNetworkDiagnostics, BinaryInputBasic, and NetworkCommissioning
+  `readAttribute*(with:)` / `writeAttribute*(withValue:expectedValueInterval:)`
+  use the in-memory expected-value cache (write then read is non-nil).
+- Remaining BaseCluster instance **writes** on ElectricalMeasurement,
+  UnitTesting, TestCluster, Thermostat, ColorControl, DoorLock, LevelControl,
+  BallastConfiguration, WindowCovering, Pump, and PowerSource fail closed
+  through `completion` / `completionHandler`.
 
-Async `class func readAttribute*(withAttributeCache:…)` overlays remain
-deferred: the sealed host tests are synchronous and there is no radio.
+The Swift `async throws` overlay spelling of those ObjC selectors is still
+not awaitable on the sealed runner; Apple's empty-cache error (CHIP IM vs
+`invalidState`) remains an oracle question.
