@@ -1,0 +1,3 @@
+import LiveCommunicationKit
+
+let frameworkLoadSmokeMarker = "LIVECOMMUNICATIONKIT_AGENT_RUNTIME_OK"
