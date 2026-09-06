@@ -147,7 +147,8 @@ DISPATCH_HOST_EXPECTED_EXPORTS=$WORK_DIR/open-dispatch-host-expected-exports.txt
         openui_dispatch_host_v1_semaphore_create \
         openui_dispatch_host_v1_semaphore_release \
         openui_dispatch_host_v1_semaphore_signal \
-        openui_dispatch_host_v1_semaphore_wait
+        openui_dispatch_host_v1_semaphore_wait \
+        openui_dispatch_host_v1_sync
 } > "$DISPATCH_HOST_EXPECTED_EXPORTS"
 readelf --wide --syms "$DISPATCH_HOST" \
     | awk '$5 == "GLOBAL" && $7 != "UND" && $8 ~ /^openui_dispatch_host_v1_/ { print $8 }' \

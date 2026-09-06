@@ -154,6 +154,11 @@ int main(void)
         increment_with_specific
     );
     wait_for(&state, 3);
+    openui_dispatch_host_v1_sync(
+        OPENUI_DISPATCH_QUEUE_PRIVATE_V1, private_queue, &state,
+        increment_with_specific
+    );
+    if (state.count != 4) fail("sync returned before the callback completed");
     openui_dispatch_host_v1_release_queue(private_queue);
 
     semaphore = openui_dispatch_host_v1_semaphore_create(0);

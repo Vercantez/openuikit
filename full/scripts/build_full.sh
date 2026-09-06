@@ -92,7 +92,9 @@ echo "   -> $PINNED_SOURCE_STATE_BEFORE"
 # uihelpers_subject includes the verified upstream digest above.
 UIHELPERS_SUBJECT_BEFORE=$(bash "$W/full/scripts/uihelpers_subject.sh" \
     "$W" "$UIKIT" "$SF" "$SC")
+FOCUS_SUBJECT_BEFORE=$(python3 "$W/full/focus-ios/guest_subject.py" "$W" "$UIKIT")
 mkdir -p "$OUT" "$MC" "$FE_OUT" "$FE_COLLECTIONS" "$FE_OS" "$FE_CSHIMS"
+rm -f "$OUT/focus-guest-subject.sha256" "$OUT/focus-guest-executable.sha256"
 # These files are commit markers for a completely successful build. Remove
 # them before mutating any output, so a failed or interrupted rebuild can never
 # leave yesterday's attestation blessing today's partial binary.
@@ -1339,6 +1341,29 @@ OBSERVATION_PLUGIN_FLAGS=(
     -plugin-path "$PLUGIN_STAGE/plugins"
     -load-plugin-library "$OBSERVATION_MACRO_PLUGIN"
 )
+# The SDK interface alone does not stage its runtime. Build the repository's
+# pinned Swift Observation sources so Shared's @Observable runs under machorun.
+echo "== guest Observation runtime"
+OBS_OUT="$OUT/observation"
+mkdir -p "$OBS_OUT"
+mapfile -t OBS_SOURCES < "$W/full/observation/observation_guest_sources.txt"
+for i in "${!OBS_SOURCES[@]}"; do OBS_SOURCES[$i]="$W/${OBS_SOURCES[$i]}"; done
+"${SWIFTC[@]}" -parse-as-library -suppress-warnings -module-name Observation \
+    -module-link-name swiftObservation -enable-library-evolution \
+    -enable-experimental-feature Macros -enable-experimental-feature ExtensionMacros \
+    -emit-module -emit-module-path "$OBS_OUT/Observation.swiftmodule" \
+    -emit-object -o "$OBS_OUT/observation.o" "${OBS_SOURCES[@]}"
+"${CC[@]}" -std=c11 -fvisibility=hidden -Wall -Wextra -Werror \
+    -c "$W/full/observation/ObservationRuntimeBridge.c" -o "$OBS_OUT/bridge.o"
+"${LD[@]}" -dylib -dead_strip -ignore_auto_link \
+    -install_name /usr/lib/swift/libswiftObservation.dylib \
+    -o "$ROOTDIR/darwin/usr/lib/swift/libswiftObservation.dylib" \
+    "$OBS_OUT/observation.o" "$OBS_OUT/bridge.o" "$OUT/swiftcorepatch.o" \
+    -L"$ROOTDIR/darwin/usr/lib" -L"$SYS/usr/lib/swift" \
+    -lswiftCore -lswiftObjectiveC -lswift_Concurrency "$SWIFTCOMPAT" \
+    -L"$SYS/usr/lib" -lSystem -lobjc "$ROOTDIR/darwin/usr/lib/libSystem.B.dylib"
+cp "$OBS_OUT/Observation.swiftmodule" "$APPINC/"
+
 compile_app_module() {
     local name=$1 outfile=$2; shift 2
     echo "   module $name"
@@ -1346,7 +1371,7 @@ compile_app_module() {
     # (copies under appmods/include). Passing CINC as well redefines those four
     # maps (attempt 5, 5486bdde, arm64 verify): APPMODS/include/CPortableIO vs
     # $OUT/inc/CPortableIO, likewise CSTBTrueType, CHostClock, CQuartz.
-    "${SWIFTC[@]}" -parse-as-library "${FEMODULES[@]}" \
+    "${SWIFTC[@]}" -D OPENUIKIT_GUEST -parse-as-library "${FEMODULES[@]}" \
         "${PREVIEW_SWIFT_FLAGS[@]}" "${APPMODS_CINC[@]}" \
         -I "$OUT" -I "$APPINC" -I "$APPMODS" \
         -disable-availability-checking \
@@ -1360,8 +1385,6 @@ compile_app_module Glean "$OUT/glean.o" \
     "$UIKIT"/Sources/RealAppProbe/FocusModules/Glean/*.swift
 compile_app_module Intents "$OUT/intents_stub.o" \
     "$UIKIT"/Sources/RealAppProbe/FocusModules/Intents/*.swift
-compile_app_module Onboarding "$OUT/onboarding_stub.o" \
-    "$UIKIT"/Sources/RealAppProbe/FocusModules/Onboarding/*.swift
 compile_app_module Domain "$OUT/domain.o" \
     "$UIKIT"/Sources/RealAppProbe/HackersModules/Domain/*.swift
 compile_app_module IntentsUI "$OUT/intentsui_stub.o" \
@@ -1372,6 +1395,73 @@ compile_app_module Shared "$OUT/shared.o" \
     "$UIKIT"/Sources/RealAppProbe/HackersModules/Shared/*.swift
 compile_app_module DesignSystem "$OUT/designsystem.o" \
     "$UIKIT"/Sources/RealAppProbe/HackersModules/DesignSystem/*.swift
+
+echo "== Focus guest application graph (unmodified vendored app sources)"
+# SwiftUI was needed to bootstrap Foundation. Its final interface now exports
+# the actual app-facing Foundation identity, as UIKit does above.
+compile_app_module SwiftUI "$OUT/swiftui.o" "${SWIFTUI_SOURCES[@]}" \
+    "$W/full/appshim/SwiftUIFoundation.swift"
+cp "$APPINC/SwiftUI.swiftmodule" "$APPMODS/"
+mapfile -d '' -t SNAPKIT_SOURCES < <(
+    find "$UIKIT/Sources/SnapKit" -name '*.swift' ! -name Debugging.swift -print0 | LC_ALL=C sort -z
+)
+compile_app_module SnapKit "$OUT/snapkit.o" "${SNAPKIT_SOURCES[@]}"
+FOCUS_LINK_OBJECTS=("$OUT/snapkit.o")
+for module in WebKit Sentry FocusAppServices LocalAuthentication SafariServices PassKit Network; do
+    compile_app_module "$module" "$OUT/focus-$module.o" "$UIKIT/Sources/$module/"*.swift
+    FOCUS_LINK_OBJECTS+=("$OUT/focus-$module.o")
+done
+# Focus and Hackers both call their package DesignSystem. Use Swift module
+# aliases for Focus's real target so the fourteen established fixture screens
+# retain their own module identity and pixel contract.
+mapfile -d '' -t FOCUS_DESIGN_SOURCES < <(
+    find "$UIKIT/Sources/BlockzillaPackage/DesignSystem" -name '*.swift' \
+        ! -path '*/Preview Files/*' -print0 | LC_ALL=C sort -z
+)
+compile_app_module FocusDesignSystem "$OUT/focus-designsystem.o" \
+    -D FOCUS_DESIGN_SYSTEM "${FOCUS_DESIGN_SOURCES[@]}" "$W/full/focus-ios/PackageBundle.swift"
+compile_app_module FocusLicenses "$OUT/focus-licenses.o" \
+    "$UIKIT/Sources/BlockzillaPackage/Licenses/"*.swift "$W/full/focus-ios/PackageBundle.swift"
+FOCUS_PACKAGE_FLAGS=(-module-alias DesignSystem=FocusDesignSystem -module-alias Licenses=FocusLicenses)
+FOCUS_LINK_OBJECTS+=("$OUT/focus-designsystem.o" "$OUT/focus-licenses.o")
+mkdir -p "$OUT/FocusDesignSystem.bundle" "$OUT/FocusLicenses.bundle"
+cp -R "$UIKIT/fixtures/realapp/focus-package/DesignSystem/." "$OUT/FocusDesignSystem.bundle/"
+rm -rf "$OUT/FocusDesignSystem.bundle/OpenUIKit/AssetCatalogs"
+python3 "$W/full/xcassets/xcassets_tool.py" index \
+    "$UIKIT/fixtures/realapp/focus-package/DesignSystem" \
+    --out "$OUT/FocusDesignSystem.bundle/OpenUIKit/AssetCatalogs" --strict
+cp "$UIKIT/Sources/BlockzillaPackage/Licenses/"*.plist "$OUT/FocusLicenses.bundle/"
+
+for module in UIHelpers UIComponents Widget AppShortcuts Onboarding; do
+    mapfile -d '' -t package_sources < <(
+        find "$UIKIT/Sources/BlockzillaPackage/$module" -name '*.swift' \
+            ! -path '*/Preview Files/*' -print0 | LC_ALL=C sort -z
+    )
+    compile_app_module "$module" "$OUT/focus-$module.o" "${FOCUS_PACKAGE_FLAGS[@]}" "${package_sources[@]}"
+    FOCUS_LINK_OBJECTS+=("$OUT/focus-$module.o")
+done
+compile_app_module OpenUIKitStoreKit "$OUT/focus-storekit.o" "$UIKIT/Sources/StoreKit/StoreKit.swift"
+for module in AudioToolbox CoreHaptics; do
+    compile_app_module "$module" "$OUT/focus-$module.o" "$W/full/focus-ios/$module.swift"
+    FOCUS_LINK_OBJECTS+=("$OUT/focus-$module.o")
+done
+env W="$W" SYS="$SYS" OUT="$OUT" TARGET="$TARGET" bash "$W/full/focus-ios/build_libxml_guest.sh"
+FOCUS_XML_FLAGS=(-I "$UIKIT/Sources/CLibXML2" -Xcc -I"$OUT/focus-libxml/include")
+compile_app_module Fuzi "$OUT/focus-fuzi.o" "${FOCUS_XML_FLAGS[@]}" "$UIKIT/Sources/Fuzi/"*.swift
+mapfile -d '' -t BLOCKZILLA_SOURCES < <(
+    find "$UIKIT/Sources/Blockzilla" -name '*.swift' -print0 | LC_ALL=C sort -z
+)
+compile_app_module Blockzilla "$OUT/blockzilla.o" "${FOCUS_PACKAGE_FLAGS[@]}" \
+    -default-isolation MainActor -enable-upcoming-feature IsolatedDefaultValues \
+    -module-alias StoreKit=OpenUIKitStoreKit \
+    -Xcc -fmodule-map-file="$UIKIT/Sources/os/include/module.modulemap" \
+    -Xcc -I"$UIKIT/Sources/os/include" "${FOCUS_XML_FLAGS[@]}" "${BLOCKZILLA_SOURCES[@]}"
+FOCUS_LINK_OBJECTS+=("$OUT/focus-storekit.o" "$OUT/focus-fuzi.o" "$OUT/blockzilla.o"
+    "$OUT/focus-libxml/build/libxml2.a" "$OUT/focus-libxml/random.o")
+# Blockzilla's serialized module imports Fuzi and the os.log Clang submodule.
+APPMODS_CINC+=("${FOCUS_XML_FLAGS[@]}"
+    -Xcc -fmodule-map-file="$UIKIT/Sources/os/include/module.modulemap"
+    -Xcc -I"$UIKIT/Sources/os/include")
 
 echo "== RealAppProbe (top-level + Vendored + Vendored/* + Focus/ + Hackers/)"
 # Measured glob that SwiftPM already compiles. The previous guest path
@@ -1437,12 +1527,15 @@ COMMON_LINK_OBJECTS=(
 APP_LINK_OBJECTS=(
     "$OUT/uikitshim_app.o"
     "$OUT/symbols.o" "$OUT/swiftui.o" "$OUT/corefoundation.o"
-    "$OUT/glean.o" "$OUT/intents_stub.o" "$OUT/onboarding_stub.o"
+    "$OUT/glean.o" "$OUT/intents_stub.o"
+    "${FOCUS_LINK_OBJECTS[@]}"
     "$OUT/domain.o" "$OUT/intentsui_stub.o" "$OUT/licenses.o"
     "$OUT/shared.o" "$OUT/designsystem.o"
 )
+link_app_executable() {
+    local destination=$1; shift
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
-    -L"$ROOTDIR/darwin/usr/lib" -L"$OUT" -L"$APPMODS" \
+    -L"$ROOTDIR/darwin/usr/lib" -L"$OUT" -L"$APPMODS" -L"$OUT/focus-libxml/build" \
     -L/usr/lib/swift -lswiftCore -lswift_StringProcessing -lswiftSynchronization \
     "$SWIFTCOMPAT" \
     -L/usr/lib -lSystem -lobjc "$QUARTZLIB" \
@@ -1455,10 +1548,23 @@ APP_LINK_OBJECTS=(
     "$OUT/libDispatch.dylib" \
     "$OUT/libFoundationInternationalization.dylib" \
     "$OUT/lib_FoundationICU.dylib" \
-    -o "$OUT/render_full" \
-    "$OUT/render_full.o" "$OUT/realappprobe.o" "$OUT/foundation_guest.o" \
+    -o "$destination" \
+    "$@" "$OUT/foundation_guest.o" \
     "${APP_LINK_OBJECTS[@]}" \
     "${COMMON_LINK_OBJECTS[@]}"
+}
+link_app_executable "$OUT/render_full" "$OUT/render_full.o" "$OUT/realappprobe.o"
+# Executable behavioral probes share the identical guest module/link boundary.
+for probe in GuestBoundaryTests LaunchProbe FuziProbe; do
+    compile_app_module "$probe" "$OUT/$probe.o" "$W/full/focus-ios/$probe.swift"
+    link_app_executable "$OUT/$probe" "$OUT/$probe.o"
+done
+
+
+compile_app_module BrowserInkProbe "$OUT/BrowserInkProbe.o" \
+    "$W/full/focus-ios/BrowserInkProbe.swift" \
+    "$UIKIT/Sources/openrender/SceneBuilder.swift" "$UIKIT/Sources/openrender/RealApp.swift"
+link_app_executable "$OUT/BrowserInkProbe" "$OUT/BrowserInkProbe.o" "$OUT/realappprobe.o"
 
 "${LD[@]}" -dead_strip -exported_symbol __mh_execute_header -rpath @loader_path \
     -L"$ROOTDIR/darwin/usr/lib" \
@@ -1468,6 +1574,11 @@ APP_LINK_OBJECTS=(
     -o "$OUT/indexpath_identity_probe" \
     "$OUT/literal_uikit_indexpath_probe.o" "$OUT/uikitshim.o" \
     "${COMMON_LINK_OBJECTS[@]}"
+
+# Match SwiftPM's executable bundle metadata and stage Focus startup assets.
+# The guest Bundle reads a filesystem Info.plist rather than __TEXT metadata.
+cp "$UIKIT/Sources/openrender/Info.plist" "$OUT/Info.plist"
+cp -R "$UIKIT/fixtures/realapp/focus-bundle/." "$OUT/"
 
 # ---- bundle fixtures -------------------------------------------------------
 # Built here rather than committed, so they cannot drift from what the test
@@ -1579,3 +1690,11 @@ mv "$OUT/uihelpers-artifacts.sha256.tmp" "$OUT/uihelpers-artifacts.sha256"
 mv "$OUT/uihelpers-subject.sha256.tmp" "$OUT/uihelpers-subject.sha256"
 
 echo "== done"; ls -l "$OUT/render_full" "$OUT/indexpath_identity_probe"
+
+# Bracket every app/module/resource input, including the real package targets.
+FOCUS_SUBJECT_AFTER=$(python3 "$W/full/focus-ios/guest_subject.py" "$W" "$UIKIT")
+[ "$FOCUS_SUBJECT_BEFORE" = "$FOCUS_SUBJECT_AFTER" ] \
+    || die "Focus guest source/resource inputs changed during the build"
+printf '%s\n' "$FOCUS_SUBJECT_AFTER" > "$OUT/focus-guest-subject.sha256"
+sha256sum "$OUT/render_full" | awk '{print $1}' > "$OUT/focus-guest-executable.sha256"
+echo 'FOCUS_GUEST_BUILT modules=SnapKit,WebKit,DesignSystem,Licenses,UIHelpers,UIComponents,Widget,AppShortcuts,Onboarding,Blockzilla'
