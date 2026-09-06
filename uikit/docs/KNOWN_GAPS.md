@@ -1755,9 +1755,10 @@ predict.
   the same single rule; `patternDot`/`patternDash`/`byWord` are accepted and
   ignored. Real UIKit's `.thick` and `.double` were measured (rows
   73–78 / 73–80 at 17 pt vs 75–78 for `.single`) but are not implemented.
-- **`.strokeColor` / `.strokeWidth` / `.link` / attachments.** The keys exist
-  so app code compiles; nothing reads them (no stroking, no
-  `NSTextAttachment`).
+- **`.strokeColor` / `.strokeWidth` / `.link`.** The keys exist so app code
+  compiles; nothing reads them (no stroking). Attachments are implemented
+  (`NSTextAttachment`, U+FFFC, TextKit-1 storage/container/layout manager);
+  see docs/agent_reports/uikit-textkit.md.
 - **`UITextField` / `UITextView` editing drops attributes.** Typing rewrites
   the plain string and clears the attributed storage; real UIKit keeps
   `typingAttributes`, which we do not model.

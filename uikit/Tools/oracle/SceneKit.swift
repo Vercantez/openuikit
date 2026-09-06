@@ -635,12 +635,34 @@ func paragraphStyleFrom(_ j: JSON) -> NSParagraphStyle {
     return p
 }
 
-func attributedStringFrom(_ j: JSON, traits: UITraitCollection) -> NSAttributedString {
+func attributedStringFrom(_ j: JSON, traits: UITraitCollection,
+                          scale: CGFloat) -> NSAttributedString {
     guard let runs = j["runs"] as? [JSON], !runs.isEmpty else {
         fatalError("attributedText needs a non-empty \"runs\" array")
     }
     let out = NSMutableAttributedString()
     for r in runs {
+        if let attJ = r["attachment"] as? JSON {
+            let att = NSTextAttachment()
+            if let ij = attJ["image"] as? JSON {
+                att.image = makeImage(ij, scale: scale)
+            }
+            if let b = numArray(attJ["bounds"]), b.count == 4 {
+                att.bounds = CGRect(x: b[0], y: b[1], width: b[2], height: b[3])
+            }
+            if let p = num(attJ["lineLayoutPadding"]) { att.lineLayoutPadding = p }
+            if let ft = attJ["fileType"] as? String { att.fileType = ft }
+            if let allow = attJ["allowsTextAttachmentView"] as? Bool {
+                att.allowsTextAttachmentView = allow
+            }
+            let piece = NSMutableAttributedString(attachment: att)
+            var extra: [NSAttributedString.Key: Any] = [.font: fontFrom(r)]
+            extra[.foregroundColor] = colorOrDie(r["color"], "attributed run", traits)
+                ?? UIColor.label.resolvedColor(with: traits)
+            piece.addAttributes(extra, range: NSRange(location: 0, length: piece.length))
+            out.append(piece)
+            continue
+        }
         guard let text = r["text"] as? String else { fatalError("run needs \"text\"") }
         var a: [NSAttributedString.Key: Any] = [.font: fontFrom(r)]
         a[.foregroundColor] = colorOrDie(r["color"], "attributed run", traits)
@@ -732,7 +754,7 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         // Attributed content last: UILabel adopts the paragraph style's
         // alignment / line-break mode when the string carries one.
         if let aj = j["attributedText"] as? JSON {
-            l.attributedText = attributedStringFrom(aj, traits: traits)
+            l.attributedText = attributedStringFrom(aj, traits: traits, scale: scale)
         }
         v = l
     case "UIImageView":
@@ -890,7 +912,7 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         else { t.textColor = UIColor.label.resolvedColor(with: traits) }
         t.tintColor = t.tintColor.resolvedColor(with: traits)
         if let aj = j["attributedText"] as? JSON {
-            t.attributedText = attributedStringFrom(aj, traits: traits)
+            t.attributedText = attributedStringFrom(aj, traits: traits, scale: scale)
         }
         v = t
     case "UISearchBar":
@@ -919,7 +941,7 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
         // scene style (an explicit scene backgroundColor overrides below).
         t.backgroundColor = t.backgroundColor?.resolvedColor(with: traits)
         if let aj = j["attributedText"] as? JSON {
-            t.attributedText = attributedStringFrom(aj, traits: traits)
+            t.attributedText = attributedStringFrom(aj, traits: traits, scale: scale)
         }
         v = t
     case "UIScrollView":
@@ -1259,6 +1281,119 @@ func buildView(_ jIn: JSON, scale: CGFloat, traits: UITraitCollection) -> UIView
     return v
 }
 
+// MARK: - TextKit attachment probe dump
+//
+// Written into layout JSON under "textKit" so a capture can be read as
+// numbers (usedRect, line fragments, attachmentBounds, glyph location)
+// rather than guessed from pixels. compare.py ignores unknown keys.
+
+func textKitNum(_ v: CGFloat) -> Double {
+    // UITextView's container height is often CGFloat.greatestFiniteMagnitude;
+    // round3 multiplies by 1000 and overflows to Inf, which JSONSerialization
+    // refuses (measured 2026-09-06, attach_probe dump).
+    guard v.isFinite, abs(Double(v)) < 1_000_000 else { return -1 }
+    return round3(v)
+}
+
+func textKitProbeDump(attr: NSAttributedString, font: UIFont?,
+                      containerSize: CGSize, padding: CGFloat,
+                      maxLines: Int, lineBreak: NSLineBreakMode,
+                      textView: UITextView?, inset: UIEdgeInsets) -> JSON {
+    var d: JSON = [:]
+    let f = font ?? UIFont.systemFont(ofSize: 17)
+    d["fontAscender"] = textKitNum(f.ascender)
+    d["fontDescender"] = textKitNum(f.descender)
+    d["fontLineHeight"] = textKitNum(f.lineHeight)
+    d["fontCapHeight"] = textKitNum(f.capHeight)
+    d["fontXHeight"] = textKitNum(f.xHeight)
+    d["fontLeading"] = textKitNum(f.leading)
+    d["pointSize"] = textKitNum(f.pointSize)
+    d["inset"] = [textKitNum(inset.top), textKitNum(inset.left),
+                  textKitNum(inset.bottom), textKitNum(inset.right)]
+
+    let lm: NSLayoutManager
+    let tc: NSTextContainer
+    if let tv = textView {
+        lm = tv.layoutManager
+        tc = tv.textContainer
+    } else {
+        let storage = NSTextStorage(attributedString: attr)
+        lm = NSLayoutManager()
+        tc = NSTextContainer(size: containerSize)
+        tc.lineFragmentPadding = padding
+        tc.maximumNumberOfLines = maxLines
+        tc.lineBreakMode = lineBreak
+        lm.addTextContainer(tc)
+        storage.addLayoutManager(lm)
+    }
+    let used = lm.usedRect(for: tc)
+    d["usedRect"] = [textKitNum(used.origin.x), textKitNum(used.origin.y),
+                     textKitNum(used.width), textKitNum(used.height)]
+    d["lineFragmentPadding"] = textKitNum(tc.lineFragmentPadding)
+    d["containerSize"] = [textKitNum(tc.size.width), textKitNum(tc.size.height)]
+    d["glyphCount"] = lm.numberOfGlyphs
+
+    var lines: [JSON] = []
+    let glyphCount = lm.numberOfGlyphs
+    if glyphCount > 0 {
+        lm.enumerateLineFragments(forGlyphRange: NSRange(location: 0, length: glyphCount)) {
+            frag, usedRect, _, glyphRange, _ in
+            var line: JSON = [
+                "frag": [textKitNum(frag.origin.x), textKitNum(frag.origin.y),
+                         textKitNum(frag.width), textKitNum(frag.height)],
+                "used": [textKitNum(usedRect.origin.x), textKitNum(usedRect.origin.y),
+                         textKitNum(usedRect.width), textKitNum(usedRect.height)],
+                "glyphRange": [glyphRange.location, glyphRange.length]
+            ]
+            if glyphRange.length > 0 {
+                let loc = lm.location(forGlyphAt: glyphRange.location)
+                line["firstGlyph"] = [textKitNum(loc.x), textKitNum(loc.y)]
+            }
+            lines.append(line)
+        }
+    }
+    d["lines"] = lines
+
+    var attachments: [JSON] = []
+    attr.enumerateAttribute(.attachment, in: NSRange(location: 0, length: attr.length),
+                            options: []) { value, range, _ in
+        guard let att = value as? NSTextAttachment else { return }
+        let glyph = lm.glyphIndexForCharacter(at: range.location)
+        let loc = glyphCount > 0 ? lm.location(forGlyphAt: glyph) : .zero
+        var fragRange = NSRange()
+        let frag = glyphCount > 0
+            ? lm.lineFragmentRect(forGlyphAt: glyph, effectiveRange: &fragRange)
+            : .zero
+        let bounds = att.attachmentBounds(for: tc, proposedLineFragment: frag,
+                                          glyphPosition: loc, characterIndex: range.location)
+        var a: JSON = [
+            "char": range.location,
+            "glyph": glyph,
+            "location": [textKitNum(loc.x), textKitNum(loc.y)],
+            "bounds": [textKitNum(bounds.origin.x), textKitNum(bounds.origin.y),
+                       textKitNum(bounds.width), textKitNum(bounds.height)],
+            "attBoundsProperty": [textKitNum(att.bounds.origin.x), textKitNum(att.bounds.origin.y),
+                                  textKitNum(att.bounds.width), textKitNum(att.bounds.height)],
+            "lineLayoutPadding": textKitNum(att.lineLayoutPadding),
+            "allowsView": att.allowsTextAttachmentView,
+            "usesView": att.usesTextAttachmentView,
+        ]
+        if let img = att.image {
+            a["imageSize"] = [textKitNum(img.size.width), textKitNum(img.size.height)]
+        }
+        if glyphCount > 0 {
+            let gRect = lm.boundingRect(forGlyphRange: NSRange(location: glyph, length: 1), in: tc)
+            a["glyphRect"] = [textKitNum(gRect.origin.x), textKitNum(gRect.origin.y),
+                              textKitNum(gRect.width), textKitNum(gRect.height)]
+        }
+        attachments.append(a)
+    }
+    d["attachments"] = attachments
+    d["string"] = attr.string
+    d["length"] = attr.length
+    return d
+}
+
 // MARK: - Layout dump
 
 func round3(_ v: CGFloat) -> Double {
@@ -1287,8 +1422,11 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
     if v is UILabel || v is UIButton || v is UISwitch || v is UIImageView || v is UIProgressView
         || v is UITextField || v is UITextView || v is UISlider {
         let i = v.intrinsicContentSize
-        entry["intrinsic"] = [i.width == UIView.noIntrinsicMetric ? -1 : round3(i.width),
-                              i.height == UIView.noIntrinsicMetric ? -1 : round3(i.height)]
+        let iw: Double = (i.width == UIView.noIntrinsicMetric || !i.width.isFinite
+                          || abs(Double(i.width)) > 1_000_000) ? -1 : round3(i.width)
+        let ih: Double = (i.height == UIView.noIntrinsicMetric || !i.height.isFinite
+                          || abs(Double(i.height)) > 1_000_000) ? -1 : round3(i.height)
+        entry["intrinsic"] = [iw, ih]
     }
     if v is UILabel || v is UIButton {
         let s = v.sizeThatFits(CGSize(width: 200, height: CGFloat.greatestFiniteMagnitude))
@@ -1347,6 +1485,23 @@ func dumpLayout(_ v: UIView, path: String, into out: inout [JSON]) {
     if let l = v as? UILabel, let t = l.text { entry["text"] = t }
     if let l = v as? UILabel {
         entry["font"] = [l.font.fontName, round3(l.font.pointSize)]
+        if let attr = l.attributedText, attr.length > 0,
+           attr.attribute(.attachment, at: 0, effectiveRange: nil) != nil
+            || (attr.string as NSString).range(of: "\u{FFFC}").location != NSNotFound {
+            entry["textKit"] = textKitProbeDump(
+                attr: attr, font: l.font, containerSize: l.bounds.size,
+                padding: 0, maxLines: l.numberOfLines, lineBreak: l.lineBreakMode,
+                textView: nil, inset: .zero)
+        }
+    }
+    if let tv = v as? UITextView, let attr = tv.attributedText, attr.length > 0,
+       (attr.string as NSString).range(of: "\u{FFFC}").location != NSNotFound {
+        entry["textKit"] = textKitProbeDump(
+            attr: attr, font: tv.font, containerSize: tv.textContainer.size,
+            padding: tv.textContainer.lineFragmentPadding,
+            maxLines: tv.textContainer.maximumNumberOfLines,
+            lineBreak: tv.textContainer.lineBreakMode,
+            textView: tv, inset: tv.textContainerInset)
     }
     out.append(entry)
     for (i, sub) in v.subviews.enumerated() {

@@ -78,6 +78,9 @@ open class NSAttributedString {
         public static let link = Key("NSLink")
         /// `CGFloat` — points of extra tracking, an alias apps sometimes use.
         public static let tracking = Key("NSTracking")
+        /// `NSTextAttachment`. The run's character is U+FFFC
+        /// (`NSAttachmentCharacter`).
+        public static let attachment = Key("NSAttachment")
     }
 
     /// One maximal span of equal attributes. `length` is in UTF-16 units.
@@ -329,6 +332,7 @@ open class NSMutableAttributedString: NSAttributedString {
             start = end
         }
         runs = NSAttributedString.normalized(out)
+        didSetAttributes(in: NSRange(location: lo, length: hi - lo))
     }
 
     open func append(_ attrString: NSAttributedString) {
@@ -359,6 +363,19 @@ open class NSMutableAttributedString: NSAttributedString {
         let (tailStr, tailRuns) = slice(NSRange(location: hi, length: n - hi))
         string = headStr + attrString.string + tailStr
         runs = NSAttributedString.normalized(headRuns + attrString.runs + tailRuns)
+        didReplaceCharacters(in: NSRange(location: lo, length: attrString.length),
+                             changeInLength: length - n)
+    }
+
+    /// Hook for `NSTextStorage`. Default is a no-op.
+    func didReplaceCharacters(in range: NSRange, changeInLength delta: Int) {}
+
+    /// Hook for `NSTextStorage`. Default is a no-op.
+    func didSetAttributes(in range: NSRange) {}
+
+    /// Foundation's `setAttributedString(_:)`.
+    open func setAttributedString(_ attrString: NSAttributedString) {
+        replaceCharacters(in: fullRange, with: attrString)
     }
 
     private func attributesForReplacement(at range: NSRange) -> [Key: Any]? {
@@ -402,6 +419,7 @@ func attributeValuesEqual(_ a: Any?, _ b: Any?) -> Bool {
     if let x = a as? String, let y = b as? String { return x == y }
     if let x = a as? Bool, let y = b as? Bool { return x == y }
     if let x = a as? NSParagraphStyle, let y = b as? NSParagraphStyle { return x == y }
+    if let x = a as? NSTextAttachment, let y = b as? NSTextAttachment { return x === y }
     return false
 }
 
