@@ -81,32 +81,40 @@ TCP/UDP/IP option defaults. New evidence lives in focused
 The 2026-09-05 merge check refused `9723f04bbedd` because those 660
 `not-applicable` rows are stdlib `Int`/`UInt` synthesized witnesses (for
 example `s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:s4Int8V`), not SwiftUI
-cross-import overlay IDs. This ledger repair reclassifies every non-SwiftUI
-`not-applicable` row to `deferred`, splits C API function evidence into
-`NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions`, moves C
-`nw_*` typealiases that the smoke test never named to `declared`, and
-reclassifies implemented rows whose cited test did not exercise that
-identifier.
+cross-import overlay IDs. Relabeling them `deferred` (they cannot be
+`not-applicable`) produced `439384b4`, which the merge check then refused
+for **no depth gain**: implemented **1182 → 968**. Reclassifying overlay
+rows is bookkeeping; the depth task is real behaviour with per-identifier
+tests.
 
-Coverage before this ledger repair: **1215 implemented / 862 declared /
-310 deferred / 0 unavailable / 660 not-applicable** (2077 nondeferred).
+This repair adds focused `tests/agent/*Tests.swift` functions that actually
+call the identifiers they cite (C parameter get/set round-trips, TCP option
+setters, TXT dictionary APIs, EstablishmentReport data model, ConnectionGroup
+send/message, protocol-definition equality, path DNS/endpoints). Rows without
+such a test stay `declared` with `source:full/network/<file>.swift#Symbol`.
+C `nw_*` typealiases without a named test stay `declared`. Stdlib integer
+and Collection synthesized witnesses stay `deferred`.
 
-Coverage after this ledger repair: **968 implemented / 1051 declared /
-1028 deferred / 0 unavailable / 0 not-applicable** (2019 nondeferred).
+Coverage before this depth repair (`439384b4`): **968 implemented / 1051
+declared / 1028 deferred / 0 unavailable / 0 not-applicable** (2019
+nondeferred). First-pass baseline was **1182 implemented**.
 
-Top-5 `implemented` evidence distribution (of 968):
+Coverage after this depth repair: **1266 implemented / 754 declared /
+1027 deferred / 0 unavailable / 0 not-applicable** (2020 nondeferred).
 
-1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 rows (19.7%)
+Top-5 `implemented` evidence distribution (of 1266):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 rows (15.1%)
    (C `nw_*` / `k…` enum constants; table-driven raw values)
-2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (9.0%)
-3. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (7.3%)
+2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (6.9%)
+3. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (5.6%)
 4. `NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError`
-   — 54 (5.6%)
-5. `NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions` — 53 (5.5%)
+   — 54 (4.3%)
+5. `NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions` — 53 (4.2%)
 
 No non-exempt test is cited by more than 40% of implemented rows (largest
-remaining family test: `testNWInterfaceAndPathFromGetifaddrs` at 87/968 =
-9.0%). Enum/option-set members share family tests; C `nw_*` typealiases
+remaining family test: `testNWInterfaceAndPathFromGetifaddrs` at 87/1266 =
+6.9%). Enum/option-set members share family tests; C `nw_*` typealiases
 without a named test are `declared`.
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
