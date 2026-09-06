@@ -359,3 +359,51 @@ func testRenderEncoderStageBindings() {
     }
     precondition(pixel == [0, 0, 255, 255])
 }
+
+func testRenderPipelineStateMeshProperties() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let descriptor = MTLRenderPipelineDescriptor()
+    descriptor.colorAttachments[0].pixelFormat = .rgba8Unorm
+    descriptor.supportIndirectCommandBuffers = true
+    let state = try! device.makeRenderPipelineState(descriptor: descriptor)
+    _ = state.device
+    _ = state.label
+    _ = state.gpuResourceID
+    _ = state.maxTotalThreadsPerThreadgroup
+    _ = state.threadExecutionWidth
+    _ = state.imageblockSampleLength
+    _ = state.supportIndirectCommandBuffers
+    _ = state.shaderValidation
+    precondition(state.maxTotalThreadgroupsPerMeshGrid == 0)
+    precondition(state.maxTotalThreadsPerMeshThreadgroup == 0)
+    precondition(state.maxTotalThreadsPerObjectThreadgroup == 0)
+    _ = state.meshThreadExecutionWidth
+    _ = state.objectThreadExecutionWidth
+    _ = state.requiredThreadsPerMeshThreadgroup
+    _ = state.requiredThreadsPerObjectThreadgroup
+    _ = state.requiredThreadsPerTileThreadgroup
+    _ = state.threadgroupSizeMatchesTileSize
+    precondition(state.imageblockMemoryLength(forDimensions: MTLSizeMake(8, 8, 1)) == 0)
+    let specialized = state.makeRenderPipelineDescriptorForSpecialization()
+    _ = specialized.label
+    do {
+        _ = try state.makeRenderPipelineState(
+            additionalBinaryFunctions: MTL4RenderPipelineBinaryFunctionsDescriptor()
+        )
+        fatalError("extra Metal 4 binary functions must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+    do {
+        _ = try state.makeRenderPipelineState(
+            additionalBinaryFunctions: MTLRenderPipelineFunctionsDescriptor()
+        )
+        fatalError("extra binary functions must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+}

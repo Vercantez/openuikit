@@ -50,6 +50,16 @@ public protocol QuadrilateralProviding: BoundingBoxProviding {
     var topRight: NormalizedPoint { get }
 }
 
+extension QuadrilateralProviding {
+    public var boundingBox: NormalizedRect {
+        let xs = [topLeft.x, topRight.x, bottomLeft.x, bottomRight.x]
+        let ys = [topLeft.y, topRight.y, bottomLeft.y, bottomRight.y]
+        let minX = xs.min() ?? 0
+        let minY = ys.min() ?? 0
+        return NormalizedRect(x: minX, y: minY, width: (xs.max() ?? 0) - minX, height: (ys.max() ?? 0) - minY)
+    }
+}
+
 public protocol VisionObservation: CustomStringConvertible, Hashable, Sendable {
     var confidence: Float { get }
     var originatingRequestDescriptor: RequestDescriptor? { get }
@@ -105,6 +115,10 @@ public protocol ImageProcessingRequest: VisionRequest {
 public protocol StatefulRequest: VisionRequest {
     var frameAnalysisSpacing: CMTime { get }
     var minimumLatencyFrameCount: Int { get }
+}
+
+extension StatefulRequest {
+    public var minimumLatencyFrameCount: Int { 0 }
 }
 
 public protocol TargetedRequest: VisionRequest {}
@@ -625,6 +639,9 @@ public struct ClassifyImageRequest: ImageProcessingRequest {
 
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
+    public var cropAndScaleAction: ImageCropAndScaleAction = .scaleToFill
+    /// Empty on Linux: Apple's classifier taxonomy is model-backed and unobserved.
+    public var supportedIdentifiers: [String] { [] }
     private var devices: [ComputeStage: MLComputeDevice] = [:]
     public static let supportedRevisions: [Revision] = [.revision2]
     public var descriptor: RequestDescriptor { .classifyImageRequest(revision) }
@@ -782,13 +799,21 @@ public struct DetectHumanBodyPoseRequest: ImageProcessingRequest {
     public typealias Result = [HumanBodyPoseObservation]
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision1
+        case revision2
         public static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
     }
 
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
     private var devices: [ComputeStage: MLComputeDevice] = [:]
-    public static let supportedRevisions: [Revision] = [.revision1]
+    public var detectsHands: Bool = false
+    public var supportedJointNames: [HumanBodyPoseObservation.JointName] {
+        HumanBodyPoseObservation.JointName.allCases
+    }
+    public var supportedJointsGroupNames: [HumanBodyPoseObservation.JointsGroupName] {
+        HumanBodyPoseObservation.JointsGroupName.allCases
+    }
+    public static let supportedRevisions: [Revision] = [.revision1, .revision2]
     public var descriptor: RequestDescriptor { .detectHumanBodyPoseRequest(revision) }
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
 
@@ -931,14 +956,21 @@ public struct DetectLensSmudgeRequest: ImageProcessingRequest {
 public struct RecognizeAnimalsRequest: ImageProcessingRequest {
     public typealias Result = [RecognizedObjectObservation]
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
-        case revision1
+        case revision1 = 1
+        case revision2 = 2
         public static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
+    }
+
+    public enum Animal: String, Codable, Hashable, Sendable, CaseIterable {
+        case cat
+        case dog
     }
 
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
     private var devices: [ComputeStage: MLComputeDevice] = [:]
-    public static let supportedRevisions: [Revision] = [.revision1]
+    public static let supportedRevisions: [Revision] = [.revision1, .revision2]
+    public var supportedAnimals: [Animal] { Animal.allCases }
     public var descriptor: RequestDescriptor { .recognizeAnimalsRequest(revision) }
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
 
@@ -978,7 +1010,7 @@ public struct RecognizeAnimalsRequest: ImageProcessingRequest {
 
 }
 
-public struct DetectTrajectoriesRequest: ImageProcessingRequest {
+public final class DetectTrajectoriesRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
     public typealias Result = [TrajectoryObservation]
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision1
@@ -986,38 +1018,66 @@ public struct DetectTrajectoriesRequest: ImageProcessingRequest {
     }
 
     public let revision: Revision
+    public let trajectoryLength: Int
+    public let frameAnalysisSpacing: CMTime
     public var regionOfInterest: NormalizedRect = .fullImage
+    public var targetFrameTime: CMTime = .zero
+    public var objectMinimumNormalizedRadius: Float = 0
+    public var objectMaximumNormalizedRadius: Float = 1
+    public var minimumLatencyFrameCount: Int { trajectoryLength }
+    public var supportedComputeStageDevices: [ComputeStage: [MLComputeDevice]] {
+        [.main: [MLComputeDevice.cpu], .postProcessing: [MLComputeDevice.cpu]]
+    }
     private var devices: [ComputeStage: MLComputeDevice] = [:]
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .detectTrajectoriesRequest(revision) }
-    public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
+    public var description: String { String(describing: descriptor) }
+    public var hashValue: Int { descriptor.hashValue }
+
+    public convenience init(_ revision: Revision? = nil) {
+        self.init(trajectoryLength: 5, revision, frameAnalysisSpacing: nil)
+    }
+
+    public init(trajectoryLength: Int, _ revision: Revision? = nil, frameAnalysisSpacing: CMTime? = nil) {
+        self.trajectoryLength = max(1, trajectoryLength)
+        self.revision = revision ?? .revision1
+        self.frameAnalysisSpacing = frameAnalysisSpacing ?? .zero
+    }
 
     public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
         devices[computeStage]
     }
-    public mutating func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
+    public func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
         devices[computeStage] = computeDevice
     }
-    public var description: String { String(describing: descriptor) }
-    public func hash(into hasher: inout Hasher) { hasher.combine(descriptor) }
-    public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(descriptor)
+        hasher.combine(trajectoryLength)
+        hasher.combine(frameAnalysisSpacing)
+    }
+    public static func == (lhs: DetectTrajectoriesRequest, rhs: DetectTrajectoriesRequest) -> Bool {
+        lhs.descriptor == rhs.descriptor
+            && lhs.trajectoryLength == rhs.trajectoryLength
+            && lhs.frameAnalysisSpacing == rhs.frameAnalysisSpacing
+            && lhs.regionOfInterest == rhs.regionOfInterest
+    }
 
-    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
@@ -1025,7 +1085,6 @@ public struct DetectTrajectoriesRequest: ImageProcessingRequest {
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
         try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
-
 }
 
 public struct RecognizeDocumentsRequest: ImageProcessingRequest {
@@ -1222,6 +1281,13 @@ public struct DetectHumanHandPoseRequest: ImageProcessingRequest {
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
     private var devices: [ComputeStage: MLComputeDevice] = [:]
+    public var maximumHandCount: Int = 2
+    public var supportedJointNames: [HumanHandPoseObservation.JointName] {
+        HumanHandPoseObservation.JointName.allCases
+    }
+    public var supportedJointsGroupNames: [HumanHandPoseObservation.JointsGroupName] {
+        get throws { HumanHandPoseObservation.JointsGroupName.allCases }
+    }
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .detectHumanHandPoseRequest(revision) }
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
@@ -1272,6 +1338,12 @@ public struct DetectAnimalBodyPoseRequest: ImageProcessingRequest {
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
     private var devices: [ComputeStage: MLComputeDevice] = [:]
+    public var supportedJointNames: [AnimalBodyPoseObservation.JointName] {
+        AnimalBodyPoseObservation.JointName.allCases
+    }
+    public var supportedJointsGroupNames: [AnimalBodyPoseObservation.JointsGroupName] {
+        AnimalBodyPoseObservation.JointsGroupName.allCases
+    }
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .detectAnimalBodyPoseRequest(revision) }
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
@@ -1322,6 +1394,7 @@ public struct DetectTextRectanglesRequest: ImageProcessingRequest {
     public let revision: Revision
     public var regionOfInterest: NormalizedRect = .fullImage
     private var devices: [ComputeStage: MLComputeDevice] = [:]
+    public var reportCharacterBoxes: Bool = false
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .detectTextRectanglesRequest(revision) }
     public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
@@ -1562,7 +1635,7 @@ public struct GeneratePersonInstanceMaskRequest: ImageProcessingRequest {
 
 }
 
-public struct GeneratePersonSegmentationRequest: ImageProcessingRequest {
+public final class GeneratePersonSegmentationRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
     public typealias Result = PixelBufferObservation
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision1
@@ -1576,39 +1649,58 @@ public struct GeneratePersonSegmentationRequest: ImageProcessingRequest {
     }
 
     public let revision: Revision
+    public let frameAnalysisSpacing: CMTime
     public var regionOfInterest: NormalizedRect = .fullImage
-    private var devices: [ComputeStage: MLComputeDevice] = [:]
     public var qualityLevel: GeneratePersonSegmentationRequest.QualityLevel = .balanced
+    public var outputPixelFormatType: OSType = kCVPixelFormatType_32BGRA
+    public var supportedOutputPixelFormats: [OSType] { [kCVPixelFormatType_32BGRA] }
+    private var devices: [ComputeStage: MLComputeDevice] = [:]
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .generatePersonSegmentationRequest(revision) }
-    public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
+    public var description: String { String(describing: descriptor) }
+    public var hashValue: Int { descriptor.hashValue }
+
+    public init(_ revision: Revision? = nil, frameAnalysisSpacing: CMTime? = nil) {
+        self.revision = revision ?? .revision1
+        self.frameAnalysisSpacing = frameAnalysisSpacing ?? .zero
+    }
 
     public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
         devices[computeStage]
     }
-    public mutating func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
+    public func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
         devices[computeStage] = computeDevice
     }
-    public var description: String { String(describing: descriptor) }
-    public func hash(into hasher: inout Hasher) { hasher.combine(descriptor) }
-    public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(descriptor)
+        hasher.combine(qualityLevel)
+        hasher.combine(outputPixelFormatType)
+        hasher.combine(frameAnalysisSpacing)
+    }
+    public static func == (lhs: GeneratePersonSegmentationRequest, rhs: GeneratePersonSegmentationRequest) -> Bool {
+        lhs.descriptor == rhs.descriptor
+            && lhs.qualityLevel == rhs.qualityLevel
+            && lhs.outputPixelFormatType == rhs.outputPixelFormatType
+            && lhs.frameAnalysisSpacing == rhs.frameAnalysisSpacing
+            && lhs.regionOfInterest == rhs.regionOfInterest
+    }
 
-    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
@@ -1616,7 +1708,6 @@ public struct GeneratePersonSegmentationRequest: ImageProcessingRequest {
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
         try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
-
 }
 
 public struct CalculateImageAestheticsScoresRequest: ImageProcessingRequest {
@@ -1819,7 +1910,7 @@ public struct GenerateObjectnessBasedSaliencyImageRequest: ImageProcessingReques
 
 }
 
-public struct DetectHumanBodyPose3DRequest: ImageProcessingRequest {
+public final class DetectHumanBodyPose3DRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
     public typealias Result = [HumanBodyPose3DObservation]
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision1
@@ -1827,38 +1918,55 @@ public struct DetectHumanBodyPose3DRequest: ImageProcessingRequest {
     }
 
     public let revision: Revision
+    public let frameAnalysisSpacing: CMTime
     public var regionOfInterest: NormalizedRect = .fullImage
+    public var supportedJointNames: [HumanBodyPose3DObservation.JointName] {
+        HumanBodyPose3DObservation.JointName.allCases
+    }
+    public var supportedJointsGroupNames: [HumanBodyPose3DObservation.JointsGroupName] {
+        HumanBodyPose3DObservation.JointsGroupName.allCases
+    }
     private var devices: [ComputeStage: MLComputeDevice] = [:]
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .detectHumanBodyPose3DRequest(revision) }
-    public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
+    public var description: String { String(describing: descriptor) }
+    public var hashValue: Int { descriptor.hashValue }
+
+    public init(_ revision: Revision? = nil, frameAnalysisSpacing: CMTime? = nil) {
+        self.revision = revision ?? .revision1
+        self.frameAnalysisSpacing = frameAnalysisSpacing ?? .zero
+    }
 
     public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
         devices[computeStage]
     }
-    public mutating func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
+    public func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
         devices[computeStage] = computeDevice
     }
-    public var description: String { String(describing: descriptor) }
-    public func hash(into hasher: inout Hasher) { hasher.combine(descriptor) }
-    public static func == (a: Self, b: Self) -> Bool { a.descriptor == b.descriptor && a.regionOfInterest == b.regionOfInterest }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(descriptor)
+        hasher.combine(frameAnalysisSpacing)
+    }
+    public static func == (lhs: DetectHumanBodyPose3DRequest, rhs: DetectHumanBodyPose3DRequest) -> Bool {
+        lhs.descriptor == rhs.descriptor && lhs.frameAnalysisSpacing == rhs.frameAnalysisSpacing && lhs.regionOfInterest == rhs.regionOfInterest
+    }
 
-    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
     }
-    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Self.Result {
+    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
         try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
     }
 
@@ -1866,7 +1974,30 @@ public struct DetectHumanBodyPose3DRequest: ImageProcessingRequest {
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
         try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
+}
 
+public struct CoreMLModelContainer: Hashable, Sendable {
+    public var inputImageFeatureName: String
+    let model: MLModel
+
+    public init(model: MLModel, featureProvider: (any MLFeatureProvider)? = nil) throws {
+        _ = model
+        _ = featureProvider
+        throw VisionError.invalidModel("Linux has no Core ML runtime for Vision")
+    }
+
+    public init(unchecked model: MLModel, inputImageFeatureName: String = "image") {
+        self.model = model
+        self.inputImageFeatureName = inputImageFeatureName
+    }
+
+    public static func == (lhs: CoreMLModelContainer, rhs: CoreMLModelContainer) -> Bool {
+        lhs.inputImageFeatureName == rhs.inputImageFeatureName
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(inputImageFeatureName)
+    }
 }
 
 public struct CoreMLRequest: ImageProcessingRequest {
@@ -1877,11 +2008,24 @@ public struct CoreMLRequest: ImageProcessingRequest {
     }
 
     public let revision: Revision
+    public let modelContainer: CoreMLModelContainer
     public var regionOfInterest: NormalizedRect = .fullImage
+    public var cropAndScaleAction: ImageCropAndScaleAction = .centerCrop
+    public var supportedIdentifiers: [String]? { nil }
+    public var supportedComputeStageDevices: [ComputeStage: [MLComputeDevice]] {
+        [.main: [MLComputeDevice.cpu], .postProcessing: [MLComputeDevice.cpu]]
+    }
     private var devices: [ComputeStage: MLComputeDevice] = [:]
     public static let supportedRevisions: [Revision] = [.revision1]
     public var descriptor: RequestDescriptor { .coreMLRequest(revision) }
-    public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
+    public init(_ revision: Revision? = nil) {
+        self.revision = revision ?? .revision1
+        self.modelContainer = CoreMLModelContainer(unchecked: MLModel())
+    }
+    public init(model: CoreMLModelContainer, _ revision: Revision? = nil) {
+        self.modelContainer = model
+        self.revision = revision ?? .revision1
+    }
 
     public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
         devices[computeStage]
@@ -1916,7 +2060,6 @@ public struct CoreMLRequest: ImageProcessingRequest {
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
         try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
     }
-
 }
 
 
@@ -1977,14 +2120,105 @@ public final class TrackObjectRequest: @unchecked Sendable {
     }
 }
 
-public struct TrackRectangleRequest: Hashable, Sendable {
+public final class TrackRectangleRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
+    public typealias Result = RectangleObservation?
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision1
         public static func < (a: Self, b: Self) -> Bool { a.rawValue < b.rawValue }
     }
-    public enum TrackingLevel: UInt, Hashable, Sendable { case accurate, fast }
+    public enum TrackingLevel: UInt, Codable, Hashable, Sendable, CaseIterable {
+        case accurate
+        case fast
+    }
+
     public let revision: Revision
-    public init(_ revision: Revision? = nil) { self.revision = revision ?? .revision1 }
+    public let inputObservation: any QuadrilateralProviding & VisionObservation
+    public let frameAnalysisSpacing: CMTime
+    public var regionOfInterest: NormalizedRect = .fullImage
+    public var trackingLevel: TrackingLevel = .accurate
+    public static let supportedRevisions: [Revision] = [.revision1]
+    public var descriptor: RequestDescriptor { .trackRectangleRequest(revision) }
+    public var description: String { String(describing: descriptor) }
+    public var hashValue: Int { descriptor.hashValue }
+    private var devices: [ComputeStage: MLComputeDevice] = [:]
+    private var inner: VNTrackRectangleRequest
+
+    public convenience init(_ revision: Revision? = nil) {
+        self.init(
+            detectedRectangle: RectangleObservation(
+                topLeft: NormalizedPoint(x: 0, y: 1),
+                topRight: NormalizedPoint(x: 1, y: 1),
+                bottomRight: NormalizedPoint(x: 1, y: 0),
+                bottomLeft: NormalizedPoint(x: 0, y: 0)
+            ),
+            revision,
+            frameAnalysisSpacing: nil
+        )
+    }
+
+    public init(
+        detectedRectangle: any QuadrilateralProviding & VisionObservation,
+        _ revision: Revision? = nil,
+        frameAnalysisSpacing: CMTime? = nil
+    ) {
+        self.inputObservation = detectedRectangle
+        self.revision = revision ?? .revision1
+        self.frameAnalysisSpacing = frameAnalysisSpacing ?? .zero
+        let box = detectedRectangle.boundingBox.cgRect
+        self.inner = VNTrackRectangleRequest(
+            rectangleObservation: VNRectangleObservation(
+                requestRevision: VNTrackRectangleRequestRevision1,
+                topLeft: CGPoint(x: box.minX, y: box.maxY),
+                topRight: CGPoint(x: box.maxX, y: box.maxY),
+                bottomRight: CGPoint(x: box.maxX, y: box.minY),
+                bottomLeft: CGPoint(x: box.minX, y: box.minY)
+            )
+        )
+    }
+
+    public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? { devices[computeStage] }
+    public func setComputeDevice(_ computeDevice: MLComputeDevice?, for computeStage: ComputeStage) {
+        devices[computeStage] = computeDevice
+    }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(descriptor)
+        hasher.combine(trackingLevel)
+        hasher.combine(frameAnalysisSpacing)
+    }
+    public static func == (lhs: TrackRectangleRequest, rhs: TrackRectangleRequest) -> Bool {
+        lhs.descriptor == rhs.descriptor
+            && lhs.trackingLevel == rhs.trackingLevel
+            && lhs.frameAnalysisSpacing == rhs.frameAnalysisSpacing
+            && lhs.regionOfInterest == rhs.regionOfInterest
+    }
+
+    public func perform(on url: URL, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(url: url, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on data: Data, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(data: data, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on image: CGImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(cgImage: image, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on pixelBuffer: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on sampleBuffer: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(cmSampleBuffer: sampleBuffer, orientation: orientation ?? .up, options: [:]))
+    }
+    public func perform(on image: CIImage, orientation: CGImagePropertyOrientation? = nil) async throws -> Result {
+        try performOnHandler(VNImageRequestHandler(ciImage: image, orientation: orientation ?? .up, options: [:]))
+    }
+
+    @_spi(OpenUIKitHost)
+    public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        inner.trackingLevel = trackingLevel == .fast ? .fast : .accurate
+        try handler.perform([inner])
+        guard let obs = inner.results?.first as? VNRectangleObservation else { return nil }
+        return RectangleObservation(obs)
+    }
 }
 public final class TrackOpticalFlowRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
     public typealias Result = OpticalFlowObservation?

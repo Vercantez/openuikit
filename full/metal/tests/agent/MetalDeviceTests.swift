@@ -160,3 +160,145 @@ func testDeviceFactoryAndFailClosed() {
         fatalError("CPU builtin compute pipeline must succeed")
     }
 }
+
+func testDeviceFailClosedFactories() {
+    let device = MTLCreateSystemDefaultDevice()!
+    precondition(device.counterSets?.isEmpty == true)
+    precondition(device.queryTimestampFrequency() == 1_000_000_000)
+    let asDesc = MTLAccelerationStructureDescriptor()
+    let structure = device.makeAccelerationStructure(descriptor: asDesc)!
+    precondition(structure.size == 0)
+    let sized = device.makeAccelerationStructure(size: 32)!
+    precondition(sized.size == 32)
+    let heapAlign = device.heapAccelerationStructureSizeAndAlign(size: 48)
+    precondition(heapAlign.size == 48)
+    precondition(heapAlign.align == 16)
+    let descAlign = device.heapAccelerationStructureSizeAndAlign(descriptor: asDesc)
+    precondition(descAlign.size == 0)
+    var pixels = [MTLRegionMake2D(0, 0, 16, 16)]
+    var tiles = [MTLRegion()]
+    device.convertSparsePixelRegions(
+        &pixels,
+        toTileRegions: &tiles,
+        withTileSize: MTLSizeMake(0, 0, 1),
+        alignmentMode: .outward,
+        numRegions: 1
+    )
+    precondition(tiles[0].size.width == 0)
+    pixels = [MTLRegionMake2D(0, 0, 16, 16)]
+    device.convertSparsePixelRegions(
+        &pixels,
+        toTileRegions: &tiles,
+        withTileSize: MTLSizeMake(8, 8, 1),
+        alignmentMode: .inward,
+        numRegions: 1
+    )
+    precondition(tiles[0].size.width == 2)
+    var tileIn = [MTLRegionMake2D(1, 1, 2, 2)]
+    var pixelOut = [MTLRegion()]
+    device.convertSparseTileRegions(
+        &tileIn,
+        toPixelRegions: &pixelOut,
+        withTileSize: MTLSizeMake(8, 8, 1),
+        numRegions: 1
+    )
+    precondition(pixelOut[0].origin.x == 8)
+    precondition(pixelOut[0].size.width == 16)
+
+    var libraryDone = false
+    device.makeLibrary(source: "not msl", options: nil) { library, error in
+        libraryDone = true
+        precondition(library == nil)
+        precondition((error as? MTLLibraryError)?.code == .compileFailure)
+    }
+    precondition(libraryDone)
+
+    var stitchDone = false
+    let stitched = MTLStitchedLibraryDescriptor()
+    stitched.functions = []
+    stitched.functionGraphs = []
+    stitched.binaryArchives = nil
+    stitched.options = []
+    device.makeLibrary(stitchedDescriptor: stitched) { library, error in
+        stitchDone = true
+        precondition(library == nil)
+        precondition((error as? MTLLibraryError)?.code == .compileFailure)
+    }
+    precondition(stitchDone)
+    do {
+        _ = try device.makeLibrary(stitchedDescriptor: MTLStitchedLibraryDescriptor())
+        fatalError("stitched library must fail closed")
+    } catch let error as MTLLibraryError {
+        precondition(error.code == .compileFailure)
+    } catch {
+        fatalError("expected MTLLibraryError")
+    }
+
+    var renderDone = false
+    let renderDesc = MTLRenderPipelineDescriptor()
+    renderDesc.colorAttachments[0].pixelFormat = .rgba8Unorm
+    device.makeRenderPipelineState(descriptor: renderDesc) { state, error in
+        renderDone = true
+        precondition(state != nil)
+        precondition(error == nil)
+    }
+    precondition(renderDone)
+
+    var computeDone = false
+    let builtin = MTLMakeCPUBuiltinLibrary(device).makeFunction(name: MTLCPUBuiltinKernel.fillUInt32.rawValue)!
+    device.makeComputePipelineState(function: builtin) { state, error in
+        computeDone = true
+        precondition(state != nil)
+        precondition(error == nil)
+    }
+    precondition(computeDone)
+
+    do {
+        _ = try device.makeIOFileHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"))
+        fatalError("IO file handle must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+        precondition(MTLIOError.internal ~= error)
+        precondition(MTLIOError.errorDomain == MTLIOErrorDomain)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+    do {
+        _ = try device.makeIOFileHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"), compressionMethod: .lzfse)
+        fatalError("compressed IO handle must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+    do {
+        _ = try device.makeIOHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"))
+        fatalError("IO handle must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+    do {
+        _ = try device.makeIOHandle(url: URL(fileURLWithPath: "/tmp/missing.bin"), compressionMethod: .lz4)
+        fatalError("compressed IO handle alias must fail closed")
+    } catch let error as MTLIOError {
+        precondition(error.code == .internal)
+    } catch {
+        fatalError("expected MTLIOError")
+    }
+
+    let counterDesc = MTLCounterSampleBufferDescriptor()
+    counterDesc.sampleCount = 1
+    counterDesc.label = "counters"
+    counterDesc.storageMode = .shared
+    counterDesc.counterSet = nil
+    do {
+        _ = try device.makeCounterSampleBuffer(descriptor: counterDesc)
+        fatalError("counter sample buffer must fail closed")
+    } catch let error as MTLCPUValidationError {
+        precondition(error.reason.contains("counter"))
+    } catch {
+        fatalError("expected MTLCPUValidationError")
+    }
+}

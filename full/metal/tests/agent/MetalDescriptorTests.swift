@@ -294,3 +294,239 @@ func testMeshAndTilePipelineDescriptors() {
     compute.buffers[0].mutability = .immutable
     precondition(compute.buffers[0].mutability == .immutable)
 }
+
+func testMetal4PipelineDescriptors() {
+    let options = MTL4PipelineOptions()
+    options.shaderReflection = .bindingInfo
+    options.shaderValidation = .disabled
+    precondition(options.shaderReflection.contains(.bindingInfo))
+    let binary = MTL4RenderPipelineBinaryFunctionsDescriptor()
+    binary.vertexAdditionalBinaryFunctions = []
+    binary.fragmentAdditionalBinaryFunctions = []
+    binary.meshAdditionalBinaryFunctions = []
+    binary.objectAdditionalBinaryFunctions = []
+    binary.tileAdditionalBinaryFunctions = []
+    binary.reset()
+    precondition(binary.vertexAdditionalBinaryFunctions == nil)
+
+    let function = MTL4LibraryFunctionDescriptor()
+    function.name = "vertex_main"
+    function.library = nil
+    let specialized = MTL4SpecializedFunctionDescriptor()
+    specialized.functionDescriptor = function
+    specialized.specializedName = "spec"
+    specialized.constantValues = MTLFunctionConstantValues()
+    let linking = MTL4StaticLinkingDescriptor()
+    linking.functionDescriptors = [function]
+    linking.privateFunctionDescriptors = []
+    linking.groups = ["g": [function]]
+    precondition(linking.groups?["g"]?.count == 1)
+
+    let libraryDesc = MTL4LibraryDescriptor()
+    libraryDesc.source = "kernel void k() {}"
+    libraryDesc.name = "k"
+    libraryDesc.options = MTLCompileOptions()
+    precondition(libraryDesc.name == "k")
+
+    let color = MTL4RenderPipelineColorAttachmentDescriptor()
+    color.pixelFormat = .rgba8Unorm
+    color.blendingState = .enabled
+    color.sourceRGBBlendFactor = .one
+    color.destinationRGBBlendFactor = .zero
+    color.rgbBlendOperation = .add
+    color.sourceAlphaBlendFactor = .one
+    color.destinationAlphaBlendFactor = .zero
+    color.alphaBlendOperation = .add
+    color.writeMask = .all
+    precondition(color.pixelFormat == .rgba8Unorm)
+    color.reset()
+    precondition(color.pixelFormat == .invalid)
+    let colors = MTL4RenderPipelineColorAttachmentDescriptorArray()
+    colors[0].pixelFormat = .bgra8Unorm
+    precondition(colors[0].pixelFormat == .bgra8Unorm)
+    colors.reset()
+    precondition(colors[0].pixelFormat == .invalid)
+
+    let render = MTL4RenderPipelineDescriptor()
+    render.label = "r4"
+    render.options = options
+    render.vertexFunctionDescriptor = function
+    render.fragmentFunctionDescriptor = specialized
+    render.vertexDescriptor = MTLVertexDescriptor()
+    render.colorAttachments[0].pixelFormat = .rgba8Unorm
+    render.rasterSampleCount = 1
+    render.alphaToCoverageState = .enabled
+    render.alphaToOneState = .disabled
+    render.isRasterizationEnabled = true
+    render.maxVertexAmplificationCount = 1
+    render.inputPrimitiveTopology = .triangle
+    render.supportIndirectCommandBuffers = .disabled
+    render.supportVertexBinaryLinking = false
+    render.supportFragmentBinaryLinking = false
+    render.colorAttachmentMappingState = .identity
+    render.vertexStaticLinkingDescriptor = linking
+    render.fragmentStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    precondition(render.label == "r4")
+    precondition(render.colorAttachments[0].pixelFormat == .rgba8Unorm)
+    render.reset()
+    precondition(render.label == nil)
+    precondition(render.rasterSampleCount == 1)
+
+    let mesh = MTL4MeshRenderPipelineDescriptor()
+    mesh.label = "mesh4"
+    mesh.objectFunctionDescriptor = function
+    mesh.meshFunctionDescriptor = function
+    mesh.fragmentFunctionDescriptor = function
+    mesh.colorAttachments[0].pixelFormat = .rgba8Unorm
+    mesh.rasterSampleCount = 1
+    mesh.alphaToCoverageState = .disabled
+    mesh.alphaToOneState = .enabled
+    mesh.isRasterizationEnabled = true
+    mesh.maxVertexAmplificationCount = 1
+    mesh.maxTotalThreadsPerObjectThreadgroup = 32
+    mesh.maxTotalThreadsPerMeshThreadgroup = 64
+    mesh.maxTotalThreadgroupsPerMeshGrid = 4
+    mesh.payloadMemoryLength = 16
+    mesh.objectThreadgroupSizeIsMultipleOfThreadExecutionWidth = true
+    mesh.meshThreadgroupSizeIsMultipleOfThreadExecutionWidth = true
+    mesh.requiredThreadsPerObjectThreadgroup = MTLSizeMake(8, 1, 1)
+    mesh.requiredThreadsPerMeshThreadgroup = MTLSizeMake(16, 1, 1)
+    mesh.supportIndirectCommandBuffers = .enabled
+    mesh.supportObjectBinaryLinking = false
+    mesh.supportMeshBinaryLinking = false
+    mesh.supportFragmentBinaryLinking = false
+    mesh.colorAttachmentMappingState = .inherited
+    mesh.objectStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    mesh.meshStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    mesh.fragmentStaticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    precondition(mesh.maxTotalThreadsPerMeshThreadgroup == 64)
+    mesh.reset()
+    precondition(mesh.label == nil)
+
+    let compute = MTL4ComputePipelineDescriptor()
+    compute.computeFunctionDescriptor = function
+    compute.maxTotalThreadsPerThreadgroup = 64
+    compute.requiredThreadsPerThreadgroup = MTLSizeMake(8, 1, 1)
+    compute.threadGroupSizeIsMultipleOfThreadExecutionWidth = true
+    compute.supportIndirectCommandBuffers = .disabled
+    compute.supportBinaryLinking = false
+    compute.staticLinkingDescriptor = linking
+    compute.reset()
+    precondition(compute.computeFunctionDescriptor == nil)
+
+    let tile = MTL4TileRenderPipelineDescriptor()
+    tile.tileFunctionDescriptor = function
+    tile.colorAttachments[0].pixelFormat = .rgba8Unorm
+    tile.rasterSampleCount = 1
+    tile.threadgroupSizeMatchesTileSize = true
+    tile.maxTotalThreadsPerThreadgroup = 32
+    tile.requiredThreadsPerThreadgroup = MTLSizeMake(8, 8, 1)
+    tile.supportBinaryLinking = false
+    tile.staticLinkingDescriptor = MTL4StaticLinkingDescriptor()
+    tile.reset()
+    precondition(tile.tileFunctionDescriptor == nil)
+
+    let stage = MTL4PipelineStageDynamicLinkingDescriptor()
+    stage.binaryLinkedFunctions = []
+    stage.maxCallStackDepth = 2
+    stage.preloadedLibraries = []
+    let dynamic = MTL4RenderPipelineDynamicLinkingDescriptor()
+    _ = dynamic.vertexLinkingDescriptor.maxCallStackDepth
+    _ = dynamic.fragmentLinkingDescriptor
+    _ = dynamic.meshLinkingDescriptor
+    _ = dynamic.objectLinkingDescriptor
+    _ = dynamic.tileLinkingDescriptor
+
+    let pipeline = MTLRenderPipelineDescriptor()
+    pipeline.inputPrimitiveTopology = .triangle
+    pipeline.maxTessellationFactor = 16
+    pipeline.isTessellationFactorScaleEnabled = false
+    pipeline.tessellationFactorFormat = .half
+    pipeline.tessellationControlPointIndexType = .none
+    pipeline.tessellationFactorStepFunction = .constant
+    pipeline.tessellationOutputWindingOrder = .clockwise
+    pipeline.tessellationPartitionMode = .pow2
+    pipeline.vertexPreloadedLibraries = []
+    pipeline.fragmentPreloadedLibraries = []
+    precondition(pipeline.inputPrimitiveTopology == .triangle)
+    pipeline.reset()
+    precondition(pipeline.tessellationPartitionMode == .pow2)
+
+    let argument = MTLArgument()
+    argument.name = "buf"
+    argument.type = .buffer
+    argument.access = .readOnly
+    argument.index = 1
+    argument.isActive = true
+    argument.arrayLength = 4
+    argument.bufferAlignment = 16
+    argument.bufferDataSize = 64
+    argument.bufferDataType = .float4
+    argument.bufferPointerType = MTLPointerType()
+    argument.bufferStructType = MTLStructType()
+    argument.isDepthTexture = false
+    argument.textureDataType = .none
+    argument.textureType = .type2D
+    argument.threadgroupMemoryAlignment = 16
+    argument.threadgroupMemoryDataSize = 32
+    precondition(argument.bufferAlignment == 16)
+    let members = MTLStructMember()
+    members.name = "x"
+    argument.bufferStructType?.members = [members]
+    precondition(argument.bufferStructType?.memberByName("x")?.name == "x")
+    _ = members.arrayType()
+    _ = members.pointerType()
+    _ = members.structType()
+    _ = members.textureReferenceType()
+    _ = members.tensorReferenceType()
+    members.dataType = .float
+    members.offset = 0
+    members.argumentIndex = 1
+    let array = MTLArrayType()
+    array.arrayLength = 2
+    array.stride = 16
+    array.argumentIndexStride = 1
+    array.elementType = .float
+    _ = array.element()
+    _ = array.elementPointerType()
+    _ = array.elementStructType()
+    _ = array.elementTensorReferenceType()
+    _ = array.elementTextureReferenceType()
+    let pointer = MTLPointerType()
+    pointer.access = .readOnly
+    pointer.alignment = 16
+    pointer.dataSize = 8
+    pointer.elementIsArgumentBuffer = false
+    pointer.elementType = .float
+    _ = pointer.elementArrayType()
+    _ = pointer.elementStructType()
+    let texRef = MTLTextureReferenceType()
+    texRef.access = .readOnly
+    texRef.isDepthTexture = false
+    texRef.textureDataType = .float
+    texRef.textureType = .type2D
+    _ = MTLTensorReferenceType()
+    _ = texRef.textureType
+
+    let compilerDesc = MTL4CompilerDescriptor()
+    compilerDesc.pipelineDataSetSerializer = nil
+    _ = compilerDesc.label
+    let task = MTL4CompilerTaskOptions()
+    task.lookupArchives = nil
+    _ = task.lookupArchives
+    let binaryFn = MTL4BinaryFunctionDescriptor()
+    binaryFn.name = "n"
+    binaryFn.options = []
+    binaryFn.functionDescriptor = MTL4FunctionDescriptor()
+    precondition(binaryFn.name == "n")
+    let heap = MTL4CounterHeapDescriptor()
+    heap.count = 4
+    heap.type = .timestamp
+    precondition(heap.count == 4)
+    let serializer = MTL4PipelineDataSetSerializerDescriptor()
+    serializer.configuration = [.captureBinaries, .captureDescriptors]
+    precondition(serializer.configuration.contains(.captureBinaries))
+    let argumentAccess: MTLArgumentAccess = .readWrite
+    _ = argumentAccess
+    _ = MTLArgumentAccess.readOnly
+}

@@ -120,3 +120,16 @@ public struct VNRecognizedPointGroupKey: RawRepresentable, Hashable, Sendable {
     public static let all = VNRecognizedPointGroupKey(rawValue: "VNRecognizedPointGroupKeyAll")
     public static let point3DGroupKeyAll = VNRecognizedPointGroupKey(rawValue: "VNRecognizedPoint3DGroupKeyAll")
 }
+
+/// Linux-local animal identifier tokens named after TBD export symbols.
+/// The C-string payload of `_VNAnimalIdentifierCat` is unobserved.
+public struct VNAnimalIdentifier: RawRepresentable, Hashable, Codable, Sendable {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let cat = VNAnimalIdentifier(rawValue: "VNAnimalIdentifierCat")
+    public static let dog = VNAnimalIdentifier(rawValue: "VNAnimalIdentifierDog")
+}
