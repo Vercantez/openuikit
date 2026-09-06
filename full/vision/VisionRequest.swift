@@ -184,6 +184,12 @@ open class VNDetectFaceRectanglesRequest: VNImageBasedRequest {
 }
 
 open class VNDetectFaceLandmarksRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectFaceLandmarksRequestRevision3 }
+    public override class var defaultRevision: Int { VNDetectFaceLandmarksRequestRevision3 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integersIn: VNDetectFaceLandmarksRequestRevision1...VNDetectFaceLandmarksRequestRevision3)
+    }
+
     public var constellation: VNRequestFaceLandmarksConstellation = .constellationNotDefined
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
@@ -242,6 +248,9 @@ open class VNClassifyImageRequest: VNImageBasedRequest {
 open class VNDetectHumanBodyPoseRequest: VNImageBasedRequest {
     public override class var currentRevision: Int { VNDetectHumanBodyPoseRequestRevision1 }
     public override class var defaultRevision: Int { VNDetectHumanBodyPoseRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNDetectHumanBodyPoseRequestRevision1)
+    }
 
     public class func supportedJointNames(forRevision revision: Int) throws -> [VNHumanBodyPoseObservation.JointName] {
         _ = revision
@@ -261,30 +270,64 @@ open class VNDetectHumanBodyPoseRequest: VNImageBasedRequest {
     }
 }
 
-open class VNHumanBodyPoseObservation: VNRecognizedPointsObservation {
-    public struct JointName: RawRepresentable, Hashable, Sendable {
-        public let rawValue: VNRecognizedPointKey
-        public init(rawValue: VNRecognizedPointKey) { self.rawValue = rawValue }
-        public static let nose = JointName(rawValue: VNRecognizedPointKey(rawValue: "nose"))
+open class VNDetectHumanHandPoseRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectHumanHandPoseRequestRevision1 }
+    public override class var defaultRevision: Int { VNDetectHumanHandPoseRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNDetectHumanHandPoseRequestRevision1)
     }
 
-    public struct JointsGroupName: RawRepresentable, Hashable, Sendable {
-        public let rawValue: VNRecognizedPointGroupKey
-        public init(rawValue: VNRecognizedPointGroupKey) { self.rawValue = rawValue }
-        public static let all = JointsGroupName(rawValue: VNRecognizedPointGroupKey(rawValue: "all"))
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectHumanHandPoseRequest")
     }
 }
 
-open class VNRecognizedPointsObservation: VNObservation {}
+open class VNDetectAnimalBodyPoseRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectAnimalBodyPoseRequestRevision1 }
+    public override class var defaultRevision: Int { VNDetectAnimalBodyPoseRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNDetectAnimalBodyPoseRequestRevision1)
+    }
 
-public struct VNRecognizedPointKey: RawRepresentable, Hashable, Sendable {
-    public let rawValue: String
-    public init(rawValue: String) { self.rawValue = rawValue }
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectAnimalBodyPoseRequest")
+    }
 }
 
-public struct VNRecognizedPointGroupKey: RawRepresentable, Hashable, Sendable {
-    public let rawValue: String
-    public init(rawValue: String) { self.rawValue = rawValue }
+open class VNDetectHumanBodyPose3DRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectHumanBodyPose3DRequestRevision1 }
+    public override class var defaultRevision: Int { VNDetectHumanBodyPose3DRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNDetectHumanBodyPose3DRequestRevision1)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectHumanBodyPose3DRequest")
+    }
+}
+
+open class VNDetectTextRectanglesRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectTextRectanglesRequestRevision1 }
+    public override class var defaultRevision: Int { VNDetectTextRectanglesRequestRevision1 }
+    public var reportCharacterBoxes: Bool = false
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectTextRectanglesRequest")
+    }
+}
+
+open class VNDetectHorizonRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectHorizonRequestRevision1 }
+    public override class var defaultRevision: Int { VNDetectHorizonRequestRevision1 }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectHorizonRequest")
+    }
 }
 
 open class VNTargetedImageRequest: VNImageBasedRequest {
@@ -868,6 +911,7 @@ open class VNImageRequestHandler: NSObject {
                 throw error
             }
             do {
+                try visionValidateRequestConfiguration(request)
                 let observations = try request.perform(on: context)
                 request.finish(observations, error: nil)
             } catch {

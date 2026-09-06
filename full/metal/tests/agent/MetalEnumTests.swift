@@ -1326,6 +1326,16 @@ func testMetalEnumOptionSetAndConstantValues() {
     MTLSparsePageSizeSet.insert(.size64)
     precondition(MTLSparsePageSizeSet.count == 2)
 
+    _ = MTLSparseTextureMappingMode.map
+    precondition(MTLSparseTextureMappingMode.map.rawValue == 0)
+    precondition(MTLSparseTextureMappingMode(rawValue: 0) == MTLSparseTextureMappingMode.map)
+    precondition(MTLSparseTextureMappingMode.unmap.rawValue == 1)
+    precondition(MTLSparseTextureMappingMode(rawValue: 1) == MTLSparseTextureMappingMode.unmap)
+    precondition(MTLSparseTextureMappingMode.map != MTLSparseTextureMappingMode.unmap)
+    var MTLSparseTextureMappingModeSet: Set<MTLSparseTextureMappingMode> = [.map]
+    MTLSparseTextureMappingModeSet.insert(.unmap)
+    precondition(MTLSparseTextureMappingModeSet.count == 2)
+
     _ = MTLStencilOperation.keep
     precondition(MTLStencilOperation.keep.rawValue == 0)
     precondition(MTLStencilOperation(rawValue: 0) == MTLStencilOperation.keep)

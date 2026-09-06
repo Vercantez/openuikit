@@ -900,39 +900,141 @@ public enum BNNSGraph {
 }
 
 public struct Quadrature {
-    public var absoluteTolerance: Double {
-        get { preconditionFailure("Accelerate Linux: unread property") }
-        set { _ = newValue }
+    public var absoluteTolerance: Double
+    public var relativeTolerance: Double
+    var integrator: Quadrature.Integrator
+
+    public init(
+        integrator: Quadrature.Integrator,
+        absoluteTolerance: Double = 1.0e-8,
+        relativeTolerance: Double = 1.0e-2
+    ) {
+        self.integrator = integrator
+        self.absoluteTolerance = absoluteTolerance
+        self.relativeTolerance = relativeTolerance
     }
-    public var relativeTolerance: Double {
-        get { preconditionFailure("Accelerate Linux: unread property") }
-        set { _ = newValue }
-    }
-    public enum Error {
+
+    public enum Error: Swift.Error, Equatable, Hashable {
         case invalidArgument
         case integrateMaxEval
         case badIntegrandBehaviour
         case generic
         case `internal`
-        public var errorDescription: String { preconditionFailure("Accelerate Linux: unread property") }
+        public var errorDescription: String {
+            switch self {
+            case .invalidArgument: return "invalid argument"
+            case .integrateMaxEval: return "maximum evaluations exceeded"
+            case .badIntegrandBehaviour: return "bad integrand behaviour"
+            case .generic: return "quadrature error"
+            case .internal: return "internal quadrature error"
+            }
+        }
+        public init(quadratureStatus: quadrature_status) {
+            switch quadratureStatus.rawValue {
+            case QUADRATURE_INVALID_ARG_ERROR.rawValue: self = .invalidArgument
+            case QUADRATURE_INTEGRATE_MAX_EVAL_ERROR.rawValue: self = .integrateMaxEval
+            case QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR.rawValue: self = .badIntegrandBehaviour
+            case QUADRATURE_INTERNAL_ERROR.rawValue: self = .internal
+            default: self = .generic
+            }
+        }
     }
     public enum Integrator {
         case qag(pointsPerInterval: Quadrature.QAGPointsPerInterval, maxIntervals: Int)
         case qng
         case qags(maxIntervals: Int)
-        public static var nonAdaptive: Quadrature.Integrator { preconditionFailure("Accelerate Linux: unread property") }
+        public static var nonAdaptive: Quadrature.Integrator { .qng }
+        public static func adaptive(
+            pointsPerInterval: Quadrature.QAGPointsPerInterval,
+            maxIntervals: Int
+        ) -> Quadrature.Integrator {
+            .qag(pointsPerInterval: pointsPerInterval, maxIntervals: maxIntervals)
+        }
+        public static func adaptiveWithSingularities(maxIntervals: Int) -> Quadrature.Integrator {
+            .qags(maxIntervals: maxIntervals)
+        }
     }
     public struct QAGPointsPerInterval {
-        public var points: Int {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public let points: Int
+        public static let fifteen = Quadrature.QAGPointsPerInterval(points: 15)
+        public static let twentyOne = Quadrature.QAGPointsPerInterval(points: 21)
+        public static let thirtyOne = Quadrature.QAGPointsPerInterval(points: 31)
+        public static let fortyOne = Quadrature.QAGPointsPerInterval(points: 41)
+        public static let fiftyOne = Quadrature.QAGPointsPerInterval(points: 51)
+        public static let sixtyOne = Quadrature.QAGPointsPerInterval(points: 61)
+    }
+
+    public func integrate(
+        over interval: ClosedRange<Double>,
+        integrand: (Double) -> Double
+    ) -> Result<(integralResult: Double, estimatedAbsoluteError: Double), Quadrature.Error> {
+        let a = interval.lowerBound
+        let b = interval.upperBound
+        if a == b { return .success((0, 0)) }
+        let maxIntervals: Int
+        switch integrator {
+        case .qng:
+            maxIntervals = 64
+        case .qag(_, let maxN), .qags(let maxN):
+            maxIntervals = max(1, maxN)
         }
-        public static var fifteen: Quadrature.QAGPointsPerInterval { preconditionFailure("Accelerate Linux: unread property") }
-        public static var fiftyOne: Quadrature.QAGPointsPerInterval { preconditionFailure("Accelerate Linux: unread property") }
-        public static var fortyOne: Quadrature.QAGPointsPerInterval { preconditionFailure("Accelerate Linux: unread property") }
-        public static var sixtyOne: Quadrature.QAGPointsPerInterval { preconditionFailure("Accelerate Linux: unread property") }
-        public static var thirtyOne: Quadrature.QAGPointsPerInterval { preconditionFailure("Accelerate Linux: unread property") }
-        public static var twentyOne: Quadrature.QAGPointsPerInterval { preconditionFailure("Accelerate Linux: unread property") }
+        let n = min(max(8, maxIntervals * 4), 4096)
+        if n % 2 != 0 {
+            return integrateComposite(a: a, b: b, n: n + 1, integrand: integrand, maxN: maxIntervals)
+        }
+        return integrateComposite(a: a, b: b, n: n, integrand: integrand, maxN: maxIntervals)
+    }
+
+    public func integrate(
+        over interval: ClosedRange<Double>,
+        integrand: (UnsafeBufferPointer<Double>, UnsafeMutableBufferPointer<Double>) -> ()
+    ) -> Result<(integralResult: Double, estimatedAbsoluteError: Double), Quadrature.Error> {
+        integrate(over: interval) { x in
+            let xs = [x]
+            var ys = [0.0]
+            xs.withUnsafeBufferPointer { xp in
+                ys.withUnsafeMutableBufferPointer { yp in
+                    integrand(xp, yp)
+                }
+            }
+            return ys[0]
+        }
+    }
+
+    private func integrateComposite(
+        a: Double,
+        b: Double,
+        n: Int,
+        integrand: (Double) -> Double,
+        maxN: Int
+    ) -> Result<(integralResult: Double, estimatedAbsoluteError: Double), Quadrature.Error> {
+        _ = maxN
+        let h = (b - a) / Double(n)
+        var evals = 0
+        let fa = integrand(a)
+        let fb = integrand(b)
+        evals += 2
+        if fa.isNaN || fb.isNaN { return .failure(.badIntegrandBehaviour) }
+        var trap = 0.5 * (fa + fb)
+        var simpsonOdd = 0.0
+        var simpsonEven = 0.0
+        for i in 1..<n {
+            let x = a + Double(i) * h
+            let y = integrand(x)
+            evals += 1
+            if y.isNaN { return .failure(.badIntegrandBehaviour) }
+            trap += y
+            if i % 2 == 0 { simpsonEven += y } else { simpsonOdd += y }
+            if evals > 100_000 { return .failure(.integrateMaxEval) }
+        }
+        let coarse = trap * h
+        let fine = (h / 3) * (fa + fb + 4 * simpsonOdd + 2 * simpsonEven)
+        let err = abs(fine - coarse)
+        let scale = max(abs(fine), 1)
+        if err > max(absoluteTolerance, relativeTolerance * scale) && n < 4096 {
+            return integrateComposite(a: a, b: b, n: min(n * 2, 4096), integrand: integrand, maxN: maxN)
+        }
+        return .success((fine, err))
     }
 }
 
