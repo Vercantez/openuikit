@@ -32,6 +32,7 @@ open class SCNScene: NSObject, NSSecureCoding {
         background = SCNMaterialProperty()
         lightingEnvironment = SCNMaterialProperty()
         super.init()
+        physicsWorld._root = rootNode
     }
 
     public convenience init?(named name: String) {
@@ -92,11 +93,11 @@ open class SCNScene: NSObject, NSSecureCoding {
         return false
     }
 
-    /// Linux CPU action/physics clock. Physics remains fail-closed.
+    /// Linux CPU action/physics clock. Physics uses a fixed `timeStep`.
     public func linux_advanceTime(_ dt: TimeInterval) {
         if isPaused { return }
         rootNode.linux_advanceTime(dt)
-        physicsWorld.step()
+        physicsWorld._linuxStep(dt)
     }
 
     public static var supportsSecureCoding: Bool { true }
@@ -165,8 +166,22 @@ open class SCNSceneSource: NSObject {
     }
 
     public func property(forKey key: String) -> Any? {
-        _ = key
-        return nil
+        switch key {
+        case SCNSceneSourceAssetAuthorKey,
+             SCNSceneSourceAssetAuthoringToolKey,
+             SCNSceneSourceAssetContributorsKey,
+             SCNSceneSourceAssetUnitKey,
+             SCNSceneSourceAssetUnitMeterKey,
+             SCNSceneSourceAssetUnitNameKey,
+             SCNSceneSourceAssetUpAxisKey:
+            return nil
+        case SCNSceneSourceAssetCreatedDateKey, SCNSceneSourceAssetModifiedDateKey:
+            guard let url else { return nil }
+            return (try? url.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey]))
+                .flatMap { key == SCNSceneSourceAssetCreatedDateKey ? $0.creationDate : $0.contentModificationDate }
+        default:
+            return nil
+        }
     }
 
     public func identifiersOfEntries(withClass entryClass: AnyClass) -> [String] {

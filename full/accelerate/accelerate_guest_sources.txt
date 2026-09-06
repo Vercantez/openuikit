@@ -1,14 +1,17 @@
 full/accelerate/Accelerate.swift
 full/accelerate/AccelerateBLASLevel23.swift
+full/accelerate/AccelerateBLASMore.swift
 full/accelerate/AccelerateBLASOps.swift
 full/accelerate/AccelerateCFunctions.swift
 full/accelerate/AccelerateCTypes.swift
+full/accelerate/AccelerateDepthGeometry.swift
 full/accelerate/AccelerateFFT.swift
 full/accelerate/AccelerateLAPACK.swift
 full/accelerate/AccelerateNumericCore.swift
 full/accelerate/AccelerateOverlay.swift
 full/accelerate/AcceleratePixelFormats.swift
 full/accelerate/AcceleratePixelStorage.swift
+full/accelerate/AccelerateSparseMultiply.swift
 full/accelerate/AccelerateVDSPMore.swift
 full/accelerate/AccelerateVDSPOps.swift
 full/accelerate/AccelerateVForceOps.swift

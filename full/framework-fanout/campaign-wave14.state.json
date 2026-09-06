@@ -139,11 +139,12 @@
     "gss": {
       "agentId": "bc-3fb8d6c1-fe41-5e82-a9f7-6f3d4bae92d2",
       "agentName": "Port GSS to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-3fb8d6c1-fe41-5e82-a9f7-6f3d4bae92d2",
       "branches": [
         {
           "branch": "cursor/port-gss-to-linux-a6c6",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/260",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -152,10 +153,13 @@
       "launchStatus": "CREATED",
       "module": "GSS",
       "priority": 100,
+      "resultBytes": 1272,
+      "resultSha256": "13bf4fc09b0549bc1766b22c205f81e1a242c5c81b00ad215cfd2c93d18e72f6",
       "runCreatedAt": "2026-09-06T05:34:52.966Z",
+      "runDurationMs": 1244949,
       "runId": "run-0462b4e2-2956-4df4-81f9-7c18fa0f31dc",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-06T05:34:53.822Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-06T05:55:38.568Z"
     },
     "identitydocumentservicesui": {
       "agentId": "bc-d90217ad-1fbf-52cb-b913-488d713da159",
@@ -185,11 +189,12 @@
     "lightweightcoderequirements": {
       "agentId": "bc-dad0a96b-3e98-5623-bef7-1c3742fc7156",
       "agentName": "Port LightweightCodeRequirements to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-dad0a96b-3e98-5623-bef7-1c3742fc7156",
       "branches": [
         {
           "branch": "cursor/port-lightweightcoderequirements-to-linux-aa7a",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/258",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -198,10 +203,13 @@
       "launchStatus": "CREATED",
       "module": "LightweightCodeRequirements",
       "priority": 100,
+      "resultBytes": 1277,
+      "resultSha256": "a5ea8606cbbd56d87bfd9dc3264f91b4e6cd184c5bde32de4a396b71bb38bb59",
       "runCreatedAt": "2026-09-06T05:34:59.513Z",
+      "runDurationMs": 1105381,
       "runId": "run-62d12f09-5c98-4c1c-9efa-4821c166fa17",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-06T05:35:00.305Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-06T05:53:25.479Z"
     },
     "securityui": {
       "agentId": "bc-a5bcad82-c132-50f5-9c86-498604f04732",
@@ -245,18 +253,18 @@
       "launchStatus": "CREATED",
       "module": "SystemExtensions",
       "priority": 100,
-      "resultBytes": 1225,
-      "resultSha256": "2fe95892c7c2c3e587305e59aadef058465d23b0fad19879b90852becd9e5faa",
-      "runCreatedAt": "2026-09-06T05:35:05.482Z",
-      "runDurationMs": 514890,
-      "runId": "run-0f76f91e-b6be-4b2c-827e-fd8ddb088352",
+      "resultBytes": 688,
+      "resultSha256": "a000a9893911bb540d4193f254e6ae2f25a477edeacae40163fb88588abddc48",
+      "runCreatedAt": "2026-09-06T06:05:15.322Z",
+      "runDurationMs": 176928,
+      "runId": "run-769ecd19-10d2-4652-acd8-6e8a412550a2",
       "runStatus": "FINISHED",
-      "runUpdatedAt": "2026-09-06T05:43:40.995Z"
+      "runUpdatedAt": "2026-09-06T06:08:13.430Z"
     },
     "touchcontroller": {
       "agentId": "bc-e61edb74-6414-5f5e-88e3-7d67111dcc39",
       "agentName": "Port TouchController to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-e61edb74-6414-5f5e-88e3-7d67111dcc39",
       "branches": [
         {
@@ -270,10 +278,13 @@
       "launchStatus": "CREATED",
       "module": "TouchController",
       "priority": 100,
+      "resultBytes": 1496,
+      "resultSha256": "75f2ba64f8f270e09267c4bd1b7fd8bc3a346d2c79c432c99686ad82a00867ea",
       "runCreatedAt": "2026-09-06T05:35:08.560Z",
+      "runDurationMs": 1004517,
       "runId": "run-0925cbce-c219-4a11-97d6-aabecccc9c66",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-06T05:35:09.395Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-06T05:51:53.776Z"
     },
     "translationuiprovider": {
       "agentId": "bc-8a226415-a6f2-58c9-b74b-0f10bd782430",
@@ -328,11 +339,12 @@
     "wirelessinsights": {
       "agentId": "bc-7742fbb5-da82-5937-8ae0-1c4743fe155e",
       "agentName": "Port WirelessInsights to Linux",
-      "agentStatus": "ACTIVE",
+      "agentStatus": "IDLE",
       "agentUrl": "https://cursor.com/agents/bc-7742fbb5-da82-5937-8ae0-1c4743fe155e",
       "branches": [
         {
           "branch": "cursor/port-wirelessinsights-to-linux-fb14",
+          "prUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/262",
           "repoUrl": "github.com/Vercantez/openuikit-linux-platform"
         }
       ],
@@ -341,10 +353,13 @@
       "launchStatus": "CREATED",
       "module": "WirelessInsights",
       "priority": 100,
+      "resultBytes": 1526,
+      "resultSha256": "4c0c3fbefd70280071d9f3f336f1bf9b857d9f52c97bef8855931fcf44b0bc9a",
       "runCreatedAt": "2026-09-06T05:51:16.166Z",
+      "runDurationMs": 865674,
       "runId": "run-76d7cb23-3b96-43a1-bee6-1cbd824c2185",
-      "runStatus": "RUNNING",
-      "runUpdatedAt": "2026-09-06T05:51:16.921Z"
+      "runStatus": "FINISHED",
+      "runUpdatedAt": "2026-09-06T06:05:42.396Z"
     }
   },
   "model": {
@@ -357,5 +372,5 @@
     "url": "https://github.com/Vercantez/openuikit-linux-platform"
   },
   "schema": "openuikit.cursor-framework-campaign-state.v1",
-  "updatedAt": "2026-09-06T05:51:37Z"
+  "updatedAt": "2026-09-06T06:20:44Z"
 }

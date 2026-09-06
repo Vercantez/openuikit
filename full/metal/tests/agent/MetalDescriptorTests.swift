@@ -177,7 +177,14 @@ func testDescriptorValueSemantics() {
     var value: Int32 = 1
     withUnsafeBytes(of: &value) { raw in
         constants.setConstantValue(raw.baseAddress!, type: .int, index: 0)
+        constants.setConstantValue(raw.baseAddress!, type: .int, withName: "k")
+        constants.setConstantValues(raw.baseAddress!, type: .int, range: 1..<2)
     }
+    constants.reset()
+    let resourceStatePass = MTLResourceStatePassDescriptor()
+    resourceStatePass.sampleBufferAttachments[0].startOfEncoderSampleIndex = 0
+    resourceStatePass.sampleBufferAttachments[0].endOfEncoderSampleIndex = 1
+    _ = resourceStatePass.sampleBufferAttachments[0].sampleBuffer
     let fnDesc = MTLFunctionDescriptor()
     fnDesc.name = "n"
     fnDesc.options = []

@@ -1,0 +1,76 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave15-repair-1",
+    "maxActive": 24,
+    "maxRuns": 4
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "accelerate": {
+      "agentId": "bc-cb59117d-2bd3-56f9-a9a8-502b471da791",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T06:57:00Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/263",
+      "expectedPriorHead": "1181a0bdee0504c81e8757739d373c3decc9621d",
+      "idempotencyKey": "e37b4fdf-71cd-5094-a97a-b0874661a8f7",
+      "launchStatus": "SENT",
+      "module": "Accelerate",
+      "promptBytes": 1523,
+      "promptSha256": "153bfc4af0cb3b74a77e8c8eec35458790ac0f33f893b32324240017ee996406",
+      "runId": "run-5d1221b5-0b85-4ad8-bc95-704ad524d4b2",
+      "runStatus": "running",
+      "slug": "accelerate"
+    },
+    "intents": {
+      "agentId": "bc-13c07dd4-2472-5795-b801-49c33b02ec74",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T06:57:08Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/271",
+      "expectedPriorHead": "a27394e379f7740d181356b23d4d0841cb25ce74",
+      "idempotencyKey": "9ad84135-8b84-5129-895b-8dda2c51c33f",
+      "launchStatus": "SENT",
+      "module": "Intents",
+      "promptBytes": 1733,
+      "promptSha256": "c73ab0197a924b934d2c863702c1e24555524c30cba937111a990a94ac32ec3b",
+      "runId": "run-f4225360-7795-4b48-b719-1cae64e2f2de",
+      "runStatus": "running",
+      "slug": "intents"
+    },
+    "scenekit": {
+      "agentId": "bc-588cef8e-c90f-58b1-89e9-d85fbbf64fc0",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T06:57:12Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/270",
+      "expectedPriorHead": "1e7a0ae54e0345ab873ee746144377f4af8a597a",
+      "idempotencyKey": "8e7835be-046c-51b0-ab11-78e5d182a070",
+      "launchStatus": "SENT",
+      "module": "SceneKit",
+      "promptBytes": 1412,
+      "promptSha256": "5f2d12830df21b2a68f818a56f744630fd1b4d5555f5d358804020c95cbe2cfb",
+      "runId": "run-f372d0df-be18-401d-b5ec-208a5a0641a4",
+      "runStatus": "running",
+      "slug": "scenekit"
+    },
+    "spritekit": {
+      "agentId": "bc-117e29b9-fc18-51d1-8508-3a17c3f52995",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T06:57:17Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/267",
+      "expectedPriorHead": "986cf31c2a9cfa217e4f59a5f69d594f30af2eee",
+      "idempotencyKey": "44e2f14f-8a98-5544-b0a6-4545e175296c",
+      "launchStatus": "SENT",
+      "module": "SpriteKit",
+      "promptBytes": 1424,
+      "promptSha256": "4161a4e9dc64b1f8225454c62b3b2eab982979236e4759e966740997394cbea7",
+      "runId": "run-09d80c36-72e4-42ef-b6c8-a097b4f6cceb",
+      "runStatus": "running",
+      "slug": "spritekit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

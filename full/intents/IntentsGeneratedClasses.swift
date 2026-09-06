@@ -1803,12 +1803,14 @@ open class INPaymentAccount: NSObject, @unchecked Sendable {
     public convenience init?(nickname: INSpeakableString, number: String?, accountType: INAccountType, organizationName: INSpeakableString?) {
         self.init()
         self.nickname = nickname
+        self.accountNumber = number
         self.accountType = accountType
         self.organizationName = organizationName
     }
     public convenience init(nickname: INSpeakableString, number: String?, accountType: INAccountType, organizationName: INSpeakableString?, balance: INBalanceAmount?, secondaryBalance: INBalanceAmount?) {
         self.init()
         self.nickname = nickname
+        self.accountNumber = number
         self.accountType = accountType
         self.organizationName = organizationName
         self.balance = balance
@@ -2295,6 +2297,11 @@ open class INRestaurantGuest: NSObject, @unchecked Sendable {
         self.init()
         self.phoneNumber = phoneNumber
         self.emailAddress = emailAddress
+        _ = nameComponents
+    }
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -2380,14 +2387,27 @@ open class INRestaurantReservationUserBooking: NSObject, @unchecked Sendable {
     open var selectedOffer: INRestaurantOffer? = nil
     open var status: INRestaurantReservationUserBookingStatus?
     public required override init() { super.init() }
+    open var restaurant: INRestaurant?
+    open var bookingDate: Date?
+    open var partySize: Int = 0
+    open var bookingIdentifier: String?
+
     public convenience init(restaurant: INRestaurant, booking bookingDate: Date, partySize: Int, bookingIdentifier: String, guest: INRestaurantGuest, status: INRestaurantReservationUserBookingStatus, dateStatusModified: Date) {
         self.init()
+        self.restaurant = restaurant
+        self.bookingDate = bookingDate
+        self.partySize = partySize
+        self.bookingIdentifier = bookingIdentifier
         self.guest = guest
         self.status = status
         self.dateStatusModified = dateStatusModified
     }
     public convenience init(restaurant: INRestaurant, bookingDate: Date, partySize: Int, bookingIdentifier: String, guest: INRestaurantGuest, status: INRestaurantReservationUserBookingStatus, dateStatusModified: Date) {
         self.init()
+        self.restaurant = restaurant
+        self.bookingDate = bookingDate
+        self.partySize = partySize
+        self.bookingIdentifier = bookingIdentifier
         self.guest = guest
         self.status = status
         self.dateStatusModified = dateStatusModified
@@ -2467,21 +2487,38 @@ open class INRideDriver: NSObject, @unchecked Sendable {
         self.init()
         self.rating = rating
         self.phoneNumber = phoneNumber
+        _ = handle
+        _ = displayName
+        _ = image
     }
     public convenience init(handle: String, nameComponents: PersonNameComponents, image: INImage?, rating: String?, phoneNumber: String?) {
         self.init()
         self.rating = rating
         self.phoneNumber = phoneNumber
+        _ = handle
+        _ = nameComponents
+        _ = image
     }
     public convenience init(personHandle: INPersonHandle, nameComponents: PersonNameComponents?, displayName: String?, image: INImage?, rating: String?, phoneNumber: String?) {
         self.init()
         self.rating = rating
         self.phoneNumber = phoneNumber
+        _ = personHandle
+        _ = nameComponents
+        _ = displayName
+        _ = image
     }
     public convenience init(phoneNumber: String, nameComponents: PersonNameComponents?, displayName: String?, image: INImage?, rating: String?) {
         self.init()
         self.phoneNumber = phoneNumber
         self.rating = rating
+        _ = nameComponents
+        _ = displayName
+        _ = image
+    }
+    public required convenience init?(coder: NSCoder) {
+        self.init()
+        inLinuxApplyCoder(self, coder)
     }
 }
 
@@ -3046,7 +3083,43 @@ open class INSetClimateSettingsInCarIntent: INIntent, @unchecked Sendable {
     open var relativeFanSpeedSetting: INRelativeSetting?
     open var relativeTemperatureSetting: INRelativeSetting?
     open var temperature: Measurement<UnitTemperature>? = nil
+    @nonobjc public var enableFan: Bool? = nil
+    @nonobjc public var enableAirConditioner: Bool? = nil
+    @nonobjc public var enableClimateControl: Bool? = nil
+    @nonobjc public var enableAutoMode: Bool? = nil
+    @nonobjc public var fanSpeedIndex: Int? = nil
+    @nonobjc public var fanSpeedPercentage: Double? = nil
     public required override init() { super.init() }
+
+    @nonobjc
+    public convenience init(
+        enableFan: Bool? = nil,
+        enableAirConditioner: Bool? = nil,
+        enableClimateControl: Bool? = nil,
+        enableAutoMode: Bool? = nil,
+        airCirculationMode: INCarAirCirculationMode = .unknown,
+        fanSpeedIndex: Int? = nil,
+        fanSpeedPercentage: Double? = nil,
+        relativeFanSpeedSetting: INRelativeSetting = .unknown,
+        temperature: Measurement<UnitTemperature>? = nil,
+        relativeTemperatureSetting: INRelativeSetting = .unknown,
+        climateZone: INCarSeat = .unknown,
+        carName: INSpeakableString? = nil
+    ) {
+        self.init()
+        self.enableFan = enableFan
+        self.enableAirConditioner = enableAirConditioner
+        self.enableClimateControl = enableClimateControl
+        self.enableAutoMode = enableAutoMode
+        self.airCirculationMode = airCirculationMode
+        self.fanSpeedIndex = fanSpeedIndex
+        self.fanSpeedPercentage = fanSpeedPercentage
+        self.relativeFanSpeedSetting = relativeFanSpeedSetting
+        self.temperature = temperature
+        self.relativeTemperatureSetting = relativeTemperatureSetting
+        self.climateZone = climateZone
+        self.carName = carName
+    }
 }
 
 open class INSetClimateSettingsInCarIntentResponse: INIntentResponse, @unchecked Sendable {

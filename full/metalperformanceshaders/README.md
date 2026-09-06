@@ -19,18 +19,20 @@ is a separate central review step.
   histogram, scale, threshold, area max/min) can be constructed, copied, and
   queried. `sourceRegion(destinationSize:)` is offset/clip CPU geometry.
   `MPSImageGaussianBlur.copy(with:device:)` preserves `sigma`.
-- CPU encode for unorm8 Gaussian (separable), box, convolution, transpose,
-  arithmetic add/sub/mul/div, and a four-channel uint32 histogram into a host
-  `MTLBuffer`.
-- Matrix and vector descriptors plus host buffers. `MPSSizeofMPSDataType` and
-  `MPSDataTypeBitsCount` follow the documented bit-field encoding.
-- Host `float32` GEMM / GEMV (`MPSMatrixMultiplication`,
-  `MPSMatrixVectorMultiplication`) and matrix/image copy helpers.
-- `MPSNDArrayDescriptor` shape/slice/transpose/reshape math and host
-  `MPSNDArray` byte I/O.
-- Additional constructable image kernels (median, dilate/erode, integral,
-  Laplacian/pyramid, reduce, statistics, Canny, keypoints) with documented
-  properties; GPU encode stays fail-closed unless a CPU path exists.
+- CPU encode for unorm8 Gaussian (separable 2-pass), box, tent, convolution,
+  median, Sobel, Laplacian, threshold binary/toZero/truncate, area max/min,
+  dilate/erode, bilinear and Lanczos-2 scale, transpose, histogram, histogram
+  equalization LUT, arithmetic add/sub/mul/div. ClipRect writes only the
+  destination region; offset is the source coordinate of `clipRect.origin`.
+- `MPSImage` packed `HeightxWidthxFeatureChannels` and
+  `featureChannelsxHeightxWidth` byte layouts.
+- Host `float32` GEMM / GEMV with alpha/beta/transposes and exact row strides,
+  plus `MPSMatrixSoftMax`, `MPSMatrixFindTopK`, and `MPSMatrixSum`.
+- CNN / NN-graph / RNN descriptors (`MPSCNNConvolutionDescriptor`,
+  `MPSNNNeuronDescriptor`, `MPSRNNDescriptor`, `MPSNNGraph`, pooling kernels)
+  are constructable validated data. Encode stays fail-closed.
+- `MPSRayIntersector` is constructable; every `encodeIntersection` is
+  fail-closed.
 - `MPSSupportsMTLDevice` is always `false` and `MPSGetPreferredDevice` is
   always `nil`. Linux has no Metal GPU in this environment.
 
@@ -44,17 +46,22 @@ GPU `encode` methods that have no CPU implementation record
 `MPSHostBoundary.lastRefusedAPI` and do not write fabricated filtered pixels.
 In-place texture encodes return `false`. Command-buffer heap hints
 (`MPSHintTemporaryMemoryHighWaterMark`, `MPSSetHeapCacheDuration`) are inert.
-`NSCoder` kernel initializers return `nil`. Neural-network graphs, CNN layers,
-and `MPSRayIntersector` remain deferred.
+`NSCoder` kernel initializers return `nil`. `MPSCNNKernel` / `MPSNNGraph`
+encode and `MPSRayIntersector.encodeIntersection` record
+`MPSHostBoundary.lastRefusedAPI` and do not invent GPU results. CNN
+convolution encode is fail-closed; descriptors and weight state objects are
+real host data. `MPSAccelerationStructure` remains a declared stub.
 
 ## Tests
 
 `tests/agent/MetalPerformanceShadersRuntime.swift` exercises descriptor math,
-image byte I/O, kernel construction, histogram sizing, host GEMM, and the
-fail-closed device queries, then prints `METALPERFORMANCESHADERS_AGENT_RUNTIME_OK`.
+image byte I/O, identity convolution + clipRect, CHW/HWC layout, host GEMM,
+softmax, CNN fail-closed encode, and ray fail-closed intersection, then prints
+`METALPERFORMANCESHADERS_AGENT_RUNTIME_OK`.
 
 Focused `tests/agent/*Tests.swift` probes are the coverage evidence for
-`implemented` rows.
+`implemented` rows. Pixel-exact image kernels live in
+`MPSImageKernelCPUTests.swift`.
 
 Run:
 
@@ -87,3 +94,45 @@ Top-5 `implemented` evidence distribution:
 
 No non-enum/option-set test cites more than 40% of the remaining implemented
 rows (next highest is geometry structs at 17.3% of remaining).
+
+## Depth pass 2026-09 (wave 8)
+
+Coverage before this pass: **1501 implemented / 6 declared / 1875 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **1763 implemented / 3 declared / 1616 deferred /
+0 unavailable / 0 not-applicable**.
+
+This second pass keeps the first-pass host surface and adds CPU pixel-exact
+kernels (convolution, Gaussian/box/tent/median, Sobel, thresholds, histogram
+equalization, Lanczos/bilinear/transpose, area max/min, Laplacian,
+dilate/erode), matrix softmax/top-k/sum with exact strides, CHW/HWC feature
+layouts, unary clipRect/offset/edgeMode, CNN/NN/RNN descriptors with
+fail-closed encode, and fail-closed `MPSRayIntersector`.
+
+`MPSNNFilterNode`, `MPSNNImageNode`, and `MPSNNPadding` moved from `declared`
+to `implemented`. `MPSAccelerationStructure`, `MPSHandle`, and
+`MPSHeapProvider` stay declared stubs. Remaining CNN training/gradient layers,
+YOLO loss, RNN inference layers, and binary/multiary kernels stay deferred.
+
+Top-5 `implemented` evidence distribution after this pass:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 21.4% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (option-set members; shared table-driven test) |
+| 343 | 19.5% | `MPSTypesTests.swift#testMPSEnumRawValues` (enum members; shared table-driven test) |
+| 135 | 7.7% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 104 | 5.9% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+| 81 | 4.6% | `MPSTypesTests.swift#testMPSConstantVars` |
+
+No non-enum/option-set test cites more than 40% of the remaining implemented
+rows (next highest is geometry structs at 14.0% of remaining). New CNN/matrix
+evidence is split across `MPSCNNDescriptorTests.swift` and
+`MPSMatrixDepthTests.swift`.
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot
+fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`).
+`swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean
+product tree (`products=clean`). Starting commit
+`bff8535c68425cc39fb45cb00d447b0981b57242` matched.

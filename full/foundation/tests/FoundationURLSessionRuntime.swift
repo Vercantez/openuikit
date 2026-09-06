@@ -51,6 +51,12 @@ private enum FoundationURLSessionRuntime {
         require(defaultConfiguration.timeoutIntervalForResource == 604_800, "default resource timeout")
         require(defaultConfiguration.httpCookieStorage === HTTPCookieStorage.shared, "default cookie storage")
         require(defaultConfiguration.urlCache === URLCache.shared, "default cache")
+        require(defaultConfiguration.waitsForConnectivity == false, "waitsForConnectivity")
+        require(defaultConfiguration.httpMaximumConnectionsPerHost == 6, "httpMaximumConnectionsPerHost")
+        require(
+            defaultConfiguration.httpCookieAcceptPolicy == .onlyFromMainDocumentDomain,
+            "httpCookieAcceptPolicy"
+        )
 
         let ephemeralOne = URLSessionConfiguration.ephemeral
         let ephemeralTwo = URLSessionConfiguration.ephemeral
@@ -239,6 +245,99 @@ private enum FoundationURLSessionRuntime {
             httpsMarker = "system-ca-verified"
         }
 
-        print("FOUNDATION_URLSESSION_MACHO_OK delegate=retained configuration=isolated cookies=host-domain-path-expiry-delete redirect=set-cookie-post-get status500=response final-url=preserved concurrency=parallel input-stream=bounded urlprotocol=intercepted-cache-hit-redirect-refused timeouts=configuration-request https=\(httpsMarker)")
+        let components = URLComponents(string: "https://user:pass@example.com:8080/path?q=1&b=hello%20world#frag")
+        require(components?.scheme == "https", "URLComponents scheme")
+        require(components?.host == "example.com", "URLComponents host")
+        require(components?.port == 8080, "URLComponents port")
+        require(components?.path == "/path", "URLComponents path")
+        require(components?.queryItems?.count == 2, "URLComponents queryItems")
+        require(components?.queryItems?.last?.value == "hello world", "URLComponents query decode")
+        var built = URLComponents()
+        built.scheme = "http"
+        built.host = "example.com"
+        built.path = "/"
+        built.queryItems = [URLQueryItem(name: "k", value: "a&b")]
+        require(built.percentEncodedQuery == "k=a%26b", "URLQueryItem percent-encoding")
+
+        let dataTask = protocolSession.dataTask(with: URL(string: "probe://fixture/value")!)
+        require(dataTask.state == .suspended, "new dataTask starts suspended")
+        require(type(of: dataTask) == URLSessionDataTask.self, "dataTask metatype")
+        let (taskData, taskResponse, taskError) = await withCheckedContinuation {
+            (continuation: CheckedContinuation<(Data?, URLResponse?, (any Error)?), Never>) in
+            let task = protocolSession.dataTask(with: URL(string: "probe://fixture/value")!) { data, response, error in
+                continuation.resume(returning: (data, response, error))
+            }
+            require(task.state == .suspended, "completion dataTask starts suspended")
+            task.resume()
+        }
+        require(taskError == nil, "completion handler error")
+        require(String(data: taskData ?? Data(), encoding: .utf8) == "protocol-ok", "completion handler data")
+        require((taskResponse as? HTTPURLResponse)?.statusCode == 200, "completion handler response")
+
+        let upload = networkSession.uploadTask(with: URLRequest(url: base.appendingPathComponent("echo")), from: Data("x".utf8))
+        require(type(of: upload) == URLSessionUploadTask.self, "uploadTask metatype")
+        require(upload.state == .suspended, "uploadTask starts suspended")
+
+        let download = protocolSession.downloadTask(with: URL(string: "probe://fixture/value")!)
+        require(type(of: download) == URLSessionDownloadTask.self, "downloadTask metatype")
+
+        let credential = URLCredential(user: "u", password: "p", persistence: .forSession)
+        require(credential.user == "u" && credential.password == "p", "URLCredential")
+        let space = URLProtectionSpace(
+            host: "example.com", port: 80, protocol: "http", realm: nil, authenticationMethod: nil
+        )
+        require(space.host == "example.com", "URLProtectionSpace")
+        _ = URLAuthenticationChallenge(
+            protectionSpace: space, proposedCredential: credential,
+            previousFailureCount: 0, failureResponse: nil, error: nil
+        )
+
+        let background = URLSession(
+            configuration: .background(withIdentifier: "openuikit.foundation.urlsession")
+        )
+        require(background.configuration.identifier == "openuikit.foundation.urlsession", "background identifier")
+        do {
+            _ = try await background.data(from: URL(string: "probe://fixture/value")!)
+            fatalError("FoundationURLSessionRuntime: background session did not fail closed")
+        } catch let error as URLError {
+            require(error.code == .cannotLoadFromNetwork, "background fail-closed")
+        }
+
+        let filenameResponse = HTTPURLResponse(
+            url: URL(string: "http://example.com/a/b.txt")!,
+            statusCode: 200, httpVersion: "HTTP/1.1",
+            headerFields: ["Content-Type": "text/html"]
+        )!
+        require(filenameResponse.suggestedFilename == "b.txt.html", "suggestedFilename MIME extension")
+        require(HTTPURLResponse.localizedString(forStatusCode: 418) == "client error", "localizedString 4xx")
+
+        final class RegisteredProbe: URLProtocol, @unchecked Sendable {
+            nonisolated(unsafe) static var started = false
+            override class func canInit(with request: URLRequest) -> Bool {
+                request.url?.scheme == "regprobe"
+            }
+            override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+            override func startLoading() {
+                Self.started = true
+                let response = HTTPURLResponse(
+                    url: request.url!, statusCode: 200, httpVersion: "HTTP/1.1",
+                    headerFields: ["Content-Type": "text/plain"]
+                )!
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                client?.urlProtocol(self, didLoad: Data("registered-ok".utf8))
+                client?.urlProtocolDidFinishLoading(self)
+            }
+            override func stopLoading() {}
+        }
+        require(URLProtocol.registerClass(RegisteredProbe.self), "URLProtocol.registerClass")
+        let registeredSession = URLSession(configuration: .ephemeral)
+        let (registeredData, _) = try await registeredSession.data(
+            from: URL(string: "regprobe://fixture/value")!
+        )
+        require(String(data: registeredData, encoding: .utf8) == "registered-ok", "registerClass intercept")
+        require(RegisteredProbe.started, "registerClass startLoading")
+        URLProtocol.unregisterClass(RegisteredProbe.self)
+
+        print("FOUNDATION_URLSESSION_MACHO_OK delegate=retained configuration=isolated cookies=host-domain-path-expiry-delete redirect=set-cookie-post-get status500=response final-url=preserved concurrency=parallel input-stream=bounded urlprotocol=intercepted-cache-hit-redirect-refused timeouts=configuration-request https=\(httpsMarker) components=rfc3986 tasks=suspended-completion-upload-download background=fail-closed registerClass=global")
     }
 }
