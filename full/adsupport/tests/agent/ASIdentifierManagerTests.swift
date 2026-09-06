@@ -7,7 +7,6 @@ func testASIdentifierManagerClassIdentity() {
     let asObject: NSObject = manager
     precondition(asObject === manager)
     precondition(manager.isKind(of: NSObject.self))
-    precondition(manager is NSObject)
     let _: ASIdentifierManager.Type = ASIdentifierManager.self
     precondition(!(String(reflecting: ASIdentifierManager.self).hasPrefix("Foundation.")))
 }
