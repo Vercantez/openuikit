@@ -124,24 +124,41 @@ public enum ContactsUIHostControl {
         picker.hostSelect(properties: properties)
     }
 
-    /// Records a fail-closed editor completion. The Darwin `didCompleteWith`
-    /// callback is invoked with `nil` (no saved contact).
+    /// Records an editor completion. Pass `nil` for the Darwin cancel path
+    /// (no saved contact). Pass a caller-owned `CNContact` to script Done;
+    /// Linux never writes `contactStore`.
     public static func reportViewControllerCompletion(
-        _ viewController: CNContactViewController
+        _ viewController: CNContactViewController,
+        contact: CNContact? = nil
     ) {
-        viewController.linuxCompletedWithoutSaving = true
-        viewController.delegate?.contactViewController(viewController, didCompleteWith: nil)
+        viewController.linuxCompletedWithoutSaving = (contact == nil)
+        viewController.delegate?.contactViewController(viewController, didCompleteWith: contact)
+    }
+
+    /// Darwin Cancel. Equivalent to `reportViewControllerCompletion(_:contact: nil)`.
+    public static func reportViewControllerDidCancel(_ viewController: CNContactViewController) {
+        reportViewControllerCompletion(viewController, contact: nil)
     }
 
     /// Asks the editor whether a property should perform its default action.
+    /// `allowsActions == false` is fail-closed: the delegate is not asked.
     public static func shouldPerformDefaultAction(
         _ viewController: CNContactViewController,
         for property: CNContactProperty
     ) -> Bool {
-        viewController.delegate?.contactViewController(
+        guard viewController.allowsActions else { return false }
+        return viewController.delegate?.contactViewController(
             viewController,
             shouldPerformDefaultActionFor: property
         ) ?? false
+    }
+
+    /// Darwin would consult `contactStore` for unified/linked cards.
+    /// Isolated Linux always returns `0`.
+    public static func linkedContactCount(_ viewController: CNContactViewController) -> Int {
+        _ = viewController.shouldShowLinkedContacts
+        _ = viewController.contactStore
+        return 0
     }
 
     /// Invokes the access-button approval callback with an empty identifier
@@ -178,7 +195,13 @@ public enum ContactsUIHostControl {
     /// write as `NSPredicate(format:)`. swift-corelibs-foundation does not
     /// parse predicate strings; this returns an `NSPredicate(block:)`.
     public static func predicate(format: String, argument: String? = nil) -> NSPredicate {
-        ContactsUIPredicateEvaluation.makePredicate(format: format, argument: argument)
+        predicate(format: format, arguments: argument.map { [$0] } ?? [])
+    }
+
+    /// Same portable subset with left-to-right `%@` substitution, including
+    /// `AND` / `OR` compounds (`AND` binds tighter).
+    public static func predicate(format: String, arguments: [String]) -> NSPredicate {
+        ContactsUIPredicateEvaluation.makePredicate(format: format, arguments: arguments)
     }
 
     public static func evaluate(_ predicate: NSPredicate?, contact: CNContact) -> Bool {
@@ -187,6 +210,23 @@ public enum ContactsUIHostControl {
 
     public static func evaluate(_ predicate: NSPredicate?, property: CNContactProperty) -> Bool {
         ContactsUIPredicateEvaluation.evaluate(predicate, property: property)
+    }
+
+    /// Conjunction of two portable picker predicates. Darwin would write
+    /// `NSCompoundPredicate(andPredicateWithSubpredicates:)`.
+    public static func and(_ lhs: NSPredicate, _ rhs: NSPredicate) -> NSPredicate {
+        NSPredicate { object, bindings in
+            lhs.evaluate(with: object, substitutionVariables: bindings)
+                && rhs.evaluate(with: object, substitutionVariables: bindings)
+        }
+    }
+
+    /// Disjunction of two portable picker predicates.
+    public static func or(_ lhs: NSPredicate, _ rhs: NSPredicate) -> NSPredicate {
+        NSPredicate { object, bindings in
+            lhs.evaluate(with: object, substitutionVariables: bindings)
+                || rhs.evaluate(with: object, substitutionVariables: bindings)
+        }
     }
 
     public static func shortcutContactIdentifier(_ icon: UIApplicationShortcutIcon) -> String? {
@@ -205,8 +245,12 @@ public enum ContactsUIHostControl {
 /// interpreter is the documented host path.
 public enum ContactsUIPredicateEvaluation {
     public static func makePredicate(format: String, argument: String? = nil) -> NSPredicate {
+        makePredicate(format: format, arguments: argument.map { [$0] } ?? [])
+    }
+
+    public static func makePredicate(format: String, arguments: [String]) -> NSPredicate {
         NSPredicate { object, _ in
-            evaluate(format: format, argument: argument, object: object)
+            evaluate(format: format, arguments: arguments, object: object)
         }
     }
 
@@ -221,8 +265,29 @@ public enum ContactsUIPredicateEvaluation {
     }
 
     static func evaluate(format: String, argument: String?, object: Any?) -> Bool {
+        evaluate(format: format, arguments: argument.map { [$0] } ?? [], object: object)
+    }
+
+    static func evaluate(format: String, arguments: [String], object: Any?) -> Bool {
         guard let snapshot = object as? [String: Any] else { return false }
+        let bound = bindArguments(format, arguments: arguments)
+        return evaluateBound(bound, snapshot: snapshot)
+    }
+
+    private static func evaluateBound(_ format: String, snapshot: [String: Any]) -> Bool {
         let trimmed = format.trimmingCharacters(in: .whitespacesAndNewlines)
+        let orParts = splitKeyword(trimmed, keyword: "OR")
+        if orParts.count > 1 {
+            return orParts.contains { evaluateBound($0, snapshot: snapshot) }
+        }
+        let andParts = splitKeyword(trimmed, keyword: "AND")
+        if andParts.count > 1 {
+            return andParts.allSatisfy { evaluateBound($0, snapshot: snapshot) }
+        }
+        return evaluateLeaf(trimmed, snapshot: snapshot)
+    }
+
+    private static func evaluateLeaf(_ trimmed: String, snapshot: [String: Any]) -> Bool {
         if trimmed.compare("TRUEPREDICATE", options: .caseInsensitive) == .orderedSame {
             return true
         }
@@ -243,27 +308,101 @@ public enum ContactsUIPredicateEvaluation {
             }
         }
 
-        if let comparison = parseStringComparison(trimmed, argument: argument) {
+        if let comparison = parseStringComparison(trimmed, argument: nil) {
+            if let values = snapshot[comparison.key] as? [String] {
+                return evaluateCollection(values, comparison: comparison)
+            }
             let actual = string(snapshot[comparison.key]) ?? ""
-            let expected = comparison.value
-            let foldedActual: String
-            let foldedExpected: String
-            if comparison.caseInsensitive {
-                foldedActual = actual.lowercased()
-                foldedExpected = expected.lowercased()
-            } else {
-                foldedActual = actual
-                foldedExpected = expected
-            }
-            switch comparison.op {
-            case "EQUAL": return foldedActual == foldedExpected
-            case "BEGINSWITH": return foldedActual.hasPrefix(foldedExpected)
-            case "CONTAINS": return foldedActual.contains(foldedExpected)
-            case "ENDSWITH": return foldedActual.hasSuffix(foldedExpected)
-            default: return false
-            }
+            return evaluateString(actual, comparison: comparison)
         }
         return false
+    }
+
+    /// Left-to-right `%@` substitution. Values are wrapped in double quotes so
+    /// the leaf parser can `stripQuotes`.
+    private static func bindArguments(_ format: String, arguments: [String]) -> String {
+        var result = ""
+        var index = format.startIndex
+        var argumentIndex = 0
+        while index < format.endIndex {
+            if format[index...].hasPrefix("%@") {
+                let value = argumentIndex < arguments.count ? arguments[argumentIndex] : ""
+                argumentIndex += 1
+                result += quoted(value)
+                index = format.index(index, offsetBy: 2)
+            } else {
+                result.append(format[index])
+                index = format.index(after: index)
+            }
+        }
+        return result
+    }
+
+    private static func quoted(_ value: String) -> String {
+        let escaped = value.replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+        return "\"\(escaped)\""
+    }
+
+    private static func splitKeyword(_ text: String, keyword: String) -> [String] {
+        guard let regex = try? NSRegularExpression(
+            pattern: "\\s+\(keyword)\\s+",
+            options: .caseInsensitive
+        ) else {
+            return [text]
+        }
+        let range = NSRange(text.startIndex..<text.endIndex, in: text)
+        let matches = regex.matches(in: text, range: range)
+        if matches.isEmpty {
+            return [text]
+        }
+        var parts: [String] = []
+        var cursor = text.startIndex
+        for match in matches {
+            guard let slice = Range(match.range, in: text) else { continue }
+            parts.append(String(text[cursor..<slice.lowerBound]))
+            cursor = slice.upperBound
+        }
+        parts.append(String(text[cursor...]))
+        return parts
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+    }
+
+    private static func evaluateCollection(_ values: [String], comparison: StringClause) -> Bool {
+        let expected = comparison.caseInsensitive ? comparison.value.lowercased() : comparison.value
+        let folded = comparison.caseInsensitive ? values.map { $0.lowercased() } : values
+        switch comparison.op {
+        case "EQUAL":
+            return folded.contains(expected)
+        case "CONTAINS":
+            return folded.contains { $0.contains(expected) }
+        case "BEGINSWITH":
+            return folded.contains { $0.hasPrefix(expected) }
+        case "ENDSWITH":
+            return folded.contains { $0.hasSuffix(expected) }
+        default:
+            return false
+        }
+    }
+
+    private static func evaluateString(_ actual: String, comparison: StringClause) -> Bool {
+        let foldedActual: String
+        let foldedExpected: String
+        if comparison.caseInsensitive {
+            foldedActual = actual.lowercased()
+            foldedExpected = comparison.value.lowercased()
+        } else {
+            foldedActual = actual
+            foldedExpected = comparison.value
+        }
+        switch comparison.op {
+        case "EQUAL": return foldedActual == foldedExpected
+        case "BEGINSWITH": return foldedActual.hasPrefix(foldedExpected)
+        case "CONTAINS": return foldedActual.contains(foldedExpected)
+        case "ENDSWITH": return foldedActual.hasSuffix(foldedExpected)
+        default: return false
+        }
     }
 
     private struct CountClause {

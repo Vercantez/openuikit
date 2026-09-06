@@ -407,4 +407,67 @@ public struct Binding<Value> {
     }
 }
 
+public struct LocalizedStringKey: Equatable, Hashable, Sendable {
+    public var linuxRaw: String
+    public init(_ raw: String) { self.linuxRaw = raw }
+}
+
+public struct Text: Equatable, Hashable, Sendable {
+    public var linuxRaw: String
+    public init(_ raw: String) { self.linuxRaw = raw }
+}
+
+public struct LocalizedStringResource: Equatable, Hashable, Sendable {
+    public var linuxRaw: String
+    public init(_ raw: String) { self.linuxRaw = raw }
+}
+
+public struct FocusInteractions: Equatable, Hashable, Sendable {
+    public static let automatic = FocusInteractions()
+}
+
+public struct Alignment: Equatable, Hashable, Sendable {
+    public static let center = Alignment()
+}
+
+public struct EdgeInsets: Equatable, Hashable, Sendable {
+    public var top: CGFloat
+    public var leading: CGFloat
+    public var bottom: CGFloat
+    public var trailing: CGFloat
+
+    public init(top: CGFloat = 0, leading: CGFloat = 0, bottom: CGFloat = 0, trailing: CGFloat = 0) {
+        self.top = top
+        self.leading = leading
+        self.bottom = bottom
+        self.trailing = trailing
+    }
+}
+
+public enum Edge: Int, Sendable {
+    case top = 1
+    case leading = 2
+    case bottom = 4
+    case trailing = 8
+
+    public struct Set: OptionSet, Sendable {
+        public let rawValue: Int
+        public init(rawValue: Int) { self.rawValue = rawValue }
+        public static let all = Set(rawValue: 15)
+        public static let top = Set(rawValue: 1)
+    }
+}
+
+public struct ListSectionSpacing: Equatable, Hashable, Sendable {
+    public static let `default` = ListSectionSpacing()
+}
+
+public protocol Transferable {}
+
+extension String: Transferable {}
+
+public struct SharePreview<Icon, Label> {
+    public init() {}
+}
+
 #endif
