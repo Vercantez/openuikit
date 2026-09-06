@@ -1,0 +1,9 @@
+full/financekit/FinanceKit.swift
+full/financekit/FinanceKitBackground.swift
+full/financekit/FinanceKitEnums.swift
+full/financekit/FinanceKitError.swift
+full/financekit/FinanceKitLookalikes.swift
+full/financekit/FinanceKitModels.swift
+full/financekit/FinanceKitOrders.swift
+full/financekit/FinanceKitQueries.swift
+full/financekit/FinanceKitStore.swift
