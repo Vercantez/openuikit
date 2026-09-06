@@ -1,0 +1,222 @@
+{
+  "campaign": {
+    "activeBuildId": "bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87",
+    "environmentMarker": "CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean",
+    "id": "ios26.1-fwseed-r13",
+    "manifestSha256": "b7216a73bbbd662a5dadb7d4e4478059e30a05193baed8b01e85259747f9dec8",
+    "startingSha": "cbb368eeea236bbc0479fefa599190972ac8cfca"
+  },
+  "createAttemptTimestamps": [
+    "2026-09-06T05:21:32Z"
+  ],
+  "createdAt": "2026-09-06T05:21:22Z",
+  "frameworks": {
+    "assignables": {
+      "agentId": "bc-62e07c51-b6d9-5d48-9c53-4ef19e3ebd05",
+      "agentName": "Port Assignables to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchAttemptedAt": "2026-09-06T05:21:32Z",
+      "launchStatus": "CREATING",
+      "module": "Assignables",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "browserenginekit": {
+      "agentId": "bc-79c7a441-16aa-5764-8798-1879d9264877",
+      "agentName": "Port BrowserEngineKit to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchStatus": "PENDING",
+      "module": "BrowserEngineKit",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "contactprovider": {
+      "agentId": "bc-f9576db6-6703-56eb-9497-b745091ee62d",
+      "agentName": "Port ContactProvider to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "ContactProvider",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "declaredagerange": {
+      "agentId": "bc-18210196-9823-581b-a2a9-8ee7bf5467bb",
+      "agentName": "Port DeclaredAgeRange to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "DeclaredAgeRange",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "devicediscoveryextension": {
+      "agentId": "bc-a0f41618-5d71-5173-81ad-fc32e49d00fe",
+      "agentName": "Port DeviceDiscoveryExtension to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "DeviceDiscoveryExtension",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "extensionfoundation": {
+      "agentId": "bc-f5fbb1d8-6d34-576b-ab49-881e6dc83365",
+      "agentName": "Port ExtensionFoundation to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "ExtensionFoundation",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "identitydocumentservices": {
+      "agentId": "bc-34d6648c-f45c-53dc-8688-3e497906ce6a",
+      "agentName": "Port IdentityDocumentServices to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchStatus": "PENDING",
+      "module": "IdentityDocumentServices",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "managedapp": {
+      "agentId": "bc-22825096-8dd3-53d5-a8ed-2e7fbc1ee623",
+      "agentName": "Port ManagedApp to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "ManagedApp",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "managedappdistribution": {
+      "agentId": "bc-413dd3a3-9920-5fb9-a778-6d6034ddb0d2",
+      "agentName": "Port ManagedAppDistribution to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "ManagedAppDistribution",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "paperkit": {
+      "agentId": "bc-bcd92946-5a33-581a-ae89-5d75c5450bc9",
+      "agentName": "Port PaperKit to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchStatus": "PENDING",
+      "module": "PaperKit",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "permissionkit": {
+      "agentId": "bc-41afba26-9f8d-5af2-8b83-e5a2289ccc7f",
+      "agentName": "Port PermissionKit to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "PermissionKit",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "relevancekit": {
+      "agentId": "bc-f702887a-abf3-5a61-a4dd-8c7e3ff9bb80",
+      "agentName": "Port RelevanceKit to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "RelevanceKit",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "secureelementcredential": {
+      "agentId": "bc-20c0d64b-666c-5a91-8a4b-8049e0459b74",
+      "agentName": "Port SecureElementCredential to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "medium-full",
+      "launchStatus": "PENDING",
+      "module": "SecureElementCredential",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "stickerkit": {
+      "agentId": "bc-6ac2505a-c623-571e-903c-a877b350dbe6",
+      "agentName": "Port StickerKit to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "StickerKit",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    },
+    "telephonymessagingkit": {
+      "agentId": "bc-c99c32c9-4576-5aef-8b0b-185b921ae89b",
+      "agentName": "Port TelephonyMessagingKit to Linux",
+      "agentStatus": null,
+      "agentUrl": null,
+      "branches": [],
+      "lane": "leaf-full",
+      "launchStatus": "PENDING",
+      "module": "TelephonyMessagingKit",
+      "priority": 100,
+      "runId": null,
+      "runStatus": null
+    }
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repository": {
+    "startingRef": "experiment/cursor-framework-fanout-wave13-seed-20260914",
+    "url": "https://github.com/Vercantez/openuikit-linux-platform"
+  },
+  "schema": "openuikit.cursor-framework-campaign-state.v1",
+  "updatedAt": "2026-09-06T05:21:32Z"
+}

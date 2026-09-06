@@ -1,0 +1,61 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave12-repair-1",
+    "maxActive": 24,
+    "maxRuns": 3
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "businesschat": {
+      "agentId": "bc-e74732e1-9a69-5671-aea0-cf3ca7535725",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T04:25:46Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/218",
+      "expectedPriorHead": "149078779dfb8aca5bfd252296ead831be6c214e",
+      "idempotencyKey": "b384d080-e1f3-588d-8a01-aab98c1a3013",
+      "launchStatus": "SENT",
+      "module": "BusinessChat",
+      "promptBytes": 1463,
+      "promptSha256": "c2f152b032f15e631fcb067730b8f7f1de5fe6eafab3e93f3e84d48abdf0ba29",
+      "runId": "run-80dd0f65-bb44-4eae-8399-bfbf03524291",
+      "runStatus": "running",
+      "slug": "businesschat"
+    },
+    "dockkit": {
+      "agentId": "bc-7876de46-d1c0-579d-856d-a25993adce1c",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T04:25:52Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/229",
+      "expectedPriorHead": "0009a54bc59127196b37bf91759e1e1cf0bef0e3",
+      "idempotencyKey": "97bcd1dc-a183-5703-8a95-faf513df2c9c",
+      "launchStatus": "SENT",
+      "module": "DockKit",
+      "promptBytes": 1415,
+      "promptSha256": "55f571a5c3ee6ff70a0d3fb821d77af91a0dd7d7dc2464bfa49a5e1e14fc9e98",
+      "runId": "run-08c70184-98c1-4c1c-ae8e-6979f570fea2",
+      "runStatus": "running",
+      "slug": "dockkit"
+    },
+    "localauthenticationembeddedui": {
+      "agentId": "bc-62d5b1ea-88b4-5ff4-a62f-8098b08e71d7",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T04:25:58Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/219",
+      "expectedPriorHead": "60909bfd44ec8c8d79767e529768809cbe9646a9",
+      "idempotencyKey": "e07d5afc-7566-5865-a42a-ccfb2e58d940",
+      "launchStatus": "SENT",
+      "module": "LocalAuthenticationEmbeddedUI",
+      "promptBytes": 1625,
+      "promptSha256": "13386fb2375258c20896e1da8220ad2f8c46bc20d9545ec09594dcc9427679f5",
+      "runId": "run-ffe2cc3a-c874-4ee4-b008-bfe54f9b13bb",
+      "runStatus": "running",
+      "slug": "localauthenticationembeddedui"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}

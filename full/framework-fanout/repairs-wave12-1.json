@@ -1,0 +1,39 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave12-repair-1",
+    "maxActive": 24,
+    "maxRuns": 3
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "BusinessChat",
+      "slug": "businesschat",
+      "agentId": "bc-e74732e1-9a69-5671-aea0-cf3ca7535725",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/218",
+      "expectedPriorHead": "149078779dfb8aca5bfd252296ead831be6c214e",
+      "prompt": "Continue repairing BusinessChat in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 149078779dfb:\nFW_MERGE GATE RED (see /tmp/fw_merge_gate-businesschat.log):\n/gate/businesschat-38982/full/businesschat/tests/agent/BCChatActionTests.swift:9:36: error: 'is' test is always true\n   |                                    `- error: 'is' test is always true\n\nFix the coverage ledger, not just the code: every `implemented` row in full/businesschat/coverage.tsv must cite evidence of the exact form `test:full/businesschat/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/businesschat/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/businesschat/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "DockKit",
+      "slug": "dockkit",
+      "agentId": "bc-7876de46-d1c0-579d-856d-a25993adce1c",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/229",
+      "expectedPriorHead": "0009a54bc59127196b37bf91759e1e1cf0bef0e3",
+      "prompt": "Continue repairing DockKit in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 0009a54bc591:\nFW_MERGE REFUSED: 112 not-applicable rows are not SwiftUI cross-import overlay IDs (e.g. s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:7DockKit0A) \u2014 they must be implemented/declared/deferred/unavailable\n\nFix the coverage ledger, not just the code: every `implemented` row in full/dockkit/coverage.tsv must cite evidence of the exact form `test:full/dockkit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/dockkit/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/dockkit/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "LocalAuthenticationEmbeddedUI",
+      "slug": "localauthenticationembeddedui",
+      "agentId": "bc-62d5b1ea-88b4-5ff4-a62f-8098b08e71d7",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/219",
+      "expectedPriorHead": "60909bfd44ec8c8d79767e529768809cbe9646a9",
+      "prompt": "Continue repairing LocalAuthenticationEmbeddedUI in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 60909bfd44ec:\n==> top evidence: 1 of 2 rows -> mbeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow\nFW_MERGE REFUSED: evidence concentration \u2014 1 of 2 implemented rows cite one test (test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow)\n\nFix the coverage ledger, not just the code: every `implemented` row in full/localauthenticationembeddedui/coverage.tsv must cite evidence of the exact form `test:full/localauthenticationembeddedui/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/localauthenticationembeddedui/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/localauthenticationembeddedui/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}
