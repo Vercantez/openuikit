@@ -11,7 +11,7 @@ func testConnectionGroupDescriptorAndSend() {
         using: .udp
     )
     expect(group.descriptor is NWMultiplexGroup, "descriptor")
-    expect(group.parameters.tcpOptions == nil, "parameters")
+    expect(group.parameters.defaultProtocolStack.transportProtocol is NWProtocolUDP.Options, "parameters")
     expect(group.debugDescription.contains("NWConnectionGroup"), "debugDescription")
     var handlerRan = false
     group.newConnectionHandler = { _ in handlerRan = true }
