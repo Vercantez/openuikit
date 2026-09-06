@@ -185,3 +185,55 @@ Added Linux behaviour this pass:
 Still fail-closed / not invented: Apple ML models, homography, learned feature
 prints, on-device OCR/document parsing (document types only wrap caller-supplied
 strings and geometry).
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r16`, lane `large-partitioned`, framework `Vision`
+(3584 IDs). Starting commit `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+Branch `cursor/port-vision-to-linux-450f`. Next pass on top of the wave-8
+ledger already in this tree (1514 implemented / 1940 declared / 130 deferred).
+
+`.cursor/verify-cloud-environment.sh` failed on missing
+`scratch/ladder-corpus/focus-ios`. `swiftc` is Swift 6.2.4 /
+`x86_64-unknown-linux-gnu`. The sealed host gate was run directly on this Linux
+host.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before (wave 8 ledger) | 1514 | 1940 | 130 | 0 | 0 |
+| After this pass | **2148** | **1306** | **130** | **0** | **0** |
+
+Nondeferred 3454. Gain **+634 implemented**. Every `implemented` row cites
+`test:full/vision/tests/agent/<File>Tests.swift#testName`. SwiftUI overlay
+re-exports were not present (none marked `not-applicable`). Async overlay
+`perform(on:orientation:)` overloads stay `declared`: tests exercise the same
+fail-closed path through a synchronous `@_spi(OpenUIKitHost)` `performOnHandler`
+so the sealed runtime does not wait on a semaphore.
+
+Top-5 implemented evidence distribution (2148 rows):
+
+1. `VisionOverlayRequestTests.swift#testOverlayRevisionComparableOperators` — 319 (14.9%) — Comparable / range operators on overlay `Revision` enums
+2. `VisionEnumTests.swift#testValueCatalog` — 270 (12.6%) — table-driven enums, revisions, and error codes
+3. `VisionOverlayValueTests.swift#testOverlayPoseValueTypes` — 233 (10.8%) — overlay pose joints/groups
+4. `VisionOverlayValueTests.swift#testOverlayFaceAndDocumentValues` — 172 (8.0%) — face landmarks and document container values
+5. `VisionPoseTests.swift#testHumanBodyPose3DObservationJoints` — 59 (2.7%)
+
+No non-enum test exceeds 40% of implemented rows.
+
+Added Linux behaviour this pass:
+
+- Overlay `VisionRequest.supportedComputeStageDevices` is CPU-only.
+- Overlay `performOnHandler` validates ROI (negative size → `invalidArgument`,
+  outside unit square → `outOfBoundsError`) and empty rasters (`invalidImage`)
+  before fail-closed ML (`invalidModel`).
+- `RecognizeDocumentsRequest` text/barcode options (no Apple languages).
+- `TrackOpticalFlowRequest` as a stateful class: accuracy, output pixel
+  format, frame spacing; fail-closed (no optical-flow model).
+- `VNTrackOpticalFlowRequest.keepNetworkOutput` / `outputPixelFormat`.
+- `BarcodeObservation` Codable/Hashable overlay values from decoded QR
+  fixtures, including composite-type mapping.
+- `RequestDescriptor` / `VisionResult` catalogs with non-recursive
+  `description`.
+
+Still fail-closed / not invented: Apple ML / document / optical-flow models,
+`performAll` AsyncSequence, homography, learned feature prints.
