@@ -6,8 +6,8 @@ Swift surface from the sealed symbol graph and API digester. It is not wired
 into the shared guest package; that integration is a separate central review
 step.
 
-Coverage: **123 implemented / 22 declared / 7 unavailable / 3 not-applicable /
-155 total** (145 nondeferred, above the medium-full floor of 78).
+Coverage: **123 implemented / 25 declared / 7 unavailable / 0 not-applicable /
+155 total** (148 nondeferred, above the medium-full floor of 78).
 
 ## What is real
 
@@ -51,12 +51,19 @@ sheet, or presentment authorization UI.
 - `endCardEmulation()` has no scene type, so it is declared on the actor
   and still throws `featureUnavailable`.
 - Actor isolation witnesses (`assertIsolated`, `assumeIsolated`,
-  `preconditionIsolated`) are `not-applicable` compiler synthesis.
+  `preconditionIsolated`) are `declared`: they trap off-actor, and the
+  sealed runner has no isolation hop.
 
 ## Depth pass 2026-09
 
-Fresh seed: no prior implemented/declared split. After this pass:
+Fresh seed started at 0 implemented/declared. First host pass:
 **123 implemented / 22 declared / 7 unavailable / 3 not-applicable**.
+
+Repair: the three `Actor` isolation witnesses (`assertIsolated`,
+`assumeIsolated`, `preconditionIsolated`) are not SwiftUI cross-import
+overlays, so `not-applicable` was refused. They are now `declared`
+(off-actor calls trap; sealed runner cannot hop). After this pass:
+**123 implemented / 25 declared / 7 unavailable / 0 not-applicable**.
 
 Top-5 implemented evidence distribution:
 
@@ -69,8 +76,9 @@ Top-5 implemented evidence distribution:
 | 3 | `SessionStateTests.swift#testNFCFieldCases` |
 
 `testErrorCodeCases` is a table-driven enum-member test (22 cases plus the
-enum type). The remaining implemented rows are spread across focused
-value-type tests and stay under the 40% bulk-relabel bound.
+enum type). Focused per-family tests in `tests/agent/*Tests.swift` cover
+the remaining implemented rows and stay under the 40% bulk-relabel bound
+on non-member citations.
 
 The sealed host gate was run as
 `bash full/secureelementcredential/tests/acceptance/test_host.sh` and ended:

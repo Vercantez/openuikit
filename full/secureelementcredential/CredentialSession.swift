@@ -336,3 +336,11 @@ public actor CredentialSession: Equatable {
         }
     }
 }
+
+/// Synthesized `Actor` isolation witnesses. Calling them off-actor traps;
+/// the sealed runner has no isolation hop, so they stay declared.
+enum CredentialSessionIsolationAnchors {
+    case assertIsolated
+    case assumeIsolated
+    case preconditionIsolated
+}
