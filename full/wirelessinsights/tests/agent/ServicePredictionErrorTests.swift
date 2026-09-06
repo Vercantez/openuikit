@@ -26,8 +26,8 @@ func testServicePredictionErrorEquality() {
         "same case"
     )
     wiExpect(
-        ServicePredictionError.==( .connectionError, .connectionError),
-        "static =="
+        ServicePredictionError.connectionError == .connectionError,
+        "connectionError == connectionError"
     )
 }
 

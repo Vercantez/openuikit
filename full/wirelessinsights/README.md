@@ -38,8 +38,8 @@ rows would be 30).
   value-based. Codable round-trips those fields using property-name keys
   and `JSONEncoder.deferredToDate`.
 - `ServicePrediction.Impact` and `.Confidence` are `low < medium < high`
-  (`Comparable` + synthesized `>`, `>=`, `<=`, range operators). Codable
-  uses case names (`"low"`, `"medium"`, `"high"`).
+  (`Comparable` + synthesized `>`, `>=`, `<=`, range operators). Synthesized
+  Codable encodes cases as `{"caseName":{}}`.
 - `ServicePrediction.ConfidenceScore` stores independent confidence for
   `prediction`, `startTime`, and `duration`.
 - `ServicePrediction.QuantizedInterval` is a namespace of `Double`

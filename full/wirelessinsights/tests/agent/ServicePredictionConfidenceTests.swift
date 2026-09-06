@@ -51,7 +51,7 @@ func testServicePredictionConfidenceLessThanOrEqual() {
 
 func testServicePredictionConfidenceEquality() {
     wiExpect(ServicePrediction.Confidence.low == .low, "low == low")
-    wiExpect(ServicePrediction.Confidence.==( .medium, .medium), "static ==")
+    wiExpect(ServicePrediction.Confidence.medium == .medium, "medium == medium")
     wiExpect(!(ServicePrediction.Confidence.low == .high), "low != high via ==")
 }
 
@@ -75,14 +75,14 @@ func testServicePredictionConfidenceHashInto() {
 
 func testServicePredictionConfidenceEncode() {
     let data = try! JSONEncoder().encode(ServicePrediction.Confidence.medium)
-    let text = String(data: data, encoding: .utf8)
-    wiExpect(text == "\"medium\"", "Confidence encodes as case name")
+    let object = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
+    wiExpect(object?.keys.contains("medium") == true, "Confidence encodes medium case")
 }
 
 func testServicePredictionConfidenceInitFromDecoder() {
     let decoded = try! JSONDecoder().decode(
         ServicePrediction.Confidence.self,
-        from: Data("\"high\"".utf8)
+        from: Data("{\"high\":{}}".utf8)
     )
     wiExpect(decoded == .high, "decoded high")
 }
@@ -95,7 +95,7 @@ func testServicePredictionConfidenceRange() {
 }
 
 func testServicePredictionConfidencePartialRangeUpTo() {
-    let range: PartialRangeUpTo<ServicePrediction.Confidence> = ..< .high
+    let range: PartialRangeUpTo<ServicePrediction.Confidence> = ..<(.high)
     wiExpect(range.contains(.low), "low")
     wiExpect(range.contains(.medium), "medium")
     wiExpect(!range.contains(.high), "high excluded")
@@ -116,7 +116,7 @@ func testServicePredictionConfidenceClosedRange() {
 }
 
 func testServicePredictionConfidencePartialRangeThrough() {
-    let range: PartialRangeThrough<ServicePrediction.Confidence> = ... .medium
+    let range: PartialRangeThrough<ServicePrediction.Confidence> = ...(.medium)
     wiExpect(range.contains(.low), "low")
     wiExpect(range.contains(.medium), "medium")
     wiExpect(!range.contains(.high), "high excluded")

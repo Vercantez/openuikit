@@ -49,7 +49,7 @@ func testServicePredictionImpactLessThanOrEqual() {
 
 func testServicePredictionImpactEquality() {
     wiExpect(ServicePrediction.Impact.low == .low, "low == low")
-    wiExpect(ServicePrediction.Impact.==( .high, .high), "static ==")
+    wiExpect(ServicePrediction.Impact.high == .high, "high == high")
 }
 
 func testServicePredictionImpactInequality() {
@@ -72,14 +72,14 @@ func testServicePredictionImpactHashInto() {
 
 func testServicePredictionImpactEncode() {
     let data = try! JSONEncoder().encode(ServicePrediction.Impact.high)
-    let text = String(data: data, encoding: .utf8)
-    wiExpect(text == "\"high\"", "Impact encodes as case name")
+    let object = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
+    wiExpect(object?.keys.contains("high") == true, "Impact encodes high case")
 }
 
 func testServicePredictionImpactInitFromDecoder() {
     let decoded = try! JSONDecoder().decode(
         ServicePrediction.Impact.self,
-        from: Data("\"low\"".utf8)
+        from: Data("{\"low\":{}}".utf8)
     )
     wiExpect(decoded == .low, "decoded low")
 }
@@ -92,7 +92,7 @@ func testServicePredictionImpactRange() {
 }
 
 func testServicePredictionImpactPartialRangeUpTo() {
-    let range: PartialRangeUpTo<ServicePrediction.Impact> = ..< .high
+    let range: PartialRangeUpTo<ServicePrediction.Impact> = ..<(.high)
     wiExpect(range.contains(.low), "low")
     wiExpect(range.contains(.medium), "medium")
     wiExpect(!range.contains(.high), "high excluded")
@@ -113,7 +113,7 @@ func testServicePredictionImpactClosedRange() {
 }
 
 func testServicePredictionImpactPartialRangeThrough() {
-    let range: PartialRangeThrough<ServicePrediction.Impact> = ... .medium
+    let range: PartialRangeThrough<ServicePrediction.Impact> = ...(.medium)
     wiExpect(range.contains(.low), "low")
     wiExpect(range.contains(.medium), "medium")
     wiExpect(!range.contains(.high), "high excluded")

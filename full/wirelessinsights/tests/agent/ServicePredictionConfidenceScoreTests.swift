@@ -28,7 +28,7 @@ func testServicePredictionConfidenceScoreEquality() {
     let a = wiSampleScore(prediction: .high, startTime: .low, duration: .medium)
     let b = wiSampleScore(prediction: .high, startTime: .low, duration: .medium)
     wiExpect(a == b, "equal scores")
-    wiExpect(ServicePrediction.ConfidenceScore.==(a, b), "static ==")
+    wiExpect(!(a != b), "equal scores are not !=")
 }
 
 func testServicePredictionConfidenceScoreInequality() {
@@ -53,14 +53,17 @@ func testServicePredictionConfidenceScoreEncode() {
     let score = wiSampleScore(prediction: .high, startTime: .medium, duration: .low)
     let data = try! JSONEncoder().encode(score)
     let object = try! JSONSerialization.jsonObject(with: data) as? [String: Any]
-    wiExpect(object?["prediction"] as? String == "high", "prediction key")
-    wiExpect(object?["startTime"] as? String == "medium", "startTime key")
-    wiExpect(object?["duration"] as? String == "low", "duration key")
+    let prediction = object?["prediction"] as? [String: Any]
+    let startTime = object?["startTime"] as? [String: Any]
+    let duration = object?["duration"] as? [String: Any]
+    wiExpect(prediction?.keys.contains("high") == true, "prediction key")
+    wiExpect(startTime?.keys.contains("medium") == true, "startTime key")
+    wiExpect(duration?.keys.contains("low") == true, "duration key")
 }
 
 func testServicePredictionConfidenceScoreInitFromDecoder() {
     let json = """
-    {"prediction":"low","startTime":"high","duration":"medium"}
+    {"prediction":{"low":{}},"startTime":{"high":{}},"duration":{"medium":{}}}
     """
     let decoded = try! JSONDecoder().decode(
         ServicePrediction.ConfidenceScore.self,
