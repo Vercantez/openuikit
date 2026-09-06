@@ -146,7 +146,8 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
     /// its last row above the chrome. MEASURED Tabs t200, iPhone SE 2x /
     /// iOS 26.1, window SA `[0,0,0,0]`: UITabBar `[0, 584, 375, 83]`,
     /// table `safeAreaInsets.bottom` **83** (no home-indicator extra).
-    /// `UITabBar.barHeight` is already 83 on the iOS cut / 72 Catalyst.
+    /// Compact-height (Tabs t200.landscape): bar `[0, 311, 667, 64]`,
+    /// table bottom **64**. `UITabBar.barHeight` is 83 / 64 / 72.
     ///
     /// Pad: the bar is at the top and does **not** add to the child's
     /// bottom inset. MEASURED Tabs-ipad t200: transitionView SA

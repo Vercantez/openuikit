@@ -141,7 +141,33 @@ final class _UITabBarItemView: UIControl {
             layoutBadge()
             return
         }
+        if UITabBar.isCompactHeight {
+            // MEASURED Tabs t200.landscape / t2000.landscape, iPhone SE 2x
+            // / iOS 26.1: compact-height `_UITabButton` is icon+title
+            // inline in a 36 pt pill. Selected title `.SFUI-Semibold` 12
+            // (Library `[35, 11, 42, 14.5]`); unselected `.SFUI-Regular`
+            // 12 (Scroll `[34.5, 11, 32, 14.5]`). Icon at x=6, title at
+            // icon.maxX+8, both vertically centred in 36.
+            iconView.isHidden = false
+            titleLabel.textAlignment = .left
+            let selected = item._bar?.selectedItem === item
+            titleLabel.font = .systemFont(ofSize: UITabBar.compactTitleFontSize,
+                                          weight: selected ? .semibold : .regular)
+            let size = UITabBar.compactIconSize(for: iconView.image)
+            let iconY = (bounds.height - size.height) / 2
+            iconView.frame = CGRect(x: UITabBar.compactIconLeading, y: iconY,
+                                    width: size.width, height: size.height)
+            let t = titleLabel.intrinsicContentSize
+            titleLabel.frame = CGRect(
+                x: UITabBar.compactIconLeading + size.width
+                    + UITabBar.compactIconTitleGap,
+                y: UITabBar.compactTitleY,
+                width: t.width, height: t.height)
+            layoutBadge()
+            return
+        }
         iconView.isHidden = false
+        titleLabel.textAlignment = .center
         titleLabel.font = .systemFont(ofSize: UITabBar.titleFontSize,
                                       weight: .semibold)
         let size = iconView.image?.size ?? .zero
@@ -182,6 +208,22 @@ final class _UITabBarItemView: UIControl {
                                      width: size, height: size)
             badgeLabel.textAlignment = .center
             badgeLabel.frame = CGRect(x: 4, y: 2, width: 10.5, height: 14.5)
+            return
+        }
+        if UITabBar.isCompactHeight {
+            // MEASURED Tabs t200.landscape, iPhone SE 2x / iOS 26.1:
+            // `_UIBarBadgeView [59.5, 0, 16, 16]` r=8 on the Tools button
+            // `[94.5, 4, 76.5, 36]` → x = width − 16 − 1. Digit
+            // `.SFUI-Medium` 10 in `[4, 2, 8, 12]` (label abs.x 363).
+            let size = UITabBar.compactBadgeSize
+            badgeLabel.font = .systemFont(ofSize: UITabBar.compactBadgeFontSize,
+                                          weight: .medium)
+            badgeView.backgroundColor = UITabBar.badgeColor
+            badgeView.layer.cornerRadius = size / 2
+            badgeView.frame = CGRect(x: bounds.width - size - 1, y: 0,
+                                     width: size, height: size)
+            badgeLabel.textAlignment = .center
+            badgeLabel.frame = UITabBar.compactBadgeLabelFrame
             return
         }
         let size = UITabBar.isIOS ? UITabBar.badgeSizeIOS : UITabBar.badgeHeight
@@ -238,10 +280,41 @@ public final class UITabBar: UIView {
         isIOS && (UITraitCollection.current.userInterfaceIdiom == .pad
                   || UIDevice.current.userInterfaceIdiom == .pad)
     }
+    /// iOS cut AND compact vertical size class on phone. MEASURED Tabs
+    /// t200.landscape dump `screen.verticalSizeClass` = 1 on iPhone SE 2x
+    /// / iOS 26.1. Pad keeps the 44 pt top strip; unspecified (portrait
+    /// suite / Catalyst) does not count.
+    static var isCompactHeight: Bool {
+        isIOS && !isPad
+            && UITraitCollection.current.verticalSizeClass == .compact
+    }
     public static var barHeight: CGFloat {
         if isPad { return 44 }
+        if isCompactHeight { return compactBarHeight }
         return isIOS ? 83 : 72
     }
+    /// MEASURED Tabs t200.landscape, iPhone SE 2x / iOS 26.1: `UITabBar
+    /// [0, 311, 667, 64]`, table `safeAreaInsets.bottom` **64**.
+    static let compactBarHeight: CGFloat = 64
+    /// MEASURED Tabs t200.landscape: `_UITabBarPlatterView [205, 0, 257.5, 44]`.
+    static let compactPlatterHeight: CGFloat = 44
+    /// MEASURED Tabs t200.landscape: `_UITabButton [4, 4, 86.5, 36]`.
+    static let compactItemHeight: CGFloat = 36
+    static let compactItemY: CGFloat = 4
+    /// 4 pt around and between packed items: 4+86.5+4+76.5+4+78.5+4 = 257.5.
+    static let compactItemSidePad: CGFloat = 4
+    static let compactIconLeading: CGFloat = 6
+    static let compactIconTitleGap: CGFloat = 8
+    /// Packing uses 12 pt **regular** intrinsic. MEASURED unselected
+    /// Scroll: 6+20.5+8+32+12 = 78.5. Selected semibold does not widen
+    /// the button (Library regular 39.5 → 86.5, semibold label 42 sits
+    /// in the same pill).
+    static let compactItemTrailing: CGFloat = 12
+    static let compactTitleFontSize: CGFloat = 12
+    static let compactTitleY: CGFloat = 11
+    static let compactBadgeSize: CGFloat = 16
+    static let compactBadgeFontSize: CGFloat = 10
+    static let compactBadgeLabelFrame = CGRect(x: 4, y: 2, width: 8, height: 12)
     /// Gap below the 44 pt top bar for a child that is not inside a
     /// UINavigationController. MEASURED Tabs-ipad t1000 / t2000: Tools
     /// toolbar and Scroll view sit at y **96** = SA.top 32 + bar 44 + **20**.
@@ -439,6 +512,12 @@ public final class UITabBar: UIView {
             layoutPadItems()
             return
         }
+        if UITabBar.isCompactHeight {
+            layoutCompactHeightItems()
+            return
+        }
+        platter.layer.cornerRadius = UITabBar.platterHeight / 2
+        capsule.layer.cornerRadius = UITabBar.capsuleHeight / 2
         let n = CGFloat(max(itemViews.count, 1))
         let width = min(n * UITabBar.itemPitch + 2 * UITabBar.platterSidePadding,
                         bounds.width - 16)
@@ -476,6 +555,83 @@ public final class UITabBar: UIView {
         } else {
             capsule.isHidden = true
         }
+    }
+
+    /// MEASURED Tabs t200.landscape / t2000.landscape, iPhone SE 2x /
+    /// iOS 26.1: compact-height bar is a 44 pt floating platter of
+    /// **packed** icon+title pills, not the portrait equal-pitch stack.
+    /// Library/Tools/Scroll buttons **86.5 / 76.5 / 78.5** with 4 pt
+    /// gaps; platter width 257.5, x = round((667−257.5)/2) = **205**.
+    func layoutCompactHeightItems() {
+        platter.backgroundColor = UITabBar.platterColor.resolvedColor(with: traitCollection)
+        platter._usesIOSGlass = true
+        platter.layer.cornerRadius = UITabBar.compactPlatterHeight / 2
+        platter.layer.shadowOpacity = UITabBar.shadowOpacity
+        var widths: [CGFloat] = []
+        var total: CGFloat = 0
+        for v in itemViews {
+            widths.append(compactItemWidth(for: v))
+            total += widths.last ?? 0
+        }
+        let n = CGFloat(itemViews.count)
+        let pad = UITabBar.compactItemSidePad
+        let width = n == 0 ? 0 : total + pad * (n + 1)
+        let x = ((bounds.width - width) / 2).rounded()
+        platter.frame = CGRect(x: x, y: 0, width: width,
+                               height: UITabBar.compactPlatterHeight)
+        var itemX = pad
+        for (i, v) in itemViews.enumerated() {
+            v.frame = CGRect(x: itemX, y: UITabBar.compactItemY,
+                             width: widths[i], height: UITabBar.compactItemHeight)
+            itemX += widths[i] + pad
+        }
+        if _layoutIsRTL {
+            let span = width
+            for v in itemViews {
+                var f = v.frame
+                f.origin.x = span - f.maxX
+                v.frame = f
+            }
+        }
+        if let sel = selectedItem,
+           let idx = itemViews.firstIndex(where: { $0.item === sel }) {
+            capsule.isHidden = false
+            capsule.frame = itemViews[idx].frame
+            capsule.layer.cornerRadius = UITabBar.compactItemHeight / 2
+            platter.insertSubview(capsule, at: 0)
+        } else {
+            capsule.isHidden = true
+        }
+    }
+
+    /// Button width from 12 pt regular title + compact icon size + the
+    /// measured 6 / 8 / 12 paddings (see compactItemTrailing).
+    func compactItemWidth(for v: _UITabBarItemView) -> CGFloat {
+        v.titleLabel.text = v.item.title
+        v.titleLabel.font = .systemFont(ofSize: UITabBar.compactTitleFontSize,
+                                        weight: .regular)
+        let titleW = v.titleLabel.intrinsicContentSize.width
+        let iconW = UITabBar.compactIconSize(for: v.iconView.image).width
+        return UITabBar.compactIconLeading + iconW
+            + UITabBar.compactIconTitleGap + titleW
+            + UITabBar.compactItemTrailing
+    }
+
+    /// MEASURED Tabs t200.landscape: calendar image view **21×18.5** vs
+    /// portrait 18/medium/large **29×25**; clock / plus.circle.fill
+    /// **20.5×20.5** vs **27.5×27.5**. Same harvested 18 pt masks, shown
+    /// in the dump frames (UIImageView default scaleToFill).
+    static func compactIconSize(for image: UIImage?) -> CGSize {
+        guard let image else { return .zero }
+        let w = image.size.width
+        let h = image.size.height
+        if abs(w - 29) < 0.01, abs(h - 25) < 0.01 {
+            return CGSize(width: 21, height: 18.5)
+        }
+        if abs(w - 27.5) < 0.01, abs(h - 27.5) < 0.01 {
+            return CGSize(width: 20.5, height: 20.5)
+        }
+        return CGSize(width: w * (20.5 / 27.5), height: h * (20.5 / 27.5))
     }
 
     /// MEASURED Tabs-ipad t200, iPad (A16) 820×1180 @2x / iOS 26.1:
