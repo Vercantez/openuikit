@@ -24,12 +24,17 @@ PLATFORM_URL = "git@github.com:Vercantez/openuikit-linux-platform.git"
 ADDENDUM = (
     "\n\nCODEX CLOUD RUN: this task runs in a Codex Cloud container of the platform "
     "repository with NO network in the agent phase. Do not try to push, open a PR, or "
-    "fetch anything; leave every change committed or uncommitted in the working tree — "
-    "the operator harvests it with `codex cloud apply` and pushes it as your branch. "
-    "The environment marker to cite is `CODEX_SWIFT_ENVIRONMENT_OK swift=6.2.4 "
-    "target=linux products=clean` (printed by the setup script after Cursor's own "
-    "marker). Your final message MUST paste the last 10 lines of the sealed gate "
-    "(`{gate}`) verbatim and the honest before/after implemented counts."
+    "fetch anything; commit your work on the current branch — the operator harvests it "
+    "with `codex cloud apply` and pushes it as your branch. "
+    "YIELD TARGET (binding): the pilot runs of this campaign stopped after moving 2 and 6 "
+    "rows to `implemented`; that is not a depth pass. This run must move at least {target} "
+    "rows to `implemented` with real behaviour and focused test evidence (or exhaust every "
+    "remaining non-overlay family, whichever comes first), working family by family in the "
+    "order listed above, committing after each family, and continuing until your agent time "
+    "budget is spent — do not write the README summary until the target is met or the "
+    "families are exhausted. Reclassifying rows to `not-applicable`/`unavailable` does not "
+    "count toward the target. Your final message MUST paste the last 10 lines of the sealed "
+    "gate (`{gate}`) verbatim and the honest before/after implemented counts."
 )
 
 def sh(args, cwd=None, timeout=900, check=False):
@@ -67,11 +72,13 @@ def task_status(task_id):
     if tag: return "done", raw
     return "unknown", raw
 
-def submit(env, branch, prompt, dry):
+def submit(env, branch, prompt, dry, effort=""):
     if dry:
         print(f"  DRY RUN: codex cloud exec --env {env} --branch {branch} <prompt {len(prompt)} chars>")
         return "task_dry_" + str(int(time.time()))
-    r = sh(["codex", "cloud", "exec", "--env", env, "--branch", branch, prompt], timeout=300)
+    args = ["codex", "cloud", "exec"]
+    if effort: args += ["-c", f'model_reasoning_effort="{effort}"']
+    r = sh(args + ["--env", env, "--branch", branch, prompt], timeout=300)
     out = r.stdout + r.stderr
     m = re.search(r"task_e_[0-9a-f]+", out)
     if not m:
@@ -131,6 +138,8 @@ def main():
     ap.add_argument("--slugs", default=""); ap.add_argument("--poll", type=int, default=120)
     ap.add_argument("--dry-run", action="store_true"); ap.add_argument("--once", action="store_true")
     ap.add_argument("--branch", default="")
+    ap.add_argument("--target", type=int, default=80, help="minimum rows to implement per lane (prompt yield target)")
+    ap.add_argument("--effort", default="high", help="model_reasoning_effort passed to codex cloud exec via -c ('' to omit)")
     a = ap.parse_args()
     camp = json.load(open(a.campaign))
     st_path = a.campaign.replace(".json", ".codex.state.json")
@@ -167,9 +176,10 @@ def main():
         for fw in want:
             if len(active) >= a.max_active: break
             if fw["slug"] in fws: continue
-            prompt = fw["prompt"] + ADDENDUM.format(gate=fw.get("gate", "the framework's tests/acceptance/test_host.sh"))
+            prompt = fw["prompt"] + ADDENDUM.format(gate=fw.get("gate", "the framework's tests/acceptance/test_host.sh"),
+                                                    target=a.target)
             try:
-                tid = submit(a.env, starting_ref, prompt, a.dry_run)
+                tid = submit(a.env, starting_ref, prompt, a.dry_run, a.effort)
                 fws[fw["slug"]] = {"taskId": tid, "status": "active", "submittedAt": now(), "module": fw["module"]}
                 active.append(fw["slug"]); print(f"  submitted {fw['slug']} -> {tid}")
             except Exception as ex:
