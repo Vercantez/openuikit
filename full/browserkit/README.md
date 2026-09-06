@@ -88,3 +88,12 @@ The sealed framework gate does not require that checkout. The pod
 booted from `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` rather
 than campaign `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`.
 The sealed host gate compiles a clean product tree (`products=clean`).
+
+Exact sealed-gate markers from `bash full/browserkit/tests/acceptance/test_host.sh`:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=BrowserKit lane=leaf-full symbols=8
+FRAMEWORK_FANOUT_REFERENCE_OK
+BROWSERKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=BrowserKit dylib=libBrowserKit.dylib
+```

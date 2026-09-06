@@ -29,7 +29,7 @@ func testBEAvailabilityContextInequality() {
     let right = BEAvailability.Context(rawValue: 0)!
     precondition(!(left != right))
     precondition(left == right)
-    precondition(!(.webBrowser != .webBrowser))
+    precondition(!(BEAvailability.Context.webBrowser != .webBrowser))
 }
 
 func testBEAvailabilityContextHashValue() {

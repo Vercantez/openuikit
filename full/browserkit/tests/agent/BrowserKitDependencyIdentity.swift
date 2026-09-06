@@ -18,9 +18,9 @@ private func assertNotBrowserKitType<T>(_ value: T) {
 
 func browserKitDependencyIdentityProbe() {
     let availability = BEAvailability()
-    precondition(availability is NSObject)
     let nsObject: NSObject = availability
-    assertNotBrowserKitType(type(of: nsObject).description())
+    let objectTypeName = String(reflecting: type(of: nsObject))
+    assertNotBrowserKitType(objectTypeName)
     precondition((nsObject as AnyObject) === availability)
 
     var deliveredError: (any Error)?
@@ -45,6 +45,11 @@ func browserKitDependencyIdentityProbe() {
 }
 
 #if BROWSERKIT_IDENTITY_MAIN
-browserKitDependencyIdentityProbe()
-print("BROWSERKIT_DEPENDENCY_IDENTITY_OK")
+@main
+enum BrowserKitDependencyIdentityMain {
+    static func main() {
+        browserKitDependencyIdentityProbe()
+        print("BROWSERKIT_DEPENDENCY_IDENTITY_OK")
+    }
+}
 #endif

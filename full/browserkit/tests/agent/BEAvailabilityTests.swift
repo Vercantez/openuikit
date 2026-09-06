@@ -4,13 +4,13 @@ import Foundation
 func testBEAvailabilityIsNSObject() {
     let first = BEAvailability()
     let second = BEAvailability()
-    precondition(first is NSObject)
     precondition(type(of: first) == BEAvailability.self)
     precondition(first !== second)
     let asObject: NSObject = first
     precondition(asObject === first)
     precondition(first.isEqual(first))
     precondition(!first.isEqual(second))
+    precondition(asObject.hash == first.hash)
 }
 
 func testBEAvailabilityIsEligibleFailClosed() {
