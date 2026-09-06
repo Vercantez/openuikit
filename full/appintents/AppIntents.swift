@@ -1020,8 +1020,17 @@ public final class IntentParameter<Value>: @unchecked Sendable
     var storedInputOptionsBox: Any?
     var storedResolvedOptions: [Any] = []
     var optionsProviderAttached = false
+    var storedMeasurementDefaultUnit: Any?
+    var storedMeasurementUnit: Any?
+    var storedUnitAdjustForLocale: Bool?
+    var storedSupportsNegativeNumbers: Bool?
+    var storedRequestDisambiguationDialog: IntentDialog?
+    var storedSupportedValues: [Any] = []
 
     public var dateKind: DateKind? { storedDateKind }
+
+    public var requestDisambiguationDialog: IntentDialog? { storedRequestDisambiguationDialog }
+    public var supportedValues: [Any] { storedSupportedValues }
 
     public var wrappedValue: Value {
         get {
@@ -1662,6 +1671,25 @@ extension AttributedString: _IntentValue {}
 extension DateComponents: _IntentValue {}
 extension IntentFile: _IntentValue {}
 extension IntentDialog: _IntentValue {}
+
+/// File-backed entity property value (`EntityProperty` where `Value.ValueType == File`).
+/// Linux stores URL and bytes in-process. Security-scoped bookmarks are unobserved.
+public final class File: NSObject, _IntentValue, @unchecked Sendable {
+    public var url: URL?
+    public var data: Data
+    public var filename: String?
+
+    public init(url: URL? = nil, data: Data = Data(), filename: String? = nil) {
+        self.url = url
+        self.data = data
+        self.filename = filename
+        super.init()
+    }
+
+    public convenience init(url: URL) {
+        self.init(url: url, data: Data(), filename: url.lastPathComponent)
+    }
+}
 extension Optional: _IntentValue where Wrapped: _IntentValue {}
 extension Array: _IntentValue where Element: _IntentValue {}
 
