@@ -75,6 +75,9 @@ echo "swiftc: $(command -v swiftc)"
 swiftc --version
 echo "ld64.lld: $(command -v ld64.lld) -> $(readlink -f "$(command -v ld64.lld)")"
 ld64.lld --version | head -1
-bash .cursor/install-static-evidence.sh
-bash .cursor/verify-cloud-environment.sh
+# Exactly what the Cursor environment's "install" hook runs (.cursor/environment.json
+# → .cursor/install.sh): static evidence, the pinned scratch corpus (the second
+# Codex smoke task failed the verify gate with "missing corpus checkout:
+# scratch/ladder-corpus/focus-ios"), the built products, then the verify gate.
+bash .cursor/install.sh
 echo "CODEX_SWIFT_ENVIRONMENT_OK swift=${SWIFT_VERSION} target=linux products=clean"
