@@ -149,6 +149,8 @@ extension INObject: NSSecureCoding {
         coder.encode(identifier as NSString?, forKey: "identifier")
         coder.encode(displayString as NSString, forKey: "displayString")
         coder.encode(pronunciationHint as NSString?, forKey: "pronunciationHint")
+        coder.encode(subtitleString as NSString?, forKey: "subtitleString")
+        coder.encode(displayImage, forKey: "displayImage")
     }
 }
 

@@ -19,7 +19,6 @@ public let kAudioQueueProperty_TimePitchBypass: AudioQueuePropertyID = atFourCC(
 public let kAudioQueueProperty_HardwareCodecPolicy: AudioQueuePropertyID = atFourCC("aqcp")
 public let kAudioQueueProperty_ChannelAssignments: AudioQueuePropertyID = atFourCC("aqca")
 
-public let kAudioQueueHardwareCodecPolicy_Default: UInt32 = 0
 public let kAudioQueueTimePitchAlgorithm_Spectral: UInt32 = atFourCC("spec")
 public let kAudioQueueTimePitchAlgorithm_TimeDomain: UInt32 = atFourCC("tido")
 public let kAudioQueueTimePitchAlgorithm_LowQualityZeroLatency: UInt32 = atFourCC("lqzl")

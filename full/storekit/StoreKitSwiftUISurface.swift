@@ -146,6 +146,7 @@ public struct SubscriptionStoreControlPlacementKey: Hashable, Sendable, RawRepre
 
 public struct AutomaticSubscriptionStoreControlPlacement: SubscriptionStoreControlPlacement {
     public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "automatic") }
+    public static var automatic: AutomaticSubscriptionStoreControlPlacement { AutomaticSubscriptionStoreControlPlacement() }
     public init() {}
     public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
 }
@@ -272,6 +273,7 @@ public struct AutomaticSubscriptionOfferViewStyle: SubscriptionOfferViewStyle {
 public struct PickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
         public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "picker") }
+        public static var automatic: Placement { Placement() }
         public init() {}
         public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
     }
@@ -281,6 +283,7 @@ public struct PickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle
 public struct ButtonsSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
         public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "buttons") }
+        public static var automatic: Placement { Placement() }
         public init() {}
         public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
     }
@@ -290,6 +293,7 @@ public struct ButtonsSubscriptionStoreControlStyle: SubscriptionStoreControlStyl
 public struct AutomaticSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
         public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "automatic") }
+        public static var automatic: Placement { Placement() }
         public init() {}
         public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
     }
@@ -299,6 +303,7 @@ public struct AutomaticSubscriptionStoreControlStyle: SubscriptionStoreControlSt
 public struct PagedPickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
         public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "paged") }
+        public static var automatic: Placement { Placement() }
         public init() {}
         public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
     }
@@ -308,6 +313,7 @@ public struct PagedPickerSubscriptionStoreControlStyle: SubscriptionStoreControl
 public struct CompactPickerSubscriptionStoreControlStyle: SubscriptionStoreControlStyle {
     public struct Placement: SubscriptionStoreControlPlacement {
         public var rawValue: SubscriptionStoreControlPlacementKey { SubscriptionStoreControlPlacementKey(rawValue: "compact") }
+        public static var automatic: Placement { Placement() }
         public init() {}
         public init?(rawValue: SubscriptionStoreControlPlacementKey) { _ = rawValue }
     }
@@ -338,15 +344,144 @@ public enum EntitlementTaskState<Value> {
     case failure(any Error)
 }
 
-public struct SubscriptionOptionGroup<Content: View, Label: View, MarketingContent: View> {
+public struct SubscriptionOptionGroup<Content: View, Label: View, MarketingContent: View>: StoreContent {
+    public var body: EmptyStoreContent { EmptyStoreContent() }
     public init() {}
 }
-public struct SubscriptionOptionSection<Header: View, Content: View, Footer: View> {
+public struct SubscriptionOptionSection<Header: View, Content: View, Footer: View>: StoreContent {
+    public var body: EmptyStoreContent { EmptyStoreContent() }
     public init() {}
 }
-public struct SubscriptionOptionGroupSet<GroupID: Hashable, Label: View, MarketingContent: View> {
+public struct SubscriptionOptionGroupSet<GroupID: Hashable, Label: View, MarketingContent: View>: StoreContent {
+    public var body: EmptyStoreContent { EmptyStoreContent() }
     public init() {}
 }
-public struct SubscriptionPeriodGroupSet<Label: View, MarketingContent: View> {
+public struct SubscriptionPeriodGroupSet<Label: View, MarketingContent: View>: StoreContent {
+    public var body: EmptyStoreContent { EmptyStoreContent() }
     public init() {}
+}
+
+extension StoreContent {
+    nonisolated public func subscriptionStoreButtonLabel(
+        _ label: SubscriptionStoreButtonLabel
+    ) -> some StoreContent {
+        _ = label
+        return self
+    }
+
+    nonisolated public func subscriptionStoreControlStyle<S>(
+        _ style: S,
+        placement: S.Placement
+    ) -> some StoreContent where S: SubscriptionStoreControlStyle {
+        _ = style
+        _ = placement
+        return self
+    }
+
+    public func subscriptionStoreOptionGroupStyle(
+        _ style: some SubscriptionOptionGroupStyle
+    ) -> some StoreContent {
+        _ = style
+        return self
+    }
+
+    nonisolated public func subscriptionStoreControlBackground(
+        _ backgroundStyle: SubscriptionStoreControlBackground
+    ) -> some StoreContent {
+        _ = backgroundStyle
+        return self
+    }
+
+    nonisolated public func subscriptionStoreControlBackground(
+        _ backgroundStyle: some ShapeStyle
+    ) -> some StoreContent {
+        _ = backgroundStyle
+        return self
+    }
+
+    nonisolated public func subscriptionStorePickerItemBackground(
+        _ backgroundStyle: some ShapeStyle,
+        in shape: some Shape
+    ) -> some StoreContent {
+        _ = backgroundStyle
+        _ = shape
+        return self
+    }
+
+    nonisolated public func subscriptionStorePickerItemBackground(
+        _ backgroundStyle: some ShapeStyle
+    ) -> some StoreContent {
+        _ = backgroundStyle
+        return self
+    }
+
+    nonisolated public func storeButton(
+        _ visibility: Visibility,
+        for buttonKinds: StoreButtonKind...
+    ) -> some StoreContent {
+        _ = visibility
+        _ = buttonKinds
+        return self
+    }
+
+    nonisolated public func productDescription(_ visibility: Visibility) -> some StoreContent {
+        _ = visibility
+        return self
+    }
+}
+
+extension SubscriptionStoreControlStyle where Self == AutomaticSubscriptionStoreControlStyle {
+    public static var automatic: AutomaticSubscriptionStoreControlStyle {
+        AutomaticSubscriptionStoreControlStyle()
+    }
+}
+
+extension ProductViewStyle where Self == LargeProductViewStyle {
+    public static var large: LargeProductViewStyle { LargeProductViewStyle() }
+}
+
+extension ProductViewStyle where Self == RegularProductViewStyle {
+    public static var regular: RegularProductViewStyle { RegularProductViewStyle() }
+}
+
+extension ProductViewStyle where Self == AutomaticProductViewStyle {
+    public static var automatic: AutomaticProductViewStyle { AutomaticProductViewStyle() }
+}
+
+extension SubscriptionOfferViewStyle where Self == AutomaticSubscriptionOfferViewStyle {
+    public static var automatic: AutomaticSubscriptionOfferViewStyle {
+        AutomaticSubscriptionOfferViewStyle()
+    }
+}
+
+extension SubscriptionOptionGroupStyle where Self == AutomaticSubscriptionOptionGroupStyle {
+    public static var automatic: AutomaticSubscriptionOptionGroupStyle {
+        AutomaticSubscriptionOptionGroupStyle()
+    }
+}
+
+extension EnvironmentValues {
+    public var displayStoreKitMessage: DisplayMessageAction { DisplayMessageAction() }
+    public var requestReview: RequestReviewAction { RequestReviewAction() }
+    public var purchase: PurchaseAction { PurchaseAction() }
+}
+
+extension ContainerBackgroundPlacement {
+    public static var subscriptionStore: ContainerBackgroundPlacement {
+        var value = ContainerBackgroundPlacement()
+        value.storeKitKind = "subscriptionStore"
+        return value
+    }
+
+    public static var subscriptionStoreFullHeight: ContainerBackgroundPlacement {
+        var value = ContainerBackgroundPlacement()
+        value.storeKitKind = "subscriptionStoreFullHeight"
+        return value
+    }
+
+    public static var subscriptionStoreHeader: ContainerBackgroundPlacement {
+        var value = ContainerBackgroundPlacement()
+        value.storeKitKind = "subscriptionStoreHeader"
+        return value
+    }
 }

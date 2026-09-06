@@ -1,6 +1,6 @@
 {
- "head": "e497ff6e",
- "date": "2026-09-06T06:27Z",
+ "head": "df668157",
+ "date": "2026-09-06T09:11Z",
  "suite": {
   "pass": 112,
   "total": 113
@@ -16,7 +16,7 @@
    "score": 64.663,
    "blob": 139.0,
    "layout_issues": 16,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -27,7 +27,7 @@
    "score": 67.544,
    "blob": 210.8,
    "layout_issues": 8,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -35,10 +35,10 @@
   {
    "scene": "Notes:t12000.ax1",
    "category": "conformance",
-   "score": 68.508,
+   "score": 68.529,
    "blob": 329.8,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -49,7 +49,7 @@
    "score": 70.479,
    "blob": 329.8,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -60,7 +60,7 @@
    "score": 72.024,
    "blob": 79.2,
    "layout_issues": 22,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -71,7 +71,7 @@
    "score": 72.051,
    "blob": 79.2,
    "layout_issues": 22,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -82,7 +82,7 @@
    "score": 72.269,
    "blob": 139.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -90,10 +90,10 @@
   {
    "scene": "Notes:t10000.landscape",
    "category": "conformance",
-   "score": 72.972,
+   "score": 72.96,
    "blob": 139.0,
    "layout_issues": 15,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -104,7 +104,7 @@
    "score": 76.342,
    "blob": 56.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -115,7 +115,7 @@
    "score": 76.417,
    "blob": 57.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -126,7 +126,7 @@
    "score": 76.417,
    "blob": 57.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -137,7 +137,7 @@
    "score": 76.859,
    "blob": 101.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -148,18 +148,7 @@
    "score": 77.222,
    "blob": 75.8,
    "layout_issues": 22,
-   "captured": "2026-09-06T01:14",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Tabs:t2000.landscape",
-   "category": "conformance",
-   "score": 77.611,
-   "blob": 563.8,
-   "layout_issues": 9,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -170,7 +159,7 @@
    "score": 77.623,
    "blob": 330.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -178,10 +167,21 @@
   {
    "scene": "Notes:t10000.ax1",
    "category": "conformance",
-   "score": 77.631,
+   "score": 77.632,
    "blob": 329.8,
    "layout_issues": 15,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t2000.landscape",
+   "category": "conformance",
+   "score": 78.024,
+   "blob": 9.0,
+   "layout_issues": 9,
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -192,7 +192,7 @@
    "score": 78.639,
    "blob": 106.2,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -203,7 +203,7 @@
    "score": 78.771,
    "blob": 163.2,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -214,7 +214,7 @@
    "score": 80.023,
    "blob": 52.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -225,7 +225,7 @@
    "score": 80.025,
    "blob": 52.8,
    "layout_issues": 14,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -236,7 +236,7 @@
    "score": 80.541,
    "blob": 330.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -247,7 +247,7 @@
    "score": 80.548,
    "blob": 329.8,
    "layout_issues": 15,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -258,7 +258,7 @@
    "score": 80.649,
    "blob": 28.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -266,10 +266,10 @@
   {
    "scene": "Notes:t200.rtl",
    "category": "conformance",
-   "score": 81.716,
+   "score": 81.753,
    "blob": 79.2,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -280,7 +280,7 @@
    "score": 81.758,
    "blob": 79.2,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -296,23 +296,23 @@
    "status": "pass"
   },
   {
-   "scene": "Notes:t10000",
-   "category": "conformance",
-   "score": 82.178,
-   "blob": 43.0,
-   "layout_issues": 14,
-   "captured": "2026-09-06T01:13",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
    "scene": "Notes:t6000",
    "category": "conformance",
    "score": 82.196,
    "blob": 43.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Notes:t10000",
+   "category": "conformance",
+   "score": 82.198,
+   "blob": 43.0,
+   "layout_issues": 14,
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -323,18 +323,7 @@
    "score": 84.09,
    "blob": 36.0,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:27",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Tabs:t2000.xxxl",
-   "category": "conformance",
-   "score": 84.627,
-   "blob": 146.8,
-   "layout_issues": 7,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -342,10 +331,10 @@
   {
    "scene": "Tabs:t2000.ax1",
    "category": "conformance",
-   "score": 84.629,
-   "blob": 142.2,
+   "score": 84.619,
+   "blob": 118.5,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -353,10 +342,10 @@
   {
    "scene": "Tabs:t2000.rtl",
    "category": "conformance",
-   "score": 84.636,
-   "blob": 123.5,
+   "score": 84.628,
+   "blob": 142.2,
    "layout_issues": 8,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -364,10 +353,21 @@
   {
    "scene": "Tabs:t2000",
    "category": "conformance",
+   "score": 84.641,
+   "blob": 127.8,
+   "layout_issues": 7,
+   "captured": "2026-09-06T04:07",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t2000.xxxl",
+   "category": "conformance",
    "score": 84.665,
    "blob": 139.8,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -378,7 +378,7 @@
    "score": 84.882,
    "blob": 27.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -399,7 +399,7 @@
    "score": 85.733,
    "blob": 53.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -410,7 +410,7 @@
    "score": 86.065,
    "blob": 139.2,
    "layout_issues": 11,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -421,7 +421,7 @@
    "score": 86.294,
    "blob": 34.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -429,10 +429,10 @@
   {
    "scene": "Notes:t3000.landscape",
    "category": "conformance",
-   "score": 86.814,
+   "score": 86.817,
    "blob": 139.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -440,10 +440,10 @@
   {
    "scene": "Notes:t4000.ax1",
    "category": "conformance",
-   "score": 86.887,
+   "score": 86.901,
    "blob": 282.2,
    "layout_issues": 10,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -454,7 +454,7 @@
    "score": 86.983,
    "blob": 139.0,
    "layout_issues": 10,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -465,7 +465,7 @@
    "score": 87.433,
    "blob": 16.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -476,7 +476,7 @@
    "score": 87.504,
    "blob": 73.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -484,21 +484,10 @@
   {
    "scene": "Notes:t10000.dark",
    "category": "conformance",
-   "score": 87.528,
+   "score": 87.525,
    "blob": 16.5,
    "layout_issues": 14,
-   "captured": "2026-09-06T01:14",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t2100.landscape",
-   "category": "conformance",
-   "score": 88.142,
-   "blob": 7.8,
-   "layout_issues": 2,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -506,10 +495,21 @@
   {
    "scene": "Notes:t4000.xxxl",
    "category": "conformance",
-   "score": 88.384,
+   "score": 88.56,
    "blob": 86.2,
    "layout_issues": 10,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t2100.landscape",
+   "category": "conformance",
+   "score": 88.634,
+   "blob": 7.8,
+   "layout_issues": 2,
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -517,10 +517,10 @@
   {
    "scene": "Notes:t3000.ax1",
    "category": "conformance",
-   "score": 88.666,
-   "blob": 329.2,
+   "score": 88.661,
+   "blob": 328.5,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -531,18 +531,7 @@
    "score": 89.026,
    "blob": 330.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Notes:t3000.xxxl",
-   "category": "conformance",
-   "score": 89.087,
-   "blob": 329.2,
-   "layout_issues": 4,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -553,7 +542,18 @@
    "score": 89.116,
    "blob": 38.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Notes:t3000.xxxl",
+   "category": "conformance",
+   "score": 89.16,
+   "blob": 329.2,
+   "layout_issues": 4,
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -561,10 +561,10 @@
   {
    "scene": "Notes:t3000",
    "category": "conformance",
-   "score": 89.258,
+   "score": 89.165,
    "blob": 34.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -572,21 +572,10 @@
   {
    "scene": "Notes:t200.xxxl",
    "category": "conformance",
-   "score": 89.406,
+   "score": 89.443,
    "blob": 330.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:16",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t2100.rtl",
-   "category": "conformance",
-   "score": 89.453,
-   "blob": 6.2,
-   "layout_issues": 2,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -597,7 +586,7 @@
    "score": 89.47,
    "blob": 34.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -608,7 +597,7 @@
    "score": 89.519,
    "blob": 42.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -619,7 +608,18 @@
    "score": 89.535,
    "blob": 33.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t2100.rtl",
+   "category": "conformance",
+   "score": 89.544,
+   "blob": 6.2,
+   "layout_issues": 2,
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -627,10 +627,10 @@
   {
    "scene": "Ledger:t2100.dark",
    "category": "conformance",
-   "score": 89.552,
+   "score": 89.579,
    "blob": 6.2,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -641,7 +641,7 @@
    "score": 89.87,
    "blob": 7.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -649,10 +649,10 @@
   {
    "scene": "Ledger:t200.landscape",
    "category": "conformance",
-   "score": 90.048,
+   "score": 90.052,
    "blob": 7.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -663,7 +663,7 @@
    "score": 90.178,
    "blob": 7.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -674,7 +674,7 @@
    "score": 90.18,
    "blob": 7.2,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -682,10 +682,10 @@
   {
    "scene": "Ledger:t3000.landscape",
    "category": "conformance",
-   "score": 90.562,
-   "blob": 15.0,
+   "score": 90.553,
+   "blob": 28.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -696,7 +696,7 @@
    "score": 90.813,
    "blob": 6.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -707,7 +707,7 @@
    "score": 90.967,
    "blob": 282.0,
    "layout_issues": 14,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -715,10 +715,21 @@
   {
    "scene": "Ledger:t200.dark",
    "category": "conformance",
-   "score": 91.388,
+   "score": 91.319,
    "blob": 6.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t2100.ax1",
+   "category": "conformance",
+   "score": 91.423,
+   "blob": 7.8,
+   "layout_issues": 4,
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -729,7 +740,7 @@
    "score": 91.426,
    "blob": 98.8,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -740,7 +751,7 @@
    "score": 91.457,
    "blob": 98.8,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -751,7 +762,7 @@
    "score": 91.502,
    "blob": 23.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -762,18 +773,7 @@
    "score": 91.529,
    "blob": 66.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t2100.ax1",
-   "category": "conformance",
-   "score": 91.596,
-   "blob": 7.8,
-   "layout_issues": 4,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:51",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -784,7 +784,7 @@
    "score": 91.672,
    "blob": 3.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -795,7 +795,7 @@
    "score": 91.73,
    "blob": 6.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -806,7 +806,7 @@
    "score": 91.797,
    "blob": 25129.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -817,7 +817,7 @@
    "score": 91.797,
    "blob": 25129.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -825,10 +825,10 @@
   {
    "scene": "Notes:t200.dark",
    "category": "conformance",
-   "score": 91.803,
+   "score": 91.813,
    "blob": 16.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -836,10 +836,21 @@
   {
    "scene": "Feed-ipad:t2800",
    "category": "conformance",
-   "score": 91.853,
-   "blob": 24318.0,
+   "score": 91.877,
+   "blob": 24320.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t5000.dark",
+   "category": "conformance",
+   "score": 91.909,
+   "blob": 6.2,
+   "layout_issues": 1,
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -850,7 +861,7 @@
    "score": 91.909,
    "blob": 6.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -858,10 +869,10 @@
   {
    "scene": "Ledger:t2100.xxxl",
    "category": "conformance",
-   "score": 92.004,
+   "score": 91.953,
    "blob": 7.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -872,7 +883,7 @@
    "score": 92.124,
    "blob": 16.5,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -883,40 +894,7 @@
    "score": 92.131,
    "blob": 19.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:25",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t5000.dark",
-   "category": "conformance",
-   "score": 92.132,
-   "blob": 6.2,
-   "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t2100",
-   "category": "conformance",
-   "score": 92.193,
-   "blob": 3.8,
-   "layout_issues": 2,
-   "captured": "2026-09-06T01:04",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t5000.rtl",
-   "category": "conformance",
-   "score": 92.254,
-   "blob": 3.8,
-   "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -927,7 +905,7 @@
    "score": 92.261,
    "blob": 7.2,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -938,7 +916,29 @@
    "score": 92.271,
    "blob": 3.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t5000.rtl",
+   "category": "conformance",
+   "score": 92.281,
+   "blob": 3.8,
+   "layout_issues": 1,
+   "captured": "2026-09-06T03:48",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t2100",
+   "category": "conformance",
+   "score": 92.287,
+   "blob": 3.8,
+   "layout_issues": 2,
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -949,7 +949,7 @@
    "score": 92.358,
    "blob": 213.2,
    "layout_issues": 10,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -960,7 +960,7 @@
    "score": 92.389,
    "blob": 1.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -971,7 +971,18 @@
    "score": 92.452,
    "blob": 213.2,
    "layout_issues": 14,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs:t2000.dark",
+   "category": "conformance",
+   "score": 92.475,
+   "blob": 9.8,
+   "layout_issues": 7,
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -982,7 +993,7 @@
    "score": 92.822,
    "blob": 282.0,
    "layout_issues": 11,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -993,7 +1004,7 @@
    "score": 92.911,
    "blob": 3.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1004,18 +1015,7 @@
    "score": 93.131,
    "blob": 7.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Tabs:t2000.dark",
-   "category": "conformance",
-   "score": 93.21,
-   "blob": 8.0,
-   "layout_issues": 7,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1023,10 +1023,10 @@
   {
    "scene": "Forms:t3000.landscape",
    "category": "conformance",
-   "score": 93.256,
+   "score": 93.238,
    "blob": 98.8,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1037,7 +1037,7 @@
    "score": 93.327,
    "blob": 139.8,
    "layout_issues": 14,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1048,7 +1048,7 @@
    "score": 93.382,
    "blob": 7.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1059,7 +1059,7 @@
    "score": 93.482,
    "blob": 98.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1070,7 +1070,7 @@
    "score": 93.553,
    "blob": 7.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1081,7 +1081,7 @@
    "score": 93.566,
    "blob": 3.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1092,7 +1092,7 @@
    "score": 93.569,
    "blob": 7.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1103,7 +1103,7 @@
    "score": 93.576,
    "blob": 137.0,
    "layout_issues": 15,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1114,7 +1114,7 @@
    "score": 93.641,
    "blob": 3.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1125,7 +1125,7 @@
    "score": 93.724,
    "blob": 137.0,
    "layout_issues": 14,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1133,10 +1133,10 @@
   {
    "scene": "Ledger:t5000.xxxl",
    "category": "conformance",
-   "score": 93.805,
+   "score": 93.801,
    "blob": 7.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1147,7 +1147,7 @@
    "score": 93.82,
    "blob": 7.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1158,7 +1158,7 @@
    "score": 93.89,
    "blob": 98.8,
    "layout_issues": 15,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1169,18 +1169,7 @@
    "score": 93.92,
    "blob": 213.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:14",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t5000",
-   "category": "conformance",
-   "score": 94.071,
-   "blob": 3.8,
-   "layout_issues": 1,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1191,7 +1180,7 @@
    "score": 94.076,
    "blob": 98.8,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1202,18 +1191,18 @@
    "score": 94.08,
    "blob": 3.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "Present:t1200.xxxl",
+   "scene": "Ledger:t5000",
    "category": "conformance",
-   "score": 94.386,
-   "blob": 140.2,
-   "layout_issues": 6,
-   "captured": "2026-09-06T01:21",
+   "score": 94.145,
+   "blob": 3.8,
+   "layout_issues": 1,
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1221,10 +1210,21 @@
   {
    "scene": "Ledger:t3000.rtl",
    "category": "conformance",
-   "score": 94.397,
-   "blob": 15.0,
+   "score": 94.36,
+   "blob": 29.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Present:t1200.xxxl",
+   "category": "conformance",
+   "score": 94.435,
+   "blob": 150.2,
+   "layout_issues": 6,
+   "captured": "2026-09-06T04:04",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1232,10 +1232,21 @@
   {
    "scene": "Present:t1200.ax1",
    "category": "conformance",
-   "score": 94.411,
-   "blob": 140.2,
+   "score": 94.452,
+   "blob": 133.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Present:t1200.rtl",
+   "category": "conformance",
+   "score": 94.754,
+   "blob": 89.5,
+   "layout_issues": 6,
+   "captured": "2026-09-06T04:03",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1246,18 +1257,7 @@
    "score": 94.788,
    "blob": 137.0,
    "layout_issues": 11,
-   "captured": "2026-09-06T01:26",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Present:t1200.rtl",
-   "category": "conformance",
-   "score": 94.817,
-   "blob": 97.8,
-   "layout_issues": 6,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1268,7 +1268,7 @@
    "score": 94.836,
    "blob": 137.0,
    "layout_issues": 11,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1279,7 +1279,7 @@
    "score": 94.97,
    "blob": 98.8,
    "layout_issues": 12,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1290,7 +1290,7 @@
    "score": 95.011,
    "blob": 137.0,
    "layout_issues": 10,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1298,10 +1298,10 @@
   {
    "scene": "Notes:t2100.landscape",
    "category": "conformance",
-   "score": 95.14,
+   "score": 95.154,
    "blob": 98.8,
    "layout_issues": 11,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1309,10 +1309,10 @@
   {
    "scene": "Forms:t4800.dark",
    "category": "conformance",
-   "score": 95.309,
+   "score": 95.318,
    "blob": 213.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1320,10 +1320,10 @@
   {
    "scene": "Forms:t3900.dark",
    "category": "conformance",
-   "score": 95.323,
+   "score": 95.332,
    "blob": 213.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1334,7 +1334,7 @@
    "score": 95.353,
    "blob": 213.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1345,7 +1345,7 @@
    "score": 95.361,
    "blob": 213.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1356,18 +1356,18 @@
    "score": 95.363,
    "blob": 137.0,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "Forms:t1200.dark",
+   "scene": "Notes:t2100.ax1",
    "category": "conformance",
-   "score": 95.387,
-   "blob": 213.2,
-   "layout_issues": 5,
-   "captured": "2026-09-06T01:02",
+   "score": 95.374,
+   "blob": 137.0,
+   "layout_issues": 7,
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1378,18 +1378,7 @@
    "score": 95.388,
    "blob": 23.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Notes:t2100.ax1",
-   "category": "conformance",
-   "score": 95.393,
-   "blob": 137.0,
-   "layout_issues": 7,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1400,7 +1389,18 @@
    "score": 95.393,
    "blob": 137.0,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Forms:t1200.dark",
+   "category": "conformance",
+   "score": 95.404,
+   "blob": 213.2,
+   "layout_issues": 5,
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1408,10 +1408,10 @@
   {
    "scene": "Present:t1200.dark",
    "category": "conformance",
-   "score": 95.446,
-   "blob": 92.5,
+   "score": 95.429,
+   "blob": 99.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1422,18 +1422,7 @@
    "score": 95.452,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:15",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Notes-ipad:t2100",
-   "category": "conformance",
-   "score": 95.492,
-   "blob": 380.5,
-   "layout_issues": 10,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1444,18 +1433,18 @@
    "score": 95.613,
    "blob": 139.2,
    "layout_issues": 11,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "Ledger:t3000.ax1",
+   "scene": "Notes-ipad:t2100",
    "category": "conformance",
-   "score": 95.872,
-   "blob": 53.8,
-   "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "score": 95.647,
+   "blob": 245.2,
+   "layout_issues": 10,
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1466,7 +1455,7 @@
    "score": 95.884,
    "blob": 566.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1477,7 +1466,18 @@
    "score": 95.892,
    "blob": 566.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t3000.ax1",
+   "category": "conformance",
+   "score": 95.903,
+   "blob": 52.5,
+   "layout_issues": 3,
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1488,7 +1488,7 @@
    "score": 95.917,
    "blob": 557.5,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1499,7 +1499,7 @@
    "score": 95.936,
    "blob": 557.5,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1510,7 +1510,7 @@
    "score": 95.973,
    "blob": 160.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1518,32 +1518,21 @@
   {
    "scene": "Forms:t1200.rtl",
    "category": "conformance",
-   "score": 96.076,
+   "score": 96.093,
    "blob": 557.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "Tabs-ipad:t4000",
+   "scene": "NavFlow:t4800.ax1",
    "category": "conformance",
-   "score": 96.104,
-   "blob": 380.5,
-   "layout_issues": 7,
-   "captured": "2026-09-06T01:25",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Notes-ipad:t10000",
-   "category": "conformance",
-   "score": 96.116,
-   "blob": 119.0,
-   "layout_issues": 15,
-   "captured": "2026-09-06T01:14",
+   "score": 96.109,
+   "blob": 24.8,
+   "layout_issues": 1,
+   "captured": "2026-09-06T03:55",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1551,10 +1540,10 @@
   {
    "scene": "Ledger:t3000.xxxl",
    "category": "conformance",
-   "score": 96.122,
-   "blob": 53.8,
+   "score": 96.125,
+   "blob": 55.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1565,7 +1554,7 @@
    "score": 96.164,
    "blob": 282.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1576,7 +1565,7 @@
    "score": 96.169,
    "blob": 73.2,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1587,7 +1576,18 @@
    "score": 96.192,
    "blob": 378.8,
    "layout_issues": 24,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Notes-ipad:t10000",
+   "category": "conformance",
+   "score": 96.204,
+   "blob": 120.0,
+   "layout_issues": 15,
+   "captured": "2026-09-06T03:57",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1598,29 +1598,18 @@
    "score": 96.239,
    "blob": 6.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "Tabs-ipad:t5000",
+   "scene": "Tabs-ipad:t4000",
    "category": "conformance",
-   "score": 96.259,
-   "blob": 449.2,
-   "layout_issues": 9,
-   "captured": "2026-09-06T01:25",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Ledger:t3000.dark",
-   "category": "conformance",
-   "score": 96.287,
-   "blob": 27.5,
-   "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "score": 96.254,
+   "blob": 269.5,
+   "layout_issues": 7,
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1628,10 +1617,10 @@
   {
    "scene": "Forms-ipad:t3900",
    "category": "conformance",
-   "score": 96.293,
+   "score": 96.289,
    "blob": 378.8,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1639,10 +1628,10 @@
   {
    "scene": "Forms-ipad:t3000",
    "category": "conformance",
-   "score": 96.3,
+   "score": 96.292,
    "blob": 378.8,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1650,10 +1639,10 @@
   {
    "scene": "Forms-ipad:t4800",
    "category": "conformance",
-   "score": 96.3,
+   "score": 96.297,
    "blob": 378.8,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1661,10 +1650,21 @@
   {
    "scene": "Forms-ipad:t2100",
    "category": "conformance",
-   "score": 96.303,
+   "score": 96.3,
    "blob": 378.8,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Ledger:t3000.dark",
+   "category": "conformance",
+   "score": 96.312,
+   "blob": 14.8,
+   "layout_issues": 1,
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1672,10 +1672,10 @@
   {
    "scene": "Ledger:t3000",
    "category": "conformance",
-   "score": 96.372,
-   "blob": 26.5,
+   "score": 96.339,
+   "blob": 27.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1686,7 +1686,7 @@
    "score": 96.4,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1697,7 +1697,18 @@
    "score": 96.407,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Tabs-ipad:t5000",
+   "category": "conformance",
+   "score": 96.41,
+   "blob": 449.2,
+   "layout_issues": 9,
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1708,7 +1719,7 @@
    "score": 96.419,
    "blob": 73.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1719,7 +1730,7 @@
    "score": 96.429,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1730,18 +1741,7 @@
    "score": 96.429,
    "blob": 34.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Present:t1200.landscape",
-   "category": "conformance",
-   "score": 96.442,
-   "blob": 82.0,
-   "layout_issues": 6,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1752,7 +1752,7 @@
    "score": 96.448,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1760,21 +1760,10 @@
   {
    "scene": "Forms:t1200.ax1",
    "category": "conformance",
-   "score": 96.469,
+   "score": 96.487,
    "blob": 137.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:03",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "NavFlow:t4800.ax1",
-   "category": "conformance",
-   "score": 96.509,
-   "blob": 24.8,
-   "layout_issues": 1,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1785,7 +1774,7 @@
    "score": 96.541,
    "blob": 113.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1796,7 +1785,7 @@
    "score": 96.6,
    "blob": 45.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1807,7 +1796,7 @@
    "score": 96.61,
    "blob": 46.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1818,7 +1807,7 @@
    "score": 96.634,
    "blob": 73.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1829,7 +1818,7 @@
    "score": 96.657,
    "blob": 41.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1840,7 +1829,7 @@
    "score": 96.669,
    "blob": 137.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1851,7 +1840,7 @@
    "score": 96.671,
    "blob": 41.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1862,7 +1851,7 @@
    "score": 96.677,
    "blob": 137.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1873,7 +1862,7 @@
    "score": 96.699,
    "blob": 137.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1884,7 +1873,18 @@
    "score": 96.718,
    "blob": 137.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Forms:t3900",
+   "category": "conformance",
+   "score": 96.721,
+   "blob": 137.0,
+   "layout_issues": 6,
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1895,7 +1895,7 @@
    "score": 96.728,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1906,18 +1906,18 @@
    "score": 96.729,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
   },
   {
-   "scene": "Forms:t3900",
+   "scene": "Forms:t1200.xxxl",
    "category": "conformance",
-   "score": 96.73,
+   "score": 96.739,
    "blob": 137.0,
-   "layout_issues": 6,
-   "captured": "2026-09-06T01:01",
+   "layout_issues": 3,
+   "captured": "2026-09-06T03:46",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1928,7 +1928,7 @@
    "score": 96.739,
    "blob": 113.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1939,18 +1939,7 @@
    "score": 96.751,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:01",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Forms:t1200.xxxl",
-   "category": "conformance",
-   "score": 96.757,
-   "blob": 137.0,
-   "layout_issues": 3,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1961,7 +1950,7 @@
    "score": 96.769,
    "blob": 137.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1972,7 +1961,7 @@
    "score": 96.779,
    "blob": 166.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1983,7 +1972,7 @@
    "score": 96.808,
    "blob": 137.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -1994,7 +1983,7 @@
    "score": 96.875,
    "blob": 23.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2005,7 +1994,7 @@
    "score": 96.898,
    "blob": 41.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2016,7 +2005,7 @@
    "score": 96.912,
    "blob": 41.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2024,21 +2013,10 @@
   {
    "scene": "Notes:t1200",
    "category": "conformance",
-   "score": 96.919,
+   "score": 96.917,
    "blob": 129.5,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:13",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "Notes:t1200.ax1",
-   "category": "conformance",
-   "score": 96.931,
-   "blob": 123.2,
-   "layout_issues": 7,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:56",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2046,10 +2024,21 @@
   {
    "scene": "Notes:t1200.xxxl",
    "category": "conformance",
-   "score": 96.931,
+   "score": 96.928,
    "blob": 123.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Notes:t1200.ax1",
+   "category": "conformance",
+   "score": 96.929,
+   "blob": 123.2,
+   "layout_issues": 7,
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2060,7 +2049,7 @@
    "score": 96.933,
    "blob": 18.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2068,10 +2057,21 @@
   {
    "scene": "Notes:t1200.dark",
    "category": "conformance",
-   "score": 96.975,
+   "score": 96.972,
    "blob": 131.8,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "Present:t1200.landscape",
+   "category": "conformance",
+   "score": 96.973,
+   "blob": 82.0,
+   "layout_issues": 6,
+   "captured": "2026-09-06T04:04",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2079,10 +2079,10 @@
   {
    "scene": "Notes:t1200.rtl",
    "category": "conformance",
-   "score": 96.989,
+   "score": 96.986,
    "blob": 97.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2093,7 +2093,7 @@
    "score": 97.211,
    "blob": 88.2,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:50",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2104,7 +2104,7 @@
    "score": 97.27,
    "blob": 46.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2115,7 +2115,7 @@
    "score": 97.289,
    "blob": 46.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2126,7 +2126,7 @@
    "score": 97.3,
    "blob": 34.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2137,7 +2137,7 @@
    "score": 97.301,
    "blob": 34.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2148,7 +2148,7 @@
    "score": 97.311,
    "blob": 34.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2159,7 +2159,18 @@
    "score": 97.311,
    "blob": 34.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
+   "verdict": "FAIL",
+   "threshold": 97.5,
+   "status": "fail"
+  },
+  {
+   "scene": "NavFlow:t3000.ax1",
+   "category": "conformance",
+   "score": 97.321,
+   "blob": 128.0,
+   "layout_issues": 3,
+   "captured": "2026-09-06T03:55",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2167,10 +2178,10 @@
   {
    "scene": "Ledger:t1200.ax1",
    "category": "conformance",
-   "score": 97.366,
+   "score": 97.365,
    "blob": 140.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2178,10 +2189,10 @@
   {
    "scene": "Ledger:t1200.xxxl",
    "category": "conformance",
-   "score": 97.366,
+   "score": 97.365,
    "blob": 140.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2202,7 +2213,7 @@
    "score": 97.412,
    "blob": 6.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2213,7 +2224,7 @@
    "score": 97.413,
    "blob": 45.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2221,10 +2232,10 @@
   {
    "scene": "Ledger:t1200.rtl",
    "category": "conformance",
-   "score": 97.425,
+   "score": 97.426,
    "blob": 130.2,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2235,7 +2246,7 @@
    "score": 97.431,
    "blob": 22.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2243,10 +2254,10 @@
   {
    "scene": "Ledger:t1200",
    "category": "conformance",
-   "score": 97.447,
+   "score": 97.448,
    "blob": 77.2,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:47",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2254,21 +2265,10 @@
   {
    "scene": "NavFlow:t4800.xxxl",
    "category": "conformance",
-   "score": 97.451,
+   "score": 97.448,
    "blob": 10.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
-   "verdict": "FAIL",
-   "threshold": 97.5,
-   "status": "fail"
-  },
-  {
-   "scene": "NavFlow:t3000.rtl",
-   "category": "conformance",
-   "score": 97.453,
-   "blob": 58.8,
-   "layout_issues": 2,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:55",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2279,7 +2279,7 @@
    "score": 97.465,
    "blob": 24.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2290,7 +2290,7 @@
    "score": 97.465,
    "blob": 24.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2301,7 +2301,7 @@
    "score": 97.468,
    "blob": 7.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2322,7 +2322,7 @@
    "score": 97.472,
    "blob": 19.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2333,7 +2333,7 @@
    "score": 97.474,
    "blob": 137.5,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2344,7 +2344,7 @@
    "score": 97.484,
    "blob": 137.5,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "FAIL",
    "threshold": 97.5,
    "status": "fail"
@@ -2355,7 +2355,7 @@
    "score": 97.505,
    "blob": 137.5,
    "layout_issues": 16,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2376,7 +2376,7 @@
    "score": 97.536,
    "blob": 38.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2387,7 +2387,7 @@
    "score": 97.556,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2408,7 +2408,7 @@
    "score": 97.561,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2419,7 +2419,7 @@
    "score": 97.563,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2430,7 +2430,7 @@
    "score": 97.564,
    "blob": 168.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2441,7 +2441,7 @@
    "score": 97.567,
    "blob": 53.8,
    "layout_issues": 8,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2452,7 +2452,7 @@
    "score": 97.572,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2463,7 +2463,7 @@
    "score": 97.606,
    "blob": 34.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2474,7 +2474,7 @@
    "score": 97.606,
    "blob": 34.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2482,10 +2482,10 @@
   {
    "scene": "Notes-ipad:t6000",
    "category": "conformance",
-   "score": 97.628,
-   "blob": 116.5,
+   "score": 97.625,
+   "blob": 116.2,
    "layout_issues": 9,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2496,7 +2496,7 @@
    "score": 97.64,
    "blob": 34.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2504,10 +2504,10 @@
   {
    "scene": "Ledger:t1200.dark",
    "category": "conformance",
-   "score": 97.645,
+   "score": 97.642,
    "blob": 77.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2518,7 +2518,7 @@
    "score": 97.674,
    "blob": 11.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2529,18 +2529,7 @@
    "score": 97.686,
    "blob": 11.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "NavFlow:t3000.ax1",
-   "category": "conformance",
-   "score": 97.7,
-   "blob": 128.0,
-   "layout_issues": 3,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:45",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2551,7 +2540,7 @@
    "score": 97.708,
    "blob": 19.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2562,7 +2551,7 @@
    "score": 97.712,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2573,7 +2562,7 @@
    "score": 97.716,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2584,7 +2573,7 @@
    "score": 97.725,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2595,7 +2584,7 @@
    "score": 97.726,
    "blob": 117.5,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2603,10 +2592,10 @@
   {
    "scene": "Notes-ipad:t3000",
    "category": "conformance",
-   "score": 97.729,
-   "blob": 113.8,
+   "score": 97.726,
+   "blob": 117.2,
    "layout_issues": 9,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2617,7 +2606,7 @@
    "score": 97.74,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2628,7 +2617,7 @@
    "score": 97.751,
    "blob": 116.2,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2639,7 +2628,7 @@
    "score": 97.751,
    "blob": 43.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2650,7 +2639,7 @@
    "score": 97.777,
    "blob": 6.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2666,12 +2655,23 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow:t3000.rtl",
+   "category": "conformance",
+   "score": 97.812,
+   "blob": 58.8,
+   "layout_issues": 2,
+   "captured": "2026-09-06T03:55",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Notes:t9000.dark",
    "category": "conformance",
    "score": 97.836,
    "blob": 16.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2682,7 +2682,7 @@
    "score": 97.839,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2693,7 +2693,7 @@
    "score": 97.839,
    "blob": 23.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2704,7 +2704,7 @@
    "score": 97.844,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2715,7 +2715,7 @@
    "score": 97.849,
    "blob": 566.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2726,7 +2726,7 @@
    "score": 97.849,
    "blob": 23.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2737,7 +2737,7 @@
    "score": 97.851,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2748,7 +2748,7 @@
    "score": 97.851,
    "blob": 23.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2759,7 +2759,7 @@
    "score": 97.854,
    "blob": 16.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2770,7 +2770,7 @@
    "score": 97.856,
    "blob": 16.5,
    "layout_issues": 27,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2781,7 +2781,7 @@
    "score": 97.858,
    "blob": 23.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2792,7 +2792,7 @@
    "score": 97.86,
    "blob": 68.5,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2803,7 +2803,7 @@
    "score": 97.899,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2814,7 +2814,7 @@
    "score": 97.899,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2825,7 +2825,7 @@
    "score": 97.913,
    "blob": 24.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2836,7 +2836,7 @@
    "score": 97.916,
    "blob": 557.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:46",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2847,7 +2847,7 @@
    "score": 97.923,
    "blob": 152.5,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2858,7 +2858,7 @@
    "score": 97.938,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2879,7 +2879,7 @@
    "score": 97.99,
    "blob": 83.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2890,40 +2890,7 @@
    "score": 98.053,
    "blob": 8.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "NavFlow:t3000",
-   "category": "conformance",
-   "score": 98.055,
-   "blob": 97.2,
-   "layout_issues": 2,
-   "captured": "2026-09-06T01:10",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Notes-ipad:t1200",
-   "category": "conformance",
-   "score": 98.056,
-   "blob": 248.8,
-   "layout_issues": 10,
-   "captured": "2026-09-06T01:14",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Tabs-ipad:t3000",
-   "category": "conformance",
-   "score": 98.07,
-   "blob": 35.0,
-   "layout_issues": 7,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2934,7 +2901,7 @@
    "score": 98.082,
    "blob": 43.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2955,7 +2922,7 @@
    "score": 98.115,
    "blob": 128.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2966,7 +2933,7 @@
    "score": 98.119,
    "blob": 16.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2987,7 +2954,7 @@
    "score": 98.171,
    "blob": 16510.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -2998,7 +2965,7 @@
    "score": 98.193,
    "blob": 77.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3014,12 +2981,23 @@
    "status": "pass"
   },
   {
+   "scene": "NavFlow:t3000",
+   "category": "conformance",
+   "score": 98.196,
+   "blob": 97.5,
+   "layout_issues": 2,
+   "captured": "2026-09-06T03:53",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "Forms:t200.ax1",
    "category": "conformance",
    "score": 98.212,
    "blob": 111.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3030,7 +3008,7 @@
    "score": 98.233,
    "blob": 23.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3051,7 +3029,7 @@
    "score": 98.252,
    "blob": 6.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3072,7 +3050,18 @@
    "score": 98.268,
    "blob": 111.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Notes-ipad:t1200",
+   "category": "conformance",
+   "score": 98.27,
+   "blob": 245.2,
+   "layout_issues": 10,
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3083,7 +3072,7 @@
    "score": 98.294,
    "blob": 24.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3099,12 +3088,23 @@
    "status": "pass"
   },
   {
+   "scene": "Pager-ipad:t600",
+   "category": "conformance",
+   "score": 98.342,
+   "blob": 14859.0,
+   "layout_issues": 2,
+   "captured": "2026-09-06T04:00",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
    "scene": "TableEditor:t1350",
    "category": "conformance",
    "score": 98.343,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3115,7 +3115,18 @@
    "score": 98.343,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Tabs-ipad:t3000",
+   "category": "conformance",
+   "score": 98.362,
+   "blob": 35.0,
+   "layout_issues": 7,
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3126,7 +3137,7 @@
    "score": 98.364,
    "blob": 43.2,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3137,7 +3148,7 @@
    "score": 98.404,
    "blob": 9.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3148,7 +3159,7 @@
    "score": 98.404,
    "blob": 10.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3159,7 +3170,7 @@
    "score": 98.404,
    "blob": 10.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3170,7 +3181,7 @@
    "score": 98.425,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3181,7 +3192,7 @@
    "score": 98.428,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3192,7 +3203,7 @@
    "score": 98.43,
    "blob": 128.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3213,7 +3224,7 @@
    "score": 98.471,
    "blob": 8.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3264,18 +3275,7 @@
    "score": 98.589,
    "blob": 11.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "NavFlow:t4800.rtl",
-   "category": "conformance",
-   "score": 98.597,
-   "blob": 6.2,
-   "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3286,7 +3286,7 @@
    "score": 98.602,
    "blob": 35.0,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3297,7 +3297,7 @@
    "score": 98.61,
    "blob": 69.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3308,7 +3308,18 @@
    "score": 98.617,
    "blob": 83.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Notes-ipad:t7000",
+   "category": "conformance",
+   "score": 98.618,
+   "blob": 345.2,
+   "layout_issues": 31,
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3319,7 +3330,7 @@
    "score": 98.62,
    "blob": 35.0,
    "layout_issues": 7,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3330,7 +3341,7 @@
    "score": 98.624,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3351,7 +3362,7 @@
    "score": 98.638,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3382,18 +3393,7 @@
    "score": 98.657,
    "blob": 37.2,
    "layout_issues": 8,
-   "captured": "2026-09-06T01:25",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Notes-ipad:t7000",
-   "category": "conformance",
-   "score": 98.661,
-   "blob": 345.2,
-   "layout_issues": 31,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3404,7 +3404,7 @@
    "score": 98.665,
    "blob": 69.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:46",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3412,10 +3412,10 @@
   {
    "scene": "NavFlow:t4800.landscape",
    "category": "conformance",
-   "score": 98.67,
+   "score": 98.667,
    "blob": 16.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3426,7 +3426,7 @@
    "score": 98.699,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3437,7 +3437,7 @@
    "score": 98.699,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3448,7 +3448,7 @@
    "score": 98.701,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3469,7 +3469,18 @@
    "score": 98.704,
    "blob": 10.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "NavFlow:t4800.rtl",
+   "category": "conformance",
+   "score": 98.711,
+   "blob": 6.2,
+   "layout_issues": 0,
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3480,7 +3491,7 @@
    "score": 98.713,
    "blob": 128.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3498,10 +3509,10 @@
   {
    "scene": "NavFlow:t4800",
    "category": "conformance",
-   "score": 98.738,
+   "score": 98.734,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3512,7 +3523,7 @@
    "score": 98.754,
    "blob": 3.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3533,7 +3544,7 @@
    "score": 98.788,
    "blob": 58.8,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3544,7 +3555,7 @@
    "score": 98.796,
    "blob": 97.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3555,7 +3566,7 @@
    "score": 98.796,
    "blob": 345.2,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3566,7 +3577,7 @@
    "score": 98.799,
    "blob": 345.2,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3577,7 +3588,7 @@
    "score": 98.806,
    "blob": 78.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3588,7 +3599,7 @@
    "score": 98.813,
    "blob": 15.2,
    "layout_issues": 21,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3599,7 +3610,7 @@
    "score": 98.818,
    "blob": 38.2,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3610,7 +3621,7 @@
    "score": 98.823,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3621,7 +3632,7 @@
    "score": 98.824,
    "blob": 98.2,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3632,7 +3643,7 @@
    "score": 98.83,
    "blob": 98.2,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3643,18 +3654,7 @@
    "score": 98.864,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t3267",
-   "category": "conformance",
-   "score": 98.874,
-   "blob": 68.0,
-   "layout_issues": 4,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3675,7 +3675,7 @@
    "score": 98.881,
    "blob": 83.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3686,7 +3686,7 @@
    "score": 98.881,
    "blob": 83.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3707,7 +3707,7 @@
    "score": 98.901,
    "blob": 83.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3718,7 +3718,7 @@
    "score": 98.901,
    "blob": 83.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3734,23 +3734,23 @@
    "status": "pass"
   },
   {
-   "scene": "Modal-ipad:t9200",
+   "scene": "Modal:t9200.landscape",
    "category": "conformance",
-   "score": 98.923,
-   "blob": 68.5,
-   "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "score": 98.922,
+   "blob": 0.2,
+   "layout_issues": 0,
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
   },
   {
-   "scene": "Modal:t9200.landscape",
+   "scene": "Modal-ipad:t9200",
    "category": "conformance",
-   "score": 98.924,
-   "blob": 0.2,
-   "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "score": 98.923,
+   "blob": 68.5,
+   "layout_issues": 1,
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3761,7 +3761,7 @@
    "score": 98.93,
    "blob": 17.8,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3772,7 +3772,7 @@
    "score": 98.936,
    "blob": 105.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3783,7 +3783,7 @@
    "score": 98.985,
    "blob": 17.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3834,7 +3834,7 @@
    "score": 99.022,
    "blob": 110.8,
    "layout_issues": 21,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3855,7 +3855,7 @@
    "score": 99.036,
    "blob": 5.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3866,7 +3866,7 @@
    "score": 99.036,
    "blob": 5.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3877,7 +3877,7 @@
    "score": 99.04,
    "blob": 5.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3898,7 +3898,7 @@
    "score": 99.043,
    "blob": 88.5,
    "layout_issues": 19,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3909,7 +3909,7 @@
    "score": 99.043,
    "blob": 88.5,
    "layout_issues": 22,
-   "captured": "2026-09-06T01:27",
+   "captured": "2026-09-06T04:10",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3920,7 +3920,7 @@
    "score": 99.049,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3931,7 +3931,7 @@
    "score": 99.049,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3942,7 +3942,7 @@
    "score": 99.054,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3953,7 +3953,7 @@
    "score": 99.065,
    "blob": 45.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3964,7 +3964,7 @@
    "score": 99.065,
    "blob": 45.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3975,7 +3975,7 @@
    "score": 99.089,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3986,7 +3986,7 @@
    "score": 99.095,
    "blob": 18.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -3997,7 +3997,7 @@
    "score": 99.095,
    "blob": 18.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4008,7 +4008,7 @@
    "score": 99.096,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4019,7 +4019,7 @@
    "score": 99.097,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4030,7 +4030,7 @@
    "score": 99.098,
    "blob": 273.2,
    "layout_issues": 22,
-   "captured": "2026-09-06T01:26",
+   "captured": "2026-09-06T04:09",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4041,7 +4041,7 @@
    "score": 99.099,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4052,7 +4052,7 @@
    "score": 99.1,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4060,10 +4060,10 @@
   {
    "scene": "Modal:t9200.rtl",
    "category": "conformance",
-   "score": 99.104,
+   "score": 99.103,
    "blob": 11.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4074,7 +4074,7 @@
    "score": 99.105,
    "blob": 11.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4085,7 +4085,7 @@
    "score": 99.107,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4096,7 +4096,7 @@
    "score": 99.107,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4117,7 +4117,7 @@
    "score": 99.118,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4128,7 +4128,7 @@
    "score": 99.12,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4139,7 +4139,7 @@
    "score": 99.12,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4150,7 +4150,7 @@
    "score": 99.12,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4161,7 +4161,7 @@
    "score": 99.12,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4172,7 +4172,7 @@
    "score": 99.123,
    "blob": 7.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4183,7 +4183,7 @@
    "score": 99.123,
    "blob": 7.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4194,7 +4194,7 @@
    "score": 99.127,
    "blob": 7.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4205,7 +4205,7 @@
    "score": 99.131,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4216,7 +4216,7 @@
    "score": 99.134,
    "blob": 189.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4237,7 +4237,7 @@
    "score": 99.138,
    "blob": 1.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4258,7 +4258,7 @@
    "score": 99.149,
    "blob": 55.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4269,7 +4269,7 @@
    "score": 99.155,
    "blob": 23.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4280,7 +4280,7 @@
    "score": 99.161,
    "blob": 9.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4291,7 +4291,7 @@
    "score": 99.161,
    "blob": 9.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4302,7 +4302,7 @@
    "score": 99.164,
    "blob": 15.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4313,7 +4313,7 @@
    "score": 99.166,
    "blob": 9.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4324,7 +4324,7 @@
    "score": 99.166,
    "blob": 46.2,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4335,7 +4335,7 @@
    "score": 99.166,
    "blob": 46.2,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4346,7 +4346,7 @@
    "score": 99.172,
    "blob": 9.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4357,7 +4357,7 @@
    "score": 99.172,
    "blob": 9.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4368,7 +4368,7 @@
    "score": 99.174,
    "blob": 15.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4379,7 +4379,7 @@
    "score": 99.176,
    "blob": 9.0,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4390,7 +4390,7 @@
    "score": 99.188,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4401,7 +4401,7 @@
    "score": 99.188,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4412,7 +4412,7 @@
    "score": 99.19,
    "blob": 9.0,
    "layout_issues": 24,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4423,7 +4423,7 @@
    "score": 99.19,
    "blob": 9.0,
    "layout_issues": 27,
-   "captured": "2026-09-06T01:16",
+   "captured": "2026-09-06T03:59",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4434,7 +4434,7 @@
    "score": 99.192,
    "blob": 15.8,
    "layout_issues": 27,
-   "captured": "2026-09-06T01:13",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4445,7 +4445,7 @@
    "score": 99.194,
    "blob": 9.0,
    "layout_issues": 27,
-   "captured": "2026-09-06T01:15",
+   "captured": "2026-09-06T03:58",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4473,10 +4473,10 @@
   {
    "scene": "Tabs-ipad:t1000",
    "category": "conformance",
-   "score": 99.211,
-   "blob": 78.8,
+   "score": 99.21,
+   "blob": 70.0,
    "layout_issues": 34,
-   "captured": "2026-09-06T01:25",
+   "captured": "2026-09-06T04:08",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4487,7 +4487,7 @@
    "score": 99.221,
    "blob": 122.0,
    "layout_issues": 23,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4498,7 +4498,7 @@
    "score": 99.223,
    "blob": 3.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4509,7 +4509,7 @@
    "score": 99.223,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4520,7 +4520,7 @@
    "score": 99.228,
    "blob": 82.5,
    "layout_issues": 24,
-   "captured": "2026-09-06T01:02",
+   "captured": "2026-09-06T03:45",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4531,7 +4531,7 @@
    "score": 99.235,
    "blob": 37.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4552,7 +4552,7 @@
    "score": 99.248,
    "blob": 2.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4563,7 +4563,7 @@
    "score": 99.249,
    "blob": 2.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4574,7 +4574,7 @@
    "score": 99.251,
    "blob": 105.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4585,7 +4585,7 @@
    "score": 99.257,
    "blob": 59.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4594,9 +4594,9 @@
    "scene": "Ledger-ipad:t1200",
    "category": "conformance",
    "score": 99.285,
-   "blob": 245.2,
+   "blob": 246.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4607,7 +4607,7 @@
    "score": 99.288,
    "blob": 46.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:05",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4638,18 +4638,7 @@
    "score": 99.304,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Pager-ipad:t3133",
-   "category": "conformance",
-   "score": 99.308,
-   "blob": 58.5,
-   "layout_issues": 4,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4660,7 +4649,7 @@
    "score": 99.313,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4671,7 +4660,7 @@
    "score": 99.313,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4679,10 +4668,10 @@
   {
    "scene": "Ledger-ipad:t3000",
    "category": "conformance",
-   "score": 99.319,
-   "blob": 58.2,
+   "score": 99.318,
+   "blob": 58.5,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4690,10 +4679,10 @@
   {
    "scene": "Ledger-ipad:t5000",
    "category": "conformance",
-   "score": 99.319,
-   "blob": 59.0,
+   "score": 99.318,
+   "blob": 58.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4701,10 +4690,10 @@
   {
    "scene": "Ledger-ipad:t2100",
    "category": "conformance",
-   "score": 99.32,
+   "score": 99.319,
    "blob": 59.8,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4715,7 +4704,7 @@
    "score": 99.322,
    "blob": 3.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4726,7 +4715,7 @@
    "score": 99.322,
    "blob": 59.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4737,7 +4726,7 @@
    "score": 99.324,
    "blob": 7.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4748,7 +4737,7 @@
    "score": 99.324,
    "blob": 7.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4759,7 +4748,7 @@
    "score": 99.329,
    "blob": 7.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4780,7 +4769,7 @@
    "score": 99.342,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4791,7 +4780,7 @@
    "score": 99.345,
    "blob": 1.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4812,7 +4801,7 @@
    "score": 99.367,
    "blob": 32.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4823,7 +4812,7 @@
    "score": 99.367,
    "blob": 876.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4834,7 +4823,7 @@
    "score": 99.367,
    "blob": 876.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4845,7 +4834,7 @@
    "score": 99.37,
    "blob": 59.8,
    "layout_issues": 3,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:48",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4856,7 +4845,7 @@
    "score": 99.37,
    "blob": 876.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4867,7 +4856,7 @@
    "score": 99.37,
    "blob": 876.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4888,7 +4877,7 @@
    "score": 99.387,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4899,7 +4888,7 @@
    "score": 99.387,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4910,7 +4899,7 @@
    "score": 99.399,
    "blob": 750.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4921,7 +4910,7 @@
    "score": 99.399,
    "blob": 750.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4932,7 +4921,7 @@
    "score": 99.406,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4943,7 +4932,7 @@
    "score": 99.409,
    "blob": 31.2,
    "layout_issues": 21,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4975,7 +4964,7 @@
    "score": 99.421,
    "blob": 16.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -4986,7 +4975,7 @@
    "score": 99.421,
    "blob": 32.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5007,7 +4996,7 @@
    "score": 99.422,
    "blob": 750.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5018,7 +5007,7 @@
    "score": 99.422,
    "blob": 750.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5029,7 +5018,7 @@
    "score": 99.423,
    "blob": 750.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5040,7 +5029,7 @@
    "score": 99.423,
    "blob": 750.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5051,7 +5040,7 @@
    "score": 99.432,
    "blob": 14.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5072,7 +5061,7 @@
    "score": 99.435,
    "blob": 1.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5083,7 +5072,7 @@
    "score": 99.435,
    "blob": 1.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5094,7 +5083,7 @@
    "score": 99.437,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5105,7 +5094,7 @@
    "score": 99.437,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5116,7 +5105,7 @@
    "score": 99.437,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5127,7 +5116,7 @@
    "score": 99.437,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5138,7 +5127,7 @@
    "score": 99.437,
    "blob": 14.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5169,7 +5158,7 @@
    "score": 99.452,
    "blob": 105.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5180,7 +5169,7 @@
    "score": 99.452,
    "blob": 105.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5191,7 +5180,7 @@
    "score": 99.456,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5202,7 +5191,7 @@
    "score": 99.456,
    "blob": 9.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5213,7 +5202,18 @@
    "score": 99.457,
    "blob": 105.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Notes-ipad:t4000",
+   "category": "conformance",
+   "score": 99.458,
+   "blob": 113.8,
+   "layout_issues": 8,
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5224,7 +5224,7 @@
    "score": 99.46,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5235,18 +5235,7 @@
    "score": 99.46,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:20",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
-   "scene": "Notes-ipad:t4000",
-   "category": "conformance",
-   "score": 99.461,
-   "blob": 114.8,
-   "layout_issues": 6,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5257,7 +5246,7 @@
    "score": 99.463,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5268,7 +5257,7 @@
    "score": 99.463,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5279,7 +5268,7 @@
    "score": 99.463,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5290,7 +5279,7 @@
    "score": 99.463,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5301,7 +5290,7 @@
    "score": 99.463,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5312,7 +5301,7 @@
    "score": 99.463,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5343,7 +5332,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5354,7 +5343,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5365,7 +5354,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5376,7 +5365,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5387,7 +5376,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5398,7 +5387,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5409,7 +5398,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5420,7 +5409,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5431,7 +5420,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5442,7 +5431,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5453,7 +5442,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5464,7 +5453,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5475,7 +5464,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5486,7 +5475,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5497,7 +5486,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5508,7 +5497,7 @@
    "score": 99.469,
    "blob": 750.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5519,7 +5508,7 @@
    "score": 99.481,
    "blob": 0.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5540,7 +5529,7 @@
    "score": 99.487,
    "blob": 87.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5551,7 +5540,7 @@
    "score": 99.493,
    "blob": 11.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5562,7 +5551,7 @@
    "score": 99.494,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5573,7 +5562,7 @@
    "score": 99.494,
    "blob": 105.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5604,7 +5593,7 @@
    "score": 99.529,
    "blob": 87.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:06",
+   "captured": "2026-09-06T03:49",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5625,7 +5614,7 @@
    "score": 99.538,
    "blob": 59.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5656,7 +5645,7 @@
    "score": 99.558,
    "blob": 16.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:12",
+   "captured": "2026-09-06T03:56",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5687,7 +5676,7 @@
    "score": 99.597,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5698,7 +5687,7 @@
    "score": 99.599,
    "blob": 16.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5709,7 +5698,7 @@
    "score": 99.599,
    "blob": 16.8,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5720,7 +5709,7 @@
    "score": 99.603,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5731,7 +5720,7 @@
    "score": 99.603,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:01",
+   "captured": "2026-09-06T03:44",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5742,7 +5731,7 @@
    "score": 99.603,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5753,7 +5742,7 @@
    "score": 99.603,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:55",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5764,7 +5753,7 @@
    "score": 99.604,
    "blob": 3.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:03",
+   "captured": "2026-09-06T03:47",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5775,7 +5764,7 @@
    "score": 99.606,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5786,7 +5775,7 @@
    "score": 99.606,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5797,7 +5786,7 @@
    "score": 99.606,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5808,7 +5797,7 @@
    "score": 99.606,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5819,7 +5808,7 @@
    "score": 99.606,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5830,7 +5819,7 @@
    "score": 99.606,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:21",
+   "captured": "2026-09-06T04:04",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5841,7 +5830,7 @@
    "score": 99.625,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5852,7 +5841,7 @@
    "score": 99.625,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5873,7 +5862,7 @@
    "score": 99.632,
    "blob": 59.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5894,7 +5883,7 @@
    "score": 99.64,
    "blob": 6.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:24",
+   "captured": "2026-09-06T04:07",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5925,7 +5914,7 @@
    "score": 99.653,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5936,7 +5925,7 @@
    "score": 99.653,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5947,7 +5936,7 @@
    "score": 99.653,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5958,7 +5947,7 @@
    "score": 99.653,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5969,7 +5958,18 @@
    "score": 99.653,
    "blob": 4.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:08",
+   "captured": "2026-09-06T03:51",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t10100.dark",
+   "category": "conformance",
+   "score": 99.657,
+   "blob": 4.2,
+   "layout_issues": 5,
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -5985,23 +5985,12 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t10100.dark",
-   "category": "conformance",
-   "score": 99.658,
-   "blob": 4.2,
-   "layout_issues": 5,
-   "captured": "2026-09-06T01:08",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "Notes-ipad:t5000",
    "category": "conformance",
    "score": 99.66,
    "blob": 114.8,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:14",
+   "captured": "2026-09-06T03:57",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6012,7 +6001,7 @@
    "score": 99.661,
    "blob": 0.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6023,7 +6012,7 @@
    "score": 99.661,
    "blob": 0.2,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6044,7 +6033,7 @@
    "score": 99.673,
    "blob": 11.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6055,7 +6044,7 @@
    "score": 99.673,
    "blob": 11.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:00",
+   "captured": "2026-09-06T03:43",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6066,7 +6055,7 @@
    "score": 99.674,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6077,7 +6066,7 @@
    "score": 99.674,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6088,7 +6077,7 @@
    "score": 99.687,
    "blob": 59.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6099,7 +6088,7 @@
    "score": 99.689,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:23",
+   "captured": "2026-09-06T04:06",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6110,7 +6099,7 @@
    "score": 99.693,
    "blob": 12.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6121,7 +6110,7 @@
    "score": 99.721,
    "blob": 0.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6142,7 +6131,7 @@
    "score": 99.726,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6153,7 +6142,7 @@
    "score": 99.731,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6194,7 +6183,7 @@
    "score": 99.748,
    "blob": 0.2,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6205,7 +6194,7 @@
    "score": 99.759,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6213,10 +6202,10 @@
   {
    "scene": "Pager:t1800.rtl",
    "category": "conformance",
-   "score": 99.759,
+   "score": 99.76,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6247,7 +6236,7 @@
    "score": 99.77,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6255,10 +6244,10 @@
   {
    "scene": "Pager:t600.landscape",
    "category": "conformance",
-   "score": 99.771,
+   "score": 99.772,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6269,7 +6258,7 @@
    "score": 99.774,
    "blob": 0.8,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6280,7 +6269,7 @@
    "score": 99.776,
    "blob": 23.8,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:04",
+   "captured": "2026-09-06T03:47",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6291,7 +6280,7 @@
    "score": 99.78,
    "blob": 0.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6302,7 +6291,7 @@
    "score": 99.782,
    "blob": 2.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6313,7 +6302,7 @@
    "score": 99.784,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6324,7 +6313,7 @@
    "score": 99.784,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6355,7 +6344,7 @@
    "score": 99.794,
    "blob": 127.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6376,7 +6365,7 @@
    "score": 99.804,
    "blob": 0.5,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6387,7 +6376,7 @@
    "score": 99.805,
    "blob": 0.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6398,7 +6387,7 @@
    "score": 99.805,
    "blob": 0.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6414,23 +6403,23 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t10100.xxxl",
-   "category": "conformance",
-   "score": 99.806,
-   "blob": 2.0,
-   "layout_issues": 5,
-   "captured": "2026-09-06T01:09",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "Modal:t10100.ax1",
    "category": "conformance",
    "score": 99.808,
    "blob": 2.0,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t10100.xxxl",
+   "category": "conformance",
+   "score": 99.808,
+   "blob": 2.0,
+   "layout_issues": 5,
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6451,7 +6440,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6462,7 +6451,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6473,7 +6462,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6484,7 +6473,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6495,7 +6484,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:52",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6506,7 +6495,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6517,7 +6506,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6528,7 +6517,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6539,7 +6528,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6550,7 +6539,7 @@
    "score": 99.809,
    "blob": 2.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:09",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6581,7 +6570,7 @@
    "score": 99.812,
    "blob": 0.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6592,7 +6581,7 @@
    "score": 99.812,
    "blob": 0.5,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6603,7 +6592,7 @@
    "score": 99.814,
    "blob": 0.0,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6614,7 +6603,7 @@
    "score": 99.819,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6625,7 +6614,7 @@
    "score": 99.819,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6636,7 +6625,7 @@
    "score": 99.819,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6647,7 +6636,7 @@
    "score": 99.819,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6658,7 +6647,7 @@
    "score": 99.819,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6669,7 +6658,7 @@
    "score": 99.821,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6680,7 +6669,7 @@
    "score": 99.821,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6691,7 +6680,7 @@
    "score": 99.821,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6702,7 +6691,7 @@
    "score": 99.822,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6710,10 +6699,10 @@
   {
    "scene": "Modal:t10100.landscape",
    "category": "conformance",
-   "score": 99.829,
+   "score": 99.83,
    "blob": 3.5,
    "layout_issues": 5,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6729,23 +6718,12 @@
    "status": "pass"
   },
   {
-   "scene": "Modal:t10100",
-   "category": "conformance",
-   "score": 99.833,
-   "blob": 3.5,
-   "layout_issues": 5,
-   "captured": "2026-09-06T01:07",
-   "verdict": "PASS",
-   "threshold": 97.5,
-   "status": "pass"
-  },
-  {
    "scene": "Pager:t500",
    "category": "conformance",
    "score": 99.833,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6756,7 +6734,18 @@
    "score": 99.833,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Modal:t10100",
+   "category": "conformance",
+   "score": 99.834,
+   "blob": 3.5,
+   "layout_issues": 5,
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6767,7 +6756,7 @@
    "score": 99.835,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6778,7 +6767,7 @@
    "score": 99.835,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6789,7 +6778,7 @@
    "score": 99.836,
    "blob": 59.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6800,7 +6789,7 @@
    "score": 99.836,
    "blob": 59.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:11",
+   "captured": "2026-09-06T03:54",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6811,7 +6800,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6822,7 +6811,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6833,7 +6822,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6844,7 +6833,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6855,7 +6844,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:50",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6866,7 +6855,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6877,7 +6866,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6888,7 +6877,7 @@
    "score": 99.839,
    "blob": 3.5,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:10",
+   "captured": "2026-09-06T03:53",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6899,7 +6888,7 @@
    "score": 99.843,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6910,7 +6899,7 @@
    "score": 99.848,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6921,7 +6910,7 @@
    "score": 99.848,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6942,7 +6931,7 @@
    "score": 99.86,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6963,7 +6952,7 @@
    "score": 99.877,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6974,7 +6963,7 @@
    "score": 99.877,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6985,7 +6974,7 @@
    "score": 99.877,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -6996,7 +6985,7 @@
    "score": 99.877,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7007,7 +6996,7 @@
    "score": 99.877,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7018,7 +7007,7 @@
    "score": 99.877,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7029,7 +7018,7 @@
    "score": 99.878,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7040,7 +7029,7 @@
    "score": 99.878,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T00:59",
+   "captured": "2026-09-06T03:42",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7071,7 +7060,7 @@
    "score": 99.887,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7082,7 +7071,7 @@
    "score": 99.887,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7093,7 +7082,7 @@
    "score": 99.887,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7104,7 +7093,7 @@
    "score": 99.896,
    "blob": 80.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7115,7 +7104,7 @@
    "score": 99.898,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7126,7 +7115,7 @@
    "score": 99.898,
    "blob": 3.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:20",
+   "captured": "2026-09-06T04:03",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7137,7 +7126,7 @@
    "score": 99.901,
    "blob": 80.5,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:22",
+   "captured": "2026-09-06T04:05",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7158,7 +7147,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7169,7 +7158,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7180,7 +7169,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7191,7 +7180,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7202,7 +7191,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7213,7 +7202,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7224,7 +7213,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7235,7 +7224,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7246,7 +7235,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7257,7 +7246,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7268,7 +7257,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7279,7 +7268,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7290,7 +7279,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7301,7 +7290,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7312,7 +7301,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7323,7 +7312,7 @@
    "score": 99.918,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:18",
+   "captured": "2026-09-06T04:01",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7354,7 +7343,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7365,7 +7354,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7376,7 +7365,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7387,7 +7376,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7398,7 +7387,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7409,7 +7398,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 4,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7420,7 +7409,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7431,7 +7420,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7442,7 +7431,7 @@
    "score": 99.928,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:19",
+   "captured": "2026-09-06T04:02",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7463,7 +7452,7 @@
    "score": 99.939,
    "blob": 72.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7474,7 +7463,7 @@
    "score": 99.939,
    "blob": 72.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7485,7 +7474,7 @@
    "score": 99.939,
    "blob": 72.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7496,7 +7485,7 @@
    "score": 99.939,
    "blob": 72.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7507,7 +7496,7 @@
    "score": 99.939,
    "blob": 72.2,
    "layout_issues": 1,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7516,9 +7505,9 @@
    "scene": "Modal-ipad:t10100",
    "category": "conformance",
    "score": 99.939,
-   "blob": 71.8,
+   "blob": 72.0,
    "layout_issues": 6,
-   "captured": "2026-09-06T01:07",
+   "captured": "2026-09-06T03:51",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7539,7 +7528,7 @@
    "score": 99.957,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7565,12 +7554,12 @@
    "status": "pass"
   },
   {
-   "scene": "Pager-ipad:t600",
+   "scene": "Pager-ipad:t3133",
    "category": "conformance",
-   "score": 99.963,
+   "score": 99.961,
    "blob": 0.0,
-   "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "layout_issues": 4,
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7601,7 +7590,7 @@
    "score": 99.968,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7612,7 +7601,7 @@
    "score": 99.968,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7623,7 +7612,7 @@
    "score": 99.968,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7634,7 +7623,7 @@
    "score": 99.974,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7645,7 +7634,7 @@
    "score": 99.974,
    "blob": 0.0,
    "layout_issues": 2,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7666,7 +7655,7 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7677,7 +7666,7 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7688,7 +7677,7 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7699,7 +7688,7 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7710,7 +7699,18 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
+   "verdict": "PASS",
+   "threshold": 97.5,
+   "status": "pass"
+  },
+  {
+   "scene": "Pager-ipad:t3267",
+   "category": "conformance",
+   "score": 99.979,
+   "blob": 0.0,
+   "layout_issues": 4,
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7721,7 +7721,7 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
@@ -7732,7 +7732,7 @@
    "score": 99.979,
    "blob": 0.0,
    "layout_issues": 0,
-   "captured": "2026-09-06T01:17",
+   "captured": "2026-09-06T04:00",
    "verdict": "PASS",
    "threshold": 97.5,
    "status": "pass"
