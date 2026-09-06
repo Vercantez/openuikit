@@ -180,6 +180,18 @@ public func AudioUnitGetProperty(
         ioDataSize?.pointee = 4
         outData?.storeBytes(of: unit.lastRenderError, as: Int32.self)
         return 0
+    case kAudioUnitProperty_ParameterList:
+        if unit.isMixer {
+            ioDataSize?.pointee = 12
+            if let outData {
+                outData.storeBytes(of: kMultiChannelMixerParam_Volume, toByteOffset: 0, as: UInt32.self)
+                outData.storeBytes(of: kMultiChannelMixerParam_Enable, toByteOffset: 4, as: UInt32.self)
+                outData.storeBytes(of: kMultiChannelMixerParam_Pan, toByteOffset: 8, as: UInt32.self)
+            }
+            return 0
+        }
+        ioDataSize?.pointee = 0
+        return 0
     default:
         return kAudioUnitErr_InvalidProperty
     }
@@ -246,12 +258,19 @@ public func AudioUnitGetParameter(
     _ inElement: AudioUnitElement,
     _ outValue: UnsafeMutablePointer<AudioUnitParameterValue>?
 ) -> Int32 {
-    _ = inScope
-    _ = inElement
     guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
         return kAudioUnitErr_InvalidElement
     }
-    outValue?.pointee = unit.parameters[inID] ?? 0
+    let key = unit.parameterKey(scope: inScope, element: inElement, id: inID)
+    if let stored = unit.scopedParameters[key] ?? unit.parameters[inID] {
+        outValue?.pointee = stored
+        return 0
+    }
+    if inID == kMultiChannelMixerParam_Volume || inID == kMultiChannelMixerParam_Enable {
+        outValue?.pointee = 1
+        return 0
+    }
+    outValue?.pointee = 0
     return 0
 }
 
@@ -263,13 +282,12 @@ public func AudioUnitSetParameter(
     _ inValue: AudioUnitParameterValue,
     _ inBufferOffsetInFrames: UInt32
 ) -> Int32 {
-    _ = inScope
-    _ = inElement
     _ = inBufferOffsetInFrames
     guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
         return kAudioUnitErr_InvalidElement
     }
     unit.parameters[inID] = inValue
+    unit.scopedParameters[unit.parameterKey(scope: inScope, element: inElement, id: inID)] = inValue
     return 0
 }
 
@@ -327,6 +345,29 @@ public func AudioUnitRender(
             ioData
         )
         ioActionFlags?.pointee = flags
+        if status == 0 && unit.isMixer {
+            let gain = unit.mixerGain(element: 0)
+            if gain != 1 {
+                var copy = [UInt8](repeating: 0, count: count)
+                memcpy(&copy, dest, count)
+                copy.withUnsafeBytes { raw in
+                    guard let source = raw.baseAddress else { return }
+                    _ = atMixPCM(
+                        inputs: [
+                            (
+                                format: unit.outputFormat,
+                                bytes: source,
+                                byteCount: count,
+                                gain: gain
+                            )
+                        ],
+                        dest: unit.outputFormat,
+                        output: dest,
+                        outputByteCapacity: count
+                    )
+                }
+            }
+        }
         unit.lastRenderError = status
         return status
     }
@@ -369,13 +410,15 @@ public func AudioUnitRender(
                 }
             }
             if pulledStatus == 0 {
+                let gain = unit.isMixer ? unit.mixerGain(element: UInt32(index)) : 1
                 storage.withUnsafeBytes { raw in
                     _ = atMixPCM(
                         inputs: [
                             (
                                 format: unit.inputFormat,
                                 bytes: raw.baseAddress!,
-                                byteCount: planeBytes
+                                byteCount: planeBytes,
+                                gain: gain
                             )
                         ],
                         dest: unit.outputFormat,
@@ -401,6 +444,66 @@ public func AudioUnitRender(
     }
     unit.lastRenderError = 0
     unit.sampleCounter += Int64(inNumberFrames)
+    return 0
+}
+
+public func AudioUnitGetPropertyInfo(
+    _ inUnit: AudioUnit?,
+    _ inID: AudioUnitPropertyID,
+    _ inScope: AudioUnitScope,
+    _ inElement: AudioUnitElement,
+    _ outDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outWritable: UnsafeMutablePointer<UInt8>?
+) -> Int32 {
+    _ = inElement
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    switch inID {
+    case kAudioUnitProperty_StreamFormat:
+        outDataSize?.pointee = UInt32(atASBDSize)
+        outWritable?.pointee = unit.initialized ? 0 : 1
+    case kAudioUnitProperty_ElementCount, kAudioUnitProperty_MaximumFramesPerSlice, kAudioUnitProperty_LastRenderError:
+        outDataSize?.pointee = 4
+        outWritable?.pointee = inID == kAudioUnitProperty_LastRenderError ? 0 : 1
+    case kAudioUnitProperty_SampleRate:
+        outDataSize?.pointee = 8
+        outWritable?.pointee = 0
+    case kAudioUnitProperty_ParameterList:
+        outDataSize?.pointee = unit.isMixer ? 12 : 0
+        outWritable?.pointee = 0
+    default:
+        return kAudioUnitErr_InvalidProperty
+    }
+    _ = inScope
+    return 0
+}
+
+public func AudioUnitAddRenderNotify(
+    _ inUnit: AudioUnit?,
+    _ inProc: AURenderCallback?,
+    _ inProcUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    guard let inProc else { return kAudioUnitErr_InvalidParameter }
+    unit.renderNotifies.append(AURenderCallbackStruct(inputProc: inProc, inputProcRefCon: inProcUserData))
+    return 0
+}
+
+public func AudioUnitRemoveRenderNotify(
+    _ inUnit: AudioUnit?,
+    _ inProc: AURenderCallback?,
+    _ inProcUserData: UnsafeMutableRawPointer?
+) -> Int32 {
+    guard let unit = ATRegistry.shared.lookup(inUnit, as: ATAudioUnitObject.self) else {
+        return kAudioUnitErr_InvalidElement
+    }
+    unit.renderNotifies.removeAll { notify in
+        notify.inputProcRefCon == inProcUserData
+    }
+    _ = inProc
     return 0
 }
 

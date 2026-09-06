@@ -37,3 +37,13 @@ func testHitTestSegment() {
     )
     precondition(ignoreHidden.isEmpty)
 }
+
+func testHitTestFailClosedWithoutScene() {
+    let renderer = SCNRenderer()
+    renderer.scene = nil
+    let empty = renderer.hitTest(CGPoint(x: 16, y: 16), options: nil)
+    precondition(empty.isEmpty)
+    let view = SCNView(frame: CGRect(x: 0, y: 0, width: 32, height: 32), options: nil)
+    view.scene = nil
+    precondition(view.hitTest(CGPoint.zero, options: nil).isEmpty)
+}

@@ -118,6 +118,10 @@ open class SCNReplicatorConstraint: SCNConstraint {
     public var positionOffset: SCNVector3 = SCNVector3Zero
     public var scaleOffset: SCNVector3 = SCNVector3Zero
     public override init() { super.init() }
+    public convenience init(target: SCNNode?) {
+        self.init()
+        self.target = target
+    }
     public required init?(coder: NSCoder) { return nil }
 }
 
@@ -190,7 +194,15 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     public var movabilityHint: SCNMovabilityHint = .fixed
     public var focusBehavior: SCNNodeFocusBehavior = .none
     public var isPaused: Bool = false
-    public var physicsBody: SCNPhysicsBody?
+    private var _physicsBody: SCNPhysicsBody?
+    public var physicsBody: SCNPhysicsBody? {
+        get { _physicsBody }
+        set {
+            _physicsBody?._node = nil
+            _physicsBody = newValue
+            _physicsBody?._node = self
+        }
+    }
     public var physicsField: SCNPhysicsField?
     public var constraints: [SCNConstraint]?
     public weak var rendererDelegate: SCNNodeRendererDelegate?
@@ -307,6 +319,38 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
     public var worldUp: SCNVector3 { _scnNormalize(_scnTransformDirection(worldTransform, SCNNode.localUp)) }
     public var worldRight: SCNVector3 { _scnNormalize(_scnTransformDirection(worldTransform, SCNNode.localRight)) }
     public var worldFront: SCNVector3 { _scnNormalize(_scnTransformDirection(worldTransform, SCNNode.localFront)) }
+
+    /// True when this node or any ancestor has `isHidden == true`.
+    public var linux_worldHidden: Bool {
+        var cursor: SCNNode? = self
+        while let node = cursor {
+            if node.isHidden { return true }
+            cursor = node.parent
+        }
+        return false
+    }
+
+    /// Product of this node's opacity and every ancestor's opacity.
+    public var linux_worldOpacity: CGFloat {
+        var value = opacity
+        var cursor = parent
+        while let node = cursor {
+            value *= node.opacity
+            cursor = node.parent
+        }
+        return value
+    }
+
+    /// Bitwise AND of this node's `categoryBitMask` with every ancestor.
+    public var linux_worldCategoryBitMask: Int {
+        var mask = categoryBitMask
+        var cursor = parent
+        while let node = cursor {
+            mask &= node.categoryBitMask
+            cursor = node.parent
+        }
+        return mask
+    }
 
     public var presentation: SCNNode { self }
 

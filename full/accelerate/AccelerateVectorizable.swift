@@ -20,14 +20,13 @@ extension vDSP.VectorizableFloat {
 
     public static func destroySetup(channelCount: UInt, biquadSetup: OpaquePointer) {
         _ = channelCount
-        _fftRelease(biquadSetup)
+        _biquadRelease(biquadSetup)
     }
 
     public static func makeBiquadSetup(channelCount: UInt, coefficients: [Double], sectionCount: UInt) -> OpaquePointer? {
         _ = channelCount
-        _ = coefficients
-        _ = sectionCount
-        return nil
+        guard let box = _BiquadSetupBox(coefficients: coefficients, sectionCount: Int(sectionCount)) else { return nil }
+        return _biquadRetain(box)
     }
 
     public static func applyMulti(
@@ -36,10 +35,17 @@ extension vDSP.VectorizableFloat {
         pOutputs: UnsafeMutablePointer<UnsafeMutablePointer<vDSP.VectorizableFloat.Scalar>>,
         count: vDSP_Length
     ) {
-        _ = setup
-        _ = pInputs
-        _ = pOutputs
-        _ = count
+        guard let box = _biquadBox(setup) else { return }
+        var delays = [Float](repeating: 0, count: max(2, box.sections * 2))
+        delays.withUnsafeMutableBufferPointer { dp in
+            _biquadApply(
+                source: pInputs[0],
+                destination: pOutputs[0],
+                delays: dp.baseAddress!,
+                box: box,
+                count: Int(count)
+            )
+        }
     }
 
     public static func applySingle<U, V>(
@@ -50,11 +56,18 @@ extension vDSP.VectorizableFloat {
         sectionCount: vDSP_Length,
         count: vDSP_Length
     ) where U: AccelerateBuffer, V: AccelerateMutableBuffer, U.Element == Float, V.Element == Float {
-        _ = delays
-        _ = setup
         _ = sectionCount
-        _ = count
-        _AccelerateNumeric.map(source, &destination) { $0 }
+        guard let box = _biquadBox(setup) else {
+            _AccelerateNumeric.map(source, &destination) { $0 }
+            return
+        }
+        source.withUnsafeBufferPointer { src in
+            destination.withUnsafeMutableBufferPointer { dest in
+                let n = min(Int(count), src.count, dest.count)
+                guard let sp = src.baseAddress, let dp = dest.baseAddress else { return }
+                _biquadApply(source: sp, destination: dp, delays: delays, box: box, count: n)
+            }
+        }
     }
 
     public static func transform<U, V>(
@@ -108,14 +121,13 @@ extension vDSP.VectorizableDouble {
 
     public static func destroySetup(channelCount: UInt, biquadSetup: OpaquePointer) {
         _ = channelCount
-        _fftRelease(biquadSetup)
+        _biquadRelease(biquadSetup)
     }
 
     public static func makeBiquadSetup(channelCount: vDSP_Length, coefficients: [Double], sectionCount: vDSP_Length) -> OpaquePointer? {
         _ = channelCount
-        _ = coefficients
-        _ = sectionCount
-        return nil
+        guard let box = _BiquadSetupBox(coefficients: coefficients, sectionCount: Int(sectionCount)) else { return nil }
+        return _biquadRetain(box)
     }
 
     public static func applyMulti(
@@ -124,10 +136,17 @@ extension vDSP.VectorizableDouble {
         pOutputs: UnsafeMutablePointer<UnsafeMutablePointer<vDSP.VectorizableDouble.Scalar>>,
         count: vDSP_Length
     ) {
-        _ = setup
-        _ = pInputs
-        _ = pOutputs
-        _ = count
+        guard let box = _biquadBox(setup) else { return }
+        var delays = [Double](repeating: 0, count: max(2, box.sections * 2))
+        delays.withUnsafeMutableBufferPointer { dp in
+            _biquadApply(
+                source: pInputs[0],
+                destination: pOutputs[0],
+                delays: dp.baseAddress!,
+                box: box,
+                count: Int(count)
+            )
+        }
     }
 
     public static func applySingle<U, V>(
@@ -138,11 +157,18 @@ extension vDSP.VectorizableDouble {
         sectionCount: vDSP_Length,
         count: vDSP_Length
     ) where U: AccelerateBuffer, V: AccelerateMutableBuffer, U.Element == Double, V.Element == Double {
-        _ = delays
-        _ = setup
         _ = sectionCount
-        _ = count
-        _AccelerateNumeric.map(source, &destination) { $0 }
+        guard let box = _biquadBox(setup) else {
+            _AccelerateNumeric.map(source, &destination) { $0 }
+            return
+        }
+        source.withUnsafeBufferPointer { src in
+            destination.withUnsafeMutableBufferPointer { dest in
+                let n = min(Int(count), src.count, dest.count)
+                guard let sp = src.baseAddress, let dp = dest.baseAddress else { return }
+                _biquadApply(source: sp, destination: dp, delays: delays, box: box, count: n)
+            }
+        }
     }
 
     public static func transform<U, V>(

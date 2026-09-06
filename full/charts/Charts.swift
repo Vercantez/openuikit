@@ -343,16 +343,36 @@ private func resolveScale(
     let minValue = storage?.domainMin ?? values.min() ?? 0
     let maxValue = storage?.domainMax ?? values.max() ?? 1
     let domain = min(minValue, maxValue)...max(minValue, maxValue == minValue ? minValue + 1 : maxValue)
+    let inferred = storage?.domainMin == nil && storage?.domainMax == nil
+    let inverted = !horizontal
     if type == .log {
-        return .log(domain: domain, range: range, inverted: !horizontal)
+        var scale = ChartScale.log(domain: domain, range: range, inverted: inverted)
+        if inferred {
+            let nice = scale.niceDomain()
+            scale.domainMin = nice.min
+            scale.domainMax = nice.max
+        }
+        return scale
     }
     if type == .symbolLog {
-        return .symbolLog(domain: domain, range: range, inverted: !horizontal)
+        var scale = ChartScale.symbolLog(domain: domain, range: range, inverted: inverted)
+        if inferred {
+            let nice = scale.niceDomain()
+            scale.domainMin = nice.min
+            scale.domainMax = nice.max
+        }
+        return scale
     }
     if type == .date {
-        return .date(domain: domain, range: range, inverted: !horizontal)
+        return .date(domain: domain, range: range, inverted: inverted)
     }
-    return .linear(domain: domain, range: range, inverted: !horizontal)
+    var scale = ChartScale.linear(domain: domain, range: range, inverted: inverted)
+    if inferred {
+        let nice = scale.niceDomain()
+        scale.domainMin = nice.min
+        scale.domainMax = nice.max
+    }
+    return scale
 }
 
 private func inferXType(_ records: [ChartPlotRecord]) -> ScaleType {
@@ -1029,19 +1049,97 @@ public struct _EmptyAxisMark: AxisMark {
 
 @resultBuilder
 public enum AxisMarkBuilder {
+    public static func buildBlock() -> _EmptyAxisMark {
+        _EmptyAxisMark()
+    }
+
     public static func buildBlock<Content: AxisMark>(
         _ content: Content
     ) -> Content {
         content
     }
+
+    public static func buildBlock<each T>(_ content: repeat each T) -> _EmptyAxisMark
+        where repeat each T: AxisMark
+    {
+        _ = (repeat each content)
+        return _EmptyAxisMark()
+    }
+
+    public static func buildExpression<Content: AxisMark>(
+        _ content: Content
+    ) -> Content {
+        content
+    }
+
+    public static func buildEither<T1: AxisMark, T2: AxisMark>(
+        first: T1
+    ) -> BuilderConditional<T1, T2> {
+        BuilderConditional(storage: .first(first))
+    }
+
+    public static func buildEither<T1: AxisMark, T2: AxisMark>(
+        second: T2
+    ) -> BuilderConditional<T1, T2> {
+        BuilderConditional(storage: .second(second))
+    }
+
+    public static func buildIf<T: AxisMark>(_ content: T?) -> T? {
+        content
+    }
+
+    public static func buildLimitedAvailability(
+        _ content: some AxisMark
+    ) -> AnyAxisMark {
+        AnyAxisMark(content)
+    }
 }
 
 @resultBuilder
 public enum AxisContentBuilder {
+    public static func buildBlock() -> AxisMarks<_EmptyAxisMark> {
+        AxisMarks()
+    }
+
     public static func buildBlock<Content: AxisContent>(
         _ content: Content
     ) -> Content {
         content
+    }
+
+    public static func buildBlock<each T>(_ content: repeat each T) -> AxisMarks<_EmptyAxisMark>
+        where repeat each T: AxisContent
+    {
+        _ = (repeat each content)
+        return AxisMarks()
+    }
+
+    public static func buildExpression<Content: AxisContent>(
+        _ content: Content
+    ) -> Content {
+        content
+    }
+
+    public static func buildEither<T1: AxisContent, T2: AxisContent>(
+        first: T1
+    ) -> BuilderConditional<T1, T2> {
+        BuilderConditional(storage: .first(first))
+    }
+
+    public static func buildEither<T1: AxisContent, T2: AxisContent>(
+        second: T2
+    ) -> BuilderConditional<T1, T2> {
+        BuilderConditional(storage: .second(second))
+    }
+
+    public static func buildIf<T: AxisContent>(_ content: T?) -> T? {
+        content
+    }
+
+    public static func buildLimitedAvailability(
+        _ content: some AxisContent
+    ) -> AnyAxisContent {
+        AnyAxisContent(content)
     }
 }
 
@@ -1233,26 +1331,44 @@ public extension ChartContent {
         )
     }
 
-    func symbolSize<D: Plottable>(by value: PlottableValue<D>) -> some ChartContent {
-        _ = value
-        return self
+    func symbolSize<D: Plottable>(by value: PlottableValue<D>) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.symbolBy = value.label
+            }
+        )
     }
 
-    func symbolSize(_ area: CGFloat) -> some ChartContent {
-        _ = area
-        return self
+    func symbolSize(_ area: CGFloat) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.symbolSize = Double(area)
+            }
+        )
     }
 
-    func symbolSize(_ size: CGSize) -> some ChartContent {
-        _ = size
-        return self
+    func symbolSize(_ size: CGSize) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.symbolSize = Double(size.width * size.height)
+            }
+        )
     }
 
-    func compositingLayer() -> some ChartContent { self }
+    func compositingLayer() -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.compositing = "layer"
+            }
+        )
+    }
 
-    func alignsMarkStylesWithPlotArea(_ aligns: Bool = true) -> some ChartContent {
-        _ = aligns
-        return self
+    func alignsMarkStylesWithPlotArea(_ aligns: Bool = true) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.alignsMarkStyles = aligns
+            }
+        )
     }
 
     func interpolationMethod(_ method: InterpolationMethod) -> _ChartInterpolationContent<Self> {
@@ -1263,37 +1379,48 @@ public extension ChartContent {
         _ChartLineStyleContent(content: self, style: style)
     }
 
-    func offset(x: CGFloat = 0, y: CGFloat = 0) -> Self {
-        _ = x
-        _ = y
-        return self
+    func offset(x: CGFloat = 0, y: CGFloat = 0) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.offsetX += Double(x)
+                record.layout.offsetY += Double(y)
+            }
+        )
     }
 
-    func offset(_ value: CGSize) -> Self {
-        _ = value
-        return self
+    func offset(_ value: CGSize) -> _ChartAttributedPlotContent {
+        offset(x: value.width, y: value.height)
     }
 
-    func offset(x: CGFloat = 0, yStart: CGFloat = 0, yEnd: CGFloat = 0) -> Self {
-        _ = x
-        _ = yStart
-        _ = yEnd
-        return self
+    func offset(x: CGFloat = 0, yStart: CGFloat = 0, yEnd: CGFloat = 0) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.offsetX += Double(x)
+                record.layout.offsetYStart += Double(yStart)
+                record.layout.offsetYEnd += Double(yEnd)
+            }
+        )
     }
 
-    func offset(xStart: CGFloat = 0, xEnd: CGFloat = 0, y: CGFloat = 0) -> Self {
-        _ = xStart
-        _ = xEnd
-        _ = y
-        return self
+    func offset(xStart: CGFloat = 0, xEnd: CGFloat = 0, y: CGFloat = 0) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.offsetXStart += Double(xStart)
+                record.layout.offsetXEnd += Double(xEnd)
+                record.layout.offsetY += Double(y)
+            }
+        )
     }
 
-    func offset(xStart: CGFloat = 0, xEnd: CGFloat = 0, yStart: CGFloat = 0, yEnd: CGFloat = 0) -> Self {
-        _ = xStart
-        _ = xEnd
-        _ = yStart
-        _ = yEnd
-        return self
+    func offset(xStart: CGFloat = 0, xEnd: CGFloat = 0, yStart: CGFloat = 0, yEnd: CGFloat = 0) -> _ChartAttributedPlotContent {
+        _ChartAttributedPlotContent(
+            records: chartStampRecords(chartPlotRecords) { record in
+                record.layout.offsetXStart += Double(xStart)
+                record.layout.offsetXEnd += Double(xEnd)
+                record.layout.offsetYStart += Double(yStart)
+                record.layout.offsetYEnd += Double(yEnd)
+            }
+        )
     }
 }
 
@@ -1311,6 +1438,9 @@ extension Optional: ChartContent where Wrapped: ChartContent {
         self?.chartPlotRecords ?? []
     }
 }
+
+extension Optional: AxisMark where Wrapped: AxisMark {}
+extension Optional: AxisContent where Wrapped: AxisContent {}
 
 extension ClosedRange: ScaleDomain where Bound: Plottable {}
 extension Array: ScaleDomain where Element: Plottable {}

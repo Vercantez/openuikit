@@ -5,6 +5,7 @@ full/metal/MetalDescriptors.swift
 full/metal/MetalEnums.swift
 full/metal/MetalErrors.swift
 full/metal/MetalGeometry.swift
+full/metal/MetalHost.swift
 full/metal/MetalOptionSets.swift
 full/metal/MetalPixelFormat.swift
 full/metal/MetalProtocols.swift

@@ -896,3 +896,191 @@ public func CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout(
     _ = flavor
     return false
 }
+
+public func CMAudioFormatDescriptionEqual(
+    _ formatDescription: CMAudioFormatDescription,
+    otherFormatDescription: CMAudioFormatDescription,
+    equalityMask: CMAudioFormatDescriptionMask,
+    equalityMaskOut: UnsafeMutablePointer<CMAudioFormatDescriptionMask>?
+) -> Bool {
+    var matched: CMAudioFormatDescriptionMask = 0
+    if (equalityMask & kCMAudioFormatDescriptionMask_StreamBasicDescription) != 0 {
+        if formatDescription.mediaType == otherFormatDescription.mediaType
+            && formatDescription.mediaSubType == otherFormatDescription.mediaSubType
+        {
+            matched |= kCMAudioFormatDescriptionMask_StreamBasicDescription
+        }
+    }
+    if (equalityMask & kCMAudioFormatDescriptionMask_MagicCookie) != 0 {
+        if formatDescription.magicCookieBytes == otherFormatDescription.magicCookieBytes {
+            matched |= kCMAudioFormatDescriptionMask_MagicCookie
+        }
+    }
+    if (equalityMask & kCMAudioFormatDescriptionMask_ChannelLayout) != 0 {
+        matched |= kCMAudioFormatDescriptionMask_ChannelLayout
+    }
+    if (equalityMask & kCMAudioFormatDescriptionMask_Extensions) != 0 {
+        if CMFormatDescriptionEqual(formatDescription, otherFormatDescription: otherFormatDescription) {
+            matched |= kCMAudioFormatDescriptionMask_Extensions
+        }
+    }
+    equalityMaskOut?.pointee = matched
+    let requested = equalityMask == 0 ? kCMAudioFormatDescriptionMask_All : equalityMask
+    return (matched & requested) == requested
+}
+
+public func CMAudioFormatDescriptionCreateSummary(
+    allocator: CFAllocator?,
+    formatDescriptionArray: CFArray,
+    flags: UInt32,
+    formatDescriptionOut: UnsafeMutablePointer<CMAudioFormatDescription?>
+) -> OSStatus {
+    _ = flags
+    let count = Int(CFArrayGetCount(formatDescriptionArray))
+    if count <= 0 {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+    guard let first = CFArrayGetValueAtIndex(formatDescriptionArray, 0) else {
+        formatDescriptionOut.pointee = nil
+        return kCMFormatDescriptionError_InvalidParameter
+    }
+    let source = unsafeBitCast(first, to: CMFormatDescription.self)
+    return CMFormatDescriptionCreate(
+        allocator: allocator,
+        mediaType: source.mediaType.rawValue,
+        mediaSubType: source.mediaSubType.rawValue,
+        extensions: source.copyExtensions(),
+        formatDescriptionOut: formatDescriptionOut
+    )
+}
+
+public func CMAudioFormatDescriptionGetMagicCookie(
+    _ desc: CMAudioFormatDescription,
+    sizeOut: UnsafeMutablePointer<Int>?
+) -> UnsafeRawPointer? {
+    desc.magicCookiePointer(sizeOut: sizeOut)
+}
+
+public func CMAudioFormatDescriptionCopyAsBigEndianSoundDescriptionBlockBuffer(
+    allocator: CFAllocator?,
+    audioFormatDescription: CMAudioFormatDescription,
+    flavor: CMSoundDescriptionFlavor?,
+    blockBufferOut: UnsafeMutablePointer<CMBlockBuffer?>
+) -> OSStatus {
+    _ = (allocator, audioFormatDescription, flavor)
+    return cmFailBridge(bufferOut: blockBufferOut)
+}
+
+public func CMAudioFormatDescriptionCreateFromBigEndianSoundDescriptionBlockBuffer(
+    allocator: CFAllocator?,
+    bigEndianSoundDescriptionBlockBuffer soundDescriptionBlockBuffer: CMBlockBuffer,
+    flavor: CMSoundDescriptionFlavor?,
+    formatDescriptionOut: UnsafeMutablePointer<CMAudioFormatDescription?>
+) -> OSStatus {
+    _ = (allocator, soundDescriptionBlockBuffer, flavor)
+    return cmFailBridge(formatDescriptionOut)
+}
+
+public func CMAudioFormatDescriptionCreateFromBigEndianSoundDescriptionData(
+    allocator: CFAllocator?,
+    bigEndianSoundDescriptionData soundDescriptionData: UnsafePointer<UInt8>,
+    size: Int,
+    flavor: CMSoundDescriptionFlavor?,
+    formatDescriptionOut: UnsafeMutablePointer<CMAudioFormatDescription?>
+) -> OSStatus {
+    _ = (allocator, soundDescriptionData, size, flavor)
+    return cmFailBridge(formatDescriptionOut)
+}
+
+private func cmSwapDescriptionFailClosed(
+    _ data: UnsafeMutablePointer<UInt8>,
+    _ size: Int
+) -> OSStatus {
+    _ = (data, size)
+    return kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor
+}
+
+public func CMSwapBigEndianClosedCaptionDescriptionToHost(
+    _ closedCaptionDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ closedCaptionDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(closedCaptionDescriptionData, closedCaptionDescriptionSize)
+}
+
+public func CMSwapBigEndianImageDescriptionToHost(
+    _ imageDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ imageDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(imageDescriptionData, imageDescriptionSize)
+}
+
+public func CMSwapBigEndianMetadataDescriptionToHost(
+    _ metadataDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ metadataDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(metadataDescriptionData, metadataDescriptionSize)
+}
+
+public func CMSwapBigEndianSoundDescriptionToHost(
+    _ soundDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ soundDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(soundDescriptionData, soundDescriptionSize)
+}
+
+public func CMSwapBigEndianTextDescriptionToHost(
+    _ textDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ textDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(textDescriptionData, textDescriptionSize)
+}
+
+public func CMSwapBigEndianTimeCodeDescriptionToHost(
+    _ timeCodeDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ timeCodeDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(timeCodeDescriptionData, timeCodeDescriptionSize)
+}
+
+public func CMSwapHostEndianClosedCaptionDescriptionToBig(
+    _ closedCaptionDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ closedCaptionDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(closedCaptionDescriptionData, closedCaptionDescriptionSize)
+}
+
+public func CMSwapHostEndianImageDescriptionToBig(
+    _ imageDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ imageDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(imageDescriptionData, imageDescriptionSize)
+}
+
+public func CMSwapHostEndianMetadataDescriptionToBig(
+    _ metadataDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ metadataDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(metadataDescriptionData, metadataDescriptionSize)
+}
+
+public func CMSwapHostEndianSoundDescriptionToBig(
+    _ soundDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ soundDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(soundDescriptionData, soundDescriptionSize)
+}
+
+public func CMSwapHostEndianTextDescriptionToBig(
+    _ textDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ textDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(textDescriptionData, textDescriptionSize)
+}
+
+public func CMSwapHostEndianTimeCodeDescriptionToBig(
+    _ timeCodeDescriptionData: UnsafeMutablePointer<UInt8>,
+    _ timeCodeDescriptionSize: Int
+) -> OSStatus {
+    cmSwapDescriptionFailClosed(timeCodeDescriptionData, timeCodeDescriptionSize)
+}

@@ -1411,12 +1411,18 @@ public func CTFontGetLigatureCaretPositions(
 }
 
 public func CTFontGetGlyphWithName(_ font: CTFont, _ glyphName: CFString) -> CGGlyph {
-    _ = font
     let name = _ctString(glyphName)
     if name.count == 1, let scalar = name.unicodeScalars.first {
+        let mapped = _ctGlyphForCharacter(font, scalar.value)
+        if mapped != 0 || font.metrics.cmap[scalar.value] != nil {
+            return mapped
+        }
         return CGGlyph(truncatingIfNeeded: scalar.value)
     }
-    if name == "space" { return 32 }
+    if name == "space" {
+        let mapped = _ctGlyphForCharacter(font, 0x20)
+        return mapped != 0 ? mapped : 32
+    }
     return 0
 }
 

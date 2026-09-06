@@ -712,3 +712,310 @@ Outputs: `ladder-census-2026-08-27.json` (per-app raw),
 `gap-classes-2026-08-27.json` (blocking/stub-able),
 `deps-2026-08-27.json` (in-tree vs external), `deps-census-2026-08-27.json`,
 `dep-classes-2026-08-27.json`, `dep-pins-2026-08-27.tsv`.
+
+---
+
+## 8. Re-measure 2026-09-14 — same corpus, current supply
+
+The 08-27 text above is the frozen baseline. This section is a new
+measurement against current main. **Nothing was built, nothing was fixed.**
+Corpus SHAs are the 08-27 pins (`scratch/ladder-corpus/PINS.txt`, copied to
+`corpus-pins-2026-09-14.tsv`). The 20 apps were not re-cloned.
+
+Dated outputs sit **beside** the 08-27 files, never over them:
+`ladder-census-2026-09-14.json`, `ladder-scores-2026-09-14.json`,
+`uikit-union-2026-09-14.json`, `imports-full-2026-09-14.json`,
+`nibdeps-2026-09-14.tsv`, `gap-classes-2026-09-14.json`,
+`deps-2026-09-14.json`, `deps-census-2026-09-14.json`,
+`dep-classes-2026-09-14.json`, `model-supply-2026-09-14.json`,
+`ledger-supply-2026-09-14.json`, `openuikit_types-2026-09-14.txt` (279),
+`uikit_sdk_types-2026-09-14.txt` (737, same as 08-27).
+
+### 8.0 What was enumerated (gate-scope)
+
+Printed here so a missing row is a missing row, not a silent shrink.
+
+- **20 / 20** corpus apps, same SHAs as `corpus-pins-2026-08-27.tsv` /
+  `scratch/ladder-corpus/PINS.txt`. 0 FAILED.
+- **30 / 30** cloned deps, same pins as `dep-pins-2026-08-27.tsv`.
+- **197** `full/<slug>/coverage.tsv` ledgers. 0 missing
+  `reference/framework.json`. **197 / 197** have ≥ 1 `implemented` row.
+  Status totals: implemented 92,152 · declared 62,114 · deferred 34,149 ·
+  not-applicable 10,156 · unavailable 958.
+- **76** `HEAVY` Apple-framework names in `score_ladder.py`. **72 supplied**
+  (ledger ≥ 1 `implemented`, or an OpenUIKit package product). **4 unsupplied:**
+  `AppKit`, `MobileCoreServices`, `SystemConfiguration`, `WatchKit`.
+- **737** Catalyst UIKit SDK `@interface`/`@protocol` names (byte-equal to 08-27).
+- **279** OpenUIKit `public`/`open` `UI*`/`NS*`/`CA*` types from
+  `uikit/Sources/OpenUIKit` (was 180). 99 added, 1 removed
+  (`UIBarTitleTextAttributes`).
+- **41** guest Foundation files in `foundation_guest_sources.txt`, **128**
+  declared types (identifier-level: a type counts only if `open`/`public`
+  `class`/`struct`/`enum`/`protocol`/`typealias Name` is in those files).
+- **55** named types from §4's 16 wall clusters, each grepped as a
+  `public`/`open` declaration under `uikit/Sources` (not inferred from a
+  report sentence). List in §8.4.
+- Combine product types in `uikit/Sources/Combine`: `ObservableObject`,
+  `ObservableObjectPublisher`, `Published`. `os` product types in
+  `uikit/Sources/os`: `Logger`, `OSAllocatedUnfairLock`, `OSLog`,
+  `OSLogInterpolation`, `OSLogMessage`, `OSLogPrivacy`, `OSLogType`,
+  `OSSignpostID`, `OSSignpostType`. None of those names are in the model
+  census `FAMILIES` alphabet, so they do not move the model table; they do
+  subtract from MOD when an app `import`s `Combine` / `os`.
+
+### 8.1 Method change — ledgers as SUPPLY
+
+FW and MOD in 08-27 counted **demand**: every imported Apple framework was a
+wall. They now consume `full/<slug>/coverage.tsv` as supply.
+
+**A framework row counts as supplied only for identifiers whose coverage
+status is `implemented`.** `declared`, `deferred`, `unavailable`, and
+`not-applicable` are not supply. A ledger with zero implemented rows would
+not supply the module; none of the 197 are in that state.
+
+FW/MOD see **module names**, not per-identifier WebKit demand. At that
+granularity a module is supplied iff it has ≥ 1 implemented identifier, **or**
+it is an OpenUIKit package product (`Combine`, `os`, `SafariServices`,
+`MessageUI`, `LinkPresentation`, `StoreKit`, `CoreImage`, `ImageIO`, plus
+the Focus stub products). `UIKit` / `Foundation` / `SwiftUI` stay in the MOD
+denominator so the 08-27 shape stays comparable; SwiftUI is a Focus-widget
+slice and the UI=3 gate still fires.
+
+`raw.heavy_demand` / `raw.modules_demand` keep the 08-27 counts so a
+movement can be attributed to supply rather than to a quieter import list.
+
+`dep_class.py`: `import Combine` no longer makes a dep SwiftUI/Combine-bound
+(the Combine product exists, 2026-09-05). SwiftUI still does. Networking-bound
+now uses the **unsupplied** remainder of the URLSession family. Guest Foundation
+declares the task types (`URLSessionTask` / `URLSessionDataTask` /
+`URLSessionDownloadTask` / `URLSessionUploadTask`), `URLComponents` /
+`URLQueryItem`, and `URLCredential` / `URLAuthenticationChallenge` /
+`URLProtectionSpace`. Alamofire, Apollo, HAKit, and Moya all fall through to
+Foundation-heavy.
+
+`model_supply.py` first-match bands now include GUEST-ORACLE (guest Foundation
+type **and** a carried Darwin golden), GUEST-FOUNDATION (declared in guest
+sources), LEDGER-IMPLEMENTED (CoreData `NSManaged*` / `NSFetch*` only — a
+CoreData public-surface title `Data` is not Foundation.Data), PACKAGE-PRODUCT.
+Guest Foundation wins over the 08-27 OPENUIKIT-SHADOWS / CF-BRIDGE / ICU
+bands when the same name is declared in guest sources.
+
+### 8.2 The ladder, 2026-09-14
+
+Same rubric, same gates, same band cutoffs. UIK uses the 279-name ours list.
+FW/MOD use unsupplied counts. DEP uses the reclassified 30 deps.
+
+| app | UI | OBJC | NIB | UIK | DEP | MOD | FW | NET | SIZE | **=B** | SEL | **=A** | verdict (b) | verdict (a) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| **focus-ios** | 2 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | **3** | 2 | **5** | **NEAR** | **NEAR** |
+| **eidolon** | 0 | 0 | 3 | 0 | 1 | 1 | 0 | 1 | 0 | **6** | 3 | 9 | **NEAR** | FAR — `#selector` wall |
+| Hackers | 3 | 0 | 1 | 0 | 0 | 0 | 0 | 1 | 0 | 5 | 1 | 6 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| ProtonMail-ios | 3 | 0 | 0 | 1 | 0 | 1 | 0 | 0 | 2 | 7 | 2 | 9 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| eigen | 1 | 3 | 1 | 1 | 1 | 0 | 0 | 0 | 0 | 7 | 2 | 9 | FAR — ObjC-majority | FAR — ObjC-majority |
+| **simplenote-ios** | 1 | 2 | 2 | 1 | **?** | 0 | 0 | 0 | 1 | **7** | 3 | 10 | **NEAR** | FAR — `#selector` wall |
+| vlc-ios | 1 | 3 | 2 | 1 | **?** | 0 | 0 | 0 | 0 | 7 | 3 | 10 | FAR — ObjC-majority | FAR — ObjC-majority |
+| mastodon-ios | 3 | 0 | 0 | 2 | 0 | 1 | 0 | 3 | 1 | 10 | 2 | 12 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| Signal-iOS | 1 | 0 | 0 | 2 | 1 | 1 | 0 | 3 | 3 | 11 | 3 | 14 | MID | FAR — `#selector` wall |
+| duckduckgo-ios | 3 | 0 | 1 | 1 | 0 | 2 | 0 | 2 | 2 | 11 | 3 | 14 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| firefox-ios | 1 | 0 | 0 | 2 | 0 | 2 | 0 | 3 | 3 | 11 | 3 | 14 | MID | FAR — `#selector` wall |
+| ios-oss | 1 | 0 | 1 | 1 | 1 | 2 | 0 | 2 | 3 | 11 | 3 | 14 | MID | FAR — `#selector` wall |
+| NetNewsWire | 2 | 1 | 2 | 2 | **?** | 1 | 1 | 2 | 1 | 12 | 3 | 15 | MID | FAR — `#selector` wall |
+| Telegram-iOS | 0 | 2 | 0 | 2 | 0 | 3 | 1 | 1 | 3 | 12 | 3 | 15 | MID | FAR — `#selector` wall |
+| element-ios | 3 | 3 | 2 | 1 | 0 | 1 | 0 | 0 | 3 | 13 | 3 | 16 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| home-assistant-ios | 3 | 0 | 0 | 1 | 1 | 2 | 1 | 3 | 2 | 13 | 3 | 16 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| **WordPress-iOS** | 2 | 1 | 1 | 2 | 0 | 2 | 0 | 3 | 3 | **14** | 3 | 17 | **MID** | FAR — `#selector` wall |
+| nextcloud-ios | 2 | 1 | 2 | 2 | **3** | 1 | 0 | 2 | 1 | 14 | 3 | 17 | FAR — SwiftUI-bound dep | FAR — SwiftUI-bound dep |
+| pocket-casts-ios | 3 | 0 | 2 | 2 | 0 | 2 | 0 | 3 | 2 | 14 | 3 | 17 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+| wikipedia-ios | 3 | 2 | 2 | 2 | 2 | 0 | 0 | 2 | 2 | 15 | 3 | 18 | FAR — SwiftUI-majority | FAR — SwiftUI-majority |
+
+**Route (b) — Apple toolchain: NEAR 3, MID 6, FAR 11.** (was NEAR 2, MID 6, FAR 12)
+**Route (a) — Linux cross-swiftc: NEAR 1, MID 0, FAR 19.** (unchanged band counts)
+
+### 8.3 Per-app deltas (08-27 → 09-14), measured cause of every movement
+
+Every row moved. UI / OBJC / NIB / SIZE / NET / SEL did not move for any app
+(corpus pins frozen). Every `=B` drop is UIK, DEP, MOD, and/or FW.
+
+| app | =B | cause |
+|---|---|---|
+| focus-ios | 6 → **3** | MOD 1→0, FW 2→0. Demand still 35 modules / 13 heavy; 18 supplied imports (Combine, os, WebKit, SafariServices, StoreKit, …). UIK 1 unchanged (14 genuine-missing types / 30 uses; blocking 2 / 5: `UIMenuItem` 3, `UIMenuController` 2). |
+| Hackers | 8 → 5 | UIK 1→0 (`UIPasteboard`, `UIImpactFeedbackGenerator` now in ours), MOD 1→0, FW 1→0. Gate still SwiftUI-majority (88.6 %). |
+| eidolon | 7 → 6 | DEP 2→1. Moya was networking-bound on absent `URLSession`; guest Foundation now declares `URLSession`, so Moya is Foundation-heavy. Worst load-bearing is now **UIKit-bound (RxSwift)**. FW 0, UIK 0 unchanged. |
+| ProtonMail-ios | 10 → 7 | MOD 2→1, FW 2→0. Gate SwiftUI-majority. |
+| eigen | 8 → 7 | FW 1→0. Gate ObjC-majority. |
+| **simplenote-ios** | 10 → **7** | MOD 1→0, FW 2→0. **MID → NEAR.** UI=1, OBJC=2, NIB=2, UIK=1 unchanged. `DEP = ?` still a floor. |
+| vlc-ios | 11 → 7 | UIK 2→1 (27→19 genuine-missing types), MOD 1→0, FW 2→0. Gate ObjC-majority. |
+| mastodon-ios | 13 → 10 | MOD 2→1, FW 2→0. Gate SwiftUI-majority. |
+| Signal-iOS | 16 → 11 | UIK 3→2 (85→54 types / gap uses  still ≥100), MOD 2→1, FW 3→0. Stays MID. |
+| duckduckgo-ios | 15 → 11 | UIK 2→1, FW 3→0. Gate SwiftUI-majority. |
+| firefox-ios | 16 → 11 | UIK 3→2, MOD 3→2, FW 3→0. Stays MID. |
+| ios-oss | 14 → 11 | DEP 2→1 (Apollo networking-bound → Foundation-heavy), FW 2→0. Stays MID. |
+| NetNewsWire | 14 → 12 | MOD 2→1, FW 2→1 (still imports an unsupplied HEAVY: one of AppKit / MobileCoreServices / SystemConfiguration / WatchKit). Stays MID. `DEP = ?`. |
+| Telegram-iOS | 15 → 12 | UIK 3→2, FW 3→1 (demand 52 heavy → 3 unsupplied). Stays MID. |
+| element-ios | 17 → 13 | MOD 2→1, FW 3→0. Gate SwiftUI-majority. |
+| home-assistant-ios | 18 → 13 | UIK 2→1, DEP 2→1 (HAKit networking-bound → Foundation-heavy), MOD 3→2, FW 3→1. Gate SwiftUI-majority. |
+| **WordPress-iOS** | 18 → **14** | MOD 3→2, FW 3→0. **FAR → MID.** No gate fired in 08-27; the sum is now ≤ 16. |
+| nextcloud-ios | 18 → 14 | MOD 2→1, FW 3→0. Gate still SwiftUI-bound load-bearing dep (NextcloudKit, 15 `import SwiftUI`). |
+| pocket-casts-ios | 17 → 14 | FW 3→0. Gate SwiftUI-majority. |
+| wikipedia-ios | 18 → 15 | MOD 1→0, FW 2→0. Gate SwiftUI-majority. DEP 2 is now ObjC (CocoaLumberjack), same numeric bucket as 08-27's networking-bound. |
+
+Swift-file counts are identical to 08-27 for all 20 apps (pins frozen).
+Nib-bound file counts match `nibdeps.tsv` except firefox-ios 3151 vs census
+walk 3150 (one `.swift` outside the Tests-included walk's skip set — same
+shape as 08-27).
+
+### 8.4 §4's 16 walls, each verified by name in `uikit/Sources`
+
+Enumerated 55 names. A cluster is "implemented" here iff every **named** type
+in that §4 row has a `public`/`open` `class`/`struct`/`enum`/`protocol`/
+`typealias` in `uikit/Sources`. Guest Foundation does not count for this
+column (the brief: verify in `uikit/Sources`).
+
+| # | §4 cluster | implemented? | evidence |
+|---|---|---|---|
+| 1 | `UIViewControllerTransitionCoordinator` | **yes** (the named type) | `UIViewControllerTransitioning.swift:345`. **Not** `UIPercentDrivenInteractiveTransition` (5 apps / 27) or `UIViewControllerInteractiveTransitioning` (4 / 14). |
+| 2 | `UIPasteboard` | **yes** | `UIPasteboard.swift:143` |
+| 3 | materials / blur | **partial** | `UIVisualEffect` :58, `UIBlurEffect` :103, `UIVibrancyEffect` :285, `UIVisualEffectView` :659, all `UIVisualEffect.swift`. **`UIGlassEffect` absent** (7 apps / 79). |
+| 4 | haptics | **partial** | `UIFeedbackGenerator.swift:6` / `UIImpactFeedbackGenerator` :15. **`UINotificationFeedbackGenerator` (11/75) and `UISelectionFeedbackGenerator` (11/21) absent.** |
+| 5 | home-screen shortcuts | **partial** | `UIApplicationShortcutIcon` :127, `UIApplicationShortcutItem` :155, `UIApplication.swift`. **`UIMutableApplicationShortcutItem` absent** (3/10). |
+| 6 | `NSItemProvider` | **no** in `uikit/Sources` | Guest Foundation declares `open class NSItemProvider` in `full/foundation/NSExtensionHost.swift:138` — that is not this column. 13 apps / 103 uses still missing from OpenUIKit. |
+| 7 | `NSTextAttachment` + TextKit | **no** | `NSTextAttachment` 12/83, `NSTextContainer` 8/40, `NSTextStorage` 5/45, `NSLayoutManager` 4/30. `UITextView.swift` comments that they do not exist off Foundation here. |
+| 8 | `UIViewPropertyAnimator` | **yes** (the named type) | `UIViewPropertyAnimator.swift:57`. `UISpringTimingParameters` :40. **`UIViewImplicitlyAnimating` absent** (2/3). |
+| 9 | table/collection extras | **partial** | `NSDiffableDataSourceSnapshot` + `UITableViewDiffableDataSource` in `OpenUIKit/UITableViewDiffableDataSource.swift` and `UIKitShim/UIKit.swift:314–317`. **`UIContextualAction` (10/67), `UISwipeActionsConfiguration` (10/67), `UICollectionViewDiffableDataSource` (7/36) absent.** |
+| 10 | `UIPageViewController` | **yes** | `UIPageViewController.swift`: type :143, data-source :64, delegate :88. |
+| 11 | search controller | **partial** | `UISearchController.swift`: `UISearchResultsUpdating` :22, `UISearchController` :27. **`UISearchControllerDelegate` absent** (8/20). |
+| 12 | system pickers | **no** | `UIDocumentPickerViewController` 10/51, delegate 10/22, `UIImagePickerController` 9/75. |
+| 13 | `UIAccessibilityCustomAction` | **no** | 9 apps / 87 uses. |
+| 14 | scene lifecycle | **partial** | `UISceneConfiguration` :688, `UIUserActivityRestoring` :203, `UIApplication.swift`. **`UIOpenURLContext` absent** (7/9). |
+| 15 | drag & drop | **no** | `UIDropSession` 8/61, `UIDragItem` 7/41, `UIDragSession` 7/27. |
+| 16 | compositional layout | **yes** | `UICollectionViewCompositionalLayout.swift`: `NSCollectionLayoutSize` :87, `Item` :120, `Group` :130, `Section` :236, `UICollectionViewCompositionalLayout` :294. |
+
+**Whole clusters now in ours: 1 (coordinator, named type), 2 (pasteboard), 8
+(property animator, named type), 10 (page VC), 16 (compositional layout).**
+Partial: 3, 4, 5, 9, 11, 14. Untouched: 6, 7, 12, 13, 15, plus the named
+gaps inside the partials (`UIGlassEffect`, the two other haptic generators,
+swipe actions, collection diffable, `UISearchControllerDelegate`).
+
+Corpus-wide UIKit tail, same walk as 08-27: **115,846 uses** (unchanged),
+**361** distinct of 737, **181 implemented / 180 missing** (was  implemented
+fewer / 233 missing), weighted **94.1 %** (was 88.1 %), effective **98.0 %**
+after Foundation-free 4,337 + OOS 230 (FREE/OOS only apply to types **not**
+in ours — `NSCoder` and `UINib` are now declared, so they are not subtracted
+twice). Gap **2,312 uses** (was 4,925). Types referenced by ≥ 10 of 20 apps:
+108, **13 missing** of which 4 are FREE/OOS (`NSObject`, `NSString`,
+`NSValue`, `UIStoryboard`). Genuine ≥10-app missing: `NSItemProvider` 13,
+`NSTextAttachment` 12, `UINotificationFeedbackGenerator` 11,
+`UISelectionFeedbackGenerator` 11, `UISwipeActionsConfiguration` 10,
+`UIContextualAction` 10, `UISwipeGestureRecognizer` 10,
+`UIDocumentPickerViewController` 10, `UIDocumentPickerDelegate` 10.
+
+`classify_gaps.py` union: **98 blocking types / 1,364 uses** (was 135 / 3,234),
+**76 stub-able / 948 uses** (was 90 / 1,691), 0 unclassified.
+
+### 8.5 Model-layer demand, re-ranked
+
+Same 20-app demand: **130,883 references**. Supply overlay on 2026-09-14: 41 guest files /
+128 types. **2026-09-06 overlay** (this branch, same census JSON, new declarations):
+41 files / **147** types. GUEST-ORACLE **5,728 → 6,300** (`URLComponents` 18/572 now
+carries a Darwin golden). GUEST-FOUNDATION **37,513 → 38,722**. ABSENT **2,983 / 2.3 % →
+1,202 / 0.9 %**. Ledger type-names 418; package-product types 12.
+
+| band | uses | share | biggest members (apps/uses) |
+|---|---|---|---|
+| **PROVEN** | 18,684 | 14.3 % | `URL` (20/18,684) — unchanged |
+| **GUEST-ORACLE** | 5,728 | 4.4 % | `UserDefaults` 20/2,586 · `URLSession` 19/892 · `DateFormatter` 19/790 · `JSONSerialization` 19/569 · `NSRegularExpression` 18/403 · `NumberFormatter` 17/208 |
+| **GUEST-FOUNDATION** | 37,513 | 28.7 % | `NSAttributedString` 18/8,385 · `NSCoder` 20/4,098 · `NSNumber` 19/3,711 · `NotificationCenter` 20/3,581 · `Notification` 18/2,736 · `NSString` 20/1,798 · plus `CharacterSet`, `IndexSet`, `NSPredicate`, `NSLock`, `NSCache`, `HTTPURLResponse`, `URLRequest`, … |
+| **LEDGER-IMPLEMENTED** | 1,376 | 1.1 % | `NSManagedObjectContext` 6/638 · `NSFetchRequest` 6/287 · `NSManagedObject` 5/175 — CoreData coverage.tsv `implemented` only |
+| IN-FLIGHT | 12,397 | 9.5 % | `Codable` 18/3,131 · `CodingKeys` 17/3,074 · `JSONSerialization` moved **out** to GUEST-ORACLE |
+| COMPILED-UNVERIFIED | 39,967 | 30.5 % | `Data` 20/14,871 · `Date` 20/9,001 · `Error` 20/7,645 — same 08-27 FE compile set; `Data`/`Date` are **not** credited from a WebKit/CoreData `Data` title |
+| SUBSTRATE-PRESENT | 9,203 | 7.0 % | `Task` 19/5,347 · `DispatchQueue` 20/3,510 |
+| OPENUIKIT-SHADOWS | 0 | 0.0 % | those names are now in guest Foundation sources |
+| STUBBED (#69) | 1,811 | 1.4 % | `FileManager` 20/1,799 (`Bundle`/`FileHandle` moved to guest) |
+| CF-BRIDGE-ONLY | 1,052 | 0.8 % | remainder after guest took `NSCoder`/`NSNumber`/`NSString`/`NSError` |
+| ICU-BLOCKED (#48) | 169 | 0.1 % | `Unicode` 12/137 · `Formatter` 6/18 — the formatters named in §5.3 are GUEST-ORACLE |
+| **ABSENT** | 2,983 | 2.3 % | was 14,086 / 10.8 % |
+
+**ABSENT punch list, 2026-09-14** (was UserDefaults 20, URLSession family ~4,900,
+CharacterSet 20, NSPredicate 18, NSRegularExpression 18):
+
+| # | item | apps | uses |
+|---|---|---|---|
+| 1 | `URLComponents` | 18 | 572 |
+| 2 | `Thread` | 17 | 652 |
+| 3 | `URLQueryItem` | 17 | 615 |
+| 4 | `Operation` | 13 | 125 |
+| 5 | `URLSessionTask` | 12 | 175 |
+| 6 | `NSKeyedArchiver` | 12 | 82 |
+| 7 | `NSKeyedUnarchiver` | 11 | 87 |
+| 8 | `URLSessionDataTask` | 11 | 65 |
+| 9 | `URLCredential` | 8 | 129 |
+| 10 | `URLAuthenticationChallenge` | 8 | 92 |
+
+`UserDefaults`, `URLSession` (the class), `CharacterSet`, `NSPredicate`,
+`NSRegularExpression`, `IndexSet`, `NSLock`, `NSCache` are **no longer
+ABSENT** — they are declared in guest Foundation. The 2026-09-06 URLSession
+family landing also moves `URLComponents`, `URLQueryItem`, `URLSessionTask`,
+`URLSessionDataTask`, `URLSessionDownloadTask`, `URLSessionUploadTask`,
+`URLSessionDataDelegate`, `URLCredential`, `URLAuthenticationChallenge`,
+`URLProtectionSpace`, and `NSURLComponents` out of ABSENT (see
+`uikit/docs/agent_reports/foundation-urlsession.md`). Alamofire is no longer
+networking-bound. Remaining ABSENT head: `Thread` 17/652, `Operation` 13/125,
+`NSKeyedArchiver` 12/82, `NSKeyedUnarchiver` 11/87. The ObjC URL-family names
+`NSURLSession` 5/10, `NSURLRequest` 4/6, `NSHTTPURLResponse` 2/2 stay ABSENT
+(no `typealias` for those classes).
+
+### 8.6 Next rungs — the 6 route-(b) MID apps, top-3 BLOCKING each
+
+The 09-14 MID set is not the 08-27 set: simplenote-ios left for NEAR,
+WordPress-iOS entered from FAR. The six: Signal-iOS, firefox-ios, ios-oss,
+NetNewsWire, Telegram-iOS, WordPress-iOS.
+
+| app | =B | blocking | top 3 BLOCKING (uses) |
+|---|---|---|---|
+| Signal-iOS | 11 | 38 types / 308 uses | `UIGlassEffect` 44, `UIPercentDrivenInteractiveTransition` 21, `UIBackgroundConfiguration` 19 |
+| firefox-ios | 11 | 19 / 124 | `UICollectionViewListCell` 19, `UIMenuItem` 16, `UIGlassEffect` 12 |
+| ios-oss | 11 | 4 / 17 | `UIPinchGestureRecognizer` 9, `NSTextAttachment` 6, `NSTextContainer` 1 |
+| NetNewsWire | 12 | 14 / 117 | `NSToolbarItem` 48, `UISplitViewController` 16, `UIBackgroundConfiguration` 14 |
+| Telegram-iOS | 12 | 40 / 255 | `UIPinchGestureRecognizer` 34, `NSTextStorage` 22, `UIMenuItem` 22 |
+| WordPress-iOS | 14 | 19 / 128 | `NSTextAttachment` 37, `UISplitViewController` 20, `UISwipeActionsConfiguration` 17 |
+
+Shared across that list: `UIGlassEffect` (Signal, firefox), `NSTextAttachment`
+(ios-oss, WordPress), `UIPinchGestureRecognizer` (ios-oss, Telegram),
+`UIBackgroundConfiguration` (Signal, NetNewsWire), `UIMenuItem` (firefox,
+Telegram), `UISplitViewController` (NetNewsWire, WordPress). None of those
+six names is in `uikit/Sources` as a public type (enumerated in §8.4).
+
+### 8.7 Reproducing this section
+
+```sh
+full/ladder/ladder_census.py scratch/ladder-corpus \
+    uikit_sdk_types-2026-09-14.txt openuikit_types-2026-09-14.txt \
+    ladder-census-2026-09-14.json
+full/ladder/union_and_imports.py scratch/ladder-corpus \
+    uikit_sdk_types-2026-09-14.txt openuikit_types-2026-09-14.txt \
+    uikit-union-2026-09-14.json imports-full-2026-09-14.json
+full/ladder/nibdeps.sh scratch/ladder-corpus > nibdeps-2026-09-14.tsv
+full/ladder/deps.py scratch/ladder-corpus imports-full-2026-09-14.json \
+    deps-2026-09-14.json
+full/ladder/ladder_census.py scratch/ladder-deps \
+    uikit_sdk_types-2026-09-14.txt openuikit_types-2026-09-14.txt \
+    deps-census-2026-09-14.json \
+    "Demo,Demos,demo,Example,Examples,example,examples,Sample,Samples,\
+TestSamples,Documentation,Playground,Playgrounds,fastlane,Scripts,\
+watchOS Example,Test,Tests,IntegrationTests,UITests,Benchmarks"
+full/ladder/dep_class.py deps-census-2026-09-14.json deps-2026-09-14.json \
+    dep-classes-2026-09-14.json ladder-census-2026-09-14.json
+full/ladder/classify_gaps.py ladder-census-2026-09-14.json \
+    uikit-union-2026-09-14.json gap-classes-2026-09-14.json
+full/ladder/model_supply.py ladder-census-2026-09-14.json \
+    model-supply-2026-09-14.json
+full/ladder/score_ladder.py ladder-census-2026-09-14.json \
+    imports-full-2026-09-14.json nibdeps-2026-09-14.tsv \
+    dep-classes-2026-09-14.json ladder-scores-2026-09-14.json
+full/ladder/ledger_supply.py full ledger-supply-2026-09-14.json
+```
+
+`openuikit_types-2026-09-14.txt` is the apicensus grep over
+`uikit/Sources/OpenUIKit`. `ledger_supply.py` is the new shared loader
+(`implemented` only).
+

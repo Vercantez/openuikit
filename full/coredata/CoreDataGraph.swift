@@ -1,8 +1,8 @@
 import Foundation
 
 // Relationship tokens, inverse maintenance, delete-rule expansion, and
-// merge-policy application for the in-memory store. SQLite is not present
-// under full/ or uikit/ (grep sqlite3); NSSQLiteStoreType stays fail-closed.
+// merge-policy application. SQLite persistence uses libsqlite3 via dlopen
+// (see CoreDataSQLite.swift); Apple's Z* WAL layout is not claimed.
 
 let _CDRelationshipURIKey = "_cd.rel.uris"
 let _CDRelationshipToManyKey = "_cd.rel.toMany"

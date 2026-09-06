@@ -103,14 +103,18 @@ public struct AnyAxisContent: View, AxisContent {
     public var body: some View { EmptyView() }
 }
 
-public struct BuilderConditional<TrueContent: ChartContent, FalseContent: ChartContent>: ChartContent {
-    enum Storage {
+public struct BuilderConditional<TrueContent, FalseContent>: View {
+    public enum Storage {
         case first(TrueContent)
         case second(FalseContent)
     }
     let storage: Storage?
     public init() { storage = nil }
-    init(storage: Storage) { self.storage = storage }
+    public init(storage: Storage) { self.storage = storage }
+    public var body: some View { EmptyView() }
+}
+
+extension BuilderConditional: ChartContent where TrueContent: ChartContent, FalseContent: ChartContent {
     public var chartPlotRecords: [ChartPlotRecord] {
         switch storage {
         case .first(let content): return content.chartPlotRecords
@@ -118,8 +122,10 @@ public struct BuilderConditional<TrueContent: ChartContent, FalseContent: ChartC
         case nil: return []
         }
     }
-    public var body: some View { EmptyView() }
 }
+
+extension BuilderConditional: AxisMark where TrueContent: AxisMark, FalseContent: AxisMark {}
+extension BuilderConditional: AxisContent where TrueContent: AxisContent, FalseContent: AxisContent {}
 
 public struct AutomaticScaleDomain: ScaleDomain, Hashable, Sendable {
     public static let automatic = AutomaticScaleDomain()
@@ -148,14 +154,62 @@ public struct ScaleType: Hashable, Sendable, CustomStringConvertible {
     public var description: String { name }
 }
 
-public struct MarkDimension: Hashable, Sendable {
-    public static let automatic = MarkDimension()
-    public init() {}
+public struct MarkDimension: Hashable, Sendable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public typealias FloatLiteralType = Double
+    public typealias IntegerLiteralType = Int
+    public let kind: String
+    public let value: CGFloat?
+    public static let automatic = MarkDimension(kind: "automatic", value: nil)
+    public static func fixed(_ value: CGFloat) -> MarkDimension {
+        MarkDimension(kind: "fixed", value: value)
+    }
+    public static func ratio(_ value: CGFloat) -> MarkDimension {
+        MarkDimension(kind: "ratio", value: value)
+    }
+    public init() {
+        kind = "automatic"
+        value = nil
+    }
+    init(kind: String, value: CGFloat?) {
+        self.kind = kind
+        self.value = value
+    }
+    public init(floatLiteral value: Double) {
+        self = .fixed(CGFloat(value))
+    }
+    public init(integerLiteral value: Int) {
+        self = .fixed(CGFloat(value))
+    }
 }
 
-public struct MarkDimensions<DataElement>: Hashable {
-    public static var automatic: MarkDimensions<DataElement> { MarkDimensions() }
-    public init() {}
+public struct MarkDimensions<DataElement>: Hashable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+    public typealias FloatLiteralType = Double
+    public typealias IntegerLiteralType = Int
+    public let kind: String
+    public let value: CGFloat?
+    public static var automatic: MarkDimensions<DataElement> {
+        MarkDimensions(kind: "automatic", value: nil)
+    }
+    public static func fixed(_ value: CGFloat) -> MarkDimensions<DataElement> {
+        MarkDimensions(kind: "fixed", value: value)
+    }
+    public static func ratio(_ value: CGFloat) -> MarkDimensions<DataElement> {
+        MarkDimensions(kind: "ratio", value: value)
+    }
+    public init() {
+        kind = "automatic"
+        value = nil
+    }
+    init(kind: String, value: CGFloat?) {
+        self.kind = kind
+        self.value = value
+    }
+    public init(floatLiteral value: Double) {
+        self = .fixed(CGFloat(value))
+    }
+    public init(integerLiteral value: Int) {
+        self = .fixed(CGFloat(value))
+    }
 }
 
 public struct MarkStackingMethod: Hashable, Sendable, CustomStringConvertible {
@@ -400,6 +454,10 @@ public struct AnnotationPosition: Hashable, Sendable, CustomStringConvertible {
     public static let trailing = AnnotationPosition("trailing")
     public static let top = AnnotationPosition("top")
     public static let bottom = AnnotationPosition("bottom")
+    public static let topLeading = AnnotationPosition("topLeading")
+    public static let topTrailing = AnnotationPosition("topTrailing")
+    public static let bottomLeading = AnnotationPosition("bottomLeading")
+    public static let bottomTrailing = AnnotationPosition("bottomTrailing")
     public init() { self = .automatic }
     public var description: String { name }
 }
@@ -413,7 +471,14 @@ public struct AnnotationOverflowResolution: Hashable, Sendable {
     }
     public struct Strategy: Hashable, Sendable {
         public static let automatic = Strategy()
+        public static let fit = Strategy(name: "fit")
+        public static let padScale = Strategy(name: "padScale")
+        public static func fit(to boundary: Boundary) -> Strategy {
+            _ = boundary
+            return .fit
+        }
         public init() {}
+        init(name: String) { _ = name }
     }
     public init() {}
 }
@@ -978,8 +1043,12 @@ public struct SurfaceMark: Chart3DContent {
 }
 
 public struct Plot<Content: ChartContent>: ChartContent {
-    public init(@ChartContentBuilder content: () -> Content) { _ = content }
-    public var body: some View { EmptyView() }
+    let content: Content
+    public init(@ChartContentBuilder content: () -> Content) {
+        self.content = content()
+    }
+    public var chartPlotRecords: [ChartPlotRecord] { content.chartPlotRecords }
+    public var body: some View { content }
 }
 
 public struct VectorizedBarPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
@@ -1110,12 +1179,14 @@ public struct SectorPlot<Content: VectorizedChartContent>: VectorizedChartConten
 }
 
 public struct FunctionAreaPlotContent: ChartContent {
-    public init() {}
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
     public var body: some View { EmptyView() }
 }
 
 public struct FunctionLinePlotContent: ChartContent {
-    public init() {}
+    public var chartPlotRecords: [ChartPlotRecord]
+    public init() { chartPlotRecords = [] }
     public var body: some View { EmptyView() }
 }
 

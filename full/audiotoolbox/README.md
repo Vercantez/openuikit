@@ -22,11 +22,11 @@ Product code imports Foundation always, CoreFoundation when the module exists, a
 
 ## Fail-closed boundaries
 
-Hardware I/O, compressed codecs, RemoteIO/VoiceProcessingIO render, Audio Unit plug-ins, and system-sound servers do not succeed. Unknown/garbage refs and double-dispose do not crash. AUGraph RemoteIO nodes return `kAUGraphErr_OutputNodeErr`. `AUAudioUnit.startHardware()` throws. AudioFileStream SetProperty is unsupported.
+Hardware I/O, compressed codecs, RemoteIO/VoiceProcessingIO render, Audio Unit plug-ins, MIDI CI, and system-sound servers do not succeed. Unknown/garbage refs and double-dispose do not crash. AUGraph RemoteIO nodes return `kAUGraphErr_OutputNodeErr`. `AUAudioUnit.startHardware()` throws. AudioFileStream SetProperty is unsupported. AudioCodec objects and MusicDevice MIDI on non-music-device units fail closed.
 
 ## Deferred
 
-AUGraph unnamed-union overlay, v3 AU realtime render blocks, AudioCodec, MusicDevice I/O, compressed CAF/AAC encode/decode, CoreAudioTypes-typed realtime-safe converters, and synthesized Equatable/Hashable members without product anchors remain deferred or unavailable until a central Apple-oracle / ARM64 integration build observes them.
+AUGraph unnamed-union overlay, v3 AU realtime render blocks, MusicDeviceMIDIEventList (`MIDIEventList`), compressed CAF/AAC encode/decode, CoreAudioTypes-typed realtime-safe converters, and synthesized Equatable/Hashable members without product anchors remain deferred or unavailable until a central Apple-oracle / ARM64 integration build observes them.
 
 ## Depth pass 2026-09
 
@@ -128,3 +128,64 @@ Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.c
 ### Unresolved behavioral questions
 
 See `oracle-questions.tsv`. New items this pass: Apple SRC phase versus the stated linear formula, `AUGraphIsRunning` DarwinBoolean layout, `AUNodeInteraction` unnamed-union layout, and incremental `AudioFileStreamParseBytes` OSStatus on truncated headers.
+
+## Depth pass 2026-09 (wave 9)
+
+Third SDK-depth pass on the wave-8 tree (keep existing tests green; do not rewrite). HEAD at start was `bff8535c68425cc39fb45cb00d447b0981b57242`. `.cursor/verify-cloud-environment.sh` still fails because `scratch/ladder-corpus/focus-ios` is absent; `swiftc` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`. Active Cursor Build on this pod is `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (seed expected `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed gate is the authority for `FRAMEWORK_FANOUT_HOST_OK`.
+
+### Coverage before / after
+
+| status | after wave 8 | after wave 9 |
+| --- | ---: | ---: |
+| implemented | 873 | 1371 |
+| declared | 277 | 158 |
+| deferred | 1765 | 1704 |
+| unavailable | 319 | 1 |
+| not-applicable | 0 | 0 |
+
+No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in this census. Remaining `unavailable` is `AUMIDICIProfileChangedBlock` (MIDI CI / Apple-service). Codec, CAF, MusicDevice, and AudioFileStream packet-table IDs that are not hardware/daemon-bound were reclassified to `implemented` or `deferred`.
+
+### Top-5 implemented evidence distribution (after)
+
+1. `testAudioToolboxConstantCatalog` — 146 rows (10.6%) — table-driven k…/err… payloads
+2. `testAudioCodecConstantsAndFailClosed` — 138 (10.1%) — table-driven AudioCodec FourCC/quality/error IDs plus fail-closed codec entry points
+3. `testCAFRemainingStructFields` — 107 (7.8%) — CAF chunk/marker/region/instrument field overlays
+4. `testAudioUnitPropertyAndScopeIDsExact` — 95 (6.9%) — table-driven AU property/scope IDs
+5. `testAudioUnitPropertyInfoAndParameterOptions` — 73 (5.3%) — table-driven parameter-unit/option-set/render-action flags
+
+No non-table test exceeds 40% of implemented rows (`testMixerVolumeAffectsMix` is 4.0%).
+
+### Public surface added this pass
+
+- **Mixer parameters.** Per-element volume/enable/pan on MultiChannelMixer; render-callback PCM is scaled by input-element volume. Matrix mixer meter IDs, 3D mixer parameter IDs, HAL output volume, TimePitch/NewTimePitch/Varispeed, and AUGroup MIDI CC parameter IDs are exact constants. `AudioUnitGetPropertyInfo` reports the mixer parameter list; `AudioUnitAddRenderNotify` / `RemoveRenderNotify` store observers.
+- **AudioQueue.** `GetParameter` / `SetParameter` for volume, pan, play rate, pitch, and ramp time; `Prime`; `GetCurrentTime` sample-time overlay. Processing taps and timelines fail closed (`TooManyTaps` / `InvalidTapContext` / `InvalidParameter`).
+- **AudioFile.** `Optimize`, `ReadPacketData`, `SetProperty(DeferSizeUpdates)`, and `GetGlobalInfo` / `GetGlobalInfoSize` for WAVE/AIFF/CAF readable/writable types plus Linear PCM format IDs.
+- **MusicSequence.** Beats↔seconds, bar/beat time, track index, CopyInsert/Cut/Merge/MoveEvents, mute/solo/offset/length/resolution, `SetEventTime`, SMF `FileCreate` / `FileCreateData`, AUGraph attach, `MusicPlayerPreroll`.
+- **AudioCodec / MusicDevice.** Exact codec property/error/quality/select constants. Codec initialize/produce/append APIs fail closed. `MusicDeviceMIDIEvent` / `SysEx` / `StartNote` / `StopNote` fail closed on software units. `MusicDeviceMIDIEventList` stays deferred (`MIDIEventList` is CoreMIDI-owned).
+- **CAF helpers.** Remaining chunk/marker/region/instrument/peak/overview/UMID/UUID field overlays and memberwise/empty inits. Packet-table flexible `mPacketDescriptions` tail is not overlaid.
+
+### Fail-closed boundaries (wave 9)
+
+- No hardware I/O, system-sound server, RemoteIO / VoiceProcessingIO render, processing taps, or AudioQueue timelines.
+- Compressed codec objects never initialize; MusicDevice MIDI on non-music-device units returns `kAudioUnitErr_CannotDoInCurrentContext`.
+- MIDI CI (`AUMIDICIProfileChangedBlock`) remains unavailable.
+- `AudioStreamBasicDescription` / `AudioBufferList` names stay in CoreAudioTypes. Isolated calls take 40-byte ASBD blobs and buffer-list overlays.
+- Unknown refs and double-dispose stay crash-safe.
+
+### Tests and gate
+
+- Agent tests: `AudioToolboxCoreTests.swift`, `AudioToolboxDepthTests.swift`, `AudioToolboxWave2Tests.swift`, `AudioToolboxWave3Tests.swift`.
+- Sealed host gate: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Exact marker output from the green wave-9 run:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.cursor/verify-cloud-environment.sh` still cannot print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` because `scratch/ladder-corpus/focus-ios` is missing on this snapshot.
+
+### Unresolved behavioral questions
+
+See `oracle-questions.tsv`. New items this pass: mixer volume versus `SetRenderCallback`, AudioCodec null `OSStatus`, MusicDevice MIDI on non-music-device units, processing-tap/timeline fail-closed codes, and CAF packet-table flexible-array layout.
