@@ -433,3 +433,67 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 COREDATA_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
 ```
+
+## Depth pass local repair (wave 18, 2026-09-06)
+
+Repaired cloud head `f8b0fe33` from
+`platform/cursor/port-coredata-to-linux-6ccb` on `agent/fw-coredata-r`,
+merging current `origin/main` (`c1973365`) without CoreData conflicts.
+The merged diff against main is confined to `full/coredata/`; all existing
+implemented rows and tests are retained. The wave-10 success markers above
+were reported by the cloud branch; the operator refused that head before
+its runtime probe could execute.
+
+The first errors in `/tmp/fw_merge_gate-coredata.log` were at
+`CoreDataRuntime.swift:2438`: both option-set literal elements failed to
+convert from `T` to `T.ArrayLiteralElement`. On Linux Swift 6.2.4,
+`T.Element == T` does not establish `T.ArrayLiteralElement == T`. The
+catalog helper now requires both equalities, preserving the array-literal
+exercise for all three option-set types. The focused test and its embedded
+runtime copy use the same constraint.
+
+The citation review also added explicit catalog calls for the attribute
+wrapper's equality/hash operations, context concurrency raw-value
+initializer, and the three nonmutating option-set `symmetricDifference`
+members, plus a history-result `resultType` assertion in its cited test.
+These checks substantiate existing cloud-ledger claims; they do not change
+production behavior or reclassify rows.
+
+| Measured tree | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Current main (`c1973365`) | 949 | 345 | 15 | 10 | 0 |
+| Refused cloud head (`f8b0fe33`) | 1283 | 11 | 15 | 10 | 0 |
+| Local repair | 1283 | 11 | 15 | 10 | 0 |
+
+The implemented gain over main is **334 rows**. All 1283 implemented rows
+cite real synchronous, no-argument functions in `tests/agent/*Tests.swift`.
+All 64 distinct cited functions are byte-identical to their embedded
+`CoreDataRuntime.swift` definitions and are invoked by that runner. The
+largest non-table citation remains `testFailClosedSurfaces`: 49/1283
+(3.82%), below 40%. There are no `not-applicable` rows.
+
+Validation in the operator's `uikit-linux` container, at
+`/gate-codex-coredata`, with Swift 6.2.4 targeting
+`aarch64-unknown-linux-gnu`:
+
+- Unmodified sealed `tests/acceptance/test_host.sh`: reference hashes,
+  warnings-as-errors module/dylib compilation, runtime compilation, and
+  the complete runtime probe pass. Before repair: two compiler errors;
+  after repair: zero errors and the terminal success marker below.
+- All 64 cited tests also pass in separate processes, each with a 30-second
+  timeout and no preceding tests, using a temporary runner built from the
+  same runtime definitions. No test timed out. The normal sealed runner
+  executes all 73 existing tests synchronously.
+- Coverage citation format, definition/call presence, focused/runtime body
+  equality, status totals, and preservation of main's implemented rows
+  checked directly from the TSV and Swift sources.
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```
+
+Local logs: `/tmp/fw-coredata-r-gate.log` and
+`/tmp/fw-coredata-r-individual.log`. No sealed files, shared harness files,
+vendor pins, or generated products are changed by this repair.

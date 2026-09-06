@@ -36,7 +36,11 @@ private func toFoundation(_ v: JSONValue) -> Any {
     switch v {
     case .object(let d): return d.mapValues(toFoundation)
     case .array(let a): return a.map(toFoundation)
-    case .number(let d): return d
+    case .number(let d):
+        // JSON has no inf/nan. MEASURED Focus BrowserViewController dump
+        // 2026-09-06: SnapKit/Auto Layout emitted a non-finite number and
+        // NSJSONSerialization threw `Invalid number value (infinite)`.
+        return d.isFinite ? d : NSNull()
     case .string(let s): return s
     case .bool(let b): return b
     case .null: return NSNull()

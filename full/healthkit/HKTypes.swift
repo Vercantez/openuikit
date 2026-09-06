@@ -116,10 +116,28 @@ open class HKObjectType: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
 }
 
 open class HKSampleType: HKObjectType, @unchecked Sendable {
-    public var allowsRecalibrationForEstimates: Bool { false }
-    public var isMaximumDurationRestricted: Bool { false }
+    /// Apple documents a seven-day cap for most quantity/category/document samples.
+    public static let hkMaximumSampleDuration: TimeInterval = 7 * 24 * 60 * 60
+
+    public var allowsRecalibrationForEstimates: Bool {
+        let tokens = ["Walking", "Running", "Stair", "CardioFitness", "VO2", "Estimated", "Steadiness"]
+        return tokens.contains(where: { identifier.contains($0) })
+    }
+
+    /// Workouts, series, and correlations are not duration-capped on this Linux host.
+    public var isMaximumDurationRestricted: Bool {
+        if self is HKWorkoutType { return false }
+        if self is HKSeriesType { return false }
+        if self is HKCorrelationType { return false }
+        return true
+    }
+
     public var isMinimumDurationRestricted: Bool { false }
-    public var maximumAllowedDuration: TimeInterval { 0 }
+
+    public var maximumAllowedDuration: TimeInterval {
+        isMaximumDurationRestricted ? Self.hkMaximumSampleDuration : 0
+    }
+
     public var minimumAllowedDuration: TimeInterval { 0 }
 }
 

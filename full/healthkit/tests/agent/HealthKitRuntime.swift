@@ -467,6 +467,13 @@ private func testCharacteristicsBuilderAndFailClosed() async {
     let summary = HKActivitySummary()
     summary.activeEnergyBurned = HKQuantity(unit: .kilocalorie(), doubleValue: 200)
     require(summary.dateComponents(for: .current).calendar != nil || true, "summary calendar")
+    let dstu2 = HKFHIRVersion.primaryDSTU2()
+    require(dstu2.stringRepresentation == "1.0.2", "FHIR DSTU2")
+    require(dstu2.fhirRelease == .dstu2, "FHIR release")
+    let walking = try! HKAppleWalkingSteadinessClassification(for: HKQuantity(unit: .percent(), doubleValue: 0.8))
+    require(walking == .ok, "walking ok")
+    require(HKMedicationDoseEvent.LogStatus.taken.rawValue == 4, "dose taken")
+
     require(HKPredicateOperator.equalTo.rawValue == 4, "equalTo raw")
     require(HKCategoryValueSleepAnalysis.predicateForSamples(equalTo: [.asleepCore]).evaluate(with: HKCategorySample(
         type: HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,

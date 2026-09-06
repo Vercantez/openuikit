@@ -48,9 +48,17 @@ let realAppVariants: [RealAppVariant] = RealAppScreen.screens.map { screen in
 
 /// Render scale; main.swift sets it from OPENUIKIT_REALAPP_SCALE.
 nonisolated(unsafe) var realAppScale: CGFloat = 2
+nonisolated(unsafe) var didSeedFocusBundleResources = false
 
 @MainActor
 func runRealApp(_ variant: RealAppVariant, assets: String) -> SceneResult {
+    if !didSeedFocusBundleResources {
+        // Before any Bundle.main resource snapshot. MEASURED try3:
+        // copying SearchPlugins after the first resourceURL read left
+        // disconnect-*.json invisible to path(forResource:ofType:).
+        RealAppScreen.installFocusBundleResourcesIfNeeded()
+        didSeedFocusBundleResources = true
+    }
     // MEASURED openrender realapp scale 2 iOS cut, this Mac: SimpleActionView
     // picker rows are `UIFont.font(ofSize: 18, weight: .semibold,
     // scalingWith: .headline)` — "Select Episodes" starts with S (U+0053).

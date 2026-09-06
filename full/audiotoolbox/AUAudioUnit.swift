@@ -11,6 +11,11 @@ open class AUAudioUnitPreset: NSObject {
     public override init() {
         super.init()
     }
+
+    public init?(coder: NSCoder) {
+        _ = coder
+        return nil
+    }
 }
 
 open class AUAudioUnitBusArray: NSObject {
@@ -341,6 +346,7 @@ open class AUAudioUnit: NSObject {
 
     private var renderObserverTokens: [Int] = []
     private var nextRenderObserverToken = 1
+    private static var registeredSubclassNames: [String] = []
 
     public static func isHostedSoftwareUnit(_ description: AudioComponentDescription) -> Bool {
         if description.componentSubType == kAudioUnitSubType_RemoteIO
@@ -467,5 +473,54 @@ open class AUAudioUnit: NSObject {
     open func deleteUserPreset(_ preset: AUAudioUnitPreset) throws {
         _ = preset
         throw AUAudioUnitError.unavailable(kAudioUnitErr_PropertyNotInUse)
+    }
+
+    open func presetState(for userPreset: AUAudioUnitPreset) throws -> [String: Any] {
+        _ = userPreset
+        throw AUAudioUnitError.unavailable(kAudioUnitErr_PropertyNotInUse)
+    }
+
+    open class func registerSubclass(
+        _ cls: AnyClass,
+        as componentDescription: AudioComponentDescription,
+        name: String,
+        version: UInt32
+    ) {
+        _ = cls
+        _ = componentDescription
+        _ = version
+        registeredSubclassNames.append(name)
+    }
+}
+
+/// v2 Audio Unit wrapped as a v3 `AUAudioUnit`. RemoteIO still fail-closes in
+/// the superclass initializer because Linux has no hardware I/O unit.
+open class AUAudioUnitV2Bridge: AUAudioUnit {
+    public private(set) var audioUnit: AudioUnit
+
+    public override init(
+        componentDescription: AudioComponentDescription,
+        options: AudioComponentInstantiationOptions = []
+    ) throws {
+        audioUnit = AudioComponent(bitPattern: 1)!
+        try super.init(componentDescription: componentDescription, options: options)
+        var description = componentDescription
+        guard let component = AudioComponentFindNext(nil, &description) else {
+            throw AUAudioUnitError.unavailable(kAudioUnitErr_ComponentManagerNotSupported)
+        }
+        var instance: AudioComponentInstance?
+        let status = AudioComponentInstanceNew(component, &instance)
+        guard status == 0, let instance else {
+            throw AUAudioUnitError.unavailable(
+                status == 0 ? kAudioUnitErr_FailedInitialization : status
+            )
+        }
+        audioUnit = instance
+    }
+
+    deinit {
+        if Int(bitPattern: audioUnit) > 1 {
+            _ = AudioComponentInstanceDispose(audioUnit)
+        }
     }
 }

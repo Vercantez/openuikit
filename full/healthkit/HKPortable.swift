@@ -126,6 +126,7 @@ public enum HKHealthStorePortable {
     fileprivate static var effortRelationships: [HKWorkoutEffortRelationship] = []
     fileprivate static var liveSamples: [UUID: HKSample] = [:]
     fileprivate static var nextAnchor: Int = 1
+    fileprivate static var attachmentsByObject: [UUID: [(HKAttachment, Data)]] = [:]
 
     struct HKQuantitySeriesPoint {
         var quantity: HKQuantity
@@ -176,6 +177,7 @@ public enum HKHealthStorePortable {
         voltageSeries.removeAll()
         effortRelationships.removeAll()
         liveSamples.removeAll()
+        attachmentsByObject.removeAll()
         nextAnchor = 1
         lock.unlock()
         if let dir {
@@ -225,6 +227,41 @@ public enum HKHealthStorePortable {
     /// Documented test hook: persist objects through the local store without `await`.
     public static func _save(_ objects: [HKObject]) throws {
         try HKHealthStore().hkSave(objects)
+    }
+
+    static func _addAttachment(_ attachment: HKAttachment, data: Data, to object: UUID) {
+        lock.lock()
+        var list = attachmentsByObject[object] ?? []
+        list.append((attachment, data))
+        attachmentsByObject[object] = list
+        lock.unlock()
+    }
+
+    static func _removeAttachment(_ identifier: UUID, from object: UUID) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard var list = attachmentsByObject[object] else { return false }
+        let before = list.count
+        list.removeAll { $0.0.identifier == identifier }
+        attachmentsByObject[object] = list
+        return list.count < before
+    }
+
+    static func attachments(for object: UUID) -> [HKAttachment] {
+        lock.lock()
+        defer { lock.unlock() }
+        return (attachmentsByObject[object] ?? []).map(\.0)
+    }
+
+    static func attachmentData(for identifier: UUID) -> Data? {
+        lock.lock()
+        defer { lock.unlock() }
+        for list in attachmentsByObject.values {
+            if let found = list.first(where: { $0.0.identifier == identifier }) {
+                return found.1
+            }
+        }
+        return nil
     }
 
     public static func _setActivitySummaries(_ summaries: [HKActivitySummary]) {

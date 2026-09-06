@@ -398,5 +398,17 @@ func testEnumOptionSetAndConstantValues() {
     var physHasher = Hasher()
     SCNPhysicsWorld.TestOption.collisionBitMask.hash(into: &physHasher)
     SCNPhysicsWorld.TestSearchMode.closest.hash(into: &physHasher)
+    _ = SCNTransparencyMode.default
+    _ = SCNSceneSource.AnimationImportPolicy.doNotPlay
+    _ = SCNSceneSource.AnimationImportPolicy.playRepeatedly
+    _ = SCNSceneSource.AnimationImportPolicy.playUsingSceneTimeBase
+    _ = SCNParticleSystem.ParticleProperty.angle
+    _ = SCNParticleSystem.ParticleProperty.bounce
+    _ = SCNParticleSystem.ParticleProperty.charge
+    _ = SCNParticleSystem.ParticleProperty.contactNormal
+    _ = SCNParticleSystem.ParticleProperty.contactPoint
+    _ = SCNParticleSystem.ParticleProperty.frameRate
+    _ = SCNParticleSystem.ParticleProperty.life
+    _ = SCNParticleSystem.ParticleProperty.rotationAxis
 }
 

@@ -2,6 +2,7 @@ full/charts/Charts.swift
 full/charts/ChartsFunctionPlots.swift
 full/charts/ChartsGeometry.swift
 full/charts/ChartsLookalikes.swift
+full/charts/ChartsMarkLayout.swift
 full/charts/ChartsModifiers.swift
 full/charts/ChartsPlotEngine.swift
 full/charts/ChartsSurface.swift

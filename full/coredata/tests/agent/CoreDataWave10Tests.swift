@@ -208,7 +208,8 @@ func testPersistentHistoryChangeLocalTracking() {
         let fetchWith = NSPersistentHistoryChangeRequest.fetchHistory(withFetch: NSFetchRequest<any NSFetchRequestResult>())
         fetchWith.resultType = .count
         let countResult = try context.execute(fetchWith) as? NSPersistentHistoryResult
-        guard (countResult?.result as? Int) ?? 0 >= 3 else {
+        guard countResult?.resultType == .count,
+              (countResult?.result as? Int) ?? 0 >= 3 else {
             throw ProbeFailure.message("fetchHistory(withFetch:) count mismatch")
         }
         let token = container.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)

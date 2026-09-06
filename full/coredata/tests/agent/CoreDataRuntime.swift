@@ -2316,6 +2316,14 @@ func testEnumOptionSetAndConstantValues() {
             guard NSAttributeType(rawValue: 700) == .stringAttributeType else {
                 throw ProbeFailure.message("NSAttributeType.init(rawValue:) failed")
             }
+            // These overlay IDs cite this catalog test, so exercise the wrapper itself.
+            try checkInequality(NSAttributeDescription.AttributeType.string, .boolean, "NSAttributeDescription.AttributeType")
+            try checkHash(NSAttributeDescription.AttributeType.string, "NSAttributeDescription.AttributeType")
+            guard NSManagedObjectContextConcurrencyType(
+                rawValue: NSManagedObjectContextConcurrencyType.mainQueueConcurrencyType.rawValue
+            ) == .mainQueueConcurrencyType else {
+                throw ProbeFailure.message("NSManagedObjectContextConcurrencyType.init(rawValue:) failed")
+            }
             try checkInequality(NSDeleteRule.cascadeDeleteRule, .nullifyDeleteRule, "NSDeleteRule")
             try checkHash(NSDeleteRule.cascadeDeleteRule, "NSDeleteRule")
             guard NSDeleteRule(rawValue: 2) == .cascadeDeleteRule else {
@@ -2426,7 +2434,9 @@ func testEnumOptionSetAndConstantValues() {
                 throw ProbeFailure.message("StoreType.init(rawValue:) failed")
             }
 
-            func checkOptionSet<T: OptionSet>(_ value: T, _ other: T, _ name: String) throws where T.Element == T, T: Hashable {
+            // Linux Swift 6.2.4 rejected the two literal elements in the sealed gate:
+            // OptionSet.Element == Self does not constrain ArrayLiteralElement.
+            func checkOptionSet<T: OptionSet>(_ value: T, _ other: T, _ name: String) throws where T.Element == T, T.ArrayLiteralElement == T, T: Hashable {
                 var working = T()
                 try checkInequality(value, other, name)
                 try checkHash(value, name)
@@ -2445,6 +2455,7 @@ func testEnumOptionSetAndConstantValues() {
                       !working.isDisjoint(with: value),
                       working.subtracting(value).isEmpty,
                       working.intersection(value) == value,
+                      working.symmetricDifference(other) == working.union(other).subtracting(working.intersection(other)),
                       !working.isStrictSubset(of: working),
                       working.union(other).isStrictSuperset(of: working) || working.union(other) == working else {
                     throw ProbeFailure.message("\(name) OptionSet algebra failed")
@@ -3953,7 +3964,8 @@ func testPersistentHistoryChangeLocalTracking() {
         let fetchWith = NSPersistentHistoryChangeRequest.fetchHistory(withFetch: NSFetchRequest<any NSFetchRequestResult>())
         fetchWith.resultType = .count
         let countResult = try context.execute(fetchWith) as? NSPersistentHistoryResult
-        guard (countResult?.result as? Int) ?? 0 >= 3 else {
+        guard countResult?.resultType == .count,
+              (countResult?.result as? Int) ?? 0 >= 3 else {
             throw ProbeFailure.message("fetchHistory(withFetch:) count mismatch")
         }
         let token = container.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)

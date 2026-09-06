@@ -169,6 +169,35 @@ private func _foundationDictionaryKeysEqual(_ lhs: Any, _ rhs: Any) -> Bool {
     return false
 }
 
+// Decode the complete plist value graph, independent of any application's schema.
+private enum _FoundationPlistValue: Decodable {
+    case string(String), bool(Bool), integer(Int64), real(Double), data(Data), date(Date)
+    case array([Self]), dictionary([String: Self])
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let value = try? container.decode(Bool.self) { self = .bool(value) }
+        else if let value = try? container.decode(Int64.self) { self = .integer(value) }
+        else if let value = try? container.decode(Double.self) { self = .real(value) }
+        else if let value = try? container.decode(String.self) { self = .string(value) }
+        else if let value = try? container.decode(Data.self) { self = .data(value) }
+        else if let value = try? container.decode(Date.self) { self = .date(value) }
+        else if let value = try? container.decode([Self].self) { self = .array(value) }
+        else { self = .dictionary(try container.decode([String: Self].self)) }
+    }
+    var object: Any {
+        switch self {
+        case .string(let value): return value
+        case .bool(let value): return value
+        case .integer(let value): return value
+        case .real(let value): return value
+        case .data(let value): return value
+        case .date(let value): return value
+        case .array(let value): return value.map(\.object)
+        case .dictionary(let value): return value.mapValues(\.object)
+        }
+    }
+}
+
 /// Immutable reference dictionary base for the Foundation class cluster.
 open class NSDictionary: NSObject, NSCopying, @unchecked Sendable {
     fileprivate let entries: Mutex<[_FoundationDictionaryEntry]>
@@ -182,6 +211,18 @@ open class NSDictionary: NSObject, NSCopying, @unchecked Sendable {
         self.entries = Mutex(entries)
         super.init()
     }
+
+    public convenience init(dictionary: [AnyHashable: Any]) {
+        self.init(entries: dictionary.map { _FoundationDictionaryEntry(key: $0.key, value: $0.value) })
+    }
+    public convenience init?(contentsOfFile path: String) {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
+              let decoded = try? PropertyListDecoder().decode([String: _FoundationPlistValue].self, from: data)
+        else { return nil }
+        self.init(dictionary: decoded.reduce(into: [AnyHashable: Any]()) { $0[$1.key] = $1.value.object })
+    }
+    @objc
+    open subscript(key: String) -> Any? { object(forKey: key) }
 
     open var count: Int { entries.withLock { $0.count } }
 

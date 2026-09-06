@@ -42,35 +42,192 @@ open class HKActivitySummary: NSObject, NSCopying, NSSecureCoding, @unchecked Se
     }
 }
 
-open class HKAttachment: NSObject, @unchecked Sendable {
-    public var identifier: UUID = UUID()
-    public var name: String = ""
-    public var size: Int = 0
-    public var creationDate: Date = Date()
+open class HKAttachment: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var identifier: UUID
+    public private(set) var name: String
+    public private(set) var size: Int
+    public private(set) var creationDate: Date
+    public private(set) var metadata: [String: Any]?
+
+    public override init() {
+        self.identifier = UUID()
+        self.name = ""
+        self.size = 0
+        self.creationDate = Date()
+        self.metadata = nil
+        super.init()
+    }
+
+    public init(
+        identifier: UUID = UUID(),
+        name: String,
+        size: Int,
+        creationDate: Date = Date(),
+        metadata: [String: Any]? = nil
+    ) {
+        self.identifier = identifier
+        self.name = name
+        self.size = size
+        self.creationDate = creationDate
+        self.metadata = metadata
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        self.identifier = UUID(uuidString: (coder.decodeObject(of: NSString.self, forKey: "identifier") as String?) ?? "") ?? UUID()
+        self.name = (coder.decodeObject(of: NSString.self, forKey: "name") as String?) ?? ""
+        self.size = coder.decodeInteger(forKey: "size")
+        self.creationDate = (coder.decodeObject(of: NSDate.self, forKey: "creationDate") as Date?) ?? Date()
+        self.metadata = nil
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(identifier.uuidString as NSString, forKey: "identifier")
+        coder.encode(name as NSString, forKey: "name")
+        coder.encode(size, forKey: "size")
+        coder.encode(creationDate as NSDate, forKey: "creationDate")
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        HKAttachment(identifier: identifier, name: name, size: size, creationDate: creationDate, metadata: metadata)
+    }
+
     public struct AsyncBytes: AsyncSequence {
         public typealias Element = UInt8
         public struct Iterator: AsyncIteratorProtocol {
-            public mutating func next() async throws -> UInt8? { nil }
+            var bytes: [UInt8]
+            var index = 0
+            public mutating func next() async throws -> UInt8? {
+                guard index < bytes.count else { return nil }
+                let value = bytes[index]
+                index += 1
+                return value
+            }
         }
-        public func makeAsyncIterator() -> Iterator { Iterator() }
+        let bytes: [UInt8]
+        public func makeAsyncIterator() -> Iterator { Iterator(bytes: bytes) }
     }
 }
 
 open class HKAttachmentStore: NSObject, @unchecked Sendable {
+    private let healthStore: HKHealthStore
+
+    public override init() {
+        self.healthStore = HKHealthStore()
+        super.init()
+    }
+
+    public init(healthStore: HKHealthStore) {
+        self.healthStore = healthStore
+        super.init()
+    }
+
+    /// Linux local attachment: stores bytes in-process. Apple attachment daemons / iCloud
+    /// Health sharing are not invented; `UTType` overloads stay unavailable.
+    public func addAttachment(
+        to object: HKObject,
+        name: String,
+        data: Data,
+        metadata: [String: Any]? = nil
+    ) throws -> HKAttachment {
+        _ = healthStore
+        let attachment = HKAttachment(name: name, size: data.count, metadata: metadata)
+        HKHealthStorePortable._addAttachment(attachment, data: data, to: object.uuid)
+        return attachment
+    }
+
+    public func getAttachments(for object: HKObject, completion: @escaping ([HKAttachment]?, (any Error)?) -> Void) {
+        completion(HKHealthStorePortable.attachments(for: object.uuid), nil)
+    }
+
+    public func attachments(for object: HKObject) async throws -> [HKAttachment] {
+        HKHealthStorePortable.attachments(for: object.uuid)
+    }
+
     public func getAttachments(for object: HKObject) async throws -> [HKAttachment] {
-        _ = object
-        return []
+        try await attachments(for: object)
+    }
+
+    public func removeAttachment(
+        _ attachment: HKAttachment,
+        from object: HKObject,
+        completion: @escaping (Bool, (any Error)?) -> Void
+    ) {
+        let removed = HKHealthStorePortable._removeAttachment(attachment.identifier, from: object.uuid)
+        if removed {
+            completion(true, nil)
+        } else {
+            completion(false, hkError(.errorInvalidArgument, reason: "attachment is not on this object"))
+        }
     }
 
     public func removeAttachment(_ attachment: HKAttachment, from object: HKObject) async throws {
-        _ = (attachment, object)
-        throw hkError(.errorHealthDataUnavailable, reason: "attachments are fail-closed")
+        let removed = HKHealthStorePortable._removeAttachment(attachment.identifier, from: object.uuid)
+        if !removed {
+            throw hkError(.errorInvalidArgument, reason: "attachment is not on this object")
+        }
+    }
+
+    public func getData(
+        for attachment: HKAttachment,
+        completion: @escaping (Data?, (any Error)?) -> Void
+    ) -> Progress {
+        let progress = Progress(totalUnitCount: 1)
+        if let data = HKHealthStorePortable.attachmentData(for: attachment.identifier) {
+            progress.completedUnitCount = 1
+            completion(data, nil)
+        } else {
+            progress.completedUnitCount = 1
+            completion(nil, hkError(.errorNoData, reason: "attachment bytes are not in the local store"))
+        }
+        return progress
+    }
+
+    public func streamData(
+        for attachment: HKAttachment,
+        dataHandler: @escaping (Data?, (any Error)?, Bool) -> Void
+    ) -> Progress {
+        let progress = Progress(totalUnitCount: 1)
+        if let data = HKHealthStorePortable.attachmentData(for: attachment.identifier) {
+            progress.completedUnitCount = 1
+            dataHandler(data, nil, true)
+        } else {
+            progress.completedUnitCount = 1
+            dataHandler(nil, hkError(.errorNoData, reason: "attachment bytes are not in the local store"), true)
+        }
+        return progress
+    }
+
+    public func dataReader(for attachment: HKAttachment) -> HKAttachmentDataReader {
+        HKAttachmentDataReader(attachment: attachment)
     }
 }
 
 open class HKAttachmentDataReader: NSObject, @unchecked Sendable {
+    public let attachment: HKAttachment
+    public let progress: Progress
+
+    public override init() {
+        self.attachment = HKAttachment()
+        self.progress = Progress(totalUnitCount: 1)
+        super.init()
+    }
+
+    public init(attachment: HKAttachment) {
+        self.attachment = attachment
+        self.progress = Progress(totalUnitCount: 1)
+        super.init()
+    }
+
+    public var bytes: HKAttachment.AsyncBytes {
+        let data = HKHealthStorePortable.attachmentData(for: attachment.identifier) ?? Data()
+        return HKAttachment.AsyncBytes(bytes: [UInt8](data))
+    }
+
     public func makeAsyncIterator() -> HKAttachment.AsyncBytes.Iterator {
-        HKAttachment.AsyncBytes.Iterator()
+        bytes.makeAsyncIterator()
     }
 }
 
@@ -90,39 +247,369 @@ open class HKAudiogramSample: HKSample, @unchecked Sendable {
     }
 
     public convenience init(sensitivityPoints: [HKAudiogramSensitivityPoint], start startDate: Date, end endDate: Date, metadata: [String: Any]?) {
-        self.init(type: HKObjectType.audiogramSampleType(), start: startDate, end: endDate, metadata: metadata)
+        self.init(sensitivityPoints: sensitivityPoints, start: startDate, end: endDate, device: nil, metadata: metadata)
+    }
+
+    public convenience init(
+        sensitivityPoints: [HKAudiogramSensitivityPoint],
+        startDate: Date,
+        endDate: Date,
+        metadata: [String: Any]?
+    ) {
+        self.init(sensitivityPoints: sensitivityPoints, start: startDate, end: endDate, metadata: metadata)
+    }
+
+    public convenience init(
+        sensitivityPoints: [HKAudiogramSensitivityPoint],
+        start startDate: Date,
+        end endDate: Date,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(type: HKObjectType.audiogramSampleType(), start: startDate, end: endDate, device: device, metadata: metadata)
         self.sensitivityPoints = sensitivityPoints
+    }
+
+    public convenience init(
+        sensitivityPoints: [HKAudiogramSensitivityPoint],
+        startDate: Date,
+        endDate: Date,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init(sensitivityPoints: sensitivityPoints, start: startDate, end: endDate, device: device, metadata: metadata)
     }
 
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
-open class HKAudiogramSensitivityPoint: NSObject, @unchecked Sendable {
-    public var frequency: HKQuantity = HKQuantity(unit: .hertz(), doubleValue: 0)
-    public var leftEarSensitivity: HKQuantity?
-    public var rightEarSensitivity: HKQuantity?
+open class HKAudiogramSensitivityPoint: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var frequency: HKQuantity
+    public private(set) var leftEarSensitivity: HKQuantity?
+    public private(set) var rightEarSensitivity: HKQuantity?
+    public private(set) var tests: [HKAudiogramSensitivityTest]
+
+    public override init() {
+        self.frequency = HKQuantity(unit: .hertz(), doubleValue: 0)
+        self.leftEarSensitivity = nil
+        self.rightEarSensitivity = nil
+        self.tests = []
+        super.init()
+    }
+
+    public init(frequency: HKQuantity, leftEarSensitivity: HKQuantity?, rightEarSensitivity: HKQuantity?) throws {
+        try Self.validateFrequency(frequency)
+        if let leftEarSensitivity { try Self.validateSensitivity(leftEarSensitivity) }
+        if let rightEarSensitivity { try Self.validateSensitivity(rightEarSensitivity) }
+        self.frequency = frequency
+        self.leftEarSensitivity = leftEarSensitivity
+        self.rightEarSensitivity = rightEarSensitivity
+        var built: [HKAudiogramSensitivityTest] = []
+        if let leftEarSensitivity {
+            built.append(try HKAudiogramSensitivityTest(
+                sensitivity: leftEarSensitivity,
+                type: .air,
+                masked: false,
+                side: .left,
+                clampingRange: nil
+            ))
+        }
+        if let rightEarSensitivity {
+            built.append(try HKAudiogramSensitivityTest(
+                sensitivity: rightEarSensitivity,
+                type: .air,
+                masked: false,
+                side: .right,
+                clampingRange: nil
+            ))
+        }
+        self.tests = built
+        super.init()
+    }
+
+    public init(frequency: HKQuantity, tests: [HKAudiogramSensitivityTest]) throws {
+        try Self.validateFrequency(frequency)
+        self.frequency = frequency
+        self.tests = tests
+        self.leftEarSensitivity = tests.first(where: { $0.side == .left })?.sensitivity
+        self.rightEarSensitivity = tests.first(where: { $0.side == .right })?.sensitivity
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        let hz = coder.decodeDouble(forKey: "frequency")
+        self.frequency = HKQuantity(unit: .hertz(), doubleValue: hz)
+        if coder.containsValue(forKey: "left") {
+            self.leftEarSensitivity = HKQuantity(unit: .decibelHearingLevel(), doubleValue: coder.decodeDouble(forKey: "left"))
+        } else {
+            self.leftEarSensitivity = nil
+        }
+        if coder.containsValue(forKey: "right") {
+            self.rightEarSensitivity = HKQuantity(unit: .decibelHearingLevel(), doubleValue: coder.decodeDouble(forKey: "right"))
+        } else {
+            self.rightEarSensitivity = nil
+        }
+        self.tests = []
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(frequency.doubleValue(for: .hertz()), forKey: "frequency")
+        if let leftEarSensitivity {
+            coder.encode(leftEarSensitivity.doubleValue(for: .decibelHearingLevel()), forKey: "left")
+        }
+        if let rightEarSensitivity {
+            coder.encode(rightEarSensitivity.doubleValue(for: .decibelHearingLevel()), forKey: "right")
+        }
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        (try? HKAudiogramSensitivityPoint(
+            frequency: frequency,
+            leftEarSensitivity: leftEarSensitivity,
+            rightEarSensitivity: rightEarSensitivity
+        )) ?? HKAudiogramSensitivityPoint()
+    }
+
+    static func validateFrequency(_ quantity: HKQuantity) throws {
+        guard quantity.unit.`is`(compatibleWith: .hertz()) else {
+            throw hkError(.errorInvalidArgument, reason: "audiogram frequency must be in hertz")
+        }
+        let hz = quantity.doubleValue(for: .hertz())
+        guard hz > 0 else {
+            throw hkError(.errorInvalidArgument, reason: "audiogram frequency must be positive")
+        }
+    }
+
+    static func validateSensitivity(_ quantity: HKQuantity) throws {
+        guard quantity.unit.`is`(compatibleWith: .decibelHearingLevel()) else {
+            throw hkError(.errorInvalidArgument, reason: "audiogram sensitivity must be in dB HL")
+        }
+    }
 }
 
-open class HKAudiogramSensitivityPointClampingRange: NSObject, @unchecked Sendable {
-    public var lowerBound: HKQuantity?
-    public var upperBound: HKQuantity?
+open class HKAudiogramSensitivityPointClampingRange: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var lowerBound: HKQuantity?
+    public private(set) var upperBound: HKQuantity?
+
+    public override init() {
+        self.lowerBound = nil
+        self.upperBound = nil
+        super.init()
+    }
+
+    public init(lowerBound: NSNumber?, upperBound: NSNumber?) throws {
+        if let lowerBound, let upperBound, lowerBound.doubleValue > upperBound.doubleValue {
+            throw hkError(.errorInvalidArgument, reason: "clamping range lowerBound must be <= upperBound")
+        }
+        self.lowerBound = lowerBound.map { HKQuantity(unit: .decibelHearingLevel(), doubleValue: $0.doubleValue) }
+        self.upperBound = upperBound.map { HKQuantity(unit: .decibelHearingLevel(), doubleValue: $0.doubleValue) }
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        if coder.containsValue(forKey: "lower") {
+            self.lowerBound = HKQuantity(unit: .decibelHearingLevel(), doubleValue: coder.decodeDouble(forKey: "lower"))
+        }
+        if coder.containsValue(forKey: "upper") {
+            self.upperBound = HKQuantity(unit: .decibelHearingLevel(), doubleValue: coder.decodeDouble(forKey: "upper"))
+        }
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        if let lowerBound {
+            coder.encode(lowerBound.doubleValue(for: .decibelHearingLevel()), forKey: "lower")
+        }
+        if let upperBound {
+            coder.encode(upperBound.doubleValue(for: .decibelHearingLevel()), forKey: "upper")
+        }
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        (try? HKAudiogramSensitivityPointClampingRange(
+            lowerBound: lowerBound.map { NSNumber(value: $0.doubleValue(for: .decibelHearingLevel())) },
+            upperBound: upperBound.map { NSNumber(value: $0.doubleValue(for: .decibelHearingLevel())) }
+        )) ?? HKAudiogramSensitivityPointClampingRange()
+    }
 }
 
-open class HKAudiogramSensitivityTest: NSObject, @unchecked Sendable {
-    public var type: HKAudiogramConductionType = .air
-    public var side: HKAudiogramSensitivityTestSide = .left
+open class HKAudiogramSensitivityTest: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var type: HKAudiogramConductionType
+    public private(set) var side: HKAudiogramSensitivityTestSide
+    public private(set) var sensitivity: HKQuantity
+    public private(set) var masked: Bool
+    public private(set) var clampingRange: HKAudiogramSensitivityPointClampingRange?
+
+    public override init() {
+        self.type = .air
+        self.side = .left
+        self.sensitivity = HKQuantity(unit: .decibelHearingLevel(), doubleValue: 0)
+        self.masked = false
+        self.clampingRange = nil
+        super.init()
+    }
+
+    public init(
+        sensitivity: HKQuantity,
+        type: HKAudiogramConductionType,
+        masked: Bool,
+        side: HKAudiogramSensitivityTestSide,
+        clampingRange: HKAudiogramSensitivityPointClampingRange?
+    ) throws {
+        try HKAudiogramSensitivityPoint.validateSensitivity(sensitivity)
+        if let clampingRange {
+            let value = sensitivity.doubleValue(for: .decibelHearingLevel())
+            if let lower = clampingRange.lowerBound?.doubleValue(for: .decibelHearingLevel()), value < lower {
+                throw hkError(.errorInvalidArgument, reason: "sensitivity is below clamping lowerBound")
+            }
+            if let upper = clampingRange.upperBound?.doubleValue(for: .decibelHearingLevel()), value > upper {
+                throw hkError(.errorInvalidArgument, reason: "sensitivity is above clamping upperBound")
+            }
+        }
+        self.sensitivity = sensitivity
+        self.type = type
+        self.masked = masked
+        self.side = side
+        self.clampingRange = clampingRange
+        super.init()
+    }
+
+    public required init?(coder: NSCoder) {
+        self.type = HKAudiogramConductionType(rawValue: coder.decodeInteger(forKey: "type")) ?? .air
+        self.side = HKAudiogramSensitivityTestSide(rawValue: coder.decodeInteger(forKey: "side")) ?? .left
+        self.sensitivity = HKQuantity(unit: .decibelHearingLevel(), doubleValue: coder.decodeDouble(forKey: "sensitivity"))
+        self.masked = coder.decodeBool(forKey: "masked")
+        self.clampingRange = coder.decodeObject(of: HKAudiogramSensitivityPointClampingRange.self, forKey: "clamping")
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(type.rawValue, forKey: "type")
+        coder.encode(side.rawValue, forKey: "side")
+        coder.encode(sensitivity.doubleValue(for: .decibelHearingLevel()), forKey: "sensitivity")
+        coder.encode(masked, forKey: "masked")
+        if let clampingRange {
+            coder.encode(clampingRange, forKey: "clamping")
+        }
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        (try? HKAudiogramSensitivityTest(
+            sensitivity: sensitivity,
+            type: type,
+            masked: masked,
+            side: side,
+            clampingRange: clampingRange
+        )) ?? HKAudiogramSensitivityTest()
+    }
 }
 
 open class HKCDADocument: NSObject, @unchecked Sendable {
-    public var title: String?
-    public var patientName: String?
-    public var authorName: String?
-    public var custodianName: String?
+    public private(set) var title: String
+    public private(set) var patientName: String
+    public private(set) var authorName: String
+    public private(set) var custodianName: String
     public var documentData: Data?
+
+    public override init() {
+        self.title = ""
+        self.patientName = ""
+        self.authorName = ""
+        self.custodianName = ""
+        self.documentData = nil
+        super.init()
+    }
+
+    public init(title: String, patientName: String, authorName: String, custodianName: String, documentData: Data?) {
+        self.title = title
+        self.patientName = patientName
+        self.authorName = authorName
+        self.custodianName = custodianName
+        self.documentData = documentData
+        super.init()
+    }
+
+    /// Local XML field extraction. This is not Apple CDA schema validation.
+    public static func parse(_ data: Data) throws -> HKCDADocument {
+        guard let xml = String(data: data, encoding: .utf8),
+              xml.range(of: "ClinicalDocument", options: .caseInsensitive) != nil else {
+            throw hkError(.errorInvalidArgument, reason: "CDA payload is missing ClinicalDocument")
+        }
+        func firstTag(_ names: [String]) -> String {
+            for name in names {
+                let pattern = "<\(name)[^>]*>([^<]*)</\(name)>"
+                if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) {
+                    let range = NSRange(xml.startIndex..<xml.endIndex, in: xml)
+                    if let match = regex.firstMatch(in: xml, options: [], range: range),
+                       match.numberOfRanges > 1,
+                       let inner = Range(match.range(at: 1), in: xml) {
+                        let text = xml[inner].trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !text.isEmpty { return text }
+                    }
+                }
+            }
+            return ""
+        }
+        let given = firstTag(["given"])
+        let family = firstTag(["family"])
+        let patient: String
+        if given.isEmpty && family.isEmpty {
+            patient = firstTag(["patientName", "name"])
+        } else {
+            patient = [given, family].filter { !$0.isEmpty }.joined(separator: " ")
+        }
+        return HKCDADocument(
+            title: firstTag(["title"]),
+            patientName: patient,
+            authorName: firstTag(["authorName", "assignedPerson"]),
+            custodianName: firstTag(["custodianName", "representedCustodianOrganization"]),
+            documentData: data
+        )
+    }
 }
 
 open class HKCDADocumentSample: HKDocumentSample, @unchecked Sendable {
     public var document: HKCDADocument?
+
+    public override init(
+        type: HKSampleType,
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(
+            type: type,
+            start: startDate,
+            end: endDate,
+            uuid: uuid,
+            sourceRevision: sourceRevision,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(data documentData: Data, start startDate: Date, end endDate: Date, metadata: [String: Any]?) throws {
+        let parsed = try HKCDADocument.parse(documentData)
+        self.init(
+            type: HKObjectType.documentType(forIdentifier: .CDA) ?? HKDocumentType(identifier: HKDocumentTypeIdentifier.CDA.rawValue),
+            start: startDate,
+            end: endDate,
+            metadata: metadata
+        )
+        self.document = parsed
+    }
+
+    public convenience init(data documentData: Data, startDate: Date, endDate: Date, metadata: [String: Any]?) throws {
+        try self.init(data: documentData, start: startDate, end: endDate, metadata: metadata)
+    }
+
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
@@ -189,14 +676,99 @@ open class HKFHIRResource: NSObject, @unchecked Sendable {
     public var identifier: String = ""
     public var sourceURL: URL?
     public var data: Data?
+    public var fhirVersion: HKFHIRVersion = HKFHIRVersion.primaryR4()
 }
 
-open class HKFHIRVersion: NSObject, @unchecked Sendable {
-    public var majorVersion: Int = 0
-    public var minorVersion: Int = 0
-    public var patchVersion: Int = 0
-    public var fhirRelease: HKFHIRRelease = .unknown
+open class HKFHIRVersion: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public let majorVersion: Int
+    public let minorVersion: Int
+    public let patchVersion: Int
+    public let fhirRelease: HKFHIRRelease
     public var stringRepresentation: String { "\(majorVersion).\(minorVersion).\(patchVersion)" }
+
+    public override convenience init() {
+        self.init(majorVersion: 0, minorVersion: 0, patchVersion: 0, fhirRelease: .unknown)
+    }
+
+    public required init(majorVersion: Int, minorVersion: Int, patchVersion: Int, fhirRelease: HKFHIRRelease) {
+        self.majorVersion = majorVersion
+        self.minorVersion = minorVersion
+        self.patchVersion = patchVersion
+        self.fhirRelease = fhirRelease
+        super.init()
+    }
+
+    public convenience init(fromVersionString versionString: String) throws {
+        let parts = versionString.split(separator: ".").map(String.init)
+        guard (1...3).contains(parts.count), let major = Int(parts[0]) else {
+            throw hkError(.errorInvalidArgument, reason: "FHIR version string must be major[.minor[.patch]]")
+        }
+        let minor = parts.count > 1 ? (Int(parts[1]) ?? -1) : 0
+        let patch = parts.count > 2 ? (Int(parts[2]) ?? -1) : 0
+        guard minor >= 0, patch >= 0 else {
+            throw hkError(.errorInvalidArgument, reason: "FHIR version components must be integers")
+        }
+        let release: HKFHIRRelease
+        if major == 1 {
+            release = .dstu2
+        } else if major == 4 {
+            release = .r4
+        } else {
+            release = .unknown
+        }
+        self.init(majorVersion: major, minorVersion: minor, patchVersion: patch, fhirRelease: release)
+    }
+
+    public class func primaryDSTU2() -> Self {
+        Self.init(majorVersion: 1, minorVersion: 0, patchVersion: 2, fhirRelease: .dstu2)
+    }
+
+    public class func primaryR4() -> Self {
+        Self.init(majorVersion: 4, minorVersion: 0, patchVersion: 1, fhirRelease: .r4)
+    }
+
+    public required init?(coder: NSCoder) {
+        self.majorVersion = coder.decodeInteger(forKey: "major")
+        self.minorVersion = coder.decodeInteger(forKey: "minor")
+        self.patchVersion = coder.decodeInteger(forKey: "patch")
+        let raw = (coder.decodeObject(of: NSString.self, forKey: "release") as String?) ?? HKFHIRRelease.unknown.rawValue
+        self.fhirRelease = HKFHIRRelease(rawValue: raw)
+        super.init()
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(majorVersion, forKey: "major")
+        coder.encode(minorVersion, forKey: "minor")
+        coder.encode(patchVersion, forKey: "patch")
+        coder.encode(fhirRelease.rawValue as NSString, forKey: "release")
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        HKFHIRVersion(
+            majorVersion: majorVersion,
+            minorVersion: minorVersion,
+            patchVersion: patchVersion,
+            fhirRelease: fhirRelease
+        )
+    }
+
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? HKFHIRVersion else { return false }
+        return majorVersion == other.majorVersion
+            && minorVersion == other.minorVersion
+            && patchVersion == other.patchVersion
+            && fhirRelease == other.fhirRelease
+    }
+
+    public override var hash: Int {
+        var hasher = Hasher()
+        hasher.combine(majorVersion)
+        hasher.combine(minorVersion)
+        hasher.combine(patchVersion)
+        hasher.combine(fhirRelease)
+        return hasher.finalize()
+    }
 }
 
 open class HKGAD7Assessment: HKScoredAssessment, @unchecked Sendable {
@@ -205,22 +777,137 @@ open class HKGAD7Assessment: HKScoredAssessment, @unchecked Sendable {
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
-open class HKGlassesLensSpecification: NSObject, @unchecked Sendable {
-    public var eye: HKVisionEye = .left
-    public var sphere: HKQuantity?
-    public var cylinder: HKQuantity?
-    public var axis: HKQuantity?
-    public var add: HKQuantity?
+open class HKGlassesLensSpecification: HKLensSpecification, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var vertexDistance: HKQuantity?
+    public private(set) var prism: HKVisionPrism?
+    public private(set) var farPupillaryDistance: HKQuantity?
+    public private(set) var nearPupillaryDistance: HKQuantity?
+
+    public override init() {
+        super.init()
+    }
+
+    public init(
+        sphere: HKQuantity,
+        cylinder: HKQuantity?,
+        axis: HKQuantity?,
+        addPower: HKQuantity?,
+        vertexDistance: HKQuantity?,
+        prism: HKVisionPrism?,
+        farPupillaryDistance: HKQuantity?,
+        nearPupillaryDistance: HKQuantity?
+    ) {
+        self.vertexDistance = vertexDistance
+        self.prism = prism
+        self.farPupillaryDistance = farPupillaryDistance
+        self.nearPupillaryDistance = nearPupillaryDistance
+        super.init()
+        self.sphere = sphere
+        self.cylinder = cylinder
+        self.axis = axis
+        self.add = addPower
+        self.addPower = addPower
+    }
+
+    public required init?(coder: NSCoder) {
+        if coder.containsValue(forKey: "vertex") {
+            self.vertexDistance = HKQuantity(unit: .meterUnit(with: .milli), doubleValue: coder.decodeDouble(forKey: "vertex"))
+        }
+        if coder.containsValue(forKey: "farPD") {
+            self.farPupillaryDistance = HKQuantity(unit: .meterUnit(with: .milli), doubleValue: coder.decodeDouble(forKey: "farPD"))
+        }
+        if coder.containsValue(forKey: "nearPD") {
+            self.nearPupillaryDistance = HKQuantity(unit: .meterUnit(with: .milli), doubleValue: coder.decodeDouble(forKey: "nearPD"))
+        }
+        if coder.containsValue(forKey: "prism") {
+            self.prism = coder.decodeObject(of: HKVisionPrism.self, forKey: "prism")
+        }
+        super.init()
+        self.sphere = HKQuantity(unit: .diopter(), doubleValue: coder.decodeDouble(forKey: "sphere"))
+        if coder.containsValue(forKey: "cylinder") {
+            self.cylinder = HKQuantity(unit: .diopter(), doubleValue: coder.decodeDouble(forKey: "cylinder"))
+        }
+        if coder.containsValue(forKey: "axis") {
+            self.axis = HKQuantity(unit: .degreeAngle(), doubleValue: coder.decodeDouble(forKey: "axis"))
+        }
+        if coder.containsValue(forKey: "add") {
+            let add = HKQuantity(unit: .diopter(), doubleValue: coder.decodeDouble(forKey: "add"))
+            self.add = add
+            self.addPower = add
+        }
+    }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(sphere?.doubleValue(for: .diopter()) ?? 0, forKey: "sphere")
+        if let cylinder { coder.encode(cylinder.doubleValue(for: .diopter()), forKey: "cylinder") }
+        if let axis { coder.encode(axis.doubleValue(for: .degreeAngle()), forKey: "axis") }
+        if let addPower { coder.encode(addPower.doubleValue(for: .diopter()), forKey: "add") }
+        if let vertexDistance { coder.encode(vertexDistance.doubleValue(for: .meterUnit(with: .milli)), forKey: "vertex") }
+        if let farPupillaryDistance { coder.encode(farPupillaryDistance.doubleValue(for: .meterUnit(with: .milli)), forKey: "farPD") }
+        if let nearPupillaryDistance { coder.encode(nearPupillaryDistance.doubleValue(for: .meterUnit(with: .milli)), forKey: "nearPD") }
+        if let prism { coder.encode(prism, forKey: "prism") }
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        HKGlassesLensSpecification(
+            sphere: sphere ?? HKQuantity(unit: .diopter(), doubleValue: 0),
+            cylinder: cylinder,
+            axis: axis,
+            addPower: addPower,
+            vertexDistance: vertexDistance,
+            prism: prism,
+            farPupillaryDistance: farPupillaryDistance,
+            nearPupillaryDistance: nearPupillaryDistance
+        )
+    }
 }
 
-open class HKGlassesPrescription: NSObject, @unchecked Sendable {
+open class HKGlassesPrescription: HKVisionPrescription, @unchecked Sendable {
     public var rightEye: HKGlassesLensSpecification?
     public var leftEye: HKGlassesLensSpecification?
+
+    public init() {
+        super.init(
+            type: HKObjectType.visionPrescriptionType(),
+            start: Date(),
+            end: Date()
+        )
+        self.prescriptionType = .glasses
+    }
+
+    public convenience init(
+        rightEyeSpecification: HKGlassesLensSpecification?,
+        leftEyeSpecification: HKGlassesLensSpecification?,
+        dateIssued: Date,
+        expirationDate: Date?,
+        device: HKDevice?,
+        metadata: [String: Any]?
+    ) {
+        self.init()
+        self.rightEye = rightEyeSpecification
+        self.leftEye = leftEyeSpecification
+        self.dateIssued = dateIssued
+        self.expirationDate = expirationDate
+        self.prescriptionType = .glasses
+        _ = (device, metadata)
+    }
+
+    public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
 open class HKHealthConceptIdentifier: NSObject, @unchecked Sendable {
     public var domain: HKHealthConceptDomain = .medication
     public var identifier: String = ""
+
+    public override init() { super.init() }
+
+    public init(domain: HKHealthConceptDomain = .medication, identifier: String) {
+        self.domain = domain
+        self.identifier = identifier
+        super.init()
+    }
+
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? HKHealthConceptIdentifier else { return false }
         return identifier == other.identifier && domain == other.domain
@@ -238,6 +925,11 @@ open class HKLensSpecification: NSObject, @unchecked Sendable {
     public var sphere: HKQuantity?
     public var cylinder: HKQuantity?
     public var axis: HKQuantity?
+    public var add: HKQuantity?
+    public var addPower: HKQuantity? {
+        get { add }
+        set { add = newValue }
+    }
 }
 
 open class HKMedicationConcept: NSObject, @unchecked Sendable {
@@ -251,6 +943,54 @@ open class HKMedicationDoseEvent: HKSample, @unchecked Sendable {
     public var scheduledDate: Date?
     public var logStatus: LogStatus = .notLogged
     public var scheduleType: ScheduleType = .asNeeded
+    public var unit: HKUnit = .count()
+    public var doseQuantity: Double?
+    public var scheduledDoseQuantity: Double?
+    public var medicationDoseEventType: HKMedicationDoseEventType {
+        HKObjectType.medicationDoseEventType()
+    }
+
+    public override init(
+        type: HKSampleType,
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(
+            type: type,
+            start: startDate,
+            end: endDate,
+            uuid: uuid,
+            sourceRevision: sourceRevision,
+            device: device,
+            metadata: metadata
+        )
+    }
+
+    public convenience init(
+        medicationConceptIdentifier: HKHealthConceptIdentifier,
+        logStatus: LogStatus,
+        scheduleType: ScheduleType,
+        scheduledDate: Date?,
+        scheduledDoseQuantity: Double?,
+        doseQuantity: Double?,
+        unit: HKUnit,
+        start: Date,
+        end: Date
+    ) {
+        self.init(type: HKObjectType.medicationDoseEventType(), start: start, end: end)
+        self.medicationConceptIdentifier = medicationConceptIdentifier
+        self.logStatus = logStatus
+        self.scheduleType = scheduleType
+        self.scheduledDate = scheduledDate
+        self.scheduledDoseQuantity = scheduledDoseQuantity
+        self.doseQuantity = doseQuantity
+        self.unit = unit
+    }
+
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
@@ -405,6 +1145,27 @@ open class HKVisionPrescription: HKSample, @unchecked Sendable {
     public var prescriptionType: HKVisionPrescriptionType = .glasses
     public var dateIssued: Date = Date()
     public var expirationDate: Date?
+
+    public override init(
+        type: HKSampleType,
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(
+            type: type,
+            start: startDate,
+            end: endDate,
+            uuid: uuid,
+            sourceRevision: sourceRevision,
+            device: device,
+            metadata: metadata
+        )
+    }
+
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
@@ -575,7 +1336,38 @@ extension HKCategoryValueSeverity: HKCategoryValuePredicateProviding {}
 extension HKCategoryValueSleepAnalysis: HKCategoryValuePredicateProviding {}
 extension HKCategoryValueVaginalBleeding: HKCategoryValuePredicateProviding {}
 
-extension HKAppleWalkingSteadinessClassification {
+extension HKAppleWalkingSteadinessClassification: CaseIterable {
+    public static var allCases: [HKAppleWalkingSteadinessClassification] { [.ok, .low, .veryLow] }
+
+    /// Linux host ranges: veryLow [0, 0.50), low [0.50, 0.75), ok [0.75, 1.0].
+    /// Quantity must be percent-compatible. Apple Watch classification firmware is not used.
+    public init(for appleWalkingSteadiness: HKQuantity) throws {
+        guard appleWalkingSteadiness.is(compatibleWith: .percent()) else {
+            throw hkError(.errorInvalidArgument, reason: "walking steadiness must be a percent quantity")
+        }
+        let percent = appleWalkingSteadiness.doubleValue(for: .percent())
+        guard percent >= 0, percent <= 1 else {
+            throw hkError(.errorInvalidArgument, reason: "walking steadiness percent must be between 0 and 1")
+        }
+        self = Self.classification(for: appleWalkingSteadiness)
+    }
+
+    public var minimum: HKQuantity {
+        switch self {
+        case .veryLow: return HKQuantity(unit: .percent(), doubleValue: 0)
+        case .low: return HKQuantity(unit: .percent(), doubleValue: 0.50)
+        case .ok: return HKQuantity(unit: .percent(), doubleValue: 0.75)
+        }
+    }
+
+    public var maximum: HKQuantity {
+        switch self {
+        case .veryLow: return HKQuantity(unit: .percent(), doubleValue: 0.50)
+        case .low: return HKQuantity(unit: .percent(), doubleValue: 0.75)
+        case .ok: return HKQuantity(unit: .percent(), doubleValue: 1.0)
+        }
+    }
+
     public static func classification(for quantity: HKQuantity) -> HKAppleWalkingSteadinessClassification {
         let percent = quantity.doubleValue(for: .percent())
         if percent < 0.5 { return .veryLow }

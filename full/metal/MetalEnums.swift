@@ -787,3 +787,61 @@ public enum MTL4CounterHeapType: Int, Equatable, Hashable, Sendable {
     case invalid = 0
     case timestamp = 1
 }
+
+/// Tensor element types. Integer payloads are sequential stand-ins until an
+/// Apple-oracle probe records the iPhoneOS 26.1 Metal.h values.
+public enum MTLTensorDataType: Int, Equatable, Hashable, Sendable {
+    case none = 0
+    case float32 = 1
+    case float16 = 2
+    case bfloat16 = 3
+    case int8 = 4
+    case uint8 = 5
+    case int16 = 6
+    case uint16 = 7
+    case int32 = 8
+    case uint32 = 9
+}
+
+public enum MTLStepFunction: UInt, Equatable, Hashable, Sendable {
+    case constant = 0
+    case perVertex = 1
+    case perInstance = 2
+    case perPatch = 3
+    case perPatchControlPoint = 4
+    case threadPositionInGridX = 5
+    case threadPositionInGridY = 6
+    case threadPositionInGridXIndexed = 7
+    case threadPositionInGridYIndexed = 8
+}
+
+public enum MTLLogLevel: Int, Equatable, Hashable, Sendable {
+    case undefined = 0
+    case debug = 1
+    case info = 2
+    case notice = 3
+    case error = 4
+    case fault = 5
+}
+
+public enum MTLCommandEncoderErrorState: Int, Equatable, Hashable, Sendable {
+    case unknown = 0
+    case completed = 1
+    case affected = 2
+    case pending = 3
+    case faulted = 4
+}
+
+public enum MTLFunctionLogType: UInt, Equatable, Hashable, Sendable {
+    case validation = 0
+}
+
+public enum MTLIOCompressionStatus: Int, Equatable, Hashable, Sendable {
+    case complete = 0
+    case error = 1
+}
+
+public enum MTLLogStateError: UInt, Error, Equatable, Hashable, Sendable {
+    case invalid = 1
+    case invalidSize = 2
+}
