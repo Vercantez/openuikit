@@ -97,3 +97,64 @@ func weatherKitRoundTrip<T: Codable & Equatable>(_ value: T) {
 func testWeatherKitFixtureHelpersExist() {
     precondition(weatherKitMetadata().latitude == 37.3349)
 }
+
+func weatherKitIntForecast(_ values: [Int] = [3, 1, 4, 1, 5, 9, 2]) -> Forecast<Int> {
+    Forecast(forecast: values, metadata: weatherKitMetadata())
+}
+
+func weatherKitStringForecast(_ values: [String] = ["rain", "snow", "rain"]) -> Forecast<String> {
+    Forecast(forecast: values, metadata: weatherKitMetadata())
+}
+
+func weatherKitNestedForecast() -> Forecast<[Int]> {
+    Forecast(forecast: [[1, 2], [3], [4, 5]], metadata: weatherKitMetadata())
+}
+
+func weatherKitIntDays(_ values: [Int] = [3, 1, 4, 1, 5, 9, 2]) -> DailyWeatherStatistics<Int> {
+    DailyWeatherStatistics(days: values, baselineStartDate: weatherKitDate(), metadata: weatherKitMetadata())
+}
+
+func weatherKitIntHours(_ values: [Int] = [3, 1, 4, 1, 5, 9, 2]) -> HourlyWeatherStatistics<Int> {
+    HourlyWeatherStatistics(hours: values, baselineStartDate: weatherKitDate(), metadata: weatherKitMetadata())
+}
+
+func weatherKitIntMonths(_ values: [Int] = [3, 1, 4, 1, 5, 9, 2]) -> MonthlyWeatherStatistics<Int> {
+    MonthlyWeatherStatistics(months: values, baselineStartDate: weatherKitDate(), metadata: weatherKitMetadata())
+}
+
+func weatherKitIntSummary(_ values: [Int] = [3, 1, 4, 1, 5, 9, 2]) -> DailyWeatherSummary<Int> {
+    DailyWeatherSummary(days: values, metadata: weatherKitMetadata())
+}
+
+func weatherKitSampleChange(_ temperature: WeatherChange.Direction = .increase) -> WeatherChange {
+    WeatherChange(
+        date: weatherKitDate(),
+        lowTemperature: temperature,
+        highTemperature: .steady,
+        dayPrecipitationAmount: .decrease,
+        nightPrecipitationAmount: .steady
+    )
+}
+
+func weatherKitChangeCollection() -> WeatherChanges {
+    WeatherChanges(
+        changes: [weatherKitSampleChange(.increase), weatherKitSampleChange(.decrease), weatherKitSampleChange(.steady)],
+        metadata: weatherKitMetadata()
+    )
+}
+
+func weatherKitComparisonCollection() -> HistoricalComparisons {
+    let baseline = TrendBaseline(
+        kind: .mean,
+        value: weatherKitTemperature(15),
+        startDate: weatherKitDate()
+    )
+    let high = HistoricalComparison.highTemperature(
+        Trend(currentValue: weatherKitTemperature(18), baseline: baseline, deviation: .higher)
+    )
+    let low = HistoricalComparison.lowTemperature(
+        Trend(currentValue: weatherKitTemperature(10), baseline: baseline, deviation: .lower)
+    )
+    return HistoricalComparisons(comparisons: [high, low, high], metadata: weatherKitMetadata())
+}
+

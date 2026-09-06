@@ -24,6 +24,12 @@ where Element: Decodable, Element: Encodable, Element: Equatable, Element: Senda
 
     public func index(after i: Index) -> Index { forecast.index(after: i) }
     public func index(before i: Index) -> Index { forecast.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<Element>) throws -> R
+    ) rethrows -> R? {
+        try forecast.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public struct DailyWeatherStatistics<T>: RandomAccessCollection, Equatable, Codable, Sendable
@@ -49,6 +55,12 @@ where T: Decodable, T: Encodable, T: Equatable, T: Sendable {
     public subscript(position: Index) -> T { days[position] }
     public func index(after i: Index) -> Index { days.index(after: i) }
     public func index(before i: Index) -> Index { days.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<T>) throws -> R
+    ) rethrows -> R? {
+        try days.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public struct HourlyWeatherStatistics<T>: RandomAccessCollection, Equatable, Codable, Sendable
@@ -74,6 +86,12 @@ where T: Decodable, T: Encodable, T: Equatable, T: Sendable {
     public subscript(position: Index) -> T { hours[position] }
     public func index(after i: Index) -> Index { hours.index(after: i) }
     public func index(before i: Index) -> Index { hours.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<T>) throws -> R
+    ) rethrows -> R? {
+        try hours.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public struct MonthlyWeatherStatistics<T>: RandomAccessCollection, Equatable, Codable, Sendable
@@ -99,6 +117,12 @@ where T: Decodable, T: Encodable, T: Equatable, T: Sendable {
     public subscript(position: Index) -> T { months[position] }
     public func index(after i: Index) -> Index { months.index(after: i) }
     public func index(before i: Index) -> Index { months.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<T>) throws -> R
+    ) rethrows -> R? {
+        try months.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public struct DailyWeatherSummary<T>: RandomAccessCollection, Equatable, Codable, Sendable
@@ -122,6 +146,12 @@ where T: Decodable, T: Encodable, T: Equatable, T: Sendable {
     public subscript(position: Index) -> T { days[position] }
     public func index(after i: Index) -> Index { days.index(after: i) }
     public func index(before i: Index) -> Index { days.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<T>) throws -> R
+    ) rethrows -> R? {
+        try days.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public struct WeatherChange: Equatable, Codable, Sendable {
@@ -173,6 +203,12 @@ public struct WeatherChanges: RandomAccessCollection, Equatable, Codable, Sendab
     public subscript(position: Index) -> WeatherChange { changes[position] }
     public func index(after i: Index) -> Index { changes.index(after: i) }
     public func index(before i: Index) -> Index { changes.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<WeatherChange>) throws -> R
+    ) rethrows -> R? {
+        try changes.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public enum HistoricalComparison: Equatable, Codable, Sendable {
@@ -202,6 +238,12 @@ public struct HistoricalComparisons: RandomAccessCollection, Equatable, Codable,
     public subscript(position: Index) -> HistoricalComparison { comparisons[position] }
     public func index(after i: Index) -> Index { comparisons.index(after: i) }
     public func index(before i: Index) -> Index { comparisons.index(before: i) }
+
+    public func withContiguousStorageIfAvailable<R>(
+        _ body: (UnsafeBufferPointer<HistoricalComparison>) throws -> R
+    ) rethrows -> R? {
+        try comparisons.withContiguousStorageIfAvailable(body)
+    }
 }
 
 public struct DayTemperatureSummary: Equatable, Codable, Sendable {
