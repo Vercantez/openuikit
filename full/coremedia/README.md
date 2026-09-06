@@ -20,17 +20,24 @@ This directory is a clean-room Linux implementation of Apple's public
   returns `kCMClockError_UnsupportedOperation`. Timers throw
   `kCMTimebaseError_TimerIntervalTooShort`.
 - `CMBlockBuffer` owned-byte copy-in/copy-out, fill/replace/append,
+  custom `AllocateBlock`/`FreeBlock` (copy-in then free),
   `AccessDataBytes` (prefers an interior cache pointer), and
   `GetDataPointer` into a contiguous cache invalidated on mutation.
 - `CMSampleBuffer` create/ready/copy/timing/size/attachments/invalidate,
-  per-sample attachment dictionaries, data-failed status, and
-  same-thread data-readiness tracking. Image-buffer and AudioBufferList
-  entry points stay deferred until CoreVideo/CoreAudioTypes are present.
+  per-sample attachment dictionaries, data-failed status,
+  `MakeDataReady` callback invocation, and same-thread data-readiness
+  tracking. Image-buffer and AudioBufferList entry points stay deferred
+  until CoreVideo/CoreAudioTypes are present.
 - `CMFormatDescription` media type/subtype, video dimensions, extensions,
-  clean aperture / presentation dimensions, text/timecode getters, and
-  metadata identifier arrays. Audio `AudioStreamBasicDescription`
-  bridging is compiled only when `CoreAudioTypes` is imported
+  clean aperture / presentation dimensions, text/timecode getters,
+  metadata identifier arrays, `CMAudioFormatDescriptionEqual` /
+  `CreateSummary` / `GetMagicCookie` (cookie is nil until an ASBD create
+  path supplies bytes). Audio `AudioStreamBasicDescription` bridging is
+  compiled only when `CoreAudioTypes` is imported
   (`CMDependencyBridges.swift`); the isolated host does not claim it.
+- `CMMemoryPool` wrapping `kCFAllocatorDefault` (AgeOutPeriod stored,
+  no slab cache). `CMPackingType` / `CMProjectionType` FourCCs and
+  stereo-view option sets.
 - `CMSimpleQueue` and `CMBufferQueue` (unsorted and PTS-sorted sample
   buffers, duration/size/PTS getters, end-of-data, validation, and
   rising-edge triggers). `CMBufferQueueCreateWithHandlers` fails closed:
@@ -52,8 +59,9 @@ color/matrix, sample attachments, metadata key spaces).
 
 - Invalid timescale, NaN seconds, mixed infinities, different epochs on add,
   empty/malformed buffer offsets, and invalidated sample buffers fail closed.
-- Big-endian sample-description bridges and H.264/HEVC parameter-set
-  parsers return `kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor`
+- Big-endian sample-description bridges, `CMSwap*` endian helpers, and
+  H.264/HEVC parameter-set parsers return
+  `kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor`
   / `kCMFormatDescriptionError_InvalidParameter`: there is no QuickTime
   decoder on this isolated Linux gate. SoundDescription CBR layout is never
   required (`CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout`
@@ -67,8 +75,8 @@ color/matrix, sample attachments, metadata key spaces).
 
 ## Deferred
 
-- `CMMemoryPool`, `CMTag`, `CMReadySampleBuffer`, stereo/packing, and
-  tagged-buffer types.
+- `CMTag`, `CMReadySampleBuffer`, tagged-buffer groups, and packing
+  attached to sample buffers (the packing/projection *enums* are implemented).
 - APIs that require `AudioStreamBasicDescription` / `CVImageBuffer` until
   the central build supplies CoreAudioTypes and CoreVideo.
 - Remaining Swift overlay Collection/camera-calibration helpers on
@@ -109,4 +117,31 @@ Top-5 `implemented` evidence distribution after this repair:
 
 No non-constant test owns more than 40% of the remaining implemented rows.
 SwiftUI cross-import overlay IDs are not in this module's public surface.
-Audio ASBD / CVImageBuffer / MemoryPool / Tag / packing remain deferred.
+
+This run (third pass, starting commit `bff8535c`) keeps the wave-8 surface and adds
+honest Linux behavior for attachments, memory pool, packing/projection/stereo
+enums, audio format equal/summary/magic-cookie (nil until ASBD Create),
+MakeDataReady callbacks, custom block allocators, and fail-closed endian /
+H.264 / HEVC / timebase-dispatch / audio-clock APIs.
+
+| status | before (this seed) | after |
+| --- | ---: | ---: |
+| implemented | 737 | 932 |
+| declared | 1600 | 1508 |
+| deferred | 1167 | 1064 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMKeyStringTests.swift#testCMFormatDescriptionExtensionKeyStrings` — 46 (4.9%)
+2. `CMAudioFormatAndConstantTests.swift#testCMMPEG2VideoProfileFourCCConstants` — 37 (4.0%)
+3. `CMKeyStringTests.swift#testCMSampleAttachmentKeyStrings` — 34 (3.6%)
+4. `CMQueueTests.swift#testCMBufferQueueErrorAndTriggerConstants` — 33 (3.5%)
+5. `CMAudioFormatAndConstantTests.swift#testCMSampleBufferAndFormatBridgeErrorConstants` — 33 (3.5%)
+
+No non-constant test owns more than 40% of implemented rows. Audio
+`AudioStreamBasicDescription` create/getters, `CVImageBuffer` sample-buffer
+entry points, `CMTag`, and stereo-tagged buffer groups remain deferred. `CMMemoryPool`
+is a default-allocator wrapper (no slab cache). Endian sample-description
+bridges and bitstream parsers stay fail-closed.
