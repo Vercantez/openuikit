@@ -79,8 +79,13 @@ final class UITextViewCanvasView: UIView {
 /// Gating members that really gate here:
 ///   - `textViewShouldBeginEditing` / `textViewShouldEndEditing`
 ///   - `textView(_:shouldChangeTextIn:replacementText:)`
-/// `textView(_:shouldInteractWith:in:interaction:)` is NOT declared: it takes
-/// `NSTextAttachment` / `URL`, neither of which exists off Foundation here.
+///   - `textView(_:shouldInteractWith:in:interaction:)` (NSTextAttachment)
+public enum UITextItemInteraction: Int, Sendable {
+    case invokeDefaultAction = 0
+    case presentActions = 1
+    case preview = 2
+}
+
 @preconcurrency @MainActor
 public protocol UITextViewDelegate: UIScrollViewDelegate {
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool
@@ -91,6 +96,8 @@ public protocol UITextViewDelegate: UIScrollViewDelegate {
                   replacementText text: String) -> Bool
     func textViewDidChange(_ textView: UITextView)
     func textViewDidChangeSelection(_ textView: UITextView)
+    func textView(_ textView: UITextView, shouldInteractWith attachment: NSTextAttachment,
+                  in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool
 }
 
 public extension UITextViewDelegate {
@@ -102,6 +109,8 @@ public extension UITextViewDelegate {
                   replacementText text: String) -> Bool { true }
     func textViewDidChange(_ textView: UITextView) {}
     func textViewDidChangeSelection(_ textView: UITextView) {}
+    func textView(_ textView: UITextView, shouldInteractWith attachment: NSTextAttachment,
+                  in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool { true }
 }
 
 @preconcurrency @MainActor
@@ -162,7 +171,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             _attributed = newValue
             // Assign through the storage directly (the `text` observer would
             // clear `_attributed` again).
-            _textStorage = s
+            _plainBacking = s
             if caretOffset > UITextCaretMath.scalarCount(s) {
                 caretOffset = UITextCaretMath.scalarCount(s)
             }
@@ -171,7 +180,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     }
     var _attributed: NSAttributedString?
     /// Write-through to `text` without tripping its didSet.
-    private var _textStorage: String {
+    private var _plainBacking: String {
         get { text }
         set {
             let saved = _attributed
@@ -201,6 +210,13 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
 
     public static let lineFragmentPadding: CGFloat = 5
 
+    /// TextKit-1 stack. The three objects are the real ones; `attributedText`
+    /// / `text` write through `textStorage`. MEASURED attach_probe UITextView
+    /// path 7: lineFragmentPadding 5, inset (8, 0, 8, 0).
+    public let textStorage = NSTextStorage()
+    public let layoutManager = NSLayoutManager()
+    public let textContainer = NSTextContainer(size: CGSize(width: 0, height: 0))
+
     var effectiveFont: UIFont { font ?? .systemFont(ofSize: 12) }
     var lineHeight: CGFloat { FontEngine.metrics(for: effectiveFont).lineHeight }
 
@@ -229,11 +245,35 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         backgroundColor = .systemBackground
         contentView.owner = self
         addSubview(contentView)
+        textContainer.lineFragmentPadding = UITextView.lineFragmentPadding
+        textContainer.widthTracksTextView = true
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        textStorage.delegate = self
     }
 
     func contentDidChange() {
+        syncTextKitStorage()
         contentView.setNeedsDisplay()
         setNeedsLayout()
+    }
+
+    private var suppressingStorage = false
+    private var attachmentProviders: [Int: NSTextAttachmentViewProvider] = [:]
+
+    private func syncTextKitStorage() {
+        if suppressingStorage { return }
+        suppressingStorage = true
+        let s: NSAttributedString
+        if let a = _attributed {
+            s = a
+        } else {
+            s = NSAttributedString(string: text ?? "",
+                                   attributes: [.font: effectiveFont,
+                                                .foregroundColor: textColor])
+        }
+        textStorage.setAttributedString(s)
+        suppressingStorage = false
     }
 
     // MARK: Line layout
@@ -290,6 +330,10 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
         let h = contentHeight
         contentView.frame = CGRect(x: 0, y: 0, width: bounds.width, height: h)
         contentSize = CGSize(width: bounds.width, height: h)
+        if textContainer.widthTracksTextView {
+            textContainer.size = CGSize(width: bounds.width, height: Swift.max(h, bounds.height))
+        }
+        layoutAttachmentViews()
         layoutCaret()
     }
 
@@ -310,11 +354,17 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             let x = textContainerInset.left + UITextView.lineFragmentPadding
             let box = CGRect(x: x, y: textContainerInset.top,
                              width: Swift.max(0, wrapWidth), height: h)
+            // Image attachments paint here only when no hosted view covers
+            // them. UITextView hosts a UIImageView for `usesTextAttachmentView`
+            // (MEASURED attach_probe UITextView path 7: a view sits on the
+            // 24×24 box). Passing false avoids a double-draw of the same
+            // pixels.
             AttributedTextLayout.draw(t, lines: lines,
                                       in: AttributedTextLayout.DrawContext(
                                         canvas: canvas, traits: traitCollection,
                                         bounds: box,
-                                        alignment: t.paragraph.alignment))
+                                        alignment: t.paragraph.alignment,
+                                        drawAttachments: false))
             return
         }
         guard !text.isEmpty else { return }
@@ -565,5 +615,97 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
             off.y = Swift.max(0, r.minY - textContainerInset.top)
         }
         if off != contentOffset { contentOffset = off }
+    }
+
+    /// Host a view for each `usesTextAttachmentView` attachment. Image
+    /// attachments still paint through AttributedTextLayout (the pixel
+    /// oracle); a hosted UIImageView sits on the same box so app code that
+    /// walks subviews finds a view. MEASURED attach_probe UITextView path 7:
+    /// 24×24 box at (16.023, 8) in view space (padding 5 + "A" + inset 8).
+    func layoutAttachmentViews() {
+        guard let t = attributedLayoutText else {
+            for p in attachmentProviders.values { p.view?.removeFromSuperview() }
+            attachmentProviders.removeAll()
+            return
+        }
+        let lines = AttributedTextLayout.wrap(t, maxWidth: wrapWidth, maxLines: 0,
+                                              scale: traitCollection.displayScale)
+        let originX = textContainerInset.left + UITextView.lineFragmentPadding
+        var boxTop = textContainerInset.top
+        var seen: Set<Int> = []
+        var scalar = 0
+        for line in lines {
+            var x = originX + line.indent
+            var i = line.range.lowerBound
+            while i < line.range.upperBound {
+                let st = t.style(i)
+                let adv = AttributedTextLayout.advance(t, i)
+                if let att = st.attachment, att.usesTextAttachmentView {
+                    let b = att.attachmentBounds(
+                        for: textContainer,
+                        proposedLineFragment: CGRect(x: 0, y: 0, width: 0, height: 0),
+                        glyphPosition: CGPoint(x: 0, y: 0),
+                        characterIndex: i)
+                    let baselineY = boxTop + line.ascent
+                    let imgY = baselineY - (b.origin.y + b.height)
+                    let pad = att.lineLayoutPadding
+                    let imgX = x + pad + b.origin.x
+                    let imgW = Swift.max(0, b.width - 2 * pad)
+                    let rect = CGRect(x: imgX, y: imgY, width: imgW, height: b.height)
+                    var provider = attachmentProviders[i]
+                    if provider == nil {
+                        let cls: NSTextAttachmentViewProvider.Type
+                        if let ft = att.fileType,
+                           let registered = NSTextAttachment.textAttachmentViewProviderClass(forFileType: ft) {
+                            cls = registered
+                        } else {
+                            cls = NSTextAttachmentViewProvider.self
+                        }
+                        let p = cls.init(textAttachment: att, parentView: contentView,
+                                         textLayoutManager: nil, location: i)
+                        p.loadView()
+                        if let v = p.view {
+                            v.isUserInteractionEnabled = false
+                            contentView.addSubview(v)
+                        }
+                        attachmentProviders[i] = p
+                        provider = p
+                    }
+                    provider?.view?.frame = rect
+                    seen.insert(i)
+                }
+                x += adv
+                if i + 1 < line.range.upperBound {
+                    x += AttributedTextLayout.kerning(t, i)
+                }
+                i += 1
+                scalar += 1
+            }
+            boxTop += line.height + line.spacingBelow
+        }
+        _ = scalar
+        for (idx, p) in attachmentProviders {
+            if !seen.contains(idx) {
+                p.view?.removeFromSuperview()
+                attachmentProviders.removeValue(forKey: idx)
+            }
+        }
+    }
+}
+
+extension UITextView: NSTextStorageDelegate {
+    public func textStorage(_ textStorage: NSTextStorage,
+                            didProcessEditing editedMask: NSTextStorage.EditActions,
+                            range editedRange: NSRange,
+                            changeInLength delta: Int) {
+        if suppressingStorage { return }
+        suppressingStorage = true
+        _attributed = NSAttributedString(attributedString: textStorage)
+        let saved = _attributed
+        text = textStorage.string
+        _attributed = saved
+        suppressingStorage = false
+        contentView.setNeedsDisplay()
+        setNeedsLayout()
     }
 }
