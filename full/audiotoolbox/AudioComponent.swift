@@ -398,4 +398,11 @@ public struct AudioComponentPlugInInterface {
         self.Lookup = Lookup
         self.reserved = reserved
     }
+
+    public init() {
+        Open = nil
+        Close = nil
+        Lookup = nil
+        reserved = nil
+    }
 }

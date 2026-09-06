@@ -249,3 +249,54 @@ FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
 
 See `oracle-questions.tsv`. New items this pass: 3D mixer HeadYaw/decibel aliases, `AUParameterAutomationEvent` reserved/hostTime layout, and `AudioUnitProcess` versus `AudioUnitRender` pull semantics.
 
+## Depth pass 2026-09 (wave 11)
+
+Fifth SDK-depth pass on the wave-10 tree (keep existing tests green; do not rewrite). HEAD at start was `39dc25a2769fb88a50f0853964137a4f96d50322`. `.cursor/verify-cloud-environment.sh` still fails because `scratch/ladder-corpus/focus-ios` is absent; `swiftc` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`. Active Cursor Build on this pod is `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (seed expected `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed gate is the authority for `FRAMEWORK_FANOUT_HOST_OK`.
+
+### Coverage before / after
+
+| status | after wave 10 | after wave 11 |
+| --- | ---: | ---: |
+| implemented | 2619 | 2906 |
+| declared | 90 | 63 |
+| deferred | 524 | 264 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in this census. Remaining `unavailable` is `AUMIDICIProfileChangedBlock` (MIDI CI daemon / CoreMIDI).
+
+### Top-5 implemented evidence distribution (after)
+
+1. `testEnumHashableInequalityCatalog` — 200 rows (6.9%) — table-driven enum `!=` / `hash(into:)` / `init(rawValue:)`
+2. `testOptionSetAlgebraAudioUnitAndQueue` — 200 (6.9%) — table-driven OptionSet algebra
+3. `testOptionSetAlgebraNewMixerFlags` — 168 (5.8%) — mixer/transport/slice flags
+4. `testOptionSetAlgebraAudioFileFamily` — 163 (5.6%) — AudioFile/CAF OptionSet algebra
+5. `testAudioToolboxConstantCatalog` — 146 (5.0%) — table-driven k…/err… payloads
+
+No non-table test exceeds 40% of implemented rows. Wave-11 family tests each cite only the identifiers they exercise.
+
+### Public surface added this pass
+
+- **Parameter ID aliases.** `k3DMixerParam_BusEnable` / `*InDecibels` aliases of Enable/gain/reverb/occlusion; `kNewTimePitchParam_Smoothness` / `EnableSpectralCoherence` aliases plus `EnableTransientPreservation=7`; dynamic-range / program-target / sound-isolation constants.
+- **Overlays.** `AudioUnitParameterInfo` (52-byte name), `ScheduledAudioSlice` / `ScheduledAudioFileRegion`, `AUMIDIEvent` / `AUParameterEvent` / `AURenderEventHeader` / `AURenderEvent`, `AudioFileRegion` + `NextAudioFileRegion`, `AudioPanningInfo`, flattened `AudioUnitParameterEvent`, `HostCallbackInfo`, packet translations, queue meter/assignment/parameter events, node connections, ducking/start-at-time/MIDI callback structs, `ExtendedNoteOnEvent`.
+- **Runtime.** `AudioUnitScheduleParameters` applies immediate values and ramp end-values onto mixer parameters; `AudioQueueEnqueueBufferWithParameters` stores start/end trim and optional volume events; `AudioQueueOfflineRender` copies trimmed PCM sample-exactly (silence when the queue is empty).
+- **AUAudioUnit v3.** `AUAudioUnitStatus`, `registerSubclass` (stored, does not publish plugins), `presetState(for:)` fail-closed, `AUAudioUnitV2Bridge` wrapping a v2 software instance. RemoteIO still fail-closes. MIDI CI / `MIDIEventList` / `AVAudioFormat` remain deferred or unavailable.
+
+### Fail-closed boundaries (wave 11)
+
+- No hardware I/O, system-sound server, RemoteIO / VoiceProcessingIO render, processing taps, or AudioQueue device clocks.
+- MIDI CI remains unavailable. Compressed codec objects never initialize.
+- `registerSubclass` does not add components to `AudioComponentFindNext`.
+- `AudioStreamBasicDescription` / `AudioBufferList` / `AudioTimeStamp` / `AudioChannelLayout` names stay in CoreAudioTypes. Isolated calls take 40-byte ASBD blobs, buffer-list overlays, and 64-byte timestamp slots.
+- Unknown refs and double-dispose stay crash-safe.
+
+### Tests and gate
+
+- Agent tests: previous waves plus `AudioToolboxWave6Tests.swift`.
+- Only host script under `tests/`: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Marker output is filled after the sealed run.
+
+### Unresolved behavioral questions
+
+See `oracle-questions.tsv`. New items this pass: 3D-mixer BusEnable alias versus bindgen IDs 20–26, DRC GeneralCompression 6 versus sequential 4, `AudioUnitParameterEvent` unnamed-union layout, `ScheduledAudioSlice` timestamp packing, and `AURenderEvent` C-union size with `MIDIEventList`.
+
+

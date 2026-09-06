@@ -4,6 +4,7 @@ full/audiotoolbox/AudioCodec.swift
 full/audiotoolbox/AudioComponent.swift
 full/audiotoolbox/AudioConverter.swift
 full/audiotoolbox/AudioConverterProperties.swift
+full/audiotoolbox/AudioToolboxDepthOverlays.swift
 full/audiotoolbox/AudioFile.swift
 full/audiotoolbox/AudioFileProperties.swift
 full/audiotoolbox/AudioFileStream.swift
