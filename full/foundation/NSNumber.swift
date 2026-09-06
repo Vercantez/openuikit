@@ -58,6 +58,18 @@ open class NSNumber: NSObject, CustomStringConvertible,
         self.init(storage: .decimal(value))
     }
 
+    /// Copy the scalar representation held by this guest NSNumber. The caller
+    /// owns a buffer large enough for that representation, as with Foundation.
+    open func getValue(_ destination: UnsafeMutableRawPointer) {
+        switch storage {
+        case .boolean(let value): destination.storeBytes(of: value, as: Bool.self)
+        case .signed(let value): destination.storeBytes(of: value, as: Int64.self)
+        case .unsigned(let value): destination.storeBytes(of: value, as: UInt64.self)
+        case .floating(let value): destination.storeBytes(of: value, as: Double.self)
+        case .decimal: destination.storeBytes(of: doubleValue, as: Double.self)
+        }
+    }
+
     open var boolValue: Bool {
         switch storage {
         case .boolean(let value): value

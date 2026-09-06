@@ -73,6 +73,11 @@ public protocol UIContentContainer: AnyObject {
 
 @preconcurrency @MainActor
 open class UIViewController: UIResponder, UIContentContainer {
+#if !canImport(Foundation)
+    open func observeValue(forKeyPath keyPath: String?, of object: Any?,
+                           change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {}
+#endif
+
     private let _nibName: String?
     private let _nibBundle: Bundle
     private let _hasExplicitNibRequest: Bool

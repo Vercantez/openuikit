@@ -1,4 +1,6 @@
-#if os(Linux)
+// Guest Foundation uses the same explicit encoding bridge as corelibs.
+// MEASURED focus-guest-linux: Fuzi emits a 250840-byte guest object.
+#if os(Linux) || OPENUIKIT_GUEST
 import Foundation
 
 // Linux corelibs Foundation does not vend these CoreFoundation encoding

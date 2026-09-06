@@ -399,3 +399,16 @@ private func _foundationGuestStringRange(
           let upper = String.Index(upperUTF16, within: string) else { return nil }
     return lower..<upper
 }
+
+#if !FOUNDATION_GUEST_SERVICES_HOST
+/// Link-only detector for the guest URL-entry boundary. Unsupported detector
+/// kinds are rejected, so phone/address detection is never reported as present.
+public final class NSDataDetector: NSRegularExpression, @unchecked Sendable {
+    public init(types: UInt64) throws {
+        guard types == NSTextCheckingResult.CheckingType.link.rawValue else {
+            throw NSError(domain: NSCocoaErrorDomain, code: 2048)
+        }
+        try super.init(pattern: #"(?i)(?:https?://|www\.)[^\s<>]+|(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}(?:/[^\s<>]*)?"#)
+    }
+}
+#endif

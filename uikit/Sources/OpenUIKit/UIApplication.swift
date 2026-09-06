@@ -287,12 +287,10 @@ open class UIMutableApplicationShortcutItem: UIApplicationShortcutItem {
 #endif
 }
 
-#if canImport(Foundation)
 @preconcurrency @MainActor
 public protocol UIUserActivityRestoring: AnyObject {
     func restoreUserActivityState(_ userActivity: NSUserActivity)
 }
-#endif
 
 // MARK: - UIApplicationDelegate
 

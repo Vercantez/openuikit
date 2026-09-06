@@ -15,6 +15,9 @@ extern void host_release_queue(void *)
 extern void host_async(
     uint32_t, void *, void *, openui_dispatch_callback_v1
 ) __asm__("_glibc_openui_dispatch_host_v1_async");
+extern void host_sync(
+    uint32_t, void *, void *, openui_dispatch_callback_v1
+) __asm__("_glibc_openui_dispatch_host_v1_sync");
 extern void host_after(
     uint32_t, void *, uint64_t, void *, openui_dispatch_callback_v1
 ) __asm__("_glibc_openui_dispatch_host_v1_after");
@@ -71,6 +74,15 @@ void openui_dispatch_v1_async(
 )
 {
     host_async(queue_kind, queue, context, callback);
+}
+void openui_dispatch_v1_sync(
+    uint32_t queue_kind,
+    void *queue,
+    void *context,
+    openui_dispatch_callback_v1 callback
+)
+{
+    host_sync(queue_kind, queue, context, callback);
 }
 
 void openui_dispatch_v1_after(
