@@ -311,4 +311,26 @@ var sliceRead = [UInt8](repeating: 0, count: 10)
 sliceRead.withUnsafeMutableBytes { reshapedImage.readBytes($0.baseAddress!, dataLayout: .HeightxWidthxFeatureChannels, imageIndex: 0) }
 precondition(sliceRead == sliceValues && reshapedImage.height == 5)
 
+// Exact two-item batch selection also runs through the sealed runtime.
+let binaryBatchDescriptor = MPSMatrixDescriptor(rows: 1, columns: 2, matrices: 2,
+    rowBytes: 16, matrixBytes: 32, dataType: .float32)
+let binaryGradient = MPSMatrix(device: device, descriptor: binaryBatchDescriptor)
+let binaryForward = MPSMatrix(device: device, descriptor: binaryBatchDescriptor)
+let binaryResult = MPSMatrix(device: device, descriptor: binaryBatchDescriptor)
+let binaryG = binaryGradient.data.contents.bindMemory(to: Float.self, capacity: 16)
+let binaryY = binaryForward.data.contents.bindMemory(to: Float.self, capacity: 16)
+let binaryDX = binaryResult.data.contents.bindMemory(to: Float.self, capacity: 16)
+for i in 0..<16 { binaryDX[i] = -999 }
+binaryG[8] = 2; binaryG[9] = 6; binaryY[8] = 0.25; binaryY[9] = 0.75
+let binarySoftmax = MPSMatrixSoftMaxGradient(device: device)
+let binaryConfiguration: MPSMatrixBinaryKernel = binarySoftmax
+binaryConfiguration.batchStart = 1; binaryConfiguration.batchSize = 1
+MPSHostBoundary.reset()
+binarySoftmax.encode(to: commandBuffer, gradientMatrix: binaryGradient,
+    forwardOutputMatrix: binaryForward, resultMatrix: binaryResult)
+for i in 0..<16 {
+    precondition(binaryDX[i] == (i == 8 ? -0.75 : i == 9 ? 0.75 : -999))
+}
+precondition(MPSHostBoundary.lastRefusedAPI == nil)
+
 print("METALPERFORMANCESHADERS_AGENT_RUNTIME_OK")

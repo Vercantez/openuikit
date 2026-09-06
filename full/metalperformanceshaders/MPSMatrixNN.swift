@@ -656,7 +656,7 @@ open class MPSMatrixBatchNormalizationGradient: MPSKernel {
     }
 }
 
-open class MPSMatrixSoftMaxGradient: MPSKernel {
+open class MPSMatrixSoftMaxGradient: MPSMatrixBinaryKernel {
     public var sourceRows: Int = 0
     public var sourceColumns: Int = 0
 
@@ -672,6 +672,7 @@ open class MPSMatrixSoftMaxGradient: MPSKernel {
         let copied = MPSMatrixSoftMaxGradient(device: device ?? self.device)
         copied.options = options
         copied.label = label
+        copyBinaryConfiguration(to: copied)
         copied.sourceRows = sourceRows
         copied.sourceColumns = sourceColumns
         return copied as! Self
@@ -693,19 +694,37 @@ open class MPSMatrixSoftMaxGradient: MPSKernel {
         }
         let rows = sourceRows > 0 ? sourceRows : forwardOutputMatrix.rows
         let columns = sourceColumns > 0 ? sourceColumns : forwardOutputMatrix.columns
-        let g = mpsFloatBuffer(gradientMatrix.data, offset: gradientMatrix.offset)
-        let y = mpsFloatBuffer(forwardOutputMatrix.data, offset: forwardOutputMatrix.offset)
-        let dx = mpsFloatBuffer(resultMatrix.data, offset: resultMatrix.offset)
-        let ldg = max(gradientMatrix.rowBytes / 4, 1)
-        let ldy = max(forwardOutputMatrix.rowBytes / 4, 1)
-        let ldd = max(resultMatrix.rowBytes / 4, 1)
-        for row in 0..<rows {
-            var dot: Float = 0
-            for col in 0..<columns {
-                dot += y[row * ldy + col] * g[row * ldg + col]
-            }
-            for col in 0..<columns {
-                dx[row * ldd + col] = y[row * ldy + col] * (g[row * ldg + col] - dot)
+        let zero = MTLOrigin(x: 0, y: 0, z: 0)
+        guard hasHostOrigins, sourceRows >= 0, sourceColumns >= 0,
+              [gradientMatrix, forwardOutputMatrix, resultMatrix].allSatisfy({
+                  mpsHostMatrixRegionFits($0, rows: rows, columns: columns, origin: zero,
+                      batchStart: batchStart, batchSize: batchSize)
+              }), resultMatrix.data !== gradientMatrix.data,
+              resultMatrix.data !== forwardOutputMatrix.data
+        else {
+            MPSHostBoundary.refuseGPUEncode("MPSMatrixSoftMaxGradient.encode")
+            return
+        }
+        // BatchedCPUTests: y=[1/4,3/4], g=[2,6] gives [-3/4,3/4];
+        // y=[1/2,1/2], g=[8,-4] gives [3,-3], with independent matrix strides.
+        for batch in batchStart..<(batchStart + batchSize) {
+            let g = mpsFloatBuffer(gradientMatrix.data,
+                offset: gradientMatrix.offset + batch * gradientMatrix.matrixBytes)
+            let y = mpsFloatBuffer(forwardOutputMatrix.data,
+                offset: forwardOutputMatrix.offset + batch * forwardOutputMatrix.matrixBytes)
+            let dx = mpsFloatBuffer(resultMatrix.data,
+                offset: resultMatrix.offset + batch * resultMatrix.matrixBytes)
+            let ldg = max(gradientMatrix.rowBytes / 4, 1)
+            let ldy = max(forwardOutputMatrix.rowBytes / 4, 1)
+            let ldd = max(resultMatrix.rowBytes / 4, 1)
+            for row in 0..<rows {
+                var dot: Float = 0
+                for col in 0..<columns {
+                    dot += y[row * ldy + col] * g[row * ldg + col]
+                }
+                for col in 0..<columns {
+                    dx[row * ldd + col] = y[row * ldy + col] * (g[row * ldg + col] - dot)
+                }
             }
         }
     }
