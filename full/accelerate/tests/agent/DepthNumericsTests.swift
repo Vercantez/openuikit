@@ -197,13 +197,13 @@ func testCBLASDotGemvKnown() {
     precondition(abs(cblas_sdot(3, x, 1, y, 1) - 32) < 0.0001)
     let a: [Float] = [1, 0, 0, 1]
     var out: [Float] = [0, 0]
-    var xv: [Float] = [7, 8]
+    let xv: [Float] = [7, 8]
     cblas_sgemv(CblasColMajor, CblasNoTrans, 2, 2, 1, a, 2, xv, 1, 0, &out, 1)
     precondition(abs(out[0] - 7) < 0.0001)
     precondition(abs(out[1] - 8) < 0.0001)
     var rowOut: [Float] = [0, 0]
-    var rm: [Float] = [1, 2, 3, 4]
-    var rv: [Float] = [1, 1]
+    let rm: [Float] = [1, 2, 3, 4]
+    let rv: [Float] = [1, 1]
     cblas_sgemv(CblasRowMajor, CblasNoTrans, 2, 2, 1, rm, 2, rv, 1, 0, &rowOut, 1)
     precondition(abs(rowOut[0] - 3) < 0.0001)
     precondition(abs(rowOut[1] - 7) < 0.0001)
