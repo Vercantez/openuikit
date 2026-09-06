@@ -366,8 +366,9 @@ open class UITableView: UIScrollView {
         // inset-grouped which adds 20 (table_inset_nav header abs 40 =
         // card 20 + 20). Compact-height phone inset-grouped adds `iOSMargin`
         // (NavFlow t200.landscape "General" abs 40; Ledger t200.landscape
-        // header abs.x **40** = card 20 + 20, not 36). Portrait 393 keeps
-        // inner 16 so realapp_focus_settings_light "General" stays 36.
+        // header abs.x **40**; Notes t200.landscape All Notes abs.x **40**
+        // = card 20 + 20, not 36). Portrait 393 keeps inner 16 so
+        // realapp_focus_settings_light "General" stays 36.
         if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
         let inner: CGFloat
         if style == .insetGrouped, UITableView.isPadChrome {
