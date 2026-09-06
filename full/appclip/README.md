@@ -64,7 +64,15 @@ Top-5 implemented evidence distribution:
 `init(rawValue:)` value test. Every remaining implemented row cites its own
 focused test, well under the 40% bulk-relabel bound.
 
-The sealed host gate was run as `bash full/appclip/tests/acceptance/test_host.sh`.
+The sealed host gate was run as `bash full/appclip/tests/acceptance/test_host.sh`
+and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AppClip lane=leaf-full symbols=30
+FRAMEWORK_FANOUT_REFERENCE_OK
+APPCLIP_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AppClip dylib=libAppClip.dylib
+```
 
 `swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` does not print

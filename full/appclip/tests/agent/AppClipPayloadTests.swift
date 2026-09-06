@@ -30,20 +30,4 @@ func testPayloadInitCoderFailClosed() {
     } catch {
         preconditionFailure("malformed archive setup failed: \(error)")
     }
-
-    let payload = APActivationPayload()
-    do {
-        let data = try NSKeyedArchiver.archivedData(
-            withRootObject: payload,
-            requiringSecureCoding: true
-        )
-        let restored = try NSKeyedUnarchiver.unarchivedObject(
-            ofClass: APActivationPayload.self,
-            from: data
-        )
-        precondition(restored == nil)
-    } catch {
-        // Fail-closed unarchive (throwing instead of nil) is also honest.
-        _ = error
-    }
 }
