@@ -173,3 +173,109 @@ extension AppIntentsHost {
 extension ForegroundContinuableIntent {
     public static var authenticationPolicy: IntentAuthenticationPolicy { .alwaysAllowed }
 }
+
+extension IntentParameter where Value == Date {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Date? = nil,
+        kind: DateKind = .dateTime,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+        storedDateKind = kind
+    }
+}
+
+extension IntentParameter where Value == Bool {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Bool? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+    }
+}
+
+extension IntentParameter where Value == URL {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: URL? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+    }
+}
+
+extension IntentParameter where Value == IntentFile {
+    public convenience init(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: IntentFile? = nil,
+        supportedContentTypes: [IntentFileContentType] = [],
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: appIntentsString(title),
+            description: description.map { appIntentsString($0) },
+            requestValueDialog: requestValueDialog,
+            supportedContentTypes: supportedContentTypes,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        self.defaultValue = defaultValue
+    }
+}
+
+/// Process-local Progress values for ProgressReportingIntent. Linux has no
+/// system progress UI; completedUnitCount is host-owned.
+public enum ProgressReportingHost {
+    private static let lock = NSLock()
+    private static var values: [String: Progress] = [:]
+
+    public static func reset() {
+        lock.lock()
+        values.removeAll()
+        lock.unlock()
+    }
+
+    public static func progress(for typeName: String) -> Progress {
+        lock.lock()
+        defer { lock.unlock() }
+        if let existing = values[typeName] {
+            return existing
+        }
+        let created = Progress(totalUnitCount: 100)
+        values[typeName] = created
+        return created
+    }
+
+    public static func setCompleted(_ completed: Int64, for typeName: String) {
+        let progress = progress(for: typeName)
+        progress.completedUnitCount = completed
+    }
+}
+
