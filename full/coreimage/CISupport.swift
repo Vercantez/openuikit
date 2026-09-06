@@ -149,29 +149,47 @@ public class CIRAWFilter: CIFilter, @unchecked Sendable {
     public class var supportedCameraModels: [String] { [] }
 
     public var baselineExposure: Float = 0
-    public var boostAmount: Float = 0
-    public var boostShadowAmount: Float = 0
-    public var colorNoiseReductionAmount: Float = 0
+    public var boostAmount: Float = 0 {
+        didSet { if boostAmount != ciClampAmount(boostAmount) { boostAmount = ciClampAmount(boostAmount) } }
+    }
+    public var boostShadowAmount: Float = 0 {
+        didSet { if boostShadowAmount != ciClampAmount(boostShadowAmount) { boostShadowAmount = ciClampAmount(boostShadowAmount) } }
+    }
+    public var colorNoiseReductionAmount: Float = 0 {
+        didSet { if colorNoiseReductionAmount != ciClampAmount(colorNoiseReductionAmount) { colorNoiseReductionAmount = ciClampAmount(colorNoiseReductionAmount) } }
+    }
     public var isColorNoiseReductionSupported = false
-    public var contrastAmount: Float = 0
+    public var contrastAmount: Float = 0 {
+        didSet { if contrastAmount != ciClampAmount(contrastAmount) { contrastAmount = ciClampAmount(contrastAmount) } }
+    }
     public var isContrastSupported = false
     public var decoderVersion: CIRAWDecoderVersion = .none
-    public var detailAmount: Float = 0
+    public var detailAmount: Float = 0 {
+        didSet { if detailAmount != ciClampAmount(detailAmount) { detailAmount = ciClampAmount(detailAmount) } }
+    }
     public var isDetailSupported = false
     public var isDraftModeEnabled = false
     public var exposure: Float = 0
-    public var extendedDynamicRangeAmount: Float = 0
+    public var extendedDynamicRangeAmount: Float = 0 {
+        didSet { if extendedDynamicRangeAmount != ciClampAmount(extendedDynamicRangeAmount) { extendedDynamicRangeAmount = ciClampAmount(extendedDynamicRangeAmount) } }
+    }
     public var isGamutMappingEnabled = false
     public var isHighlightRecoveryEnabled = false
     public var isHighlightRecoverySupported = false
     public var isLensCorrectionEnabled = false
     public var isLensCorrectionSupported = false
     public var linearSpaceFilter: CIFilter?
-    public var localToneMapAmount: Float = 0
+    public var localToneMapAmount: Float = 0 {
+        didSet { if localToneMapAmount != ciClampAmount(localToneMapAmount) { localToneMapAmount = ciClampAmount(localToneMapAmount) } }
+    }
     public var isLocalToneMapSupported = false
-    public var luminanceNoiseReductionAmount: Float = 0
+    public var luminanceNoiseReductionAmount: Float = 0 {
+        didSet { if luminanceNoiseReductionAmount != ciClampAmount(luminanceNoiseReductionAmount) { luminanceNoiseReductionAmount = ciClampAmount(luminanceNoiseReductionAmount) } }
+    }
     public var isLuminanceNoiseReductionSupported = false
-    public var moireReductionAmount: Float = 0
+    public var moireReductionAmount: Float = 0 {
+        didSet { if moireReductionAmount != ciClampAmount(moireReductionAmount) { moireReductionAmount = ciClampAmount(moireReductionAmount) } }
+    }
     public var isMoireReductionSupported = false
     public var nativeSize: CGSize = .zero
     public var neutralChromaticity: CGPoint = .zero
@@ -182,14 +200,18 @@ public class CIRAWFilter: CIFilter, @unchecked Sendable {
     public var portraitEffectsMatte: CIImage?
     public var previewImage: CIImage?
     public var properties: [AnyHashable: Any] = [:]
-    public var scaleFactor: Float = 1
+    public var scaleFactor: Float = 1 {
+        didSet { if scaleFactor < 0 { scaleFactor = 0 } }
+    }
     public var semanticSegmentationGlassesMatte: CIImage?
     public var semanticSegmentationHairMatte: CIImage?
     public var semanticSegmentationSkinMatte: CIImage?
     public var semanticSegmentationSkyMatte: CIImage?
     public var semanticSegmentationTeethMatte: CIImage?
     public var shadowBias: Float = 0
-    public var sharpnessAmount: Float = 0
+    public var sharpnessAmount: Float = 0 {
+        didSet { if sharpnessAmount != ciClampAmount(sharpnessAmount) { sharpnessAmount = ciClampAmount(sharpnessAmount) } }
+    }
     public var isSharpnessSupported = false
     public var supportedDecoderVersions: [CIRAWDecoderVersion] { [] }
 
@@ -216,8 +238,12 @@ public class CIRAWFilter: CIFilter, @unchecked Sendable {
     }
 }
 
+func ciClampAmount(_ value: Float) -> Float {
+    min(1, max(0, value))
+}
+
 extension NSObject {
-    public func provideImageData(
+    @objc public func provideImageData(
         _ data: UnsafeMutableRawPointer,
         bytesPerRow rowbytes: Int,
         origin originx: Int,
