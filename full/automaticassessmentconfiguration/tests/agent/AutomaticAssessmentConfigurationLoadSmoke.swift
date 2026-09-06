@@ -1,0 +1,3 @@
+import AutomaticAssessmentConfiguration
+
+let frameworkLoadSmokeMarker = "AUTOMATICASSESSMENTCONFIGURATION_AGENT_RUNTIME_OK"
