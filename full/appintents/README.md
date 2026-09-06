@@ -21,19 +21,20 @@ the remaining `@Property` specializations the ledger called out
 (`EntityProperty` where `Value` is `URL` / `Date` / `DateComponents` /
 `AttributedString` / `Calendar.RecurrenceRule` / `IntentFile` /
 `IntentPerson` / `IntentPaymentMethod` / `IntentCurrencyAmount` /
-`AppEntity`), plus typed `@Parameter` inits for DateComponents (`kind`),
+`AppEntity` / `CLPlacemark`), plus typed `@Parameter` inits for DateComponents (`kind`),
 IntentCurrencyAmount (`currencyCodes` / Decimal `inclusiveRange`),
-IntentPerson (`parameterMode`), and IntentPaymentMethod. `asyncGetter`
-stays declared (no run loop). A sample `PropertyPayIntent` evaluates
-`hostResult()` from a stored currency amount.
+IntentPerson (`parameterMode`), IntentPaymentMethod, and CLPlacemark
+(`displayStyle`). `asyncGetter` stays declared (no run loop). Sample
+`PropertyPayIntent` / `Wave9PlaceIntent` evaluate `hostResult()` in-process.
 
-Coverage this round:
+Coverage this round (ledger at start of this increment, then after):
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 1234 | 2548 | 1216 | 0 | 1588 | 3782 |
-| After | 1526 | 2257 | 1215 | 0 | 1588 | 3783 |
+| Before | 1526 | 2257 | 1215 | 0 | 1588 | 3783 |
+| After | 1738 | 2052 | 1208 | 0 | 1588 | 3790 |
 
+Prior increment on this tree was 1234 / 2548 / 1216 → 1526 / 2257 / 1215.
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
 overlay re-exports (1,588 rows) are `not-applicable` with
 `SwiftUI cross-import overlay; owned by the SwiftUI lane`.
@@ -42,13 +43,13 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 53 | 3.5% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
-| 41 | 2.7% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
-| 37 | 2.4% | `AppIntentsMeasurementTests.swift#testIntentParameterVolumeUnitTable` |
-| 36 | 2.4% | `AppIntentsWaveTests.swift#testIntentPersonHandleLabelsAndParameterModes` |
-| 33 | 2.2% | `AppIntentsWaveTests.swift#testConfirmationActionNameCatalogTable` |
+| 53 | 3.0% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
+| 42 | 2.4% | `AppIntentsWave9Tests.swift#testIntentResultActionButtonAndSnippetFactories` |
+| 41 | 2.4% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
+| 37 | 2.1% | `AppIntentsMeasurementTests.swift#testIntentParameterVolumeUnitTable` |
+| 36 | 2.1% | `AppIntentsWaveTests.swift#testIntentPersonHandleLabelsAndParameterModes` |
 
-No test is cited by more than 3.5% of implemented rows (well under the
+No test is cited by more than 3.0% of implemented rows (well under the
 40% bulk-relabel line). New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
@@ -60,7 +61,7 @@ absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Active Cursor Build observed on this run was
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
-`6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
+`39dc25a2769fb88a50f0853964137a4f96d50322` matched.
 
 `bash full/appintents/tests/acceptance/test_host.sh` ended:
 
@@ -76,6 +77,30 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 `bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
 
 ### What this pass added
+
+- `@Property` (`EntityProperty`) `CLPlacemark` identifier / title /
+  KeyPath getter / getSetter / indexingKey / customIndexingKey inits
+  resolve from `EntityResolutionEngine.defaultResult`. `asyncGetter`
+  stays declared. Host-local `CLPlacemark` stores `name` / `locality` /
+  `thoroughfare`; there is no `CLGeocoder`.
+- `@Parameter` `CLPlacemark` stores `displayStyle` (`.name` / `.city` /
+  `.address`) on the wrapper and `IntentParameterContext`. Options
+  providers are attached and not consulted. Linux never formats a
+  Maps address card.
+- `EnumURLRepresentation` interpolates `${rawValue}` / per-case maps.
+  There is no system URL handler.
+- `ResolverSpecificationBuilder` concatenates `buildBlock` arities 0–15.
+  Concrete resolvers expose synchronous `hostResolve` (radix / rounding).
+  Protocol `resolve(from:context:)` stays async and is not waited on in
+  the sealed gate.
+- `IntentResult` / `IntentResultContainer` action-button, snippet-intent,
+  and `value:opensIntent:` factories store the payload. Overlay
+  `opensIntent` + `view` / `content` discards the `View` (fail-closed UI).
+  Empty `.result()` / `.result(dialog:)` stay on `IntentResultValue`.
+- `IntentFile.hostData` / `hostFile` read stored bytes or a path. Codable
+  round-trips `removedOnCompletion`. UTI daemons and security-scoped
+  bookmarks are unobserved; async `data` / `file` stay declared.
+- `Wave9PlaceIntent.hostResult()` returns the stored placemark name.
 
 - `@Property` (`EntityProperty`) specializations for `URL`, `Date`,
   `DateComponents`, `AttributedString`, `Calendar.RecurrenceRule`,
@@ -258,8 +283,14 @@ No implemented test is cited by more than 29 rows (9.7% of implemented).
   not security-scoped bookmarks.
 - `EntityProperty` URL / Date / DateComponents / AttributedString /
   RecurrenceRule / IntentFile / IntentPerson / IntentPaymentMethod /
-  IntentCurrencyAmount / AppEntity inits are process-local. Spotlight
+  IntentCurrencyAmount / AppEntity / CLPlacemark inits are process-local. Spotlight
   indexing keys are stored and never written to `CSSearchableIndex`.
+- `CLPlacemark` is a host-local name/locality/thoroughfare value. There is
+  no `CLGeocoder` or Maps address card. `displayStyle` is stored metadata.
+- `IntentFile.hostData` / `hostFile` do not consult a UTI daemon or
+  security-scoped bookmarks. Async `data` / `file` stay declared.
+- `result(opensIntent:view:)` / `content:` discard the `View`. Snippet
+  UI and action-button presentation are unobserved.
   `asyncGetter` is not invoked.
 - IntentCurrencyAmount `currencyCodes` is a stored string list. Linux
   does not validate ISO 4217 or format a locale amount.

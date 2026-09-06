@@ -193,15 +193,24 @@ public struct IntentResultContainer<ResultValue, OpensType, SnippetType, DialogT
     public var storedValue: ResultValue?
     public var dialog: IntentDialog?
     public var opensIntent: (any AppIntent)?
+    public var activityIdentifier: String?
+    public var actionButtonIntent: (any AppIntent)?
+    public var snippetIntent: (any AppIntent)?
 
     public init(
         value: ResultValue? = nil,
         dialog: IntentDialog? = nil,
-        opensIntent: (any AppIntent)? = nil
+        opensIntent: (any AppIntent)? = nil,
+        activityIdentifier: String? = nil,
+        actionButtonIntent: (any AppIntent)? = nil,
+        snippetIntent: (any AppIntent)? = nil
     ) {
         self.storedValue = value
         self.dialog = dialog
         self.opensIntent = opensIntent
+        self.activityIdentifier = activityIdentifier
+        self.actionButtonIntent = actionButtonIntent
+        self.snippetIntent = snippetIntent
     }
 
     public var value: ResultValue? { storedValue }
@@ -212,6 +221,179 @@ extension IntentResultContainer: ShowsSnippetView where SnippetType == _SnippetV
 extension IntentResultContainer: ShowsSnippetIntent where SnippetType == _SnippetIntentContainer {}
 extension IntentResultContainer: OpensIntent {}
 extension IntentResultContainer: ReturnsValue {}
+
+extension IntentResultContainer {
+    public static func result(
+        actionButtonIntent: some AppIntent
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == Never, DialogType == Never {
+        Self(actionButtonIntent: actionButtonIntent)
+    }
+
+    public static func result(
+        actionButtonIntent: some AppIntent,
+        dialog: IntentDialog
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == Never, DialogType == IntentDialog {
+        Self(dialog: dialog, actionButtonIntent: actionButtonIntent)
+    }
+
+    public static func result(
+        actionButtonIntent: some AppIntent,
+        activityIdentifier: String
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == Never, DialogType == Never {
+        Self(activityIdentifier: activityIdentifier, actionButtonIntent: actionButtonIntent)
+    }
+
+    public static func result(
+        actionButtonIntent: some AppIntent,
+        activityIdentifier: String,
+        dialog: IntentDialog
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == Never, DialogType == IntentDialog {
+        Self(
+            dialog: dialog,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    public static func result(
+        value: ResultValue,
+        actionButtonIntent: some AppIntent
+    ) -> Self
+    where OpensType == Never, SnippetType == Never, DialogType == Never {
+        Self(value: value, actionButtonIntent: actionButtonIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        actionButtonIntent: some AppIntent,
+        dialog: IntentDialog
+    ) -> Self
+    where OpensType == Never, SnippetType == Never, DialogType == IntentDialog {
+        Self(value: value, dialog: dialog, actionButtonIntent: actionButtonIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        actionButtonIntent: some AppIntent,
+        activityIdentifier: String
+    ) -> Self
+    where OpensType == Never, SnippetType == Never, DialogType == Never {
+        Self(
+            value: value,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    public static func result(
+        value: ResultValue,
+        actionButtonIntent: some AppIntent,
+        activityIdentifier: String,
+        dialog: IntentDialog
+    ) -> Self
+    where OpensType == Never, SnippetType == Never, DialogType == IntentDialog {
+        Self(
+            value: value,
+            dialog: dialog,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    public static func result(
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == Never {
+        Self(snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == IntentDialog {
+        Self(dialog: dialog, snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == Never {
+        Self(value: value, snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == IntentDialog {
+        Self(value: value, dialog: dialog, snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        opensIntent: some AppIntent,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == Never {
+        Self(opensIntent: opensIntent, snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where ResultValue == Never, OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == IntentDialog {
+        Self(dialog: dialog, opensIntent: opensIntent, snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        opensIntent: some AppIntent,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == Never {
+        Self(value: value, opensIntent: opensIntent, snippetIntent: snippetIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> Self
+    where OpensType == Never, SnippetType == _SnippetIntentContainer, DialogType == IntentDialog {
+        Self(
+            value: value,
+            dialog: dialog,
+            opensIntent: opensIntent,
+            snippetIntent: snippetIntent
+        )
+    }
+
+    public static func result(
+        value: ResultValue,
+        opensIntent: OpensType
+    ) -> Self
+    where SnippetType == Never, DialogType == Never {
+        Self(value: value, opensIntent: opensIntent)
+    }
+
+    public static func result(
+        value: ResultValue,
+        opensIntent: OpensType,
+        dialog: IntentDialog
+    ) -> Self
+    where SnippetType == Never, DialogType == IntentDialog {
+        Self(value: value, dialog: dialog, opensIntent: opensIntent)
+    }
+}
 
 public extension IntentResult where Self == IntentResultValue {
     /// Portable empty / dialog-only factories stay on `IntentResultValue` so
@@ -256,6 +438,182 @@ public extension IntentResult {
     ) -> IntentResultContainer<Never, OpensAppIntent, Never, IntentDialog>
     where Self == IntentResultContainer<Never, OpensAppIntent, Never, IntentDialog> {
         IntentResultContainer(dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, OpensAppIntent: AppIntent>(
+        value: Value,
+        opensIntent: OpensAppIntent
+    ) -> IntentResultContainer<Value, OpensAppIntent, Never, Never>
+    where Self == IntentResultContainer<Value, OpensAppIntent, Never, Never> {
+        IntentResultContainer(value: value, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, OpensAppIntent: AppIntent>(
+        value: Value,
+        opensIntent: OpensAppIntent,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Value, OpensAppIntent, Never, IntentDialog>
+    where Self == IntentResultContainer<Value, OpensAppIntent, Never, IntentDialog> {
+        IntentResultContainer(value: value, dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Intent: AppIntent>(
+        actionButtonIntent: Intent
+    ) -> IntentResultContainer<Never, Never, Never, Never>
+    where Self == IntentResultContainer<Never, Never, Never, Never> {
+        IntentResultContainer(actionButtonIntent: actionButtonIntent)
+    }
+
+    static func result<Intent: AppIntent>(
+        actionButtonIntent: Intent,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Never, Never, Never, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, Never, IntentDialog> {
+        IntentResultContainer(dialog: dialog, actionButtonIntent: actionButtonIntent)
+    }
+
+    static func result<Intent: AppIntent>(
+        actionButtonIntent: Intent,
+        activityIdentifier: String
+    ) -> IntentResultContainer<Never, Never, Never, Never>
+    where Self == IntentResultContainer<Never, Never, Never, Never> {
+        IntentResultContainer(
+            opensIntent: actionButtonIntent,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    static func result<Intent: AppIntent>(
+        actionButtonIntent: Intent,
+        activityIdentifier: String,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Never, Never, Never, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, Never, IntentDialog> {
+        IntentResultContainer(
+            dialog: dialog,
+            opensIntent: actionButtonIntent,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    static func result<Value: _IntentValue, Intent: AppIntent>(
+        value: Value,
+        actionButtonIntent: Intent
+    ) -> IntentResultContainer<Value, Never, Never, Never>
+    where Self == IntentResultContainer<Value, Never, Never, Never> {
+        IntentResultContainer(value: value, actionButtonIntent: actionButtonIntent)
+    }
+
+    static func result<Value: _IntentValue, Intent: AppIntent>(
+        value: Value,
+        actionButtonIntent: Intent,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Value, Never, Never, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, Never, IntentDialog> {
+        IntentResultContainer(value: value, dialog: dialog, actionButtonIntent: actionButtonIntent)
+    }
+
+    static func result<Value: _IntentValue, Intent: AppIntent>(
+        value: Value,
+        actionButtonIntent: Intent,
+        activityIdentifier: String
+    ) -> IntentResultContainer<Value, Never, Never, Never>
+    where Self == IntentResultContainer<Value, Never, Never, Never> {
+        IntentResultContainer(
+            value: value,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    static func result<Value: _IntentValue, Intent: AppIntent>(
+        value: Value,
+        actionButtonIntent: Intent,
+        activityIdentifier: String,
+        dialog: IntentDialog
+    ) -> IntentResultContainer<Value, Never, Never, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, Never, IntentDialog> {
+        IntentResultContainer(
+            value: value,
+            dialog: dialog,
+            activityIdentifier: activityIdentifier,
+            actionButtonIntent: actionButtonIntent
+        )
+    }
+
+    static func result(
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Never, Never, _SnippetIntentContainer, Never>
+    where Self == IntentResultContainer<Never, Never, _SnippetIntentContainer, Never> {
+        IntentResultContainer(snippetIntent: snippetIntent)
+    }
+
+    static func result(
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Never, Never, _SnippetIntentContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, _SnippetIntentContainer, IntentDialog> {
+        IntentResultContainer(dialog: dialog, snippetIntent: snippetIntent)
+    }
+
+    static func result<Value: _IntentValue>(
+        value: Value,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Value, Never, _SnippetIntentContainer, Never>
+    where Self == IntentResultContainer<Value, Never, _SnippetIntentContainer, Never> {
+        IntentResultContainer(value: value, snippetIntent: snippetIntent)
+    }
+
+    static func result<Value: _IntentValue>(
+        value: Value,
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Value, Never, _SnippetIntentContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, _SnippetIntentContainer, IntentDialog> {
+        IntentResultContainer(value: value, dialog: dialog, snippetIntent: snippetIntent)
+    }
+
+    static func result(
+        opensIntent: some AppIntent,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Never, Never, _SnippetIntentContainer, Never>
+    where Self == IntentResultContainer<Never, Never, _SnippetIntentContainer, Never> {
+        IntentResultContainer(opensIntent: opensIntent, snippetIntent: snippetIntent)
+    }
+
+    static func result(
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Never, Never, _SnippetIntentContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, _SnippetIntentContainer, IntentDialog> {
+        IntentResultContainer(dialog: dialog, opensIntent: opensIntent, snippetIntent: snippetIntent)
+    }
+
+    static func result<Value: _IntentValue>(
+        value: Value,
+        opensIntent: some AppIntent,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Value, Never, _SnippetIntentContainer, Never>
+    where Self == IntentResultContainer<Value, Never, _SnippetIntentContainer, Never> {
+        IntentResultContainer(value: value, opensIntent: opensIntent, snippetIntent: snippetIntent)
+    }
+
+    static func result<Value: _IntentValue>(
+        value: Value,
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        snippetIntent: some SnippetIntent
+    ) -> IntentResultContainer<Value, Never, _SnippetIntentContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, _SnippetIntentContainer, IntentDialog> {
+        IntentResultContainer(
+            value: value,
+            dialog: dialog,
+            opensIntent: opensIntent,
+            snippetIntent: snippetIntent
+        )
     }
 }
 
@@ -954,7 +1312,7 @@ public enum InputConnectionBehavior: Sendable, Hashable {
 /// Content-type metadata accepted by `Parameter`.  Identifiers use the same
 /// public UTI spellings as UniformTypeIdentifiers and can be losslessly mapped
 /// to that framework once it is loaded.
-public struct IntentFileContentType: Sendable, Hashable {
+public struct IntentFileContentType: Sendable, Hashable, Codable {
     public let identifier: String
 
     public init(_ identifier: String) { self.identifier = identifier }
@@ -1029,8 +1387,10 @@ public final class IntentParameter<Value>: @unchecked Sendable
     var storedCurrencyCodes: [String]?
     var storedPersonMode: IntentPerson.ParameterMode?
     var storedDecimalInclusiveRange: (lowerBound: Decimal, upperBound: Decimal)?
+    var storedPlacemarkDisplayStyle: PlacemarkDisplayStyle?
 
     public var dateKind: DateKind? { storedDateKind }
+    public var displayStyle: PlacemarkDisplayStyle? { storedPlacemarkDisplayStyle }
 
     public var requestDisambiguationDialog: IntentDialog? { storedRequestDisambiguationDialog }
     public var supportedValues: [Any] { storedSupportedValues }
@@ -1303,6 +1663,85 @@ public struct IntentFile: @unchecked Sendable, Hashable {
         self.filename = filename
         self.fileURL = fileURL
         self.type = type
+    }
+
+    public var localizedStringResource: LocalizedStringResource {
+        LocalizedStringResource(filename ?? fileURL?.lastPathComponent ?? "file")
+    }
+
+    /// Linux has no security-scoped bookmark or UTI daemon. Matching is by
+    /// stored `IntentFileContentType.identifier`.
+    public func hostData(contentType: IntentFileContentType) throws -> Data {
+        if let type, type != contentType, type != .item, type != .data,
+           contentType != .item, contentType != .data {
+            throw IntentFileError.unsupportedType
+        }
+        if !data.isEmpty {
+            return data
+        }
+        if let fileURL {
+            do {
+                return try Data(contentsOf: fileURL)
+            } catch {
+                throw IntentFileError.failedToLoadData
+            }
+        }
+        throw IntentFileError.unreadable
+    }
+
+    public func data(contentType: IntentFileContentType) async throws -> Data {
+        try hostData(contentType: contentType)
+    }
+
+    /// Writes in-memory bytes to `destinationDirectory` when there is no
+    /// existing `fileURL`. An existing URL is returned in-place; Linux never
+    /// claims a security-scoped bookmark.
+    public func hostFile(
+        contentType: IntentFileContentType,
+        destinationDirectory: URL? = nil
+    ) throws -> (fileURL: URL, openedInPlace: Bool) {
+        if let existing = fileURL {
+            if type == nil || type == contentType || type == .item || contentType == .item {
+                return (existing, true)
+            }
+            throw IntentFileError.unsupportedType
+        }
+        let directory = destinationDirectory ?? URL(fileURLWithPath: NSTemporaryDirectory())
+        let name = filename ?? "intent-file"
+        let dest = directory.appendingPathComponent(name)
+        try hostData(contentType: contentType).write(to: dest, options: .atomic)
+        return (dest, false)
+    }
+
+    public func file(
+        contentType: IntentFileContentType,
+        destinationDirectory: URL? = nil
+    ) async throws -> (fileURL: URL, openedInPlace: Bool) {
+        try hostFile(contentType: contentType, destinationDirectory: destinationDirectory)
+    }
+}
+
+extension IntentFile: Codable {
+    enum CodingKeys: String, CodingKey {
+        case data, filename, fileURL, type, removedOnCompletion
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        data = try container.decode(Data.self, forKey: .data)
+        filename = try container.decodeIfPresent(String.self, forKey: .filename)
+        fileURL = try container.decodeIfPresent(URL.self, forKey: .fileURL)
+        type = try container.decodeIfPresent(IntentFileContentType.self, forKey: .type)
+        removedOnCompletion = try container.decodeIfPresent(Bool.self, forKey: .removedOnCompletion) ?? false
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(data, forKey: .data)
+        try container.encodeIfPresent(filename, forKey: .filename)
+        try container.encodeIfPresent(fileURL, forKey: .fileURL)
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encode(removedOnCompletion, forKey: .removedOnCompletion)
     }
 }
 
@@ -1674,6 +2113,19 @@ extension AttributedString: _IntentValue {}
 extension DateComponents: _IntentValue {}
 extension IntentFile: _IntentValue {}
 extension IntentDialog: _IntentValue {}
+
+extension CLPlacemark: _IntentValue, InstanceDisplayRepresentable, TypeDisplayRepresentable {
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Placemark" }
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: name ?? locality ?? thoroughfare ?? "Placemark")
+    }
+    public var localizedStringResource: LocalizedStringResource {
+        LocalizedStringResource(name ?? locality ?? "Placemark")
+    }
+    public static var defaultResolverSpecification: EmptyResolverSpecification<CLPlacemark> {
+        EmptyResolverSpecification()
+    }
+}
 
 /// File-backed entity property value (`EntityProperty` where `Value.ValueType == File`).
 /// Linux stores URL and bytes in-process. Security-scoped bookmarks are unobserved.
