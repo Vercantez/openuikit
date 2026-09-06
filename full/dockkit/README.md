@@ -5,8 +5,8 @@ Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift surface
 from the sealed symbol graph. It is not wired into the shared guest package;
 that integration is a separate central review step.
 
-Coverage: **219 implemented / 18 declared / 112 not-applicable / 349 total**
-(237 nondeferred, above the medium-full floor of 175).
+Coverage: **284 implemented / 65 declared / 0 not-applicable / 349 total**
+(349 nondeferred, above the medium-full floor of 175).
 
 ## What is real
 
@@ -53,22 +53,33 @@ or AVFoundation capture session.
 
 ## Depth pass 2026-09
 
-Fresh seed: no prior implemented/declared split. After this pass:
-**219 implemented / 18 declared / 112 not-applicable**.
+Fresh seed first revision at `0009a54b` was **219 implemented / 18 declared /
+112 not-applicable**. The operator merge refused that ledger: those 112
+rows are stdlib `AsyncSequence` / `AsyncIteratorProtocol` witnesses (for
+example `s:ScI12_ConcurrencyE4next7ElementQzSgyYa7FailureQzYKF::SYNTHESIZED::s:7DockKit0A…`),
+not SwiftUI cross-import overlay IDs, so they cannot be `not-applicable`.
+
+After this repair: **284 implemented / 65 declared / 0 not-applicable**.
+
+Synchronous `AsyncSequence` adapters (`map`, `compactMap`, `filter`,
+`drop(while:)`, `dropFirst`, `prefix`, `prefix(while:)`, `flatMap`) are
+implemented with focused tests in `DockKitSequenceAdapterTests.swift`.
+Async consumers (`next`, `next(isolation:)`, `allSatisfy`, `first`, `max`,
+`min`, `reduce`, `contains`) stay `declared` — the sealed runner cannot await.
 
 Top-5 implemented evidence distribution:
 
 | Citations | Evidence |
 | ---: | --- |
+| 20 | `DockKitSequenceAdapterTests.swift#testAsyncSequenceFlatMap` |
 | 13 | `DockKitEnumTests.swift#testCameraOrientationCases` |
+| 10 | `DockKitSequenceAdapterTests.swift#testAsyncSequenceCompactMap` |
+| 10 | `DockKitSequenceAdapterTests.swift#testAsyncSequenceMap` |
 | 9 | `DockKitEnumTests.swift#testAccessoryEventCases` |
-| 9 | `DockKitEnumTests.swift#testFramingModeCases` |
-| 9 | `DockKitEnumTests.swift#testAnimationCases` |
-| 9 | `DockKitErrorTests.swift#testDockKitErrorCases` |
 
-Those five are table-driven enum/case identity tests (plus the matching
-`==` / `hash(into:)` members). No non-enum test is cited by more than 8 of
-the remaining implemented rows, well under the 40% bulk-relabel bound.
+Enum/case identity tests may share a table-driven value test. The largest
+non-enum citation is `testAsyncSequenceFlatMap` at 20 of 235 remaining
+implemented rows (8.5%), under the 40% bulk-relabel bound.
 
 The sealed host gate was run as `bash full/dockkit/tests/acceptance/test_host.sh`
 and ended:
