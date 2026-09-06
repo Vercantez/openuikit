@@ -1,0 +1,12 @@
+full/matter/MTRClusterStubs.swift
+full/matter/MTRConstants.swift
+full/matter/MTRControllers.swift
+full/matter/MTRCoreTypes.swift
+full/matter/MTREnums.swift
+full/matter/MTRError.swift
+full/matter/MTRIDs.swift
+full/matter/MTRNames.swift
+full/matter/MTROptionSets.swift
+full/matter/MTRProtocols.swift
+full/matter/MTRSetupPayload.swift
+full/matter/Matter.swift
