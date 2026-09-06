@@ -118,7 +118,7 @@ extension LARight {
         localizedReason: String,
         in presentationContext: LAPresentationContext
     ) async throws {
-        try await withCheckedThrowingContinuation { continuation in
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
             authorize(
                 localizedReason: localizedReason,
                 in: presentationContext
