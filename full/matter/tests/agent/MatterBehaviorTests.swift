@@ -57,31 +57,71 @@ func testDeviceTypeAndProductIdentity() {
     let rev = MTRDeviceTypeRevision(deviceTypeID: n(0x0100), revision: n(1))
     mtrRequire(rev != nil, "rev")
     mtrRequire(rev?.deviceType?.name == "On/Off Light", "rev lookup")
+    mtrRequire(rev?.deviceTypeID.uintValue == 0x0100, "dt id")
+    mtrRequire(rev?.deviceTypeRevision.intValue == 1, "rev num")
+    mtrRequire(rev?.typeInformation?.name == "On/Off Light", "type info")
     mtrRequire(MTRDeviceTypeRevision(deviceTypeID: n(0x0100), revision: n(0)) == nil, "rev 0")
     let pid = MTRProductIdentity(vendorID: n(0xFFF1), productID: n(0x8001))
     mtrRequire(pid.vendorID.uintValue == 0xFFF1, "vid")
     mtrRequire(pid.productID.uintValue == 0x8001, "pid")
+}
+
+func testCommissioningParameters() {
     let params = MTRCommissioningParameters()
     params.wifiSSID = Data("net".utf8)
+    params.wifiCredentials = Data("secret".utf8)
+    params.threadOperationalDataset = Data([1, 2])
     params.countryCode = "US"
     params.skipCommissioningComplete = true
+    params.csrNonce = Data([3])
+    params.attestationNonce = Data([4])
+    params.failSafeExpiryTimeoutSecs = n(30)
+    params.failSafeTimeout = n(30)
+    params.readEndpointInformation = true
+    params.deviceAttestationDelegate = nil
     mtrRequire(params.countryCode == "US", "cc")
     mtrRequire(params.skipCommissioningComplete, "skip")
+    mtrRequire(params.wifiCredentials != nil, "cred")
+    mtrRequire(params.readEndpointInformation, "read ep")
+}
+
+func testFabricAndEndpointInfo() {
     let fabric = MTRFabricInfo()
     fabric.fabricIndex = n(1)
+    fabric.fabricID = n(2)
+    fabric.nodeID = n(3)
+    fabric.label = "lab"
+    fabric.intermediateCertificate = Data([1])
+    fabric.intermediateCertificateTLV = Data([2])
+    fabric.operationalCertificate = Data([3])
+    fabric.operationalCertificateTLV = Data([4])
+    fabric.rootCertificate = Data([5])
+    fabric.rootCertificateTLV = Data([6])
     mtrRequire(fabric.fabricIndex.intValue == 1, "fabric")
+    mtrRequire(fabric.fabricID.intValue == 2, "fid")
+    mtrRequire(fabric.nodeID.intValue == 3, "nid")
+    mtrRequire(fabric.label == "lab", "label")
+    mtrRequire(fabric.rootPublicKey.isEmpty, "rpk")
     let ep = MTREndpointInfo()
     ep.endpointID = n(1)
+    ep.deviceTypes = []
+    ep.partsList = [n(1)]
+    ep.children = []
     mtrRequire(ep.endpointID.intValue == 1, "epid")
+    mtrRequire(ep.partsList.count == 1, "parts")
+    mtrRequire(ep.children.isEmpty, "children")
+    mtrRequire(ep.deviceTypes.isEmpty, "dts")
 }
 
 func testAsyncWorkQueue() {
-    let queue = MTRAsyncCallbackWorkQueue()
-    let item = MTRAsyncCallbackQueueWorkItem()
+    let queue = MTRAsyncCallbackWorkQueue(context: nil, queue: DispatchQueue.global())
+    let item = MTRAsyncCallbackQueueWorkItem(queue: DispatchQueue.global())
     var ready = 0
     item.readyHandler = { _, count in
         ready = count + 1
     }
+    item.cancelHandler = {}
+    _ = item.cancelHandler
     queue.enqueue(item)
     mtrRequire(item.enqueued, "enqueued")
     mtrRequire(ready == 1, "ready sync")
@@ -115,6 +155,16 @@ func testAccessGrant() {
     mtrRequire(grant.grantedPrivilege == .administer, "priv")
     mtrRequire(grant.authenticationMode == .CASE, "auth")
     mtrRequire(grant.subjectID?.intValue == 1, "subj")
+    let all = MTRAccessGrant(forAllNodesWith: .view)
+    mtrRequire(all.subjectID == nil, "all nodes")
+    let allPriv = MTRAccessGrant(forAllNodesWithPrivilege: .operate)
+    mtrRequire(allPriv.grantedPrivilege == .operate, "operate")
+    let cat = MTRAccessGrant(forCASEAuthenticatedTag: n(9), privilege: .administer)
+    mtrRequire(cat?.subjectID?.intValue == 9, "cat")
+    let group = MTRAccessGrant(forGroupID: n(4), privilege: .view)
+    mtrRequire(group?.authenticationMode == .group, "group")
+    let node = MTRAccessGrant(forNodeID: n(8), privilege: .administer)
+    mtrRequire(node?.subjectID?.intValue == 8, "node")
     mtrRequire(MTRAccessControlEntryPrivilege.view.rawValue == 1, "view")
     mtrRequire(MTRAccessControlEntryPrivilege.administer.rawValue == 5, "admin")
     mtrRequire(MTRAccessControlEntryAuthMode.PASE.rawValue == 1, "pase")
@@ -138,8 +188,7 @@ func testMemoryStorage() {
     mtrRequire(store.storageData(forKey: "k") == Data([1, 2]), "get")
     mtrRequire(store.removeStorageData(forKey: "k"), "rm")
     mtrRequire(store.storageData(forKey: "k") == nil, "gone")
-    let params = MTRDeviceControllerFactoryParams()
-    params.storage = store
+    let params = MTRDeviceControllerFactoryParams(storage: store)
     mtrRequire(params.storage != nil, "assigned")
     mtrRequire(!params.shouldStartServer, "server off")
 }

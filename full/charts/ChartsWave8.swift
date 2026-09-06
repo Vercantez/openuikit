@@ -419,7 +419,6 @@ public extension BarPlot {
         width: MarkDimension = .automatic,
         stacking: MarkStackingMethod = .standard
     ) where Content == VectorizedBarPlotContent<Data> {
-        _ = width
         chartPlotRecords = data.map { element in
             ChartPlotRecord(
                 kind: .bar,
@@ -427,7 +426,8 @@ public extension BarPlot {
                 yStart: yStart.map(Double.init),
                 yEnd: yEnd.map(Double.init),
                 category: x.value(from: element) as? String,
-                stacking: stacking
+                stacking: stacking,
+                markWidth: width
             )
         }
     }
@@ -478,14 +478,14 @@ public extension BarPlot {
         height: MarkDimension = .automatic,
         stacking: MarkStackingMethod = .standard
     ) where Content == VectorizedBarPlotContent<Data> {
-        _ = height
         chartPlotRecords = data.map { element in
             ChartPlotRecord(
                 kind: .bar,
                 y: y.value(from: element).flatMap(chartNumericScalar),
                 xStart: xStart.map(Double.init),
                 xEnd: xEnd.map(Double.init),
-                stacking: stacking
+                stacking: stacking,
+                markHeight: height
             )
         }
     }
@@ -497,14 +497,14 @@ public extension BarPlot {
         y: PlottableProjection<Data.Element, Y>,
         height: MarkDimension = .automatic
     ) where Content == VectorizedBarPlotContent<Data> {
-        _ = height
         chartPlotRecords = data.map { element in
             ChartPlotRecord(
                 kind: .bar,
                 y: y.value(from: element).flatMap(chartNumericScalar),
                 xStart: xStart.value(from: element).flatMap(chartNumericScalar),
                 xEnd: xEnd.value(from: element).flatMap(chartNumericScalar),
-                stacking: .standard
+                stacking: .standard,
+                markHeight: height
             )
         }
     }
@@ -736,13 +736,13 @@ public extension RectanglePlot {
         width: MarkDimension = .automatic,
         height: MarkDimension = .automatic
     ) where Content == VectorizedRectanglePlotContent<Data> {
-        _ = width
-        _ = height
         chartPlotRecords = data.map { element in
             ChartPlotRecord(
                 kind: .rectangle,
                 x: x.value(from: element).flatMap(chartNumericScalar),
-                y: y.value(from: element).flatMap(chartNumericScalar)
+                y: y.value(from: element).flatMap(chartNumericScalar),
+                markWidth: width,
+                markHeight: height
             )
         }
     }
@@ -754,13 +754,13 @@ public extension RectanglePlot {
         yEnd: PlottableProjection<Data.Element, Y>,
         width: MarkDimension = .automatic
     ) where Content == VectorizedRectanglePlotContent<Data> {
-        _ = width
         chartPlotRecords = data.map { element in
             ChartPlotRecord(
                 kind: .rectangle,
                 x: x.value(from: element).flatMap(chartNumericScalar),
                 yStart: yStart.value(from: element).flatMap(chartNumericScalar),
-                yEnd: yEnd.value(from: element).flatMap(chartNumericScalar)
+                yEnd: yEnd.value(from: element).flatMap(chartNumericScalar),
+                markWidth: width
             )
         }
     }
@@ -772,13 +772,13 @@ public extension RectanglePlot {
         y: PlottableProjection<Data.Element, Y>,
         height: MarkDimension = .automatic
     ) where Content == VectorizedRectanglePlotContent<Data> {
-        _ = height
         chartPlotRecords = data.map { element in
             ChartPlotRecord(
                 kind: .rectangle,
                 y: y.value(from: element).flatMap(chartNumericScalar),
                 xStart: xStart.value(from: element).flatMap(chartNumericScalar),
                 xEnd: xEnd.value(from: element).flatMap(chartNumericScalar),
+                markHeight: height
             )
         }
     }
@@ -792,10 +792,15 @@ public extension SectorPlot {
         outerRadius: MarkDimensions<Data.Element> = .automatic,
         angularInset: CGFloat? = nil
     ) where Content == VectorizedSectorPlotContent<Data> {
-        _ = innerRadius
-        _ = outerRadius
-        _ = angularInset
-        chartPlotRecords = ChartVectorizedRecords.sectors(data, angle: angle)
+        chartPlotRecords = data.map { element in
+            ChartPlotRecord(
+                kind: .sector,
+                angle: angle.value(from: element).flatMap(chartNumericScalar),
+                innerRadius: innerRadius.resolved(for: element),
+                outerRadius: outerRadius.resolved(for: element),
+                angularInset: angularInset
+            )
+        }
     }
 }
 

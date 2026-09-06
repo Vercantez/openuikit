@@ -77,3 +77,44 @@ func testReplicatorConstraintMath() {
     precondition(abs(follower.scale.x - 2.5) < 1e-3)
     precondition(abs(follower.worldOrientation.y - target.worldOrientation.y) < 0.05)
 }
+
+func testIKAndAccelerationConstraints() {
+    let root = SCNNode()
+    let joint = SCNNode()
+    root.addChildNode(joint)
+    let ik = SCNIKConstraint.inverseKinematicsConstraint(chainRootNode: root)
+    ik.targetPosition = SCNVector3(0, 1, 0)
+    ik.setMaxAllowedRotationAngle(30, forJoint: joint)
+    precondition(abs(Float(ik.maxAllowedRotationAngle(forJoint: joint)) - 30) < 1e-4)
+    precondition(abs(ik.targetPosition.y - 1) < 1e-4)
+    let accel = SCNAccelerationConstraint()
+    accel.decelerationDistance = 2
+    accel.maximumLinearVelocity = 5
+    precondition(abs(Float(accel.decelerationDistance) - 2) < 1e-4)
+    let constraint = SCNConstraint()
+    constraint.isEnabled = false
+    constraint.isIncremental = true
+    precondition(!constraint.isEnabled)
+    precondition(constraint.isIncremental)
+    let slider = SCNSliderConstraint()
+    slider.collisionCategoryBitMask = 3
+    precondition(slider.collisionCategoryBitMask == 3)
+    final class AvoidProbe: NSObject, SCNAvoidOccluderConstraintDelegate {
+        func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, didAvoidOccluder occluder: SCNNode, for node: SCNNode) {
+            _ = constraint
+            _ = occluder
+            _ = node
+        }
+        func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, shouldAvoidOccluder occluder: SCNNode, for node: SCNNode) -> Bool {
+            _ = constraint
+            _ = occluder
+            _ = node
+            return true
+        }
+    }
+    let avoid = SCNAvoidOccluderConstraint()
+    let probe = AvoidProbe()
+    avoid.delegate = probe
+    _ = probe.avoidOccluderConstraint(avoid, shouldAvoidOccluder: joint, for: root)
+    probe.avoidOccluderConstraint(avoid, didAvoidOccluder: joint, for: root)
+}

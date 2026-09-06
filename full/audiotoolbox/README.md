@@ -249,3 +249,201 @@ FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
 
 See `oracle-questions.tsv`. New items this pass: 3D mixer HeadYaw/decibel aliases, `AUParameterAutomationEvent` reserved/hostTime layout, and `AudioUnitProcess` versus `AudioUnitRender` pull semantics.
 
+## Depth pass 2026-09 (wave 11)
+
+Fifth SDK-depth pass on the wave-10 tree (keep existing tests green; do not rewrite). HEAD at start was `39dc25a2769fb88a50f0853964137a4f96d50322`. `.cursor/verify-cloud-environment.sh` still fails because `scratch/ladder-corpus/focus-ios` is absent; `swiftc` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`. Active Cursor Build on this pod is `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (seed expected `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed gate is the authority for `FRAMEWORK_FANOUT_HOST_OK`.
+
+### Coverage before / after
+
+| status | after wave 10 | after wave 11 |
+| --- | ---: | ---: |
+| implemented | 2619 | 2927 |
+| declared | 90 | 44 |
+| deferred | 524 | 262 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in this census. Remaining `unavailable` is `AUMIDICIProfileChangedBlock` (MIDI CI daemon / CoreMIDI).
+
+### Top-5 implemented evidence distribution (after)
+
+1. `testEnumHashableInequalityCatalog` — 200 rows (6.8%) — table-driven enum `!=` / `hash(into:)` / `init(rawValue:)`
+2. `testOptionSetAlgebraAudioUnitAndQueue` — 200 (6.8%) — table-driven OptionSet algebra
+3. `testOptionSetAlgebraNewMixerFlags` — 168 (5.7%) — mixer/transport/slice flags
+4. `testOptionSetAlgebraAudioFileFamily` — 163 (5.6%) — AudioFile/CAF OptionSet algebra
+5. `testAudioToolboxConstantCatalog` — 146 (5.0%) — table-driven k…/err… payloads
+
+No non-table test exceeds 40% of implemented rows. Wave-11 family tests each cite only the identifiers they exercise.
+
+### Public surface added this pass
+
+- **Parameter ID aliases.** `k3DMixerParam_BusEnable` / `*InDecibels` aliases of Enable/gain/reverb/occlusion; `kNewTimePitchParam_Smoothness` / `EnableSpectralCoherence` aliases plus `EnableTransientPreservation=7`; dynamic-range / program-target / sound-isolation constants.
+- **Overlays.** `AudioUnitParameterInfo` (52-byte name), `ScheduledAudioSlice` / `ScheduledAudioFileRegion`, `AUMIDIEvent` / `AUParameterEvent` / `AURenderEventHeader` / `AURenderEvent`, `AudioFileRegion` + `NextAudioFileRegion`, `AudioPanningInfo`, flattened `AudioUnitParameterEvent`, `HostCallbackInfo`, packet translations, queue meter/assignment/parameter events, node connections, ducking/start-at-time/MIDI callback structs, `ExtendedNoteOnEvent`.
+- **Runtime.** `AudioUnitScheduleParameters` applies immediate values and ramp end-values onto mixer parameters; `AudioQueueEnqueueBufferWithParameters` stores start/end trim and optional volume events; `AudioQueueOfflineRender` copies trimmed PCM sample-exactly (silence when the queue is empty). `AudioComponentCopyName` returns the built-in software-unit name (`MultiChannelMixer`, `GenericOutput`, `ScheduledSoundPlayer`, `RemoteIO`); `AudioComponentRegister` / `Validate` stay fail-closed and do not publish plugins. Sound-bank name/instrument copy returns `kAudioFileUnsupportedFileTypeError`.
+- **AUAudioUnit v3.** `AUAudioUnitStatus`, `registerSubclass` (stored, does not publish plugins), `presetState(for:)` fail-closed, `AUAudioUnitV2Bridge` wrapping a v2 software instance. RemoteIO still fail-closes. MIDI CI / `MIDIEventList` / `AVAudioFormat` remain deferred or unavailable.
+
+### Fail-closed boundaries (wave 11)
+
+- No hardware I/O, system-sound server, RemoteIO / VoiceProcessingIO render, processing taps, or AudioQueue device clocks.
+- MIDI CI remains unavailable. Compressed codec objects never initialize.
+- `registerSubclass` does not add components to `AudioComponentFindNext`.
+- `AudioStreamBasicDescription` / `AudioBufferList` / `AudioTimeStamp` / `AudioChannelLayout` names stay in CoreAudioTypes. Isolated calls take 40-byte ASBD blobs, buffer-list overlays, and 64-byte timestamp slots.
+- Unknown refs and double-dispose stay crash-safe.
+
+### Tests and gate
+
+- Agent tests: previous waves plus `AudioToolboxWave6Tests.swift`.
+- Only host script under `tests/`: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Exact sealed-gate stdout:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+Swift `6.2.4` / `x86_64-unknown-linux-gnu` compiled `libAudioToolbox.dylib`. `.cursor/verify-cloud-environment.sh` still fails (`scratch/ladder-corpus/focus-ios` missing) and therefore does not print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`. The sealed gate is the authority for this pass.
+
+### Unresolved behavioral questions
+
+See `oracle-questions.tsv`. New items this pass: 3D-mixer BusEnable alias versus bindgen IDs 20–26, DRC GeneralCompression 6 versus sequential 4, `AudioUnitParameterEvent` unnamed-union layout, `ScheduledAudioSlice` timestamp packing, and `AURenderEvent` C-union size with `MIDIEventList`.
+
+
+## Depth pass 2026-09 (wave-18 local repair)
+
+Repair branch: `agent/fw-audiotoolbox-r`. At inspection, the requested cloud
+head `platform/cursor/port-audiotoolbox-to-linux-0d11` (`a94e23fb`) was already
+an ancestor of current `origin/main` (`8332a8f2`), with an identical AudioToolbox
+tree. Both requested merges therefore reported `Already up to date`; no
+conflict resolution was needed. The supplied
+`/tmp/fw_merge_gate-audiotoolbox.log` contained no `error:` or `REFUSING` line
+and already ended in `FRAMEWORK_FANOUT_HOST_OK`. A fresh baseline run in the
+operator's `uikit-linux` container also passed. No compiler or runtime failure
+was reproduced, so this repair adds missing evidence rather than claiming a
+product-code fix.
+
+### Coverage before / after
+
+| status | current main | local repair |
+| --- | ---: | ---: |
+| implemented | 2927 | 2931 |
+| declared | 44 | 40 |
+| deferred | 262 | 262 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+The gain is **4 implemented rows**, with all previous implemented rows and
+agent tests preserved. `AudioToolboxFileCallbackTests.swift` adds four top-level,
+synchronous, no-argument tests, each cited by exactly one callback typedef:
+
+- `testAudioFileReadProcPartialTransfer`: client context, position `2^40 + 7`,
+  requested/actual byte counts `4/2`, exact bytes `12 AB`, untouched buffer tail,
+  and signed failure return `-123` with zero bytes transferred.
+- `testAudioFileWriteProcPartialTransfer`: client context, position `2^40 + 11`,
+  requested/actual byte counts `4/2`, exact bytes `34 CD`, unchanged input buffer,
+  and signed failure return `-456` with zero bytes transferred.
+- `testAudioFileGetSizeProcWideResult`: client context and exact `Int64` results
+  `0`, `2^40 + 13`, and `Int64.max`.
+- `testAudioFileSetSizeProcWideArgument`: client context and exact `Int64`
+  arguments `0`, `2^40 + 17`, and `Int64.max`; signed failure return `-789`
+  leaves the fixture's size unchanged.
+
+These are invocation tests of the exported C callback types. Positions, payloads,
+and statuses are explicit test inputs, not Apple-oracle measurements. The exact
+`c:@T@AudioFile_*Proc` declarations come from the sealed public surface; the
+API-digester has no matching exact-USR nodes for these typedefs. Product callback
+declarations are unchanged. `AudioFileOpenWithCallbacks` and
+`AudioFileInitializeWithCallbacks` remain deferred; these tests do not claim
+callback-backed file I/O, callback scheduling, or hardware support. All pointer
+lifetimes are scoped, and no new test waits, threads, files, or services are used.
+
+There are **110 distinct cited tests**, all synchronous with no arguments. The
+largest evidence anchors are `testEnumHashableInequalityCatalog` and
+`testOptionSetAlgebraAudioUnitAndQueue`, each **200/2931 rows (6.82%)**; even this
+maximum across all tests is below the 40% non-table limit. No row was reclassified
+to `not-applicable`.
+
+### Validation
+
+The baseline sealed gate exited 0 in the operator's container using Swift
+**6.2.4**, target **aarch64-unknown-linux-gnu**. The changed-tree sealed gate
+also exited **0**, compiling and invoking all **110** cited tests (baseline:
+**106**). Both runs ended with:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+Run command in `/gate-codex-audiotoolbox` after copying the framework and sealed
+harness into `uikit-linux` and committing that snapshot:
+`timeout 3600 bash full/audiotoolbox/tests/acceptance/test_host.sh`.
+Local logs: `/tmp/fw-audiotoolbox-r-baseline.log` and
+`/tmp/fw-audiotoolbox-r-final.log`. The immutable reference inputs, acceptance
+script, product sources, and source manifest are unchanged. `git diff --check`
+and the synchronous evidence-anchor / coverage-preservation audits also passed.
+All branch changes are confined to `full/audiotoolbox/`.
+
+
+## Depth pass 2026-09 (wave-18 callback-order follow-up)
+
+Current-main baseline: `c1973365`; requested Cursor head: `a94e23fb`.
+The Cursor head and the earlier four-file-callback repair were already merged
+into main. Merging the Cursor head was a no-op; current main was fast-forwarded
+into this repair branch without conflicts. The supplied operator log already
+ended in `FRAMEWORK_FANOUT_HOST_OK` and contained no `error:` or `REFUSING` line.
+A fresh baseline gate also passed, so there was no reproduced refusal to fix.
+
+The declaration audit did find a concrete defect: `AudioSessionInterruptionListener`
+put the `UInt32` state before the client pointer. The sealed symbol graph and
+`reference/public-surface.tsv` both specify `(UnsafeMutableRawPointer?, UInt32)`.
+`reference/api-crosswalk.tsv` records this typedef as unmatched in the API
+digester. The product now follows the graph's argument order, retaining its C
+calling convention. No other product rule changes.
+
+`testAudioSessionInterruptionListenerArgumentOrder` invokes the exported callback
+synchronously, verifies mutation of the supplied client context on three calls
+with states `0`, `1`, and `UInt32.max`, and checks a fourth call with a nil client.
+These boundary values are test inputs, not observations of system interruption
+behavior. The test has no waits, tasks, hardware, or external services; its
+client pointer remains scoped to `withUnsafeMutablePointer`. This proves callback
+type invocation only: the deprecated AudioSession service remains unhosted.
+
+| status | current main | callback-order repair |
+| --- | ---: | ---: |
+| implemented | 2931 | 2932 |
+| declared | 40 | 39 |
+| deferred | 262 | 262 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+The gain is **1 implemented row**, backed by one new top-level synchronous,
+no-argument test. All previous implemented rows and tests are preserved.
+Distinct cited tests increase **110 → 111**. The largest evidence anchors remain
+200 rows each (**6.82%** of 2932), below the 40% limit even without the table-test
+exception. No `not-applicable` rows were introduced. All changes are confined to
+`full/audiotoolbox/`; sealed inputs and acceptance scripts are unchanged.
+
+### Validation of the callback-order repair
+
+The operator's `uikit-linux` container used Swift **6.2.4**, target
+**aarch64-unknown-linux-gnu**. Three sealed-gate runs established the regression:
+
+- Unmodified baseline: exit **0**, **110** cited tests.
+- New regression test and coverage row, original typedef: exit **1** at test
+  compilation. The compiler rejected `callback(client, state)` with
+  `unnamed argument #2 must precede unnamed argument #1`, and rejected nil
+  client data where the old signature expected `UInt32`.
+- Corrected typedef: exit **0**, all **111** cited tests executed, ending in
+  `AUDIOTOOLBOX_AGENT_RUNTIME_OK` and
+  `FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib`.
+
+Each run copied the framework and the operator's sealed harness into
+`/gate-codex-audiotoolbox`, committed the snapshot, then executed
+`timeout 3600 bash full/audiotoolbox/tests/acceptance/test_host.sh`.
+Logs on this Mac: `/tmp/fw-audiotoolbox-r-recheck-baseline.log`,
+`/tmp/fw-audiotoolbox-r-regression.log`, and
+`/tmp/fw-audiotoolbox-r-recheck-final.log`. The coverage-preservation,
+synchronous-anchor, evidence-distribution, and `git diff --check` audits passed.

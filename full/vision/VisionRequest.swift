@@ -1,6 +1,6 @@
 import Foundation
 
-open class VNRequest: NSObject {
+open class VNRequest: NSObject, VNRequestProgressProviding {
     public class var currentRevision: Int { VNRequestRevisionUnspecified }
     public class var defaultRevision: Int { VNRequestRevisionUnspecified }
     public class var supportedRevisions: IndexSet { IndexSet(integer: VNRequestRevisionUnspecified) }
@@ -10,6 +10,9 @@ open class VNRequest: NSObject {
     public var usesCPUOnly: Bool = false
     public var revision: Int
     public internal(set) var results: [VNObservation]?
+    public var progressHandler: VNRequestProgressHandler = { _, _, _ in }
+    /// Linux never emits model-progress callbacks; the handler is stored only.
+    public var indeterminate: Bool { true }
     var isCancelled: Bool = false
 
     private var hostResults: [VNObservation]?
@@ -183,7 +186,7 @@ open class VNDetectFaceRectanglesRequest: VNImageBasedRequest {
     }
 }
 
-open class VNDetectFaceLandmarksRequest: VNImageBasedRequest {
+open class VNDetectFaceLandmarksRequest: VNImageBasedRequest, VNFaceObservationAccepting {
     public override class var currentRevision: Int { VNDetectFaceLandmarksRequestRevision3 }
     public override class var defaultRevision: Int { VNDetectFaceLandmarksRequestRevision3 }
     public override class var supportedRevisions: IndexSet {
@@ -191,10 +194,93 @@ open class VNDetectFaceLandmarksRequest: VNImageBasedRequest {
     }
 
     public var constellation: VNRequestFaceLandmarksConstellation = .constellationNotDefined
+    public var inputFaceObservations: [VNFaceObservation]?
+
+    public class func revision(
+        _ requestRevision: Int,
+        supportsConstellation constellation: VNRequestFaceLandmarksConstellation
+    ) -> Bool {
+        guard supportedRevisions.contains(requestRevision) else { return false }
+        switch constellation {
+        case .constellationNotDefined, .constellation65Points, .constellation76Points:
+            return true
+        @unknown default:
+            return false
+        }
+    }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
         throw visionUnavailableModel("VNDetectFaceLandmarksRequest")
+    }
+}
+
+open class VNDetectHumanRectanglesRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNDetectHumanRectanglesRequestRevision2 }
+    public override class var defaultRevision: Int { VNDetectHumanRectanglesRequestRevision2 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integersIn: VNDetectHumanRectanglesRequestRevision1...VNDetectHumanRectanglesRequestRevision2)
+    }
+
+    public var upperBodyOnly: Bool = false
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectHumanRectanglesRequest")
+    }
+}
+
+open class VNDetectFaceCaptureQualityRequest: VNImageBasedRequest, VNFaceObservationAccepting {
+    public override class var currentRevision: Int { VNDetectFaceCaptureQualityRequestRevision3 }
+    public override class var defaultRevision: Int { VNDetectFaceCaptureQualityRequestRevision3 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integersIn: VNDetectFaceCaptureQualityRequestRevision1...VNDetectFaceCaptureQualityRequestRevision3)
+    }
+
+    public var inputFaceObservations: [VNFaceObservation]?
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNDetectFaceCaptureQualityRequest")
+    }
+}
+
+open class VNCalculateImageAestheticsScoresRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNCalculateImageAestheticsScoresRequestRevision1 }
+    public override class var defaultRevision: Int { VNCalculateImageAestheticsScoresRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNCalculateImageAestheticsScoresRequestRevision1)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNCalculateImageAestheticsScoresRequest")
+    }
+}
+
+open class VNGeneratePersonInstanceMaskRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNGeneratePersonInstanceMaskRequestRevision1 }
+    public override class var defaultRevision: Int { VNGeneratePersonInstanceMaskRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNGeneratePersonInstanceMaskRequestRevision1)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNGeneratePersonInstanceMaskRequest")
+    }
+}
+
+open class VNGenerateForegroundInstanceMaskRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNGenerateForegroundInstanceMaskRequestRevision1 }
+    public override class var defaultRevision: Int { VNGenerateForegroundInstanceMaskRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNGenerateForegroundInstanceMaskRequestRevision1)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNGenerateForegroundInstanceMaskRequest")
     }
 }
 
@@ -220,6 +306,21 @@ open class VNGenerateAttentionBasedSaliencyImageRequest: VNImageBasedRequest {
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
         throw visionUnavailableModel("VNGenerateAttentionBasedSaliencyImageRequest")
+    }
+}
+
+open class VNGenerateObjectnessBasedSaliencyImageRequest: VNImageBasedRequest {
+    public override class var currentRevision: Int { VNGenerateObjectnessBasedSaliencyImageRequestRevision2 }
+    public override class var defaultRevision: Int { VNGenerateObjectnessBasedSaliencyImageRequestRevision2 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(
+            integersIn: VNGenerateObjectnessBasedSaliencyImageRequestRevision1...VNGenerateObjectnessBasedSaliencyImageRequestRevision2
+        )
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw visionUnavailableModel("VNGenerateObjectnessBasedSaliencyImageRequest")
     }
 }
 
@@ -720,6 +821,63 @@ open class VNTrackRectangleRequest: VNTrackingRequest {
                 uuid: tracked.uuid
             )
         ]
+    }
+}
+
+open class VNTrackHomographicImageRegistrationRequest: VNStatefulRequest {
+    public override class var currentRevision: Int { VNTrackHomographicImageRegistrationRequestRevision1 }
+    public override class var defaultRevision: Int { VNTrackHomographicImageRegistrationRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNTrackHomographicImageRegistrationRequestRevision1)
+    }
+
+    public override init(
+        frameAnalysisSpacing: CMTime,
+        completionHandler: VNRequestCompletionHandler? = nil
+    ) {
+        super.init(frameAnalysisSpacing: frameAnalysisSpacing, completionHandler: completionHandler)
+    }
+
+    public required init(completionHandler: VNRequestCompletionHandler? = nil) {
+        super.init(completionHandler: completionHandler)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        _ = context
+        throw vnMakeError(
+            .unsupportedRequest,
+            description: "homographic tracking is fail-closed on Linux; no 3x3 warp is invented"
+        )
+    }
+}
+
+open class VNTrackTranslationalImageRegistrationRequest: VNStatefulRequest {
+    public override class var currentRevision: Int { VNTrackTranslationalImageRegistrationRequestRevision1 }
+    public override class var defaultRevision: Int { VNTrackTranslationalImageRegistrationRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNTrackTranslationalImageRegistrationRequestRevision1)
+    }
+
+    var previousRaster: VisionRaster?
+
+    public override init(
+        frameAnalysisSpacing: CMTime,
+        completionHandler: VNRequestCompletionHandler? = nil
+    ) {
+        super.init(frameAnalysisSpacing: frameAnalysisSpacing, completionHandler: completionHandler)
+    }
+
+    public required init(completionHandler: VNRequestCompletionHandler? = nil) {
+        super.init(completionHandler: completionHandler)
+    }
+
+    open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
+        let current = context.rasterForROI(regionOfInterest)
+        defer { previousRaster = current }
+        guard let previous = previousRaster else {
+            return [VNImageTranslationAlignmentObservation(alignmentTransform: .identity)]
+        }
+        return [visionTranslationalAlignment(source: previous, target: current)]
     }
 }
 

@@ -103,6 +103,184 @@ public extension IntentResult {
         _ = content()
         return IntentResultContainer()
     }
+
+    static func result<Content: View>(
+        opensIntent: some AppIntent,
+        view: Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, Never> {
+        _ = view
+        return IntentResultContainer(opensIntent: opensIntent)
+    }
+
+    static func result<OpensAppIntent: AppIntent, Content: View>(
+        opensIntent: OpensAppIntent,
+        view: Content
+    ) -> IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, Never> {
+        _ = view
+        return IntentResultContainer(opensIntent: opensIntent)
+    }
+
+    static func result<Content: View>(
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        view: Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog> {
+        _ = view
+        return IntentResultContainer(dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<OpensAppIntent: AppIntent, Content: View>(
+        opensIntent: OpensAppIntent,
+        dialog: IntentDialog,
+        view: Content
+    ) -> IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, IntentDialog> {
+        _ = view
+        return IntentResultContainer(dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Content: View>(
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        content: () -> Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog> {
+        _ = content()
+        return IntentResultContainer(dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<OpensAppIntent: AppIntent, Content: View>(
+        opensIntent: OpensAppIntent,
+        dialog: IntentDialog,
+        content: () -> Content
+    ) -> IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, IntentDialog> {
+        _ = content()
+        return IntentResultContainer(dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Content: View>(
+        opensIntent: some AppIntent,
+        content: () -> Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, Never> {
+        _ = content()
+        return IntentResultContainer(opensIntent: opensIntent)
+    }
+
+    static func result<OpensAppIntent: AppIntent, Content: View>(
+        opensIntent: OpensAppIntent,
+        content: () -> Content
+    ) -> IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Never, OpensAppIntent, _SnippetViewContainer, Never> {
+        _ = content()
+        return IntentResultContainer(opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        opensIntent: some AppIntent,
+        view: Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, Never> {
+        _ = view
+        return IntentResultContainer(value: value, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, OpensAppIntent: AppIntent, Content: View>(
+        value: Value,
+        opensIntent: OpensAppIntent,
+        view: Content
+    ) -> IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, Never> {
+        _ = view
+        return IntentResultContainer(value: value, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        view: Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog> {
+        _ = view
+        return IntentResultContainer(value: value, dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, OpensAppIntent: AppIntent, Content: View>(
+        value: Value,
+        opensIntent: OpensAppIntent,
+        dialog: IntentDialog,
+        view: Content
+    ) -> IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, IntentDialog> {
+        _ = view
+        return IntentResultContainer(value: value, dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        opensIntent: some AppIntent,
+        dialog: IntentDialog,
+        content: () -> Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog> {
+        _ = content()
+        return IntentResultContainer(value: value, dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, OpensAppIntent: AppIntent, Content: View>(
+        value: Value,
+        opensIntent: OpensAppIntent,
+        dialog: IntentDialog,
+        content: () -> Content
+    ) -> IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, IntentDialog> {
+        _ = content()
+        return IntentResultContainer(value: value, dialog: dialog, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        opensIntent: some AppIntent,
+        content: () -> Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, Never> {
+        _ = content()
+        return IntentResultContainer(value: value, opensIntent: opensIntent)
+    }
+
+    static func result<Value: _IntentValue, OpensAppIntent: AppIntent, Content: View>(
+        value: Value,
+        opensIntent: OpensAppIntent,
+        content: () -> Content
+    ) -> IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Value, OpensAppIntent, _SnippetViewContainer, Never> {
+        _ = content()
+        return IntentResultContainer(value: value, opensIntent: opensIntent)
+    }
+
+    static func result<Content: View>(
+        dialog: IntentDialog,
+        view: Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog> {
+        _ = view
+        return IntentResultContainer(dialog: dialog)
+    }
+
+    static func result<Content: View>(
+        dialog: IntentDialog,
+        content: () -> Content
+    ) -> IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Never, Never, _SnippetViewContainer, IntentDialog> {
+        _ = content()
+        return IntentResultContainer(dialog: dialog)
+    }
 }
 
 extension IntentParameterContext {

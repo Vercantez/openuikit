@@ -417,3 +417,29 @@ extension Data: @retroactive _ObjectiveCBridgeable {
         source.map { Data($0) } ?? Data()
     }
 }
+
+
+extension Dictionary: @retroactive _ObjectiveCBridgeable {
+    public typealias _ObjectType = NSDictionary
+    public func _bridgeToObjectiveC() -> NSDictionary {
+        NSDictionary(dictionary: reduce(into: [AnyHashable: Any]()) { $0[$1.key] = $1.value })
+    }
+    public static func _forceBridgeFromObjectiveC(_ source: NSDictionary, result: inout Dictionary?) {
+        result = _unconditionallyBridgeFromObjectiveC(source)
+    }
+    public static func _conditionallyBridgeFromObjectiveC(_ source: NSDictionary, result: inout Dictionary?) -> Bool {
+        var values: Dictionary = [:]
+        for rawKey in source.allKeys {
+            guard let key = rawKey as? Key, let value = source.object(forKey: rawKey) as? Value else { return false }
+            values[key] = value
+        }
+        result = values
+        return true
+    }
+    public static func _unconditionallyBridgeFromObjectiveC(_ source: NSDictionary?) -> Dictionary {
+        guard let source else { return [:] }
+        var result: Dictionary?
+        precondition(_conditionallyBridgeFromObjectiveC(source, result: &result), "NSDictionary key/value type mismatch")
+        return result!
+    }
+}

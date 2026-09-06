@@ -71,7 +71,7 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9): **88 → 1206 → 682 → 774 → 949 implemented** / 345 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10): **88 → 1206 → 682 → 774 → 949 → 1283 implemented** / 11 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Fail-closed boundaries
 
@@ -86,8 +86,10 @@ Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9): **88 �
   `removeUbiquitousContentAndPersistentStore` throws.
 - `NSMappingModel.inferredMappingModel` and `NSMigrationManager.migrateStore`
   throw. Staged/lightweight migration does not rewrite stores.
-- Persistent history tokens are not produced; history fetch requests compile
-  but do not invent transactions.
+- Persistent history is a Linux-local log gated by
+  `NSPersistentHistoryTrackingKey`. It is not Apple's private history
+  entities or transaction schema; `NSPersistentHistoryChange.entityDescription`
+  stays nil. Without the tracking option the log stays empty.
 - `NSCoreDataCoreSpotlightDelegate` does not index. `CSSearchableIndex`
   methods are unavailable.
 - `NSCoreDataVersionNumber` is exported as `0` because the current iOS 26.1
@@ -336,3 +338,162 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 COREDATA_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
 ```
+
+## Depth pass 2026-09 (wave 10)
+
+Fifth behavioral pass on `cursor/port-coredata-to-linux-6ccb` from expected
+start `39dc25a2769fb88a50f0853964137a4f96d50322` (wave-9 ledger). Kept the
+in-memory graph, XML model load, SQLite store, inheritance, batch/atomic/
+incremental adapters, and every existing synchronous test. Added:
+
+- Linux-local persistent history when `NSPersistentHistoryTrackingKey` is
+  set (insert/update/delete, fetch/delete requests, tokens). Apple private
+  history entities stay nil.
+- `NSPersistentStoreDescription` option merge (`isReadOnly`, timeout,
+  sqlite pragmas, migrate/infer flags) and read-only save refusal.
+- SQLite `PRAGMA` application after open (sanitized names/values).
+- `NSEntityMigrationPolicy.createDestinationInstances` copies matching
+  attributes and associates them. `NSManagedObjectModelReference(fileURL:)`
+  loads contents XML. Model merge reindexes `entitiesByName`.
+- `NSAsynchronousFetchRequest` completion runs **synchronously** on execute
+  (no run-loop wait). `performBackgroundTask` uses `performAndWait`.
+- Validation / merge-policy errors populate `NSValidationObjectErrorKey`,
+  `NSAffectedObjectsErrorKey`, and typed save-conflict userInfo.
+- FRC section `indexTitle` / `objects` and synchronous delegate diffs.
+- CloudKit event requests stay empty; Spotlight index deletion completes
+  synchronously and remains fail-closed.
+
+Async `perform(schedule:)`, async `performBackgroundTask`, and coordinator
+async `perform` stay `declared` so the sealed gate cannot hang. Eight
+`init(coder:)` rows stay `declared` because the Linux `NSCoder` path does
+not round-trip model objects. Nine `NSExpression`/`UndoManager` rows stay
+`deferred`. Ten ubiquity/Spotlight daemon rows stay `unavailable`.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift
+6.2.4 / linux and the sealed gate compiles with a clean product tree
+(`products=clean`). Starting commit
+`39dc25a2769fb88a50f0853964137a4f96d50322` matched.
+
+**Coverage before / after this wave 10 pass** (1319 public IDs):
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before (tree at expected start `39dc25a2`, wave 9) | 949 | 345 | 15 | 10 | 0 |
+| After (history + description + focused tests) | 1283 | 11 | 15 | 10 | 0 |
+
+Every `implemented` row cites
+`test:full/coredata/tests/agent/<File>Tests.swift#testName` naming a real
+top-level synchronous `func testName()`. Enum / option-set members and C
+`k…`/`err…`/`NS*Error` constants still share two table-driven value tests
+(including OptionSet array-literal init). No other test is cited by more
+than 40% of implemented rows (largest non-catalog/error:
+`testFailClosedSurfaces` at 49 / 1283 ≈ 3.8%). Tests do not wait on
+`DispatchQueue.main`, `DispatchSemaphore`, `RunLoop`, or `Task`.
+
+Top-5 implemented evidence distribution (1283 rows):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 401 | 31.3% | `CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues` |
+| 218 | 17.0% | `CoreDataErrorCodeTests.swift#testErrorCodes` |
+| 49 | 3.8% | `CoreDataFailClosedTests.swift#testFailClosedSurfaces` |
+| 38 | 3.0% | `CoreDataDepthPassTests.swift#testContextLifecycleMergeAndExecute` |
+| 23 | 1.8% | `CoreDataBatchTests.swift#testBatchRequests` |
+
+New focused tests this pass (`CoreDataWave10Tests.swift`):
+
+| Family | Test |
+| --- | --- |
+| store description / read-only / objectID store | `testPersistentStoreDescriptionOptionsAndReadOnly` |
+| attribute flags / versionHash | `testAttributeDescriptionFlagsAndVersionHash` |
+| model merge / configurations / templates | `testManagedObjectModelMergeConfigurationsAndTemplates` |
+| local persistent history | `testPersistentHistoryChangeLocalTracking` |
+| entity migration policy copy | `testEntityMigrationPolicyCreatesDestinationInstances` |
+| FRC delegate diffs / section titles | `testFetchedResultsControllerDelegateDiffAndTitles` |
+| CocoaError validation / save conflicts | `testCocoaErrorValidationAndSaveConflictUserInfo` |
+| merge conflict snapshots | `testMergeConflictSnapshotProperties` |
+| CloudKit event request fail-closed | `testPersistentCloudKitContainerEventRequestFailClosed` |
+| container + synchronous background task | `testPersistentContainerSurfaceAndBackgroundTask` |
+| async fetch as sync host driver | `testAsynchronousFetchRequestSynchronousHostDriver` |
+| Spotlight delegate fail-closed | `testCoreSpotlightDelegateFailClosedSurface` |
+| store init / exporter / StoreType | `testPersistentStoreInitReadOnlyAndSpotlightExporter` |
+| model reference / custom migration stage | `testManagedObjectModelReferenceAndCustomMigrationStage` |
+| mapping model / StoreType migrateStore | `testMappingModelFailClosedAndEntityMappings` |
+| atomic / incremental nodes | `testAtomicAndIncrementalNodeProperties` |
+| coordinator StoreType overloads | `testCoordinatorSwiftStoreTypeOverloads` |
+
+Isolated-gate markers from this host:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```
+
+## Depth pass local repair (wave 18, 2026-09-06)
+
+Repaired cloud head `f8b0fe33` from
+`platform/cursor/port-coredata-to-linux-6ccb` on `agent/fw-coredata-r`,
+merging current `origin/main` (`c1973365`) without CoreData conflicts.
+The merged diff against main is confined to `full/coredata/`; all existing
+implemented rows and tests are retained. The wave-10 success markers above
+were reported by the cloud branch; the operator refused that head before
+its runtime probe could execute.
+
+The first errors in `/tmp/fw_merge_gate-coredata.log` were at
+`CoreDataRuntime.swift:2438`: both option-set literal elements failed to
+convert from `T` to `T.ArrayLiteralElement`. On Linux Swift 6.2.4,
+`T.Element == T` does not establish `T.ArrayLiteralElement == T`. The
+catalog helper now requires both equalities, preserving the array-literal
+exercise for all three option-set types. The focused test and its embedded
+runtime copy use the same constraint.
+
+The citation review also added explicit catalog calls for the attribute
+wrapper's equality/hash operations, context concurrency raw-value
+initializer, and the three nonmutating option-set `symmetricDifference`
+members, plus a history-result `resultType` assertion in its cited test.
+These checks substantiate existing cloud-ledger claims; they do not change
+production behavior or reclassify rows.
+
+| Measured tree | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Current main (`c1973365`) | 949 | 345 | 15 | 10 | 0 |
+| Refused cloud head (`f8b0fe33`) | 1283 | 11 | 15 | 10 | 0 |
+| Local repair | 1283 | 11 | 15 | 10 | 0 |
+
+The implemented gain over main is **334 rows**. All 1283 implemented rows
+cite real synchronous, no-argument functions in `tests/agent/*Tests.swift`.
+All 64 distinct cited functions are byte-identical to their embedded
+`CoreDataRuntime.swift` definitions and are invoked by that runner. The
+largest non-table citation remains `testFailClosedSurfaces`: 49/1283
+(3.82%), below 40%. There are no `not-applicable` rows.
+
+Validation in the operator's `uikit-linux` container, at
+`/gate-codex-coredata`, with Swift 6.2.4 targeting
+`aarch64-unknown-linux-gnu`:
+
+- Unmodified sealed `tests/acceptance/test_host.sh`: reference hashes,
+  warnings-as-errors module/dylib compilation, runtime compilation, and
+  the complete runtime probe pass. Before repair: two compiler errors;
+  after repair: zero errors and the terminal success marker below.
+- All 64 cited tests also pass in separate processes, each with a 30-second
+  timeout and no preceding tests, using a temporary runner built from the
+  same runtime definitions. No test timed out. The normal sealed runner
+  executes all 73 existing tests synchronously.
+- Coverage citation format, definition/call presence, focused/runtime body
+  equality, status totals, and preservation of main's implemented rows
+  checked directly from the TSV and Swift sources.
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```
+
+Local logs: `/tmp/fw-coredata-r-gate.log` and
+`/tmp/fw-coredata-r-individual.log`. No sealed files, shared harness files,
+vendor pins, or generated products are changed by this repair.

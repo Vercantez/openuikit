@@ -127,6 +127,11 @@ public struct ChartPlotRecord: Equatable, Sendable {
     public var annotationAlignment: String?
     public var opacity: Double?
     public var layout: ChartLayoutAttributes
+    public var markWidth: MarkDimension
+    public var markHeight: MarkDimension
+    public var innerRadius: MarkDimension
+    public var outerRadius: MarkDimension
+    public var angularInset: CGFloat?
 
     public init(
         kind: Kind,
@@ -148,7 +153,12 @@ public struct ChartPlotRecord: Equatable, Sendable {
         annotationPosition: String? = nil,
         annotationAlignment: String? = nil,
         opacity: Double? = nil,
-        layout: ChartLayoutAttributes = ChartLayoutAttributes()
+        layout: ChartLayoutAttributes = ChartLayoutAttributes(),
+        markWidth: MarkDimension = .automatic,
+        markHeight: MarkDimension = .automatic,
+        innerRadius: MarkDimension = .automatic,
+        outerRadius: MarkDimension = .automatic,
+        angularInset: CGFloat? = nil
     ) {
         self.kind = kind
         self.x = x
@@ -170,6 +180,11 @@ public struct ChartPlotRecord: Equatable, Sendable {
         self.annotationAlignment = annotationAlignment
         self.opacity = opacity
         self.layout = layout
+        self.markWidth = markWidth
+        self.markHeight = markHeight
+        self.innerRadius = innerRadius
+        self.outerRadius = outerRadius
+        self.angularInset = angularInset
     }
 }
 
@@ -416,6 +431,23 @@ public struct ChartScale: Hashable, Sendable {
     public func bandStart(forCategory name: String) -> Double? {
         guard let index = categories.firstIndex(of: name) else { return nil }
         return rangeStart + Double(index) * bandWidth
+    }
+
+    /// Pixel interval occupied by `encoded`.
+    ///
+    /// Category values use the exclusive band `[bandStart, bandStart+bandWidth]`.
+    /// Continuous (linear/log/date/symbolLog) values collapse to the mapped
+    /// pixel, so the closed range has equal bounds.
+    public func pixelRange(for encoded: ChartEncodedValue) -> ClosedRange<Double>? {
+        switch encoded {
+        case .category(let name):
+            guard let start = bandStart(forCategory: name) else { return nil }
+            let end = start + bandWidth
+            return min(start, end)...max(start, end)
+        case .number(let value), .date(let value):
+            let mapped = position(forNumeric: value)
+            return mapped...mapped
+        }
     }
 
     public func numericValue(at position: Double) -> Double {
@@ -810,17 +842,32 @@ public struct ChartPlacedMark: Equatable, Sendable {
     public var frame: CGRect
     public var points: [CGPoint]
     public var series: String?
+    public var startAngle: Double?
+    public var endAngle: Double?
+    public var innerRadius: Double?
+    public var outerRadius: Double?
+    public var center: CGPoint?
 
     public init(
         kind: ChartPlotRecord.Kind,
         frame: CGRect = .zero,
         points: [CGPoint] = [],
-        series: String? = nil
+        series: String? = nil,
+        startAngle: Double? = nil,
+        endAngle: Double? = nil,
+        innerRadius: Double? = nil,
+        outerRadius: Double? = nil,
+        center: CGPoint? = nil
     ) {
         self.kind = kind
         self.frame = frame
         self.points = points
         self.series = series
+        self.startAngle = startAngle
+        self.endAngle = endAngle
+        self.innerRadius = innerRadius
+        self.outerRadius = outerRadius
+        self.center = center
     }
 }
 
@@ -884,7 +931,41 @@ public enum ChartLayout {
                     )
                 )
             case .rule:
-                if let x = xPosition(record, scale: xScale) {
+                let xPos = xPosition(record, scale: xScale)
+                let yPos = yPosition(record, scale: yScale)
+                let mappedXStart = record.xStart.map { xScale.position(forNumeric: $0) }
+                let mappedXEnd = record.xEnd.map { xScale.position(forNumeric: $0) }
+                let mappedYStart = record.yStart.map { yScale.position(forNumeric: $0) }
+                let mappedYEnd = record.yEnd.map { yScale.position(forNumeric: $0) }
+                if let x0 = mappedXStart, let x1 = mappedXEnd, let y = yPos {
+                    let lo = min(x0, x1)
+                    let hi = max(x0, x1)
+                    placed.append(
+                        applyLayout(
+                            record,
+                            to: ChartPlacedMark(
+                                kind: .rule,
+                                frame: CGRect(x: lo, y: y, width: hi - lo, height: 1),
+                                points: [CGPoint(x: lo, y: y), CGPoint(x: hi, y: y)],
+                                series: record.series
+                            )
+                        )
+                    )
+                } else if let y0 = mappedYStart, let y1 = mappedYEnd, let x = xPos {
+                    let lo = min(y0, y1)
+                    let hi = max(y0, y1)
+                    placed.append(
+                        applyLayout(
+                            record,
+                            to: ChartPlacedMark(
+                                kind: .rule,
+                                frame: CGRect(x: x, y: lo, width: 1, height: hi - lo),
+                                points: [CGPoint(x: x, y: lo), CGPoint(x: x, y: hi)],
+                                series: record.series
+                            )
+                        )
+                    )
+                } else if let x = xPos {
                     let y0 = min(yScale.rangeStart, yScale.rangeEnd)
                     let y1 = max(yScale.rangeStart, yScale.rangeEnd)
                     placed.append(
@@ -901,7 +982,7 @@ public enum ChartLayout {
                             )
                         )
                     )
-                } else if let y = yPosition(record, scale: yScale) {
+                } else if let y = yPos {
                     let x0 = min(xScale.rangeStart, xScale.rangeEnd)
                     let x1 = max(xScale.rangeStart, xScale.rangeEnd)
                     placed.append(
@@ -932,6 +1013,8 @@ public enum ChartLayout {
                 continue
             }
         }
+
+        placed.append(contentsOf: chartPlaceSectors(records: records, xScale: xScale, yScale: yScale))
 
         for (series, points) in linePoints {
             let sorted = points.sorted { $0.x < $1.x }
@@ -1002,16 +1085,28 @@ public enum ChartLayout {
         let category = record.category ?? record.x.map { String($0) } ?? ""
         let series = record.series ?? "_"
         let stackedBar = stacked["\(category)\u{1f}\(series)"]
-        let yStartValue = stackedBar?.yStart ?? record.yStart ?? 0
-        let yEndValue = stackedBar?.yEnd ?? record.yEnd ?? record.y ?? 0
+        let yStartValue: Double
+        let yEndValue: Double
+        if record.yStart != nil, record.yEnd != nil, record.stacking == .unstacked {
+            yStartValue = record.yStart ?? 0
+            yEndValue = record.yEnd ?? 0
+        } else {
+            yStartValue = stackedBar?.yStart ?? record.yStart ?? 0
+            yEndValue = stackedBar?.yEnd ?? record.yEnd ?? record.y ?? 0
+        }
         let y0 = yScale.position(forNumeric: yStartValue)
         let y1 = yScale.position(forNumeric: yEndValue)
         let y = min(y0, y1)
         let height = abs(y1 - y0)
         if xScale.type == .category, let name = record.category ?? (record.x.map { String($0) }) {
             let start = xScale.bandStart(forCategory: name) ?? xScale.rangeStart
-            let width = max(1, xScale.bandWidth - 2 * defaultBarInset)
-            return CGRect(x: start + defaultBarInset, y: y, width: width, height: height)
+            let band = xScale.bandWidth
+            let resolved = chartResolveMarkDimension(
+                record.markWidth,
+                span: band,
+                defaultInset: defaultBarInset
+            )
+            return CGRect(x: start + resolved.origin, y: y, width: max(1, resolved.length), height: height)
         }
         let xStart = record.xStart.map { xScale.position(forNumeric: $0) }
             ?? xPosition(record, scale: xScale).map { $0 - 8 }
@@ -1019,7 +1114,24 @@ public enum ChartLayout {
         let xEnd = record.xEnd.map { xScale.position(forNumeric: $0) }
             ?? xPosition(record, scale: xScale).map { $0 + 8 }
             ?? xStart + 16
-        return CGRect(x: min(xStart, xEnd), y: y, width: abs(xEnd - xStart), height: height)
+        let spanStart = min(xStart, xEnd)
+        let span = abs(xEnd - xStart)
+        let resolved = chartResolveMarkDimension(
+            record.markWidth,
+            span: span,
+            defaultInset: 0
+        )
+        let yResolved = chartResolveMarkDimension(
+            record.markHeight,
+            span: height,
+            defaultInset: 0
+        )
+        return CGRect(
+            x: spanStart + resolved.origin,
+            y: y + yResolved.origin,
+            width: resolved.length,
+            height: yResolved.length
+        )
     }
 }
 

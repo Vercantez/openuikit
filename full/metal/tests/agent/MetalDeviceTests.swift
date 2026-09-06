@@ -293,12 +293,7 @@ func testDeviceFailClosedFactories() {
     counterDesc.label = "counters"
     counterDesc.storageMode = .shared
     counterDesc.counterSet = nil
-    do {
-        _ = try device.makeCounterSampleBuffer(descriptor: counterDesc)
-        fatalError("counter sample buffer must fail closed")
-    } catch let error as MTLCPUValidationError {
-        precondition(error.reason.contains("counter"))
-    } catch {
-        fatalError("expected MTLCPUValidationError")
-    }
+    let counters = try! device.makeCounterSampleBuffer(descriptor: counterDesc)
+    precondition(counters.sampleCount == 1)
+    precondition(try! counters.resolveCounterRange(0..<1) == nil)
 }

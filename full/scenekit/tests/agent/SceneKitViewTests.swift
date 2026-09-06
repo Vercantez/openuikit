@@ -49,3 +49,62 @@ func testSCNViewStores() {
     controller.endInteraction(CGPoint.zero, withViewport: CGSize(width: 1, height: 1), velocity: CGPoint.zero)
     precondition(controller.automaticTarget)
 }
+
+func testCameraControllerOrbitAndDolly() {
+    let scene = SCNScene()
+    let cam = SCNNode()
+    cam.camera = SCNCamera()
+    cam.camera?.fieldOfView = 60
+    cam.position = SCNVector3(0, 0, 10)
+    scene.rootNode.addChildNode(cam)
+    let box = SCNNode(geometry: SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0))
+    scene.rootNode.addChildNode(box)
+    let controller = SCNCameraController()
+    controller.pointOfView = cam
+    controller.target = SCNVector3Zero
+    controller.worldUp = SCNNode.localUp
+    controller.inertiaEnabled = true
+    controller.inertiaFriction = 0.1
+    controller.minimumVerticalAngle = -80
+    controller.maximumVerticalAngle = 80
+    controller.minimumHorizontalAngle = -3
+    controller.maximumHorizontalAngle = 3
+    precondition(controller.inertiaEnabled)
+    precondition(abs(Float(controller.inertiaFriction) - 0.1) < 1e-4)
+    controller.beginInteraction(CGPoint.zero, withViewport: CGSize(width: 64, height: 64))
+    precondition(controller.isInertiaRunning)
+    controller.stopInertia()
+    precondition(!controller.isInertiaRunning)
+    let before = cam.worldPosition.z
+    controller.dollyToTarget(2)
+    precondition(cam.worldPosition.z < before)
+    controller.dolly(toTarget: -1)
+    controller.dolly(by: 0.5, onScreenPoint: CGPoint(x: 32, y: 32), viewport: CGSize(width: 64, height: 64))
+    controller.rollAroundTarget(0.1)
+    controller.roll(by: 0.05, aroundScreenPoint: CGPoint.zero, viewport: CGSize(width: 64, height: 64))
+    controller.clearRoll()
+    controller.frameNodes([box])
+    let dist = (
+        cam.worldPosition.x * cam.worldPosition.x +
+        cam.worldPosition.y * cam.worldPosition.y +
+        cam.worldPosition.z * cam.worldPosition.z
+    ).squareRoot()
+    precondition(dist > 0.5)
+    final class InertiaProbe: NSObject, SCNCameraControllerDelegate {
+        var ended = false
+        var started = false
+        func cameraInertiaDidEnd(for cameraController: SCNCameraController) {
+            ended = true
+            _ = cameraController
+        }
+        func cameraInertiaWillStart(for cameraController: SCNCameraController) {
+            started = true
+            _ = cameraController
+        }
+    }
+    let probe = InertiaProbe()
+    controller.delegate = probe
+    probe.cameraInertiaWillStart(for: controller)
+    probe.cameraInertiaDidEnd(for: controller)
+    precondition(probe.started && probe.ended)
+}

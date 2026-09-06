@@ -458,25 +458,28 @@ func testVNTrackOpticalFlowRequestConfig() {
 }
 
 func testImageRequestHandlerOverlayPerformNow() {
-    let image = visionRectangleImage()
+    let image = try! VisionHost.makeQRImage(payload: "HELLO")
     let data = VisionHost.encodeNetpbm(image)
-    _ = ImageRequestHandler(data)
-    _ = ImageRequestHandler(image)
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+    try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try! FileManager.default.removeItem(at: directory) }
+    let url = directory.appendingPathComponent("qr.ppm")
+    try! data.write(to: url)
     let ci = CIImage(cgImage: image)
-    _ = ImageRequestHandler(ci)
-    let buffer = CVPixelBuffer(width: image.width, height: image.height)
-    _ = ImageRequestHandler(buffer)
+    let buffer = CVPixelBuffer(width: image.width, height: image.height, pixels: image.pixels)
     let sample = CMSampleBuffer(pixelBuffer: buffer)
-    _ = ImageRequestHandler(sample)
-    let handler = ImageRequestHandler(image)
+    let handlers = [
+        ImageRequestHandler(url), ImageRequestHandler(data), ImageRequestHandler(image),
+        ImageRequestHandler(ci), ImageRequestHandler(buffer), ImageRequestHandler(sample),
+    ]
     var barcodes = DetectBarcodesRequest()
     barcodes.symbologies = [.qr]
-    let qr = try! VisionHost.makeQRImage(payload: "HELLO")
-    let qrHandler = ImageRequestHandler(qr)
-    let hits: [BarcodeObservation] = try! qrHandler.performNow(barcodes)
-    visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "handler performNow QR")
+    for (index, handler) in handlers.enumerated() {
+        let hits: [BarcodeObservation] = try! handler.performNow(barcodes)
+        visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "handler source \(index) QR")
+    }
     do {
-        _ = try handler.performNow(RecognizeDocumentsRequest())
+        _ = try handlers[0].performNow(RecognizeDocumentsRequest())
         visionExpect(false, "handler documents fail closed")
     } catch let error as VisionError {
         if case .invalidModel = error {

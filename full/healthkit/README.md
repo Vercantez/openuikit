@@ -45,17 +45,22 @@ The first two are the allowed table-driven enum / C-constant tests.
 
 Second depth pass over the repaired wave-3 ledger. Public-surface IDs: 2645.
 
-- **Before:** 1663 implemented / 943 declared / 0 deferred / 39 unavailable / 0 not-applicable
-- **After:** 1876 implemented / 730 declared / 0 deferred / 39 unavailable / 0 not-applicable
-- **Gain:** +213 implemented (local query-descriptor behaviour, value types, builders, workout inits)
+- **Before (wave 8):** 1663 implemented / 943 declared / 0 deferred / 39 unavailable / 0 not-applicable
+- **After wave 8:** 1876 implemented / 730 declared / 0 deferred / 39 unavailable / 0 not-applicable
+- **Wave 8 gain:** +213 implemented (local query-descriptor behaviour, value types, builders, workout inits)
+
+### Wave 9 continuation (this run)
+
+- **Before:** 1876 implemented / 730 declared / 0 deferred / 39 unavailable / 0 not-applicable
+- **After:** 2019 implemented / 587 declared / 39 deferred / 0 unavailable / 0 not-applicable
+- **Gain:** +143 implemented (FHIR version parsing, audiogram points/tests, discrete aggregates, glasses lenses, medication dose events, sample-type duration rules, walking-steadiness classification, query execute/stop, CDA parse, workout builder/session state machine, local attachment store)
+- **Unavailable reclassification:** 39 `NSComparisonPredicate.Operator` / `UTType` rows moved to **deferred** (Linux Foundation / isolated-gate module limits, not hardware/daemon/entitlement).
 
 Every new `implemented` row cites a top-level synchronous `func testName()` in
-`tests/agent/HealthKitDepthWave8Tests.swift` or the existing table-driven
-`testQuantitySeriesOptionsAlgebra`. Async `result(for:)` / `Sci12_Concurrency`
-AsyncSequence combinators stay **declared**. Quantity-series `finishSeries`
-and heartbeat `addHeartbeat` / `addMetadata` async entry points stay **declared**.
+`tests/agent/HealthKitDepthWave9Tests.swift`. Async `Sci12_Concurrency`
+combinators and `HKAttachment.AsyncBytes` overlays stay **declared**.
 
-**Top-5 implemented evidence distribution**
+**Top-5 implemented evidence distribution (after wave 9)**
 
 | rows | evidence |
 | ---: | --- |
@@ -66,8 +71,36 @@ and heartbeat `addHeartbeat` / `addMetadata` async entry points stay **declared*
 | 72 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable3` |
 
 Largest non-table test remains under the 40% bulk-relabel cap
-(`testUnitFactories` at 10.4% of remaining implemented rows). Largest wave-8
-test is `testVerifiableClinicalRecordValueTypes` (28 rows).
+(`testUnitFactories` at ~5.8% of remaining implemented rows). Largest wave-9
+test is `testAudiogramSensitivityPointAndTests` (26 rows).
+
+### Wave 9 behaviour added
+
+- `HKFHIRVersion` parsing (`1.0.2` DSTU2 / `4.0.1` R4), `init(fromVersionString:)`,
+  NSSecureCoding, and `HKFHIRResource.fhirVersion`.
+- `HKAudiogramSensitivityPoint` / `HKAudiogramSensitivityTest` /
+  `HKAudiogramSensitivityPointClampingRange` unit validation (Hz, dB HL) and
+  audiogram sample factories.
+- `HKDiscreteQuantitySample` min/max/average/mostRecent from the local series
+  table (or the single quantity when no series exists).
+- `HKGlassesLensSpecification` designated init (sphere, cylinder, axis, add,
+  vertex distance, prism, PD) and `HKGlassesPrescription` factory.
+- `HKMedicationDoseEvent` value type with macios log-status raw values
+  (`taken = 4`, …) and a local convenience init (not Apple medication logging).
+- `HKSampleType` seven-day maximum duration for quantity/category samples;
+  workouts/series/correlations unrestricted; estimate recalibration flag.
+- `HKAppleWalkingSteadinessClassification.init(for:)` percent ranges
+  (veryLow < 0.50, low < 0.75, else ok) plus `minimum`/`maximum`/`allCases`.
+- `HKHealthStore.execute` / `stop` covered against local `HKSampleQuery`,
+  anchored, observer, source, correlation, and `HKDocumentQuery`.
+- `HKCDADocument.parse` extracts title/patient/author/custodian from a
+  `ClinicalDocument` XML payload (not Apple schema validation).
+- `HKWorkoutBuilder` sync completion handlers for begin/end collection,
+  `elapsedTime(at:)`, `statistics(for:)`, `seriesBuilder(for:)`, activity add/update.
+- `HKWorkoutSession` state machine with synchronous delegate callbacks;
+  `sendToRemoteWorkoutSession` fail-closes (`errorHealthDataUnavailable`, no Watch).
+- Local `HKAttachmentStore` byte table (name/size/data/stream/remove). `UTType`
+  addAttachment overloads stay deferred.
 
 ### Wave 8 behaviour added
 
@@ -147,16 +180,16 @@ test is `testVerifiableClinicalRecordValueTypes` (28 rows).
 - No Apple Health database, Health app UI, entitlements, or TCC.
 - `enableBackgroundDelivery` / `disableBackgroundDelivery` /
   `disableAllBackgroundDelivery` → `errorHealthDataUnavailable`.
-- Watch pairing, `HKWorkoutSession` hardware, Apple clinical-record / FHIR
-  network verification, medication dose logging, live vision-prescription
+- Watch pairing, `HKWorkoutSession.sendToRemoteWorkoutSession`, Apple clinical-record / FHIR
+  network verification, medication dose logging against Apple's medication store, live vision-prescription
   capture, Watch ECG hardware, and `splitTotalEnergy` stay fail-closed
   (`errorHealthDataUnavailable` or empty hardware streams). Local ECG
   voltage tables and locally stored JWS clinical records are queryable; they
-  are not Apple-verified credentials.
-- Attachment APIs that take `UTType` stay **unavailable** (isolated gate cannot
+  are not Apple-verified credentials. Local attachment bytes are in-process only.
+- Attachment APIs that take `UTType` stay **deferred** (isolated gate cannot
   import UniformTypeIdentifiers).
 - APIs whose signatures require `NSComparisonPredicate.Operator` stay
-  **unavailable**; use `HKPredicateOperator` instead.
+  **deferred**; use `HKPredicateOperator` instead.
 - `preferredUnits(for:)` throws `errorHealthDataUnavailable`.
 - Workout-activity quantity predicates currently match all (Linux NSPredicate
   cannot inspect nested `HKWorkoutActivity` via KVC).
@@ -182,7 +215,7 @@ Focused coverage tests (cited by `coverage.tsv`): `HealthKitEnumTests.swift`,
 `HealthKitStoreTests.swift`, `HealthKitQueryTests.swift`,
 `HealthKitStatisticsTests.swift`, `HealthKitSampleTests.swift`,
 `HealthKitWorkoutTests.swift`, `HealthKitDescriptorTests.swift`,
-`HealthKitSurfaceTests.swift`, `HealthKitDepthWave8Tests.swift`.
+`HealthKitSurfaceTests.swift`, `HealthKitDepthWave8Tests.swift`, `HealthKitDepthWave9Tests.swift`.
 
 ### Unresolved behavioral questions
 
@@ -219,13 +252,13 @@ when no store directory is writable.
 - No Apple Health database, no Health app UI, no entitlement grant, no Watch
   workout session, no Apple-verified clinical credentials / FHIR network.
 - Attachment `UTType` and `NSComparisonPredicate.Operator` signatures remain
-  unavailable on this isolated Linux gate.
+  deferred on this isolated Linux gate.
 - `HKUnit.unit(_:)` parses the documented SI/compound strings used in tests;
   arbitrary Apple unit strings that are not in that set are not claimed.
 
 ## Coverage
 
-See `coverage.tsv`. Implemented 1876, declared 730, unavailable 39, deferred 0.
-Unavailable rows are `NSComparisonPredicate.Operator` and `UTType` APIs only.
-Declared rows compile but lack a focused `*Tests.swift` assertion. Wave-8
+See `coverage.tsv`. Implemented 2019, declared 587, deferred 39, unavailable 0.
+Deferred rows are `NSComparisonPredicate.Operator` and `UTType` APIs only.
+Declared rows compile but lack a focused `*Tests.swift` assertion. Wave-8/9
 async `result(for:)` / `Sci12_Concurrency` combinators remain declared.

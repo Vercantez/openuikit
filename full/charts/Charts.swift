@@ -455,6 +455,8 @@ public struct RectangleMark: ChartContent {
     public let y: Double?
     public let category: String?
     public let series: String?
+    public let width: MarkDimension
+    public let height: MarkDimension
 
     public init<XStart, XEnd, YStart, YEnd>(
         xStart: PlottableValue<XStart>,
@@ -474,6 +476,8 @@ public struct RectangleMark: ChartContent {
         self.y = nil
         self.category = xStart.value as? String
         self.series = nil
+        self.width = .automatic
+        self.height = .automatic
     }
 
     public init<X: Plottable & Sendable, Y: Plottable & Sendable>(
@@ -482,8 +486,6 @@ public struct RectangleMark: ChartContent {
         width: MarkDimension = .automatic,
         height: MarkDimension = .automatic
     ) {
-        _ = width
-        _ = height
         self.x = chartNumericScalar(x.value)
         self.y = chartNumericScalar(y.value)
         self.xStart = nil
@@ -492,6 +494,8 @@ public struct RectangleMark: ChartContent {
         self.yEnd = nil
         self.category = x.value as? String
         self.series = nil
+        self.width = width
+        self.height = height
     }
 
     public init<X: Plottable & Sendable, Y: Plottable & Sendable>(
@@ -500,7 +504,6 @@ public struct RectangleMark: ChartContent {
         yEnd: PlottableValue<Y>,
         width: MarkDimension = .automatic
     ) {
-        _ = width
         self.x = chartNumericScalar(x.value)
         self.yStart = chartNumericScalar(yStart.value)
         self.yEnd = chartNumericScalar(yEnd.value)
@@ -509,6 +512,8 @@ public struct RectangleMark: ChartContent {
         self.y = self.yEnd
         self.category = x.value as? String
         self.series = nil
+        self.width = width
+        self.height = .automatic
     }
 
     public var chartPlotRecords: [ChartPlotRecord] {
@@ -522,7 +527,9 @@ public struct RectangleMark: ChartContent {
                 yStart: yStart,
                 yEnd: yEnd,
                 category: category,
-                series: series
+                series: series,
+                markWidth: width,
+                markHeight: height
             ),
         ]
     }
@@ -1108,7 +1115,7 @@ public enum AxisMarkBuilder {
     public static func buildLimitedAvailability(
         _ content: some AxisMark
     ) -> AnyAxisMark {
-        AnyAxisMark(content)
+        AnyAxisMark(erasing: content)
     }
 }
 

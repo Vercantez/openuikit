@@ -80,6 +80,261 @@ open class MTRBaseDevice: NSObject {
         _ = (endpoint, clusterID, commandID, commandFields, timedInvokeTimeout)
         throw MTRFailClosed(.invalidState)
     }
+
+    public convenience init(nodeID: NSNumber, controller: MTRDeviceController) {
+        self.init()
+        _ = (nodeID, controller)
+    }
+
+    public func deregisterReportHandlers(withClientQueue queue: dispatch_queue_t, completion: @escaping () -> Void) {
+        _ = queue
+        completion()
+    }
+
+    public func deregisterReportHandlers(with queue: dispatch_queue_t, completion: @escaping () -> Void) {
+        deregisterReportHandlers(withClientQueue: queue, completion: completion)
+    }
+
+    public func downloadLog(
+        of type: MTRDiagnosticLogType,
+        timeout: TimeInterval,
+        queue: dispatch_queue_t,
+        completion: @escaping (URL?, (any Error)?) -> Void
+    ) {
+        _ = (type, timeout, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func invokeCommand(
+        withEndpointID endpointID: NSNumber,
+        clusterID: NSNumber,
+        commandID: NSNumber,
+        commandFields: Any,
+        timedInvokeTimeout timeoutMs: NSNumber?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, commandID, commandFields, timeoutMs, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func invokeCommand(
+        withEndpointId endpointId: NSNumber,
+        clusterId: NSNumber,
+        commandId: NSNumber,
+        commandFields: Any,
+        timedInvokeTimeout timeoutMs: NSNumber?,
+        clientQueue: dispatch_queue_t,
+        completionHandler: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        invokeCommand(
+            withEndpointID: endpointId,
+            clusterID: clusterId,
+            commandID: commandId,
+            commandFields: commandFields,
+            timedInvokeTimeout: timeoutMs,
+            queue: clientQueue,
+            completion: completionHandler
+        )
+    }
+
+    public func openCommissioningWindow(
+        withDiscriminator discriminator: NSNumber,
+        duration: NSNumber,
+        queue: dispatch_queue_t,
+        completion: @escaping (MTRSetupPayload?, (any Error)?) -> Void
+    ) {
+        _ = (discriminator, duration, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func openCommissioningWindow(
+        withSetupPasscode setupPasscode: NSNumber,
+        discriminator: NSNumber,
+        duration: NSNumber,
+        queue: dispatch_queue_t,
+        completion: @escaping (MTRSetupPayload?, (any Error)?) -> Void
+    ) {
+        _ = (setupPasscode, discriminator, duration, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func readAttributePaths(
+        _ attributePaths: [MTRAttributeRequestPath]?,
+        eventPaths: [MTREventRequestPath]?,
+        params: MTRReadParams?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (attributePaths, eventPaths, params, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func readAttribute(
+        withEndpointId endpointId: NSNumber?,
+        clusterId: NSNumber?,
+        attributeId: NSNumber?,
+        params: MTRReadParams?,
+        clientQueue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        readAttributes(
+            withEndpointID: endpointId,
+            clusterID: clusterId,
+            attributeID: attributeId,
+            params: params,
+            queue: clientQueue,
+            completion: completion
+        )
+    }
+
+    public func readAttributes(
+        withEndpointID endpointID: NSNumber?,
+        clusterID: NSNumber?,
+        attributeID: NSNumber?,
+        params: MTRReadParams?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, attributeID, params, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func readEvents(
+        withEndpointID endpointID: NSNumber?,
+        clusterID: NSNumber?,
+        eventID: NSNumber?,
+        params: MTRReadParams?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, eventID, params, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func subscribeAttribute(
+        withEndpointId endpointId: NSNumber?,
+        clusterId: NSNumber?,
+        attributeId: NSNumber?,
+        minInterval: NSNumber,
+        maxInterval: NSNumber,
+        params: MTRSubscribeParams?,
+        clientQueue: dispatch_queue_t,
+        reportHandler: @escaping MTRDeviceResponseHandler,
+        subscriptionEstablished subscriptionEstablishedHandler: (() -> Void)? = nil
+    ) {
+        _ = (endpointId, clusterId, attributeId, minInterval, maxInterval, params, clientQueue, subscriptionEstablishedHandler)
+        reportHandler(nil, MTRFailClosed())
+    }
+
+    public func subscribe(
+        toAttributePaths attributePaths: [MTRAttributeRequestPath]?,
+        eventPaths: [MTREventRequestPath]?,
+        params: MTRSubscribeParams?,
+        queue: dispatch_queue_t,
+        reportHandler: @escaping MTRDeviceResponseHandler,
+        subscriptionEstablished: MTRSubscriptionEstablishedHandler?,
+        resubscriptionScheduled: MTRDeviceResubscriptionScheduledHandler? = nil
+    ) {
+        _ = (attributePaths, eventPaths, params, queue, subscriptionEstablished, resubscriptionScheduled)
+        reportHandler(nil, MTRFailClosed())
+    }
+
+    public func subscribeToAttributes(
+        withEndpointID endpointID: NSNumber?,
+        clusterID: NSNumber?,
+        attributeID: NSNumber?,
+        params: MTRSubscribeParams?,
+        queue: dispatch_queue_t,
+        reportHandler: @escaping MTRDeviceResponseHandler,
+        subscriptionEstablished: MTRSubscriptionEstablishedHandler? = nil
+    ) {
+        _ = (endpointID, clusterID, attributeID, params, queue, subscriptionEstablished)
+        reportHandler(nil, MTRFailClosed())
+    }
+
+    public func subscribeToEvents(
+        withEndpointID endpointID: NSNumber?,
+        clusterID: NSNumber?,
+        eventID: NSNumber?,
+        params: MTRSubscribeParams?,
+        queue: dispatch_queue_t,
+        reportHandler: @escaping MTRDeviceResponseHandler,
+        subscriptionEstablished: MTRSubscriptionEstablishedHandler? = nil
+    ) {
+        _ = (endpointID, clusterID, eventID, params, queue, subscriptionEstablished)
+        reportHandler(nil, MTRFailClosed())
+    }
+
+    public func subscribe(
+        with queue: dispatch_queue_t,
+        minInterval: UInt16,
+        maxInterval: UInt16,
+        params: MTRSubscribeParams?,
+        cacheContainer attributeCacheContainer: MTRAttributeCacheContainer?,
+        attributeReportHandler: MTRDeviceReportHandler?,
+        eventReportHandler: MTRDeviceReportHandler?,
+        errorHandler: @escaping MTRDeviceErrorHandler,
+        subscriptionEstablished subscriptionEstablishedHandler: (() -> Void)?,
+        resubscriptionScheduled resubscriptionScheduledHandler: MTRDeviceResubscriptionScheduledHandler? = nil
+    ) {
+        _ = (
+            queue, minInterval, maxInterval, params, attributeCacheContainer,
+            attributeReportHandler, eventReportHandler, subscriptionEstablishedHandler,
+            resubscriptionScheduledHandler
+        )
+        errorHandler(MTRFailClosed())
+    }
+
+    public func subscribe(
+        with queue: dispatch_queue_t,
+        params: MTRSubscribeParams,
+        clusterStateCacheContainer: MTRClusterStateCacheContainer?,
+        attributeReportHandler: MTRDeviceReportHandler?,
+        eventReportHandler: MTRDeviceReportHandler?,
+        errorHandler: @escaping MTRDeviceErrorHandler,
+        subscriptionEstablished: MTRSubscriptionEstablishedHandler?,
+        resubscriptionScheduled: MTRDeviceResubscriptionScheduledHandler? = nil
+    ) {
+        _ = (
+            queue, params, clusterStateCacheContainer, attributeReportHandler,
+            eventReportHandler, subscriptionEstablished, resubscriptionScheduled
+        )
+        errorHandler(MTRFailClosed())
+    }
+
+    public func writeAttribute(
+        withEndpointID endpointID: NSNumber,
+        clusterID: NSNumber,
+        attributeID: NSNumber,
+        value: Any,
+        timedWriteTimeout timeoutMs: NSNumber?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, attributeID, value, timeoutMs, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func writeAttribute(
+        withEndpointId endpointId: NSNumber,
+        clusterId: NSNumber,
+        attributeId: NSNumber,
+        value: Any,
+        timedWriteTimeout timeoutMs: NSNumber?,
+        clientQueue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        writeAttribute(
+            withEndpointID: endpointId,
+            clusterID: clusterId,
+            attributeID: attributeId,
+            value: value,
+            timedWriteTimeout: timeoutMs,
+            queue: clientQueue,
+            completion: completion
+        )
+    }
 }
 
 open class MTRDevice: MTRBaseDevice {
@@ -106,9 +361,9 @@ open class MTRDevice: MTRBaseDevice {
     }
 
     public init(nodeID: NSNumber, controller: MTRDeviceController) {
+        super.init()
         self.nodeID = nodeID
         self.deviceController = controller
-        super.init()
     }
 
     public convenience init(nodeID: UInt64, deviceController: MTRDeviceController) {
@@ -185,6 +440,97 @@ open class MTRDevice: MTRBaseDevice {
             value: value
         )
         _ = expectedValueInterval
+    }
+
+    public func writeAttribute(
+        withEndpointID endpointID: NSNumber,
+        clusterID: NSNumber,
+        attributeID: NSNumber,
+        value: Any,
+        expectedValueInterval: NSNumber,
+        timedWriteTimeout timeout: NSNumber?
+    ) {
+        _ = timeout
+        writeAttribute(
+            withEndpointID: endpointID,
+            clusterID: clusterID,
+            attributeID: attributeID,
+            value: value,
+            expectedValueInterval: expectedValueInterval
+        )
+    }
+
+    public func invokeCommand(
+        withEndpointID endpointID: NSNumber,
+        clusterID: NSNumber,
+        commandID: NSNumber,
+        commandFields: [String: Any]?,
+        expectedValues: [[String: Any]]?,
+        expectedValueInterval: NSNumber?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, commandID, commandFields, expectedValues, expectedValueInterval, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func invokeCommand(
+        withEndpointID endpointID: NSNumber,
+        clusterID: NSNumber,
+        commandID: NSNumber,
+        commandFields: Any,
+        expectedValues: [[String: Any]]?,
+        expectedValueInterval: NSNumber?,
+        timedInvokeTimeout timeout: NSNumber?,
+        clientQueue queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, commandID, commandFields, expectedValues, expectedValueInterval, timeout, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func invokeCommand(
+        withEndpointID endpointID: NSNumber,
+        clusterID: NSNumber,
+        commandID: NSNumber,
+        commandFields: Any,
+        expectedValues: [[String: Any]]?,
+        expectedValueInterval: NSNumber?,
+        timedInvokeTimeout timeout: NSNumber?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        invokeCommand(
+            withEndpointID: endpointID,
+            clusterID: clusterID,
+            commandID: commandID,
+            commandFields: commandFields,
+            expectedValues: expectedValues,
+            expectedValueInterval: expectedValueInterval,
+            timedInvokeTimeout: timeout,
+            clientQueue: queue,
+            completion: completion
+        )
+    }
+
+    public func invokeCommands(
+        _ commands: [[MTRCommandWithRequiredResponse]],
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (commands, queue)
+        mtrInvokeFailClosed(completion)
+    }
+
+    public func wait(
+        forAttributeValues values: [MTRAttributePath: [String: Any]],
+        timeout: TimeInterval,
+        queue: dispatch_queue_t,
+        completion: @escaping ((any Error)?) -> Void
+    ) -> MTRAttributeValueWaiter {
+        _ = (values, timeout, queue)
+        mtrInvokeFailClosed(completion)
+        return MTRAttributeValueWaiter()
     }
 
     public func descriptorClusters() -> [MTRAttributePath: [String: Any]] { [:] }
@@ -462,9 +808,47 @@ open class MTRDeviceControllerFactoryParams: NSObject {
     public var certificationDeclarationCertificates: [Data]?
     public var port: NSNumber?
     public var shouldStartServer: Bool = false
+
+    public override init() {
+        super.init()
+    }
+
+    public init(storage: any MTRStorage) {
+        self.storage = storage
+        super.init()
+    }
 }
 
-open class MTRControllerFactoryParams: MTRDeviceControllerFactoryParams {}
+open class MTRControllerFactoryParams: MTRDeviceControllerFactoryParams {
+    public var cdCerts: [Data]? {
+        get { certificationDeclarationCertificates }
+        set { certificationDeclarationCertificates = newValue }
+    }
+    public var paaCerts: [Data]? {
+        get { productAttestationAuthorityCertificates }
+        set { productAttestationAuthorityCertificates = newValue }
+    }
+    public var startServer: Bool {
+        get { shouldStartServer }
+        set { shouldStartServer = newValue }
+    }
+    public var storageDelegate: any MTRPersistentStorageDelegate {
+        (storage as? MTRPersistentStorageDelegate) ?? MTRHostEmptyStorage.shared
+    }
+}
+
+private final class MTRHostEmptyStorage: NSObject, MTRPersistentStorageDelegate {
+    static let shared = MTRHostEmptyStorage()
+    func storageData(forKey key: String) -> Data? { nil }
+    func setStorageData(_ value: Data, forKey key: String) -> Bool {
+        _ = (value, key)
+        return false
+    }
+    func removeStorageData(forKey key: String) -> Bool {
+        _ = key
+        return false
+    }
+}
 
 open class MTRDeviceControllerFactory: NSObject {
     public private(set) var isRunning: Bool = false
@@ -511,6 +895,27 @@ open class MTRDeviceControllerFactory: NSObject {
 
 open class MTRControllerFactory: MTRDeviceControllerFactory {
     public static let sharedFactory = MTRControllerFactory()
+
+    public func shutdown() {
+        stop()
+    }
+
+    public func startup(_ startupParams: MTRControllerFactoryParams) -> Bool {
+        do {
+            try start(startupParams)
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    public func startController(onExistingFabric startupParams: MTRDeviceControllerStartupParams) -> MTRDeviceController? {
+        try? createController(onExistingFabric: startupParams)
+    }
+
+    public func startController(onNewFabric startupParams: MTRDeviceControllerStartupParams) -> MTRDeviceController? {
+        try? createController(onNewFabric: startupParams)
+    }
 }
 
 open class MTRCertificates: NSObject {
@@ -570,10 +975,19 @@ open class MTRClusterStateCacheContainer: NSObject {}
 
 open class MTRAsyncCallbackQueueWorkItem: NSObject {
     public var readyHandler: MTRAsyncCallbackReadyHandler?
-    public var cancelHandler: (() -> Void)?
+    public var cancelHandler: () -> Void = {}
     public var enqueued = false
     public var ended = false
     public var retryCount = 0
+
+    public override init() {
+        super.init()
+    }
+
+    public init(queue: dispatch_queue_t) {
+        _ = queue
+        super.init()
+    }
 
     public func endWork() { ended = true }
     public func retryWork() { retryCount += 1 }
@@ -581,6 +995,15 @@ open class MTRAsyncCallbackQueueWorkItem: NSObject {
 
 open class MTRAsyncCallbackWorkQueue: NSObject {
     private var items: [MTRAsyncCallbackQueueWorkItem] = []
+
+    public override init() {
+        super.init()
+    }
+
+    public init(context: Any?, queue: dispatch_queue_t) {
+        _ = (context, queue)
+        super.init()
+    }
 
     public func enqueue(_ item: MTRAsyncCallbackQueueWorkItem) {
         item.enqueued = true

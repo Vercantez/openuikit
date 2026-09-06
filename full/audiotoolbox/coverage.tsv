@@ -253,22 +253,22 @@ c:@E@MusicSequenceType@kMusicSequenceType_Samples	implemented	test:full/audiotoo
 c:@E@MusicSequenceType@kMusicSequenceType_Seconds	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 c:@Ea@AUEventSampleTimeImmediate@AUEventSampleTimeImmediate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog	Exact constant payload asserted on Linux
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_Azimuth	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_BusEnable	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_BusEnable	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_Distance	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_DryWetReverbBlend	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_DryWetReverbBlend	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_Elevation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_Enable	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_Gain	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_GlobalReverbGain	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_GlobalReverbGainInDecibels	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_GlobalReverbGainInDecibels	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_MaxGain	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_MaxGainInDecibels	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_MaxGainInDecibels	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_MinGain	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_MinGainInDecibels	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_MinGainInDecibels	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_ObstructionAttenuation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_ObstructionAttenuationInDecibels	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_ObstructionAttenuationInDecibels	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_OcclusionAttenuation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_OcclusionAttenuationInDecibels	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_OcclusionAttenuationInDecibels	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_PlaybackRate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_PostAveragePower	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@k3DMixerParam_Azimuth@k3DMixerParam_PostPeakHoldLevel	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
@@ -344,10 +344,10 @@ c:@Ea@kAUSamplerProperty_LoadPresetFromBank@kAUSamplerProperty_LoadPresetFromBan
 c:@Ea@kAUSampler_DefaultPercussionBankMSB@kAUSampler_DefaultBankLSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
 c:@Ea@kAUSampler_DefaultPercussionBankMSB@kAUSampler_DefaultMelodicBankMSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
 c:@Ea@kAUSampler_DefaultPercussionBankMSB@kAUSampler_DefaultPercussionBankMSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
-c:@Ea@kAUSoundIsolationParam_WetDryMixPercent@kAUSoundIsolationParam_SoundToIsolate	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kAUSoundIsolationParam_WetDryMixPercent@kAUSoundIsolationParam_WetDryMixPercent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kAUSoundIsolationSoundType_HighQualityVoice@kAUSoundIsolationSoundType_HighQualityVoice	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kAUSoundIsolationSoundType_HighQualityVoice@kAUSoundIsolationSoundType_Voice	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@kAUSoundIsolationParam_WetDryMixPercent@kAUSoundIsolationParam_SoundToIsolate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kAUSoundIsolationParam_WetDryMixPercent@kAUSoundIsolationParam_WetDryMixPercent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kAUSoundIsolationSoundType_HighQualityVoice@kAUSoundIsolationSoundType_HighQualityVoice	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kAUSoundIsolationSoundType_HighQualityVoice@kAUSoundIsolationSoundType_Voice	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@kAUVoiceIOProperty_BypassVoiceProcessing@kAUVoiceIOProperty_BypassVoiceProcessing	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
 c:@Ea@kAUVoiceIOProperty_BypassVoiceProcessing@kAUVoiceIOProperty_MuteOutput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
 c:@Ea@kAUVoiceIOProperty_BypassVoiceProcessing@kAUVoiceIOProperty_VoiceProcessingEnableAGC	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
@@ -1195,14 +1195,14 @@ c:@Ea@kDistortionParam_Delay@kDistortionParam_RingModMix	implemented	test:full/a
 c:@Ea@kDistortionParam_Delay@kDistortionParam_Rounding	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testRemainingParameterAndSelectorIDs	Focused Linux runtime assertion
 c:@Ea@kDistortionParam_Delay@kDistortionParam_SoftClipGain	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testRemainingParameterAndSelectorIDs	Focused Linux runtime assertion
 c:@Ea@kDistortionParam_Delay@kDistortionParam_SquaredTerm	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testRemainingParameterAndSelectorIDs	Focused Linux runtime assertion
-c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_GeneralCompression	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_LateNight	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_LimitedPlaybackRange	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_NoisyEnvironment	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_None	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeControlMode_None@kDynamicRangeControlMode_Heavy	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeControlMode_None@kDynamicRangeControlMode_Light	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kDynamicRangeControlMode_None@kDynamicRangeControlMode_None	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_GeneralCompression	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_LateNight	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_LimitedPlaybackRange	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_NoisyEnvironment	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeCompressionProfile_None@kDynamicRangeCompressionProfile_None	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeControlMode_None@kDynamicRangeControlMode_Heavy	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeControlMode_None@kDynamicRangeControlMode_Light	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kDynamicRangeControlMode_None@kDynamicRangeControlMode_None	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@kDynamicsProcessorParam_Threshold@kDynamicsProcessorParam_AttackTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@kDynamicsProcessorParam_Threshold@kDynamicsProcessorParam_CompressionAmount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@kDynamicsProcessorParam_Threshold@kDynamicsProcessorParam_ExpansionRatio	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
@@ -1302,20 +1302,20 @@ c:@Ea@kMusicEventType_NULL@kMusicEventType_User	implemented	test:full/audiotoolb
 c:@Ea@kMusicNoteEvent_UseGroupInstrument@kMusicNoteEvent_Unused	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
 c:@Ea@kMusicNoteEvent_UseGroupInstrument@kMusicNoteEvent_UseGroupInstrument	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
 c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_EnablePeakLocking	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_EnableSpectralCoherence	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_EnableTransientPreservation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_EnableSpectralCoherence	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_EnableTransientPreservation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_Overlap	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_Pitch	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_Rate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
-c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_Smoothness	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@kNewTimePitchParam_Rate@kNewTimePitchParam_Smoothness	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@kNumberOfResponseFrequencies@kNumberOfResponseFrequencies	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
 c:@Ea@kParametricEQParam_CenterFreq@kParametricEQParam_CenterFreq	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@kParametricEQParam_CenterFreq@kParametricEQParam_Gain	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@kParametricEQParam_CenterFreq@kParametricEQParam_Q	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
-c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_Minus20dB	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_Minus23dB	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_Minus31dB	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_None	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_Minus20dB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_Minus23dB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_Minus31dB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
+c:@Ea@kProgramTargetLevel_None@kProgramTargetLevel_None	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testWave6ConstantAliases	Focused Linux runtime assertion
 c:@Ea@kRandomParam_BoundA@kRandomParam_BoundA	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@kRandomParam_BoundA@kRandomParam_BoundB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
 c:@Ea@kRandomParam_BoundA@kRandomParam_Curve	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingAUParameterIDs	Focused Linux runtime assertion
@@ -1422,20 +1422,20 @@ c:@F@AudioCodecSetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioT
 c:@F@AudioCodecUninitialize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioCodecConstantsAndFailClosed	Focused Linux runtime assertion
 c:@F@AudioComponentCopyConfigurationInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioComponentCopyIcon	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AudioFileUserDataAndFailClosed	Focused Linux runtime assertion
-c:@F@AudioComponentCopyName	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentCopyName	Source signature present; behavior not independently asserted
+c:@F@AudioComponentCopyName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentCopyNameAndCanDo	Focused Linux runtime assertion
 c:@F@AudioComponentCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioComponentFindNext	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioComponentGetDescription	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioComponentGetIcon	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioComponentGetLastActiveTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioComponentGetVersion	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
-c:@F@AudioComponentInstanceCanDo	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentInstanceCanDo	Source signature present; behavior not independently asserted
+c:@F@AudioComponentInstanceCanDo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentCopyNameAndCanDo	Focused Linux runtime assertion
 c:@F@AudioComponentInstanceDispose	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioComponentInstanceGetComponent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioComponentInstanceNew	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioComponentInstantiate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioComponentInstantiateFailClosedExactlyOnce	Linux runtime asserted in depth/core tests
-c:@F@AudioComponentRegister	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentRegister	Source signature present; behavior not independently asserted
-c:@F@AudioComponentValidate	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentValidate	Source signature present; behavior not independently asserted
+c:@F@AudioComponentRegister	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentRegisterAndValidateFailClosed	Focused Linux runtime assertion
+c:@F@AudioComponentValidate	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentRegisterAndValidateFailClosed	Focused Linux runtime assertion
 c:@F@AudioComponentValidateWithResults	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@AudioConverterConvertBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioConverterPCMRoundTrip	Linux runtime asserted in depth/core tests
 c:@F@AudioConverterConvertComplexBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioConverterConvertComplexBuffer	Linux runtime asserted in wave-2 depth tests
@@ -1498,7 +1498,7 @@ c:@F@AudioQueueDeviceTranslateTime	implemented	test:full/audiotoolbox/tests/agen
 c:@F@AudioQueueDispose	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueDisposeTimeline	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
 c:@F@AudioQueueEnqueueBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
-c:@F@AudioQueueEnqueueBufferWithParameters	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioQueueEnqueueBufferWithParameters	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueEnqueueWithParametersAndOfflineRender	Focused Linux runtime assertion
 c:@F@AudioQueueFlush	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOverflowAndAlias	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueFreeBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testUnknownPointerSafety	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueGetCurrentTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
@@ -1509,7 +1509,7 @@ c:@F@AudioQueueNewInput	implemented	test:full/audiotoolbox/tests/agent/AudioTool
 c:@F@AudioQueueNewInputWithDispatchQueue	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@F@AudioQueueNewOutput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueNewOutputWithDispatchQueue	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@F@AudioQueueOfflineRender	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioQueueOfflineRender	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueEnqueueWithParametersAndOfflineRender	Focused Linux runtime assertion
 c:@F@AudioQueuePause	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOverflowAndAlias	Linux runtime asserted in depth/core tests
 c:@F@AudioQueuePrime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
 c:@F@AudioQueueProcessingTapDispose	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
@@ -1548,14 +1548,14 @@ c:@F@AudioUnitRemovePropertyListenerWithUserData	implemented	test:full/audiotool
 c:@F@AudioUnitRemoveRenderNotify	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@F@AudioUnitRender	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioComponentBuiltInsAndUnits	Linux runtime asserted in depth/core tests
 c:@F@AudioUnitReset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioUnitHardwareStartFailClosed	Linux runtime asserted in depth/core tests
-c:@F@AudioUnitScheduleParameters	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@F@AudioUnitScheduleParameters	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
 c:@F@AudioUnitSetParameter	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioUnitMixerOffline	Linux runtime asserted in depth/core tests
 c:@F@AudioUnitSetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioUnitMixerOffline	Linux runtime asserted in depth/core tests
 c:@F@AudioUnitUninitialize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioUnitHardwareStartFailClosed	Linux runtime asserted in depth/core tests
 c:@F@CAShow	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@F@CAShowFile	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@F@CopyInstrumentInfoFromSoundBank	declared	source:full/audiotoolbox/AudioServices.swift#CopyInstrumentInfoFromSoundBank	Source signature present; behavior not independently asserted
-c:@F@CopyNameFromSoundBank	declared	source:full/audiotoolbox/AudioServices.swift#CopyNameFromSoundBank	Source signature present; behavior not independently asserted
+c:@F@CopyInstrumentInfoFromSoundBank	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testSoundBankCopyFailClosed	Focused Linux runtime assertion
+c:@F@CopyNameFromSoundBank	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testSoundBankCopyFailClosed	Focused Linux runtime assertion
 c:@F@DisposeAUGraph	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
 c:@F@DisposeMusicEventIterator	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testMusicEventIteratorOrderAndSeek	Linux runtime asserted in depth/core tests
 c:@F@DisposeMusicPlayer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
@@ -1649,7 +1649,7 @@ c:@F@NewAUGraph	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2
 c:@F@NewMusicEventIterator	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testMusicEventIteratorOrderAndSeek	Linux runtime asserted in depth/core tests
 c:@F@NewMusicPlayer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
 c:@F@NewMusicSequence	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testMusicSequenceSMFParseAndPlayerTime	Linux runtime asserted in depth/core tests
-c:@F@NextAudioFileRegion	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@F@NextAudioFileRegion	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
 c:@F@NumAudioFileMarkersToNumBytes	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@F@NumBytesToNumAudioFileMarkers	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@F@SetAudioUnitParameterDisplayType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1659,17 +1659,17 @@ c:@S@AUChannelInfo@FI@outChannels	implemented	test:full/audiotoolbox/tests/agent
 c:@S@AUDependentParameter	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUDependentParameter@FI@mParameterID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUDependentParameter@FI@mScope	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-c:@S@AUInputSamplesInOutputCallbackStruct	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUInputSamplesInOutputCallbackStruct@FI@inputToOutputCallback	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUInputSamplesInOutputCallbackStruct@FI@userData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@cable	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@data	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@eventSampleTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@eventType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@length	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@next	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUMIDIEvent@FI@reserved	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AUInputSamplesInOutputCallbackStruct	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUInputSamplesInOutputCallbackStructOverlay	Focused Linux runtime assertion
+c:@S@AUInputSamplesInOutputCallbackStruct@FI@inputToOutputCallback	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUInputSamplesInOutputCallbackStructOverlay	Focused Linux runtime assertion
+c:@S@AUInputSamplesInOutputCallbackStruct@FI@userData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUInputSamplesInOutputCallbackStructOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@cable	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@data	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@eventSampleTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@eventType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@length	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@next	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+c:@S@AUMIDIEvent@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
 c:@S@AUMIDIEventList	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AUMIDIEventList@FI@cable	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AUMIDIEventList@FI@eventList	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1693,14 +1693,14 @@ c:@S@AUParameterAutomationEvent@FI@eventType	implemented	test:full/audiotoolbox/
 c:@S@AUParameterAutomationEvent@FI@hostTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUParameterAutomationEvent@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUParameterAutomationEvent@FI@value	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-c:@S@AUParameterEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@eventSampleTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@eventType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@next	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@parameterAddress	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@rampDurationSampleFrames	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@reserved	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUParameterEvent@FI@value	declared	source:full/audiotoolbox/AudioUnitConstants.swift#value	Source signature present; behavior not independently asserted
+c:@S@AUParameterEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@eventSampleTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@eventType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@next	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@parameterAddress	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@rampDurationSampleFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+c:@S@AUParameterEvent@FI@value	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
 c:@S@AUPreset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUPreset@FI@presetName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUPreset@FI@presetNumber	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
@@ -1715,11 +1715,11 @@ c:@S@AURecordedParameterEvent@FI@value	implemented	test:full/audiotoolbox/tests/
 c:@S@AURenderCallbackStruct	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 c:@S@AURenderCallbackStruct@FI@inputProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 c:@S@AURenderCallbackStruct@FI@inputProcRefCon	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
-c:@S@AURenderEventHeader	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AURenderEventHeader@FI@eventSampleTime	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AURenderEventHeader@FI@eventType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AURenderEventHeader@FI@next	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AURenderEventHeader@FI@reserved	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AURenderEventHeader	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+c:@S@AURenderEventHeader@FI@eventSampleTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+c:@S@AURenderEventHeader@FI@eventType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+c:@S@AURenderEventHeader@FI@next	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+c:@S@AURenderEventHeader@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
 c:@S@AUSamplerBankPresetData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUSamplerBankPresetData@FI@bankLSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUSamplerBankPresetData@FI@bankMSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
@@ -1732,19 +1732,19 @@ c:@S@AUSamplerInstrumentData@FI@bankMSB	implemented	test:full/audiotoolbox/tests
 c:@S@AUSamplerInstrumentData@FI@fileURL	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUSamplerInstrumentData@FI@instrumentType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AUSamplerInstrumentData@FI@presetID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-c:@S@AUVoiceIOOtherAudioDuckingConfiguration	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUVoiceIOOtherAudioDuckingConfiguration@FI@mDuckingLevel	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AUVoiceIOOtherAudioDuckingConfiguration@FI@mEnableAdvancedDucking	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AUVoiceIOOtherAudioDuckingConfiguration	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AUVoiceIOOtherAudioDuckingConfiguration@FI@mDuckingLevel	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AUVoiceIOOtherAudioDuckingConfiguration@FI@mEnableAdvancedDucking	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
 c:@S@AudioBalanceFade	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioBalanceFade@FI@mBackFrontFade	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioBalanceFade@FI@mChannelLayout	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@S@AudioBalanceFade@FI@mLeftRightBalance	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioBalanceFade@FI@mType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioBytePacketTranslation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioBytePacketTranslation@FI@mByte	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioBytePacketTranslation@FI@mByteOffsetInPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioBytePacketTranslation@FI@mFlags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioBytePacketTranslation@FI@mPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AudioBytePacketTranslation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioBytePacketTranslation@FI@mByte	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioBytePacketTranslation@FI@mByteOffsetInPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioBytePacketTranslation@FI@mFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioBytePacketTranslation@FI@mPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
 c:@S@AudioCodecMagicCookieInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioCodecConstantsAndFailClosed	Focused Linux runtime assertion
 c:@S@AudioCodecMagicCookieInfo@FI@mMagicCookie	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioCodecConstantsAndFailClosed	Focused Linux runtime assertion
 c:@S@AudioCodecMagicCookieInfo@FI@mMagicCookieSize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioCodecConstantsAndFailClosed	Focused Linux runtime assertion
@@ -1757,14 +1757,14 @@ c:@S@AudioComponentDescription@FI@componentFlagsMask	implemented	test:full/audio
 c:@S@AudioComponentDescription@FI@componentManufacturer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioComponentDescriptionLayout	20-byte UInt32 record; Equatable mutation independence
 c:@S@AudioComponentDescription@FI@componentSubType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioComponentDescriptionLayout	20-byte UInt32 record; Equatable mutation independence
 c:@S@AudioComponentDescription@FI@componentType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioComponentDescriptionLayout	20-byte UInt32 record; Equatable mutation independence
-c:@S@AudioComponentPlugInInterface	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentPlugInInterface	Source signature present; behavior not independently asserted
-c:@S@AudioComponentPlugInInterface@FI@Close	declared	source:full/audiotoolbox/AudioComponent.swift#Close	Source signature present; behavior not independently asserted
-c:@S@AudioComponentPlugInInterface@FI@Lookup	declared	source:full/audiotoolbox/AudioComponent.swift#Lookup	Source signature present; behavior not independently asserted
-c:@S@AudioComponentPlugInInterface@FI@Open	declared	source:full/audiotoolbox/AudioComponent.swift#Open	Source signature present; behavior not independently asserted
-c:@S@AudioComponentPlugInInterface@FI@reserved	declared	source:full/audiotoolbox/AudioComponent.swift#reserved	Source signature present; behavior not independently asserted
-c:@S@AudioConverterPrimeInfo	declared	source:full/audiotoolbox/AudioConverter.swift#AudioConverterPrimeInfo	Source signature present; behavior not independently asserted
-c:@S@AudioConverterPrimeInfo@FI@leadingFrames	declared	source:full/audiotoolbox/AudioConverter.swift#leadingFrames	Source signature present; behavior not independently asserted
-c:@S@AudioConverterPrimeInfo@FI@trailingFrames	declared	source:full/audiotoolbox/AudioConverter.swift#trailingFrames	Source signature present; behavior not independently asserted
+c:@S@AudioComponentPlugInInterface	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
+c:@S@AudioComponentPlugInInterface@FI@Close	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
+c:@S@AudioComponentPlugInInterface@FI@Lookup	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
+c:@S@AudioComponentPlugInInterface@FI@Open	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
+c:@S@AudioComponentPlugInInterface@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
+c:@S@AudioConverterPrimeInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioConverterPrimeInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioConverterPrimeInfo@FI@leadingFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioConverterPrimeInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioConverterPrimeInfo@FI@trailingFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioConverterPrimeInfoOverlay	Focused Linux runtime assertion
 c:@S@AudioFileMarker	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioFileMarker@FI@mChannel	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioFileMarker@FI@mFramePosition	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
@@ -1777,23 +1777,23 @@ c:@S@AudioFileMarkerList	implemented	test:full/audiotoolbox/tests/agent/AudioToo
 c:@S@AudioFileMarkerList@FI@mMarkers	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioFileMarkerList@FI@mNumberMarkers	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioFileMarkerList@FI@mSMPTE_TimeType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-c:@S@AudioFilePacketTableInfo	declared	source:full/audiotoolbox/AudioFile.swift#AudioFilePacketTableInfo	Source signature present; behavior not independently asserted
-c:@S@AudioFilePacketTableInfo@FI@mNumberValidFrames	declared	source:full/audiotoolbox/AudioFile.swift#mNumberValidFrames	Source signature present; behavior not independently asserted
-c:@S@AudioFilePacketTableInfo@FI@mPrimingFrames	declared	source:full/audiotoolbox/AudioFile.swift#mPrimingFrames	Source signature present; behavior not independently asserted
-c:@S@AudioFilePacketTableInfo@FI@mRemainderFrames	declared	source:full/audiotoolbox/AudioFile.swift#mRemainderFrames	Source signature present; behavior not independently asserted
-c:@S@AudioFileRegion	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegion@FI@mFlags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegion@FI@mMarkers	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegion@FI@mName	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegion@FI@mNumberMarkers	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegion@FI@mRegionID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegionList	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegionList@FI@mNumberRegions	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegionList@FI@mRegions	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileRegionList@FI@mSMPTE_TimeType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFileTypeAndFormatID	declared	source:full/audiotoolbox/AudioFile.swift#AudioFileTypeAndFormatID	Source signature present; behavior not independently asserted
-c:@S@AudioFileTypeAndFormatID@FI@mFileType	declared	source:full/audiotoolbox/AudioFile.swift#mFileType	Source signature present; behavior not independently asserted
-c:@S@AudioFileTypeAndFormatID@FI@mFormatID	declared	source:full/audiotoolbox/AudioFile.swift#mFormatID	Source signature present; behavior not independently asserted
+c:@S@AudioFilePacketTableInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFilePacketTableInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioFilePacketTableInfo@FI@mNumberValidFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFilePacketTableInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioFilePacketTableInfo@FI@mPrimingFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFilePacketTableInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioFilePacketTableInfo@FI@mRemainderFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFilePacketTableInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioFileRegion	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegion@FI@mFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegion@FI@mMarkers	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegion@FI@mName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegion@FI@mNumberMarkers	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegion@FI@mRegionID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegionList	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegionList@FI@mNumberRegions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegionList@FI@mRegions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileRegionList@FI@mSMPTE_TimeType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+c:@S@AudioFileTypeAndFormatID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileTypeAndFormatIDOverlay	Focused Linux runtime assertion
+c:@S@AudioFileTypeAndFormatID@FI@mFileType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileTypeAndFormatIDOverlay	Focused Linux runtime assertion
+c:@S@AudioFileTypeAndFormatID@FI@mFormatID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileTypeAndFormatIDOverlay	Focused Linux runtime assertion
 c:@S@AudioFile_SMPTE_Time	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioFile_SMPTE_Time@FI@mFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioFile_SMPTE_Time@FI@mHours	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
@@ -1804,38 +1804,38 @@ c:@S@AudioFormatInfo	deferred		Outside the sealed canonical core; no honest runt
 c:@S@AudioFormatInfo@FI@mASBD	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@S@AudioFormatInfo@FI@mMagicCookie	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioFormatInfo@FI@mMagicCookieSize	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFramePacketTranslation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFramePacketTranslation@FI@mFrame	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFramePacketTranslation@FI@mFrameOffsetInPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioFramePacketTranslation@FI@mPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioIndependentPacketTranslation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioIndependentPacketTranslation@FI@mIndependentlyDecodablePacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioIndependentPacketTranslation@FI@mPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitMIDICallbacks	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitMIDICallbacks@FI@MIDIEventProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitMIDICallbacks@FI@MIDISysExProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitMIDICallbacks@FI@userData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitStartAtTimeParams	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitStartAtTimeParams@FI@mFlags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioOutputUnitStartAtTimeParams@FI@mTimestamp	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@S@AudioPacketDependencyInfoTranslation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketDependencyInfoTranslation@FI@mIsIndependentlyDecodable	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketDependencyInfoTranslation@FI@mNumberPrerollPackets	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketDependencyInfoTranslation@FI@mPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRangeByteCountTranslation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRangeByteCountTranslation@FI@mByteCountUpperBound	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRangeByteCountTranslation@FI@mPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRangeByteCountTranslation@FI@mPacketCount	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRollDistanceTranslation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRollDistanceTranslation@FI@mPacket	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPacketRollDistanceTranslation@FI@mRollDistance	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPanningInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPanningInfo@FI@mCoordinateFlags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPanningInfo@FI@mCoordinates	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPanningInfo@FI@mGainScale	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioPanningInfo@FI@mOutputChannelMap	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@S@AudioPanningInfo@FI@mPanningMode	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueBuffer	declared	source:full/audiotoolbox/AudioQueue.swift#AudioQueueBuffer	Source signature present; behavior not independently asserted
+c:@S@AudioFramePacketTranslation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioFramePacketTranslation@FI@mFrame	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioFramePacketTranslation@FI@mFrameOffsetInPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioFramePacketTranslation@FI@mPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioIndependentPacketTranslation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioIndependentPacketTranslation@FI@mIndependentlyDecodablePacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioIndependentPacketTranslation@FI@mPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioOutputUnitMIDICallbacks	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioOutputUnitMIDICallbacks@FI@MIDIEventProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioOutputUnitMIDICallbacks@FI@MIDISysExProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioOutputUnitMIDICallbacks@FI@userData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioOutputUnitStartAtTimeParams	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioOutputUnitStartAtTimeParams@FI@mFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioOutputUnitStartAtTimeParams@FI@mTimestamp	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+c:@S@AudioPacketDependencyInfoTranslation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketDependencyInfoTranslation@FI@mIsIndependentlyDecodable	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketDependencyInfoTranslation@FI@mNumberPrerollPackets	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketDependencyInfoTranslation@FI@mPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRangeByteCountTranslation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRangeByteCountTranslation@FI@mByteCountUpperBound	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRangeByteCountTranslation@FI@mPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRangeByteCountTranslation@FI@mPacketCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRollDistanceTranslation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRollDistanceTranslation@FI@mPacket	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPacketRollDistanceTranslation@FI@mRollDistance	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+c:@S@AudioPanningInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioPanningInfo@FI@mCoordinateFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioPanningInfo@FI@mCoordinates	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioPanningInfo@FI@mGainScale	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioPanningInfo@FI@mOutputChannelMap	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioPanningInfo@FI@mPanningMode	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioQueueBuffer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueBufferStructInit	Focused Linux runtime assertion
 c:@S@AudioQueueBuffer@FI@mAudioData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Focused Linux runtime assertion
 c:@S@AudioQueueBuffer@FI@mAudioDataByteSize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Focused Linux runtime assertion
 c:@S@AudioQueueBuffer@FI@mAudioDataBytesCapacity	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Focused Linux runtime assertion
@@ -1843,15 +1843,15 @@ c:@S@AudioQueueBuffer@FI@mPacketDescriptionCapacity	implemented	test:full/audiot
 c:@S@AudioQueueBuffer@FI@mPacketDescriptionCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Focused Linux runtime assertion
 c:@S@AudioQueueBuffer@FI@mPacketDescriptions	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Focused Linux runtime assertion
 c:@S@AudioQueueBuffer@FI@mUserData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Focused Linux runtime assertion
-c:@S@AudioQueueChannelAssignment	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueChannelAssignment@FI@mChannelNumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueChannelAssignment@FI@mDeviceUID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueLevelMeterState	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueLevelMeterState@FI@mAveragePower	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueLevelMeterState@FI@mPeakPower	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueParameterEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueParameterEvent@FI@mID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioQueueParameterEvent@FI@mValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AudioQueueChannelAssignment	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueChannelAssignment@FI@mChannelNumber	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueChannelAssignment@FI@mDeviceUID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueLevelMeterState	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueLevelMeterState@FI@mAveragePower	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueLevelMeterState@FI@mPeakPower	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueParameterEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueParameterEvent@FI@mID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+c:@S@AudioQueueParameterEvent@FI@mValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
 c:@S@AudioUnitConnection	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitConnection@FI@destInputNumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitConnection@FI@sourceAudioUnit	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1862,54 +1862,54 @@ c:@S@AudioUnitEvent@FI@mEventType	deferred		Outside the sealed canonical core; n
 c:@S@AudioUnitExternalBuffer	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitExternalBuffer@FI@buffer	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitExternalBuffer@FI@size	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitFrequencyResponseBin	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitFrequencyResponseBin@FI@mFrequency	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitFrequencyResponseBin@FI@mMagnitude	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AudioUnitFrequencyResponseBin	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitFrequencyResponseBin@FI@mFrequency	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitFrequencyResponseBin@FI@mMagnitude	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
 c:@S@AudioUnitMeterClipping	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitMeterClipping@FI@peakValueSinceLastCall	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitMeterClipping@FI@sawInfinity	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitMeterClipping@FI@sawNotANumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitNodeConnection	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitNodeConnection@FI@destInputNumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitNodeConnection@FI@destNode	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitNodeConnection@FI@sourceNode	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitNodeConnection@FI@sourceOutputNumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AudioUnitNodeConnection	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitNodeConnection@FI@destInputNumber	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitNodeConnection@FI@destNode	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitNodeConnection@FI@sourceNode	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitNodeConnection@FI@sourceOutputNumber	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
 c:@S@AudioUnitParameter	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioUnitParameter@FI@mAudioUnit	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioUnitParameter@FI@mElement	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioUnitParameter@FI@mParameterID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@AudioUnitParameter@FI@mScope	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-c:@S@AudioUnitParameterEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterEvent@FI@element	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterEvent@FI@eventType	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterEvent@FI@eventValues	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterEvent@FI@parameter	declared	source:full/audiotoolbox/AudioUnitConstants.swift#parameter	Source signature present; behavior not independently asserted
-c:@S@AudioUnitParameterEvent@FI@scope	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterHistoryInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterHistoryInfo@FI@historyDurationInSeconds	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterHistoryInfo@FI@updatesPerSecond	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@cfNameString	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@clumpID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@defaultValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@flags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@maxValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@minValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@name	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@unit	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterInfo@FI@unitName	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterNameInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterNameInfo@FI@inDesiredLength	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterNameInfo@FI@inID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterNameInfo@FI@outName	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterStringFromValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterStringFromValue@FI@inParamID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterStringFromValue@FI@inValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterStringFromValue@FI@outString	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterValueFromString	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterValueFromString@FI@inParamID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterValueFromString@FI@inString	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@AudioUnitParameterValueFromString@FI@outValue	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@AudioUnitParameterEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
+c:@S@AudioUnitParameterEvent@FI@element	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
+c:@S@AudioUnitParameterEvent@FI@eventType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
+c:@S@AudioUnitParameterEvent@FI@eventValues	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
+c:@S@AudioUnitParameterEvent@FI@parameter	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
+c:@S@AudioUnitParameterEvent@FI@scope	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
+c:@S@AudioUnitParameterHistoryInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterHistoryInfo@FI@historyDurationInSeconds	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterHistoryInfo@FI@updatesPerSecond	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@cfNameString	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@clumpID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@defaultValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@flags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@maxValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@minValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@name	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@unit	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterInfo@FI@unitName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+c:@S@AudioUnitParameterNameInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterNameInfo@FI@inDesiredLength	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterNameInfo@FI@inID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterNameInfo@FI@outName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterStringFromValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterStringFromValue@FI@inParamID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterStringFromValue@FI@inValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterStringFromValue@FI@outString	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterValueFromString	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterValueFromString@FI@inParamID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterValueFromString@FI@inString	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+c:@S@AudioUnitParameterValueFromString@FI@outValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
 c:@S@AudioUnitProperty	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitProperty@FI@mAudioUnit	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@AudioUnitProperty@FI@mElement	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -1918,8 +1918,8 @@ c:@S@AudioUnitProperty@FI@mScope	deferred		Outside the sealed canonical core; no
 c:@S@CABarBeatTime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 c:@S@CABarBeatTime@FI@bar	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 c:@S@CABarBeatTime@FI@beat	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
-c:@S@CABarBeatTime@FI@reserved	declared	source:full/audiotoolbox/MusicSequence.swift#reserved	Source signature present; behavior not independently asserted
-c:@S@CABarBeatTime@FI@subbeat	declared	source:full/audiotoolbox/MusicSequence.swift#subbeat	Source signature present; behavior not independently asserted
+c:@S@CABarBeatTime@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testCABarBeatTimeReservedAndMemberwise	Focused Linux runtime assertion
+c:@S@CABarBeatTime@FI@subbeat	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testCABarBeatTimeReservedAndMemberwise	Focused Linux runtime assertion
 c:@S@CABarBeatTime@FI@subbeatDivisor	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 c:@S@CAFAudioDescription	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 c:@S@CAFAudioDescription@FI@mBitsPerChannel	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
@@ -2015,24 +2015,24 @@ c:@S@ExtendedAudioFormatInfo@FI@mASBD	deferred		Depends on canonical CoreAudioTy
 c:@S@ExtendedAudioFormatInfo@FI@mClassDescription	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@ExtendedAudioFormatInfo@FI@mMagicCookie	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@ExtendedAudioFormatInfo@FI@mMagicCookieSize	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ExtendedNoteOnEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ExtendedNoteOnEvent@FI@duration	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ExtendedNoteOnEvent@FI@extendedParams	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ExtendedNoteOnEvent@FI@groupID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ExtendedNoteOnEvent@FI@instrumentID	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@S@ExtendedNoteOnEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
+c:@S@ExtendedNoteOnEvent@FI@duration	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
+c:@S@ExtendedNoteOnEvent@FI@extendedParams	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
+c:@S@ExtendedNoteOnEvent@FI@groupID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
+c:@S@ExtendedNoteOnEvent@FI@instrumentID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
 c:@S@ExtendedTempoEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@S@ExtendedTempoEvent@FI@bpm	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@HostCallbackInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@HostCallbackInfo@FI@beatAndTempoProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@HostCallbackInfo@FI@hostUserData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@HostCallbackInfo@FI@musicalTimeLocationProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@HostCallbackInfo@FI@transportStateProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@HostCallbackInfo@FI@transportStateProc2	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@MIDIChannelMessage	declared	source:full/audiotoolbox/MusicSequence.swift#MIDIChannelMessage	Source signature present; behavior not independently asserted
-c:@S@MIDIChannelMessage@FI@data1	declared	source:full/audiotoolbox/MusicSequence.swift#data1	Source signature present; behavior not independently asserted
-c:@S@MIDIChannelMessage@FI@data2	declared	source:full/audiotoolbox/MusicSequence.swift#data2	Source signature present; behavior not independently asserted
-c:@S@MIDIChannelMessage@FI@reserved	declared	source:full/audiotoolbox/MusicSequence.swift#reserved	Source signature present; behavior not independently asserted
-c:@S@MIDIChannelMessage@FI@status	declared	source:full/audiotoolbox/MusicSequence.swift#status	Source signature present; behavior not independently asserted
+c:@S@HostCallbackInfo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@S@HostCallbackInfo@FI@beatAndTempoProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@S@HostCallbackInfo@FI@hostUserData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@S@HostCallbackInfo@FI@musicalTimeLocationProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@S@HostCallbackInfo@FI@transportStateProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@S@HostCallbackInfo@FI@transportStateProc2	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@S@MIDIChannelMessage	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
+c:@S@MIDIChannelMessage@FI@data1	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
+c:@S@MIDIChannelMessage@FI@data2	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
+c:@S@MIDIChannelMessage@FI@reserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
+c:@S@MIDIChannelMessage@FI@status	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
 c:@S@MIDIMetaEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@MIDIMetaEvent@FI@data	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@MIDIMetaEvent@FI@dataLength	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
@@ -2076,26 +2076,26 @@ c:@S@ParameterEvent@FI@element	implemented	test:full/audiotoolbox/tests/agent/Au
 c:@S@ParameterEvent@FI@parameterID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@ParameterEvent@FI@scope	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 c:@S@ParameterEvent@FI@value	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-c:@S@ScheduledAudioFileRegion	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mAudioFile	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mCompletionProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mCompletionProcUserData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mFramesToPlay	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mLoopCount	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mStartFrame	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioFileRegion@FI@mTimeStamp	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@S@ScheduledAudioSlice	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mBufferList	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@S@ScheduledAudioSlice@FI@mCompletionProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mCompletionProcUserData	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mFlags	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mNumberFrames	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mReserved	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mReserved2	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@S@ScheduledAudioSlice@FI@mTimeStamp	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@S@ScheduledAudioFileRegion	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mAudioFile	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mCompletionProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mCompletionProcUserData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mFramesToPlay	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mLoopCount	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mStartFrame	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioFileRegion@FI@mTimeStamp	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mBufferList	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mCompletionProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mCompletionProcUserData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mFlags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mNumberFrames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mReserved	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mReserved2	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
+c:@S@ScheduledAudioSlice@FI@mTimeStamp	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
 c:@T@AUAudioChannelCount	declared	source:full/audiotoolbox/AudioToolbox.swift#AUAudioChannelCount	Source signature present; behavior not independently asserted
 c:@T@AUAudioFrameCount	declared	source:full/audiotoolbox/AudioToolbox.swift#AUAudioFrameCount	Source signature present; behavior not independently asserted
-c:@T@AUAudioUnitStatus	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@T@AUAudioUnitStatus	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUAudioUnitV2BridgeAndStatus	Focused Linux runtime assertion
 c:@T@AUEventListenerBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AUEventListenerProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AUEventListenerRef	declared	source:full/audiotoolbox/AudioToolbox.swift#AUEventListenerRef	Source signature present; behavior not independently asserted
@@ -2109,14 +2109,14 @@ c:@T@AUImplementorValueFromStringCallback	implemented	test:full/audiotoolbox/tes
 c:@T@AUImplementorValueObserver	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AUParameterTree	Focused Linux runtime assertion
 c:@T@AUImplementorValueProvider	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AUParameterTree	Focused Linux runtime assertion
 c:@T@AUInputHandler	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@T@AUInputSamplesInOutputCallback	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@T@AUInputSamplesInOutputCallback	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUInputSamplesInOutputCallbackStructOverlay	Focused Linux runtime assertion
 c:@T@AUInternalRenderBlock	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-c:@T@AUMIDICIProfileChangedBlock	unavailable		MIDI CI profile callbacks are Apple-service/daemon-bound
+c:@T@AUMIDICIProfileChangedBlock	unavailable		MIDI CI profile callbacks require an Apple MIDI-CI daemon/session and CoreMIDI MIDICIProfile types; no hardware/daemon path on Linux
 c:@T@AUMIDIEventListBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AUMIDIOutputCallback	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AUMIDIOutputEventBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AUNode	declared	source:full/audiotoolbox/AudioToolbox.swift#AUNode	Source signature present; behavior not independently asserted
-c:@T@AUNodeConnection	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@T@AUNodeConnection	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
 c:@T@AUParameterAddress	declared	source:full/audiotoolbox/AudioToolbox.swift#AUParameterAddress	Source signature present; behavior not independently asserted
 c:@T@AUParameterAutomationObserver	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AUParameterTree	Focused Linux runtime assertion
 c:@T@AUParameterListenerBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2146,7 +2146,7 @@ c:@T@AudioCodecResetProc	deferred		C function-pointer overlay is not hosted; the
 c:@T@AudioCodecSetPropertyProc	deferred		C function-pointer overlay is not hosted; the typed Swift entry point is fail-closed or unhosted instead
 c:@T@AudioCodecUninitializeProc	deferred		C function-pointer overlay is not hosted; the typed Swift entry point is fail-closed or unhosted instead
 c:@T@AudioComponent	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioComponent	Source signature present; behavior not independently asserted
-c:@T@AudioComponentFactoryFunction	declared	source:full/audiotoolbox/AudioComponent.swift#AudioComponentFactoryFunction	Source signature present; behavior not independently asserted
+c:@T@AudioComponentFactoryFunction	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
 c:@T@AudioComponentInstance	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@T@AudioComponentMethod	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioComponentMethod	Source signature present; behavior not independently asserted
 c:@T@AudioConverterComplexInputDataProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioConverterFillComplexBuffer	Linux runtime asserted in wave-2 depth tests
@@ -2161,10 +2161,10 @@ c:@T@AudioFileStreamPropertyID	declared	source:full/audiotoolbox/AudioToolbox.sw
 c:@T@AudioFileStream_PacketsProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioFileStream_PropertyListenerProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioFileTypeID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFileTypeID	Source signature present; behavior not independently asserted
-c:@T@AudioFile_GetSizeProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_GetSizeProc	Source signature present; behavior not independently asserted
-c:@T@AudioFile_ReadProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_ReadProc	Source signature present; behavior not independently asserted
-c:@T@AudioFile_SetSizeProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_SetSizeProc	Source signature present; behavior not independently asserted
-c:@T@AudioFile_WriteProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_WriteProc	Source signature present; behavior not independently asserted
+c:@T@AudioFile_GetSizeProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileGetSizeProcWideResult	Typed C callback invocation: client data and Int64 return values at zero, above 32 bits, and Int64.max; no claim of callback-backed file I/O.
+c:@T@AudioFile_ReadProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileReadProcPartialTransfer	Typed C callback invocation: client data, 64-bit position, partial read, actual count, untouched buffer tail, and signed failure status; callback-backed file APIs remain deferred.
+c:@T@AudioFile_SetSizeProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileSetSizeProcWideArgument	Typed C callback invocation: client data, Int64 size arguments at zero/above 32 bits/Int64.max, and signed failure return; no claim of callback-backed file I/O.
+c:@T@AudioFile_WriteProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileWriteProcPartialTransfer	Typed C callback invocation: client data, 64-bit position, const source bytes, partial write, actual count, and signed failure status; callback-backed file APIs remain deferred.
 c:@T@AudioFormatPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFormatPropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioOutputUnitStartProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioOutputUnitStopProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2183,7 +2183,7 @@ c:@T@AudioQueueRef	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWa
 c:@T@AudioQueueTimelineRef	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
 c:@T@AudioServicesPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioServicesPropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioServicesSystemSoundCompletionProc	declared	source:full/audiotoolbox/AudioServices.swift#AudioServicesSystemSoundCompletionProc	Source signature present; behavior not independently asserted
-c:@T@AudioSessionInterruptionListener	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionInterruptionListener	Source signature present; behavior not independently asserted
+c:@T@AudioSessionInterruptionListener	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxSessionCallbackTests.swift#testAudioSessionInterruptionListenerArgumentOrder	Sealed graph argument order: nullable client pointer then UInt32 state; synchronous invocation checks 0, 1, UInt32.max and nil client
 c:@T@AudioSessionInterruptionType	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionInterruptionType	Source signature present; behavior not independently asserted
 c:@T@AudioSessionPropertyID	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionPropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioSessionPropertyListener	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionPropertyListener	Source signature present; behavior not independently asserted
@@ -2197,7 +2197,7 @@ c:@T@AudioUnitGetPropertyInfoProc	deferred		Outside the sealed canonical core; n
 c:@T@AudioUnitGetPropertyProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioUnitInitializeProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioUnitParameterID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioUnitParameterID	Source signature present; behavior not independently asserted
-c:@T@AudioUnitParameterIDName	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@T@AudioUnitParameterIDName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
 c:@T@AudioUnitParameterValue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 c:@T@AudioUnitProcessMultipleProc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AudioUnitProcessProc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
@@ -2209,28 +2209,28 @@ c:@T@AudioUnitRemovePropertyListenerWithUserDataProc	deferred		Outside the seale
 c:@T@AudioUnitRemoveRenderNotifyProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioUnitRenderProc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 c:@T@AudioUnitResetProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@AudioUnitScheduleParametersProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@T@AudioUnitScheduleParametersProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
 c:@T@AudioUnitScope	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioUnitScope	Source signature present; behavior not independently asserted
 c:@T@AudioUnitSetParameterProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioUnitSetPropertyProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioUnitUninitializeProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@CallHostBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@ExtAudioFilePacketTableInfoOverride	declared	source:full/audiotoolbox/AudioToolbox.swift#ExtAudioFilePacketTableInfoOverride	Source signature present; behavior not independently asserted
+c:@T@ExtAudioFilePacketTableInfoOverride	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtAudioFilePacketTableInfoOverrideAlias	Focused Linux runtime assertion
 c:@T@ExtAudioFilePropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#ExtAudioFilePropertyID	Source signature present; behavior not independently asserted
 c:@T@ExtAudioFileRef	declared	source:full/audiotoolbox/AudioToolbox.swift#ExtAudioFileRef	Source signature present; behavior not independently asserted
-c:@T@HostCallback_GetBeatAndTempo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@HostCallback_GetMusicalTimeLocation	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@HostCallback_GetTransportState	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@HostCallback_GetTransportState2	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@T@HostCallback_GetBeatAndTempo	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@T@HostCallback_GetMusicalTimeLocation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@T@HostCallback_GetTransportState	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+c:@T@HostCallback_GetTransportState2	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
 c:@T@MIDIChannelNumber	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@MagicCookieInfo	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@MusicDeviceComponent	declared	source:full/audiotoolbox/AudioToolbox.swift#MusicDeviceComponent	Source signature present; behavior not independently asserted
-c:@T@MusicDeviceGroupID	declared	source:full/audiotoolbox/AudioToolbox.swift#MusicDeviceGroupID	Source signature present; behavior not independently asserted
-c:@T@MusicDeviceInstrumentID	declared	source:full/audiotoolbox/AudioToolbox.swift#MusicDeviceInstrumentID	Source signature present; behavior not independently asserted
-c:@T@MusicDeviceMIDIEventProc	deferred		C function-pointer overlay is not hosted; the typed Swift entry point is fail-closed or unhosted instead
-c:@T@MusicDeviceStartNoteProc	deferred		C function-pointer overlay is not hosted; the typed Swift entry point is fail-closed or unhosted instead
-c:@T@MusicDeviceStopNoteProc	deferred		C function-pointer overlay is not hosted; the typed Swift entry point is fail-closed or unhosted instead
-c:@T@MusicDeviceSysExProc	deferred		C function-pointer overlay is not hosted; the typed Swift entry point is fail-closed or unhosted instead
+c:@T@MusicDeviceComponent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
+c:@T@MusicDeviceGroupID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
+c:@T@MusicDeviceInstrumentID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
+c:@T@MusicDeviceMIDIEventProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
+c:@T@MusicDeviceStartNoteProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
+c:@T@MusicDeviceStopNoteProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
+c:@T@MusicDeviceSysExProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMusicDeviceTypealiases	Focused Linux runtime assertion
 c:@T@MusicEventIterator	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 c:@T@MusicEventType	declared	source:full/audiotoolbox/AudioToolbox.swift#MusicEventType	Source signature present; behavior not independently asserted
 c:@T@MusicPlayer	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
@@ -2239,14 +2239,14 @@ c:@T@MusicSequenceUserCallback	deferred		Outside the sealed canonical core; no h
 c:@T@MusicTimeStamp	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 c:@T@MusicTrack	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 c:@T@NoteInstanceID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
-c:@T@ScheduledAudioFileRegionCompletionProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@T@ScheduledAudioSliceCompletionProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@T@ScheduledAudioFileRegionCompletionProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
+c:@T@ScheduledAudioSliceCompletionProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
 c:@T@SystemSoundID	declared	source:full/audiotoolbox/AudioToolbox.swift#SystemSoundID	Source signature present; behavior not independently asserted
-c:@U@AURenderEvent	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@U@AURenderEvent@FI@MIDI	declared	source:full/audiotoolbox/AudioUnitConstants.swift#MIDI	Source signature present; behavior not independently asserted
+c:@U@AURenderEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+c:@U@AURenderEvent@FI@MIDI	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
 c:@U@AURenderEvent@FI@MIDIEventsList	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@U@AURenderEvent@FI@head	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:@U@AURenderEvent@FI@parameter	declared	source:full/audiotoolbox/AudioUnitConstants.swift#parameter	Source signature present; behavior not independently asserted
+c:@U@AURenderEvent@FI@head	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+c:@U@AURenderEvent@FI@parameter	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
 c:@kAudioComponentInstanceInvalidationNotification	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@kAudioComponentRegistrationsChangedNotification	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@macro@AUDIO_TOOLBOX_VERSION	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2286,10 +2286,10 @@ c:@macro@kAUPresetRenderQualityKey	implemented	test:full/audiotoolbox/tests/agen
 c:@macro@kAUPresetSubtypeKey	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@macro@kAUPresetTypeKey	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@macro@kAUPresetVersionKey	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
-c:@macro@kAudioComponentConfigurationInfo_ValidationResult	declared	source:full/audiotoolbox/AudioToolbox.swift#kAudioComponentConfigurationInfo_ValidationResult	Source signature present; behavior not independently asserted
-c:@macro@kAudioComponentValidationParameter_ForceValidation	declared	source:full/audiotoolbox/AudioToolbox.swift#kAudioComponentValidationParameter_ForceValidation	Source signature present; behavior not independently asserted
-c:@macro@kAudioComponentValidationParameter_LoadOutOfProcess	declared	source:full/audiotoolbox/AudioToolbox.swift#kAudioComponentValidationParameter_LoadOutOfProcess	Source signature present; behavior not independently asserted
-c:@macro@kAudioComponentValidationParameter_TimeOut	declared	source:full/audiotoolbox/AudioToolbox.swift#kAudioComponentValidationParameter_TimeOut	Source signature present; behavior not independently asserted
+c:@macro@kAudioComponentConfigurationInfo_ValidationResult	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
+c:@macro@kAudioComponentValidationParameter_ForceValidation	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
+c:@macro@kAudioComponentValidationParameter_LoadOutOfProcess	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
+c:@macro@kAudioComponentValidationParameter_TimeOut	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
 c:@macro@kAudioSession_AudioRouteChangeKey_OldRoute	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@macro@kAudioSession_AudioRouteChangeKey_Reason	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@macro@kAudioSettings_AvailableValues	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
@@ -2313,25 +2313,25 @@ c:@macro@kAudioUnitConfigurationInfo_InitialOutputs	implemented	test:full/audiot
 c:@macro@kAudioUnitConfigurationInfo_MIDIProtocol	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@macro@kAudioUnitConfigurationInfo_MigrateFromPlugin	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
 c:@macro@kAudioUnitConfigurationInfo_SupportedChannelLayoutTags	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5StringKeysAndMarkerBytes	Focused Linux runtime assertion
-c:@macro@kInstrumentInfoKey_LSB	declared	source:full/audiotoolbox/AudioToolbox.swift#kInstrumentInfoKey_LSB	Source signature present; behavior not independently asserted
-c:@macro@kInstrumentInfoKey_MSB	declared	source:full/audiotoolbox/AudioToolbox.swift#kInstrumentInfoKey_MSB	Source signature present; behavior not independently asserted
-c:@macro@kInstrumentInfoKey_Name	declared	source:full/audiotoolbox/AudioToolbox.swift#kInstrumentInfoKey_Name	Source signature present; behavior not independently asserted
-c:@macro@kInstrumentInfoKey_Program	declared	source:full/audiotoolbox/AudioToolbox.swift#kInstrumentInfoKey_Program	Source signature present; behavior not independently asserted
+c:@macro@kInstrumentInfoKey_LSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
+c:@macro@kInstrumentInfoKey_MSB	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
+c:@macro@kInstrumentInfoKey_Name	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
+c:@macro@kInstrumentInfoKey_Program	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testInstrumentAndValidationStringKeys	Exact string payload asserted on Linux
 c:@macro@kMusicTimeStamp_EndOfTrack	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5RemainingPropertyAndPolicyIDs	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(cm)instantiateWithComponentDescription:options:completionHandler:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(cm)registerSubclass:asComponentDescription:name:version:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(cm)registerSubclass:asComponentDescription:name:version:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUAudioUnitV2BridgeAndStatus	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(im)allocateRenderResourcesAndReturnError:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)deallocateRenderResources	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)deleteUserPreset:error:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
-c:objc(cs)AUAudioUnit(im)disableProfile:cable:onChannel:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)enableProfile:cable:onChannel:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(im)disableProfile:cable:onChannel:error:	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
+c:objc(cs)AUAudioUnit(im)enableProfile:cable:onChannel:error:	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(im)initWithComponentDescription:error:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(im)initWithComponentDescription:options:error:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAUAudioUnitInitFailClosed	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(im)messageChannelFor:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(im)parametersForOverviewWithCount:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
-c:objc(cs)AUAudioUnit(im)presetStateFor:error:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(im)profileStateForCable:channel:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(im)presetStateFor:error:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUAudioUnitV2BridgeAndStatus	Focused Linux runtime assertion
+c:objc(cs)AUAudioUnit(im)profileStateForCable:channel:	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(im)removeRenderObserver:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(im)reset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)saveUserPreset:error:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
@@ -2340,10 +2340,10 @@ c:objc(cs)AUAudioUnit(im)shouldChangeToFormat:forBus:	deferred		Outside the seal
 c:objc(cs)AUAudioUnit(im)startHardwareAndReturnError:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)stopHardware	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(im)tokenByAddingRenderObserver:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
-c:objc(cs)AUAudioUnit(py)AudioUnitMIDIProtocol	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)AudioUnitMIDIProtocol	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(py)MIDIOutputBufferSizeHint	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)MIDIOutputEventBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)MIDIOutputEventListBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)MIDIOutputEventListBlock	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(py)MIDIOutputNames	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)allParameterValues	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)audioUnitName	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
@@ -2362,7 +2362,7 @@ c:objc(cs)AUAudioUnit(py)currentPreset	implemented	test:full/audiotoolbox/tests/
 c:objc(cs)AUAudioUnit(py)factoryPresets	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)fullState	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)fullStateForDocument	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
-c:objc(cs)AUAudioUnit(py)hostMIDIProtocol	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)hostMIDIProtocol	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(py)inputBusses	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)inputEnabled	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)inputHandler	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2377,7 +2377,7 @@ c:objc(cs)AUAudioUnit(py)outputBusses	implemented	test:full/audiotoolbox/tests/a
 c:objc(cs)AUAudioUnit(py)outputEnabled	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)outputProvider	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)parameterTree	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
-c:objc(cs)AUAudioUnit(py)profileChangedBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)profileChangedBlock	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(py)providesUserInterface	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)renderBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)renderQuality	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
@@ -2385,7 +2385,7 @@ c:objc(cs)AUAudioUnit(py)renderResourcesAllocated	implemented	test:full/audiotoo
 c:objc(cs)AUAudioUnit(py)renderingOffline	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)running	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUAudioUnitSoftwareMixer	Linux runtime asserted in wave-2 depth tests
 c:objc(cs)AUAudioUnit(py)scheduleMIDIEventBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnit(py)scheduleMIDIEventListBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnit(py)scheduleMIDIEventListBlock	deferred		MIDI CI / CoreMIDI MIDICIProfile and MIDIProtocolID are Apple-service and CoreMIDI-owned; Linux has no MIDI-CI daemon
 c:objc(cs)AUAudioUnit(py)scheduleParameterBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(cs)AUAudioUnit(py)shouldBypassEffect	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnit(py)supportsMPE	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
@@ -2423,8 +2423,8 @@ c:objc(cs)AUAudioUnitBusArray(py)ownerAudioUnit	implemented	test:full/audiotoolb
 c:objc(cs)AUAudioUnitPreset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnitPreset(py)name	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
 c:objc(cs)AUAudioUnitPreset(py)number	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testAUAudioUnitSoftwareProperties	Focused Linux runtime assertion
-c:objc(cs)AUAudioUnitV2Bridge	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(cs)AUAudioUnitV2Bridge(py)audioUnit	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:objc(cs)AUAudioUnitV2Bridge	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUAudioUnitV2BridgeAndStatus	Focused Linux runtime assertion
+c:objc(cs)AUAudioUnitV2Bridge(py)audioUnit	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUAudioUnitV2BridgeAndStatus	Focused Linux runtime assertion
 c:objc(cs)AUParameter	declared	source:full/audiotoolbox/AUAudioUnit.swift#AUParameter	Source signature present; behavior not independently asserted
 c:objc(cs)AUParameter(im)setValue:originator:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AUParameterTree	Focused Linux runtime assertion
 c:objc(cs)AUParameter(im)setValue:originator:atHostTime:	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AUParameterTree	Focused Linux runtime assertion
@@ -2470,7 +2470,7 @@ c:objc(pl)AUAudioUnitFactory(im)createAudioUnitWithComponentDescription:error:	d
 c:objc(pl)AUMessageChannel	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(pl)AUMessageChannel(im)callAudioUnit:	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:objc(pl)AUMessageChannel(py)callHostBlock	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)AUAudioUnitPreset	deferred		Synthesized protocol witness; not independently anchored in product source
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)AUAudioUnitPreset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUAudioUnitV2BridgeAndStatus	Focused Linux runtime assertion
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)AUParameter	deferred		Synthesized protocol witness; not independently anchored in product source
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)AUParameterGroup	deferred		Synthesized protocol witness; not independently anchored in product source
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@AU3DMixerAttenuationCurve	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
@@ -2569,8 +2569,8 @@ s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@MusicSeq
 s:So018AudioUnitParameterB0V8rawValueABSgs6UInt32V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So10CAFStringsV11mNumEntries11mStringsIDsABs6UInt32V_So11CAFStringIDVtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So10CAFStringsVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
-s:So11AUMIDIEventV4next15eventSampleTime0C4Type8reserved6length5cable4dataABSpySo13AURenderEventVGSg_s5Int64VSo0klF0Vs5UInt8Vs6UInt16VA2S_A2Sttcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So11AUMIDIEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So11AUMIDIEventV4next15eventSampleTime0C4Type8reserved6length5cable4dataABSpySo13AURenderEventVGSg_s5Int64VSo0klF0Vs5UInt8Vs6UInt16VA2S_A2Sttcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
+s:So11AUMIDIEventVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUMIDIEventOverlay	Focused Linux runtime assertion
 s:So11CAFStringIDV07mStringB001mC15StartByteOffsetABs6UInt32V_s5Int64Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So11CAFStringIDVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So11MIDIRawDataV6length4dataABs6UInt32V_s5UInt8Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
@@ -2585,11 +2585,11 @@ s:So13AUChannelInfoV10inChannels03outD0ABs5Int16V_AFtcfc	implemented	test:full/a
 s:So13AUChannelInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So13AUPresetEventV5scope7element6presetABs6UInt32V_AGs9UnmanagedVyyXlGtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So13AURenderEventV14MIDIEventsListABSo011AUMIDIEventD0V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So13AURenderEventV4MIDIABSo11AUMIDIEventV_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So13AURenderEventV4MIDIABSo11AUMIDIEventV_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
 s:So13AURenderEventV4headABSo0aB6HeaderV_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So13AURenderEventV9parameterABSo011AUParameterB0V_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So13AURenderEventV9parameterABSo011AUParameterB0V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
 s:So13AURenderEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So13CABarBeatTimeV3bar4beat7subbeat0F7Divisor8reservedABs5Int32V_s6UInt16VA3Ktcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So13CABarBeatTimeV3bar4beat7subbeat0F7Divisor8reservedABs5Int32V_s6UInt16VA3Ktcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testCABarBeatTimeReservedAndMemberwise	Focused Linux runtime assertion
 s:So13CABarBeatTimeVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 s:So13CAFFileHeaderV9mFileType01mC7Version01mC5FlagsABs6UInt32V_s6UInt16VAItcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 s:So13CAFFileHeaderVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
@@ -2616,23 +2616,23 @@ s:So15AUMIDIEventListV4next15eventSampleTime0D4Type8reserved5cable0dB0ABSpySo13A
 s:So15AUMIDIEventListVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So15AudioFileMarkerV14mFramePosition5mName01mC2ID10mSMPTETime5mType9mReserved8mChannelABSd_s9UnmanagedVySo11CFStringRefaGSgs5Int32VSo0aB11_SMPTE_TimeVs6UInt32Vs6UInt16VAWtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 s:So15AudioFileMarkerVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So15AudioFileRegionV01mC2ID5mName6mFlags14mNumberMarkers01mH0ABs6UInt32V_s9UnmanagedVySo11CFStringRefaGSo0abcF0VAISo0aB6MarkerVtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So15AudioFileRegionV01mC2ID5mName6mFlags14mNumberMarkers01mH0ABs6UInt32V_s9UnmanagedVySo11CFStringRefaGSo0abcF0VAISo0aB6MarkerVtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
 s:So15AudioFormatInfoV5mASBD12mMagicCookie01meF4SizeABSo0A22StreamBasicDescriptionV_SVs6UInt32Vtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 s:So15CAFPositionPeakV6mValue12mFrameNumberABSf_s6UInt64Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So15CAFPositionPeakVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So15MIDINoteMessageV7channel4note8velocity15releaseVelocity8durationABs5UInt8V_A3ISftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicSequenceBeatsSecondsAndTrackEdit	Focused Linux runtime assertion
 s:So15MIDINoteMessageVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So16AUParameterEventV4next15eventSampleTime0D4Type8reserved012rampDurationE6Frames16parameterAddress5valueABSpySo08AURenderB0VGSg_s5Int64VSo0obG0Vs5UInt8V_A2Sts6UInt32Vs6UInt64VSftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So16AUParameterEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So16AUParameterEventV4next15eventSampleTime0D4Type8reserved012rampDurationE6Frames16parameterAddress5valueABSpySo08AURenderB0VGSg_s5Int64VSo0obG0Vs5UInt8V_A2Sts6UInt32Vs6UInt64VSftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
+s:So16AUParameterEventVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUParameterEventOverlay	Focused Linux runtime assertion
 s:So16AUReverbRoomTypeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So16AudioBalanceFadeV010mLeftRightB0010mBackFrontC05mType14mChannelLayoutABSf_SfSo0abcH0VSPySo0aiJ0VGtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-s:So16AudioPanningInfoV01mB4Mode16mCoordinateFlags12mCoordinates10mGainScale17mOutputChannelMapABSo0abD0V_s6UInt32VSf_S2ftSfSPySo0aK6LayoutVGtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+s:So16AudioPanningInfoV01mB4Mode16mCoordinateFlags12mCoordinates10mGainScale17mOutputChannelMapABSo0abD0V_s6UInt32VSf_S2ftSfSPySo0aK6LayoutVGtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioPanningInfoOverlay	Focused Linux runtime assertion
 s:So16AudioPanningModeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
-s:So16AudioQueueBufferV01mA17DataBytesCapacity01maD001maD8ByteSize05mUserD0018mPacketDescriptionF001mJ12Descriptions01mjK5CountABs6UInt32V_SvAKSvSgAKSpySo0a6StreamjK0VGSgAKtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So16AudioQueueBufferV01mA17DataBytesCapacity01maD001maD8ByteSize05mUserD0018mPacketDescriptionF001mJ12Descriptions01mjK5CountABs6UInt32V_SvAKSvSgAKSpySo0a6StreamjK0VGSgAKtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueBufferStructInit	Focused Linux runtime assertion
 s:So16CAFOverviewChunkV10mEditCount22mNumFramesPerOVWSample5mDataABs6UInt32V_AGSo0A6SampleVtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So16CAFOverviewChunkVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
-s:So16HostCallbackInfoV12hostUserData16beatAndTempoProc019musicalTimeLocationJ0014transportStateJ00nO5Proc2ABSvSg_s5Int32VAH_SpySdGSgALtXCSgAjH_Spys6UInt32VGSgSpySfGSgAqLtXCSgAjH_Spy6Darwin0S7BooleanVGSgAyly2LtXCSgAjH_A3yly2LtXCSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So16HostCallbackInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So16HostCallbackInfoV12hostUserData16beatAndTempoProc019musicalTimeLocationJ0014transportStateJ00nO5Proc2ABSvSg_s5Int32VAH_SpySdGSgALtXCSgAjH_Spys6UInt32VGSgSpySfGSgAqLtXCSgAjH_Spy6Darwin0S7BooleanVGSgAyly2LtXCSgAjH_A3yly2LtXCSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
+s:So16HostCallbackInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testHostCallbackInfoOverlay	Focused Linux runtime assertion
 s:So17AUNodeInteractionV04nodeB4Type0cB0ABs6UInt32V_AB016__Unnamed_union_cB0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So17AUNodeInteractionVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 s:So17AURenderEventTypeV8rawValueABSgs5UInt8V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
@@ -2648,30 +2648,30 @@ s:So18CAFInstrumentChunkV9mBaseNote08mMIDILowD009mMIDIHighD001mE8Velocity01mfG07
 s:So18CAFInstrumentChunkVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So18ExtendedTempoEventV3bpmABSd_tcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So18ExtendedTempoEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So18MIDIChannelMessageV6status5data15data28reservedABs5UInt8V_A3Htcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So18MIDIChannelMessageVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So18MIDIChannelMessageV6status5data15data28reservedABs5UInt8V_A3Htcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
+s:So18MIDIChannelMessageVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testMIDIChannelMessageOverlay	Focused Linux runtime assertion
 s:So18MusicEventUserDataV6length4dataABs6UInt32V_s5UInt8Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So18MusicEventUserDataVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So18MusicTrackLoopInfoV12loopDuration13numberOfLoopsABSd_s5Int32Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So18MusicTrackLoopInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19AURenderEventHeaderV4next15eventSampleTime0E4Type8reservedABSpySo0aB0VGSg_s5Int64VSo0abH0Vs5UInt8Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19AURenderEventHeaderVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So19AURenderEventHeaderV4next15eventSampleTime0E4Type8reservedABSpySo0aB0VGSg_s5Int64VSo0abH0Vs5UInt8Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
+s:So19AURenderEventHeaderVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAURenderEventHeaderAndUnion	Focused Linux runtime assertion
 s:So19AudioCodecPrimeInfoV13leadingFrames08trailingF0ABs6UInt32V_AFtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioCodecConstantsAndFailClosed	Focused Linux runtime assertion
 s:So19AudioCodecPrimeInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioCodecConstantsAndFailClosed	Focused Linux runtime assertion
 s:So19AudioComponentFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue	Focused Linux runtime assertion
 s:So19AudioFileMarkerListV15mSMPTE_TimeType14mNumberMarkers01mI0ABs6UInt32V_AGSo0abC0Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 s:So19AudioFileMarkerListVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19AudioFileRegionListV15mSMPTE_TimeType14mNumberRegions01mI0ABs6UInt32V_AGSo0abC0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19AudioFileRegionListVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So19AudioFileRegionListV15mSMPTE_TimeType14mNumberRegions01mI0ABs6UInt32V_AGSo0abC0Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
+s:So19AudioFileRegionListVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileRegionAndNext	Focused Linux runtime assertion
 s:So19AudioUnitConnectionV06sourceaB00D12OutputNumber09destInputF0ABs13OpaquePointerVSg_s6UInt32VAJtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19AudioUnitConnectionVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19CAFAudioDescriptionV11mSampleRate9mFormatID01mE5Flags15mBytesPerPacket07mFramesiJ009mChannelsI5Frame05mBitsI7ChannelABSd_s6UInt32VSo09CAFFormatG0VA4Ktcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
 s:So19CAFAudioDescriptionVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testCAFStructLayouts	Exact struct layout and fields asserted on Linux
-s:So19ExtendedNoteOnEventV12instrumentID05groupF08duration14extendedParamsABs6UInt32V_AHSfSo011MusicDevicebJ0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19ExtendedNoteOnEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So19ExtendedNoteOnEventV12instrumentID05groupF08duration14extendedParamsABs6UInt32V_AHSfSo011MusicDevicebJ0Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
+s:So19ExtendedNoteOnEventVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testExtendedNoteOnEventOverlay	Focused Linux runtime assertion
 s:So19MixerDistanceParamsV010mReferenceB004mMaxB001mE11AttenuationABSf_S2ftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So19MixerDistanceParamsVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So19ScheduledAudioSliceV10mTimeStamp15mCompletionProc01mfG8UserData6mFlags9mReserved10mReserved213mNumberFrames11mBufferListABSo0bdE0V_ySvSg_SpyABGtXCSgSvSo011AUScheduledbcJ0Vs6UInt32VAmSSpySo0boP0VGtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+s:So19ScheduledAudioSliceV10mTimeStamp15mCompletionProc01mfG8UserData6mFlags9mReserved10mReserved213mNumberFrames11mBufferListABSo0bdE0V_ySvSg_SpyABGtXCSgSvSo011AUScheduledbcJ0Vs6UInt32VAmSSpySo0boP0VGtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioSliceOverlay	Focused Linux runtime assertion
 s:So20AUDependentParameterV6mScope01mB2IDABs6UInt32V_AFtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 s:So20AUDependentParameterVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So20AUNodeRenderCallbackV8destNode0D11InputNumber5cbackABs5Int32V_s6UInt32VSo08AURenderC6StructVtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
@@ -2693,8 +2693,8 @@ s:So22AURenderCallbackStructV9inputProc0dE6RefConABs5Int32VSv_SpySo26AudioUnitRe
 s:So22AURenderCallbackStructVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So22AudioUnitMeterClippingV22peakValueSinceLastCall11sawInfinity0J10NotANumberABSf_6Darwin0N7BooleanVAHtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So22AudioUnitMeterClippingVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So22AudioUnitParameterInfoV4name8unitName7clumpID02cfG6String0F08minValue03maxM007defaultM05flagsABs4Int8V_A51Mt_s9UnmanagedVySo11CFStringRefaGSgs6UInt32VASSo0abcB0VS3fSo0abC7OptionsVtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So22AudioUnitParameterInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So22AudioUnitParameterInfoV4name8unitName7clumpID02cfG6String0F08minValue03maxM007defaultM05flagsABs4Int8V_A51Mt_s9UnmanagedVySo11CFStringRefaGSgs6UInt32VASSo0abcB0VS3fSo0abC7OptionsVtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
+s:So22AudioUnitParameterInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
 s:So22CAFAudioFormatListItemV01mB017mChannelLayoutTagABSo0A11DescriptionV_s6UInt32Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So22CAFAudioFormatListItemVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testCAFRemainingStructFields	Focused Linux runtime assertion
 s:So22MusicSequenceFileFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue	Focused Linux runtime assertion
@@ -2704,13 +2704,13 @@ s:So22NoteParamsControlValueVABycfc	deferred		Outside the sealed canonical core;
 s:So23AU3DMixerRenderingFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags	Focused Linux runtime assertion
 s:So23AUSamplerBankPresetDataV7bankURL0E3MSB0E3LSB8presetID8reservedABs9UnmanagedVySo8CFURLRefaG_s5UInt8VA3Ntcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 s:So23AUSamplerInstrumentDataV7fileURL14instrumentType7bankMSB0H3LSB8presetIDABs9UnmanagedVySo8CFURLRefaG_s5UInt8VA3Ntcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
-s:So23AudioConverterPrimeInfoV13leadingFrames08trailingF0ABs6UInt32V_AFtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So23AudioConverterPrimeInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So23AudioConverterPrimeInfoV13leadingFrames08trailingF0ABs6UInt32V_AFtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioConverterPrimeInfoOverlay	Focused Linux runtime assertion
+s:So23AudioConverterPrimeInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioConverterPrimeInfoOverlay	Focused Linux runtime assertion
 s:So23AudioUnitExternalBufferV6buffer4sizeABSpys5UInt8VG_s6UInt32Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So23AudioUnitNodeConnectionV06sourceC00E12OutputNumber04destC00h5InputG0ABs5Int32V_s6UInt32VAhJtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So23AudioUnitNodeConnectionVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So23AudioUnitNodeConnectionV06sourceC00E12OutputNumber04destC00h5InputG0ABs5Int32V_s6UInt32VAhJtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
+s:So23AudioUnitNodeConnectionVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitNodeConnectionOverlay	Focused Linux runtime assertion
 s:So23AudioUnitParameterEventV5scope7element9parameter9eventType0H6ValuesABs6UInt32V_A2ISo011AUParameterdI0VAB016__Unnamed_union_hJ0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So23AudioUnitParameterEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So23AudioUnitParameterEventVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterEventSchedule	Focused Linux runtime assertion
 s:So23ExtendedAudioFormatInfoV5mASBD12mMagicCookie01mfG4Size17mClassDescriptionABSo0b11StreamBasicJ0V_SVSgs6UInt32VSo0biJ0Vtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
 s:So23ExtendedAudioFormatInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So23MusicSequenceFileTypeIDV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
@@ -2719,16 +2719,16 @@ s:So24AURecordedParameterEventV8hostTime7address5valueABs6UInt64V_AGSftcfc	imple
 s:So24AURecordedParameterEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So24AUSpatialMixerOutputTypeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So24AUSpatialMixerSourceModeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
-s:So24AudioFilePacketTableInfoV18mNumberValidFrames08mPrimingH0010mRemainderH0ABs5Int64V_s5Int32VAItcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So24AudioFilePacketTableInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So24AudioFilePacketTableInfoV18mNumberValidFrames08mPrimingH0010mRemainderH0ABs5Int64V_s5Int32VAItcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFilePacketTableInfoOverlay	Focused Linux runtime assertion
+s:So24AudioFilePacketTableInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFilePacketTableInfoOverlay	Focused Linux runtime assertion
 s:So24AudioFileStreamSeekFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
-s:So24AudioFileTypeAndFormatIDV01mbC001meF0ABs6UInt32V_AFtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So24AudioFileTypeAndFormatIDVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So24AudioQueueParameterEventV3mID6mValueABs6UInt32V_Sftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So24AudioQueueParameterEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So24AudioFileTypeAndFormatIDV01mbC001meF0ABs6UInt32V_AFtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileTypeAndFormatIDOverlay	Focused Linux runtime assertion
+s:So24AudioFileTypeAndFormatIDVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioFileTypeAndFormatIDOverlay	Focused Linux runtime assertion
+s:So24AudioQueueParameterEventV3mID6mValueABs6UInt32V_Sftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+s:So24AudioQueueParameterEventVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
 s:So24MusicDeviceStdNoteParamsV8argCount6mPitch9mVelocityABs6UInt32V_S2ftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
 s:So24MusicDeviceStdNoteParamsVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
-s:So24ScheduledAudioFileRegionV10mTimeStamp15mCompletionProc01mgH8UserData01mbC010mLoopCount11mStartFrame13mFramesToPlayABSo0beF0V_ySvSg_SpyABGs5Int32VtXCSgALs13OpaquePointerVs6UInt32Vs5Int64VATtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+s:So24ScheduledAudioFileRegionV10mTimeStamp15mCompletionProc01mgH8UserData01mbC010mLoopCount11mStartFrame13mFramesToPlayABSo0beF0V_ySvSg_SpyABGs5Int32VtXCSgALs13OpaquePointerVs6UInt32Vs5Int64VATtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testScheduledAudioFileRegionOverlay	Focused Linux runtime assertion
 s:So25AU3DMixerAttenuationCurveV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So25AUHostTransportStateFlagsV8rawValueABSu_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags	Focused Linux runtime assertion
 s:So25AUSpatializationAlgorithmV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
@@ -2737,53 +2737,53 @@ s:So25AudioCodecMagicCookieInfoVABycfc	implemented	test:full/audiotoolbox/tests/
 s:So25AudioComponentDescriptionV13componentType0d3SubE00D12Manufacturer0D5Flags0dH4MaskABs6UInt32V_A4Itcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMixerVolumeAffectsMix	Focused Linux runtime assertion
 s:So25AudioComponentDescriptionVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So25AudioFileStreamParseFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
-s:So25AudioQueueLevelMeterStateV13mAveragePower05mPeakG0ABSf_Sftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So25AudioQueueLevelMeterStateVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So25AudioQueueLevelMeterStateV13mAveragePower05mPeakG0ABSf_Sftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
+s:So25AudioQueueLevelMeterStateVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
 s:So25AudioUnitParameterOptionsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue	Focused Linux runtime assertion
 s:So26AUMIDIOutputCallbackStructV010midiOutputB08userDataABs5Int32VSvSg_SPySo14AudioTimeStampVGs6UInt32VSPySo14MIDIPacketListVGtXC_AGtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So26AUParameterAutomationEventV8hostTime7address5value9eventType8reservedABs6UInt64V_AISfSo0abcI0VAItcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 s:So26AUParameterAutomationEventVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So26AUScheduledAudioSliceFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags	Focused Linux runtime assertion
-s:So26AudioBytePacketTranslationV01mB001mC001mb8OffsetInC06mFlagsABs5Int64V_AHs6UInt32VSo0abcdG0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So26AudioBytePacketTranslationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So26AudioUnitParameterNameInfoV4inID0F13DesiredLength03outD0ABs6UInt32V_s5Int32Vs9UnmanagedVySo11CFStringRefaGSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So26AudioUnitParameterNameInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So26AudioBytePacketTranslationV01mB001mC001mb8OffsetInC06mFlagsABs5Int64V_AHs6UInt32VSo0abcdG0Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So26AudioBytePacketTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So26AudioUnitParameterNameInfoV4inID0F13DesiredLength03outD0ABs6UInt32V_s5Int32Vs9UnmanagedVySo11CFStringRefaGSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+s:So26AudioUnitParameterNameInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
 s:So26AudioUnitRenderActionFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue	Focused Linux runtime assertion
-s:So27AudioFramePacketTranslationV01mB001mC001mb8OffsetInC0ABs5Int64V_AGs6UInt32Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So27AudioFramePacketTranslationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So27AudioQueueChannelAssignmentV10mDeviceUID01mC6NumberABs9UnmanagedVySo11CFStringRefaG_s6UInt32Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So27AudioFramePacketTranslationV01mB001mC001mb8OffsetInC0ABs5Int64V_AGs6UInt32Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So27AudioFramePacketTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So27AudioQueueChannelAssignmentV10mDeviceUID01mC6NumberABs9UnmanagedVySo11CFStringRefaG_s6UInt32Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueLevelMeterAndChannelAssignment	Focused Linux runtime assertion
 s:So27AudioUnitRemoteControlEventV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So28AUSpatialMixerRenderingFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags	Focused Linux runtime assertion
 s:So28AUVoiceIOSpeechActivityEventV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So28AudioFileStreamPropertyFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamOptionSetsAndConstants	Exact constant payload asserted on Linux
-s:So28AudioOutputUnitMIDICallbacksV8userData13MIDIEventProc09MIDISysExH0ABSvSg_yAF_s6UInt32VA3HtXCyAF_SPys5UInt8VGAHtXCtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So28AudioOutputUnitMIDICallbacksV8userData13MIDIEventProc09MIDISysExH0ABSvSg_yAF_s6UInt32VA3HtXCyAF_SPys5UInt8VGAHtXCtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
 s:So28AudioQueueProcessingTapFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue	Focused Linux runtime assertion
-s:So29AudioComponentPlugInInterfaceV4Open5Close6Lookup8reservedABs5Int32VSv_s13OpaquePointerVtXC_AHSvXCAJSgs5Int16VXCSvSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So29AudioUnitFrequencyResponseBinV01mC010mMagnitudeABSd_Sdtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So29AudioUnitFrequencyResponseBinVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So29AudioUnitParameterHistoryInfoV16updatesPerSecond24historyDurationInSecondsABSf_Sftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So29AudioUnitParameterHistoryInfoVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So29AudioComponentPlugInInterfaceV4Open5Close6Lookup8reservedABs5Int32VSv_s13OpaquePointerVtXC_AHSvXCAJSgs5Int16VXCSvSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioComponentPlugInInterfaceOverlay	Focused Linux runtime assertion
+s:So29AudioUnitFrequencyResponseBinV01mC010mMagnitudeABSd_Sdtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+s:So29AudioUnitFrequencyResponseBinVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+s:So29AudioUnitParameterHistoryInfoV16updatesPerSecond24historyDurationInSecondsABSf_Sftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+s:So29AudioUnitParameterHistoryInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
 s:So30AUParameterAutomationEventTypeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So30AUSpatialMixerAttenuationCurveV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So30AudioComponentValidationResultV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So31AUVoiceIOOtherAudioDuckingLevelV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So31AudioBytePacketTranslationFlagsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags	Focused Linux runtime assertion
-s:So32AudioOutputUnitStartAtTimeParamsV10mTimestamp6mFlagsABSo0aF5StampV_s6UInt32Vtcfc	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
-s:So32AudioOutputUnitStartAtTimeParamsVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So33AudioIndependentPacketTranslationV01mC0023mIndependentlyDecodableC0ABs5Int64V_AFtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So33AudioIndependentPacketTranslationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So33AudioUnitParameterStringFromValueV9inParamID0gF003outD0ABs6UInt32V_SPySfGs9UnmanagedVySo11CFStringRefaGSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So33AudioUnitParameterValueFromStringV9inParamID0gF003outD0ABs6UInt32V_s9UnmanagedVySo11CFStringRefaGSftcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So32AudioOutputUnitStartAtTimeParamsV10mTimestamp6mFlagsABSo0aF5StampV_s6UInt32Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+s:So32AudioOutputUnitStartAtTimeParamsVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioOutputUnitStartAtTimeAndMIDICallbacks	Focused Linux runtime assertion
+s:So33AudioIndependentPacketTranslationV01mC0023mIndependentlyDecodableC0ABs5Int64V_AFtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So33AudioIndependentPacketTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So33AudioUnitParameterStringFromValueV9inParamID0gF003outD0ABs6UInt32V_SPySfGs9UnmanagedVySo11CFStringRefaGSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
+s:So33AudioUnitParameterValueFromStringV9inParamID0gF003outD0ABs6UInt32V_s9UnmanagedVySo11CFStringRefaGSftcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testParameterNameAndStringConversionOverlays	Focused Linux runtime assertion
 s:So34AUSpatialMixerPersonalizedHRTFModeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
 s:So34AudioComponentInstantiationOptionsV8rawValueABs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue	Focused Linux runtime assertion
-s:So34AudioPacketRollDistanceTranslationV01mB001mcD0ABs5Int64V_AFtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So34AudioPacketRollDistanceTranslationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So34AudioPacketRollDistanceTranslationV01mB001mcD0ABs5Int64V_AFtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So34AudioPacketRollDistanceTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
 s:So35AUSpatialMixerPointSourceInHeadModeV8rawValueABSgs6UInt32V_tcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog	Focused Linux runtime assertion
-s:So36AUInputSamplesInOutputCallbackStructV07inputTodE08userDataABySv_SPySo14AudioTimeStampVGS2dtXC_SvSgtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So36AudioPacketDependencyInfoTranslationV01mB025mIsIndependentlyDecodable21mNumberPrerollPacketsABs5Int64V_s6UInt32VAItcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So36AudioPacketDependencyInfoTranslationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So36AudioPacketRangeByteCountTranslationV01mB001mbE001mdE10UpperBoundABs5Int64V_A2Gtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
-s:So36AudioPacketRangeByteCountTranslationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So36AUInputSamplesInOutputCallbackStructV07inputTodE08userDataABySv_SPySo14AudioTimeStampVGS2dtXC_SvSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAUInputSamplesInOutputCallbackStructOverlay	Focused Linux runtime assertion
+s:So36AudioPacketDependencyInfoTranslationV01mB025mIsIndependentlyDecodable21mNumberPrerollPacketsABs5Int64V_s6UInt32VAItcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So36AudioPacketDependencyInfoTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So36AudioPacketRangeByteCountTranslationV01mB001mbE001mdE10UpperBoundABs5Int64V_A2Gtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
+s:So36AudioPacketRangeByteCountTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
 s:So39AUVoiceIOOtherAudioDuckingConfigurationV015mEnableAdvancedD001mD5LevelAB6Darwin0I7BooleanV_So0abcdH0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So39AUVoiceIOOtherAudioDuckingConfigurationVABycfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 s:So8AUPresetV12presetNumber0B4NameABs5Int32V_s9UnmanagedVySo11CFStringRefaGSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion

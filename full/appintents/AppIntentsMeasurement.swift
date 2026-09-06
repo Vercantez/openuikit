@@ -35,6 +35,9 @@ extension IntentParameter {
         context.storedUnit = storedMeasurementUnit
         context.storedUnitAdjustForLocale = storedUnitAdjustForLocale
         context.storedSupportsNegativeNumbers = storedSupportsNegativeNumbers
+        context.storedCurrencyCodes = storedCurrencyCodes
+        context.storedPersonMode = storedPersonMode
+        context.storedPlacemarkDisplayStyle = storedPlacemarkDisplayStyle
         return context
     }
 }

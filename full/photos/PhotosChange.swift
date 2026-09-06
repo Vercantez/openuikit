@@ -251,7 +251,7 @@ public final class PHCollectionListChangeRequest: PHChangeRequest, @unchecked Se
     ) {
         self.init(title: "")
         pendingChildIdentifiers = childCollections.objects.map(\.localIdentifier)
-        PhotosChangeSession.record(.updateList(self))
+        PhotosChangeSession.record(.replaceTopLevel(self))
     }
 
     public init(title: String) {
@@ -388,6 +388,9 @@ public final class PHChange: NSObject, @unchecked Sendable {
             insertedAlbumIdentifiers: [],
             removedAlbumIdentifiers: [],
             changedAlbumIdentifiers: [],
+            insertedListIdentifiers: [],
+            removedListIdentifiers: [],
+            changedListIdentifiers: [],
             token: 0
         )
         super.init()
@@ -425,6 +428,24 @@ public final class PHChange: NSObject, @unchecked Sendable {
                 objectWasDeleted: false
             )
         }
+        if applied.removedListIdentifiers.contains(identifier) {
+            return PHObjectChangeDetails(
+                objectBeforeChanges: object,
+                objectAfterChanges: nil,
+                assetContentChanged: false,
+                objectWasDeleted: true
+            )
+        }
+        if applied.changedListIdentifiers.contains(identifier),
+            let after = PhotosLibraryStore.list(identifier: identifier) as? T
+        {
+            return PHObjectChangeDetails(
+                objectBeforeChanges: object,
+                objectAfterChanges: after,
+                assetContentChanged: false,
+                objectWasDeleted: false
+            )
+        }
         return nil
     }
 
@@ -439,7 +460,9 @@ public final class PHChange: NSObject, @unchecked Sendable {
         }
         let after = PHFetchResult(afterObjects, refetch: fetchResult.refetch)
         let changedIDs = Set(
-            applied.changedAssetIdentifiers + applied.changedAlbumIdentifiers
+            applied.changedAssetIdentifiers
+                + applied.changedAlbumIdentifiers
+                + applied.changedListIdentifiers
         )
         let changed = afterObjects.filter { changedIDs.contains($0.localIdentifier) }
         let details = PHFetchResultChangeDetails(
@@ -558,6 +581,17 @@ public final class PHFetchResultChangeDetails<ObjectType: PHObject>: NSObject, @
     }
 
     public func enumerateMoves(_ handler: @escaping (Int, Int) -> Void) {
-        _ = handler
+        let beforeIDs = fetchResultBeforeChanges.objects.map(\.localIdentifier)
+        let afterIDs = fetchResultAfterChanges.objects.map(\.localIdentifier)
+        var afterIndex: [String: Int] = [:]
+        for (index, identifier) in afterIDs.enumerated() {
+            if afterIndex[identifier] == nil {
+                afterIndex[identifier] = index
+            }
+        }
+        for (from, identifier) in beforeIDs.enumerated() {
+            guard let to = afterIndex[identifier], from != to else { continue }
+            handler(from, to)
+        }
     }
 }

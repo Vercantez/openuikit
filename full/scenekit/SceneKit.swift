@@ -509,9 +509,19 @@ public protocol SCNCameraControllerDelegate: NSObjectProtocol {
     func cameraInertiaWillStart(for cameraController: SCNCameraController)
 }
 
+public extension SCNCameraControllerDelegate {
+    func cameraInertiaDidEnd(for cameraController: SCNCameraController) {}
+    func cameraInertiaWillStart(for cameraController: SCNCameraController) {}
+}
+
 public protocol SCNAvoidOccluderConstraintDelegate: NSObjectProtocol {
     func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, didAvoidOccluder occluder: SCNNode, for node: SCNNode)
     func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, shouldAvoidOccluder occluder: SCNNode, for node: SCNNode) -> Bool
+}
+
+public extension SCNAvoidOccluderConstraintDelegate {
+    func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, didAvoidOccluder occluder: SCNNode, for node: SCNNode) {}
+    func avoidOccluderConstraint(_ constraint: SCNAvoidOccluderConstraint, shouldAvoidOccluder occluder: SCNNode, for node: SCNNode) -> Bool { true }
 }
 
 public protocol SCNCameraControlConfiguration: NSObjectProtocol {

@@ -91,3 +91,87 @@ func testSharedEventHostClock() {
     precondition(event.signaledValue >= 7)
     _ = MTLSharedEventHandle.supportsSecureCoding
 }
+
+func testResidencySetAndRasterizationRateMap() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let residencyDesc = MTLResidencySetDescriptor()
+    residencyDesc.label = "resident"
+    residencyDesc.initialCapacity = 4
+    let residency = try! device.makeResidencySet(descriptor: residencyDesc)
+    residency.label = "cpu-set"
+    precondition(residency.device.name == device.name)
+    precondition(residency.label == "cpu-set")
+    let buffer = device.makeBuffer(length: 32, options: .storageModeShared)!
+    let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .r8Unorm,
+        width: 2,
+        height: 2,
+        mipmapped: false
+    )
+    let texture = device.makeTexture(descriptor: textureDesc)!
+    residency.addAllocation(buffer)
+    residency.addAllocations([texture])
+    precondition(residency.containsAllocation(buffer))
+    precondition(residency.allocationCount == 2)
+    precondition(residency.allAllocations.count == 2)
+    precondition(residency.allocatedSize >= 32)
+    residency.commit()
+    residency.requestResidency()
+    residency.removeAllocation(texture)
+    precondition(!residency.containsAllocation(texture))
+    residency.removeAllocations([buffer])
+    residency.removeAllAllocations()
+    precondition(residency.allocationCount == 0)
+    residency.endResidency()
+    let queue = device.makeCommandQueue()!
+    queue.addResidencySet(residency)
+    queue.addResidencySets([residency])
+    queue.removeResidencySet(residency)
+    queue.removeResidencySets([residency])
+    let commandBuffer = queue.makeCommandBuffer()!
+    commandBuffer.useResidencySet(residency)
+    commandBuffer.useResidencySets([residency])
+    commandBuffer.commit()
+    commandBuffer.waitUntilCompleted()
+
+    let layer = MTLRasterizationRateLayerDescriptor(sampleCount: MTLSizeMake(2, 2, 1))
+    precondition(layer.maxSampleCount.width == 2)
+    layer.sampleCount = MTLSizeMake(2, 2, 1)
+    layer.horizontal[0] = 1
+    layer.horizontal[1] = 1
+    layer.vertical[0] = 1
+    layer.vertical[1] = 1
+    let fromArrays = MTLRasterizationRateLayerDescriptor(horizontal: [1, 1], vertical: [1, 1])
+    precondition(fromArrays.horizontal[0] == 1)
+    let copied = fromArrays.copy() as! MTLRasterizationRateLayerDescriptor
+    precondition(copied.vertical[0] == 1)
+    let rateDesc = MTLRasterizationRateMapDescriptor(screenSize: MTLSizeMake(8, 8, 1), layer: layer, label: "identity")
+    rateDesc.setLayer(layer, at: 0)
+    precondition(rateDesc.layerCount == 1)
+    precondition(rateDesc.layer(at: 0) != nil)
+    precondition(rateDesc.layers[0] != nil)
+    rateDesc.screenSize = MTLSizeMake(8, 8, 1)
+    let multi = MTLRasterizationRateMapDescriptor(
+        screenSize: MTLSizeMake(4, 4, 1),
+        layers: [layer],
+        label: "multi"
+    )
+    precondition(multi.layerCount == 1)
+    _ = MTLRasterizationRateMapDescriptor(screenSize: MTLSizeMake(2, 2, 1), label: "empty")
+    let map = device.makeRasterizationRateMap(descriptor: rateDesc)!
+    precondition(map.device.name == device.name)
+    precondition(map.label == "identity")
+    precondition(map.screenSize.width == 8)
+    precondition(map.layerCount == 1)
+    precondition(map.physicalGranularity.width == 1)
+    precondition(map.physicalSize(layer: 0).width == 8)
+    precondition(map.parameterBufferSizeAndAlign.size >= 16)
+    let screen = MTLCoordinate2DMake(3, 4)
+    let physical = map.physicalCoordinates(screenCoordinates: screen, layer: 0)
+    precondition(physical.x == 3 && physical.y == 4)
+    let back = map.screenCoordinates(physicalCoordinates: physical, layer: 0)
+    precondition(back.x == 3)
+    let param = device.makeBuffer(length: 64, options: .storageModeShared)!
+    map.copyParameterData(buffer: param, offset: 0)
+    precondition(param.contents().load(as: UInt32.self) == 8)
+}

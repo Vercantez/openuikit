@@ -145,7 +145,57 @@ public struct BasicChart3DSymbolShape: Hashable, Sendable, Chart3DSymbolShape {
 }
 
 public struct BasicChart3DSurfaceStyle: Hashable, Sendable, Chart3DSurfaceStyle {
-    public init() {}
+    public var kind: String
+    public var yRangeMin: CGFloat?
+    public var yRangeMax: CGFloat?
+    public var gradientName: String?
+
+    public init() {
+        kind = "automatic"
+        yRangeMin = nil
+        yRangeMax = nil
+        gradientName = nil
+    }
+
+    public init(
+        kind: String,
+        yRangeMin: CGFloat? = nil,
+        yRangeMax: CGFloat? = nil,
+        gradientName: String? = nil
+    ) {
+        self.kind = kind
+        self.yRangeMin = yRangeMin
+        self.yRangeMax = yRangeMax
+        self.gradientName = gradientName
+    }
+}
+
+public extension Chart3DSurfaceStyle where Self == BasicChart3DSurfaceStyle {
+    /// Linux default height domain is `0...1`. Apple's implicit range is unobserved.
+    static var heightBased: Self {
+        .heightBased(yRange: 0...1)
+    }
+
+    static func heightBased(yRange: ClosedRange<CGFloat>) -> Self {
+        BasicChart3DSurfaceStyle(
+            kind: "heightBased",
+            yRangeMin: yRange.lowerBound,
+            yRangeMax: yRange.upperBound
+        )
+    }
+
+    static func heightBased(_ gradient: Gradient, yRange: ClosedRange<CGFloat>? = nil) -> Self {
+        BasicChart3DSurfaceStyle(
+            kind: "heightBased",
+            yRangeMin: yRange?.lowerBound,
+            yRangeMax: yRange?.upperBound,
+            gradientName: "gradient-\(gradient.colorCount)"
+        )
+    }
+
+    static var normalBased: Self {
+        BasicChart3DSurfaceStyle(kind: "normalBased")
+    }
 }
 
 public struct AnyChartContent: View, ChartContent {
@@ -159,6 +209,8 @@ public struct AnyChartContent: View, ChartContent {
 
 public struct AnyAxisMark: View, AxisMark {
     public init<Content: AxisMark>(_ content: Content) { _ = content }
+    public init<Content: AxisMark>(erasing content: Content) { _ = content }
+    public init(_ content: any AxisMark) { _ = content }
     public var body: some View { EmptyView() }
 }
 
@@ -169,6 +221,7 @@ public struct AnyAxisContent: View, AxisContent {
 }
 
 public struct BuilderConditional<TrueContent, FalseContent>: View {
+    public typealias Body = EmptyView
     public enum Storage {
         case first(TrueContent)
         case second(FalseContent)
@@ -176,7 +229,7 @@ public struct BuilderConditional<TrueContent, FalseContent>: View {
     public let storage: Storage?
     public init() { storage = nil }
     public init(storage: Storage) { self.storage = storage }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 extension BuilderConditional: ChartContent where TrueContent: ChartContent, FalseContent: ChartContent {
@@ -229,7 +282,7 @@ public struct ScaleType: Hashable, Sendable, CustomStringConvertible {
     public var description: String { name }
 }
 
-public struct MarkDimension: Hashable, Sendable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral {
+public struct MarkDimension: Hashable, Sendable, ExpressibleByFloatLiteral, ExpressibleByIntegerLiteral, CustomStringConvertible {
     public typealias FloatLiteralType = Double
     public typealias IntegerLiteralType = Int
     public let kind: String
@@ -241,6 +294,10 @@ public struct MarkDimension: Hashable, Sendable, ExpressibleByFloatLiteral, Expr
     public static func ratio(_ value: CGFloat) -> MarkDimension {
         MarkDimension(kind: "ratio", value: value)
     }
+    public static func inset(_ value: CGFloat) -> MarkDimension {
+        MarkDimension(kind: "inset", value: value)
+    }
+    public var description: String { kind }
     public init() {
         kind = "automatic"
         value = nil
@@ -262,6 +319,7 @@ public struct MarkDimensions<DataElement>: Hashable, ExpressibleByFloatLiteral, 
     public typealias IntegerLiteralType = Int
     public let kind: String
     public let value: CGFloat?
+    public let keyPath: KeyPath<DataElement, CGFloat>?
     public static var automatic: MarkDimensions<DataElement> {
         MarkDimensions(kind: "automatic", value: nil)
     }
@@ -271,19 +329,34 @@ public struct MarkDimensions<DataElement>: Hashable, ExpressibleByFloatLiteral, 
     public static func ratio(_ value: CGFloat) -> MarkDimensions<DataElement> {
         MarkDimensions(kind: "ratio", value: value)
     }
+    public static func inset(_ value: CGFloat) -> MarkDimensions<DataElement> {
+        MarkDimensions(kind: "inset", value: value)
+    }
+    public static func inset(_ keyPath: KeyPath<DataElement, CGFloat>) -> MarkDimensions<DataElement> {
+        MarkDimensions(kind: "inset", value: nil, keyPath: keyPath)
+    }
     public init() {
         kind = "automatic"
         value = nil
+        keyPath = nil
     }
-    init(kind: String, value: CGFloat?) {
+    init(kind: String, value: CGFloat?, keyPath: KeyPath<DataElement, CGFloat>? = nil) {
         self.kind = kind
         self.value = value
+        self.keyPath = keyPath
     }
     public init(floatLiteral value: Double) {
         self = .fixed(CGFloat(value))
     }
     public init(integerLiteral value: Int) {
         self = .fixed(CGFloat(value))
+    }
+
+    public func resolved(for element: DataElement) -> MarkDimension {
+        if kind == "inset", let keyPath {
+            return .inset(element[keyPath: keyPath])
+        }
+        return MarkDimension(kind: kind, value: value)
     }
 }
 
@@ -1194,7 +1267,33 @@ public struct PlottableProjection<DataElement, DataValue: Plottable> {
 }
 
 public struct MajorValueAlignment<Value: Plottable>: Hashable {
-    public init() {}
+    public var kind: String
+    public var unitValue: Double?
+    public var matching: DateComponents?
+
+    public init() {
+        kind = "automatic"
+        unitValue = nil
+        matching = nil
+    }
+
+    init(kind: String, unitValue: Double? = nil, matching: DateComponents? = nil) {
+        self.kind = kind
+        self.unitValue = unitValue
+        self.matching = matching
+    }
+
+    public static var page: MajorValueAlignment<Value> {
+        MajorValueAlignment(kind: "page")
+    }
+
+    public static func unit(_ unit: Value) -> MajorValueAlignment<Value> where Value: Numeric {
+        MajorValueAlignment(kind: "unit", unitValue: chartNumericScalar(unit))
+    }
+
+    public static func matching(_ components: DateComponents) -> MajorValueAlignment<Value> where Value == Date {
+        MajorValueAlignment(kind: "matching", matching: components)
+    }
 }
 
 public struct ValueAlignedLimitBehavior: Hashable, Sendable {
@@ -1513,7 +1612,9 @@ public struct BarMark: ChartContent {
                 yEnd: yEnd,
                 category: category,
                 series: series,
-                stacking: stacking
+                stacking: stacking,
+                markWidth: width,
+                markHeight: height
             ),
         ]
     }
@@ -1593,7 +1694,15 @@ public struct SectorMark: ChartContent {
     }
 
     public var chartPlotRecords: [ChartPlotRecord] {
-        [ChartPlotRecord(kind: .sector, angle: angle)]
+        [
+            ChartPlotRecord(
+                kind: .sector,
+                angle: angle,
+                innerRadius: innerRadius,
+                outerRadius: outerRadius,
+                angularInset: angularInset
+            ),
+        ]
     }
 
     public var body: some View { EmptyView() }
@@ -1665,129 +1774,143 @@ public struct Plot<Content: ChartContent>: ChartContent {
 
 public struct VectorizedBarPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct VectorizedAreaPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct VectorizedLinePlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct VectorizedRulePlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct VectorizedPointPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct VectorizedSectorPlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct VectorizedRectanglePlotContent<Data: RandomAccessCollection>: VectorizedChartContent {
     public typealias DataElement = Data.Element
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct BarPlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedBarPlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(_ content: Content) { chartPlotRecords = content.chartPlotRecords }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct AreaPlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedAreaPlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct LinePlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedLinePlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct PointPlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedPointPlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct RectanglePlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedRectanglePlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct RulePlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedRulePlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct SectorPlot<Content: VectorizedChartContent>: VectorizedChartContent {
     public typealias DataElement = Content.DataElement
+    public typealias Body = EmptyView
     public var chartPlotRecords: [ChartPlotRecord]
     public init() where Content == VectorizedSectorPlotContent<[Int]> {
         chartPlotRecords = []
     }
     public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
-    public var body: some View { EmptyView() }
+    public var body: EmptyView { EmptyView() }
 }
 
 public struct FunctionAreaPlotContent: VectorizedChartContent {
@@ -1810,19 +1933,52 @@ public extension ChartProxy {
     func symbolSize<P: Plottable>(for value: P) -> CGFloat? { _ = value; return nil }
     func symbolDomain<P: Plottable>(dataType: P.Type) -> [P] { _ = dataType; return [] }
     var plotAreaFrame: Anchor<CGRect> { Anchor<CGRect>() }
-    func positionRange<X: Plottable, Y: Plottable>(for point: (x: X, y: Y)) -> CGRect? { _ = point; return nil }
-    func positionRange<P: Plottable>(forX value: P) -> ClosedRange<CGFloat>? { _ = value; return nil }
-    func positionRange<P: Plottable>(forY value: P) -> ClosedRange<CGFloat>? { _ = value; return nil }
+    func positionRange<X: Plottable, Y: Plottable>(for point: (x: X, y: Y)) -> CGRect? {
+        guard let xs = positionRange(forX: point.x), let ys = positionRange(forY: point.y) else {
+            return nil
+        }
+        let minX = min(xs.lowerBound, xs.upperBound)
+        let maxX = max(xs.lowerBound, xs.upperBound)
+        let minY = min(ys.lowerBound, ys.upperBound)
+        let maxY = max(ys.lowerBound, ys.upperBound)
+        return CGRect(
+            x: minX,
+            y: minY,
+            width: max(0, maxX - minX),
+            height: max(0, maxY - minY)
+        )
+    }
+    func positionRange<P: Plottable>(forX value: P) -> ClosedRange<CGFloat>? {
+        guard let encoded = chartEncode(value), let xScale, let range = xScale.pixelRange(for: encoded) else {
+            return nil
+        }
+        return CGFloat(range.lowerBound)...CGFloat(range.upperBound)
+    }
+    func positionRange<P: Plottable>(forY value: P) -> ClosedRange<CGFloat>? {
+        guard let encoded = chartEncode(value), let yScale, let range = yScale.pixelRange(for: encoded) else {
+            return nil
+        }
+        return CGFloat(range.lowerBound)...CGFloat(range.upperBound)
+    }
     func foregroundStyle<P: Plottable>(for value: P) -> AnyShapeStyle? { _ = value; return nil }
     func lineStyleDomain<P: Plottable>(dataType: P.Type) -> [P] { _ = dataType; return [] }
     func selectAngleValue(at angle: Angle) { _ = angle }
     func symbolSizeDomain<P: Plottable>(dataType: P.Type) -> [P] { _ = dataType; return [] }
     var plotContainerFrame: Anchor<CGRect>? { nil }
     func foregroundStyleDomain<P: Plottable>(dataType: P.Type) -> [P] { _ = dataType; return [] }
-    func angle(at position: CGPoint) -> Angle { _ = position; return Angle() }
+    func angle(at position: CGPoint) -> Angle {
+        guard let xScale, let yScale else { return Angle() }
+        let centerX = (xScale.rangeStart + xScale.rangeEnd) / 2
+        let centerY = (yScale.rangeStart + yScale.rangeEnd) / 2
+        return Angle(radians: atan2(Double(position.y) - centerY, Double(position.x) - centerX))
+    }
     func value<X: Plottable, Y: Plottable>(at position: CGPoint, as _: (X, Y).Type = (X, Y).self) -> (X, Y)? {
-        _ = position
-        return nil
+        guard let x: X = value(atX: position.x, as: X.self),
+              let y: Y = value(atY: position.y, as: Y.self)
+        else {
+            return nil
+        }
+        return (x, y)
     }
     func value<P: Plottable>(atX position: CGFloat, as _: P.Type = P.self) -> P? {
         guard let xScale else { return nil }

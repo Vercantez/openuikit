@@ -419,6 +419,17 @@ void openui_dispatch_host_v1_async(
     if (callback == NULL) boundary_abort("NULL callback submitted");
     dispatch_async_f(checked_queue(queue_kind, queue), context, callback);
 }
+void openui_dispatch_host_v1_sync(
+    uint32_t queue_kind,
+    void *queue,
+    void *context,
+    openui_dispatch_callback_v1 callback
+)
+{
+    require_runtime();
+    if (callback == NULL) boundary_abort("NULL callback submitted");
+    dispatch_sync_f(checked_queue(queue_kind, queue), context, callback);
+}
 
 void openui_dispatch_host_v1_after(
     uint32_t queue_kind,

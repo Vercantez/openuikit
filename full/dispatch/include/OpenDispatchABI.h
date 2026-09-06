@@ -55,6 +55,12 @@ OPENUI_DISPATCH_EXPORT void openui_dispatch_host_v1_async(
     void *context,
     openui_dispatch_callback_v1 callback
 );
+OPENUI_DISPATCH_EXPORT void openui_dispatch_host_v1_sync(
+    uint32_t queue_kind,
+    void *queue,
+    void *context,
+    openui_dispatch_callback_v1 callback
+);
 OPENUI_DISPATCH_EXPORT void openui_dispatch_host_v1_after(
     uint32_t queue_kind,
     void *queue,
@@ -104,6 +110,12 @@ OPENUI_DISPATCH_EXPORT void *openui_dispatch_v1_create_queue(
 );
 OPENUI_DISPATCH_EXPORT void openui_dispatch_v1_release_queue(void *queue);
 OPENUI_DISPATCH_EXPORT void openui_dispatch_v1_async(
+    uint32_t queue_kind,
+    void *queue,
+    void *context,
+    openui_dispatch_callback_v1 callback
+);
+OPENUI_DISPATCH_EXPORT void openui_dispatch_v1_sync(
     uint32_t queue_kind,
     void *queue,
     void *context,
