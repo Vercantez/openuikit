@@ -28,7 +28,7 @@ func testSpatialScalerHostSnapshotsDescriptor() {
 }
 
 func testSpatialScalerHostMutableState() {
-    var scaler: any MTLFXSpatialScaler = MTLFXSpatialScalerDescriptor().host_makeSoftwareSpatialScaler()
+    let scaler: any MTLFXSpatialScaler = MTLFXSpatialScalerDescriptor().host_makeSoftwareSpatialScaler()
     let color = MetalFXHostTexture(width: 8, height: 8, pixelFormat: .rgba8Unorm, fill: 3)
     let output = MetalFXHostTexture(width: 16, height: 16, pixelFormat: .bgra8Unorm, fill: 9)
     let fence = MetalFXHostFence()
@@ -47,7 +47,7 @@ func testSpatialScalerHostMutableState() {
 }
 
 func testSpatialScalerHostEncodeInert() {
-    var scaler: any MTLFXSpatialScaler = MTLFXSpatialScalerDescriptor().host_makeSoftwareSpatialScaler()
+    let scaler: any MTLFXSpatialScaler = MTLFXSpatialScalerDescriptor().host_makeSoftwareSpatialScaler()
     let output = MetalFXHostTexture(width: 4, height: 4, pixelFormat: .rgba8Unorm, fill: 17)
     scaler.outputTexture = output
     let device = MetalFXHostDevice()
@@ -61,7 +61,7 @@ func testSpatialScalerHostEncodeInert() {
 }
 
 func testMetal4SpatialScalerHostEncodeInert() {
-    var scaler: any MTL4FXSpatialScaler =
+    let scaler: any MTL4FXSpatialScaler =
         MTLFXSpatialScalerDescriptor().host_makeSoftwareMetal4SpatialScaler()
     let output = MetalFXHostTexture(width: 2, height: 2, pixelFormat: .rgba8Unorm, fill: 4)
     scaler.outputTexture = output

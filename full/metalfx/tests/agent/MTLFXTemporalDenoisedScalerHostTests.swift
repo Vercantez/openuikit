@@ -58,7 +58,7 @@ func testTemporalDenoisedScalerHostSnapshotsDescriptor() {
 }
 
 func testTemporalDenoisedScalerHostMutableState() {
-    var scaler: any MTLFXTemporalDenoisedScaler =
+    let scaler: any MTLFXTemporalDenoisedScaler =
         MTLFXTemporalDenoisedScalerDescriptor().host_makeSoftwareTemporalDenoisedScaler()
     let color = MetalFXHostTexture(width: 2, height: 2, pixelFormat: .rgba16Float)
     let depth = MetalFXHostTexture(width: 2, height: 2, pixelFormat: .depth32Float)
@@ -131,7 +131,7 @@ func testTemporalDenoisedScalerHostMutableState() {
 }
 
 func testTemporalDenoisedScalerHostEncodeInert() {
-    var scaler: any MTLFXTemporalDenoisedScaler =
+    let scaler: any MTLFXTemporalDenoisedScaler =
         MTLFXTemporalDenoisedScalerDescriptor().host_makeSoftwareTemporalDenoisedScaler()
     let output = MetalFXHostTexture(width: 2, height: 2, pixelFormat: .rgba16Float, fill: 55)
     scaler.outputTexture = output
@@ -149,7 +149,7 @@ func testTemporalDenoisedScalerConformsToFrameInterpolatable() {
 }
 
 func testMetal4TemporalDenoisedScalerHostEncodeInert() {
-    var scaler: any MTL4FXTemporalDenoisedScaler =
+    let scaler: any MTL4FXTemporalDenoisedScaler =
         MTLFXTemporalDenoisedScalerDescriptor().host_makeSoftwareMetal4TemporalDenoisedScaler()
     let output = MetalFXHostTexture(width: 1, height: 1, pixelFormat: .rgba16Float, fill: 8)
     scaler.outputTexture = output

@@ -38,7 +38,7 @@ func testFrameInterpolatorHostSnapshotsDescriptor() {
 }
 
 func testFrameInterpolatorHostMutableState() {
-    var interpolator: any MTLFXFrameInterpolator =
+    let interpolator: any MTLFXFrameInterpolator =
         MTLFXFrameInterpolatorDescriptor().host_makeSoftwareFrameInterpolator()
     let color = MetalFXHostTexture(width: 4, height: 4, pixelFormat: .rgba8Unorm)
     let prev = MetalFXHostTexture(width: 4, height: 4, pixelFormat: .rgba8Unorm)
@@ -88,7 +88,7 @@ func testFrameInterpolatorHostMutableState() {
 }
 
 func testFrameInterpolatorHostEncodeInert() {
-    var interpolator: any MTLFXFrameInterpolator =
+    let interpolator: any MTLFXFrameInterpolator =
         MTLFXFrameInterpolatorDescriptor().host_makeSoftwareFrameInterpolator()
     let output = MetalFXHostTexture(width: 2, height: 2, pixelFormat: .bgra8Unorm, fill: 77)
     interpolator.outputTexture = output
@@ -100,7 +100,7 @@ func testFrameInterpolatorHostEncodeInert() {
 }
 
 func testMetal4FrameInterpolatorHostEncodeInert() {
-    var interpolator: any MTL4FXFrameInterpolator =
+    let interpolator: any MTL4FXFrameInterpolator =
         MTLFXFrameInterpolatorDescriptor().host_makeSoftwareMetal4FrameInterpolator()
     let output = MetalFXHostTexture(width: 2, height: 2, pixelFormat: .bgra8Unorm, fill: 12)
     interpolator.outputTexture = output
