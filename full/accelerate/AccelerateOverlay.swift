@@ -990,7 +990,7 @@ public struct Quadrature {
         integrand: (UnsafeBufferPointer<Double>, UnsafeMutableBufferPointer<Double>) -> ()
     ) -> Result<(integralResult: Double, estimatedAbsoluteError: Double), Quadrature.Error> {
         integrate(over: interval) { x in
-            var xs = [x]
+            let xs = [x]
             var ys = [0.0]
             xs.withUnsafeBufferPointer { xp in
                 ys.withUnsafeMutableBufferPointer { yp in
@@ -1010,8 +1010,6 @@ public struct Quadrature {
     ) -> Result<(integralResult: Double, estimatedAbsoluteError: Double), Quadrature.Error> {
         _ = maxN
         let h = (b - a) / Double(n)
-        var coarse: Double = 0
-        var fine: Double = 0
         var evals = 0
         let fa = integrand(a)
         let fb = integrand(b)
@@ -1029,8 +1027,8 @@ public struct Quadrature {
             if i % 2 == 0 { simpsonEven += y } else { simpsonOdd += y }
             if evals > 100_000 { return .failure(.integrateMaxEval) }
         }
-        coarse = trap * h
-        fine = (h / 3) * (fa + fb + 4 * simpsonOdd + 2 * simpsonEven)
+        let coarse = trap * h
+        let fine = (h / 3) * (fa + fb + 4 * simpsonOdd + 2 * simpsonEven)
         let err = abs(fine - coarse)
         let scale = max(abs(fine), 1)
         if err > max(absoluteTolerance, relativeTolerance * scale) && n < 4096 {

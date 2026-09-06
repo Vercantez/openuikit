@@ -48,11 +48,11 @@ func testSparseMultiplyKnownMatrix() {
     var rows: [Int32] = [0, 0, 1]
     var cols: [Int32] = [0, 1, 1]
     var vals: [Float] = [1, 2, 3]
-    var matrix = SparseConvertFromCoordinate(2, 2, 3, 1, SparseAttributes_t(), &rows, &cols, &vals)
+    let matrix = SparseConvertFromCoordinate(2, 2, 3, 1, SparseAttributes_t(), &rows, &cols, &vals)
     var xdata: [Float] = [1, 1]
     var ydata: [Float] = [0, 0]
     let x = DenseVector_Float(count: 2, data: &xdata)
-    var y = DenseVector_Float(count: 2, data: &ydata)
+    let y = DenseVector_Float(count: 2, data: &ydata)
     SparseMultiply(matrix, x, y)
     precondition(abs(ydata[0] - 3) < 0.0001)
     precondition(abs(ydata[1] - 3) < 0.0001)
@@ -60,11 +60,11 @@ func testSparseMultiplyKnownMatrix() {
     SparseMultiplyAdd(matrix, x, y)
     precondition(abs(ydata[0] - 13) < 0.0001)
     var scaled: [Float] = [0, 0]
-    var ys = DenseVector_Float(count: 2, data: &scaled)
+    let ys = DenseVector_Float(count: 2, data: &scaled)
     SparseMultiply(Float(2), matrix, x, ys)
     precondition(abs(scaled[0] - 6) < 0.0001)
     var addScaled: [Float] = [1, 1]
-    var yas = DenseVector_Float(count: 2, data: &addScaled)
+    let yas = DenseVector_Float(count: 2, data: &addScaled)
     SparseMultiplyAdd(Float(2), matrix, x, yas)
     precondition(abs(addScaled[0] - 7) < 0.0001)
     var storage = [UInt8](repeating: 0, count: 64)
@@ -72,7 +72,7 @@ func testSparseMultiplyKnownMatrix() {
     var rows2 = rows
     var cols2 = cols
     var vals2 = vals
-    var matrix2 = storage.withUnsafeMutableBytes { sb in
+    let matrix2 = storage.withUnsafeMutableBytes { sb in
         workspace.withUnsafeMutableBytes { wb in
             SparseConvertFromCoordinate(
                 2, 2, 3, 1, SparseAttributes_t(), &rows2, &cols2, &vals2,
@@ -90,7 +90,7 @@ func testSparseMultiplyDoubleAndMatrix() {
     var vals: [Double] = [4, 5]
     var workspace = [UInt8](repeating: 0, count: 64)
     var storage = [UInt8](repeating: 0, count: 64)
-    var matrix = storage.withUnsafeMutableBytes { sb in
+    let matrix = storage.withUnsafeMutableBytes { sb in
         workspace.withUnsafeMutableBytes { wb in
             SparseConvertFromCoordinate(
                 2, 2, 2, 1, SparseAttributes_t(), &rows, &cols, &vals,
@@ -101,7 +101,7 @@ func testSparseMultiplyDoubleAndMatrix() {
     var xdata: [Double] = [1, 2]
     var ydata: [Double] = [0, 0]
     let x = DenseVector_Double(count: 2, data: &xdata)
-    var y = DenseVector_Double(count: 2, data: &ydata)
+    let y = DenseVector_Double(count: 2, data: &ydata)
     SparseMultiply(matrix, x, y)
     precondition(abs(ydata[0] - 4) < 1e-12)
     precondition(abs(ydata[1] - 10) < 1e-12)
@@ -109,11 +109,11 @@ func testSparseMultiplyDoubleAndMatrix() {
     SparseMultiplyAdd(matrix, x, y)
     precondition(abs(ydata[0] - 5) < 1e-12)
     var y2data: [Double] = [0, 0]
-    var y2 = DenseVector_Double(count: 2, data: &y2data)
+    let y2 = DenseVector_Double(count: 2, data: &y2data)
     SparseMultiply(2.0, matrix, x, y2)
     precondition(abs(y2data[0] - 8) < 1e-12)
     var y3data: [Double] = [1, 0]
-    var y3 = DenseVector_Double(count: 2, data: &y3data)
+    let y3 = DenseVector_Double(count: 2, data: &y3data)
     SparseMultiplyAdd(2.0, matrix, x, y3)
     precondition(abs(y3data[0] - 9) < 1e-12)
     var xmat: [Float] = [1, 0, 0, 1]
@@ -121,12 +121,12 @@ func testSparseMultiplyDoubleAndMatrix() {
     var rowsF: [Int32] = [0, 1]
     var colsF: [Int32] = [0, 1]
     var valsF: [Float] = [2, 3]
-    var mf = SparseConvertFromCoordinate(2, 2, 2, 1, SparseAttributes_t(), &rowsF, &colsF, &valsF)
-    var X = DenseMatrix_Float(
+    let mf = SparseConvertFromCoordinate(2, 2, 2, 1, SparseAttributes_t(), &rowsF, &colsF, &valsF)
+    let X = DenseMatrix_Float(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &xmat
     )
-    var Y = DenseMatrix_Float(
+    let Y = DenseMatrix_Float(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &ymat
     )
@@ -134,21 +134,21 @@ func testSparseMultiplyDoubleAndMatrix() {
     precondition(abs(ymat[0] - 2) < 0.0001)
     precondition(abs(ymat[3] - 3) < 0.0001)
     var ymat2 = [Float](repeating: 1, count: 4)
-    var Y2 = DenseMatrix_Float(
+    let Y2 = DenseMatrix_Float(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &ymat2
     )
     SparseMultiplyAdd(mf, X, Y2)
     precondition(abs(ymat2[0] - 3) < 0.0001)
     var ymat3 = [Float](repeating: 0, count: 4)
-    var Y3 = DenseMatrix_Float(
+    let Y3 = DenseMatrix_Float(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &ymat3
     )
     SparseMultiply(Float(3), mf, X, Y3)
     precondition(abs(ymat3[0] - 6) < 0.0001)
     var ymat4 = [Float](repeating: 1, count: 4)
-    var Y4 = DenseMatrix_Float(
+    let Y4 = DenseMatrix_Float(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &ymat4
     )
@@ -156,32 +156,32 @@ func testSparseMultiplyDoubleAndMatrix() {
     precondition(abs(ymat4[0] - 7) < 0.0001)
     var dmat: [Double] = [1, 0, 0, 1]
     var dymat = [Double](repeating: 0, count: 4)
-    var DX = DenseMatrix_Double(
+    let DX = DenseMatrix_Double(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &dmat
     )
-    var DY = DenseMatrix_Double(
+    let DY = DenseMatrix_Double(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &dymat
     )
     SparseMultiply(matrix, DX, DY)
     precondition(abs(dymat[0] - 4) < 1e-12)
     var dymat2 = [Double](repeating: 1, count: 4)
-    var DY2 = DenseMatrix_Double(
+    let DY2 = DenseMatrix_Double(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &dymat2
     )
     SparseMultiplyAdd(matrix, DX, DY2)
     precondition(abs(dymat2[0] - 5) < 1e-12)
     var dymat3 = [Double](repeating: 0, count: 4)
-    var DY3 = DenseMatrix_Double(
+    let DY3 = DenseMatrix_Double(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &dymat3
     )
     SparseMultiply(2.0, matrix, DX, DY3)
     precondition(abs(dymat3[0] - 8) < 1e-12)
     var dymat4 = [Double](repeating: 1, count: 4)
-    var DY4 = DenseMatrix_Double(
+    let DY4 = DenseMatrix_Double(
         rowCount: 2, columnCount: 2, columnStride: 2,
         attributes: SparseAttributes_t(), data: &dymat4
     )
@@ -362,7 +362,7 @@ func testVDSPBiquadPassThrough() {
         setup: setup, sectionCount: 1, count: 4
     )
     precondition(dest == src)
-    var srcCopy = src
+    let srcCopy = src
     var destMulti = [Float](repeating: 0, count: 4)
     srcCopy.withUnsafeBufferPointer { sp in
         destMulti.withUnsafeMutableBufferPointer { dp in
@@ -389,7 +389,7 @@ func testVDSPBiquadPassThrough() {
             setup: dsetup, sectionCount: 1, count: 4
         )
         precondition(ddest == dsrc)
-        var dsrcCopy = dsrc
+        let dsrcCopy = dsrc
         var ddestMulti = [Double](repeating: 0, count: 4)
         dsrcCopy.withUnsafeBufferPointer { sp in
             ddestMulti.withUnsafeMutableBufferPointer { dp in
