@@ -15,7 +15,8 @@ Usage:
                           [--slugs a,b,c] [--poll SECONDS] [--dry-run] [--once]
 State: <campaign>.codex.state.json (per slug: taskId, status, branch, sha).
 """
-import argparse, json, os, re, subprocess, sys, time, datetime, shutil
+import argparse, functools, json, os, re, subprocess, sys, time, datetime, shutil
+print = functools.partial(print, flush=True)
 
 ENV_DEFAULT = "6a9de055eaf081918405e62d8ea487f6"   # Vercantez/openuikit-linux-platform
 ROOT = os.path.expanduser("~/openuikit")
@@ -85,6 +86,8 @@ def ensure_platform_remote():
 def harvest(fw, task_id, starting_ref, st_entry):
     """Apply the task diff onto a fresh worktree of the seed branch, commit, push agent/fw-<slug>-cc."""
     slug = fw["slug"]; branch = f"agent/fw-{slug}-cc"
+    if re.search(r"^no diff\s*$", st_entry.get("lastStatus", ""), re.M):
+        return {"status": "no_diff", "reason": "codex cloud status reports no diff"}
     ensure_platform_remote()
     sh(["git", "fetch", "-q", "platform", starting_ref], cwd=ROOT, check=True)
     wt = f"/tmp/wt-codex-{slug}"
@@ -93,7 +96,16 @@ def harvest(fw, task_id, starting_ref, st_entry):
     sh(["git", "worktree", "add", "-q", "--detach", wt, "FETCH_HEAD"], cwd=ROOT, check=True)
     r = sh(["codex", "cloud", "apply", task_id], cwd=wt, timeout=600)
     applied = r.returncode == 0
+    for junk in ("error.log",):   # the codex CLI writes its debug log (with the account id) into cwd
+        try: os.remove(os.path.join(wt, junk))
+        except FileNotFoundError: pass
     changed = sh(["git", "status", "--porcelain"], cwd=wt).stdout.strip()
+    owned_prefixes = [p.split("*")[0].rstrip("/") for p in fw.get("ownedPaths", []) + fw.get("editablePaths", [])]
+    owned_changed = [l[3:] for l in changed.splitlines() if any(l[3:].startswith(op) for op in owned_prefixes)]
+    if changed and not owned_changed:
+        sh(["git", "worktree", "remove", "--force", wt], cwd=ROOT)
+        return {"status": "no_diff", "reason": "apply changed nothing under the framework's owned paths",
+                "changed": changed.splitlines()[:10], "applyTail": (r.stdout + r.stderr)[-500:]}
     if not changed:
         sh(["git", "worktree", "remove", "--force", wt], cwd=ROOT)
         return {"status": "no_diff", "applyRc": r.returncode, "applyTail": (r.stdout + r.stderr)[-500:]}
@@ -143,7 +155,8 @@ def main():
             if state == "done":
                 fw = next(f for f in camp["frameworks"] if f["slug"] == slug)
                 try:
-                    res = harvest(fw, e["taskId"], starting_ref, st); e.update(res)
+                    e["lastStatus"] = raw[:400]
+                res = harvest(fw, e["taskId"], starting_ref, {**st, **e}); e.update(res)
                     print(f"  {slug}: {res['status']} {res.get('shortstat','')} -> {res.get('branch','')}")
                 except Exception as ex:
                     e["status"] = "harvest_failed"; e["error"] = str(ex)[-600:]; print(f"  {slug}: HARVEST FAILED {ex}")
