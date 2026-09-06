@@ -106,20 +106,20 @@ c:@F@ABRecordGetRecordID	implemented	test:full/addressbook/tests/agent/AddressBo
 c:@F@ABRecordGetRecordType	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordIdentity	focused Linux behavior
 c:@F@ABRecordRemoveValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
 c:@F@ABRecordSetValue	implemented	test:full/addressbook/tests/agent/AddressBookRecordTests.swift#testRecordSetCopyRemove	focused Linux behavior
-c:@T@ABAddressBookRef	declared	source:full/addressbook/AddressBook.swift#ABAddressBook	CF typealias overlay
-c:@T@ABAddressBookRequestAccessCompletionHandler	declared	source:full/addressbook/AddressBook.swift#ABAddressBookRequestAccessCompletionHandler	CF typealias overlay
-c:@T@ABExternalChangeCallback	declared	source:full/addressbook/AddressBook.swift#ABExternalChangeCallback	CF typealias overlay
-c:@T@ABMultiValueIdentifier	declared	source:full/addressbook/AddressBook.swift#ABMultiValueIdentifier	CF typealias overlay
-c:@T@ABMultiValueRef	declared	source:full/addressbook/AddressBook.swift#ABMultiValue	CF typealias overlay
-c:@T@ABMutableMultiValueRef	declared	source:full/addressbook/AddressBook.swift#ABMutableMultiValue	CF typealias overlay
-c:@T@ABPersonCompositeNameFormat	declared	source:full/addressbook/AddressBook.swift#ABPersonCompositeNameFormat	CF typealias overlay
-c:@T@ABPersonSortOrdering	declared	source:full/addressbook/AddressBook.swift#ABPersonSortOrdering	CF typealias overlay
-c:@T@ABPropertyID	declared	source:full/addressbook/AddressBook.swift#ABPropertyID	CF typealias overlay
-c:@T@ABPropertyType	declared	source:full/addressbook/AddressBook.swift#ABPropertyType	CF typealias overlay
-c:@T@ABRecordID	declared	source:full/addressbook/AddressBook.swift#ABRecordID	CF typealias overlay
-c:@T@ABRecordRef	declared	source:full/addressbook/AddressBook.swift#ABRecord	CF typealias overlay
-c:@T@ABRecordType	declared	source:full/addressbook/AddressBook.swift#ABRecordType	CF typealias overlay
-c:@T@ABSourceType	declared	source:full/addressbook/AddressBook.swift#ABSourceType	CF typealias overlay
+c:@T@ABAddressBookRef	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABAddressBookTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABAddressBookRequestAccessCompletionHandler	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABAddressBookRequestAccessCompletionHandlerTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABExternalChangeCallback	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABExternalChangeCallbackTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABMultiValueIdentifier	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABMultiValueIdentifierTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABMultiValueRef	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABMultiValueTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABMutableMultiValueRef	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABMutableMultiValueTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABPersonCompositeNameFormat	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABPersonCompositeNameFormatTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABPersonSortOrdering	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABPersonSortOrderingTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABPropertyID	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABPropertyIDTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABPropertyType	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABPropertyTypeTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABRecordID	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABRecordIDTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABRecordRef	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABRecordTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABRecordType	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABRecordTypeTypealias	overlay typealias exercised as a typed Linux value
+c:@T@ABSourceType	implemented	test:full/addressbook/tests/agent/AddressBookTypealiasTests.swift#testABSourceTypeTypealias	overlay typealias exercised as a typed Linux value
 c:@kABGroupNameProperty	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@kABHomeLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
 c:@kABOtherLabel	implemented	test:full/addressbook/tests/agent/AddressBookConstantTests.swift#testConstantCatalog	documented raw values / payloads
