@@ -224,3 +224,72 @@ AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
 
+### Pass 5 (wave 8 next)
+
+Fifth SDK-depth pass on `cursor/port-avfoundation-to-linux-b064`. Passes 1–4
+(277 / 1188 / 1784 / 2727) are kept and stay green. This pass stores real
+`AVMetadataItem` / `AVMutableMetadataItem` values and portable identifier
+mapping, `AVCompositionTrack` / `AVMutableCompositionTrack` segments and
+`validateSegments` fail-closed `AVError` codes, `AVAssetWriterInput` stored
+configuration with fail-closed `append`, `AVPlayerInterstitialEvent` models
+and monitor notification names, empty `AVPlayerItem` access/error logs,
+capture session controls/connections plus photo representations, sample-cursor
+pinning without media, and video-composition layer-instruction ramps.
+
+| | before (pass 4) | after (pass 5) |
+|---|---|---|
+| `implemented` | 2727 | 3281 |
+| `declared` | 2639 | 2085 |
+| `deferred` | 266 | 266 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after pass 5 (table-driven enum /
+option-set / metadata-constant tests may share a value test; no other single
+test exceeds 40% of the remaining implemented rows):
+
+| citations | test |
+|---|---|
+| 292 | `testAVMetadataIdentifierRawValues` (identifier constants) |
+| 279 | `testAVMetadataKeyRawValues` (key constants) |
+| 267 | `testOptionSetAlgebraSynthesis` (OptionSet / SetAlgebra) |
+| 253 | `testRawRepresentableEnumHashableSynthesis` (enum Hashable / `!=`) |
+| 132 | `testAVCaptureDeviceFailClosedDiscoveryModel` (capture device fail-closed) |
+
+Pass 5 added 554 `implemented` rows (14 tests in
+`tests/agent/AVDepthPass5Tests.swift`; largest new test is 77 citations for
+video-composition ramps). Largest non-table test remains 132 citations
+(capture-device fail-closed), under 40% of the 2003 remaining implemented
+rows after table-driven metadata/enum/option-set evidence.
+
+Fail-closed on this pass: writer `append` / caption and metadata adaptors
+return false; capture `canAdd*` stays false and device lists stay empty;
+photo file/CGImage representations are nil; sample-cursor steps pin and
+return 0 / invalid; `AVVideoComposition.isValid` stays false; player-item
+date seeks return false; `accessLog()` / `errorLog()` are empty UTF-8 logs,
+not fabricated network sessions. Local ISO BMFF / WAV / AIFF probing from
+earlier passes is unchanged. `AVSpeechSynthesizer` remains extra portable
+AVFAudio surface; it is not in this module's public census. No SwiftUI
+cross-import overlay rows exist in this seed.
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`)
+ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```
+
+`swiftc --version` on this host is Swift 6.2.4, target
+`x86_64-unknown-linux-gnu`. The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a
+host-inventory token, not printed by the sealed framework gate.
+`.cursor/verify-cloud-environment.sh` currently stops on a missing
+`scratch/swift-foundation` corpus checkout in this snapshot (active Cursor
+Build is not the seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
+The framework tree itself has no stale `.build` / `build` / `scratch`
+products. `tests/test_avfoundation_host.sh` is a Darwin IceCubes/`xcrun`
+consumer and is not runnable on this Linux host.
+

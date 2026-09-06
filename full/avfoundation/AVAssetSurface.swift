@@ -902,6 +902,23 @@ open class AVAssetWriterInput: NSObject, @unchecked Sendable {
   }
   private var storedMediaType = AVMediaType(rawValue: "")
   private var storedOutputSettings: [String : Any]?
+  private var storedSourceFormatHint: CMFormatDescription?
+  private var storedMetadata: [AVMetadataItem] = []
+  private var storedExpectsMediaDataInRealTime = false
+  private var storedLanguageCode: String?
+  private var storedExtendedLanguageTag: String?
+  private var storedNaturalSize = CGSize.zero
+  private var storedTransform = CGAffineTransform.identity
+  private var storedPreferredVolume: Float = 1
+  private var storedMarksOutputTrackAsEnabled = true
+  private var storedMediaTimeScale: CMTimeScale = 0
+  private var storedPreferredMediaChunkDuration = CMTime.zero
+  private var storedPreferredMediaChunkAlignment = 0
+  private var storedSampleReferenceBaseURL: URL?
+  private var storedMediaDataLocation = AVAssetWriterInput.MediaDataLocation.interleavedWithMainMediaData
+  private var storedPerformsMultiPassEncodingIfSupported = false
+  private var storedFinished = false
+  private var storedAssociations: [(AVAssetWriterInput, String)] = []
   public convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?) {
     self.init()
     storedMediaType = mediaType
@@ -909,83 +926,101 @@ open class AVAssetWriterInput: NSObject, @unchecked Sendable {
   }
   public convenience init(mediaType: AVMediaType, outputSettings: [String : Any]?, sourceFormatHint: CMFormatDescription?) {
     self.init(mediaType: mediaType, outputSettings: outputSettings)
-    _ = sourceFormatHint
+    storedSourceFormatHint = sourceFormatHint
   }
   public var mediaType: AVMediaType { storedMediaType }
   public var outputSettings: [String : Any]? { storedOutputSettings }
-  public var sourceFormatHint: CMFormatDescription? { nil }
+  public var sourceFormatHint: CMFormatDescription? { storedSourceFormatHint }
   public var metadata: [AVMetadataItem] {
-      get { [] }
-      set { _ = newValue }
+      get { storedMetadata }
+      set { storedMetadata = newValue }
     }
   public var isReadyForMoreMediaData: Bool { false }
   public var expectsMediaDataInRealTime: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedExpectsMediaDataInRealTime }
+      set { storedExpectsMediaDataInRealTime = newValue }
     }
-  public func append(_ sampleBuffer: CMSampleBuffer) -> Bool { false }
-  public func markAsFinished() {}
+  public func append(_ sampleBuffer: CMSampleBuffer) -> Bool {
+    _ = sampleBuffer
+    return false
+  }
+  public func markAsFinished() { storedFinished = true }
   public var languageCode: String? {
-      get { nil }
-      set { _ = newValue }
+      get { storedLanguageCode }
+      set { storedLanguageCode = newValue }
     }
   public var extendedLanguageTag: String? {
-      get { nil }
-      set { _ = newValue }
+      get { storedExtendedLanguageTag }
+      set { storedExtendedLanguageTag = newValue }
     }
   public var naturalSize: CGSize {
-      get { .zero }
-      set { _ = newValue }
+      get { storedNaturalSize }
+      set { storedNaturalSize = newValue }
     }
   public var transform: CGAffineTransform {
-      get { .identity }
-      set { _ = newValue }
+      get { storedTransform }
+      set { storedTransform = newValue }
     }
   public var preferredVolume: Float {
-      get { 0 }
-      set { _ = newValue }
+      get { storedPreferredVolume }
+      set { storedPreferredVolume = newValue }
     }
   public var marksOutputTrackAsEnabled: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedMarksOutputTrackAsEnabled }
+      set { storedMarksOutputTrackAsEnabled = newValue }
     }
   public var mediaTimeScale: CMTimeScale {
-      get { 0 }
-      set { _ = newValue }
+      get { storedMediaTimeScale }
+      set { storedMediaTimeScale = newValue }
     }
   public var preferredMediaChunkDuration: CMTime {
-      get { .zero }
-      set { _ = newValue }
+      get { storedPreferredMediaChunkDuration }
+      set { storedPreferredMediaChunkDuration = newValue }
     }
   public var preferredMediaChunkAlignment: Int {
-      get { 0 }
-      set { _ = newValue }
+      get { storedPreferredMediaChunkAlignment }
+      set { storedPreferredMediaChunkAlignment = newValue }
     }
   public var sampleReferenceBaseURL: URL? {
-      get { nil }
-      set { _ = newValue }
+      get { storedSampleReferenceBaseURL }
+      set { storedSampleReferenceBaseURL = newValue }
     }
   public var mediaDataLocation: AVAssetWriterInput.MediaDataLocation {
-      get { AVAssetWriterInput.MediaDataLocation(rawValue: "") }
-      set { _ = newValue }
+      get { storedMediaDataLocation }
+      set { storedMediaDataLocation = newValue }
     }
-  public func canAddTrackAssociation(withTrackOf input: AVAssetWriterInput, type trackAssociationType: String) -> Bool { false }
-  public func addTrackAssociation(withTrackOf input: AVAssetWriterInput, type trackAssociationType: String) {}
+  public func canAddTrackAssociation(withTrackOf input: AVAssetWriterInput, type trackAssociationType: String) -> Bool {
+    _ = (input, trackAssociationType)
+    return false
+  }
+  public func addTrackAssociation(withTrackOf input: AVAssetWriterInput, type trackAssociationType: String) {
+    storedAssociations.append((input, trackAssociationType))
+  }
   public var performsMultiPassEncodingIfSupported: Bool {
-      get { false }
-      set { _ = newValue }
+      get { storedPerformsMultiPassEncodingIfSupported }
+      set { storedPerformsMultiPassEncodingIfSupported = newValue }
     }
   public var canPerformMultiplePasses: Bool { false }
   public var currentPassDescription: AVAssetWriterInputPassDescription? { nil }
-  public func markCurrentPassAsFinished() {}
+  public func markCurrentPassAsFinished() { storedFinished = true }
 }
 
 open class AVAssetWriterInputCaptionAdaptor: NSObject, @unchecked Sendable {
+  private var storedInput = AVAssetWriterInput()
   public override init() { super.init() }
-  convenience init(assetWriterInput input: AVAssetWriterInput) { self.init() }
-  public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
-  public func append(_ caption: AVCaption) -> Bool { false }
-  public func append(_ captionGroup: AVCaptionGroup) -> Bool { false }
+  public convenience init(assetWriterInput input: AVAssetWriterInput) {
+    self.init()
+    storedInput = input
+  }
+  public var assetWriterInput: AVAssetWriterInput { storedInput }
+  public func append(_ caption: AVCaption) -> Bool {
+    _ = caption
+    return false
+  }
+  public func append(_ captionGroup: AVCaptionGroup) -> Bool {
+    _ = captionGroup
+    return false
+  }
 }
 
 open class AVAssetWriterInputGroup: AVMediaSelectionGroup, @unchecked Sendable {
@@ -996,10 +1031,17 @@ open class AVAssetWriterInputGroup: AVMediaSelectionGroup, @unchecked Sendable {
 }
 
 open class AVAssetWriterInputMetadataAdaptor: NSObject, @unchecked Sendable {
+  private var storedInput = AVAssetWriterInput()
   public override init() { super.init() }
-  convenience init(assetWriterInput input: AVAssetWriterInput) { self.init() }
-  public var assetWriterInput: AVAssetWriterInput { AVAssetWriterInput() }
-  public func append(_ timedMetadataGroup: AVTimedMetadataGroup) -> Bool { false }
+  public convenience init(assetWriterInput input: AVAssetWriterInput) {
+    self.init()
+    storedInput = input
+  }
+  public var assetWriterInput: AVAssetWriterInput { storedInput }
+  public func append(_ timedMetadataGroup: AVTimedMetadataGroup) -> Bool {
+    _ = timedMetadataGroup
+    return false
+  }
 }
 
 open class AVAssetWriterInputPassDescription: NSObject, @unchecked Sendable {
@@ -1043,25 +1085,71 @@ open class AVComposition: AVAsset, @unchecked Sendable {
 }
 
 open class AVCompositionTrack: AVAssetTrack, @unchecked Sendable {
+  var portableCompositionSegments: [AVCompositionTrackSegment] = []
+  var portableFormatDescriptionReplacements: [AVCompositionTrackFormatDescriptionReplacement] = []
+  var portableAssociatedTracks: [AVAssetTrack.AssociationType: [AVAssetTrack]] = [:]
+  var portableMetadataItems: [AVMetadataItem] = []
+
   public override init() { super.init() }
-  public var formatDescriptionReplacements: [AVCompositionTrackFormatDescriptionReplacement] { [] }
+
+  public override var segments: [AVAssetTrackSegment] { portableCompositionSegments }
+
+  public override func segment(forTrackTime trackTime: CMTime) -> AVAssetTrackSegment? {
+    portableCompositionSegments.first { $0.timeMapping.target.containsTime(trackTime) }
+  }
+
+  public override func samplePresentationTime(forTrackTime trackTime: CMTime) -> CMTime {
+    guard let segment = portableCompositionSegments.first(where: { $0.timeMapping.target.containsTime(trackTime) }) else {
+      return super.samplePresentationTime(forTrackTime: trackTime)
+    }
+    if segment.isEmpty { return .invalid }
+    let offset = trackTime.seconds - segment.timeMapping.target.start.seconds
+    let sourceSeconds = segment.timeMapping.source.start.seconds + offset
+    let scale = trackTime.timescale == 0 ? 600 : trackTime.timescale
+    return CMTime(seconds: sourceSeconds, preferredTimescale: scale)
+  }
+
+  public var formatDescriptionReplacements: [AVCompositionTrackFormatDescriptionReplacement] {
+    portableFormatDescriptionReplacements
+  }
+
+  public override var metadata: [AVMetadataItem] { portableMetadataItems }
+  public override var commonMetadata: [AVMetadataItem] { portableMetadataItems }
+  public override func metadata(forFormat format: AVMetadataFormat) -> [AVMetadataItem] {
+    _ = format
+    return portableMetadataItems
+  }
+  public override var availableMetadataFormats: [AVMetadataFormat] {
+    portableMetadataItems.isEmpty ? [] : [.quickTimeMetadata]
+  }
+  public override var availableTrackAssociationTypes: [AVAssetTrack.AssociationType] {
+    Array(portableAssociatedTracks.keys)
+  }
+  public override func associatedTracks(ofType trackAssociationType: AVAssetTrack.AssociationType) -> [AVAssetTrack] {
+    portableAssociatedTracks[trackAssociationType] ?? []
+  }
 }
 
 open class AVCompositionTrackFormatDescriptionReplacement: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public var originalFormatDescription: CMFormatDescription { CMFormatDescription() }
-  public var replacementFormatDescription: CMFormatDescription { CMFormatDescription() }
+  var portableOriginal = CMFormatDescription()
+  var portableReplacement = CMFormatDescription()
+  public var originalFormatDescription: CMFormatDescription { portableOriginal }
+  public var replacementFormatDescription: CMFormatDescription { portableReplacement }
 }
 
 open class AVCompositionTrackSegment: AVAssetTrackSegment, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(url URL: URL, trackID: CMPersistentTrackID, sourceTimeRange: CMTimeRange, targetTimeRange: CMTimeRange) {
+  public convenience init(url URL: URL, trackID: CMPersistentTrackID, sourceTimeRange: CMTimeRange, targetTimeRange: CMTimeRange) {
     self.init()
     portableSourceURL = URL
     portableSourceTrackID = trackID
     portableTimeMapping = CMTimeMapping(source: sourceTimeRange, target: targetTimeRange)
   }
-  convenience init(timeRange: CMTimeRange) {
+  public convenience init(URL: URL, trackID: CMPersistentTrackID, sourceTimeRange: CMTimeRange, targetTimeRange: CMTimeRange) {
+    self.init(url: URL, trackID: trackID, sourceTimeRange: sourceTimeRange, targetTimeRange: targetTimeRange)
+  }
+  public convenience init(timeRange: CMTimeRange) {
     self.init()
     portableTimeMapping = CMTimeMapping(source: .zero, target: timeRange)
   }
@@ -1071,6 +1159,7 @@ open class AVCompositionTrackSegment: AVAssetTrackSegment, @unchecked Sendable {
   public var sourceURL: URL? { portableSourceURL }
   public var sourceTrackID: CMPersistentTrackID { portableSourceTrackID }
   public override var timeMapping: CMTimeMapping { portableTimeMapping }
+  public override var isEmpty: Bool { portableSourceURL == nil }
 }
 
 public protocol AVFragmentMinding {
@@ -1247,8 +1336,35 @@ open class AVMutableComposition: AVComposition, @unchecked Sendable {
 
 open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
   public override init() { super.init() }
-  var portableSegments: [AVCompositionTrackSegment] = []
-  public override var segments: [AVAssetTrackSegment] { portableSegments }
+  var portableSegments: [AVCompositionTrackSegment] {
+    get { portableCompositionSegments }
+    set { portableCompositionSegments = newValue }
+  }
+  public override var segments: [AVAssetTrackSegment] { portableCompositionSegments }
+  public override var languageCode: String? {
+    get { portableRecord.languageCode }
+    set { portableRecord.languageCode = newValue }
+  }
+  public override var extendedLanguageTag: String? {
+    get { portableRecord.languageCode }
+    set { portableRecord.languageCode = newValue }
+  }
+  public override var naturalTimeScale: CMTimeScale {
+    get { portableRecord.mediaTimescale }
+    set { portableRecord.mediaTimescale = newValue }
+  }
+  public override var isEnabled: Bool {
+    get { portableRecord.isEnabled }
+    set { portableRecord.isEnabled = newValue }
+  }
+  public override var preferredTransform: CGAffineTransform {
+    get { portableRecord.preferredTransform }
+    set { portableRecord.preferredTransform = newValue }
+  }
+  public override var preferredVolume: Float {
+    get { portableRecord.preferredVolume }
+    set { portableRecord.preferredVolume = newValue }
+  }
   public func insertTimeRange(_ timeRange: CMTimeRange, of track: AVAssetTrack, at startTime: CMTime) throws {
     let segment = AVCompositionTrackSegment(
       url: (track.asset as? AVURLAsset)?.url ?? URL(fileURLWithPath: "/dev/null"),
@@ -1256,7 +1372,7 @@ open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
       sourceTimeRange: timeRange,
       targetTimeRange: CMTimeRange(start: startTime, duration: timeRange.duration)
     )
-    portableSegments.append(segment)
+    portableCompositionSegments.append(segment)
     portableRecord.duration = timeRange.duration
     portableRecord.mediaType = track.mediaType
     portableRecord.naturalSize = track.naturalSize
@@ -1265,13 +1381,28 @@ open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
     portableRecord.mediaTimescale = track.naturalTimeScale
     portableRecord.languageCode = track.languageCode
   }
-  public func insertTimeRanges(_ timeRanges: [NSValue], of tracks: [AVAssetTrack], at startTime: CMTime) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
+  public func insertTimeRanges(_ timeRanges: [NSValue], of tracks: [AVAssetTrack], at startTime: CMTime) throws {
+    guard timeRanges.count == tracks.count else {
+      throw AVError(.invalidSourceMedia)
+    }
+    var cursor = startTime
+    for (index, track) in tracks.enumerated() {
+      let range = AVCMTimeRangeValue.range(from: timeRanges[index])
+      try insertTimeRange(range, of: track, at: cursor)
+      cursor = CMTime(
+        seconds: cursor.seconds + range.duration.seconds,
+        preferredTimescale: cursor.timescale == 0 ? 600 : cursor.timescale
+      )
+    }
+  }
   public func insertEmptyTimeRange(_ timeRange: CMTimeRange) {
     let extra = timeRange.duration.seconds
     guard extra > 0 else { return }
     let current = portableRecord.duration
     let base = current.isValid ? current.seconds : 0
     let scale = portableRecord.mediaTimescale == 0 ? 600 : portableRecord.mediaTimescale
+    let start = CMTime(seconds: base, preferredTimescale: scale)
+    portableCompositionSegments.append(AVCompositionTrackSegment(timeRange: CMTimeRange(start: start, duration: timeRange.duration)))
     portableRecord.duration = AVTimeMath.time(seconds: base + extra, timescale: scale)
   }
   public func removeTimeRange(_ timeRange: CMTimeRange) {
@@ -1282,6 +1413,7 @@ open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
       seconds: max(0, portableRecord.duration.seconds - cut),
       timescale: scale
     )
+    portableCompositionSegments.removeAll { $0.timeMapping.target.containsTime(timeRange.start) }
   }
   public func scaleTimeRange(_ timeRange: CMTimeRange, toDuration duration: CMTime) {
     let source = timeRange.duration.seconds
@@ -1292,10 +1424,48 @@ open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
       timescale: scale
     )
   }
-  public func validateSegments(_ trackSegments: [AVCompositionTrackSegment]) throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  public func addTrackAssociation(to compositionTrack: AVCompositionTrack, type trackAssociationType: AVAssetTrack.AssociationType) {}
-  public func removeTrackAssociation(to compositionTrack: AVCompositionTrack, type trackAssociationType: AVAssetTrack.AssociationType) {}
-  public func replaceFormatDescription(_ originalFormatDescription: CMFormatDescription, with replacementFormatDescription: CMFormatDescription?) {}
+  public func validateSegments(_ trackSegments: [AVCompositionTrackSegment]) throws {
+    for segment in trackSegments {
+      if !segment.timeMapping.target.duration.isValid || segment.timeMapping.target.duration.seconds < 0 {
+        throw AVError(.invalidCompositionTrackSegmentDuration)
+      }
+      if !segment.isEmpty {
+        if !segment.timeMapping.source.start.isValid {
+          throw AVError(.invalidCompositionTrackSegmentSourceStartTime)
+        }
+        if !segment.timeMapping.source.duration.isValid || segment.timeMapping.source.duration.seconds < 0 {
+          throw AVError(.invalidCompositionTrackSegmentSourceDuration)
+        }
+      }
+    }
+    let sorted = trackSegments.sorted {
+      $0.timeMapping.target.start.seconds < $1.timeMapping.target.start.seconds
+    }
+    var end = 0.0
+    var seen = false
+    for segment in sorted {
+      let start = segment.timeMapping.target.start.seconds
+      if seen, abs(start - end) > 0.0001 {
+        throw AVError(.compositionTrackSegmentsNotContiguous)
+      }
+      seen = true
+      end = start + segment.timeMapping.target.duration.seconds
+    }
+  }
+  public func addTrackAssociation(to compositionTrack: AVCompositionTrack, type trackAssociationType: AVAssetTrack.AssociationType) {
+    var current = portableAssociatedTracks[trackAssociationType] ?? []
+    current.append(compositionTrack)
+    portableAssociatedTracks[trackAssociationType] = current
+  }
+  public func removeTrackAssociation(to compositionTrack: AVCompositionTrack, type trackAssociationType: AVAssetTrack.AssociationType) {
+    portableAssociatedTracks[trackAssociationType]?.removeAll { $0 === compositionTrack }
+  }
+  public func replaceFormatDescription(_ originalFormatDescription: CMFormatDescription, with replacementFormatDescription: CMFormatDescription?) {
+    let replacement = AVCompositionTrackFormatDescriptionReplacement()
+    replacement.portableOriginal = originalFormatDescription
+    replacement.portableReplacement = replacementFormatDescription ?? originalFormatDescription
+    portableFormatDescriptionReplacements.append(replacement)
+  }
 }
 
 open class AVMutableDateRangeMetadataGroup: AVDateRangeMetadataGroup, @unchecked Sendable {
@@ -1309,6 +1479,62 @@ open class AVMutableMediaSelection: AVMediaSelection, @unchecked Sendable {
 
 open class AVMutableMetadataItem: AVMetadataItem, @unchecked Sendable {
   public override init() { super.init() }
+
+  public override var identifier: AVMetadataIdentifier? {
+    get { storedIdentifier }
+    set {
+      storedIdentifier = newValue
+      if let newValue {
+        storedKeySpace = AVMetadataItem.keySpace(forIdentifier: newValue)
+        if let mapped = AVMetadataItem.key(forIdentifier: newValue) as? AVMetadataKey {
+          storedCommonKey = mapped
+          storedKey = mapped.rawValue as NSString
+        } else if let string = AVMetadataItem.key(forIdentifier: newValue) as? String {
+          storedKey = string as NSString
+        }
+      }
+    }
+  }
+  public override var extendedLanguageTag: String? {
+    get { storedExtendedLanguageTag }
+    set { storedExtendedLanguageTag = newValue }
+  }
+  public override var locale: Locale? {
+    get { storedLocale }
+    set { storedLocale = newValue }
+  }
+  public override var time: CMTime {
+    get { storedTime }
+    set { storedTime = newValue }
+  }
+  public override var duration: CMTime {
+    get { storedDuration }
+    set { storedDuration = newValue }
+  }
+  public override var dataType: String? {
+    get { storedDataType }
+    set { storedDataType = newValue }
+  }
+  public override var value: (any NSCopying & NSObjectProtocol)? {
+    get { storedValue }
+    set { storedValue = newValue }
+  }
+  public override var extraAttributes: [AVMetadataExtraAttributeKey : Any]? {
+    get { storedExtraAttributes }
+    set { storedExtraAttributes = newValue }
+  }
+  public override var startDate: Date? {
+    get { storedStartDate }
+    set { storedStartDate = newValue }
+  }
+  public override var key: (any NSCopying & NSObjectProtocol)? {
+    get { storedKey }
+    set { storedKey = newValue }
+  }
+  public override var keySpace: AVMetadataKeySpace? {
+    get { storedKeySpace }
+    set { storedKeySpace = newValue }
+  }
 }
 
 open class AVMutableMovie: AVMovie, @unchecked Sendable {
