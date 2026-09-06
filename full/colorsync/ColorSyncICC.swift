@@ -399,6 +399,22 @@ func _csProfileClass(_ storage: _CSProfileStorage) -> String {
 }
 
 func _csIsWideGamut(_ storage: _CSProfileStorage) -> Bool {
+    // Named Display P3 / Adobe RGB / BT.2020 / ACES / DCI-P3 / ROMM are
+    // wide. sRGB-family names are not. Parsed ICC files compare D50-relative
+    // XYZ chromaticities against D50-adapted sRGB (not the D65 xy set).
+    if let named = storage.named {
+        switch named {
+        case "com.apple.ColorSync.DisplayP3",
+             "com.apple.ColorSync.AdobeRGB1998",
+             "com.apple.ColorSync.ITUR2020",
+             "com.apple.ColorSync.ACESCGLinear",
+             "com.apple.ColorSync.DCIP3",
+             "com.apple.ColorSync.ROMMRGB":
+            return true
+        default:
+            return false
+        }
+    }
     guard let matrix = _csMatrixSpace(storage) else { return false }
     func xy(_ xyz: _CSXYZ) -> (Double, Double) {
         let sum = xyz.x + xyz.y + xyz.z
@@ -408,11 +424,12 @@ func _csIsWideGamut(_ storage: _CSProfileStorage) -> Bool {
     let r = xy(matrix.r)
     let g = xy(matrix.g)
     let b = xy(matrix.b)
-    let sR = (0.64, 0.33)
-    let sG = (0.30, 0.60)
-    let sB = (0.15, 0.06)
+    // D50-adapted sRGB primaries (ICC PCS), not the D65 xy set.
+    let sR = (0.6484, 0.3309)
+    let sG = (0.3212, 0.5978)
+    let sB = (0.1559, 0.0660)
     func outside(_ p: (Double, Double), _ s: (Double, Double)) -> Bool {
-        hypot(p.0 - s.0, p.1 - s.1) > 0.02
+        hypot(p.0 - s.0, p.1 - s.1) > 0.04
     }
     return outside(r, sR) || outside(g, sG) || outside(b, sB)
 }

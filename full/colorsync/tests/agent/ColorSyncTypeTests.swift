@@ -58,8 +58,8 @@ func testColorSyncAlphaInfoRawValues() {
     precondition(kColorSyncAlphaNone != kColorSyncAlphaLast)
     var hasher = Hasher()
     kColorSyncAlphaNone.hash(into: &hasher)
-    _ = kColorSyncAlphaNone.hashValue
-    _ = kColorSyncAlphaLast.hashValue
+    kColorSyncAlphaLast.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 func testColorSyncDataDepthRawValues() {
@@ -76,8 +76,8 @@ func testColorSyncDataDepthRawValues() {
     precondition(kColorSync8BitInteger != kColorSync16BitFloat)
     var hasher = Hasher()
     kColorSync8BitInteger.hash(into: &hasher)
-    _ = kColorSync8BitInteger.hashValue
-    _ = kColorSync32BitFloat.hashValue
+    kColorSync32BitFloat.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 func testColorSyncByteOrderMasks() {
@@ -125,8 +125,8 @@ func testColorSyncProfileHashable() {
     precondition(!(a != a))
     var hasher = Hasher()
     a.hash(into: &hasher)
-    _ = a.hashValue
-    _ = b.hashValue
+    b.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 func testColorSyncTransformHashable() {
@@ -139,8 +139,8 @@ func testColorSyncTransformHashable() {
     precondition(first != second)
     var hasher = Hasher()
     first.hash(into: &hasher)
-    _ = first.hashValue
-    _ = second.hashValue
+    second.hash(into: &hasher)
+    _ = hasher.finalize()
     _ = ColorSyncTransformGetTypeID()
 }
 

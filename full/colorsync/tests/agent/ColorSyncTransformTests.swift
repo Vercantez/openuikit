@@ -3,7 +3,7 @@ import Foundation
 import ColorSync
 
 func testColorSyncNamedProfilesExist() {
-    let names: [Unmanaged<CFString>!] = [
+    let names: [Unmanaged<CFString>] = [
         kColorSyncSRGBProfile,
         kColorSyncDisplayP3Profile,
         kColorSyncAdobeRGB1998Profile,
@@ -41,7 +41,7 @@ func testColorSyncTransformConvertIdentity() {
     let profile = csNamedProfile(kColorSyncSRGBProfile)
     let sequence = [profile, profile] as NSArray
     let transform = csTakeTransform(ColorSyncTransformCreate(unsafeBitCast(sequence, to: CFArray.self), nil))!
-    var src: [UInt8] = [255, 0, 0, 10, 20, 30, 0, 128, 255]
+    let src: [UInt8] = [255, 0, 0, 10, 20, 30, 0, 128, 255]
     var dst = [UInt8](repeating: 0, count: 9)
     let ok = src.withUnsafeBytes { srcBuf in
         dst.withUnsafeMutableBytes { dstBuf in
@@ -72,7 +72,7 @@ func testColorSyncTransformConvertSRGBtoP3() {
     let dstProfile = csNamedProfile(kColorSyncDisplayP3Profile)
     let sequence = [srcProfile, dstProfile] as NSArray
     let transform = csTakeTransform(ColorSyncTransformCreate(unsafeBitCast(sequence, to: CFArray.self), nil))!
-    var src: [UInt8] = [255, 0, 0]
+    let src: [UInt8] = [255, 0, 0]
     var dst = [UInt8](repeating: 0, count: 3)
     let ok = src.withUnsafeBytes { srcBuf in
         dst.withUnsafeMutableBytes { dstBuf in
@@ -101,7 +101,7 @@ func testColorSyncTransformConvertAlphaLayouts() {
     let profile = csNamedProfile(kColorSyncGenericRGBProfile)
     let sequence = [profile, profile] as NSArray
     let transform = csTakeTransform(ColorSyncTransformCreate(unsafeBitCast(sequence, to: CFArray.self), nil))!
-    var src: [UInt8] = [10, 20, 30, 255]
+    let src: [UInt8] = [10, 20, 30, 255]
     var dst = [UInt8](repeating: 0, count: 4)
     let ok = src.withUnsafeBytes { srcBuf in
         dst.withUnsafeMutableBytes { dstBuf in
@@ -129,7 +129,7 @@ func testColorSyncTransformUnsupportedDepthFailClosed() {
     let profile = csNamedProfile(kColorSyncSRGBProfile)
     let sequence = [profile, profile] as NSArray
     let transform = csTakeTransform(ColorSyncTransformCreate(unsafeBitCast(sequence, to: CFArray.self), nil))!
-    var src: [UInt8] = [0, 0, 0]
+    let src: [UInt8] = [0, 0, 0]
     var dst = [UInt8](repeating: 0, count: 3)
     let ok = src.withUnsafeBytes { srcBuf in
         dst.withUnsafeMutableBytes { dstBuf in
