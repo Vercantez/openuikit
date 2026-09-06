@@ -846,6 +846,18 @@ let blockzillaTargets: [Target] = [
             // Sources/os/OSLog.swift.o) but the executable did not link
             // it. Apple's libswiftos does not define that struct init.
             "os",
+            // MEASURED agent_merge.sh (fresh worktree, release openrender
+            // then `swift build --build-tests`): URLExtensions.swift:6
+            // `import Network` + :317 `IPv4Address(host)` compiled against
+            // this package's Network product (Sources/Network/Network.swift
+            // was built at [139/247]) but Blockzilla did not depend on it,
+            // so debug openrender/openhost failed to link
+            // `Network.IPv4Address.init(String)` /
+            // `Network.IPv6Address.init(String)` (merge_focus46-merged.log,
+            // merge_focus2m-merged.log). Same class as `os` above.
+            // `--product openrender` alone never built the Network target,
+            // so `import Network` hit Apple's framework and autolinked.
+            "Network",
             .target(name: storeKitModule),
         ],
         path: "Sources/Blockzilla",
