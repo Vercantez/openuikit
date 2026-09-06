@@ -390,6 +390,7 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
             for object in deletedObjects { try object.validateForDelete(); object.willSave() }
 
             try obtainPermanentIDs(for: Array(insertedObjects))
+            try _enforceUniquenessConstraints()
 
             if let parent {
                 try _pushToParent(parent)
@@ -535,6 +536,27 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
                 }
             }
 
+            if request.resultType == .dictionaryResultType,
+               let groupBy = request.propertiesToGroupBy, !groupBy.isEmpty {
+                let keys = groupBy.compactMap { item -> String? in
+                    if let name = item as? String { return name }
+                    if let property = item as? NSPropertyDescription { return property.name }
+                    return nil
+                }
+                var seen: Set<String> = []
+                var grouped: [NSManagedObject] = []
+                for object in objects {
+                    let signature = keys.map { String(describing: object.value(forKey: $0) ?? NSNull()) }.joined(separator: "\u{1e}")
+                    if seen.insert(signature).inserted {
+                        grouped.append(object)
+                    }
+                }
+                objects = grouped
+                if let having = request.havingPredicate {
+                    objects = objects.filter { _CDMatchesPredicate(having, object: $0) }
+                }
+            }
+
             if request.fetchOffset > 0 {
                 objects = Array(objects.dropFirst(min(request.fetchOffset, objects.count)))
             }
@@ -549,7 +571,9 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
                 return objects.map(\.objectID)
             case .dictionaryResultType:
                 return objects.map { object -> NSDictionary in
-                    let keys = request.propertiesToFetch as? [String] ?? Array(object.entity.attributesByName.keys)
+                    let keys = request.propertiesToFetch as? [String]
+                        ?? request.propertiesToGroupBy?.compactMap { $0 as? String }
+                        ?? Array(object.entity.attributesByName.keys)
                     var dict: [String: Any] = [:]
                     for key in keys {
                         dict[key] = object.value(forKey: key) as Any
@@ -860,6 +884,84 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
         return result
     }
 
+    private func _enforceUniquenessConstraints() throws {
+        guard let model = persistentStoreCoordinator?.managedObjectModel else { return }
+        var conflicts: [NSConstraintConflict] = []
+        let candidates = Array(insertedObjects) + Array(updatedObjects)
+        for entity in model.entities {
+            for rawConstraint in entity.uniquenessConstraints {
+                let keys = rawConstraint.compactMap { item -> String? in
+                    if let name = item as? String { return name }
+                    if let property = item as? NSPropertyDescription { return property.name }
+                    return nil
+                }
+                guard !keys.isEmpty else { continue }
+                var groups: [String: [NSManagedObject]] = [:]
+                for object in candidates where object.entity.name == entity.name {
+                    let signature = keys.map { String(describing: object.value(forKey: $0) ?? NSNull()) }.joined(separator: "\u{1e}")
+                    groups[signature, default: []].append(object)
+                }
+                if let coordinator = persistentStoreCoordinator {
+                    let rows = coordinator._fetchRows(
+                        entityName: entity.name ?? "",
+                        stores: nil,
+                        includesSubentities: false
+                    )
+                    for row in rows {
+                        if deletedObjects.contains(where: { $0.objectID.reference == row.reference }) {
+                            continue
+                        }
+                        if updatedObjects.contains(where: { $0.objectID.reference == row.reference }) {
+                            continue
+                        }
+                        let signature = keys.map { key in
+                            String(describing: row.values[key] ?? NSNull())
+                        }.joined(separator: "\u{1e}")
+                        if let overlapping = groups[signature], !overlapping.isEmpty {
+                            let database = object(with: NSManagedObjectID(
+                                entity: entity,
+                                reference: row.reference,
+                                storeIdentifier: persistentStoreCoordinator?.persistentStores.first?.identifier ?? "store",
+                                isTemporary: false,
+                                store: persistentStoreCoordinator?.persistentStores.first
+                            ))
+                            conflicts.append(
+                                NSConstraintConflict(
+                                    constraint: keys,
+                                    database: database,
+                                    databaseSnapshot: row.values,
+                                    conflicting: overlapping,
+                                    conflictingSnapshots: overlapping.map { $0._snapshotValues() }
+                                )
+                            )
+                        }
+                    }
+                }
+                for group in groups.values where group.count > 1 {
+                    conflicts.append(
+                        NSConstraintConflict(
+                            constraint: keys,
+                            database: nil,
+                            databaseSnapshot: nil,
+                            conflicting: group,
+                            conflictingSnapshots: group.map { $0._snapshotValues() }
+                        )
+                    )
+                }
+            }
+        }
+        guard !conflicts.isEmpty else { return }
+        if let policy = mergePolicy as? NSMergePolicy {
+            try policy.resolve(constraintConflicts: conflicts)
+            return
+        }
+        throw _CDMakeError(
+            NSManagedObjectConstraintMergeError,
+            "uniqueness constraint conflict",
+            userInfo: [NSPersistentStoreSaveConflictsErrorKey: conflicts]
+        )
+    }
+
     private func _postChange() {
         NotificationCenter.default.post(
             name: Self.didChangeObjectsNotification,
@@ -867,7 +969,9 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
             userInfo: [
                 NSInsertedObjectsKey: insertedObjects,
                 NSUpdatedObjectsKey: updatedObjects,
-                NSDeletedObjectsKey: deletedObjects
+                NSDeletedObjectsKey: deletedObjects,
+                NSRefreshedObjectsKey: Set<NSManagedObject>(),
+                NSInvalidatedObjectsKey: Set<NSManagedObject>()
             ]
         )
     }

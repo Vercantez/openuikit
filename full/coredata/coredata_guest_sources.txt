@@ -1,6 +1,8 @@
 full/coredata/CoreData.swift
 full/coredata/CoreDataFailClosed.swift
 full/coredata/CoreDataGraph.swift
+full/coredata/CoreDataModelXML.swift
+full/coredata/CoreDataSQLite.swift
 full/coredata/NSFetchRequest.swift
 full/coredata/NSManagedObject.swift
 full/coredata/NSManagedObjectContext.swift
