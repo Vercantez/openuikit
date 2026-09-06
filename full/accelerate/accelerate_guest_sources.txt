@@ -1,4 +1,5 @@
 full/accelerate/Accelerate.swift
+full/accelerate/AccelerateBNNSTensorOps.swift
 full/accelerate/AccelerateBLASLevel23.swift
 full/accelerate/AccelerateBLASMore.swift
 full/accelerate/AccelerateBLASOps.swift
@@ -12,6 +13,7 @@ full/accelerate/AccelerateOverlay.swift
 full/accelerate/AcceleratePixelFormats.swift
 full/accelerate/AcceleratePixelStorage.swift
 full/accelerate/AccelerateSparseMultiply.swift
+full/accelerate/AccelerateSparseSolve.swift
 full/accelerate/AccelerateVDSPMore.swift
 full/accelerate/AccelerateVDSPOps.swift
 full/accelerate/AccelerateVForceOps.swift
