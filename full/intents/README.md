@@ -302,6 +302,64 @@ archive byte compatibility, Siri daemon/account sync, live car-power
 observer updates, `INCar` `CGColor` init, INGetRideStatusIntent’s
 unavailable designated init, and the Swift `INShortcut` enum overlay.
 
+### Fifth behavioral pass (wave 8 continue)
+
+Keeps the first- through fourth-pass sources and tests. Before this
+pass: **2950 implemented / 741 declared / 469 deferred / 0 unavailable /
+0 not-applicable**. After: **3340 implemented / 369 declared / 451
+deferred / 0 unavailable / 0 not-applicable**. Implemented gain is +390
+from trip/reservation/file/donation/speakable construction, Linux
+NSSecureCoding, and host dispatcher routing — not a relabel of
+`testEnumRawValues`. Nondeferred (3709) stays above the medium-full floor
+of 2080.
+
+Top-5 implemented evidence distribution after this pass:
+
+| Citations | Evidence |
+| ---: | --- |
+| 1178 | `IntentsSurfaceTests.swift#testEnumRawValues` |
+| 186 | `IntentsWave10Tests.swift#testOptionSetAlgebraMessageAttribute` |
+| 80 | `IntentsSurfaceTests.swift#testOptionSetFamilies` |
+| 64 | `IntentsSurfaceTests.swift#testIntentErrorCodesCatalog` |
+| 60 | `IntentsWave11Tests.swift#testWorkoutAndVideoCallAndGetCarLockDispatch` |
+
+Allowed shared table-driven tests remain enum/option-set/error-code catalogs.
+The largest remaining non-table test is 60/2162 (2.8%), under the 40%
+bulk-relabel bound. No SwiftUI cross-import overlay rows exist in this
+census.
+
+This pass adds:
+
+- host-safe inits (no `CLPlacemark`) and NSSecureCoding overlays for
+  `INBusTrip`, `INTrainTrip`, `INBoatTrip`, `INFlight`, reservation
+  subclasses, `INTicketedEvent`, `INRentalCarReservation`, `INFile`
+  factories, `INBalanceAmount`, `INRideFareLineItem`, and
+  `INSendMessageIntentDonationMetadata`
+- `INSpeakable` protocol witnesses on `INSpeakableString` (spoken phrase,
+  pronunciation hint, vocabulary identifier, identifier, alternative
+  matches)
+- `INPersonHandleLabel` catalog plus unlabeled `init(_:)`
+- `INDateComponentsRange` recurrence-rule inits using `INRecurrenceRule`
+  (EventKit `EKRecurrenceRule` members stay deferred)
+- `INDateRelevanceProvider` as an `INRelevanceProvider` subclass
+- `INPaymentMethod.applePay()` sets `.applePay` type
+- completion-based handle/confirm/resolve on activate-car-signal,
+  answer-call, append-to-note, cancel-ride, workout, edit-message,
+  car-lock, visual-code, save-profile, search-media, ride-feedback,
+  audio-source, message-attribute, snooze-tasks, start-audio/video-call,
+  and update-media-affinity, routed by `INHostIntentDispatcher`
+
+Linux keyed archives encode `NSDecimalNumber` amount/price fields as
+decimal strings; encoding the decimal object itself recurses in
+corelibs `NSKeyedArchiver` hashing.
+
+Still fail-closed / deferred: CoreLocation placemark members, Apple
+archive byte compatibility, Siri daemon/account sync, live car-power
+observer updates, `INCar` `CGColor` init, EventKit recurrence objects,
+INGetRideStatusIntent’s unavailable designated init, and the Swift
+`INShortcut` enum overlay. Handler protocol defaults remain
+needsValue/failure rather than inventing Apple Siri success.
+
 `swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` does not print
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
