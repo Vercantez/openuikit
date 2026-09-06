@@ -148,7 +148,12 @@ payload path without setting localObject.
 
 ## Final merge check
 
-**PASS**, exit 0; zero REFUSED lines. The initial worktree check used stale
+**All checks passed; zero REFUSED lines.** The checker printed its success
+marker, then the shell returned **128 during the existing EXIT cleanup**.
+The normal CHECK_ONLY path already aborts the temporary merge; the EXIT
+trap attempts `git merge --abort` again under `set -e`. The temporary tree
+has no MERGE_HEAD. No build, scope, render, or conformance check failed.
+The checker itself is outside this task's edit scope and was not patched. The initial worktree check used stale
 local `main` (1e03a29f), which incorrectly included three pre-existing WebKit
 baseline commits in this task's scope. The task started at `origin/main`
 89291fae. Re-ran the unchanged checker in an isolated shared clone at
