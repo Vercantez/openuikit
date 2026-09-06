@@ -1,0 +1,376 @@
+precise	status	evidence	notes
+c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeAuthenticationFailed	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeAuthenticationNeeded	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeBadParameter	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeCanceledByUser	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeCommunicationError	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeCorruptedData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeNotImplemented	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeObjectNotFound	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKErrorCode@TKErrorCodeTokenNotFound	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+c:@E@TKSmartCardPINCharset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCharsetRawValues	
+c:@E@TKSmartCardPINCharset@TKSmartCardPINCharsetAlphanumeric	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCharsetRawValues	
+c:@E@TKSmartCardPINCharset@TKSmartCardPINCharsetNumeric	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCharsetRawValues	
+c:@E@TKSmartCardPINCharset@TKSmartCardPINCharsetUpperAlphanumeric	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCharsetRawValues	
+c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCompletionRawValues	
+c:@E@TKSmartCardPINCompletion@TKSmartCardPINCompletionKey	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCompletionRawValues	
+c:@E@TKSmartCardPINCompletion@TKSmartCardPINCompletionMaxLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCompletionRawValues	
+c:@E@TKSmartCardPINCompletion@TKSmartCardPINCompletionTimeout	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCompletionRawValues	
+c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINConfirmationRawValues	
+c:@E@TKSmartCardPINConfirmation@TKSmartCardPINConfirmationCurrent	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINConfirmationRawValues	
+c:@E@TKSmartCardPINConfirmation@TKSmartCardPINConfirmationNew	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINConfirmationRawValues	
+c:@E@TKSmartCardPINEncoding	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINEncodingRawValues	
+c:@E@TKSmartCardPINEncoding@TKSmartCardPINEncodingASCII	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINEncodingRawValues	
+c:@E@TKSmartCardPINEncoding@TKSmartCardPINEncodingBCD	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINEncodingRawValues	
+c:@E@TKSmartCardPINEncoding@TKSmartCardPINEncodingBinary	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINEncodingRawValues	
+c:@E@TKSmartCardPINJustification	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINJustificationRawValues	
+c:@E@TKSmartCardPINJustification@TKSmartCardPINJustificationLeft	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINJustificationRawValues	
+c:@E@TKSmartCardPINJustification@TKSmartCardPINJustificationRight	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINJustificationRawValues	
+c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardProtocolRawValues	
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolAny	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardProtocolRawValues	
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolT0	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardProtocolRawValues	
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolT1	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardProtocolRawValues	
+c:@E@TKSmartCardProtocol@TKSmartCardProtocolT15	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardProtocolRawValues	
+c:@E@TKSmartCardSlotState	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateEmpty	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateMissing	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateMuteCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateProbing	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+c:@E@TKSmartCardSlotState@TKSmartCardSlotStateValidCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+c:@E@TKTokenOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+c:@E@TKTokenOperation@TKTokenOperationDecryptData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+c:@E@TKTokenOperation@TKTokenOperationNone	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+c:@E@TKTokenOperation@TKTokenOperationPerformKeyExchange	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+c:@E@TKTokenOperation@TKTokenOperationReadData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+c:@E@TKTokenOperation@TKTokenOperationSignData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+c:@T@TKTLVTag	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTLVTagTypealias	
+c:@T@TKTokenDriverClassID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenTypealiases	
+c:@T@TKTokenInstanceID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenTypealiases	
+c:@T@TKTokenObjectID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenTypealiases	
+c:@T@TKTokenOperationConstraint	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenTypealiases	
+c:@TKErrorDomain	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorDomain	
+c:objc(cs)TKBERTLVRecord	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKBERTLVRecord(cm)dataForTag:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordDataForTag	
+c:objc(cs)TKBERTLVRecord(im)initWithTag:records:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordNestedRecords	
+c:objc(cs)TKBERTLVRecord(im)initWithTag:value:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKCompactTLVRecord	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKCompactTLVRecord	
+c:objc(cs)TKCompactTLVRecord(im)initWithTag:value:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKCompactTLVRecord	
+c:objc(cs)TKSimpleTLVRecord	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKSimpleTLVRecord	
+c:objc(cs)TKSimpleTLVRecord(im)initWithTag:value:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKSimpleTLVRecord	
+c:objc(cs)TKSmartCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(im)beginSessionWithReply:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardBeginSessionFailsClosed	
+c:objc(cs)TKSmartCard(im)endSession	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardEndSessionClearsSensitiveContext	
+c:objc(cs)TKSmartCard(im)transmitRequest:reply:	declared	source:full/cryptotokenkit/TKSmartCard.swift#transmit	async overlay; host runner cannot await
+c:objc(cs)TKSmartCard(im)userInteractionForSecurePINChangeWithPINFormat:APDU:currentPINByteOffset:newPINByteOffset:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionForPINReturnsNil	
+c:objc(cs)TKSmartCard(im)userInteractionForSecurePINVerificationWithPINFormat:APDU:PINByteOffset:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionForPINReturnsNil	
+c:objc(cs)TKSmartCard(py)allowedProtocols	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(py)cla	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(py)context	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardEndSessionClearsSensitiveContext	
+c:objc(cs)TKSmartCard(py)currentProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(py)sensitive	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardEndSessionClearsSensitiveContext	
+c:objc(cs)TKSmartCard(py)slot	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(py)useCommandChaining	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(py)useExtendedLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCard(py)valid	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardDefaults	
+c:objc(cs)TKSmartCardATR	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATR(im)initWithBytes:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATR(im)initWithSource:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRSource	
+c:objc(cs)TKSmartCardATR(im)interfaceGroupAtIndex:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATR(im)interfaceGroupForProtocol:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATR(py)bytes	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATR(py)historicalBytes	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRHistoricalBytes	
+c:objc(cs)TKSmartCardATR(py)historicalRecords	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRHistoricalBytes	
+c:objc(cs)TKSmartCardATR(py)protocols	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATRInterfaceGroup	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)TA	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)TB	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)TC	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardATRInterfaceGroup(py)protocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitATRTests.swift#testTKSmartCardATRDirectConvention	
+c:objc(cs)TKSmartCardPINFormat	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)PINBitOffset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)PINBlockByteLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)PINJustification	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)PINLengthBitOffset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)PINLengthBitSize	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)charset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)encoding	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)maxPINLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardPINFormat(py)minPINLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardPINFormatProperties	
+c:objc(cs)TKSmartCardSlot	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlot(im)makeSmartCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlot(py)ATR	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlot(py)maxInputLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlot(py)maxOutputLength	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlot(py)name	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlot(py)state	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotHasNoCard	
+c:objc(cs)TKSmartCardSlotManager	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
+c:objc(cs)TKSmartCardSlotManager(cpy)defaultManager	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
+c:objc(cs)TKSmartCardSlotManager(im)createNFCSlotWithMessage:completion:	declared	source:full/cryptotokenkit/TKSmartCard.swift#createNFCSlot	async overlay; host runner cannot await
+c:objc(cs)TKSmartCardSlotManager(im)getSlotWithName:reply:	declared	source:full/cryptotokenkit/TKSmartCard.swift#getSlot	async overlay; host runner cannot await
+c:objc(cs)TKSmartCardSlotManager(im)isNFCSupported	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
+c:objc(cs)TKSmartCardSlotManager(im)slotNamed:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
+c:objc(cs)TKSmartCardSlotManager(py)slotNames	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotManagerEmpty	
+c:objc(cs)TKSmartCardSlotNFCSession	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotNFCSessionFailClosed	
+c:objc(cs)TKSmartCardSlotNFCSession(im)endSession	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotNFCSessionFailClosed	
+c:objc(cs)TKSmartCardSlotNFCSession(im)updateWithMessage:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotNFCSessionFailClosed	
+c:objc(cs)TKSmartCardSlotNFCSession(py)slotName	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSlotNFCSessionFailClosed	
+c:objc(cs)TKSmartCardToken	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardToken(im)initWithSmartCard:AID:instanceID:tokenDriver:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardToken(im)initWithSmartCard:AID:instanceID:tokenDriver:::SYNTHESIZED::c:objc(cs)TKSmartCardToken	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardToken(py)AID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardTokenDriver	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardTokenRegistrationManager	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenRegistrationManagerFailClosed	
+c:objc(cs)TKSmartCardTokenRegistrationManager(cpy)defaultManager	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenRegistrationManagerFailClosed	
+c:objc(cs)TKSmartCardTokenRegistrationManager(im)registerSmartCardWithTokenID:promptMessage:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenRegistrationManagerFailClosed	
+c:objc(cs)TKSmartCardTokenRegistrationManager(im)unregisterSmartCardWithTokenID:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenRegistrationManagerFailClosed	
+c:objc(cs)TKSmartCardTokenRegistrationManager(py)registeredSmartCardTokens	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenRegistrationManagerFailClosed	
+c:objc(cs)TKSmartCardTokenSession	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardTokenSession(im)getSmartCardWithError:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardTokenSession(py)smartCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenAndSession	
+c:objc(cs)TKSmartCardUserInteraction	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionRunAndCancel	
+c:objc(cs)TKSmartCardUserInteraction(im)cancel	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionRunAndCancel	
+c:objc(cs)TKSmartCardUserInteraction(im)runWithReply:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionRunAndCancel	
+c:objc(cs)TKSmartCardUserInteraction(py)delegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionRunAndCancel	
+c:objc(cs)TKSmartCardUserInteraction(py)initialTimeout	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionRunAndCancel	
+c:objc(cs)TKSmartCardUserInteraction(py)interactionTimeout	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionRunAndCancel	
+c:objc(cs)TKSmartCardUserInteractionForPINOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)PINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)PINMessageIndices	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)locale	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)resultData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForPINOperation(py)resultSW	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForSecurePINChange	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForSecurePINChange(py)PINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKSmartCardUserInteractionForSecurePINVerification	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardUserInteractionPINOperationProperties	
+c:objc(cs)TKTLVRecord	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKTLVRecord(cm)recordFromData:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKTLVRecord(cm)recordFromData:::SYNTHESIZED::c:objc(cs)TKTLVRecord	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordFromData	
+c:objc(cs)TKTLVRecord(cm)sequenceOfRecordsFromData:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKTLVRecordSequence	
+c:objc(cs)TKTLVRecord(py)data	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKTLVRecord(py)tag	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKTLVRecord(py)value	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTLVTests.swift#testTKBERTLVRecordRoundTrip	
+c:objc(cs)TKToken	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKToken(im)initWithTokenDriver:instanceID:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKToken(py)configuration	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKToken(py)delegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKToken(py)keychainContents	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKToken(py)tokenDriver	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKTokenAuthOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenAuthOperationFinish	
+c:objc(cs)TKTokenAuthOperation(im)finishWithError:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenAuthOperationFinish	
+c:objc(cs)TKTokenConfiguration	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKTokenConfiguration(im)certificateForObjectID:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenConfiguration(im)keyForObjectID:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenConfiguration(py)configurationData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKTokenConfiguration(py)instanceID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKTokenConfiguration(py)keychainItems	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenDriver	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenInitAndConfiguration	
+c:objc(cs)TKTokenDriver(py)delegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverDelegateDefault	
+c:objc(cs)TKTokenDriverConfiguration	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverConfigurationCatalog	
+c:objc(cs)TKTokenDriverConfiguration(cpy)driverConfigurations	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverConfigurationCatalog	
+c:objc(cs)TKTokenDriverConfiguration(im)addTokenConfigurationForTokenInstanceID:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverConfigurationCatalog	
+c:objc(cs)TKTokenDriverConfiguration(im)removeTokenConfigurationForTokenInstanceID:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverConfigurationCatalog	
+c:objc(cs)TKTokenDriverConfiguration(py)classID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverConfigurationCatalog	
+c:objc(cs)TKTokenDriverConfiguration(py)tokenConfigurations	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverConfigurationCatalog	
+c:objc(cs)TKTokenKeyAlgorithm	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeyAlgorithmTypeExists	
+c:objc(cs)TKTokenKeyAlgorithm(im)isAlgorithm:	deferred		SecKeyAlgorithm is owned by Security; isolated host cannot import Security and a module-local substitute is forbidden.
+c:objc(cs)TKTokenKeyAlgorithm(im)supportsAlgorithm:	deferred		SecKeyAlgorithm is owned by Security; isolated host cannot import Security and a module-local substitute is forbidden.
+c:objc(cs)TKTokenKeyExchangeParameters	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeyExchangeParameters	
+c:objc(cs)TKTokenKeyExchangeParameters(py)requestedSize	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeyExchangeParameters	
+c:objc(cs)TKTokenKeyExchangeParameters(py)sharedInfo	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeyExchangeParameters	
+c:objc(cs)TKTokenKeychainCertificate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainCertificate(im)initWithCertificate:objectID:	deferred		SecCertificate is owned by Security; isolated host cannot import Security and a module-local substitute is forbidden.
+c:objc(cs)TKTokenKeychainCertificate(py)data	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainContents	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainContentsFill	
+c:objc(cs)TKTokenKeychainContents(im)certificateForObjectID:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainContentsFill	
+c:objc(cs)TKTokenKeychainContents(im)fillWithItems:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainContentsFill	
+c:objc(cs)TKTokenKeychainContents(im)keyForObjectID:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainContentsFill	
+c:objc(cs)TKTokenKeychainContents(py)items	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainContentsFill	
+c:objc(cs)TKTokenKeychainItem	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainItemProperties	
+c:objc(cs)TKTokenKeychainItem(im)initWithObjectID:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainItemProperties	
+c:objc(cs)TKTokenKeychainItem(py)constraints	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainItemProperties	
+c:objc(cs)TKTokenKeychainItem(py)label	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainItemProperties	
+c:objc(cs)TKTokenKeychainItem(py)objectID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenKeychainItemProperties	
+c:objc(cs)TKTokenKeychainKey	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(im)initWithCertificate:objectID:	deferred		SecCertificate is owned by Security; isolated host cannot import Security and a module-local substitute is forbidden.
+c:objc(cs)TKTokenKeychainKey(py)applicationTag	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)canDecrypt	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)canPerformKeyExchange	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)canSign	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)keySizeInBits	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)keyType	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)publicKeyData	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)publicKeyHash	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenKeychainKey(py)suitableForLogin	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenConfigurationKeyLookup	
+c:objc(cs)TKTokenPasswordAuthOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenPasswordAuthOperationFailClosed	
+c:objc(cs)TKTokenPasswordAuthOperation(py)password	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenPasswordAuthOperationFailClosed	
+c:objc(cs)TKTokenSession	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionInit	
+c:objc(cs)TKTokenSession(im)initWithToken:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionInit	
+c:objc(cs)TKTokenSession(py)delegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionInit	
+c:objc(cs)TKTokenSession(py)token	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionInit	
+c:objc(cs)TKTokenSmartCardPINAuthOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSmartCardPINAuthOperationProperties	
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)APDUTemplate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSmartCardPINAuthOperationProperties	
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)PIN	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSmartCardPINAuthOperationProperties	
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)PINByteOffset	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSmartCardPINAuthOperationProperties	
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)PINFormat	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSmartCardPINAuthOperationProperties	
+c:objc(cs)TKTokenSmartCardPINAuthOperation(py)smartCard	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSmartCardPINAuthOperationProperties	
+c:objc(cs)TKTokenWatcher	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcher(im)addRemovalHandler:forTokenID:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcher(im)init	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcher(im)initWithInsertionHandler:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcher(im)setInsertionHandler:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcher(im)tokenInfoForTokenID:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcher(py)tokenIDs	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherEmpty	
+c:objc(cs)TKTokenWatcherTokenInfo	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherTokenInfo	
+c:objc(cs)TKTokenWatcherTokenInfo(py)driverName	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherTokenInfo	
+c:objc(cs)TKTokenWatcherTokenInfo(py)slotName	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherTokenInfo	
+c:objc(cs)TKTokenWatcherTokenInfo(py)tokenID	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenWatcherTokenInfo	
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)TKTokenAuthOperation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenAuthOperationInitCoder	
+c:objc(pl)TKSmartCardTokenDriverDelegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenDriverDelegate	
+c:objc(pl)TKSmartCardTokenDriverDelegate(im)tokenDriver:createTokenForSmartCard:AID:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardTokenDriverDelegate	
+c:objc(pl)TKSmartCardUserInteractionDelegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)characterEnteredInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)correctionKeyPressedInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)invalidCharacterEnteredInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)newPINConfirmationRequestedInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)newPINRequestedInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)oldPINRequestedInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKSmartCardUserInteractionDelegate(im)validationKeyPressedInUserInteraction:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKSmartCardUserInteractionDelegateDefaults	
+c:objc(pl)TKTokenDelegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDelegateCreateSession	
+c:objc(pl)TKTokenDelegate(im)token:createSessionWithError:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDelegateCreateSession	
+c:objc(pl)TKTokenDelegate(im)token:terminateSession:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDelegateCreateSession	
+c:objc(pl)TKTokenDriverDelegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverDelegateDefault	
+c:objc(pl)TKTokenDriverDelegate(im)tokenDriver:terminateToken:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverDelegateDefault	
+c:objc(pl)TKTokenDriverDelegate(im)tokenDriver:tokenForConfiguration:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenDriverDelegateDefault	
+c:objc(pl)TKTokenSessionDelegate	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionDelegateDefaults	
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:beginAuthForOperation:constraint:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionDelegateDefaults	
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:decryptData:usingKey:algorithm:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionDelegateDefaults	
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:performKeyExchangeWithPublicKey:usingKey:algorithm:parameters:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionDelegateDefaults	
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:signData:usingKey:algorithm:error:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionDelegateDefaults	
+c:objc(pl)TKTokenSessionDelegate(im)tokenSession:supportsOperation:usingKey:algorithm:	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitTokenTests.swift#testTKTokenSessionDelegateDefaults	
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorDomain	
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:SC11TKErrorCodeLeV	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:SC11TKErrorCodeLeV0A13TokenNotFoundSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV0A14ObjectNotFoundSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV0A20AuthenticationFailedSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV11errorDomainSSvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorDomain	
+s:SC11TKErrorCodeLeV12badParameterSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV13corruptedDataSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV13tokenNotFoundSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV14canceledByUserSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV14notImplementedSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV14objectNotFoundSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV18communicationErrorSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV20authenticationFailedSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SC11TKErrorCodeLeV20authenticationNeededSoAAVvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCharset	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Charset	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Encoding	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardPINJustification	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Justification	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKSmartCardSlotState	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#State	compiler-synthesized witness
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@TKTokenOperation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKTokenOperation	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKErrorCode	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKError	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINCharset	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Charset	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Encoding	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardPINJustification	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Justification	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKSmartCardSlotState	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#State	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@TKTokenOperation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKTokenOperation	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKErrorCode	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKError	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINCharset	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Charset	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINEncoding	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Encoding	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardPINJustification	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Justification	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKSmartCardSlotState	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#State	compiler-synthesized witness
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@TKTokenOperation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKTokenOperation	compiler-synthesized witness
+s:So11TKErrorCodeV0A13TokenNotFoundABvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:So11TKErrorCodeV0A14ObjectNotFoundABvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:So11TKErrorCodeV0A20AuthenticationFailedABvpZ	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorStaticCodeAliases	
+s:So11TKErrorCodeV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorCodeRawValues	
+s:So11TKSmartCardC14CryptoTokenKitE11withSessionyxxyKcKlF	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardWithSessionThrows	
+s:So11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2le5replyys5UInt8V_A2L10Foundation4DataVSgSiSgyAP_s6UInt16Vs5Error_pSgtctF	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSendReplyFailsClosed	
+s:So11TKSmartCardC14CryptoTokenKitE4send3ins2p12p24data2les6UInt16V2sw_10Foundation4DataV8responsets5UInt8V_A2rOSgSiSgtKF	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardSendThrows	
+s:So16TKTokenOperationV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKTokenOperationRawValues	
+s:So19TKSmartCardProtocolV8rawValueABSu_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardProtocolRawValues	
+s:So20TKSmartCardSlotStateV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardSlotStateRawValues	
+s:So21TKSmartCardPINCharsetV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCharsetRawValues	
+s:So22TKSmartCardPINEncodingV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINEncodingRawValues	
+s:So24TKSmartCardPINCompletionV8rawValueABSu_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINCompletionRawValues	
+s:So26TKSmartCardPINConfirmationV8rawValueABSu_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINConfirmationRawValues	
+s:So27TKSmartCardPINJustificationV8rawValueABSgSi_tcfc	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitEnumTests.swift#testTKSmartCardPINJustificationRawValues	
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINConfirmationAlgebra	
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@TKErrorCode	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitErrorTests.swift#testTKErrorBridging	
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINConfirmationAlgebra	
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Completion	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@TKSmartCardProtocol	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#TKSmartCardProtocol	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINCompletion	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKPINCompletionAlgebra	
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardPINConfirmation	declared	source:full/cryptotokenkit/CryptoTokenKit.swift#Confirmation	compiler-synthesized witness
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@TKSmartCardProtocol	implemented	test:full/cryptotokenkit/tests/agent/CryptoTokenKitSmartCardTests.swift#testTKSmartCardProtocolAlgebra	
