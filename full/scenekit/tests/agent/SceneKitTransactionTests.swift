@@ -25,3 +25,14 @@ func testTransactionBeginCommit() {
     SCNTransaction.lock()
     SCNTransaction.unlock()
 }
+
+func testTransactionFlush() {
+    SCNTransaction.begin()
+    SCNTransaction.animationDuration = 0.5
+    var flushed = false
+    SCNTransaction.completionBlock = { flushed = true }
+    SCNTransaction.flush()
+    precondition(abs(SCNTransaction.animationDuration) < 1e-9)
+    precondition(flushed)
+    SCNTransaction.commit()
+}

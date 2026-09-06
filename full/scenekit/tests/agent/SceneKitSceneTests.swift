@@ -35,3 +35,23 @@ func testSceneGraphAndLoad() {
     program.vertexFunctionName = "v"
     precondition(program.isOpaque)
 }
+
+func testSceneSourceMetadata() {
+    let tmp = URL(fileURLWithPath: "/tmp/scenekit-linux-meta-\(ProcessInfo.processInfo.processIdentifier).scn")
+    try? Data([0x00]).write(to: tmp)
+    let src = SCNSceneSource(url: tmp, options: nil)
+    precondition(src != nil)
+    _ = src?.property(forKey: SCNSceneSourceAssetAuthorKey)
+    _ = src?.property(forKey: SCNSceneSourceAssetCreatedDateKey)
+    precondition((try? src?.scene(options: nil)) == nil)
+    precondition(src?.identifiersOfEntries(withClass: SCNNode.self).isEmpty == true)
+    precondition(src?.entryWithIdentifier("x", withClass: SCNNode.self) == nil)
+    precondition(src?.entries(passingTest: { _, _, _ in true }).isEmpty == true)
+    let empty = SCNSceneSource(data: Data(), options: [.checkConsistency: true])
+    var sawError = false
+    _ = empty?.scene(options: nil, statusHandler: { _, status, _, _ in
+        if status == .error { sawError = true }
+    })
+    precondition(sawError)
+    try? FileManager.default.removeItem(at: tmp)
+}
