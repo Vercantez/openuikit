@@ -632,3 +632,14 @@ public enum MTLVertexFormat: UInt, Equatable, Hashable, Sendable {
     case floatRG11B10 = 54
     case floatRGB9E5 = 55
 }
+
+public enum MTLMutability: UInt, Equatable, Hashable, Sendable {
+    case `default` = 0
+    case mutable = 1
+    case immutable = 2
+}
+
+public enum MTLMotionBorderMode: UInt32, Equatable, Hashable, Sendable {
+    case clamp = 0
+    case vanish = 1
+}
