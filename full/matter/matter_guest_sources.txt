@@ -2,6 +2,7 @@ full/matter/MTRClusterParamsGenerated.swift
 full/matter/MTRClusterStubs.swift
 full/matter/MTRClustersGenerated.swift
 full/matter/MTRClustersWave9.swift
+full/matter/MTRClustersWave10.swift
 full/matter/MTRConstants.swift
 full/matter/MTRControllers.swift
 full/matter/MTRCoreTypes.swift
