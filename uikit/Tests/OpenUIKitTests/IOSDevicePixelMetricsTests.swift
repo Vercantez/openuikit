@@ -701,6 +701,56 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(nav.navigationBar.bounds.height, 54)
         XCTAssertEqual(nav.navigationBar.searchOverlayHeight, 0)
     }
+
+    // MARK: Compact-height phone tab bar (Tabs t200.landscape)
+
+    /// MEASURED Tabs t200.landscape / t2000.landscape, iPhone SE 2x /
+    /// iOS 26.1: `UITabBar [0, 311, 667, 64]`, platter `[205, 0, 257.5, 44]`,
+    /// buttons 36 pt tall at y 4 packed 86.5 / 76.5 / 78.5, table SA
+    /// bottom **64**. Portrait 83 / stacked 94×54 is unchanged.
+    func testCompactHeightTabBarIsInline64Pt() {
+        device(667, 375, scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+
+        let tab = UITabBarController()
+        let a = UIViewController()
+        a.tabBarItem = UITabBarItem(title: "Library",
+                                    image: UIImage(systemName: "calendar"), tag: 0)
+        let b = UIViewController()
+        b.tabBarItem = UITabBarItem(title: "Tools",
+                                    image: UIImage(systemName: "plus.circle.fill"), tag: 1)
+        b.tabBarItem?.badgeValue = "3"
+        let c = UIViewController()
+        c.tabBarItem = UITabBarItem(title: "Scroll",
+                                    image: UIImage(systemName: "clock"), tag: 2)
+        tab.viewControllers = [a, b, c]
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        window.rootViewController = tab
+        window.layoutIfNeeded()
+
+        XCTAssertEqual(UITabBar.barHeight, 64)
+        XCTAssertEqual(tab.tabBar.frame,
+                       CGRect(x: 0, y: 311, width: 667, height: 64))
+        XCTAssertEqual(tab.transitionView.safeAreaInsets.bottom, 64)
+
+        XCTAssertEqual(tab.tabBar.itemViews.count, 3)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.minY, 4)
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.height, 36)
+        XCTAssertEqual(tab.tabBar.platter.frame,
+                       CGRect(x: 205, y: 0, width: 257.5, height: 44))
+        XCTAssertEqual(tab.tabBar.itemViews[0].frame.width, 86.5, accuracy: 0.5)
+        XCTAssertEqual(tab.tabBar.itemViews[1].frame.width, 76.5, accuracy: 0.5)
+        XCTAssertEqual(tab.tabBar.itemViews[2].frame.width, 78.5, accuracy: 0.5)
+        XCTAssertEqual(tab.tabBar.itemViews[0].iconView.frame.origin.x, 6)
+        XCTAssertGreaterThan(tab.tabBar.itemViews[0].titleLabel.frame.minX,
+                             tab.tabBar.itemViews[0].iconView.frame.maxX)
+        XCTAssertFalse(tab.tabBar.itemViews[1].badgeView.isHidden)
+        XCTAssertEqual(tab.tabBar.itemViews[1].badgeView.frame.size,
+                       CGSize(width: 16, height: 16))
+        XCTAssertEqual(tab.tabBar.itemViews[1].badgeView.frame.origin.y, 0)
+    }
 }
 
 #if !os(Linux)
