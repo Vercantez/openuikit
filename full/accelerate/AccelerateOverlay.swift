@@ -2,22 +2,20 @@ import Foundation
 
 public struct BLAS {
     public static var threadingModel: BLAS.ThreadingModel {
-        get { preconditionFailure("Accelerate Linux: unread property") }
-        set { _ = newValue }
+        get { BLAS.ThreadingModel(rawValue: BLASGetThreading().rawValue) }
+        set { _ = BLASSetThreading(BLAS_THREADING(rawValue: newValue.rawValue)) }
     }
-    public struct ThreadingModel {
+    public struct ThreadingModel: Equatable, Hashable, Sendable {
         public typealias RawValue = UInt32
-        public static var multiThreaded: BLAS.ThreadingModel { preconditionFailure("Accelerate Linux: unread property") }
-        public static var singleThreaded: BLAS.ThreadingModel { preconditionFailure("Accelerate Linux: unread property") }
-        public var rawValue: UInt32 {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var rawValue: UInt32
+        public init(rawValue: UInt32) { self.rawValue = rawValue }
+        public static var multiThreaded: BLAS.ThreadingModel { BLAS.ThreadingModel(rawValue: BLAS_THREADING_MULTI_THREADED.rawValue) }
+        public static var singleThreaded: BLAS.ThreadingModel { BLAS.ThreadingModel(rawValue: BLAS_THREADING_SINGLE_THREADED.rawValue) }
     }
 }
 
 public enum BNNS {
-    public enum ActivationFunction {
+    public enum ActivationFunction: Equatable, Hashable {
         case hardShrink(alpha: Float)
         case logSigmoid
         case logSoftmax
@@ -136,7 +134,7 @@ public enum BNNS {
             set { _ = newValue }
         }
     }
-    public enum ArithmeticBinaryFunction {
+    public enum ArithmeticBinaryFunction: Equatable, Hashable {
         case divideNoNaN
         case multiplyNoNaN
         case flooringDivide
@@ -152,11 +150,11 @@ public enum BNNS {
         case subtract
         public static var allCases: [BNNS.ArithmeticBinaryFunction] { preconditionFailure("Accelerate Linux: unread property") }
     }
-    public enum ArithmeticTernaryFunction {
+    public enum ArithmeticTernaryFunction: Equatable, Hashable {
         case multiplyAdd
         public var bnnsArithmeticFunction: BNNSArithmeticFunction { preconditionFailure("Accelerate Linux: unread property") }
     }
-    public enum ArithmeticUnaryFunction {
+    public enum ArithmeticUnaryFunction: Equatable, Hashable {
         case reciprocal
         case squareRoot
         case reciprocalSquareRoot
@@ -196,23 +194,23 @@ public enum BNNS {
     }
     public class ConvolutionLayer: UnaryLayer {
     }
-    public enum ConvolutionPadding {
+    public enum ConvolutionPadding: Equatable, Hashable {
         case asymmetric(left: Int, right: Int, up: Int, down: Int)
         case symmetric(x: Int, y: Int)
         public static var zero: BNNS.ConvolutionPadding { preconditionFailure("Accelerate Linux: unread property") }
     }
-    public enum ConvolutionType {
+    public enum ConvolutionType: Equatable, Hashable {
         case transposed
         case standard
     }
     public class CropResizeLayer {
-        public enum BoxCoordinateMode {
+        public enum BoxCoordinateMode: Equatable, Hashable {
             case cornersWidthFirst
             case cornersHeightFirst
             case centerSizeWidthFirst
             case centerSizeHeightFirst
         }
-        public enum LinearSamplingMode {
+        public enum LinearSamplingMode: Equatable, Hashable {
             case alignCorners
             case offsetCorners
             case unalignCorners
@@ -220,7 +218,7 @@ public enum BNNS {
             case `default`
         }
     }
-    public enum DataLayout {
+    public enum DataLayout: Equatable, Hashable {
         case tensor3DNSE
         case tensor3DSNE
         case matrixRowMajor
@@ -246,7 +244,7 @@ public enum BNNS {
         public var rank: Int { preconditionFailure("Accelerate Linux: unread property") }
         public static var allCases: [BNNS.DataLayout] { preconditionFailure("Accelerate Linux: unread property") }
     }
-    public enum DescriptorType {
+    public enum DescriptorType: Equatable, Hashable {
         case sample
         case constant
         case parameter
@@ -255,11 +253,19 @@ public enum BNNS {
     }
     public class EmbeddingLayer: Layer {
     }
-    public enum Error {
+    public enum Error: Swift.Error, Equatable, Hashable, Sendable {
         case layerApplyFail
         case optimizerStepFail
         case unableToCreateLayer
         case arrayDescriptorInvalidData
+        public var errorDescription: String {
+            switch self {
+            case .layerApplyFail: return "layer apply failed"
+            case .optimizerStepFail: return "optimizer step failed"
+            case .unableToCreateLayer: return "unable to create layer"
+            case .arrayDescriptorInvalidData: return "array descriptor invalid data"
+            }
+        }
     }
     public class FullyConnectedLayer: ConvolutionLayer {
     }
@@ -427,7 +433,7 @@ public enum BNNS {
     }
     public class GramLayer: UnaryLayer {
     }
-    public enum InterpolationMethod {
+    public enum InterpolationMethod: Equatable, Hashable {
         case nearestNeighbor
         case linear
     }
@@ -438,7 +444,7 @@ public enum BNNS {
         }
         public init() {}
     }
-    @frozen public enum LearningPhase {
+    @frozen public enum LearningPhase: Equatable, Hashable {
         case training
         case inference
     }
@@ -515,7 +521,7 @@ public enum BNNS {
     }
     public class LossLayer: Layer {
     }
-    public enum LossReduction {
+    public enum LossReduction: Equatable, Hashable {
         case weightedMean
         case reductionMean
         case zeroWeightMean
@@ -525,17 +531,15 @@ public enum BNNS {
     }
     public struct NearestNeighbors {
     }
-    @frozen public struct Norm {
-        public static var l1: BNNS.Norm { preconditionFailure("Accelerate Linux: unread property") }
-        public static var l2: BNNS.Norm { preconditionFailure("Accelerate Linux: unread property") }
-        public static var maximum: BNNS.Norm { preconditionFailure("Accelerate Linux: unread property") }
-        public static var taxicab: BNNS.Norm { preconditionFailure("Accelerate Linux: unread property") }
-        public var rawValue: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public static var euclidean: BNNS.Norm { preconditionFailure("Accelerate Linux: unread property") }
-        public static var lInfinity: BNNS.Norm { preconditionFailure("Accelerate Linux: unread property") }
+    @frozen public struct Norm: Equatable, Hashable, Sendable {
+        public var rawValue: Float
+        public init(rawValue: Float) { self.rawValue = rawValue }
+        public static var l1: BNNS.Norm { BNNS.Norm(rawValue: 1) }
+        public static var l2: BNNS.Norm { BNNS.Norm(rawValue: 2) }
+        public static var maximum: BNNS.Norm { BNNS.Norm(rawValue: 3) }
+        public static var taxicab: BNNS.Norm { BNNS.Norm.l1 }
+        public static var euclidean: BNNS.Norm { BNNS.Norm.l2 }
+        public static var lInfinity: BNNS.Norm { BNNS.Norm.maximum }
     }
     public class NormalizationLayer: Layer {
     }
@@ -618,7 +622,7 @@ public enum BNNS {
             set { _ = newValue }
         }
     }
-    public enum RandomGeneratorMethod {
+    public enum RandomGeneratorMethod: Equatable, Hashable {
         case aesCtr
     }
     public class RandomGeneratorState {
@@ -737,7 +741,7 @@ public enum BNNS {
         public var layout: BNNSDataLayout { preconditionFailure("Accelerate Linux: unread property") }
         public var stride: (Int, Int, Int, Int, Int, Int, Int, Int) { preconditionFailure("Accelerate Linux: unread property") }
     }
-    public enum ShuffleType {
+    public enum ShuffleType: Equatable, Hashable {
         case depthToSpaceNCHW
         case spaceToDepthNCHW
     }
@@ -759,7 +763,7 @@ public enum BNNS {
             set { _ = newValue }
         }
     }
-    public enum SparsityType {
+    public enum SparsityType: Equatable, Hashable {
         case unstructured
     }
     public class TernaryArithmeticLayer: Layer {
@@ -773,7 +777,7 @@ public enum BNNS {
 public enum BNNSGraph {
     public struct Builder {
         public typealias PoolingPadding = BNNSGraph.Builder.ConvolutionPadding
-        public enum Activation {
+        public enum Activation: Equatable, Hashable {
             case scaledTanh
             case hardSigmoid
             case relu
@@ -781,38 +785,38 @@ public enum BNNSGraph {
             case linear
             case sigmoid
         }
-        public enum CeilingMode {
+        public enum CeilingMode: Equatable, Hashable {
             case floor
             case ceiling
         }
-        public enum ConvolutionPadding {
+        public enum ConvolutionPadding: Equatable, Hashable {
             case same
             case lower
             case valid
             case custom(padding: [Int])
         }
-        public enum Direction {
+        public enum Direction: Equatable, Hashable {
             case forward
             case reverse
         }
-        public enum Intent {
+        public enum Intent: Equatable, Hashable {
             case inputOutput
             case input
         }
         public protocol OperationParameter<Element> {
             associatedtype Element : BNNSScalar
         }
-        public enum Padding {
+        public enum Padding: Equatable, Hashable {
             case reflection
             case replication
             case constant(value: Float)
         }
-        public enum PoolingFunction {
+        public enum PoolingFunction: Equatable, Hashable {
             case max
             case l2Norm
             case average(includePadding: Bool)
         }
-        public enum ScatterMode {
+        public enum ScatterMode: Equatable, Hashable {
             case add
             case divide
             case update
@@ -823,18 +827,18 @@ public enum BNNSGraph {
         }
         public protocol SliceIndex {
         }
-        public struct SliceRange {
-            public var startIndex: Int {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
+        public struct SliceRange: Equatable, Hashable, Sendable {
+            public var startIndex: Int
+            public var endIndex: Int
+            public init(startIndex: Int, endIndex: Int) {
+                self.startIndex = startIndex
+                self.endIndex = endIndex
             }
-            public static var fillAll: BNNSGraph.Builder.SliceRange { preconditionFailure("Accelerate Linux: unread property") }
-            public var endIndex: Int {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
+            public static var fillAll: BNNSGraph.Builder.SliceRange {
+                BNNSGraph.Builder.SliceRange(startIndex: 0, endIndex: Int.max)
             }
         }
-        public enum SortOrder {
+        public enum SortOrder: Equatable, Hashable {
             case descending
             case ascending
         }
@@ -848,22 +852,28 @@ public enum BNNSGraph {
             public var dataType: BNNSDataType? { preconditionFailure("Accelerate Linux: unread property") }
         }
     }
-    public struct CompileOptions {
-        public var useSingleThread: Bool {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+    public struct CompileOptions: Equatable, Hashable, Sendable {
+        public var useSingleThread: Bool
+        public var generateDebugInfo: Bool
+        public var optimizationPreference: BNNSGraph.CompileOptions.OptimizationPreference
+        public init(
+            useSingleThread: Bool = false,
+            generateDebugInfo: Bool = false,
+            optimizationPreference: BNNSGraph.CompileOptions.OptimizationPreference = .performance
+        ) {
+            self.useSingleThread = useSingleThread
+            self.generateDebugInfo = generateDebugInfo
+            self.optimizationPreference = optimizationPreference
         }
-        public var generateDebugInfo: Bool {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var optimizationPreference: BNNSGraph.CompileOptions.OptimizationPreference {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public struct OptimizationPreference {
-            public static var performance: BNNSGraph.CompileOptions.OptimizationPreference { preconditionFailure("Accelerate Linux: unread property") }
-            public static var internalRepresentationSize: BNNSGraph.CompileOptions.OptimizationPreference { preconditionFailure("Accelerate Linux: unread property") }
+        public struct OptimizationPreference: Equatable, Hashable, Sendable {
+            public var rawValue: Int
+            public init(rawValue: Int) { self.rawValue = rawValue }
+            public static var performance: BNNSGraph.CompileOptions.OptimizationPreference {
+                BNNSGraph.CompileOptions.OptimizationPreference(rawValue: 0)
+            }
+            public static var internalRepresentationSize: BNNSGraph.CompileOptions.OptimizationPreference {
+                BNNSGraph.CompileOptions.OptimizationPreference(rawValue: 1)
+            }
         }
     }
     public class Context {
@@ -878,12 +888,21 @@ public enum BNNSGraph {
             set { _ = newValue }
         }
     }
-    public enum Error {
+    public enum Error: Swift.Error, Equatable, Hashable, Sendable {
         case unableToExecute
         case unableToMakeGraph(String)
         case unableToCreateGraph
         case unableToCreateContext
         case unableToSetDynamicShapes
+    }
+    public static func makeContext(
+        options: BNNSGraph.CompileOptions = CompileOptions(),
+        _ block: (inout BNNSGraph.Builder) -> [any BNNSGraph.TensorDescriptor]
+    ) throws -> BNNSGraph.Context {
+        _ = options
+        var builder = BNNSGraph.Builder()
+        _ = block(&builder)
+        throw BNNSGraph.Error.unableToCreateContext
     }
     public protocol PointerArgument {
         associatedtype Element
@@ -1067,16 +1086,23 @@ public enum vDSP {
     }
     public struct DFTDoublePrecisionSplitComplexFunctions {
     }
-    public enum DFTError: Swift.Error {
+    public enum DFTError: Swift.Error, Equatable, Hashable {
         case invalidInterleavedCount(count: Int)
         case invalidSplitComplexCount(count: Int, transformType: vDSP.DFTTransformType)
-        public var errorDescription: String? { preconditionFailure("Accelerate Linux: unread property") }
+        public var errorDescription: String? {
+            switch self {
+            case .invalidInterleavedCount(let count):
+                return "invalid interleaved count \(count)"
+            case .invalidSplitComplexCount(let count, let transformType):
+                return "invalid split-complex count \(count) \(String(describing: transformType))"
+            }
+        }
     }
     public struct DFTSinglePrecisionInterleavedFunctions {
     }
     public struct DFTSinglePrecisionSplitComplexFunctions {
     }
-    public enum DFTTransformType {
+    public enum DFTTransformType: Equatable, Hashable {
         case complexReal
         case complexComplex
     }
@@ -1166,13 +1192,13 @@ public enum vForce {
 
 public enum vImage {
     public typealias StructuringElement = vImage.ConvolutionKernel2D
-    public enum BlendMode {
+    public enum BlendMode: Equatable, Hashable {
         case darken
         case screen
         case lighten
         case multiply
     }
-    public enum BufferType {
+    public enum BufferType: Equatable, Hashable {
         case cmykYellow
         case monochrome
         case cmykMagenta
@@ -1200,7 +1226,7 @@ public enum vImage {
         public var bufferTypeCode: vImageBufferTypeCode { preconditionFailure("Accelerate Linux: unread property") }
         public var rawValue: Int { preconditionFailure("Accelerate Linux: unread property") }
     }
-    public enum ChannelOrdering {
+    public enum ChannelOrdering: Equatable, Hashable {
         case ARGB
         case RGBA
     }
@@ -1260,7 +1286,7 @@ public enum vImage {
             self = vImage.Error(rawValue: vImageError) ?? .internalError
         }
     }
-    public enum FloodFillConnectivity {
+    public enum FloodFillConnectivity: Equatable, Hashable {
         case edgesAndCorners
         case edges
         public typealias RawValue = Int32
@@ -1359,7 +1385,7 @@ public enum vImage {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
         }
-        public enum InterpolationMethod {
+        public enum InterpolationMethod: Equatable, Hashable {
             case full
             case half
             case none
@@ -1511,7 +1537,7 @@ public enum vImage {
         public static var bitCountPerPlanarPixel: Int { 32 }
         public static var planeCount: Int { 4 }
     }
-    public enum ReflectionAxis {
+    public enum ReflectionAxis: Equatable, Hashable {
         case horizontal
         case vertical
     }
@@ -1527,7 +1553,7 @@ public enum vImage {
         case counterClockwise180Degrees
         case counterClockwise270Degrees
     }
-    public enum ShearDirection {
+    public enum ShearDirection: Equatable, Hashable {
         case horizontal
         case vertical
     }
