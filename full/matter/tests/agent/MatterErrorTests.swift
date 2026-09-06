@@ -118,6 +118,8 @@ func testErrorOverlay() {
     mtrRequire((fresh as? MTRError) == nil, "ns is not MTRError")
     let other = MTRError(.invalidArgument, userInfo: [NSLocalizedDescriptionKey: "bad"])
     mtrRequire(err == other, "eq")
+    mtrRequire(err.errorUserInfo[NSLocalizedDescriptionKey] as? String == "bad", "userInfo")
+    mtrRequire(!err.localizedDescription.isEmpty, "desc")
     let im = MTRInteractionError(.unsupportedCluster)
     mtrRequire(im.errorCode == 0xC3, "im code")
     mtrRequire(MTRInteractionError.errorDomain == MTRInteractionErrorDomain, "im domain")
