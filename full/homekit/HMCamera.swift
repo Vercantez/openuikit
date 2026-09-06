@@ -69,6 +69,30 @@ open class HMCameraSettingsControl: HMCameraControl {
     public private(set) var digitalZoom: HMCharacteristic?
     public private(set) var imageRotation: HMCharacteristic?
     public private(set) var imageMirroring: HMCharacteristic?
+
+    public static func host_make(
+        nightVision: HMCharacteristic? = nil,
+        currentHorizontalTilt: HMCharacteristic? = nil,
+        targetHorizontalTilt: HMCharacteristic? = nil,
+        currentVerticalTilt: HMCharacteristic? = nil,
+        targetVerticalTilt: HMCharacteristic? = nil,
+        opticalZoom: HMCharacteristic? = nil,
+        digitalZoom: HMCharacteristic? = nil,
+        imageRotation: HMCharacteristic? = nil,
+        imageMirroring: HMCharacteristic? = nil
+    ) -> HMCameraSettingsControl {
+        let control = HMCameraSettingsControl()
+        control.nightVision = nightVision
+        control.currentHorizontalTilt = currentHorizontalTilt
+        control.targetHorizontalTilt = targetHorizontalTilt
+        control.currentVerticalTilt = currentVerticalTilt
+        control.targetVerticalTilt = targetVerticalTilt
+        control.opticalZoom = opticalZoom
+        control.digitalZoom = digitalZoom
+        control.imageRotation = imageRotation
+        control.imageMirroring = imageMirroring
+        return control
+    }
 }
 
 open class HMCameraAudioControl: HMCameraControl {
@@ -82,6 +106,18 @@ open class HMCameraProfile: HMAccessoryProfile {
     public private(set) var settingsControl: HMCameraSettingsControl?
     public private(set) var speakerControl: HMCameraAudioControl?
     public private(set) var microphoneControl: HMCameraAudioControl?
+
+    public static func host_make(
+        settingsControl: HMCameraSettingsControl? = nil,
+        streamControl: HMCameraStreamControl? = nil,
+        snapshotControl: HMCameraSnapshotControl? = nil
+    ) -> HMCameraProfile {
+        let profile = HMCameraProfile()
+        profile.settingsControl = settingsControl
+        profile.streamControl = streamControl
+        profile.snapshotControl = snapshotControl
+        return profile
+    }
 }
 
 @MainActor
