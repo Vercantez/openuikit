@@ -363,6 +363,7 @@ public struct TCP: StreamProtocol, NWParametersProvider {
 
     public func fastOpenAllowed(_ allowed: Bool) -> TCP {
         parameters.tcpOptions?.enableFastOpen = allowed
+        parameters.allowFastOpen = allowed
         return self
     }
 
