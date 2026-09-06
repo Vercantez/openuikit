@@ -7,6 +7,13 @@ import Foundation
 
 #if !canImport(SwiftUI)
 extension View {
+    func contactsUIApplyingModifier(_ tag: String) -> Self {
+        if let button = self as? ContactAccessButton {
+            return button.applyingLinuxModifier(tag) as! Self
+        }
+        return self
+    }
+
     public func accentColor(_ p0: Any? = nil) -> Self { self }
     public func accessibility(activationPoint p0: Any? = nil) -> Self { self }
     public func accessibility(addTraits p0: Any? = nil) -> Self { self }
@@ -85,8 +92,8 @@ extension View {
     public func alert(item p0: Any? = nil, content p1: Any? = nil) -> Self { self }
     public func alignmentGuide(_ p0: Any? = nil, computeValue p1: Any? = nil) -> Self { self }
     public func allowedDynamicRange(_ p0: Any? = nil) -> Self { self }
-    public func allowsHitTesting(_ p0: Any? = nil) -> Self { self }
-    public func allowsTightening(_ p0: Any? = nil) -> Self { self }
+    public func allowsHitTesting(_ enabled: Bool) -> Self { contactsUIApplyingModifier("allowsHitTesting(\(enabled))") }
+    public func allowsTightening(_ flag: Bool) -> Self { contactsUIApplyingModifier("allowsTightening(\(flag))") }
     public func allowsWindowActivationEvents() -> Self { self }
     public func allowsWindowActivationEvents(_ p0: Any? = nil) -> Self { self }
     public func anchorPreference(key p0: Any? = nil, value p1: Any? = nil, transform p2: Any? = nil) -> Self { self }
@@ -110,25 +117,29 @@ extension View {
     public func backgroundPreferenceValue(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func backgroundPreferenceValue(_ p0: Any? = nil, alignment p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
     public func backgroundStyle(_ p0: Any? = nil) -> Self { self }
-    public func badge(_ p0: Any? = nil) -> Self { self }
+    public func badge(_ count: Int) -> Self { contactsUIApplyingModifier("badge(count:\(count))") }
+    public func badge(_ key: LocalizedStringKey?) -> Self { contactsUIApplyingModifier("badge(key:\(key?.linuxRaw ?? "nil"))") }
+    public func badge(_ label: Text?) -> Self { contactsUIApplyingModifier("badge(text:\(label?.linuxRaw ?? "nil"))") }
+    public func badge(_ resource: LocalizedStringResource?) -> Self { contactsUIApplyingModifier("badge(resource:\(resource?.linuxRaw ?? "nil"))") }
+    public func badge<S: StringProtocol>(_ label: S?) -> Self { contactsUIApplyingModifier("badge(string:\(label.map { String(describing: $0) } ?? "nil"))") }
     public func badgeProminence(_ p0: Any? = nil) -> Self { self }
-    public func baselineOffset(_ p0: Any? = nil) -> Self { self }
+    public func baselineOffset(_ baselineOffset: CGFloat) -> Self { contactsUIApplyingModifier("baselineOffset(\(Double(baselineOffset)))") }
     public func blendMode(_ p0: Any? = nil) -> Self { self }
     public func blur(radius p0: Any? = nil, opaque p1: Any? = nil) -> Self { self }
-    public func bold(_ p0: Any? = nil) -> Self { self }
+    public func bold(_ isActive: Bool = true) -> Self { contactsUIApplyingModifier("bold(\(isActive))") }
     public func border(_ p0: Any? = nil, width p1: Any? = nil) -> Self { self }
-    public func brightness(_ p0: Any? = nil) -> Self { self }
+    public func brightness(_ amount: Double) -> Self { contactsUIApplyingModifier("brightness(\(amount))") }
     public func buttonBorderShape(_ p0: Any? = nil) -> Self { self }
     public func buttonRepeatBehavior(_ p0: Any? = nil) -> Self { self }
     public func buttonSizing(_ p0: Any? = nil) -> Self { self }
     public func buttonStyle(_ p0: Any? = nil) -> Self { self }
     public func clipShape(_ p0: Any? = nil, style p1: Any? = nil) -> Self { self }
-    public func clipped(antialiased p0: Any? = nil) -> Self { self }
+    public func clipped(antialiased: Bool = false) -> Self { contactsUIApplyingModifier("clipped(antialiased:\(antialiased))") }
     public func colorEffect(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
-    public func colorInvert() -> Self { self }
+    public func colorInvert() -> Self { contactsUIApplyingModifier("colorInvert()") }
     public func colorMultiply(_ p0: Any? = nil) -> Self { self }
     public func colorScheme(_ p0: Any? = nil) -> Self { self }
-    public func compositingGroup() -> Self { self }
+    public func compositingGroup() -> Self { contactsUIApplyingModifier("compositingGroup()") }
     public func confirmationDialog(_ p0: Any? = nil, isPresented p1: Any? = nil, titleVisibility p2: Any? = nil, actions p3: Any? = nil) -> Self { self }
     public func confirmationDialog(_ p0: Any? = nil, isPresented p1: Any? = nil, titleVisibility p2: Any? = nil, actions p3: Any? = nil, message p4: Any? = nil) -> Self { self }
     public func confirmationDialog(_ p0: Any? = nil, isPresented p1: Any? = nil, titleVisibility p2: Any? = nil, presenting p3: Any? = nil, actions p4: Any? = nil) -> Self { self }
@@ -151,7 +162,7 @@ extension View {
     public func contextMenu(forSelectionType p0: Any? = nil, menu p1: Any? = nil, primaryAction p2: Any? = nil) -> Self { self }
     public func contextMenu(menuItems p0: Any? = nil) -> Self { self }
     public func contextMenu(menuItems p0: Any? = nil, preview p1: Any? = nil) -> Self { self }
-    public func contrast(_ p0: Any? = nil) -> Self { self }
+    public func contrast(_ amount: Double) -> Self { contactsUIApplyingModifier("contrast(\(amount))") }
     public func controlGroupStyle(_ p0: Any? = nil) -> Self { self }
     public func controlSize(_ p0: Any? = nil) -> Self { self }
     public func coordinateSpace(_ p0: Any? = nil) -> Self { self }
@@ -159,18 +170,18 @@ extension View {
     public func cornerRadius(_ p0: Any? = nil, antialiased p1: Any? = nil) -> Self { self }
     public func datePickerStyle(_ p0: Any? = nil) -> Self { self }
     public func defaultAdaptableTabBarPlacement(_ p0: Any? = nil) -> Self { self }
-    public func defaultAppStorage(_ p0: Any? = nil) -> Self { self }
+    public func defaultAppStorage(_ store: UserDefaults) -> Self { contactsUIApplyingModifier("defaultAppStorage") }
     public func defaultFocus(_ p0: Any? = nil, _ p1: Any? = nil, priority p2: Any? = nil) -> Self { self }
     public func defaultHoverEffect(_ p0: Any? = nil) -> Self { self }
     public func defaultScrollAnchor(_ p0: Any? = nil) -> Self { self }
     public func defaultScrollAnchor(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
     public func defersSystemGestures(on p0: Any? = nil) -> Self { self }
-    public func deleteDisabled(_ p0: Any? = nil) -> Self { self }
+    public func deleteDisabled(_ isDisabled: Bool) -> Self { contactsUIApplyingModifier("deleteDisabled(\(isDisabled))") }
     public func dialogIcon(_ p0: Any? = nil) -> Self { self }
     public func dialogSuppressionToggle(_ p0: Any? = nil, isSuppressed p1: Any? = nil) -> Self { self }
     public func dialogSuppressionToggle(isSuppressed p0: Any? = nil) -> Self { self }
-    public func disableAutocorrection(_ p0: Any? = nil) -> Self { self }
-    public func disabled(_ p0: Any? = nil) -> Self { self }
+    public func disableAutocorrection(_ disable: Bool?) -> Self { contactsUIApplyingModifier("disableAutocorrection(\(disable.map { String(describing: $0) } ?? "nil"))") }
+    public func disabled(_ disabled: Bool) -> Self { contactsUIApplyingModifier("disabled(\(disabled))") }
     public func disclosureGroupStyle(_ p0: Any? = nil) -> Self { self }
     public func distortionEffect(_ p0: Any? = nil, maxSampleOffset p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
     public func documentBrowserContextMenu(_ p0: Any? = nil) -> Self { self }
@@ -205,14 +216,14 @@ extension View {
     public func fileMover(isPresented p0: Any? = nil, file p1: Any? = nil, onCompletion p2: Any? = nil, onCancellation p3: Any? = nil) -> Self { self }
     public func fileMover(isPresented p0: Any? = nil, files p1: Any? = nil, onCompletion p2: Any? = nil) -> Self { self }
     public func fileMover(isPresented p0: Any? = nil, files p1: Any? = nil, onCompletion p2: Any? = nil, onCancellation p3: Any? = nil) -> Self { self }
-    public func findDisabled(_ p0: Any? = nil) -> Self { self }
+    public func findDisabled(_ isDisabled: Bool = true) -> Self { contactsUIApplyingModifier("findDisabled(\(isDisabled))") }
     public func findNavigator(isPresented p0: Any? = nil) -> Self { self }
-    public func fixedSize() -> Self { self }
-    public func fixedSize(horizontal p0: Any? = nil, vertical p1: Any? = nil) -> Self { self }
+    public func fixedSize() -> Self { contactsUIApplyingModifier("fixedSize()") }
+    public func fixedSize(horizontal: Bool, vertical: Bool) -> Self { contactsUIApplyingModifier("fixedSize(horizontal:\(horizontal),vertical:\(vertical))") }
     public func flipsForRightToLeftLayoutDirection(_ p0: Any? = nil) -> Self { self }
     public func focusEffectDisabled(_ p0: Any? = nil) -> Self { self }
-    public func focusable(_ p0: Any? = nil) -> Self { self }
-    public func focusable(_ p0: Any? = nil, interactions p1: Any? = nil) -> Self { self }
+    public func focusable(_ isFocusable: Bool = true) -> Self { contactsUIApplyingModifier("focusable(\(isFocusable))") }
+    public func focusable(_ isFocusable: Bool = true, interactions: FocusInteractions) -> Self { contactsUIApplyingModifier("focusable(interactions:automatic)") }
     public func focused(_ p0: Any? = nil) -> Self { self }
     public func focused(_ p0: Any? = nil, equals p1: Any? = nil) -> Self { self }
     public func focusedObject(_ p0: Any? = nil) -> Self { self }
@@ -230,13 +241,21 @@ extension View {
     public func foregroundStyle(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func foregroundStyle(_ p0: Any? = nil, _ p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
     public func formStyle(_ p0: Any? = nil) -> Self { self }
-    public func frame() -> Self { self }
-    public func frame(minWidth p0: Any? = nil, idealWidth p1: Any? = nil, maxWidth p2: Any? = nil, minHeight p3: Any? = nil, idealHeight p4: Any? = nil, maxHeight p5: Any? = nil, alignment p6: Any? = nil) -> Self { self }
-    public func frame(width p0: Any? = nil, height p1: Any? = nil, alignment p2: Any? = nil) -> Self { self }
+    public func frame() -> Self { contactsUIApplyingModifier("frame()") }
+    public func frame(minWidth: CGFloat? = nil, idealWidth: CGFloat? = nil, maxWidth: CGFloat? = nil, minHeight: CGFloat? = nil, idealHeight: CGFloat? = nil, maxHeight: CGFloat? = nil, alignment: Alignment = .center) -> Self {
+        func fmt(_ value: CGFloat?) -> String { value.map { String(Double($0)) } ?? "nil" }
+        return contactsUIApplyingModifier(
+            "frame(minIdealMax:\(fmt(minWidth)),\(fmt(idealWidth)),\(fmt(maxWidth)),\(fmt(minHeight)),\(fmt(idealHeight)),\(fmt(maxHeight)))"
+        )
+    }
+    public func frame(width: CGFloat? = nil, height: CGFloat? = nil, alignment: Alignment = .center) -> Self {
+        func fmt(_ value: CGFloat?) -> String { value.map { String(Double($0)) } ?? "nil" }
+        return contactsUIApplyingModifier("frame(width:\(fmt(width)),height:\(fmt(height)))")
+    }
     public func fullScreenCover(isPresented p0: Any? = nil, onDismiss p1: Any? = nil, content p2: Any? = nil) -> Self { self }
     public func fullScreenCover(item p0: Any? = nil, onDismiss p1: Any? = nil, content p2: Any? = nil) -> Self { self }
     public func gaugeStyle(_ p0: Any? = nil) -> Self { self }
-    public func geometryGroup() -> Self { self }
+    public func geometryGroup() -> Self { contactsUIApplyingModifier("geometryGroup()") }
     public func gesture(_ p0: Any? = nil) -> Self { self }
     public func gesture(_ p0: Any? = nil, including p1: Any? = nil) -> Self { self }
     public func gesture(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
@@ -245,9 +264,9 @@ extension View {
     public func glassEffectID(_ p0: Any? = nil, `in` p1: Any? = nil) -> Self { self }
     public func glassEffectTransition(_ p0: Any? = nil) -> Self { self }
     public func glassEffectUnion(id p0: Any? = nil, namespace p1: Any? = nil) -> Self { self }
-    public func grayscale(_ p0: Any? = nil) -> Self { self }
+    public func grayscale(_ amount: Double) -> Self { contactsUIApplyingModifier("grayscale(\(amount))") }
     public func gridCellAnchor(_ p0: Any? = nil) -> Self { self }
-    public func gridCellColumns(_ p0: Any? = nil) -> Self { self }
+    public func gridCellColumns(_ count: Int) -> Self { contactsUIApplyingModifier("gridCellColumns(\(count))") }
     public func gridCellUnsizedAxes(_ p0: Any? = nil) -> Self { self }
     public func gridColumnAlignment(_ p0: Any? = nil) -> Self { self }
     public func groupBoxStyle(_ p0: Any? = nil) -> Self { self }
@@ -255,7 +274,7 @@ extension View {
     public func handlesExternalEvents(preferring p0: Any? = nil, allowing p1: Any? = nil) -> Self { self }
     public func headerProminence(_ p0: Any? = nil) -> Self { self }
     public func help(_ p0: Any? = nil) -> Self { self }
-    public func hidden() -> Self { self }
+    public func hidden() -> Self { contactsUIApplyingModifier("hidden()") }
     public func highPriorityGesture(_ p0: Any? = nil, including p1: Any? = nil) -> Self { self }
     public func highPriorityGesture(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
     public func highPriorityGesture(_ p0: Any? = nil, name p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
@@ -273,43 +292,47 @@ extension View {
     public func interactionActivityTrackingTag(_ p0: Any? = nil) -> Self { self }
     public func interactiveDismissDisabled(_ p0: Any? = nil) -> Self { self }
     public func invalidatableContent(_ p0: Any? = nil) -> Self { self }
-    public func italic(_ p0: Any? = nil) -> Self { self }
+    public func italic(_ isActive: Bool = true) -> Self { contactsUIApplyingModifier("italic(\(isActive))") }
     public func itemProvider(_ p0: Any? = nil) -> Self { self }
-    public func kerning(_ p0: Any? = nil) -> Self { self }
+    public func kerning(_ kerning: CGFloat) -> Self { contactsUIApplyingModifier("kerning(\(Double(kerning)))") }
     public func keyboardShortcut(_ p0: Any? = nil) -> Self { self }
     public func keyboardShortcut(_ p0: Any? = nil, modifiers p1: Any? = nil) -> Self { self }
     public func keyboardShortcut(_ p0: Any? = nil, modifiers p1: Any? = nil, localization p2: Any? = nil) -> Self { self }
     public func keyboardType(_ p0: Any? = nil) -> Self { self }
     public func keyframeAnimator(initialValue p0: Any? = nil, repeating p1: Any? = nil, content p2: Any? = nil, keyframes p3: Any? = nil) -> Self { self }
     public func keyframeAnimator(initialValue p0: Any? = nil, trigger p1: Any? = nil, content p2: Any? = nil, keyframes p3: Any? = nil) -> Self { self }
-    public func labelIconToTitleSpacing(_ p0: Any? = nil) -> Self { self }
-    public func labelReservedIconWidth(_ p0: Any? = nil) -> Self { self }
+    public func labelIconToTitleSpacing(_ value: CGFloat) -> Self { contactsUIApplyingModifier("labelIconToTitleSpacing(\(Double(value)))") }
+    public func labelReservedIconWidth(_ value: CGFloat) -> Self { contactsUIApplyingModifier("labelReservedIconWidth(\(Double(value)))") }
     public func labelStyle(_ p0: Any? = nil) -> Self { self }
     public func labeledContentStyle(_ p0: Any? = nil) -> Self { self }
-    public func labelsHidden() -> Self { self }
+    public func labelsHidden() -> Self { contactsUIApplyingModifier("labelsHidden()") }
     public func labelsVisibility(_ p0: Any? = nil) -> Self { self }
     public func layerEffect(_ p0: Any? = nil, maxSampleOffset p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
     public func layoutDirectionBehavior(_ p0: Any? = nil) -> Self { self }
-    public func layoutPriority(_ p0: Any? = nil) -> Self { self }
+    public func layoutPriority(_ value: Double) -> Self { contactsUIApplyingModifier("layoutPriority(\(value))") }
     public func layoutValue(key p0: Any? = nil, value p1: Any? = nil) -> Self { self }
     public func lineHeight(_ p0: Any? = nil) -> Self { self }
-    public func lineLimit(_ p0: Any? = nil) -> Self { self }
-    public func lineLimit(_ p0: Any? = nil, reservesSpace p1: Any? = nil) -> Self { self }
-    public func lineSpacing(_ p0: Any? = nil) -> Self { self }
+    public func lineLimit(_ number: Int?) -> Self { contactsUIApplyingModifier("lineLimit(optional:\(number.map(String.init) ?? "nil"))") }
+    public func lineLimit(_ limit: ClosedRange<Int>) -> Self { contactsUIApplyingModifier("lineLimit(closed:\(limit.lowerBound)...\(limit.upperBound))") }
+    public func lineLimit(_ limit: PartialRangeFrom<Int>) -> Self { contactsUIApplyingModifier("lineLimit(from:\(limit.lowerBound))") }
+    public func lineLimit(_ limit: PartialRangeThrough<Int>) -> Self { contactsUIApplyingModifier("lineLimit(through:\(limit.upperBound))") }
+    public func lineLimit(_ limit: Int, reservesSpace: Bool) -> Self { contactsUIApplyingModifier("lineLimit(\(limit),reservesSpace:\(reservesSpace))") }
+    public func lineSpacing(_ lineSpacing: CGFloat) -> Self { contactsUIApplyingModifier("lineSpacing(\(Double(lineSpacing)))") }
     public func listItemTint(_ p0: Any? = nil) -> Self { self }
     public func listRowBackground(_ p0: Any? = nil) -> Self { self }
     public func listRowInsets(_ p0: Any? = nil) -> Self { self }
     public func listRowInsets(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func listRowSeparator(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
     public func listRowSeparatorTint(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
-    public func listRowSpacing(_ p0: Any? = nil) -> Self { self }
+    public func listRowSpacing(_ spacing: CGFloat?) -> Self { contactsUIApplyingModifier("listRowSpacing(\(spacing.map { String(Double($0)) } ?? "nil"))") }
     public func listSectionIndexVisibility(_ p0: Any? = nil) -> Self { self }
     public func listSectionMargins(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func listSectionSeparator(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
     public func listSectionSeparatorTint(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
-    public func listSectionSpacing(_ p0: Any? = nil) -> Self { self }
+    public func listSectionSpacing(_ spacing: CGFloat) -> Self { contactsUIApplyingModifier("listSectionSpacing(length:\(Double(spacing)))") }
+    public func listSectionSpacing(_ spacing: ListSectionSpacing) -> Self { contactsUIApplyingModifier("listSectionSpacing(token:default)") }
     public func listStyle(_ p0: Any? = nil) -> Self { self }
-    public func luminanceToAlpha() -> Self { self }
+    public func luminanceToAlpha() -> Self { contactsUIApplyingModifier("luminanceToAlpha()") }
     public func mask(_ p0: Any? = nil) -> Self { self }
     public func mask(alignment p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func matchedGeometryEffect(id p0: Any? = nil, `in` p1: Any? = nil, properties p2: Any? = nil, anchor p3: Any? = nil, isSource p4: Any? = nil) -> Self { self }
@@ -320,15 +343,15 @@ extension View {
     public func menuIndicator(_ p0: Any? = nil) -> Self { self }
     public func menuOrder(_ p0: Any? = nil) -> Self { self }
     public func menuStyle(_ p0: Any? = nil) -> Self { self }
-    public func minimumScaleFactor(_ p0: Any? = nil) -> Self { self }
+    public func minimumScaleFactor(_ factor: CGFloat) -> Self { contactsUIApplyingModifier("minimumScaleFactor(\(Double(factor)))") }
     public func modifier(_ p0: Any? = nil) -> Self { self }
-    public func monospaced(_ p0: Any? = nil) -> Self { self }
-    public func monospacedDigit() -> Self { self }
-    public func moveDisabled(_ p0: Any? = nil) -> Self { self }
+    public func monospaced(_ isActive: Bool = true) -> Self { contactsUIApplyingModifier("monospaced(\(isActive))") }
+    public func monospacedDigit() -> Self { contactsUIApplyingModifier("monospacedDigit()") }
+    public func moveDisabled(_ isDisabled: Bool) -> Self { contactsUIApplyingModifier("moveDisabled(\(isDisabled))") }
     public func multilineTextAlignment(_ p0: Any? = nil) -> Self { self }
     public func multilineTextAlignment(strategy p0: Any? = nil) -> Self { self }
     public func navigationBarBackButtonHidden(_ p0: Any? = nil) -> Self { self }
-    public func navigationBarHidden(_ p0: Any? = nil) -> Self { self }
+    public func navigationBarHidden(_ hidden: Bool) -> Self { contactsUIApplyingModifier("navigationBarHidden(\(hidden))") }
     public func navigationBarItems(leading p0: Any? = nil) -> Self { self }
     public func navigationBarItems(leading p0: Any? = nil, trailing p1: Any? = nil) -> Self { self }
     public func navigationBarItems(trailing p0: Any? = nil) -> Self { self }
@@ -338,8 +361,16 @@ extension View {
     public func navigationDestination(`for` p0: Any? = nil, destination p1: Any? = nil) -> Self { self }
     public func navigationDestination(isPresented p0: Any? = nil, destination p1: Any? = nil) -> Self { self }
     public func navigationDestination(item p0: Any? = nil, destination p1: Any? = nil) -> Self { self }
-    public func navigationDocument(_ p0: Any? = nil) -> Self { self }
-    public func navigationDocument(_ p0: Any? = nil, preview p1: Any? = nil) -> Self { self }
+    public func navigationDocument(_ url: URL) -> Self { contactsUIApplyingModifier("navigationDocument(url:\(url.absoluteString))") }
+    public func navigationDocument<D: Transferable>(_ document: D) -> Self { contactsUIApplyingModifier("navigationDocument(transferable:\(String(describing: document)))") }
+    public func navigationDocument<D: Transferable, Icon, Label>(
+        _ document: D,
+        preview: SharePreview<Icon, Label>
+    ) -> Self {
+        contactsUIApplyingModifier(
+            "navigationDocument(preview:\(String(describing: Icon.self)),\(String(describing: Label.self)))"
+        )
+    }
     public func navigationLinkIndicatorVisibility(_ p0: Any? = nil) -> Self { self }
     public func navigationSplitViewColumnWidth(_ p0: Any? = nil) -> Self { self }
     public func navigationSplitViewColumnWidth(min p0: Any? = nil, ideal p1: Any? = nil, max p2: Any? = nil) -> Self { self }
@@ -348,8 +379,8 @@ extension View {
     public func navigationTitle(_ p0: Any? = nil) -> Self { self }
     public func navigationTransition(_ p0: Any? = nil) -> Self { self }
     public func navigationViewStyle(_ p0: Any? = nil) -> Self { self }
-    public func offset(_ p0: Any? = nil) -> Self { self }
-    public func offset(x p0: Any? = nil, y p1: Any? = nil) -> Self { self }
+    public func offset(_ offset: CGSize) -> Self { contactsUIApplyingModifier("offset(size:\(Double(offset.width))x\(Double(offset.height)))") }
+    public func offset(x: CGFloat = 0, y: CGFloat = 0) -> Self { contactsUIApplyingModifier("offset(x:\(Double(x)),y:\(Double(y)))") }
     public func onAppear(perform p0: Any? = nil) -> Self { self }
     public func onChange(of p0: Any? = nil, initial p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
     public func onChange(of p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
@@ -385,15 +416,16 @@ extension View {
     public func onSubmit(of p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func onTapGesture(count p0: Any? = nil, coordinateSpace p1: Any? = nil, perform p2: Any? = nil) -> Self { self }
     public func onTapGesture(count p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
-    public func opacity(_ p0: Any? = nil) -> Self { self }
+    public func opacity(_ opacity: Double) -> Self { contactsUIApplyingModifier("opacity(\(opacity))") }
     public func overlay(_ p0: Any? = nil, `in` p1: Any? = nil, fillStyle p2: Any? = nil) -> Self { self }
     public func overlay(_ p0: Any? = nil, alignment p1: Any? = nil) -> Self { self }
     public func overlay(_ p0: Any? = nil, ignoresSafeAreaEdges p1: Any? = nil) -> Self { self }
     public func overlay(alignment p0: Any? = nil, content p1: Any? = nil) -> Self { self }
     public func overlayPreferenceValue(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
     public func overlayPreferenceValue(_ p0: Any? = nil, alignment p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
-    public func padding(_ p0: Any? = nil) -> Self { self }
-    public func padding(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func padding(_ length: CGFloat) -> Self { contactsUIApplyingModifier("padding(length:\(Double(length)))") }
+    public func padding(_ insets: EdgeInsets) -> Self { contactsUIApplyingModifier("padding(insets:\(Double(insets.top)),\(Double(insets.leading)),\(Double(insets.bottom)),\(Double(insets.trailing)))") }
+    public func padding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> Self { contactsUIApplyingModifier("padding(edges:\(edges.rawValue),\(length.map { String(Double($0)) } ?? "nil"))") }
     public func paletteSelectionEffect(_ p0: Any? = nil) -> Self { self }
     public func persistentSystemOverlays(_ p0: Any? = nil) -> Self { self }
     public func phaseAnimator(_ p0: Any? = nil, content p1: Any? = nil, animation p2: Any? = nil) -> Self { self }
@@ -421,30 +453,31 @@ extension View {
     public func previewDisplayName(_ p0: Any? = nil) -> Self { self }
     public func previewInterfaceOrientation(_ p0: Any? = nil) -> Self { self }
     public func previewLayout(_ p0: Any? = nil) -> Self { self }
-    public func privacySensitive(_ p0: Any? = nil) -> Self { self }
+    public func privacySensitive(_ sensitive: Bool = true) -> Self { contactsUIApplyingModifier("privacySensitive(\(sensitive))") }
     public func progressViewStyle(_ p0: Any? = nil) -> Self { self }
     public func projectionEffect(_ p0: Any? = nil) -> Self { self }
     public func redacted(reason p0: Any? = nil) -> Self { self }
     public func refreshable(action p0: Any? = nil) -> Self { self }
     public func renameAction(_ p0: Any? = nil) -> Self { self }
-    public func replaceDisabled(_ p0: Any? = nil) -> Self { self }
+    public func replaceDisabled(_ isDisabled: Bool = true) -> Self { contactsUIApplyingModifier("replaceDisabled(\(isDisabled))") }
     public func rotation3DEffect(_ p0: Any? = nil, axis p1: Any? = nil, anchor p2: Any? = nil, anchorZ p3: Any? = nil, perspective p4: Any? = nil) -> Self { self }
     public func rotationEffect(_ p0: Any? = nil, anchor p1: Any? = nil) -> Self { self }
     public func safeAreaBar(edge p0: Any? = nil, alignment p1: Any? = nil, spacing p2: Any? = nil, content p3: Any? = nil) -> Self { self }
     public func safeAreaInset(edge p0: Any? = nil, alignment p1: Any? = nil, spacing p2: Any? = nil, content p3: Any? = nil) -> Self { self }
-    public func safeAreaPadding(_ p0: Any? = nil) -> Self { self }
-    public func safeAreaPadding(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
-    public func saturation(_ p0: Any? = nil) -> Self { self }
+    public func safeAreaPadding(_ length: CGFloat) -> Self { contactsUIApplyingModifier("safeAreaPadding(length:\(Double(length)))") }
+    public func safeAreaPadding(_ insets: EdgeInsets) -> Self { contactsUIApplyingModifier("safeAreaPadding(insets:\(Double(insets.top)),\(Double(insets.leading)),\(Double(insets.bottom)),\(Double(insets.trailing)))") }
+    public func safeAreaPadding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> Self { contactsUIApplyingModifier("safeAreaPadding(edges:\(edges.rawValue),\(length.map { String(Double($0)) } ?? "nil"))") }
+    public func saturation(_ amount: Double) -> Self { contactsUIApplyingModifier("saturation(\(amount))") }
     public func scaleEffect(_ p0: Any? = nil, anchor p1: Any? = nil) -> Self { self }
     public func scaleEffect(x p0: Any? = nil, y p1: Any? = nil, anchor p2: Any? = nil) -> Self { self }
-    public func scaledToFill() -> Self { self }
-    public func scaledToFit() -> Self { self }
+    public func scaledToFill() -> Self { contactsUIApplyingModifier("scaledToFill()") }
+    public func scaledToFit() -> Self { contactsUIApplyingModifier("scaledToFit()") }
     public func scenePadding(_ p0: Any? = nil) -> Self { self }
     public func scenePadding(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
     public func scrollBounceBehavior(_ p0: Any? = nil, axes p1: Any? = nil) -> Self { self }
     public func scrollClipDisabled(_ p0: Any? = nil) -> Self { self }
     public func scrollContentBackground(_ p0: Any? = nil) -> Self { self }
-    public func scrollDisabled(_ p0: Any? = nil) -> Self { self }
+    public func scrollDisabled(_ disabled: Bool) -> Self { contactsUIApplyingModifier("scrollDisabled(\(disabled))") }
     public func scrollDismissesKeyboard(_ p0: Any? = nil) -> Self { self }
     public func scrollEdgeEffectHidden(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
     public func scrollEdgeEffectStyle(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
@@ -480,7 +513,7 @@ extension View {
     public func searchable(text p0: Any? = nil, tokens p1: Any? = nil, suggestedTokens p2: Any? = nil, placement p3: Any? = nil, prompt p4: Any? = nil, token p5: Any? = nil) -> Self { self }
     public func sectionActions(content p0: Any? = nil) -> Self { self }
     public func sectionIndexLabel(_ p0: Any? = nil) -> Self { self }
-    public func selectionDisabled(_ p0: Any? = nil) -> Self { self }
+    public func selectionDisabled(_ isDisabled: Bool = true) -> Self { contactsUIApplyingModifier("selectionDisabled(\(isDisabled))") }
     public func sensoryFeedback(_ p0: Any? = nil, trigger p1: Any? = nil) -> Self { self }
     public func sensoryFeedback(_ p0: Any? = nil, trigger p1: Any? = nil, condition p2: Any? = nil) -> Self { self }
     public func sensoryFeedback(trigger p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
@@ -497,10 +530,10 @@ extension View {
     public func speechSpellsOutCharacters(_ p0: Any? = nil) -> Self { self }
     public func springLoadingBehavior(_ p0: Any? = nil) -> Self { self }
     public func statusBar(hidden p0: Any? = nil) -> Self { self }
-    public func statusBarHidden(_ p0: Any? = nil) -> Self { self }
+    public func statusBarHidden(_ hidden: Bool = true) -> Self { contactsUIApplyingModifier("statusBarHidden(\(hidden))") }
     public func strikethrough(_ p0: Any? = nil, pattern p1: Any? = nil, color p2: Any? = nil) -> Self { self }
     public func submitLabel(_ p0: Any? = nil) -> Self { self }
-    public func submitScope(_ p0: Any? = nil) -> Self { self }
+    public func submitScope(_ isBlocking: Bool = true) -> Self { contactsUIApplyingModifier("submitScope(\(isBlocking))") }
     public func swipeActions(edge p0: Any? = nil, allowsFullSwipe p1: Any? = nil, content p2: Any? = nil) -> Self { self }
     public func symbolColorRenderingMode(_ p0: Any? = nil) -> Self { self }
     public func symbolEffect(_ p0: Any? = nil, options p1: Any? = nil, isActive p2: Any? = nil) -> Self { self }
@@ -548,7 +581,7 @@ extension View {
     public func toolbarTitleDisplayMode(_ p0: Any? = nil) -> Self { self }
     public func toolbarTitleMenu(content p0: Any? = nil) -> Self { self }
     public func toolbarVisibility(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
-    public func tracking(_ p0: Any? = nil) -> Self { self }
+    public func tracking(_ tracking: CGFloat) -> Self { contactsUIApplyingModifier("tracking(\(Double(tracking)))") }
     public func transaction(_ p0: Any? = nil) -> Self { self }
     public func transaction(_ p0: Any? = nil, body p1: Any? = nil) -> Self { self }
     public func transaction(value p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
@@ -561,7 +594,7 @@ extension View {
     public func typeSelectEquivalent(_ p0: Any? = nil) -> Self { self }
     public func typesettingLanguage(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
     public func underline(_ p0: Any? = nil, pattern p1: Any? = nil, color p2: Any? = nil) -> Self { self }
-    public func unredacted() -> Self { self }
+    public func unredacted() -> Self { contactsUIApplyingModifier("unredacted()") }
     public func userActivity(_ p0: Any? = nil, element p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
     public func userActivity(_ p0: Any? = nil, isActive p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
     public func visualEffect(_ p0: Any? = nil) -> Self { self }
@@ -569,7 +602,7 @@ extension View {
     public func writingDirection(strategy p0: Any? = nil) -> Self { self }
     public func writingToolsAffordanceVisibility(_ p0: Any? = nil) -> Self { self }
     public func writingToolsBehavior(_ p0: Any? = nil) -> Self { self }
-    public func zIndex(_ p0: Any? = nil) -> Self { self }
+    public func zIndex(_ value: Double) -> Self { contactsUIApplyingModifier("zIndex(\(value))") }
 }
 
 extension ContactAccessButton {

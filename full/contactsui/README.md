@@ -20,18 +20,24 @@ as `implemented` only where a focused test exercises that identifier, and
 reclassifies the rest to `declared`.
 
 Coverage after the ledger repair: **58 implemented / 768 declared / 21 deferred / 847 total**
-(826 nondeferred, floor 85). 21 TipKit/AppIntents synthesized members stay
-deferred. No non-enum test is cited by more than 2 implemented rows (3.4%).
+(826 nondeferred, floor 85).
 
-Top-5 implemented evidence:
+Coverage after this repair (per-identifier modifier recording): **136 implemented / 0 declared / 21 deferred / 0 unavailable / 690 not-applicable**
+(136 nondeferred, floor 85). 78 walked `View` modifiers now record their
+arguments on `ContactAccessButton` and each cites its own
+`ContactsUIViewModifierTests.swift#testModifier…` function. 690 remaining
+`s:7SwiftUI4ViewPAAE…` rows stay `not-applicable` (`SwiftUI cross-import overlay; owned by the SwiftUI lane`). 21 TipKit/AppIntents members stay deferred.
+
+Top-5 implemented evidence (136 implemented rows; enum members share one
+table-driven test; no other test exceeds 40% of the remaining 126 rows):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 10 | 17.2% | `ContactsUICaptionTests.swift#testCaptionCases` (table-driven Caption enum / raw values / Equatable / Hashable) |
-| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
-| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
-| 2 | 3.4% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
-| 1 | 1.7% | 42 other focused tests, one identifier each (e.g. `ContactsUIOverlayTests.swift#testMutableContactId`) |
+| 10 | 7.4% | `ContactsUICaptionTests.swift#testCaptionCases` (table-driven Caption enum / raw values / Equatable / Hashable) |
+| 2 | 1.5% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
+| 2 | 1.5% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
+| 2 | 1.5% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
+| 1 | 0.7% | 120 other focused tests, one identifier each (picker/editor families plus 78 modifier tests) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -64,25 +70,24 @@ stay deferred. The campaign brief estimated ~150 SwiftUI overlay
 re-exports; the pinned graph has 768 `View` PAAE members plus 21
 TipKit/AppIntents members.
 
-Coverage before this family-by-family depth continuation (`0b654805`): **58 implemented / 78 declared / 21 deferred / 0 unavailable / 690 not-applicable**.
+Coverage before this family-by-family depth continuation (`8a9b09d0`): **58 implemented / 78 declared / 21 deferred / 0 unavailable / 690 not-applicable**.
 
-Coverage after this continuation: **58 implemented / 78 declared / 21 deferred / 0 unavailable / 690 not-applicable**
-(136 nondeferred, floor 85). Implemented cannot rise: the pinned Swift
-public surface has 58 ownable ContactsUI identifiers. The remaining 789
-rows are SwiftUI.View PAAE identity modifiers plus TipKit/AppIntents.
-Promoting PAAE to `implemented` is refused. Dropping the 78 declared
-rows to N/A would put nondeferred at 58, below floor 85.
+Coverage after this continuation: **136 implemented / 0 declared / 21 deferred / 0 unavailable / 690 not-applicable**
+(136 nondeferred, floor 85). The 78 walked `View` modifiers now record their
+arguments on `ContactAccessButton`; each identifier has its own synchronous
+`testModifier…` function. 690 remaining SwiftUI.View PAAE members stay
+`not-applicable`. 21 TipKit/AppIntents members stay deferred.
 
 Top-5 implemented evidence (enum members share one table-driven
-test; no other single test exceeds 40% of the remaining 48 implemented rows):
+test; no other single test exceeds 40% of the remaining 126 implemented rows):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 10 | 17.2% | `ContactsUICaptionTests.swift#testCaptionCases` (table-driven Caption enum / raw values / Equatable / Hashable) |
-| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
-| 2 | 3.4% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
-| 2 | 3.4% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
-| 1 | 1.7% | 42 other focused tests, one identifier each (e.g. `ContactsUIPickerTests.swift#testPickerDidSelectContact`) |
+| 10 | 7.4% | `ContactsUICaptionTests.swift#testCaptionCases` (table-driven Caption enum / raw values / Equatable / Hashable) |
+| 2 | 1.5% | `ContactsUIAccessButtonTests.swift#testAccessButtonInit` |
+| 2 | 1.5% | `ContactsUIAccessButtonTests.swift#testAccessButtonBody` |
+| 2 | 1.5% | `ContactsUIStyleTests.swift#testStyleAutomatic` |
+| 1 | 0.7% | 120 other focused tests, one identifier each (e.g. `ContactsUIPickerTests.swift#testPickerDidSelectContact`) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -169,11 +174,11 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
   identifiers).
 - `UIApplicationShortcutIcon(contact:)` on the UIKit lookalike stores the
   contact identifier. It does not produce Apple shortcut artwork.
-- Linux identity `View` modifiers on `ContactAccessButton` compile as `Self`
-  no-ops (`ContactsUIViewSurface.swift`). Synthesized SwiftUI.View PAAE
-  members are **not-applicable** (owned by the SwiftUI lane) except the 78
-  walked by `linuxExerciseIdentityModifiers()`, which stay **declared**.
-  None of those rows are `implemented`.
+- Linux identity `View` modifiers on `ContactAccessButton` compile as
+  argument-recording lookalikes (`ContactsUIViewSurface.swift`). The 78
+  walked modifiers are `implemented` with per-identifier tests. Remaining
+  synthesized SwiftUI.View PAAE members are **not-applicable** (owned by
+  the SwiftUI lane). None of those remaining overlay rows are `implemented`.
 
 ### Fail-closed boundaries
 
