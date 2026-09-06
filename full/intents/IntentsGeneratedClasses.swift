@@ -321,7 +321,7 @@ open class INBillTypeResolutionResult: INIntentResolutionResult, @unchecked Send
 open class INBoatReservation: INReservation, @unchecked Sendable {
     open var boatTrip: INBoatTrip? = nil
     open var reservedSeat: INSeat? = nil
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, boatTrip: INBoatTrip?) {
         self.init()
         inLinuxApplyReservation(
@@ -420,7 +420,7 @@ open class INBookRestaurantReservationIntentResponse: INIntentResponse, @uncheck
 open class INBusReservation: INReservation, @unchecked Sendable {
     open var busTrip: INBusTrip?
     open var reservedSeat: INSeat? = nil
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, busTrip: INBusTrip?) {
         self.init()
         inLinuxApplyReservation(
@@ -1086,7 +1086,7 @@ open class INFlight: NSObject, @unchecked Sendable {
 open class INFlightReservation: INReservation, @unchecked Sendable {
     open var flight: INFlight?
     open var reservedSeat: INSeat? = nil
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, flight: INFlight) {
         self.init()
         inLinuxApplyReservation(
@@ -2314,7 +2314,7 @@ open class INRentalCar: NSObject, @unchecked Sendable {
 open class INRentalCarReservation: INReservation, @unchecked Sendable {
     open var rentalCar: INRentalCar?
     open var rentalDuration: INDateComponentsRange?
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(
         itemReference: INSpeakableString,
         reservationNumber: String?,
@@ -3180,7 +3180,7 @@ open class INSendMessageIntentDonationMetadata: INIntentDonationMetadata, @unche
     open var notifyRecipientAnyway: Bool = false
     open var recipientCount: Int = 0
     open var isReplyToCurrentUser: Bool = false
-    public required override init() { super.init() }
+    public required init() { super.init() }
 }
 
 open class INSendMessageIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -4091,7 +4091,7 @@ open class INTicketedEvent: NSObject, @unchecked Sendable {
 open class INTicketedEventReservation: INReservation, @unchecked Sendable {
     open var event: INTicketedEvent?
     open var reservedSeat: INSeat? = nil
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, event: INTicketedEvent) {
         self.init()
         inLinuxApplyReservation(
@@ -4145,7 +4145,7 @@ open class INTimeIntervalResolutionResult: INIntentResolutionResult, @unchecked 
 open class INTrainReservation: INReservation, @unchecked Sendable {
     open var reservedSeat: INSeat? = nil
     open var trainTrip: INTrainTrip?
-    public required override init() { super.init() }
+    public required init() { super.init() }
     public convenience init(itemReference: INSpeakableString, reservationNumber: String?, bookingTime: Date?, reservationStatus: INReservationStatus, reservationHolderName: String?, actions: [INReservationAction]?, url URL: URL?, reservedSeat: INSeat?, trainTrip: INTrainTrip) {
         self.init()
         inLinuxApplyReservation(
