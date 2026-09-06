@@ -26,11 +26,25 @@
 /// private and prunes the subtree on both sides).
 @preconcurrency @MainActor
 final class UILayoutContainerView: UIView {
+    /// Last size `UINavigationController.updateContainerLayout` ran at.
+    /// `loadView` builds a 390×844 view; the window then assigns its own
+    /// bounds (Ledger SE 375×667 / 667×375). Without a size-change pass the
+    /// bottom-docked search stays at y 758 of the loadView frame.
+    var _lastNavigationLayoutSize: CGSize = .zero
     /// The navigation bar's y is `max(safeArea.top, 10)` (MEASURED
-    /// navprobe.barorigin). Re-frame when the window's insets arrive.
+    /// navprobe.barorigin). Re-frame when the window's insets arrive, and
+    /// when the container is first sized to the window (MEASURED Ledger
+    /// t200: slot `[0, 581, 375, 86]` in a 375×667 window).
     public override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         (_managingViewController as? UINavigationController)?.updateContainerLayout()
+    }
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        guard bounds.size != _lastNavigationLayoutSize,
+              let nav = _managingViewController as? UINavigationController else { return }
+        _lastNavigationLayoutSize = bounds.size
+        nav.updateContainerLayout()
     }
 }
 

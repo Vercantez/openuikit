@@ -283,6 +283,8 @@ open class UISearchTextField: UITextField {
     /// like.
     var drawsFieldBackground = true
     weak var _searchBar: UISearchBar?
+    /// Phone bottom-docked search field (Ledger t200 38 pt / landscape 36 pt).
+    var _bottomFloating = false
 
     /// Measured text box: 39.5 pt in from the left, and 14 + 20.5 pt in from
     /// the right once a clear button is present (iOS: 34.333 + a 9.667 pt
@@ -290,7 +292,9 @@ open class UISearchTextField: UITextField {
     public override func textRect(forBounds bounds: CGRect) -> CGRect {
         let right = (text ?? "").isEmpty ? 0
             : _UISearchFieldMetrics.clearTrailingInset + _UISearchFieldMetrics.clearTextGap
-        let left = UISearchTextField.textLeftInset
+        let left = _bottomFloating
+            ? UISearchBar.BottomDock.textLeftInset
+            : UISearchTextField.textLeftInset
         return CGRect(x: bounds.minX + left, y: bounds.minY,
                       width: max(0, bounds.width - left - right),
                       height: bounds.height)
@@ -309,8 +313,16 @@ open class UISearchTextField: UITextField {
     /// own hook is the plain-field geometry and does not apply here.
     public override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
         let size = _UISearchFieldMetrics.clearSize
+        let top: CGFloat
+        if _bottomFloating {
+            // MEASURED Ledger t4000: clear `[214.5, 8.5, 20.5, 20.5]` in
+            // the 249×38 field — vertically centred, 0.5 pt above mid.
+            top = (bounds.height - size) / 2
+        } else {
+            top = _UISearchFieldMetrics.clearTop
+        }
         return CGRect(x: bounds.maxX - _UISearchFieldMetrics.clearTrailingInset,
-                      y: bounds.minY + _UISearchFieldMetrics.clearTop,
+                      y: bounds.minY + top,
                       width: size, height: size)
     }
 
@@ -362,7 +374,9 @@ open class UISearchTextField: UITextField {
     }
 
     private func drawMagnifier(in canvas: Canvas, bounds: CGRect) {
-        let box = UISearchTextField.iconFrame.offsetBy(dx: bounds.minX, dy: bounds.minY)
+        let icon = _bottomFloating
+            ? UISearchBar.BottomDock.iconFrame : UISearchTextField.iconFrame
+        let box = icon.offsetBy(dx: bounds.minX, dy: bounds.minY)
         let c = CGPoint(x: box.minX + UISearchTextField.ringCenter.x,
                         y: box.minY + UISearchTextField.ringCenter.y)
         let color = (_tintColor ?? _UISearchFieldMetrics.glyphColor)
@@ -405,6 +419,37 @@ open class UISearchBar: UIView {
     static let navInlineDismissRadius: CGFloat = 17
     static let navInlineDismissGap: CGFloat = 11
 
+    /// MEASURED Ledger t200 / t200.landscape / t3000, iPhone SE 2x / iOS 26.1:
+    /// a phone `navigationItem.searchController` with no tab bar docks at
+    /// the bottom (`FloatingBarContainerView`), not as a 0 pt / +6 overlay
+    /// in the nav bar. Pad keeps the trailing 240/280 field (Ledger-ipad
+    /// t200 `[565, 32, 240, 44]`). Tab-hosted search stays the overlay
+    /// (Tabs / Notes t200 `UISearchBar [0, 64, 375, 0]`).
+    ///
+    /// Portrait 375×667: slot **86** at y 581, platter `[28, 591, 319, 48]`,
+    /// field `[33, 596, 309, 38]`; table `aci.bottom` 86. Compact height
+    /// 667×375: slot **82** at y 293, platter `[28, 303, 611, 44]`, field
+    /// `[32, 307, 603, 36]`. Active shrinks the field platter by
+    /// `platterHeight + dismissGap` (60 / 56) for a 1:1 dismiss platter
+    /// (portrait `[299, 591, 48, 48]`). Chrome does not scale with Dynamic
+    /// Type (Ledger t200.ax1 / t200.xxxl keep 86 / 48 / 38).
+    enum BottomDock {
+        static var isCompact: Bool { UINavigationBar.isCompactHeight }
+        static var slotHeight: CGFloat { isCompact ? 82 : 86 }
+        static let sideInset: CGFloat = 28
+        static let platterTopInSlot: CGFloat = 10
+        static var platterHeight: CGFloat { isCompact ? 44 : 48 }
+        static var fieldInset: CGFloat { isCompact ? 4 : 5 }
+        static var fieldHeight: CGFloat { isCompact ? 36 : 38 }
+        static let dismissGap: CGFloat = 12
+        static let iconX: CGFloat = 13
+        static let textLeftInset: CGFloat = 41.5
+        static var iconY: CGFloat { fieldHeight / 2 - 10.5 }
+        static var iconFrame: CGRect {
+            CGRect(x: iconX, y: iconY, width: 20.5, height: 20)
+        }
+    }
+
     public weak var delegate: UISearchBarDelegate?
 
     public let searchTextField = UISearchTextField()
@@ -415,6 +460,17 @@ open class UISearchBar: UIView {
     /// trailing chrome (Tabs-ipad t200 / t4000: UISearchBarTextField
     /// frame equals the search bar).
     var _padTrailingChrome = false
+    /// Set by UINavigationController when this bar is the phone
+    /// bottom-docked search (Ledger). Field fills the bar; the glass
+    /// platter is the parent, so the field does not draw its own pill.
+    var _bottomFloating = false {
+        didSet {
+            searchTextField._bottomFloating = _bottomFloating
+            if _bottomFloating {
+                searchTextField.drawsFieldBackground = false
+            }
+        }
+    }
 
     public var text: String? {
         get { searchTextField.text }
@@ -540,7 +596,7 @@ open class UISearchBar: UIView {
             return
         }
         searchTextField.isHidden = false
-        if _padTrailingChrome {
+        if _padTrailingChrome || _bottomFloating {
             cancelButton?.isHidden = true
             searchTextField.frame = bounds
             return
