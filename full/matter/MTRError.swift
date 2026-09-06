@@ -180,6 +180,14 @@ func MTRFailClosed(_ code: MTRError.Code = .invalidState) -> MTRError {
     )
 }
 
+func mtrInvokeFailClosed(_ completion: @escaping ((any Error)?) -> Void) {
+    completion(MTRFailClosed())
+}
+
+func mtrInvokeFailClosed<T>(_ completion: @escaping (T?, (any Error)?) -> Void) {
+    completion(nil, MTRFailClosed())
+}
+
 public typealias MTRStatusCompletion = ((any Error)?) -> Void
 public typealias StatusCompletion = ((any Error)?) -> Void
 public typealias MTRDeviceResponseHandler = ([[String: Any]]?, (any Error)?) -> Void
