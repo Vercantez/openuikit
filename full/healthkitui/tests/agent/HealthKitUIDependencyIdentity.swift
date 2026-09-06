@@ -32,7 +32,8 @@ func assertFoundationIdentity() {
 
 func assertUIKitIdentity() {
     let ring = HKActivityRingView(frame: .zero)
-    precondition(ring is UIView)
+    let asView: UIView = ring
+    precondition(asView.frame == .zero)
     let presenter = UIViewController()
     assertNotHealthKitUIType(presenter)
     let store = HKHealthStore()

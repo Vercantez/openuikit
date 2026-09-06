@@ -39,6 +39,17 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
 `2abc9defd72942e7a24dcc79779ea5c50e67d75c` matched.
 
+`bash full/healthkitui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=HealthKitUI lane=leaf-full symbols=8
+FRAMEWORK_FANOUT_REFERENCE_OK
+HEALTHKITUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=HealthKitUI dylib=libHealthKitUI.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
+
 ### What is real
 
 - `HKActivityRingView` is a `UIView` subclass with designated

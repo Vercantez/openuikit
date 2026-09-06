@@ -3,8 +3,8 @@ import Foundation
 
 func testHKActivityRingViewClass() {
     let zero = HKActivityRingView()
-    precondition(zero is UIView)
-    precondition(zero.frame == .zero)
+    let asView: UIView = zero
+    precondition(asView.frame == .zero)
     precondition(zero.activitySummary == nil)
     precondition(!HealthKitUIHostControl.lastAnimatedRequest(of: zero))
     precondition(!HealthKitUIHostControl.didRenderActivityRings(of: zero))
