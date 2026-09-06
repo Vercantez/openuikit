@@ -1,3 +1,3 @@
 precise	status	evidence	notes
-c:@T@LAPresentationContext	declared	source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#LAPresentationContext	typealias to UIWindow. This 2-ID census has no enum/option-set/C-constant rows; any unique implemented test is 50% (two rows) or 100% (one row) of implemented evidence, over the 40% cap.
-c:objc(cs)LARight(im)authorizeWithLocalizedReason:inPresentationContext:completion:	declared	source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#authorize	Fail-closed UI authorize. This 2-ID census has no enum/option-set/C-constant rows; any unique implemented test is 50% or 100% of implemented evidence, over the 40% cap.
+c:@T@LAPresentationContext	implemented	test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow	-
+c:objc(cs)LARight(im)authorizeWithLocalizedReason:inPresentationContext:completion:	implemented	test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed	-

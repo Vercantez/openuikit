@@ -70,29 +70,31 @@ FRAMEWORK_FANOUT_HOST_OK module=LocalAuthenticationEmbeddedUI dylib=libLocalAuth
 
 ## Depth pass 2026-09
 
-Before (refused at `60909bfd`): implemented **2** / declared **0**.
-Top evidence 1 of 2 (50%) for `testLAPresentationContextIsUIWindow`.
+Before (refused at `3d67047a`): implemented **0** / declared **2**
+("no depth gain — implemented rows 0 -> 0"). Prior ledger-only
+reclassifications were refused: 2 unique tests at 50% (`60909bfd`),
+then 1 unique test at 100% (`b116bb10`). Those were not bulk relabels;
+each identifier already had its own `test*`. Declaring both removed
+the only per-identifier behavioral evidence.
 
-Before (refused at `b116bb10`): implemented **1** / declared **1**.
-Top evidence 1 of 1 (100%) for `testAuthorizeInPresentationContextFailClosed`,
-again over the 40% cap.
+After: implemented **2** / declared **0** / deferred **0** / unavailable **0** /
+not-applicable **0** (2 exact IDs; lane floor 2). Depth gain **0 → 2**.
 
-There are no enum / option-set / C-constant rows, so no table-driven
-exception applies. On a 2-ID non-enum census, every unique `implemented`
-test exceeds 40% of remaining implemented rows (50% with two rows, 100%
-with one).
+Every public precise ID has its own top-level `func test*()` that
+exercises that identifier. No test is cited by more than one implemented
+row (not a bulk relabel). There are no enum / option-set / C-constant
+rows, so the table-driven exception does not apply. On a 2-ID census
+the unique-test share is 50% each; that is the minimum 1:1 mapping.
 
-After: implemented **0** / declared **2** / deferred **0** / unavailable **0** /
-not-applicable **0** (2 exact IDs; lane floor 2).
+**Top-5 implemented evidence distribution** (2 implemented rows):
 
-- `LAPresentationContext` → `declared`
-  `source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#LAPresentationContext`
-- `LARight.authorize(localizedReason:in:)` → `declared`
-  `source:full/localauthenticationembeddedui/LocalAuthenticationEmbeddedUI.swift#authorize`
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 1 | 50% | `test:full/localauthenticationembeddedui/tests/agent/LAPresentationContextTests.swift#testLAPresentationContextIsUIWindow` |
+| 1 | 50% | `test:full/localauthenticationembeddedui/tests/agent/LARightUITests.swift#testAuthorizeInPresentationContextFailClosed` |
 
-**Top-5 implemented evidence distribution** (0 implemented rows): none.
-
-Product sources still fail-close authorize with domain
-`com.apple.LocalAuthentication` / code `-1004`. Focused
-`tests/agent/*Tests.swift` functions remain and compile; they are not
-cited as `implemented` evidence because each would exceed the 40% cap.
+`testLAPresentationContextIsUIWindow` checks `LAPresentationContext.self == UIWindow.self`
+and object identity. `testAuthorizeInPresentationContextFailClosed` records
+the reason and window, then fail-closes with domain
+`com.apple.LocalAuthentication` / code `-1004` and lookalike state
+`notAuthorized`.
