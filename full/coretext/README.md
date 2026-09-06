@@ -44,10 +44,13 @@ package; that integration is a later central-review step.
   the parsed SFNT tables of a registered TTF. The portable face has none.
 - Typesetter / line / run / framesetter / frame use the same per-glyph
   advances (cmap+hmtx on a registered TTF, SFUI harvest, or portable
-  `max(size*0.5,1)`). `CTLineCreateJustifiedLine` distributes leftover
+  `max(size*0.5,1)`).   `CTLineCreateJustifiedLine` distributes leftover
   width across glyph advances. `CTFramesetterCreateFrame` wraps with
   `CTTypesetterSuggestLineBreak` inside a `CGPath` rectangle.
-  `CTLineDraw` / `CTFrameDraw` / `CTRunDraw` record into the context
+  Per-character fonts split `CTRun`s; `kCTRunDelegateAttributeName` width /
+  ascent / descent participate in line width and breaking; additive
+  `kCTKernAttributeName` is applied to advances. `CTLineDraw` / `CTFrameDraw` /
+  `CTRunDraw` record into the context
   (Linux lookalike counters; Darwin bitmap context is otherwise unused).
 - Paragraph style, text tab, ruby annotation, glyph info (name / CID /
   `CTGlyphInfoCreateWithGlyph`), and run-delegate callbacks are
@@ -83,9 +86,12 @@ module. Isolated Linux uses ImageIO-style lookalikes for `CGGlyph`,
   for iOS `.SFUI` (macOS `.SFNS` numbers are not iOS facts).
 - `AttributedString.AdaptiveImageGlyph` (needs `UTType`, not a seeded
   dependency).
-- Shaping, kerning, ligatures, justification quality, and bidi.
-- AAT `kFontEnglishLanguage` / `kMORT*` / `kPROP*` anon-enum language and
-  table selector integers (no compiling declaration without inventing ABI).
+- Shaping, kerning quality beyond additive `kCTKernAttributeName`, ligatures,
+  justification quality, and bidi.
+- AAT `kFontEnglishLanguage` / Macintosh script codes / `kMORT*` coverage
+  bits / `kPROP*` direction classes (numeric ABI is not in the pinned graph,
+  api-digester, or macios; OpenType name IDs, platform IDs, and FourCC table
+  tags *are* implemented).
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -102,30 +108,46 @@ TrueType fixture, and recites those hashing rows onto family tests.
 | `unavailable` | 0 | 0 |
 | `not-applicable` | 0 | 0 |
 
-Six `_CTFontCreate*` Swift initializers moved `declared` → `implemented`
-via `testSwiftFontInitializers`. No SwiftUI overlay IDs exist on this
-surface.
+### Third pass (behaviour + SFNT tables)
 
-Top-5 `implemented` evidence distribution after recitation (table-driven
-enum/option-set and C `k…` integer catalogs may share a value test; no
-other single test exceeds 40% of the remaining implemented rows):
+Third SDK-depth pass on the same wave-8 heading. Keeps pass-1/pass-2 tests
+green. Adds per-character fonts, `CTRunDelegate` width/ascent in line
+breaking, additive `kCTKernAttributeName`, multi-run `CTLineGetGlyphRuns`,
+optical/glyf bounds, collection attribute copy, and OpenType name/platform
+IDs plus FourCC `kMORTTag`/`kPROPTag`/… aliases. SFNT C structs that already
+compiled move `declared` → `implemented` via per-table memberwise init and
+property round-trips (split across eight tests). No SwiftUI overlay IDs
+exist on this surface; none were labelled `not-applicable`.
+
+| | before (pass 2) | after (pass 3) |
+|---|---|---|
+| `implemented` | 1450 | 2274 |
+| `declared` | 768 | 0 |
+| `deferred` | 426 | 370 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 `implemented` evidence distribution (table-driven enum/option-set and
+C `k…` integer catalogs may share a value test; no other single test exceeds
+40% of the remaining implemented rows):
 
 | citations | test |
 |---|---|
-| 412 | `testCatalogEnumAndOptionSetRawValues` (enums / option-set members) |
+| 439 | `testCatalogEnumAndOptionSetRawValues` (enums / option-set members / `init(rawValue:)`) |
 | 380 | `testCatalogIntegerConstants` (C `kCT*` / feature selector integers) |
-| 109 | `testDeclaredStringKeyPayloads` (`kCT*` CFString payloads) |
-| 56 | `testParagraphStyleTabRubyAndGlyphInfo` |
-| 53 | `testCatalogTypealiasesAndSFNT` |
+| 153 | `testSFNTCmapNamePropAndDirectoryTables` |
+| 133 | `testSFNTLookupStateAndTrackTables` |
+| 108 | `testDeclaredStringKeyPayloads` (`kCT*` CFString payloads) |
 
-Remaining after the two catalogs: 658 rows. Largest non-catalog test is
-`testDeclaredStringKeyPayloads` at 109 (16.6%).
+Remaining after the two catalogs: 1455 rows. Largest non-catalog test is
+`testSFNTCmapNamePropAndDirectoryTables` at 153 (10.5%). C FourCC / OpenType
+name-ID constants share `testSFNTNamePlatformAndTableTagConstants` (56).
 
 Environment: `git rev-parse HEAD` matched
-`dd4c8bca7e8735289928bbd1abd44f4b35815308`.
+`bff8535c68425cc39fb45cb00d447b0981b57242`.
 `.cursor/verify-cloud-environment.sh` failed with
 `missing corpus checkout: scratch/ladder-corpus/focus-ios` (this pod
-booted `bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3`, not campaign
+booted `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not campaign
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Host `swiftc` is
 Swift 6.2.4 / `x86_64-unknown-linux-gnu`. The isolated host gate does not
 need the ladder corpus.

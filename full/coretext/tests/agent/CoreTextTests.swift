@@ -547,6 +547,25 @@ func testAttributedStringCoreTextExtensions() {
     let encoded = try! JSONEncoder().encode(AttributedString.TextAlignment.left)
     let decoded = try! JSONDecoder().decode(AttributedString.TextAlignment.self, from: encoded)
     precondition(decoded == .left)
+    precondition(decoded == AttributedString.TextAlignment.left)
+    var hasher = Hasher()
+    AttributedString.TextAlignment.center.hash(into: &hasher)
+    _ = hasher.finalize()
+    _ = AttributedString.TextAlignment.right.hashValue
+    precondition(AttributeScopes.CoreTextAttributes.TextAlignmentAttribute.runBoundaries == .paragraph)
+    precondition(AttributeScopes.CoreTextAttributes.LineHeightAttribute.runBoundaries == .paragraph)
+    let heightEncoded = try! JSONEncoder().encode(AttributedString.LineHeight.normal)
+    let heightDecoded = try! JSONDecoder().decode(AttributedString.LineHeight.self, from: heightEncoded)
+    precondition(heightDecoded == .normal)
+    var heightHasher = Hasher()
+    AttributedString.LineHeight.loose.hash(into: &heightHasher)
+    _ = heightHasher.finalize()
+    _ = AttributedString.LineHeight.tight.hashValue
+    let fromDecoder = try! JSONDecoder().decode(
+        AttributedString.TextAlignment.self,
+        from: encoded
+    )
+    _ = fromDecoder
 }
 
 func testClassHashableAndInequality() {
