@@ -121,4 +121,31 @@ required. Nothing in this report introduces a new metric or threshold.
 - Standard Linux `swift:6.2-noble` release openrender **green, 189.30 s**
   (`/tmp/focus-score-linux-build.log`). This native ELF build does not
   compile Objective-C Blockzilla; it cannot clear the full-guest blocker.
-- Final operator CHECK_ONLY proof: transcript to be appended after execution.
+- Final operator CHECK_ONLY proof: **CANNOT complete — live external merge lock**.
+  The exact required command was started from the repository root:
+
+```sh
+CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/focus-score
+```
+
+Its log `/tmp/focus-score-merge-proof.log` remained **0 bytes** while waiting
+in the script's initial lock-acquisition loop. Thus its tail is empty:
+
+```text
+(no output; checks had not started)
+```
+
+There was no REFUSED line, but **this is not a successful proof**. At the
+observation, `/tmp/agent_merge.lock/pid` named live PID **70855** (the operator's
+zsh process, elapsed 02:08:49); another `agent_merge.sh simplenote44` process,
+PID **90742**, was also waiting. This task's own waiter, PID **76532**, was
+stopped without changing the operator lock or either operator process.
+The final CHECK_ONLY success tail cannot honestly be supplied until the
+operator releases the lock. No gate was bypassed or script patched.
+
+The unchanged-main guest rebuild repeated **both identical diagnostics**
+after the experimental harness was removed. That second log is
+`uikit-linux:/work-focus-score/build-unchanged-main.log`; the carried
+`build-blocker.txt` now uses this exact baseline rebuild. Required next steps
+are the DND dependency merge and a rerun of CHECK_ONLY after the lock is
+available. The numeric score and final proof remain incomplete.
