@@ -352,16 +352,28 @@ enum MPSGraphCPU {
         if kind == "stack" {
             return try op.inputTensors.flatMap { try eval($0, feeds: feeds, cache: &cache) }
         }
-        if kind == "reductionSum" || kind == "reductionMax" || kind == "reductionMin"
+        if kind == "reductionSum" || kind == "reductionMaximum" || kind == "reductionMax"
+            || kind == "reductionMinimum" || kind == "reductionMin"
             || kind == "reductionProduct" || kind == "mean"
+            || kind == "reductionAnd" || kind == "reductionOr"
+            || kind == "reductionArgMaximum" || kind == "reductionArgMinimum"
+            || kind == "reductionMaximumPropagateNaN" || kind == "reductionMinimumPropagateNaN"
         {
             let values = try input(0)
             switch kind {
             case "reductionSum": return [values.reduce(0, +)]
-            case "reductionMax": return [values.max() ?? 0]
-            case "reductionMin": return [values.min() ?? 0]
+            case "reductionMaximum", "reductionMax", "reductionMaximumPropagateNaN":
+                return [values.max() ?? 0]
+            case "reductionMinimum", "reductionMin", "reductionMinimumPropagateNaN":
+                return [values.min() ?? 0]
             case "reductionProduct": return [values.reduce(1, *)]
             case "mean": return [values.isEmpty ? 0 : values.reduce(0, +) / Double(values.count)]
+            case "reductionAnd": return [values.allSatisfy { $0 != 0 } ? 1 : 0]
+            case "reductionOr": return [values.contains(where: { $0 != 0 }) ? 1 : 0]
+            case "reductionArgMaximum":
+                return [Double(values.enumerated().max(by: { $0.element < $1.element })?.offset ?? 0)]
+            case "reductionArgMinimum":
+                return [Double(values.enumerated().min(by: { $0.element < $1.element })?.offset ?? 0)]
             default: break
             }
         }
@@ -413,7 +425,7 @@ enum MPSGraphCPU {
             }
             return values.map { $0 >= 0 ? $0 : alpha * $0 }
         }
-        if kind == "pad" {
+        if kind == "pad" || kind == "padTensor" {
             return try input(0)
         }
         if kind == "tileTensor" {
