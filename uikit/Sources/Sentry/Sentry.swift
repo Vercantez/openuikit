@@ -14,7 +14,9 @@
 
 import Foundation
 
-#if os(Linux)
+// MEASURED focus-guest-linux: guest Foundation also lacks NSException
+// (three capture(exception:) diagnostics); reuse the existing descriptor.
+#if os(Linux) || OPENUIKIT_GUEST
 /// corelibs Foundation has no NSException (MEASURED swift:6.2-noble Sentry.swift:99).
 public struct NSExceptionName: RawRepresentable, Hashable, Sendable {
     public var rawValue: String

@@ -293,10 +293,12 @@ private func WKPortableReplaceMessagePlaceholders(
     messages: [String: Any]
 ) -> String {
     var result = string
+    // MEASURED focus-guest-linux: guest Foundation exposes range(of:) on
+    // String, not Substring. Search the same bounds on the owning string.
     var search = result.startIndex
     while search < result.endIndex,
-          let open = result[search...].range(of: "__MSG_") {
-        guard let close = result[open.upperBound...].range(of: "__") else { break }
+          let open = result.range(of: "__MSG_", range: search..<result.endIndex) {
+        guard let close = result.range(of: "__", range: open.upperBound..<result.endIndex) else { break }
         let key = String(result[open.upperBound..<close.lowerBound])
         let replacement: String
         if let entry = messages[key] as? [String: Any],

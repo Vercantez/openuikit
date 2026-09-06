@@ -207,3 +207,11 @@ extension NSValue {
 // (MEASURED scripts/guest_route_check.sh: invalid redeclaration at :202/:211,
 // ambiguous `init(rawValue:)`). AutocompleteTextField.swift:250 keeps the
 // attributed boundingRect on the canonical file.
+
+#if !canImport(Foundation)
+public typealias NSKeyValueChangeKey = String
+public extension String {
+    static let newKey = "new"
+    static let oldKey = "old"
+}
+#endif
