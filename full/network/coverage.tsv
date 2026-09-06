@@ -180,47 +180,47 @@ c:@Ea@nw_browse_result_change_invalid@nw_browse_result_change_invalid	implemente
 c:@Ea@nw_browse_result_change_invalid@nw_browse_result_change_result_added	implemented	test:full/network/tests/agent/NetworkTests.swift#testCEnumRawValuesFromMacios	-
 c:@Ea@nw_browse_result_change_invalid@nw_browse_result_change_result_removed	implemented	test:full/network/tests/agent/NetworkTests.swift#testCEnumRawValuesFromMacios	-
 c:@Ea@nw_browse_result_change_invalid@nw_browse_result_change_txt_record_changed	implemented	test:full/network/tests/agent/NetworkTests.swift#testCEnumRawValuesFromMacios	-
-c:@F@nw_advertise_descriptor_copy_txt_record_object	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_copy_txt_record_object	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_create_application_service	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_create_application_service	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_create_bonjour_service	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_create_bonjour_service	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_get_application_service_name	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_get_application_service_name	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_get_no_auto_rename	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_get_no_auto_rename	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_set_no_auto_rename	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_set_no_auto_rename	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_set_txt_record	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_set_txt_record	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_advertise_descriptor_set_txt_record_object	declared	source:full/network/NetworkCAPI.swift#nw_advertise_descriptor_set_txt_record_object	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_advertise_descriptor_copy_txt_record_object	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_create_application_service	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_create_bonjour_service	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_get_application_service_name	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_get_no_auto_rename	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_set_no_auto_rename	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_set_txt_record	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
+c:@F@nw_advertise_descriptor_set_txt_record_object	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCAdvertiseDescriptorCreate	-
 c:@F@nw_browse_descriptor_create_application_service	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_create_application_service	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browse_descriptor_create_bonjour_service	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_create_bonjour_service	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_browse_descriptor_create_bonjour_service	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
 c:@F@nw_browse_descriptor_get_application_service_name	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_get_application_service_name	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_browse_descriptor_get_bonjour_service_domain	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_get_bonjour_service_domain	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_browse_descriptor_get_bonjour_service_type	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_get_bonjour_service_type	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browse_descriptor_get_include_txt_record	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_get_include_txt_record	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browse_descriptor_set_include_txt_record	declared	source:full/network/NetworkCAPI.swift#nw_browse_descriptor_set_include_txt_record	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_browse_descriptor_get_include_txt_record	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browse_descriptor_set_include_txt_record	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
 c:@F@nw_browse_result_copy_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_browse_result_copy_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_browse_result_copy_txt_record_object	declared	source:full/network/NetworkCAPI.swift#nw_browse_result_copy_txt_record_object	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_browse_result_enumerate_interfaces	declared	source:full/network/NetworkCAPI.swift#nw_browse_result_enumerate_interfaces	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_browse_result_get_changes	declared	source:full/network/NetworkCAPI.swift#nw_browse_result_get_changes	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_browse_result_get_interfaces_count	declared	source:full/network/NetworkCAPI.swift#nw_browse_result_get_interfaces_count	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_cancel	declared	source:full/network/NetworkCAPI.swift#nw_browser_cancel	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_copy_browse_descriptor	declared	source:full/network/NetworkCAPI.swift#nw_browser_copy_browse_descriptor	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_copy_parameters	declared	source:full/network/NetworkCAPI.swift#nw_browser_copy_parameters	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_create	declared	source:full/network/NetworkCAPI.swift#nw_browser_create	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_set_browse_results_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_browser_set_browse_results_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_set_queue	declared	source:full/network/NetworkCAPI.swift#nw_browser_set_queue	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_set_state_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_browser_set_state_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_browser_start	declared	source:full/network/NetworkCAPI.swift#nw_browser_start	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_access_establishment_report	declared	source:full/network/NetworkCAPI.swift#nw_connection_access_establishment_report	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_batch	declared	source:full/network/NetworkCAPI.swift#nw_connection_batch	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_browser_cancel	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_copy_browse_descriptor	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_copy_parameters	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_create	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_set_browse_results_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_set_queue	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_set_state_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_browser_start	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCBrowserCreateAndCopy	-
+c:@F@nw_connection_access_establishment_report	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_batch	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
 c:@F@nw_connection_cancel	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_connection_cancel_current_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_connection_cancel_current_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_copy_current_path	declared	source:full/network/NetworkCAPI.swift#nw_connection_copy_current_path	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_copy_description	declared	source:full/network/NetworkCAPI.swift#nw_connection_copy_description	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_copy_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_connection_copy_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_copy_parameters	declared	source:full/network/NetworkCAPI.swift#nw_connection_copy_parameters	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_copy_protocol_metadata	declared	source:full/network/NetworkCAPI.swift#nw_connection_copy_protocol_metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_connection_cancel_current_endpoint	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_copy_current_path	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_copy_description	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_copy_endpoint	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_copy_parameters	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_copy_protocol_metadata	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
 c:@F@nw_connection_create	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_connection_create_new_data_transfer_report	declared	source:full/network/NetworkCAPI.swift#nw_connection_create_new_data_transfer_report	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_force_cancel	declared	source:full/network/NetworkCAPI.swift#nw_connection_force_cancel	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_get_maximum_datagram_size	declared	source:full/network/NetworkCAPI.swift#nw_connection_get_maximum_datagram_size	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_connection_create_new_data_transfer_report	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_force_cancel	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_get_maximum_datagram_size	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
 c:@F@nw_connection_group_cancel	declared	source:full/network/NetworkCAPI.swift#nw_connection_group_cancel	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_connection_group_copy_descriptor	declared	source:full/network/NetworkCAPI.swift#nw_connection_group_copy_descriptor	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_connection_group_copy_local_endpoint_for_message	declared	source:full/network/NetworkCAPI.swift#nw_connection_group_copy_local_endpoint_for_message	Declaration compiles on Linux; Apple runtime behavior is unobserved.
@@ -240,29 +240,29 @@ c:@F@nw_connection_group_set_queue	declared	source:full/network/NetworkCAPI.swif
 c:@F@nw_connection_group_set_receive_handler	declared	source:full/network/NetworkCAPI.swift#nw_connection_group_set_receive_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_connection_group_set_state_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_connection_group_set_state_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_connection_group_start	declared	source:full/network/NetworkCAPI.swift#nw_connection_group_start	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_receive	declared	source:full/network/NetworkCAPI.swift#nw_connection_receive	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_receive_message	declared	source:full/network/NetworkCAPI.swift#nw_connection_receive_message	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_restart	declared	source:full/network/NetworkCAPI.swift#nw_connection_restart	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_send	declared	source:full/network/NetworkCAPI.swift#nw_connection_send	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_set_better_path_available_handler	declared	source:full/network/NetworkCAPI.swift#nw_connection_set_better_path_available_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_set_path_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_connection_set_path_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_set_queue	declared	source:full/network/NetworkCAPI.swift#nw_connection_set_queue	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_set_state_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_connection_set_state_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_connection_set_viability_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_connection_set_viability_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_connection_receive	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_receive_message	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_restart	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionCopyAndBatch	-
+c:@F@nw_connection_send	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_set_better_path_available_handler	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_set_path_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_set_queue	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_set_state_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_connection_set_viability_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
 c:@F@nw_connection_start	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_content_context_copy_antecedent	declared	source:full/network/NetworkCAPI.swift#nw_content_context_copy_antecedent	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_copy_protocol_metadata	declared	source:full/network/NetworkCAPI.swift#nw_content_context_copy_protocol_metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_create	declared	source:full/network/NetworkCAPI.swift#nw_content_context_create	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_foreach_protocol_metadata	declared	source:full/network/NetworkCAPI.swift#nw_content_context_foreach_protocol_metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_get_expiration_milliseconds	declared	source:full/network/NetworkCAPI.swift#nw_content_context_get_expiration_milliseconds	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_get_identifier	declared	source:full/network/NetworkCAPI.swift#nw_content_context_get_identifier	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_get_is_final	declared	source:full/network/NetworkCAPI.swift#nw_content_context_get_is_final	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_get_relative_priority	declared	source:full/network/NetworkCAPI.swift#nw_content_context_get_relative_priority	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_set_antecedent	declared	source:full/network/NetworkCAPI.swift#nw_content_context_set_antecedent	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_set_expiration_milliseconds	declared	source:full/network/NetworkCAPI.swift#nw_content_context_set_expiration_milliseconds	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_set_is_final	declared	source:full/network/NetworkCAPI.swift#nw_content_context_set_is_final	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_set_metadata_for_protocol	declared	source:full/network/NetworkCAPI.swift#nw_content_context_set_metadata_for_protocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_content_context_set_relative_priority	declared	source:full/network/NetworkCAPI.swift#nw_content_context_set_relative_priority	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_content_context_copy_antecedent	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_copy_protocol_metadata	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_create	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_content_context_foreach_protocol_metadata	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_get_expiration_milliseconds	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_get_identifier	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_get_is_final	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_get_relative_priority	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_set_antecedent	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_set_expiration_milliseconds	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_set_is_final	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_set_metadata_for_protocol	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_content_context_set_relative_priority	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
 c:@F@nw_data_transfer_report_collect	declared	source:full/network/NetworkCAPI.swift#nw_data_transfer_report_collect	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_data_transfer_report_copy_path_interface	declared	source:full/network/NetworkCAPI.swift#nw_data_transfer_report_copy_path_interface	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_data_transfer_report_get_duration_milliseconds	declared	source:full/network/NetworkCAPI.swift#nw_data_transfer_report_get_duration_milliseconds	Declaration compiles on Linux; Apple runtime behavior is unobserved.
@@ -355,128 +355,128 @@ c:@F@nw_ip_metadata_get_receive_time	declared	source:full/network/NetworkCAPI.sw
 c:@F@nw_ip_metadata_get_service_class	declared	source:full/network/NetworkCAPI.swift#nw_ip_metadata_get_service_class	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_ip_metadata_set_ecn_flag	declared	source:full/network/NetworkCAPI.swift#nw_ip_metadata_set_ecn_flag	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_ip_metadata_set_service_class	declared	source:full/network/NetworkCAPI.swift#nw_ip_metadata_set_service_class	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_calculate_receive_time	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_calculate_receive_time	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_disable_fragmentation	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_disable_fragmentation	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_disable_multicast_loopback	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_disable_multicast_loopback	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_hop_limit	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_hop_limit	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_local_address_preference	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_local_address_preference	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_use_minimum_mtu	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_use_minimum_mtu	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_ip_options_set_version	declared	source:full/network/NetworkCAPI.swift#nw_ip_options_set_version	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_cancel	declared	source:full/network/NetworkCAPI.swift#nw_listener_cancel	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_create	declared	source:full/network/NetworkCAPI.swift#nw_listener_create	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_create_with_connection	declared	source:full/network/NetworkCAPI.swift#nw_listener_create_with_connection	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_create_with_port	declared	source:full/network/NetworkCAPI.swift#nw_listener_create_with_port	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_get_new_connection_limit	declared	source:full/network/NetworkCAPI.swift#nw_listener_get_new_connection_limit	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_get_port	declared	source:full/network/NetworkCAPI.swift#nw_listener_get_port	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_advertise_descriptor	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_advertise_descriptor	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_advertised_endpoint_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_advertised_endpoint_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_new_connection_group_handler	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_new_connection_group_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_new_connection_handler	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_new_connection_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_new_connection_limit	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_new_connection_limit	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_queue	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_queue	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_set_state_changed_handler	declared	source:full/network/NetworkCAPI.swift#nw_listener_set_state_changed_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_listener_start	declared	source:full/network/NetworkCAPI.swift#nw_listener_start	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_ip_options_set_calculate_receive_time	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_ip_options_set_disable_fragmentation	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_ip_options_set_disable_multicast_loopback	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_ip_options_set_hop_limit	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_ip_options_set_local_address_preference	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_ip_options_set_use_minimum_mtu	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_ip_options_set_version	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_listener_cancel	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_create	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_create_with_connection	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_create_with_port	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_get_new_connection_limit	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_get_port	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_advertise_descriptor	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_advertised_endpoint_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_new_connection_group_handler	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_new_connection_handler	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_new_connection_limit	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_queue	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_set_state_changed_handler	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
+c:@F@nw_listener_start	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCListenerCreateAndHandlers	-
 c:@F@nw_multicast_group_descriptor_get_disable_unicast_traffic	declared	source:full/network/NetworkCAPI.swift#nw_multicast_group_descriptor_get_disable_unicast_traffic	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_multicast_group_descriptor_set_disable_unicast_traffic	declared	source:full/network/NetworkCAPI.swift#nw_multicast_group_descriptor_set_disable_unicast_traffic	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_multicast_group_descriptor_set_specific_source	declared	source:full/network/NetworkCAPI.swift#nw_multicast_group_descriptor_set_specific_source	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_clear_prohibited_interface_types	declared	source:full/network/NetworkCAPI.swift#nw_parameters_clear_prohibited_interface_types	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_clear_prohibited_interfaces	declared	source:full/network/NetworkCAPI.swift#nw_parameters_clear_prohibited_interfaces	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_copy	declared	source:full/network/NetworkCAPI.swift#nw_parameters_copy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_copy_default_protocol_stack	declared	source:full/network/NetworkCAPI.swift#nw_parameters_copy_default_protocol_stack	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_copy_local_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_parameters_copy_local_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_copy_required_interface	declared	source:full/network/NetworkCAPI.swift#nw_parameters_copy_required_interface	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_parameters_clear_prohibited_interface_types	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_clear_prohibited_interfaces	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_copy	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_copy_default_protocol_stack	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_parameters_copy_local_endpoint	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_copy_required_interface	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
 c:@F@nw_parameters_create	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
 c:@F@nw_parameters_create_application_service	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_parameters_create_quic	declared	source:full/network/NetworkCAPI.swift#nw_parameters_create_quic	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_create_secure_tcp	declared	source:full/network/NetworkCAPI.swift#nw_parameters_create_secure_tcp	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_create_secure_udp	declared	source:full/network/NetworkCAPI.swift#nw_parameters_create_secure_udp	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_allow_ultra_constrained	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_allow_ultra_constrained	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_attribution	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_attribution	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_expired_dns_behavior	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_expired_dns_behavior	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_fast_open_enabled	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_fast_open_enabled	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_include_peer_to_peer	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_include_peer_to_peer	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_local_only	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_local_only	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_multipath_service	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_multipath_service	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_prefer_no_proxy	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_prefer_no_proxy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_prohibit_constrained	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_prohibit_constrained	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_prohibit_expensive	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_prohibit_expensive	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_required_interface_type	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_required_interface_type	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_reuse_local_address	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_reuse_local_address	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_get_service_class	declared	source:full/network/NetworkCAPI.swift#nw_parameters_get_service_class	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_iterate_prohibited_interface_types	declared	source:full/network/NetworkCAPI.swift#nw_parameters_iterate_prohibited_interface_types	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_iterate_prohibited_interfaces	declared	source:full/network/NetworkCAPI.swift#nw_parameters_iterate_prohibited_interfaces	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_parameters_create_quic	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_create_secure_tcp	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_create_secure_udp	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_get_allow_ultra_constrained	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_attribution	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_expired_dns_behavior	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_fast_open_enabled	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_include_peer_to_peer	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_local_only	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_multipath_service	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_prefer_no_proxy	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_prohibit_constrained	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_prohibit_expensive	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_required_interface_type	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_reuse_local_address	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_get_service_class	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_iterate_prohibited_interface_types	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_iterate_prohibited_interfaces	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
 c:@F@nw_parameters_prohibit_interface	declared	source:full/network/NetworkCAPI.swift#nw_parameters_prohibit_interface	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_prohibit_interface_type	declared	source:full/network/NetworkCAPI.swift#nw_parameters_prohibit_interface_type	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_require_interface	declared	source:full/network/NetworkCAPI.swift#nw_parameters_require_interface	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_requires_dnssec_validation	declared	source:full/network/NetworkCAPI.swift#nw_parameters_requires_dnssec_validation	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_allow_ultra_constrained	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_allow_ultra_constrained	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_attribution	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_attribution	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_expired_dns_behavior	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_expired_dns_behavior	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_fast_open_enabled	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_fast_open_enabled	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_include_peer_to_peer	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_include_peer_to_peer	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_local_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_local_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_local_only	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_local_only	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_multipath_service	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_multipath_service	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_prefer_no_proxy	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_prefer_no_proxy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_privacy_context	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_privacy_context	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_prohibit_constrained	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_prohibit_constrained	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_prohibit_expensive	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_prohibit_expensive	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_required_interface_type	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_required_interface_type	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_requires_dnssec_validation	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_requires_dnssec_validation	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_reuse_local_address	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_reuse_local_address	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_parameters_set_service_class	declared	source:full/network/NetworkCAPI.swift#nw_parameters_set_service_class	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_copy_effective_local_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_path_copy_effective_local_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_copy_effective_remote_endpoint	declared	source:full/network/NetworkCAPI.swift#nw_path_copy_effective_remote_endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_enumerate_gateways	declared	source:full/network/NetworkCAPI.swift#nw_path_enumerate_gateways	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_enumerate_interfaces	declared	source:full/network/NetworkCAPI.swift#nw_path_enumerate_interfaces	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_get_link_quality	declared	source:full/network/NetworkCAPI.swift#nw_path_get_link_quality	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_get_status	declared	source:full/network/NetworkCAPI.swift#nw_path_get_status	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_get_unsatisfied_reason	declared	source:full/network/NetworkCAPI.swift#nw_path_get_unsatisfied_reason	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_has_dns	declared	source:full/network/NetworkCAPI.swift#nw_path_has_dns	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_has_ipv4	declared	source:full/network/NetworkCAPI.swift#nw_path_has_ipv4	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_has_ipv6	declared	source:full/network/NetworkCAPI.swift#nw_path_has_ipv6	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_is_constrained	declared	source:full/network/NetworkCAPI.swift#nw_path_is_constrained	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_is_equal	declared	source:full/network/NetworkCAPI.swift#nw_path_is_equal	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_is_expensive	declared	source:full/network/NetworkCAPI.swift#nw_path_is_expensive	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_is_ultra_constrained	declared	source:full/network/NetworkCAPI.swift#nw_path_is_ultra_constrained	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_parameters_prohibit_interface_type	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_parameters_require_interface	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_requires_dnssec_validation	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_allow_ultra_constrained	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_attribution	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_expired_dns_behavior	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_fast_open_enabled	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_include_peer_to_peer	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_local_endpoint	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_local_only	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_multipath_service	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_prefer_no_proxy	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_privacy_context	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_prohibit_constrained	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_prohibit_expensive	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_required_interface_type	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_requires_dnssec_validation	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_reuse_local_address	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_parameters_set_service_class	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
+c:@F@nw_path_copy_effective_local_endpoint	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_copy_effective_remote_endpoint	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_enumerate_gateways	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_enumerate_interfaces	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_get_link_quality	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_get_status	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_get_unsatisfied_reason	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_has_dns	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_has_ipv4	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_has_ipv6	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_is_constrained	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_is_equal	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_is_expensive	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
+c:@F@nw_path_is_ultra_constrained	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
 c:@F@nw_path_monitor_cancel	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
 c:@F@nw_path_monitor_create	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
 c:@F@nw_path_monitor_create_with_type	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_path_monitor_prohibit_interface_type	declared	source:full/network/NetworkCAPI.swift#nw_path_monitor_prohibit_interface_type	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_path_monitor_set_cancel_handler	declared	source:full/network/NetworkCAPI.swift#nw_path_monitor_set_cancel_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_path_monitor_prohibit_interface_type	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathMonitorExtraHandlers	-
+c:@F@nw_path_monitor_set_cancel_handler	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathMonitorExtraHandlers	-
 c:@F@nw_path_monitor_set_queue	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_path_monitor_set_update_handler	declared	source:full/network/NetworkCAPI.swift#nw_path_monitor_set_update_handler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_path_monitor_set_update_handler	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathMonitorExtraHandlers	-
 c:@F@nw_path_monitor_start	implemented	test:full/network/tests/agent/NetworkCAPITests.swift#testCAPIHostAndPathMonitorFunctions	-
-c:@F@nw_path_uses_interface_type	declared	source:full/network/NetworkCAPI.swift#nw_path_uses_interface_type	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_path_uses_interface_type	implemented	test:full/network/tests/agent/NetworkCAPIListenerPathTests.swift#testCPathQueriesFailClosed	-
 c:@F@nw_privacy_context_add_proxy	declared	source:full/network/NetworkCAPI.swift#nw_privacy_context_add_proxy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_privacy_context_clear_proxies	declared	source:full/network/NetworkCAPI.swift#nw_privacy_context_clear_proxies	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_privacy_context_create	declared	source:full/network/NetworkCAPI.swift#nw_privacy_context_create	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_privacy_context_create	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCParametersGetSetRoundTrip	-
 c:@F@nw_privacy_context_disable_logging	declared	source:full/network/NetworkCAPI.swift#nw_privacy_context_disable_logging	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_privacy_context_flush_cache	declared	source:full/network/NetworkCAPI.swift#nw_privacy_context_flush_cache	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_privacy_context_require_encrypted_name_resolution	declared	source:full/network/NetworkCAPI.swift#nw_privacy_context_require_encrypted_name_resolution	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_copy_ip_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_copy_ip_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_copy_quic_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_copy_quic_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_copy_tcp_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_copy_tcp_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_copy_tls_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_copy_tls_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_copy_udp_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_copy_udp_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_copy_ws_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_copy_ws_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_definition_is_equal	declared	source:full/network/NetworkCAPI.swift#nw_protocol_definition_is_equal	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_copy_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_copy_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_framer_message	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_framer_message	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_ip	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_ip	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_quic	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_quic	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_tcp	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_tcp	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_tls	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_tls	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_udp	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_udp	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_metadata_is_ws	declared	source:full/network/NetworkCAPI.swift#nw_protocol_metadata_is_ws	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_options_copy_definition	declared	source:full/network/NetworkCAPI.swift#nw_protocol_options_copy_definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_options_is_quic	declared	source:full/network/NetworkCAPI.swift#nw_protocol_options_is_quic	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_stack_clear_application_protocols	declared	source:full/network/NetworkCAPI.swift#nw_protocol_stack_clear_application_protocols	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_stack_copy_internet_protocol	declared	source:full/network/NetworkCAPI.swift#nw_protocol_stack_copy_internet_protocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_stack_copy_transport_protocol	declared	source:full/network/NetworkCAPI.swift#nw_protocol_stack_copy_transport_protocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_stack_iterate_application_protocols	declared	source:full/network/NetworkCAPI.swift#nw_protocol_stack_iterate_application_protocols	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_stack_prepend_application_protocol	declared	source:full/network/NetworkCAPI.swift#nw_protocol_stack_prepend_application_protocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_protocol_stack_set_transport_protocol	declared	source:full/network/NetworkCAPI.swift#nw_protocol_stack_set_transport_protocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_protocol_copy_ip_definition	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_copy_quic_definition	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_copy_tcp_definition	implemented	test:full/network/tests/agent/NetworkCAPIConnectionTests.swift#testCConnectionHandlersAndIO	-
+c:@F@nw_protocol_copy_tls_definition	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_copy_udp_definition	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_protocol_copy_ws_definition	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_definition_is_equal	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_copy_definition	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_framer_message	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_ip	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_quic	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_tcp	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_tls	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_udp	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_metadata_is_ws	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_options_copy_definition	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_options_is_quic	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
+c:@F@nw_protocol_stack_clear_application_protocols	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_protocol_stack_copy_internet_protocol	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCIPOptionsSetters	-
+c:@F@nw_protocol_stack_copy_transport_protocol	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_protocol_stack_iterate_application_protocols	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_protocol_stack_prepend_application_protocol	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
+c:@F@nw_protocol_stack_set_transport_protocol	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCParametersFactoriesAndStack	-
 c:@F@nw_proxy_config_add_excluded_domain	declared	source:full/network/NetworkCAPI.swift#nw_proxy_config_add_excluded_domain	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_proxy_config_add_match_domain	declared	source:full/network/NetworkCAPI.swift#nw_proxy_config_add_match_domain	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_proxy_config_clear_excluded_domains	declared	source:full/network/NetworkCAPI.swift#nw_proxy_config_clear_excluded_domains	Declaration compiles on Linux; Apple runtime behavior is unobserved.
@@ -544,43 +544,43 @@ c:@F@nw_resolution_report_get_source	declared	source:full/network/NetworkCAPI.sw
 c:@F@nw_resolver_config_add_server_address	declared	source:full/network/NetworkCAPI.swift#nw_resolver_config_add_server_address	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_resolver_config_create_https	declared	source:full/network/NetworkCAPI.swift#nw_resolver_config_create_https	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_resolver_config_create_tls	declared	source:full/network/NetworkCAPI.swift#nw_resolver_config_create_tls	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_create_options	declared	source:full/network/NetworkCAPI.swift#nw_tcp_create_options	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_tcp_create_options	implemented	test:full/network/tests/agent/NetworkCAPIProtocolCopyTests.swift#testCProtocolCopyDefinitions	-
 c:@F@nw_tcp_get_available_receive_buffer	declared	source:full/network/NetworkCAPI.swift#nw_tcp_get_available_receive_buffer	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_tcp_get_available_send_buffer	declared	source:full/network/NetworkCAPI.swift#nw_tcp_get_available_send_buffer	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_connection_timeout	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_connection_timeout	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_disable_ack_stretching	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_disable_ack_stretching	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_disable_ecn	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_disable_ecn	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_enable_fast_open	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_enable_fast_open	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_enable_keepalive	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_enable_keepalive	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_keepalive_count	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_keepalive_count	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_keepalive_idle_time	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_keepalive_idle_time	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_keepalive_interval	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_keepalive_interval	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_maximum_segment_size	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_maximum_segment_size	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_multipath_force_version	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_multipath_force_version	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_no_delay	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_no_delay	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_no_options	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_no_options	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_no_push	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_no_push	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_persist_timeout	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_persist_timeout	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_retransmit_connection_drop_time	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_retransmit_connection_drop_time	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_tcp_options_set_retransmit_fin_drop	declared	source:full/network/NetworkCAPI.swift#nw_tcp_options_set_retransmit_fin_drop	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_tcp_options_set_connection_timeout	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_disable_ack_stretching	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_disable_ecn	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_enable_fast_open	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_enable_keepalive	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_keepalive_count	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_keepalive_idle_time	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_keepalive_interval	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_maximum_segment_size	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_multipath_force_version	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_no_delay	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_no_options	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_no_push	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_persist_timeout	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_retransmit_connection_drop_time	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_tcp_options_set_retransmit_fin_drop	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
 c:@F@nw_tls_copy_sec_protocol_metadata	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 c:@F@nw_tls_copy_sec_protocol_options	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 c:@F@nw_tls_create_options	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
-c:@F@nw_txt_record_access_bytes	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_access_bytes	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_access_key	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_access_key	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_apply	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_apply	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_copy	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_copy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_create_dictionary	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_create_dictionary	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_create_with_bytes	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_create_with_bytes	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_find_key	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_find_key	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_get_key_count	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_get_key_count	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_is_dictionary	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_is_dictionary	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_is_equal	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_is_equal	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_remove_key	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_remove_key	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_txt_record_set_key	declared	source:full/network/NetworkCAPI.swift#nw_txt_record_set_key	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_udp_create_metadata	declared	source:full/network/NetworkCAPI.swift#nw_udp_create_metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_udp_create_options	declared	source:full/network/NetworkCAPI.swift#nw_udp_create_options	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-c:@F@nw_udp_options_set_prefer_no_checksum	declared	source:full/network/NetworkCAPI.swift#nw_udp_options_set_prefer_no_checksum	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+c:@F@nw_txt_record_access_bytes	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_access_key	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_apply	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_copy	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_create_dictionary	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_create_with_bytes	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_find_key	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_get_key_count	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_is_dictionary	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_is_equal	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_remove_key	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_txt_record_set_key	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTXTRecordDictionaryRoundTrip	-
+c:@F@nw_udp_create_metadata	implemented	test:full/network/tests/agent/NetworkCAPIContentContextTests.swift#testCContentContextGetSet	-
+c:@F@nw_udp_create_options	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
+c:@F@nw_udp_options_set_prefer_no_checksum	implemented	test:full/network/tests/agent/NetworkCAPIStorageTests.swift#testCTCPOptionsSettersStore	-
 c:@F@nw_ws_create_metadata	declared	source:full/network/NetworkCAPI.swift#nw_ws_create_metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_ws_create_options	declared	source:full/network/NetworkCAPI.swift#nw_ws_create_options	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 c:@F@nw_ws_metadata_copy_server_response	declared	source:full/network/NetworkCAPI.swift#nw_ws_metadata_copy_server_response	Declaration compiles on Linux; Apple runtime behavior is unobserved.
@@ -891,12 +891,12 @@ s:7Network10NWEndpointO16debugDescriptionSSvp	implemented	test:full/network/test
 s:7Network10NWEndpointO2eeoiySbAC_ACtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO3urlyAC10Foundation3URLVcACmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4HostO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
-s:7Network10NWEndpointO4HostO13stringLiteralAESS_tcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network10NWEndpointO4HostO13stringLiteralAESS_tcfc	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network10NWEndpointO4HostO16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
-s:7Network10NWEndpointO4HostO17StringLiteralTypea	declared	source:full/network/Network.swift#StringLiteralType	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network10NWEndpointO4HostO24UnicodeScalarLiteralTypea	declared	source:full/network/Network.swift#UnicodeScalarLiteralType	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network10NWEndpointO4HostO17StringLiteralTypea	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
+s:7Network10NWEndpointO4HostO24UnicodeScalarLiteralTypea	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network10NWEndpointO4HostO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
-s:7Network10NWEndpointO4HostO34ExtendedGraphemeClusterLiteralTypea	declared	source:full/network/Network.swift#ExtendedGraphemeClusterLiteralType	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network10NWEndpointO4HostO34ExtendedGraphemeClusterLiteralTypea	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network10NWEndpointO4HostO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4HostO4ipv4yAeA11IPv4AddressVcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4HostO4ipv6yAeA11IPv6AddressVcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
@@ -907,7 +907,7 @@ s:7Network10NWEndpointO4HostOyAESScfc	implemented	test:full/network/tests/agent/
 s:7Network10NWEndpointO4PortV	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV14integerLiteralAEs6UInt16V_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
-s:7Network10NWEndpointO4PortV18IntegerLiteralTypea	declared	source:full/network/Network.swift#IntegerLiteralType	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network10NWEndpointO4PortV18IntegerLiteralTypea	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network10NWEndpointO4PortV3anyAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV3popAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV3sshAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
@@ -917,7 +917,7 @@ s:7Network10NWEndpointO4PortV4smtpAEvpZ	implemented	test:full/network/tests/agen
 s:7Network10NWEndpointO4PortV5httpsAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV5imapsAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV5socksAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
-s:7Network10NWEndpointO4PortV8RawValuea	declared	source:full/network/Network.swift#RawValue	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network10NWEndpointO4PortV8RawValuea	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network10NWEndpointO4PortV8rawValueAESgs6UInt16V_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortV8rawValues6UInt16Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
 s:7Network10NWEndpointO4PortVyAESgSScfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWEndpointPortsAndHosts	-
@@ -940,8 +940,8 @@ s:7Network10NWListenerC23InfiniteConnectionLimitSivpZ	implemented	test:full/netw
 s:7Network10NWListenerC25ServiceRegistrationChangeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testListenerServiceInits	-
 s:7Network10NWListenerC25ServiceRegistrationChangeO3addyAeA10NWEndpointOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testListenerServiceInits	-
 s:7Network10NWListenerC25ServiceRegistrationChangeO6removeyAeA10NWEndpointOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testListenerServiceInits	-
-s:7Network10NWListenerC25newConnectionGroupHandleryAA012NWConnectionE0CcSgvp	declared	source:full/network/Network.swift#newConnectionGroupHandler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network10NWListenerC32serviceRegistrationUpdateHandleryAC07ServiceD6ChangeOcSgvp	declared	source:full/network/Network.swift#serviceRegistrationUpdateHandler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network10NWListenerC25newConnectionGroupHandleryAA012NWConnectionE0CcSgvp	implemented	test:full/network/tests/agent/NetworkListenerSurfaceTests.swift#testListenerGroupAndRegistrationHandlers	-
+s:7Network10NWListenerC32serviceRegistrationUpdateHandleryAC07ServiceD6ChangeOcSgvp	implemented	test:full/network/tests/agent/NetworkListenerSurfaceTests.swift#testListenerGroupAndRegistrationHandlers	-
 s:7Network10NWListenerC4portAA10NWEndpointO4PortVSgvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testConnectionViabilityBetterPathAndContext	-
 s:7Network10NWListenerC5StateO	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network10NWListenerC5StateO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
@@ -1026,7 +1026,7 @@ s:7Network11IPv6AddressV4hash4intoys6HasherVz_tF	implemented	test:full/network/t
 s:7Network11IPv6AddressV5ScopeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
 s:7Network11IPv6AddressV5ScopeO17organizationLocalyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
 s:7Network11IPv6AddressV5ScopeO6globalyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
-s:7Network11IPv6AddressV5ScopeO8RawValuea	declared	source:full/network/Network.swift#RawValue	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network11IPv6AddressV5ScopeO8RawValuea	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network11IPv6AddressV5ScopeO8rawValueAESgs5UInt8V_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
 s:7Network11IPv6AddressV5ScopeO8rawValues5UInt8Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
 s:7Network11IPv6AddressV5ScopeO9linkLocalyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv6AddressParsing	-
@@ -1067,7 +1067,7 @@ s:7Network11NWInterfaceV9RadioTypeO4WiFiO1nyA2GmF	implemented	test:full/network/
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO2acyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO2axyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO2eeoiySbAG_AGtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
-s:7Network11NWInterfaceV9RadioTypeO4WiFiO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network11NWInterfaceV9RadioTypeO4WiFiO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testInterfaceRadioHashable	-
 s:7Network11NWInterfaceV9RadioTypeO4WiFiO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:7Network11NWInterfaceV9RadioTypeO4cellyA2E8CellularOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO4wifiyA2E4WiFiOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -1075,7 +1075,7 @@ s:7Network11NWInterfaceV9RadioTypeO8CellularO	implemented	test:full/network/test
 s:7Network11NWInterfaceV9RadioTypeO8CellularO12standalone5GyA2G17NewRadio5GVariantOcAGmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO2eeoiySbAI_AItFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
-s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testInterfaceRadioHashable	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO6mmWaveyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO7sub6GHzyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network11NWInterfaceV9RadioTypeO8CellularO17NewRadio5GVariantO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
@@ -1091,7 +1091,7 @@ s:7Network11NWTXTRecordV10dictionarySDyS2SGvp	implemented	test:full/network/test
 s:7Network11NWTXTRecordV10startIndexAC0D0Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
 s:7Network11NWTXTRecordV11SubSequencea	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network11NWTXTRecordV11removeEntry3keySbSS_tF	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRemoveAndEntryNone	-
-s:7Network11NWTXTRecordV16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network11NWTXTRecordV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
 s:7Network11NWTXTRecordV2eeoiySbAC_ACtFZ	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
 s:7Network11NWTXTRecordV4data10Foundation4DataVvp	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
 s:7Network11NWTXTRecordV5EntryO	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
@@ -1109,9 +1109,9 @@ s:7Network11NWTXTRecordV5IndexV	implemented	test:full/network/tests/agent/Networ
 s:7Network11NWTXTRecordV5IndexV1loiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
 s:7Network11NWTXTRecordV5IndexV2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763RoundTrip	-
 s:7Network11NWTXTRecordV5index5afterAC5IndexVAG_tF	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
-s:7Network11NWTXTRecordV7Elementa	declared	source:full/network/Network.swift#Element	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network11NWTXTRecordV7Indicesa	declared	source:full/network/NetworkTXT.swift#Indices	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network11NWTXTRecordV8Iteratora	declared	source:full/network/Network.swift#Iterator	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network11NWTXTRecordV7Elementa	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:7Network11NWTXTRecordV7Indicesa	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
+s:7Network11NWTXTRecordV8Iteratora	implemented	test:full/network/tests/agent/NetworkTXTCollectionTests.swift#testNWTXTRecordCollectionAlgorithms	-
 s:7Network11NWTXTRecordV8endIndexAC0D0Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTXTRecordDictionaryRoundTrip	-
 s:7Network11NWTXTRecordV8getEntry3forAC0D0OSgSS_tF	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763EmptyAndBinary	-
 s:7Network11NWTXTRecordV8setEntry_3forSbAC0D0O_SStF	implemented	test:full/network/tests/agent/NetworkTXTRecordTests.swift#testNWTXTRecordRFC6763EmptyAndBinary	-
@@ -1129,7 +1129,7 @@ s:7Network12NWConnectionC14ContentContextC10identifier10expiration8priority7isFi
 s:7Network12NWConnectionC14ContentContextC10identifierSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC14ContentContextC12finalMessageAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC14ContentContextC13defaultStreamAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC14ContentContextC14defaultMessageAEvpZ	declared	source:full/network/Network.swift#defaultMessage	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC14ContentContextC14defaultMessageAEvpZ	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testContentContextDefaultMessage	-
 s:7Network12NWConnectionC14ContentContextC16protocolMetadata10definitionAA010NWProtocolF0CSgAA0H10DefinitionC_tF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC14ContentContextC16protocolMetadataSayAA010NWProtocolF0CGvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC14ContentContextC16relativePrioritySdvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
@@ -1138,7 +1138,7 @@ s:7Network12NWConnectionC14ContentContextC7isFinalSbvp	implemented	test:full/net
 s:7Network12NWConnectionC14SendCompletionO	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC14SendCompletionO10idempotentyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC14SendCompletionO16contentProcessedyAEyAA7NWErrorOSgccAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
-s:7Network12NWConnectionC14receiveMessage10completionyy10Foundation4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtc_tF	declared	source:full/network/Network.swift#receiveMessage	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC14receiveMessage10completionyy10Foundation4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtc_tF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testReceiveMessageOnRefusedConnection	-
 s:7Network12NWConnectionC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC17pathUpdateHandleryAA6NWPathVcSgvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testConnectionViabilityBetterPathAndContext	-
 s:7Network12NWConnectionC18DataTransferReportV	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
@@ -1156,51 +1156,51 @@ s:7Network12NWConnectionC18DataTransferReportV04PathE0V28receivedApplicationByte
 s:7Network12NWConnectionC18DataTransferReportV04PathE0V31retransmittedTransportByteCounts6UInt64Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC18DataTransferReportV04PathE0V35receivedTransportDuplicateByteCounts6UInt64Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC18DataTransferReportV04PathE0V36receivedTransportOutOfOrderByteCounts6UInt64Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC18DataTransferReportV04PathE0V9interfaceAA11NWInterfaceVvp	declared	source:full/network/Network.swift#interface	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC18DataTransferReportV04PathE0V9interfaceAA11NWInterfaceVvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testDataTransferReportFields	-
 s:7Network12NWConnectionC18DataTransferReportV04PathE0V9radioTypeAA11NWInterfaceV05RadioH0OSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC18DataTransferReportV11pathReportsSayAE04PathE0VGvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC18DataTransferReportV16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC18DataTransferReportV8durationSdvp	declared	source:full/network/NetworkOverlay.swift#duration	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC18DataTransferReportV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testDataTransferReportFields	-
+s:7Network12NWConnectionC18DataTransferReportV8durationSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testDataTransferReportFields	-
 s:7Network12NWConnectionC18stateUpdateHandleryAC5StateOcSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC19EstablishmentReportV	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV	declared	source:full/network/NetworkOverlay.swift#Resolution	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO	declared	source:full/network/NetworkOverlay.swift#DNSProtocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO2eeoiySbAI_AItFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO3tcpyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO3tlsyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO3udpyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO5httpsyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO7unknownyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11DNSProtocolO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11dnsProtocolAG11DNSProtocolOvp	declared	source:full/network/NetworkOverlay.swift#dnsProtocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV13endpointCountSivp	declared	source:full/network/NetworkOverlay.swift#endpointCount	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV17preferredEndpointAA10NWEndpointOvp	declared	source:full/network/NetworkOverlay.swift#preferredEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV18successfulEndpointAA10NWEndpointOvp	declared	source:full/network/NetworkOverlay.swift#successfulEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO	declared	source:full/network/NetworkOverlay.swift#Source	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV11dnsProtocolAG11DNSProtocolOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV13endpointCountSivp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV17preferredEndpointAA10NWEndpointOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV18successfulEndpointAA10NWEndpointOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO12expiredCacheyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO2eeoiySbAI_AItFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO5cacheyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO5queryyA2ImF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6SourceO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6sourceAG6SourceOvp	declared	source:full/network/NetworkOverlay.swift#source	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV8durationSdvp	declared	source:full/network/NetworkOverlay.swift#duration	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV10handshakesSayAE9HandshakeVGvp	declared	source:full/network/NetworkOverlay.swift#handshakes	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV11resolutionsSayAE10ResolutionVGvp	declared	source:full/network/NetworkOverlay.swift#resolutions	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV13proxyEndpointAA10NWEndpointOSgvp	declared	source:full/network/NetworkOverlay.swift#proxyEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV15proxyConfiguredSbvp	declared	source:full/network/NetworkOverlay.swift#proxyConfigured	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV20previousAttemptCountSivp	declared	source:full/network/NetworkOverlay.swift#previousAttemptCount	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV27attemptStartedAfterIntervalSdvp	declared	source:full/network/NetworkOverlay.swift#attemptStartedAfterInterval	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV8durationSdvp	declared	source:full/network/NetworkOverlay.swift#duration	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV	declared	source:full/network/NetworkOverlay.swift#Handshake	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV10definitionAA20NWProtocolDefinitionCvp	declared	source:full/network/Network.swift#definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV12handshakeRTTSdvp	declared	source:full/network/NetworkOverlay.swift#handshakeRTT	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV17handshakeDurationSdvp	declared	source:full/network/NetworkOverlay.swift#handshakeDuration	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWConnectionC19EstablishmentReportV9usedProxySbvp	declared	source:full/network/NetworkOverlay.swift#usedProxy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV6sourceAG6SourceOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10ResolutionV8durationSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV10handshakesSayAE9HandshakeVGvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV11resolutionsSayAE10ResolutionVGvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV13proxyEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV15proxyConfiguredSbvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV20previousAttemptCountSivp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV27attemptStartedAfterIntervalSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV8durationSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV10definitionAA20NWProtocolDefinitionCvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV12handshakeRTTSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV9HandshakeV17handshakeDurationSdvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
+s:7Network12NWConnectionC19EstablishmentReportV9usedProxySbvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testEstablishmentReportDataModel	-
 s:7Network12NWConnectionC19maximumDatagramSizeSivp	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC20receiveDiscontiguous23minimumIncompleteLength07maximumG010completionySi_Siy8Dispatch0J4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtctF	declared	source:full/network/NetworkOverlay.swift#receiveDiscontiguous	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC20receiveDiscontiguous23minimumIncompleteLength07maximumG010completionySi_Siy8Dispatch0J4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtctF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testConnectionEndpointBatchAndHandlers	-
 s:7Network12NWConnectionC21cancelCurrentEndpointyyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionRefusedOnClosedPort	-
 s:7Network12NWConnectionC22viabilityUpdateHandlerySbcSgvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testConnectionViabilityBetterPathAndContext	-
 s:7Network12NWConnectionC23betterPathUpdateHandlerySbcSgvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testConnectionViabilityBetterPathAndContext	-
@@ -1208,7 +1208,7 @@ s:7Network12NWConnectionC23startDataTransferReportAC07PendingdeF0CyF	implemented
 s:7Network12NWConnectionC25PendingDataTransferReportC	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC25PendingDataTransferReportC7collect5queue10completionySo012OS_dispatch_H0C_yAC0deF0VctF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWConnectionC26requestEstablishmentReport5queue10completionySo012OS_dispatch_F0C_yAC0dE0VSgctF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC27receiveMessageDiscontiguous10completionyy8Dispatch0G4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtc_tF	declared	source:full/network/NetworkOverlay.swift#receiveMessageDiscontiguous	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC27receiveMessageDiscontiguous10completionyy8Dispatch0G4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtc_tF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testConnectionEndpointBatchAndHandlers	-
 s:7Network12NWConnectionC2to5usingAcA10NWEndpointO_AA12NWParametersCtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC4from2to5usingACSgAA0B5GroupC_AA10NWEndpointOSgAA17NWProtocolOptionsCSgtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC4host4port5usingAcA10NWEndpointO4HostO_AH4PortVAA12NWParametersCtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
@@ -1222,7 +1222,7 @@ s:7Network12NWConnectionC5StateO6failedyAeA7NWErrorOcAEmF	implemented	test:full/
 s:7Network12NWConnectionC5StateO7waitingyAeA7NWErrorOcAEmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testServiceEndpointWaitsThenFails	-
 s:7Network12NWConnectionC5StateO9cancelledyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC5StateO9preparingyA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSHandshakeFailsWithErrSSLProtocol	-
-s:7Network12NWConnectionC5batchyyyyXEF	declared	source:full/network/NetworkOverlay.swift#batch	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC5batchyyyyXEF	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testConnectionEndpointBatchAndHandlers	-
 s:7Network12NWConnectionC5queueSo012OS_dispatch_C0CSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC5start5queueySo012OS_dispatch_D0C_tF	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC5stateAC5StateOvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
@@ -1230,18 +1230,18 @@ s:7Network12NWConnectionC6cancelyyF	implemented	test:full/network/tests/agent/Ne
 s:7Network12NWConnectionC7messageACSgAA0B5GroupC7MessageC_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testTCPLoopbackRoundTrip	-
 s:7Network12NWConnectionC7receive23minimumIncompleteLength07maximumF010completionySi_Siy10Foundation4DataVSg_AC14ContentContextCSgSbAA7NWErrorOSgtctF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionRefusedOnClosedPort	-
 s:7Network12NWConnectionC7restartyyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
-s:7Network12NWConnectionC8endpointAA10NWEndpointOvp	declared	source:full/network/Network.swift#endpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWConnectionC8endpointAA10NWEndpointOvp	implemented	test:full/network/tests/agent/NetworkConnectionSurfaceTests.swift#testConnectionEndpointBatchAndHandlers	-
 s:7Network12NWConnectionC8metadata10definitionAA18NWProtocolMetadataCSgAA0E10DefinitionC_tF	implemented	test:full/network/tests/agent/NetworkTests.swift#testConnectionContentContextAndReports	-
 s:7Network12NWParametersC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC013includePeerToD0Sbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC10parametersACvp	declared	source:full/network/Network.swift#parameters	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC10parametersACvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC11AttributionO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC11AttributionO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC11AttributionO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC11AttributionO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
 s:7Network12NWParametersC11AttributionO4useryA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC11AttributionO9developeryA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWParametersC11AttributionO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:7Network12NWParametersC11attributionAC11AttributionOvp	declared	source:full/network/Network.swift#attribution	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC11attributionAC11AttributionOvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC12ServiceClassO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO10backgroundyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO10bestEffortyA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
@@ -1249,22 +1249,22 @@ s:7Network12NWParametersC12ServiceClassO14responsiveDatayA2EmF	implemented	test:
 s:7Network12NWParametersC12ServiceClassO16interactiveVideoyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO16interactiveVoiceyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12ServiceClassO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC12ServiceClassO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC12ServiceClassO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
 s:7Network12NWParametersC12ServiceClassO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:7Network12NWParametersC12ServiceClassO9signalingyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC12quicDatagram4alpnACSaySSG_tFZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICConnectionFailsClosed	-
 s:7Network12NWParametersC12serviceClassAC07ServiceD0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC13ProtocolStackC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC13ProtocolStackC08internetC0AA17NWProtocolOptionsCSgvp	declared	source:full/network/Network.swift#internetProtocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWParametersC13ProtocolStackC09transportC0AA17NWProtocolOptionsCSgvp	declared	source:full/network/Network.swift#transportProtocol	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWParametersC13ProtocolStackC20applicationProtocolsSayAA17NWProtocolOptionsCGvp	declared	source:full/network/Network.swift#applicationProtocols	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC13ProtocolStackC08internetC0AA17NWProtocolOptionsCSgvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersProtocolStackAndPrivacy	-
+s:7Network12NWParametersC13ProtocolStackC09transportC0AA17NWProtocolOptionsCSgvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersProtocolStackAndPrivacy	-
+s:7Network12NWParametersC13ProtocolStackC20applicationProtocolsSayAA17NWProtocolOptionsCGvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersProtocolStackAndPrivacy	-
 s:7Network12NWParametersC13allowFastOpenSbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC10flushCacheyyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC11descriptionAESS_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC14disableLoggingyyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC14PrivacyContextC19proxyConfigurationsSayAA18ProxyConfigurationVGvp	declared	source:full/network/Network.swift#proxyConfigurations	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC14PrivacyContextC19proxyConfigurationsSayAA18ProxyConfigurationVGvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersProtocolStackAndPrivacy	-
 s:7Network12NWParametersC14PrivacyContextC21ResolverConfigurationO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC21ResolverConfigurationO16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC21ResolverConfigurationO3tlsyAgA10NWEndpointO_SayAJGtcAGmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1272,7 +1272,7 @@ s:7Network12NWParametersC14PrivacyContextC21ResolverConfigurationO5httpsyAG10Fou
 s:7Network12NWParametersC14PrivacyContextC30requireEncryptedNameResolution_16fallbackResolverySb_AE0J13ConfigurationOSgtF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC14PrivacyContextC7defaultAEvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC15acceptLocalOnlySbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC15preferNoProxiesSbvp	declared	source:full/network/Network.swift#preferNoProxies	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC15preferNoProxiesSbvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC17requiredInterfaceAA11NWInterfaceVSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC17setPrivacyContextyyAC0dE0CF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1280,7 +1280,7 @@ s:7Network12NWParametersC18ExpiredDNSBehaviorO	implemented	test:full/network/tes
 s:7Network12NWParametersC18ExpiredDNSBehaviorO10persistentyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO13systemDefaultyA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC18ExpiredDNSBehaviorO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC18ExpiredDNSBehaviorO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO5allowyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO8prohibityA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC18ExpiredDNSBehaviorO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
@@ -1289,7 +1289,7 @@ s:7Network12NWParametersC18expiredDNSBehaviorAC07ExpiredD0Ovp	implemented	test:f
 s:7Network12NWParametersC20MultipathServiceTypeO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20MultipathServiceTypeO11interactiveyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20MultipathServiceTypeO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC20MultipathServiceTypeO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC20MultipathServiceTypeO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersHashableEnums	-
 s:7Network12NWParametersC20MultipathServiceTypeO8disabledyA2EmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWParametersC20MultipathServiceTypeO8handoveryA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20MultipathServiceTypeO9aggregateyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
@@ -1298,23 +1298,23 @@ s:7Network12NWParametersC20defaultProtocolStackAC0dE0Cvp	implemented	test:full/n
 s:7Network12NWParametersC20multipathServiceTypeAC09MultipathdE0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC20prohibitedInterfacesSayAA11NWInterfaceVGSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC21requiredInterfaceTypeAA11NWInterfaceV0dE0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC21requiredLocalEndpointAA10NWEndpointOSgvp	declared	source:full/network/Network.swift#requiredLocalEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWParametersC22prohibitExpensivePathsSbvp	declared	source:full/network/Network.swift#prohibitExpensivePaths	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC21requiredLocalEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
+s:7Network12NWParametersC22prohibitExpensivePathsSbvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC23allowLocalEndpointReuseSbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
-s:7Network12NWParametersC24prohibitConstrainedPathsSbvp	declared	source:full/network/Network.swift#prohibitConstrainedPaths	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC24prohibitConstrainedPathsSbvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC24prohibitedInterfaceTypesSayAA11NWInterfaceV0D4TypeOGSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC24requiresDNSSECValidationSbvp	declared	source:full/network/Network.swift#requiresDNSSECValidation	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWParametersC26allowUltraConstrainedPathsSbvp	declared	source:full/network/Network.swift#allowUltraConstrainedPaths	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC24requiresDNSSECValidationSbvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
+s:7Network12NWParametersC26allowUltraConstrainedPathsSbvp	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC3tcpACvpZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
-s:7Network12NWParametersC3tls3tcpAcA13NWProtocolTLSC7OptionsCSg_AA0E3TCPCAHCtcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC3tls3tcpAcA13NWProtocolTLSC7OptionsCSg_AA0E3TCPCAHCtcfc	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC3tlsACvpZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSHandshakeFailsWithErrSSLProtocol	-
 s:7Network12NWParametersC3udpACvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network12NWParametersC4copyACyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
-s:7Network12NWParametersC4dtls3udpAcA13NWProtocolTLSC7OptionsCSg_AA0E3UDPCAHCtcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC4dtls3udpAcA13NWProtocolTLSC7OptionsCSg_AA0E3UDPCAHCtcfc	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWParametersC4dtlsACvpZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSHandshakeFailsWithErrSSLProtocol	-
 s:7Network12NWParametersC4quic4alpnACSaySSG_tFZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICConnectionFailsClosed	-
-s:7Network12NWParametersC4quicAcA14NWProtocolQUICC7OptionsC_tcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network12NWParametersCACycfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWParametersC4quicAcA14NWProtocolQUICC7OptionsC_tcfc	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
+s:7Network12NWParametersCACycfc	implemented	test:full/network/tests/agent/NetworkParametersSurfaceTests.swift#testNWParametersInitsAndStoredFlags	-
 s:7Network12NWProtocolIPC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC10definitionAA0B10DefinitionCvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC3ECNO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
@@ -1322,14 +1322,14 @@ s:7Network12NWProtocolIPC3ECNO2ceyA2EmF	implemented	test:full/network/tests/agen
 s:7Network12NWProtocolIPC3ECNO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC3ECNO4ect0yA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC3ECNO4ect1yA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
-s:7Network12NWProtocolIPC3ECNO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWProtocolIPC3ECNO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network12NWProtocolIPC3ECNO6nonECTyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC3ECNO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:7Network12NWProtocolIPC7OptionsC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC13useMinimumMTUSbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO2eeoiySbAG_AGtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
-s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO6stableyA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO7defaultyA2GmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC17AddressPreferenceO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
@@ -1343,7 +1343,7 @@ s:7Network12NWProtocolIPC7OptionsC7VersionO2eeoiySbAG_AGtFZ	implemented	test:ful
 s:7Network12NWProtocolIPC7OptionsC7VersionO2v4yA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC7VersionO2v6yA2GmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network12NWProtocolIPC7OptionsC7VersionO3anyyA2GmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
-s:7Network12NWProtocolIPC7OptionsC7VersionO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network12NWProtocolIPC7OptionsC7VersionO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network12NWProtocolIPC7OptionsC7VersionO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:7Network12NWProtocolIPC7OptionsC7versionAE7VersionOvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network12NWProtocolIPC7OptionsC8hopLimits5UInt8Vvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
@@ -1363,7 +1363,7 @@ s:7Network12QUICDatagramV8MetadataV	declared	source:full/network/Network.swift#M
 s:7Network12QUICDatagramV8MetadataV5otherSayAA010NWProtocolC0CGvp	declared	source:full/network/Network.swift#other	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network13NWPathMonitorC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWPathMonitorC11currentPathAA0B0Vvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testPathMonitorRestartAndFilterUpdates	-
-s:7Network13NWPathMonitorC13AsyncIteratora	declared	source:full/network/Network.swift#AsyncIterator	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network13NWPathMonitorC13AsyncIteratora	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network13NWPathMonitorC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWPathMonitorC17makeAsyncIteratorAC0F0VyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWPathMonitorC17pathUpdateHandleryAA0B0VcSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -1372,10 +1372,10 @@ s:7Network13NWPathMonitorC24prohibitedInterfaceTypesACSayAA11NWInterfaceV0E4Type
 s:7Network13NWPathMonitorC5queueSo012OS_dispatch_D0CSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWPathMonitorC5start5queueySo012OS_dispatch_E0C_tF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWPathMonitorC6cancelyyF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testPathMonitorRestartAndFilterUpdates	-
-s:7Network13NWPathMonitorC7Elementa	declared	source:full/network/Network.swift#Element	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network13NWPathMonitorC7Elementa	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network13NWPathMonitorC8IteratorV	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWPathMonitorC8IteratorV4nextAA0B0VSgyYaF	declared	source:full/network/Network.swift#next	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network13NWPathMonitorC8IteratorV7Elementa	declared	source:full/network/Network.swift#Element	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network13NWPathMonitorC8IteratorV7Elementa	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testHostPortAssociatedTypes	-
 s:7Network13NWPathMonitorCACycfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network13NWProtocolTCPC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network13NWProtocolTCPC10definitionAA0B10DefinitionCvpZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
@@ -1400,26 +1400,26 @@ s:7Network13NWProtocolTCPC8MetadataC	implemented	test:full/network/tests/agent/N
 s:7Network13NWProtocolTCPC8MetadataC19availableSendBuffers6UInt32Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network13NWProtocolTCPC8MetadataC22availableReceiveBuffers6UInt32Vvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
 s:7Network13NWProtocolTLSC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWProtocolOptionsValueStores	-
-s:7Network13NWProtocolTLSC10definitionAA0B10DefinitionCvpZ	declared	source:full/network/Network.swift#definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network13NWProtocolTLSC10definitionAA0B10DefinitionCvpZ	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network13NWProtocolTLSC7OptionsC	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 s:7Network13NWProtocolTLSC7OptionsC016securityProtocolD0So23OS_sec_protocol_options_pvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 s:7Network13NWProtocolTLSC7OptionsCAEycfc	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 s:7Network13NWProtocolTLSC8MetadataC	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 s:7Network13NWProtocolTLSC8MetadataC016securityProtocolD0So24OS_sec_protocol_metadata_pvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testTLSOptionsStoreSecurityProtocolData	-
 s:7Network13NWProtocolUDPC	implemented	test:full/network/tests/agent/NetworkTests.swift#testUDPLoopbackRoundTrip	-
-s:7Network13NWProtocolUDPC10definitionAA0B10DefinitionCvpZ	declared	source:full/network/Network.swift#definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network13NWProtocolUDPC10definitionAA0B10DefinitionCvpZ	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network13NWProtocolUDPC7OptionsC	implemented	test:full/network/tests/agent/NetworkTests.swift#testUDPLoopbackRoundTrip	-
 s:7Network13NWProtocolUDPC7OptionsC16preferNoChecksumSbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network13NWProtocolUDPC7OptionsCAEycfc	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testProtocolOptionDocumentedDefaults	-
 s:7Network13NWProtocolUDPC8MetadataC	implemented	test:full/network/tests/agent/NetworkTests.swift#testUDPLoopbackRoundTrip	-
-s:7Network13NWProtocolUDPC8MetadataCAEycfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network13NWProtocolUDPC8MetadataCAEycfc	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network14FramerProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network14FramerProtocolP10definitionAA010NWProtocolB0C10DefinitionCvpZ	declared	source:full/network/Network.swift#definition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network14NWProtocolQUICC	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC10definitionAA0B10DefinitionCvpZ	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC16ApplicationErrorV	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC16ApplicationErrorV14integerLiteralAEs6UInt64V_tcfc	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
-s:7Network14NWProtocolQUICC16ApplicationErrorV18IntegerLiteralTypea	declared	source:full/network/Network.swift#IntegerLiteralType	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network14NWProtocolQUICC16ApplicationErrorV18IntegerLiteralTypea	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network14NWProtocolQUICC16ApplicationErrorV4code6reasonAEs6UInt64V_SSSgtcfc	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC16ApplicationErrorV4codes6UInt64Vvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
 s:7Network14NWProtocolQUICC16ApplicationErrorV6reasonSSSgvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testQUICOptionsDataModel	-
@@ -1485,11 +1485,11 @@ s:7Network16NWMultiplexGroupC2toAcA10NWEndpointO_tcfc	declared	source:full/netwo
 s:7Network16NWMultiplexGroupC7membersSayAA10NWEndpointOGvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network16NWProtocolFramerC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC10DefinitionC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:7Network16NWProtocolFramerC10DefinitionC14implementationAeA0bC14Implementation_pXp_tcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network16NWProtocolFramerC10DefinitionC14implementationAeA0bC14Implementation_pXp_tcfc	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerDefinitionAndOptionsInits	-
 s:7Network16NWProtocolFramerC11StartResultO	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerHostDriverParseInputWriteOutput	-
 s:7Network16NWProtocolFramerC11StartResultO13willMarkReadyyA2EmF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC11StartResultO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:7Network16NWProtocolFramerC11StartResultO4hash4intoys6HasherVz_tF	declared	source:full/network/Network.swift#hash	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network16NWProtocolFramerC11StartResultO4hash4intoys6HasherVz_tF	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testFramerStartResultHashable	-
 s:7Network16NWProtocolFramerC11StartResultO5readyyA2EmF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerHostDriverParseInputWriteOutput	-
 s:7Network16NWProtocolFramerC11StartResultO9hashValueSivp	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
 s:7Network16NWProtocolFramerC7MessageC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
@@ -1497,7 +1497,7 @@ s:7Network16NWProtocolFramerC7MessageC10definitionAeC10DefinitionC_tcfc	implemen
 s:7Network16NWProtocolFramerC7MessageC8instanceAeC8InstanceC_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC7MessageCyypSgSScip	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerHostDriverParseInputWriteOutput	-
 s:7Network16NWProtocolFramerC7OptionsC	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:7Network16NWProtocolFramerC7OptionsC10definitionAeC10DefinitionC_tcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network16NWProtocolFramerC7OptionsC10definitionAeC10DefinitionC_tcfc	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerDefinitionAndOptionsInits	-
 s:7Network16NWProtocolFramerC7OptionsCyypSgSScip	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network16NWProtocolFramerC8InstanceC	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC10WakeupTimeO	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
@@ -1506,7 +1506,7 @@ s:7Network16NWProtocolFramerC8InstanceC10WakeupTimeO7foreveryA2GmF	implemented	t
 s:7Network16NWProtocolFramerC8InstanceC10markFailed5erroryAA7NWErrorOSg_tF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC10parametersAA12NWParametersCSgvp	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC10parseInput23minimumIncompleteLength07maximumI00E0SbSi_S2iSwSg_SbtXEtF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerParseInputWaitsForMinimum	-
-s:7Network16NWProtocolFramerC8InstanceC11parseOutput23minimumIncompleteLength07maximumI00E0SbSi_S2iSwSg_SbtXEtF	declared	source:full/network/NetworkOverlay.swift#parseOutput	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network16NWProtocolFramerC8InstanceC11parseOutput23minimumIncompleteLength07maximumI00E0SbSi_S2iSwSg_SbtXEtF	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerParseOutputWriteNoCopyAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC11writeOutput4datay10Foundation4DataV_tF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC11writeOutput4datayx_t10Foundation12DataProtocolRzlF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC12deliverInput4data7message10isCompletey10Foundation4DataV_AC7MessageCSbtF	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
@@ -1514,10 +1514,10 @@ s:7Network16NWProtocolFramerC8InstanceC14scheduleWakeup10wakeupTimeyAE0fH0O_tF	i
 s:7Network16NWProtocolFramerC8InstanceC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC16passThroughInputyyF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC17passThroughOutputyyF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
-s:7Network16NWProtocolFramerC8InstanceC17writeOutputNoCopy6lengthySi_tKF	declared	source:full/network/NetworkOverlay.swift#writeOutputNoCopy	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network16NWProtocolFramerC8InstanceC17writeOutputNoCopy6lengthySi_tKF	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerParseOutputWriteNoCopyAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC18deliverInputNoCopy6length7message10isCompleteSbSi_AC7MessageCSbtF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC26prependApplicationProtocol7optionsyAA0B7OptionsC_tKF	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
-s:7Network16NWProtocolFramerC8InstanceC5async7executeyyyc_tF	declared	source:full/network/Network.swift#async	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network16NWProtocolFramerC8InstanceC5async7executeyyyc_tF	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerParseOutputWriteNoCopyAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC5localAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC6remoteAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
 s:7Network16NWProtocolFramerC8InstanceC7optionsAC7OptionsCvp	implemented	test:full/network/tests/agent/NetworkFramerTests.swift#testFramerPassThroughMarkFailedAndAsync	-
@@ -1529,13 +1529,13 @@ s:7Network17ConnectionStorageP	deferred		No source-compatible declaration in thi
 s:7Network17ConnectionStoragePxycfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network17MultiplexProtocolP	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network17NWConnectionGroupC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
-s:7Network17NWConnectionGroupC10descriptorAA17NWGroupDescriptor_pvp	declared	source:full/network/NetworkBrowser.swift#descriptor	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network17NWConnectionGroupC10parametersAA12NWParametersCvp	declared	source:full/network/Network.swift#parameters	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network17NWConnectionGroupC16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network17NWConnectionGroupC10descriptorAA17NWGroupDescriptor_pvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
+s:7Network17NWConnectionGroupC10parametersAA12NWParametersCvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
+s:7Network17NWConnectionGroupC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC17setReceiveHandler18maximumMessageSize23rejectOversizedMessages7handlerySi_SbyAC0H0C_10Foundation4DataVSgSbtcSgtF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network17NWConnectionGroupC18stateUpdateHandleryAC5StateOcSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
-s:7Network17NWConnectionGroupC20newConnectionHandleryAA0B0CcSgvp	declared	source:full/network/Network.swift#newConnectionHandler	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network17NWConnectionGroupC4send7content2to7message10completiony10Foundation4DataVSg_AA10NWEndpointOSgAC7MessageCyAA7NWErrorOSgctF	declared	source:full/network/Network.swift#send	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network17NWConnectionGroupC20newConnectionHandleryAA0B0CcSgvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
+s:7Network17NWConnectionGroupC4send7content2to7message10completiony10Foundation4DataVSg_AA10NWEndpointOSgAC7MessageCyAA7NWErrorOSgctF	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC4with5usingAcA17NWGroupDescriptor_p_AA12NWParametersCtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
 s:7Network17NWConnectionGroupC5StateO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
 s:7Network17NWConnectionGroupC5StateO2eeoiySbAE_AEtFZ	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
@@ -1550,16 +1550,16 @@ s:7Network17NWConnectionGroupC5stateAC5StateOvp	implemented	test:full/network/te
 s:7Network17NWConnectionGroupC6cancelyyF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
 s:7Network17NWConnectionGroupC7MessageC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
 s:7Network17NWConnectionGroupC7MessageC10identifier10expiration8priority7isFinal10antecedent8metadataAESS_s6UInt64VSdSbAA0B0C14ContentContextCSgSayAA18NWProtocolMetadataCGSgtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
-s:7Network17NWConnectionGroupC7MessageC13localEndpointAA10NWEndpointOSgvp	declared	source:full/network/Network.swift#localEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network17NWConnectionGroupC7MessageC14remoteEndpointAA10NWEndpointOSgvp	declared	source:full/network/Network.swift#remoteEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network17NWConnectionGroupC7MessageC13localEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
+s:7Network17NWConnectionGroupC7MessageC14remoteEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC7MessageC17extractConnectionAA0B0CSgyF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network17NWConnectionGroupC7MessageC2nwAESo03OS_E16_content_context_p_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWConnectionGroupFailClosed	-
-s:7Network17NWConnectionGroupC7MessageC4pathAA6NWPathVSgvp	declared	source:full/network/Network.swift#path	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network17NWConnectionGroupC7MessageC4pathAA6NWPathVSgvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC7MessageC5reply7content7messagey10Foundation4DataVSg_AEtF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network17NWConnectionGroupC7MessageC7defaultAEvpZ	declared	source:full/network/Network.swift#default	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network17NWConnectionGroupC7MessageC8metadata10definitionAA18NWProtocolMetadataCSgAA0G10DefinitionC_tF	declared	source:full/network/NetworkBrowser.swift#metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network17NWConnectionGroupC7MessageC7defaultAEvpZ	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
+s:7Network17NWConnectionGroupC7MessageC8metadata10definitionAA18NWProtocolMetadataCSgAA0G10DefinitionC_tF	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC7extract12connectionTo5usingAA0B0CSgAA10NWEndpointOSg_AA17NWProtocolOptionsCSgtF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network17NWConnectionGroupC8metadata10definitionAA18NWProtocolMetadataCSgAA0F10DefinitionC_tF	declared	source:full/network/NetworkBrowser.swift#metadata	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network17NWConnectionGroupC8metadata10definitionAA18NWProtocolMetadataCSgAA0F10DefinitionC_tF	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testConnectionGroupDescriptorAndSend	-
 s:7Network17NWConnectionGroupC8reinsert10connectionSbAA0B0C_tF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network17NWGroupDescriptorP	declared	source:full/network/NetworkBrowser.swift#NWGroupDescriptor	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network17NWGroupDescriptorP7membersSayAA10NWEndpointOGvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
@@ -1571,13 +1571,13 @@ s:7Network18ProxyConfigurationV12matchDomainsSaySSGvp	deferred		No source-compat
 s:7Network18ProxyConfigurationV13allowFailoverSbvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network18ProxyConfigurationV15applyCredential8username8passwordySS_SStF	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
 s:7Network18ProxyConfigurationV15excludedDomainsSaySSGvp	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network18ProxyConfigurationV16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network18ProxyConfigurationV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testProxyConfigurationDebugDescription	-
 s:7Network18ProxyConfigurationV16httpCONNECTProxy10tlsOptionsAcA10NWEndpointO_AA13NWProtocolTLSC0G0CSgtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network18ProxyConfigurationV18obliviousHTTPRelay17relayResourcePath16gatewayKeyConfig12matchDomainsA2C8RelayHopV_SS10Foundation4DataVSaySSGtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network18ProxyConfigurationV8RelayHopV	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network18ProxyConfigurationV8RelayHopV05http2D8Endpoint10tlsOptions26additionalHTTPHeaderFieldsAeA10NWEndpointO_AA13NWProtocolTLSC0I0CSDyS2SGtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network18ProxyConfigurationV8RelayHopV05http3D8Endpoint05http2dG010tlsOptions26additionalHTTPHeaderFieldsAeA10NWEndpointO_AKSgAA13NWProtocolTLSC0J0CSDyS2SGtcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
-s:7Network18ProxyConfigurationV8RelayHopV16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network18ProxyConfigurationV8RelayHopV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkGroupSurfaceTests.swift#testProxyConfigurationDebugDescription	-
 s:7Network18ProxyConfigurationV9relayHopsACSayAC8RelayHopVG_tcfc	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network19NWParametersBuilderV	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network19NWParametersBuilderV10parameters17initialParameters_ACyxq_q_Qp_QPGAA0B0C_x_q_q_QptyXEtFZ	declared	source:full/network/Network.swift#parameters	Declaration compiles on Linux; Apple runtime behavior is unobserved.
@@ -1594,7 +1594,7 @@ s:7Network19NWProtocolWebSocketC6OpcodeO4pongyA2EmF	implemented	test:full/networ
 s:7Network19NWProtocolWebSocketC6OpcodeO4textyA2EmF	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketOpcodeRawValues	-
 s:7Network19NWProtocolWebSocketC6OpcodeO5closeyA2EmF	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketOpcodeRawValues	-
 s:7Network19NWProtocolWebSocketC6OpcodeO6binaryyA2EmF	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketOpcodeRawValues	-
-s:7Network19NWProtocolWebSocketC6OpcodeO8RawValuea	declared	source:full/network/Network.swift#RawValue	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network19NWProtocolWebSocketC6OpcodeO8RawValuea	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network19NWProtocolWebSocketC6OpcodeO8rawValueAESgs5UInt8V_tcfc	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketOpcodeRawValues	-
 s:7Network19NWProtocolWebSocketC6OpcodeO8rawValues5UInt8Vvp	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketOpcodeRawValues	-
 s:7Network19NWProtocolWebSocketC7OptionsC	implemented	test:full/network/tests/agent/NetworkWebSocketTests.swift#testWebSocketCloseCodesAndOptions	-
@@ -1724,10 +1724,10 @@ s:7Network20NWParametersProviderPAAE9localOnlyyxSbF::SYNTHESIZED::s:7Network19NW
 s:7Network20NWParametersProviderPAAE9localPortyxAA10NWEndpointO0E0VF	declared	source:full/network/Network.swift#localPort	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network20NWParametersProviderPAAE9localPortyxAA10NWEndpointO0E0VF::SYNTHESIZED::s:7Network12NWParametersC	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWParametersPresetsAndBuilders	-
 s:7Network20NWParametersProviderPAAE9localPortyxAA10NWEndpointO0E0VF::SYNTHESIZED::s:7Network19NWParametersBuilderV	declared	source:full/network/Network.swift#localPort	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network20NWProtocolDefinitionC	declared	source:full/network/Network.swift#NWProtocolDefinition	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network20NWProtocolDefinitionC16debugDescriptionSSvp	declared	source:full/network/Network.swift#debugDescription	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network20NWProtocolDefinitionC2eeoiySbAC_ACtFZ	deferred		Stdlib protocol witness imported into the Network graph; not a Network-owned declaration and not a SwiftUI cross-import overlay.
-s:7Network20NWProtocolDefinitionC4nameSSvp	declared	source:full/network/Network.swift#name	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network20NWProtocolDefinitionC	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
+s:7Network20NWProtocolDefinitionC16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
+s:7Network20NWProtocolDefinitionC2eeoiySbAC_ACtFZ	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
+s:7Network20NWProtocolDefinitionC4nameSSvp	implemented	test:full/network/tests/agent/NetworkProtocolSurfaceTests.swift#testProtocolDefinitionsAndHashable	-
 s:7Network20ProtocolStackBuilderV	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network20ProtocolStackBuilderV10buildBlockyx_q_q_Qptx_q_q_QptFZ	deferred		iOS 26 typed Network* / protocol-stack builder surface is deferred; C and classic NW* overlay is the starting partition.
 s:7Network22DefaultProtocolStorageV	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
@@ -1757,7 +1757,7 @@ s:7Network30NWProtocolFramerImplementationP11handleInput6framerSiAA0bC0C8Instanc
 s:7Network30NWProtocolFramerImplementationP12handleOutput6framer7message0H6Length10isCompleteyAA0bC0C8InstanceC_AJ7MessageCSiSbtF	implemented	test:full/network/tests/agent/NetworkTests.swift#testOverlayQUICWebSocketFramer	-
 s:7Network30NWProtocolFramerImplementationP4stop6framerSbAA0bC0C8InstanceC_tF	declared	source:full/network/NetworkOverlay.swift#stop	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network30NWProtocolFramerImplementationP5labelSSvpZ	deferred		No source-compatible declaration in this Linux starting point; behavior is unobserved.
-s:7Network30NWProtocolFramerImplementationP5start6framerAA0bC0C11StartResultOAG8InstanceC_tF	declared	source:full/network/Network.swift#start	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network30NWProtocolFramerImplementationP5start6framerAA0bC0C11StartResultOAG8InstanceC_tF	implemented	test:full/network/tests/agent/NetworkFramerSurfaceTests.swift#testFramerDefinitionAndOptionsInits	-
 s:7Network30NWProtocolFramerImplementationP6framerxAA0bC0C8InstanceC_tcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network30NWProtocolFramerImplementationP6wakeup6frameryAA0bC0C8InstanceC_tF	declared	source:full/network/NetworkOverlay.swift#wakeup	Declaration compiles on Linux; Apple runtime behavior is unobserved.
 s:7Network30NWProtocolFramerImplementationP7cleanup6frameryAA0bC0C8InstanceC_tF	declared	source:full/network/NetworkOverlay.swift#cleanup	Declaration compiles on Linux; Apple runtime behavior is unobserved.
@@ -1903,12 +1903,12 @@ s:7Network6NWPathV11LinkQualityO8moderateyA2EmF	implemented	test:full/network/te
 s:7Network6NWPathV11LinkQualityO9hashValueSivp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network6NWPathV11isExpensiveSbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network6NWPathV11linkQualityAC04LinkD0Ovp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
-s:7Network6NWPathV11supportsDNSSbvp	declared	source:full/network/Network.swift#supportsDNS	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network6NWPathV11supportsDNSSbvp	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testNWPathDNSAndEndpoints	-
 s:7Network6NWPathV12supportsIPv4Sbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testPathMonitorRestartAndFilterUpdates	-
 s:7Network6NWPathV12supportsIPv6Sbvp	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testPathMonitorRestartAndFilterUpdates	-
 s:7Network6NWPathV13isConstrainedSbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
-s:7Network6NWPathV13localEndpointAA10NWEndpointOSgvp	declared	source:full/network/Network.swift#localEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network6NWPathV14remoteEndpointAA10NWEndpointOSgvp	declared	source:full/network/Network.swift#remoteEndpoint	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network6NWPathV13localEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testNWPathDNSAndEndpoints	-
+s:7Network6NWPathV14remoteEndpointAA10NWEndpointOSgvp	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testNWPathDNSAndEndpoints	-
 s:7Network6NWPathV16debugDescriptionSSvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network6NWPathV17UnsatisfiedReasonO	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
 s:7Network6NWPathV17UnsatisfiedReasonO05localA6DeniedyA2EmF	implemented	test:full/network/tests/agent/NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs	-
@@ -1960,8 +1960,8 @@ s:7Network9IPAddressP11isLinkLocalSbvp	implemented	test:full/network/tests/agent
 s:7Network9IPAddressP11isMulticastSbvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv4AddressParsing	-
 s:7Network9IPAddressP8rawValue10Foundation4DataVvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv4AddressParsing	-
 s:7Network9IPAddressP9interfaceAA11NWInterfaceVSgvp	implemented	test:full/network/tests/agent/NetworkTests.swift#testIPv4AddressParsing	-
-s:7Network9IPAddressPyxSg10Foundation4DataV_AA11NWInterfaceVSgtcfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
-s:7Network9IPAddressPyxSgSScfc	declared	source:full/network/Network.swift#init	Declaration compiles on Linux; Apple runtime behavior is unobserved.
+s:7Network9IPAddressPyxSg10Foundation4DataV_AA11NWInterfaceVSgtcfc	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testIPAddressProtocolInits	-
+s:7Network9IPAddressPyxSgSScfc	implemented	test:full/network/tests/agent/NetworkPathSurfaceTests.swift#testIPAddressProtocolInits	-
 s:7Network9NWBrowserC	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError	-
 s:7Network9NWBrowserC10DescriptorO	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError	-
 s:7Network9NWBrowserC10DescriptorO18applicationServiceyAESS_tcAEmF	implemented	test:full/network/tests/agent/NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError	-
