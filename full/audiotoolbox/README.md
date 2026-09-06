@@ -385,3 +385,65 @@ Local logs: `/tmp/fw-audiotoolbox-r-baseline.log` and
 script, product sources, and source manifest are unchanged. `git diff --check`
 and the synchronous evidence-anchor / coverage-preservation audits also passed.
 All branch changes are confined to `full/audiotoolbox/`.
+
+
+## Depth pass 2026-09 (wave-18 callback-order follow-up)
+
+Current-main baseline: `c1973365`; requested Cursor head: `a94e23fb`.
+The Cursor head and the earlier four-file-callback repair were already merged
+into main. Merging the Cursor head was a no-op; current main was fast-forwarded
+into this repair branch without conflicts. The supplied operator log already
+ended in `FRAMEWORK_FANOUT_HOST_OK` and contained no `error:` or `REFUSING` line.
+A fresh baseline gate also passed, so there was no reproduced refusal to fix.
+
+The declaration audit did find a concrete defect: `AudioSessionInterruptionListener`
+put the `UInt32` state before the client pointer. The sealed symbol graph and
+`reference/public-surface.tsv` both specify `(UnsafeMutableRawPointer?, UInt32)`.
+`reference/api-crosswalk.tsv` records this typedef as unmatched in the API
+digester. The product now follows the graph's argument order, retaining its C
+calling convention. No other product rule changes.
+
+`testAudioSessionInterruptionListenerArgumentOrder` invokes the exported callback
+synchronously, verifies mutation of the supplied client context on three calls
+with states `0`, `1`, and `UInt32.max`, and checks a fourth call with a nil client.
+These boundary values are test inputs, not observations of system interruption
+behavior. The test has no waits, tasks, hardware, or external services; its
+client pointer remains scoped to `withUnsafeMutablePointer`. This proves callback
+type invocation only: the deprecated AudioSession service remains unhosted.
+
+| status | current main | callback-order repair |
+| --- | ---: | ---: |
+| implemented | 2931 | 2932 |
+| declared | 40 | 39 |
+| deferred | 262 | 262 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+The gain is **1 implemented row**, backed by one new top-level synchronous,
+no-argument test. All previous implemented rows and tests are preserved.
+Distinct cited tests increase **110 → 111**. The largest evidence anchors remain
+200 rows each (**6.82%** of 2932), below the 40% limit even without the table-test
+exception. No `not-applicable` rows were introduced. All changes are confined to
+`full/audiotoolbox/`; sealed inputs and acceptance scripts are unchanged.
+
+### Validation of the callback-order repair
+
+The operator's `uikit-linux` container used Swift **6.2.4**, target
+**aarch64-unknown-linux-gnu**. Three sealed-gate runs established the regression:
+
+- Unmodified baseline: exit **0**, **110** cited tests.
+- New regression test and coverage row, original typedef: exit **1** at test
+  compilation. The compiler rejected `callback(client, state)` with
+  `unnamed argument #2 must precede unnamed argument #1`, and rejected nil
+  client data where the old signature expected `UInt32`.
+- Corrected typedef: exit **0**, all **111** cited tests executed, ending in
+  `AUDIOTOOLBOX_AGENT_RUNTIME_OK` and
+  `FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib`.
+
+Each run copied the framework and the operator's sealed harness into
+`/gate-codex-audiotoolbox`, committed the snapshot, then executed
+`timeout 3600 bash full/audiotoolbox/tests/acceptance/test_host.sh`.
+Logs on this Mac: `/tmp/fw-audiotoolbox-r-recheck-baseline.log`,
+`/tmp/fw-audiotoolbox-r-regression.log`, and
+`/tmp/fw-audiotoolbox-r-recheck-final.log`. The coverage-preservation,
+synchronous-anchor, evidence-distribution, and `git diff --check` audits passed.

@@ -2183,7 +2183,7 @@ c:@T@AudioQueueRef	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWa
 c:@T@AudioQueueTimelineRef	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
 c:@T@AudioServicesPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioServicesPropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioServicesSystemSoundCompletionProc	declared	source:full/audiotoolbox/AudioServices.swift#AudioServicesSystemSoundCompletionProc	Source signature present; behavior not independently asserted
-c:@T@AudioSessionInterruptionListener	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionInterruptionListener	Source signature present; behavior not independently asserted
+c:@T@AudioSessionInterruptionListener	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxSessionCallbackTests.swift#testAudioSessionInterruptionListenerArgumentOrder	Sealed graph argument order: nullable client pointer then UInt32 state; synchronous invocation checks 0, 1, UInt32.max and nil client
 c:@T@AudioSessionInterruptionType	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionInterruptionType	Source signature present; behavior not independently asserted
 c:@T@AudioSessionPropertyID	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionPropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioSessionPropertyListener	declared	source:full/audiotoolbox/AudioSession.swift#AudioSessionPropertyListener	Source signature present; behavior not independently asserted
