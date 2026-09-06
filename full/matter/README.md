@@ -250,3 +250,23 @@ enum/option-set/C-constant table tests; largest share 2.5% (cap 40%):
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 Isolated `swiftc -warnings-as-errors` of `libMatter.dylib` and every
 `tests/agent/*Tests.swift` succeeded before the sealed host gate.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`).
+
+Wave-10 cache tests that wrote one writable attribute and then read
+`AcceptedCommandList` were corrected to read the attribute they wrote.
+
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`, exit 0,
+~1922s):
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
+FRAMEWORK_FANOUT_REFERENCE_OK
+MATTER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
+```
+
+Host inventory token expected by the campaign (not printed by the gate):
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
