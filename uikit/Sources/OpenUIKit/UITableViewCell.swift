@@ -72,6 +72,11 @@ final class UITableViewCellContentView: UIView {
     /// (accessory on the leading/left edge); subtitle abs x **50.5** =
     /// 42.5 + **8**, `$4.50` at 50.5. Tight inset follows the accessory
     /// (physical left in RTL), not `layoutMargins.right`.
+    ///
+    /// MEASURED Notes t200 / t5000 / t5000.rtl, iPhone SE 2x / iOS 26.1:
+    /// same 8 pt on a disclosure title `[16, 15, 292.5, 20.5]` (LTR) /
+    /// `[8, 15, 292.5]` (RTL, physical left is trailing) in a 316.5
+    /// content view.
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
         guard let cell else { return super._defaultBaseLayoutMargins }
         var m = cell.layoutMargins
