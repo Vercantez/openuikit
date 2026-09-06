@@ -121,6 +121,8 @@ def main() -> int:
     ap.add_argument("--out", required=True)
     ap.add_argument("--diff", default=None)
     ap.add_argument("--scale", type=int, default=2)
+    ap.add_argument("--golden-straight-alpha", action="store_true",
+                    help="goldens use straight alpha (Focus Xcode oracle / simscene)")
     args = ap.parse_args()
     if args.diff:
         os.makedirs(args.diff, exist_ok=True)
@@ -138,7 +140,7 @@ def main() -> int:
         if isinstance(scr, dict) and scr.get("scale"):
             scale = scr["scale"]
         diff_path = os.path.join(args.diff, name + ".diff.png") if args.diff else None
-        res = compare.compare_pixels(gpng, opng, diff_path, golden_premultiplied=True, scale=scale)
+        res = compare.compare_pixels(gpng, opng, diff_path, golden_premultiplied=not args.golden_straight_alpha, scale=scale)
         print(f"{name}: pixels {res}")
         if os.path.exists(glay) and os.path.exists(olay):
             o = json.load(open(olay))

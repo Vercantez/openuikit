@@ -1395,6 +1395,8 @@ open class UIView: UIResponder, CALayerDelegate {
     /// Interactions attached to this view (M13 — `addInteraction(_:)` and
     /// the rest live in UIContextMenu.swift, which owns the protocol).
     var _interactions: [UIInteraction] = []
+    /// Process-local paste configuration (UIPasteConfigurationSupporting).
+    var _pasteConfiguration: UIPasteConfiguration?
 
     public func addGestureRecognizer(_ recognizer: UIGestureRecognizer) {
         recognizer.view?.removeGestureRecognizer(recognizer)

@@ -5,7 +5,10 @@ import Foundation
 
 public typealias AudioSessionPropertyID = UInt32
 public typealias AudioSessionInterruptionType = UInt32
-public typealias AudioSessionInterruptionListener = @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Void
+// Sealed public-surface.tsv / symbol graph, c:@T@AudioSessionInterruptionListener:
+// argument 1 is nullable client data; argument 2 is UInt32 interruption state.
+// testAudioSessionInterruptionListenerArgumentOrder covers nil and 0/1/UInt32.max.
+public typealias AudioSessionInterruptionListener = @convention(c) (UnsafeMutableRawPointer?, UInt32) -> Void
 public typealias AudioSessionPropertyListener = @convention(c) (
     UnsafeMutableRawPointer?,
     AudioSessionPropertyID,

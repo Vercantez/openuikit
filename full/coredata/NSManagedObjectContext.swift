@@ -396,6 +396,13 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
                 try _pushToParent(parent)
             } else {
                 try _pushToStore()
+                persistentStoreCoordinator?._recordHistory(
+                    inserted: Array(insertedObjects),
+                    updated: Array(updatedObjects),
+                    deleted: Array(deletedObjects),
+                    author: transactionAuthor,
+                    contextName: name
+                )
             }
 
             for object in insertedObjects { object.isInserted = false; object.didSave(); object._clearChangeTracking() }
@@ -437,6 +444,31 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
     }
 
     public func execute(_ request: NSPersistentStoreRequest) throws -> NSPersistentStoreResult {
+        if let asyncFetch = request as? _CDAsynchronousFetchExecuting {
+            return try asyncFetch._cdExecute(on: self)
+        }
+        if let history = request as? NSPersistentHistoryChangeRequest {
+            if let coordinator = persistentStoreCoordinator {
+                return coordinator._historyLog.execute(history)
+            }
+            let empty = NSPersistentHistoryResult()
+            empty.resultType = history.resultType
+            empty.result = history.resultType == .statusOnly ? true : (
+                history.resultType == .count ? 0 : []
+            )
+            return empty
+        }
+        if let cloud = request as? NSPersistentCloudKitContainerEventRequest {
+            let result = NSPersistentCloudKitContainerEventResult()
+            result.resultType = cloud.resultType
+            switch cloud.resultType {
+            case .countEvents:
+                result.result = 0
+            case .events:
+                result.result = [NSPersistentCloudKitContainer.Event]()
+            }
+            return result
+        }
         if let fetchRequest = request as? NSFetchRequest<any NSFetchRequestResult> {
             _ = try self.fetch(fetchRequest)
             return NSPersistentStoreResult()

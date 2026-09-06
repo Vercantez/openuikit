@@ -10,7 +10,27 @@ internal func _accelerateDummyPointer() -> UnsafeMutableRawPointer {
 }
 
 public protocol OS_la_object: NSObjectProtocol {}
-public final class _OpenUIKitLAObject: NSObject, OS_la_object, Sendable {}
+
+/// Dense LinearAlgebra object used by the Linux `la_*` starting point.
+/// Operations evaluate eagerly and store row-major values.
+public final class _OpenUIKitLAObject: NSObject, OS_la_object, @unchecked Sendable {
+    enum Kind {
+        case empty
+        case float
+        case double
+        case splatFloat
+        case splatDouble
+    }
+    var kind: Kind = .empty
+    var rows: Int = 0
+    var cols: Int = 0
+    var floats: [Float] = []
+    var doubles: [Double] = []
+    var splatF: Float = 0
+    var splatD: Double = 0
+    var status: la_status_t = 0
+    var attributes: la_attribute_t = 0
+}
 
 public typealias BLASParamErrorProc = (UnsafePointer<CChar>?, UnsafePointer<CChar>?, UnsafePointer<Int32>?, UnsafePointer<Int32>?) -> Void
 public typealias BNNSAlloc = (UnsafeMutablePointer<UnsafeMutableRawPointer?>?, Int, Int) -> Int32

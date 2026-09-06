@@ -295,6 +295,35 @@ open class UIWindow: UIView {
         return touch
     }
 
+    /// Host injection for `UIHoverGestureRecognizer`. Apple's header
+    /// documents the iOS phone path as a no-op (no hover event source);
+    /// iPadOS / pointer hosts call this for enter/move/exit over a view.
+    public enum HoverPhase: Sendable {
+        case entered, moved, exited
+    }
+
+    public func sendHover(_ phase: HoverPhase, at point: CGPoint,
+                          timestamp: TimeInterval) {
+        layoutIfNeeded()
+        let hit = hitTest(point, with: nil)
+        var recs: [UIHoverGestureRecognizer] = []
+        var v: UIView? = hit
+        while let cur = v {
+            recs.append(contentsOf: cur._gestureRecognizers.compactMap { $0 as? UIHoverGestureRecognizer })
+            v = cur.superview
+        }
+        for r in recs where r.isEnabled {
+            switch phase {
+            case .entered: r._hoverEntered(at: point, timestamp: timestamp)
+            case .moved: r._hoverMoved(at: point, timestamp: timestamp)
+            case .exited: r._hoverExited(at: point, timestamp: timestamp)
+            }
+            if r._state == .ended || r._state == .cancelled || r._state == .failed {
+                r._sequenceEnded()
+            }
+        }
+    }
+
     /// Advance event time without any touch change: gives time-based
     /// recognizers (long press) a chance to fire while a touch is held
     /// stationary. Call from the host's frame loop while touches are down.

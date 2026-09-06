@@ -7,6 +7,19 @@ public typealias VNDegrees = Float
 public typealias VNRequestCompletionHandler = (VNRequest, (any Error)?) -> Void
 public typealias VNRequestProgressHandler = (VNRequest, Double, (any Error)?) -> Void
 
+public protocol VNFaceObservationAccepting: NSObjectProtocol {
+    var inputFaceObservations: [VNFaceObservation]? { get set }
+}
+
+public protocol VNRequestProgressProviding: NSObjectProtocol {
+    var progressHandler: VNRequestProgressHandler { get set }
+    var indeterminate: Bool { get }
+}
+
+public protocol VNRequestRevisionProviding {
+    var requestRevision: Int { get }
+}
+
 /// Named “unspecified” in the public graph and in independent macios bindings.
 public let VNRequestRevisionUnspecified: Int = 0
 

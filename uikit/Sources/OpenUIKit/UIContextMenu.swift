@@ -676,13 +676,82 @@ public final class UIContextMenuConfiguration {
     public func resolvedMenu() -> UIMenu? { actionProvider?([]) }
 }
 
+/// UIKit's preview clipping / background descriptor. Stored as data;
+/// OpenUIKit does not composite a live preview (docs/KNOWN_GAPS.md).
+@preconcurrency @MainActor
+open class UIPreviewParameters {
+    public var visiblePath: UIBezierPath?
+    public var shadowPath: UIBezierPath?
+    public var backgroundColor: UIColor?
+    public init() {}
+    public init(textLineRects: [CGRect]) {
+        if !textLineRects.isEmpty {
+            let path = UIBezierPath()
+            for r in textLineRects { path.append(UIBezierPath(rect: r)) }
+            visiblePath = path
+        }
+    }
+}
+
+@preconcurrency @MainActor
+open class UIDragPreviewParameters: UIPreviewParameters {}
+
+/// Where a targeted preview should come from or go to. Stored as data.
+@preconcurrency @MainActor
+open class UIPreviewTarget {
+    public let container: UIView
+    public let center: CGPoint
+    public let transform: CGAffineTransform
+    public init(container: UIView, center: CGPoint, transform: CGAffineTransform) {
+        self.container = container
+        self.center = center
+        self.transform = transform
+    }
+    public convenience init(container: UIView, center: CGPoint) {
+        self.init(container: container, center: center, transform: .identity)
+    }
+}
+
+@preconcurrency @MainActor
+open class UIDragPreviewTarget: UIPreviewTarget {}
+
 /// UIKit's preview descriptor. Declared for source compatibility; OpenUIKit
 /// draws no preview (docs/KNOWN_GAPS.md), so the parameters are stored and
-/// ignored.
+/// ignored. MEASURED existing pointer tests keep `init(view:)` compiling
+/// without a window.
 @preconcurrency @MainActor
-public final class UITargetedPreview {
+open class UITargetedPreview {
     public let view: UIView
-    public init(view: UIView) { self.view = view }
+    public let parameters: UIPreviewParameters
+    public let target: UIPreviewTarget
+    public var size: CGSize { view.bounds.size }
+
+    public init(view: UIView, parameters: UIPreviewParameters, target: UIPreviewTarget) {
+        self.view = view
+        self.parameters = parameters
+        self.target = target
+    }
+
+    public convenience init(view: UIView, parameters: UIPreviewParameters) {
+        let container = view.superview ?? view
+        self.init(view: view, parameters: parameters,
+                  target: UIPreviewTarget(container: container, center: view.center))
+    }
+
+    public convenience init(view: UIView) {
+        self.init(view: view, parameters: UIPreviewParameters())
+    }
+
+    public func retargetedPreview(with newTarget: UIPreviewTarget) -> UITargetedPreview {
+        UITargetedPreview(view: view, parameters: parameters, target: newTarget)
+    }
+}
+
+@preconcurrency @MainActor
+open class UITargetedDragPreview: UITargetedPreview {
+    public func retargetedPreview(with newTarget: UIDragPreviewTarget) -> UITargetedDragPreview {
+        UITargetedDragPreview(view: view, parameters: parameters, target: newTarget)
+    }
 }
 
 /// UIKit's animator objects. The menu here appears and disappears without a

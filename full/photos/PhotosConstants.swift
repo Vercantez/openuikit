@@ -35,6 +35,13 @@ public let PHImageManagerMaximumSize = CGSize(
     height: CGFloat.greatestFiniteMagnitude
 )
 
+// Photos invalid-error probe, iPhone 17 / iOS 26.1 (23B86):
+// PHPhotosErrorInvalid == -1 == PHPhotosError.Code.internalError.rawValue.
+// SDK diagnostics give the iOS 14 / macOS 11 deprecation and rename.
+@available(iOS, deprecated: 14.0, renamed: "PHPhotosError.invalid")
+@available(macOS, deprecated: 11.0, renamed: "PHPhotosError.invalid")
+public let PHPhotosErrorInvalid: Int = PHPhotosError.Code.internalError.rawValue
+
 public let PHPhotosErrorUserCancelled: Int = PHPhotosError.Code.userCancelled.rawValue
 public let PHPhotosErrorLibraryVolumeOffline: Int =
     PHPhotosError.Code.libraryVolumeOffline.rawValue

@@ -61,7 +61,7 @@ public struct DetectedObjectObservation: VisionObservation, BoundingBoxProviding
     }
 }
 
-public struct RectangleObservation: VisionObservation, QuadrilateralProviding {
+public struct RectangleObservation: VisionObservation, QuadrilateralProviding, Codable {
     public let topLeft: NormalizedPoint
     public let topRight: NormalizedPoint
     public let bottomRight: NormalizedPoint
@@ -330,7 +330,7 @@ public struct FeaturePrintObservation: VisionObservation {
     }
 }
 
-public struct TextObservation: VisionObservation, QuadrilateralProviding {
+public struct TextObservation: VisionObservation, QuadrilateralProviding, Codable {
     public let topLeft: NormalizedPoint
     public let topRight: NormalizedPoint
     public let bottomRight: NormalizedPoint
@@ -339,9 +339,63 @@ public struct TextObservation: VisionObservation, QuadrilateralProviding {
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let characterBoxes: [RectangleObservation]?
     public var description: String { "TextObservation" }
     public var boundingBox: NormalizedRect {
         RectangleObservation(topLeft: topLeft, topRight: topRight, bottomRight: bottomRight, bottomLeft: bottomLeft).boundingBox
+    }
+
+    public init(
+        topLeft: NormalizedPoint,
+        topRight: NormalizedPoint,
+        bottomRight: NormalizedPoint,
+        bottomLeft: NormalizedPoint,
+        characterBoxes: [RectangleObservation]? = nil,
+        confidence: Float = 1,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomRight = bottomRight
+        self.bottomLeft = bottomLeft
+        self.characterBoxes = characterBoxes
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
+
+    public init(_ observation: VNTextObservation) {
+        self.init(
+            topLeft: NormalizedPoint(normalizedPoint: observation.topLeft),
+            topRight: NormalizedPoint(normalizedPoint: observation.topRight),
+            bottomRight: NormalizedPoint(normalizedPoint: observation.bottomRight),
+            bottomLeft: NormalizedPoint(normalizedPoint: observation.bottomLeft),
+            characterBoxes: observation.characterBoxes?.map(RectangleObservation.init),
+            confidence: observation.confidence,
+            uuid: observation.uuid,
+            timeRange: observation.timeRange
+        )
+    }
+
+    public static func == (a: TextObservation, b: TextObservation) -> Bool {
+        a.uuid == b.uuid
+            && a.topLeft == b.topLeft
+            && a.characterBoxes?.count == b.characterBoxes?.count
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
+        hasher.combine(topLeft)
+        hasher.combine(confidence)
+    }
+
+    public var hashValue: Int {
+        var hasher = Hasher()
+        hash(into: &hasher)
+        return hasher.finalize()
     }
 }
 
@@ -675,13 +729,39 @@ public struct FaceObservation: VisionObservation, BoundingBoxProviding {
     }
 }
 
-public struct HumanObservation: VisionObservation, BoundingBoxProviding {
-    public var boundingBox: NormalizedRect
+public struct HumanObservation: VisionObservation, BoundingBoxProviding, Codable {
+    public let boundingBox: NormalizedRect
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let isUpperBodyOnly: Bool
     public var description: String { "HumanObservation" }
+
+    public init(
+        boundingBox: NormalizedRect,
+        revision: DetectHumanRectanglesRequest.Revision? = nil,
+        isUpperBodyOnly: Bool = false,
+        confidence: Float = 1,
+        uuid: UUID = UUID()
+    ) {
+        _ = revision
+        self.boundingBox = boundingBox
+        self.isUpperBodyOnly = isUpperBodyOnly
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = nil
+        self.originatingRequestDescriptor = revision.map { .detectHumanRectanglesRequest($0) }
+    }
+
+    public init(_ observation: VNHumanObservation) {
+        self.boundingBox = NormalizedRect(normalizedRect: observation.boundingBox)
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.isUpperBodyOnly = observation.upperBodyOnly
+    }
 }
 
 public struct HorizonObservation: VisionObservation {
@@ -720,7 +800,7 @@ public struct HorizonObservation: VisionObservation {
     }
 }
 
-public struct SmudgeObservation: VisionObservation {
+public struct SmudgeObservation: VisionObservation, Codable {
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
@@ -1391,12 +1471,131 @@ public struct DetectedDocumentObservation: VisionObservation, QuadrilateralProvi
     }
 }
 
-public struct InstanceMaskObservation: VisionObservation {
+public struct InstanceMaskObservation: VisionObservation, Codable {
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let allInstances: IndexSet
+    public let allInstancesMask: PixelBufferObservation
     public var description: String { "InstanceMaskObservation" }
+
+    enum CodingKeys: String, CodingKey {
+        case confidence, uuid, timeRange, originatingRequestDescriptor, allInstances
+    }
+
+    public init(
+        instanceMask: CVPixelBuffer,
+        confidence: Float = 1,
+        uuid: UUID = UUID(),
+        timeRange: CMTimeRange? = nil,
+        originatingRequestDescriptor: RequestDescriptor? = nil
+    ) {
+        self.confidence = confidence
+        self.uuid = uuid
+        self.timeRange = timeRange
+        self.originatingRequestDescriptor = originatingRequestDescriptor
+        self.allInstances = visionInstanceLabels(in: instanceMask)
+        self.allInstancesMask = PixelBufferObservation(
+            confidence: confidence,
+            uuid: uuid,
+            timeRange: timeRange,
+            originatingRequestDescriptor: originatingRequestDescriptor,
+            pixelBuffer: instanceMask
+        )
+    }
+
+    public init?(_ observation: VNInstanceMaskObservation) {
+        self.init(
+            instanceMask: observation.instanceMask,
+            confidence: observation.confidence,
+            uuid: observation.uuid,
+            timeRange: observation.timeRange
+        )
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        confidence = try container.decode(Float.self, forKey: .confidence)
+        uuid = try container.decode(UUID.self, forKey: .uuid)
+        timeRange = try container.decodeIfPresent(CMTimeRange.self, forKey: .timeRange)
+        originatingRequestDescriptor = try container.decodeIfPresent(
+            RequestDescriptor.self,
+            forKey: .originatingRequestDescriptor
+        )
+        let labels = try container.decode([Int].self, forKey: .allInstances)
+        allInstances = IndexSet(labels)
+        allInstancesMask = PixelBufferObservation(
+            confidence: confidence,
+            uuid: uuid,
+            timeRange: timeRange,
+            originatingRequestDescriptor: originatingRequestDescriptor
+        )
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(confidence, forKey: .confidence)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encodeIfPresent(timeRange, forKey: .timeRange)
+        try container.encodeIfPresent(originatingRequestDescriptor, forKey: .originatingRequestDescriptor)
+        try container.encode(Array(allInstances), forKey: .allInstances)
+    }
+
+    public func generateMask(for instances: IndexSet) throws -> CVPixelBuffer {
+        guard let buffer = allInstancesMask.pixelBuffer else {
+            throw VisionError.invalidImage("instance mask is empty")
+        }
+        return try visionGenerateInstanceMask(buffer, instances: instances)
+    }
+
+    public func generateScaledMask(
+        for instances: IndexSet,
+        scaledToImageFrom requestHandler: ImageRequestHandler
+    ) throws -> CVPixelBuffer {
+        let mask = try generateMask(for: instances)
+        let raster = requestHandler.inner.raster
+        return visionScaleMask(mask, width: raster.width, height: raster.height)
+    }
+
+    public func generateMaskedImage(
+        for instances: IndexSet,
+        imageFrom requestHandler: ImageRequestHandler,
+        croppedToInstancesExtent: Bool = false
+    ) throws -> CVPixelBuffer {
+        let mask = try generateMask(for: instances)
+        return try visionApplyInstanceMask(
+            mask,
+            to: requestHandler.inner.raster.makePixelBuffer(),
+            croppedToInstancesExtent: croppedToInstancesExtent
+        )
+    }
+
+    public func instanceAtPoint(_ point: NormalizedPoint) -> IndexSet {
+        guard let buffer = allInstancesMask.pixelBuffer, buffer.width > 0, buffer.height > 0 else {
+            return IndexSet()
+        }
+        let x = min(buffer.width - 1, max(0, Int((point.x * CGFloat(buffer.width)).rounded(.down))))
+        let yTop = 1 - point.y
+        let y = min(buffer.height - 1, max(0, Int((yTop * CGFloat(buffer.height)).rounded(.down))))
+        let label = Int(buffer.pixels[(y * buffer.width + x) * 4])
+        return label > 0 ? IndexSet(integer: label) : IndexSet()
+    }
+
+    public static func == (lhs: InstanceMaskObservation, rhs: InstanceMaskObservation) -> Bool {
+        lhs.uuid == rhs.uuid && lhs.allInstances == rhs.allInstances
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(uuid)
+        hasher.combine(Array(allInstances))
+    }
+
+    public var hashValue: Int {
+        var hasher = Hasher()
+        hash(into: &hasher)
+        return hasher.finalize()
+    }
 }
 
 public struct PixelBufferObservation: VisionObservation, Codable {
@@ -1507,43 +1706,74 @@ public struct PixelBufferObservation: VisionObservation, Codable {
     }
 }
 
-public struct SaliencyImageObservation: VisionObservation {
+public struct SaliencyImageObservation: VisionObservation, Codable {
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
+    public let salientObjects: [RectangleObservation]
+    public let heatMap: PixelBufferObservation
     public var description: String { "SaliencyImageObservation" }
 
     public init(
         confidence: Float = 0,
         uuid: UUID = UUID(),
         timeRange: CMTimeRange? = nil,
-        originatingRequestDescriptor: RequestDescriptor? = nil
+        originatingRequestDescriptor: RequestDescriptor? = nil,
+        salientObjects: [RectangleObservation] = [],
+        heatMap: PixelBufferObservation = PixelBufferObservation()
     ) {
         self.confidence = confidence
         self.uuid = uuid
         self.timeRange = timeRange
         self.originatingRequestDescriptor = originatingRequestDescriptor
+        self.salientObjects = salientObjects
+        self.heatMap = heatMap
+    }
+
+    public init?(_ observation: VNSaliencyImageObservation) {
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+        self.salientObjects = (observation.salientObjects ?? []).map(RectangleObservation.init)
+        self.heatMap = PixelBufferObservation(observation) ?? PixelBufferObservation()
     }
 }
 
-public struct ImageAestheticsScoresObservation: VisionObservation {
+public struct ImageAestheticsScoresObservation: VisionObservation, Codable {
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
-    public var description: String { "ImageAestheticsScoresObservation" }
+    public let overallScore: Float
+    public let isUtility: Bool
+    public var description: String { "ImageAestheticsScoresObservation \(overallScore)" }
 
     public init(
+        overallScore: Float = 0,
+        isUtility: Bool = false,
         confidence: Float = 0,
         uuid: UUID = UUID(),
         timeRange: CMTimeRange? = nil,
         originatingRequestDescriptor: RequestDescriptor? = nil
     ) {
+        self.overallScore = max(-1, min(1, overallScore))
+        self.isUtility = isUtility
         self.confidence = confidence
         self.uuid = uuid
         self.timeRange = timeRange
         self.originatingRequestDescriptor = originatingRequestDescriptor
+    }
+
+    public init(_ observation: VNImageAestheticsScoresObservation) {
+        self.init(
+            overallScore: observation.overallScore,
+            isUtility: observation.isUtility,
+            confidence: observation.confidence,
+            uuid: observation.uuid,
+            timeRange: observation.timeRange
+        )
     }
 }
 
@@ -1811,6 +2041,90 @@ extension DetectFaceRectanglesRequest: ImageProcessingRequestBox {
 }
 
 extension RecognizeTextRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectLensSmudgeRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectFaceLandmarksRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectHumanRectanglesRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectFaceCaptureQualityRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectDocumentSegmentationRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
+extension GeneratePersonInstanceMaskRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
+extension GenerateForegroundInstanceMaskRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
+extension CalculateImageAestheticsScoresRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension GenerateAttentionBasedSaliencyImageRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension GenerateObjectnessBasedSaliencyImageRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectHorizonRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
+extension TrackObjectRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
+extension TrackHomographicImageRegistrationRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension TrackTranslationalImageRegistrationRequest: ImageProcessingRequestBox {
     func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
         try performOnHandler(handler)
     }

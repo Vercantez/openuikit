@@ -60,8 +60,10 @@ On-disk library (`Documents/OpenUIKitPhotoLibrary`):
 - `PHCollection.fetchTopLevelUserCollections` returns albums and folders that
   are not children of another list. Moment-list fetches stay empty.
 
-`PHPhotosErrorDomain` is `"PHPhotosErrorDomain"`. Info-dictionary keys are the
-C identifiers until an Apple oracle records payloads.
+`PHPhotosErrorDomain` is `"PHPhotosErrorDomain"`. The deprecated
+`PHPhotosErrorInvalid`, `PHPhotosError.invalid`, and `PHPhotosError.Code.invalid`
+spellings all alias `.internalError` / -1, measured on iOS 26.1. Info-dictionary
+keys are the C identifiers until an Apple oracle records payloads.
 
 ## Fail-closed boundaries
 
@@ -198,3 +200,86 @@ copied with Photos to `/gate-codex-photos` in `uikit-linux` (Swift 6.2.4,
 Both new tests also pass twice consecutively in an independent runner.
 Local logs: `/tmp/fw-photos-r-baseline.log`, `/tmp/fw-photos-r-repaired.log`,
 `/tmp/fw-photos-r-formatting.log`, and `/tmp/fw-photos-r-comparator.log`.
+
+### Depth pass follow-up 2026-09-06 (wave 18, current main)
+
+At task start, `origin/main` at `58292232` already included Cursor head `042e60d1`
+and the preceding local repair `883ca742` (merged by `e73c567a`). Both requested
+merges report "Already up to date"; no conflicting rows or tests were removed.
+The supplied `/tmp/fw_merge_gate-photos.log` already ends in
+`FRAMEWORK_FANOUT_HOST_OK module=Photos`. The refusal is not reproducible on
+these refs. Before committing, the branch fast-forwarded to newer main
+`c1973365`; Photos and all copied gate inputs are unchanged between these main
+commits. An unchanged baseline rerun passes in the operator's `uikit-linux`
+container, so this follow-up adds a measured gain over that current main.
+
+The remaining invalid-error question is resolved by a real Apple Photos probe
+on a private iPhone 17 simulator, iOS 26.1 (23B86), device name
+`OpenUIKit-PhotosError-fw-photos-r`. Results:
+
+```text
+PHPhotosErrorInvalid=-1
+PHPhotosError.invalid=-1
+PHPhotosError.Code.invalid=-1
+aliasEqual=true
+roundTrip=true
+```
+
+The aliases and raw-value round trip also agree on macOS 26.5.2 (25F84).
+Apple Swift 6.2.1 SDK diagnostics identify the legacy constant's iOS 14 /
+macOS 11 deprecation and the two properties' iOS 15 / macOS 12 deprecation;
+the port carries those platform deprecations and rename spellings.
+
+Declaration facts: `reference/public-surface.tsv` identifies the global as
+`let PHPhotosErrorInvalid: Int` (`c:@PHPhotosErrorInvalidDeprecated`) and both
+properties as static `PHPhotosError.Code` getters. The sealed digester has
+both deprecated static `invalid` properties, owned by Photos, with enum USR
+`c:@E@PHPhotosError@PHPhotosErrorInvalid`; the Swift overlay IDs and legacy
+global have unmatched exact-ID crosswalk entries. The graph establishes their
+spellings and signatures; the runtime probe establishes the -1 alias value.
+No new dependency, enum raw-value case, or error-domain behavior is introduced.
+
+Each newly implemented ID cites its own synchronous no-argument function in
+`tests/agent/PhotosInvalidErrorTests.swift`:
+
+- `testInvalidErrorLegacyConstant`: global Int value -1 and raw-value lookup.
+- `testInvalidErrorOverlayAlias`: outer static property, equality with
+  `.internalError`, and error construction.
+- `testInvalidErrorCodeAlias`: nested property, raw-value round trip, hash/set
+  identity, and NSError pattern matching with a mismatched-domain control.
+
+The exact three test functions compile against Apple Photos and pass twice on
+iOS 26.1 (`PHOTOS_INVALID_ERROR_ORACLE_OK tests=3 repetitions=2`). These are
+pure value tests with no store, authorization, asynchronous work, or waits.
+
+| status | main `c1973365` | follow-up |
+| --- | ---: | ---: |
+| implemented | 749 | 752 |
+| declared | 0 | 0 |
+| deferred | 37 | 34 |
+| unavailable | 0 | 0 |
+| not-applicable | 1 | 1 |
+
+The gain is **+3 implemented**; all 749 previously implemented IDs are retained.
+There are 58 distinct cited tests (previously 55). The largest citation group
+is still the 96-row error table (12.77%); the largest non-table group remains
+52 rows (6.91%), below 40%. The sole `not-applicable` row is unchanged and
+explicitly compiler-`SYNTHESIZED`.
+
+Validation: baseline and repaired trees both pass the unmodified sealed host
+gate in `/gate-codex-photos`, copied with the current shared validators, on
+`uikit-linux` (Swift 6.2.4, `aarch64-unknown-linux-gnu`). The gate compiles product
+and test sources with warnings as errors, loads `libPhotos.dylib`, and ends
+with `PHOTOS_AGENT_RUNTIME_OK` and `FRAMEWORK_FANOUT_HOST_OK module=Photos`.
+A separate runner invokes each of all 58 cited tests in its own process, twice
+consecutively, with a 20-second process timeout; all 116 invocations pass.
+Existing asynchronous-API tests expose synchronous test entry points and use
+bounded waits; none hangs. No sealed inputs, acceptance scripts, shared files,
+or vendor pins changed. All branch changes stay under `full/photos/`.
+
+Local evidence logs: `/tmp/fw-photos-r-baseline-current.log`,
+`/tmp/fw-photos-r-invalid-ios.log`, `/tmp/fw-photos-r-invalid-tests-ios.log`,
+`/tmp/fw-photos-r-invalid-gate.log`, `/tmp/fw-photos-r-final-gate.log`, and
+`/tmp/fw-photos-r-independent.log`.
+The temporary oracle is `/tmp/fw-photos-r-invalid-oracle.swift`; the committed
+three-test source above is the reproducible behavioral oracle fixture.

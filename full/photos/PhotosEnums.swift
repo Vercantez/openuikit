@@ -237,6 +237,14 @@ public struct PHPhotosError: Error, Hashable {
         case accessRestricted = 3310
         case accessUserDenied = 3311
         case libraryInFileProviderSyncRoot = 5423
+
+        // Photos invalid-error probe, iPhone 17 / iOS 26.1 (23B86):
+        // Code.invalid.rawValue == -1 and Code.invalid == .internalError.
+        // This is an alias, not another raw-value case. SDK diagnostics give
+        // the iOS 15 / macOS 12 deprecation and replacement spelling.
+        @available(iOS, deprecated: 15.0, renamed: "PHPhotosError.internalError")
+        @available(macOS, deprecated: 12.0, renamed: "PHPhotosError.internalError")
+        public static var invalid: Self { .internalError }
     }
 
     public var code: Code
@@ -256,6 +264,10 @@ public struct PHPhotosError: Error, Hashable {
 
     public static var errorDomain: String { PHPhotosErrorDomain }
     public static var internalError: Code { .internalError }
+    // The same iOS 26.1 probe measures PHPhotosError.invalid.rawValue == -1.
+    @available(iOS, deprecated: 15.0, renamed: "PHPhotosError.internalError")
+    @available(macOS, deprecated: 12.0, renamed: "PHPhotosError.internalError")
+    public static var invalid: Code { .internalError }
     public static var userCancelled: Code { .userCancelled }
     public static var persistentChangeTokenExpired: Code { .persistentChangeTokenExpired }
     public static var libraryVolumeOffline: Code { .libraryVolumeOffline }
