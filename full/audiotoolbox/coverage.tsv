@@ -2161,10 +2161,10 @@ c:@T@AudioFileStreamPropertyID	declared	source:full/audiotoolbox/AudioToolbox.sw
 c:@T@AudioFileStream_PacketsProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioFileStream_PropertyListenerProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAudioFileStreamWAVParse	Linux runtime asserted in wave-2 depth tests
 c:@T@AudioFileTypeID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFileTypeID	Source signature present; behavior not independently asserted
-c:@T@AudioFile_GetSizeProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_GetSizeProc	Source signature present; behavior not independently asserted
-c:@T@AudioFile_ReadProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_ReadProc	Source signature present; behavior not independently asserted
-c:@T@AudioFile_SetSizeProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_SetSizeProc	Source signature present; behavior not independently asserted
-c:@T@AudioFile_WriteProc	declared	source:full/audiotoolbox/AudioToolboxCallbacks.swift#AudioFile_WriteProc	Source signature present; behavior not independently asserted
+c:@T@AudioFile_GetSizeProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileGetSizeProcWideResult	Typed C callback invocation: client data and Int64 return values at zero, above 32 bits, and Int64.max; no claim of callback-backed file I/O.
+c:@T@AudioFile_ReadProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileReadProcPartialTransfer	Typed C callback invocation: client data, 64-bit position, partial read, actual count, untouched buffer tail, and signed failure status; callback-backed file APIs remain deferred.
+c:@T@AudioFile_SetSizeProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileSetSizeProcWideArgument	Typed C callback invocation: client data, Int64 size arguments at zero/above 32 bits/Int64.max, and signed failure return; no claim of callback-backed file I/O.
+c:@T@AudioFile_WriteProc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxFileCallbackTests.swift#testAudioFileWriteProcPartialTransfer	Typed C callback invocation: client data, 64-bit position, const source bytes, partial write, actual count, and signed failure status; callback-backed file APIs remain deferred.
 c:@T@AudioFormatPropertyID	declared	source:full/audiotoolbox/AudioToolbox.swift#AudioFormatPropertyID	Source signature present; behavior not independently asserted
 c:@T@AudioOutputUnitStartProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
 c:@T@AudioOutputUnitStopProc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
