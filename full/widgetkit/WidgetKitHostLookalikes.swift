@@ -172,6 +172,27 @@ public struct Alignment: Equatable, Sendable {
     public init() {}
 }
 
+/// SwiftUI `Edge` stand-in for Dynamic Island content-margin signatures.
+public enum Edge: Int, Sendable {
+    case top = 0
+    case leading = 1
+    case bottom = 2
+    case trailing = 3
+
+    public struct Set: OptionSet, Hashable, Sendable {
+        public let rawValue: Int
+        public init(rawValue: Int) { self.rawValue = rawValue }
+
+        public static let top = Set(rawValue: 1 << 0)
+        public static let leading = Set(rawValue: 1 << 1)
+        public static let bottom = Set(rawValue: 1 << 2)
+        public static let trailing = Set(rawValue: 1 << 3)
+        public static let all: Set = [.top, .leading, .bottom, .trailing]
+        public static let horizontal: Set = [.leading, .trailing]
+        public static let vertical: Set = [.top, .bottom]
+    }
+}
+
 public protocol EnvironmentKey {
     associatedtype Value
     static var defaultValue: Value { get }
