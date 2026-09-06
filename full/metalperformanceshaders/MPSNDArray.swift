@@ -173,7 +173,16 @@ open class MPSNDArray: NSObject {
     public var dataTypeSize: Int { max(MPSSizeofMPSDataType(dataType), 1) }
 
     private var lengths: [Int]
-    private var hostStorage: Data
+    // A reshape view shares mutable bytes, rather than a Data copy-on-write snapshot.
+    private final class HostStorage {
+        var bytes: Data
+        init(_ bytes: Data) { self.bytes = bytes }
+    }
+    private var storage: HostStorage
+    private var hostStorage: Data {
+        get { storage.bytes }
+        set { storage.bytes = newValue }
+    }
     private var ownedBuffer: (any MTLBuffer)?
 
     public class func defaultAllocator() -> any MPSNDArrayAllocator {
@@ -187,7 +196,7 @@ open class MPSNDArray: NSObject {
         self.lengths = (0..<descriptor.numberOfDimensions).map { descriptor.length(ofDimension: $0) }
         self.parent = nil
         let bytes = descriptor.elementCount() * max(MPSSizeofMPSDataType(descriptor.dataType), 1)
-        self.hostStorage = Data(count: max(bytes, 0))
+        self.storage = HostStorage(Data(count: max(bytes, 0)))
         super.init()
     }
 
@@ -234,6 +243,23 @@ open class MPSNDArray: NSObject {
 
     public func synchronize(on commandBuffer: any MTLCommandBuffer) {
         _ = commandBuffer
+    }
+
+    // MPSNDArrayIdentity tests: [2,3] -> [3,2] retains all six float bit
+    // patterns and observes writes in both directions, including chained views.
+    private init(reshaping source: MPSNDArray, sizes: [Int]) {
+        self.device = source.device
+        self.dataType = source.dataType
+        self.numberOfDimensions = sizes.count
+        self.lengths = sizes
+        self.parent = source
+        self.storage = source.storage
+        self.ownedBuffer = source.ownedBuffer
+        super.init()
+    }
+
+    func hostReshapedView(sizes: [Int]) -> MPSNDArray {
+        MPSNDArray(reshaping: self, sizes: sizes)
     }
 
     public func arrayView(with descriptor: MPSNDArrayDescriptor) -> MPSNDArray? {

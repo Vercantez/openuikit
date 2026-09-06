@@ -286,4 +286,29 @@ MPSHostBoundary.reset()
 accel.rebuild()
 precondition(MPSHostBoundary.lastRefusedAPI != nil)
 
+// Local continuation: the sealed runtime also executes the newly delivered path.
+let reshapeSource = MPSNDArray(device: device, descriptor: MPSNDArrayDescriptor(dataType: .float32, sizes: [2, 3]))
+var reshapeValues: [Float] = [1, 2, 3, 4, 5, 6]
+reshapeValues.withUnsafeMutableBytes { reshapeSource.writeBytes($0.baseAddress!, strideBytes: nil) }
+let reshapeKernel = MPSNDArrayIdentity(device: device)
+MPSHostBoundary.reset()
+let reshapeView = reshapeKernel.reshape(with: nil, sourceArray: reshapeSource, shape: [3, 2], destinationArray: nil)!
+precondition(reshapeView.parent === reshapeSource && reshapeView.length(ofDimension: 0) == 3)
+reshapeValues = [6, 5, 4, 3, 2, 1]
+reshapeValues.withUnsafeMutableBytes { reshapeView.writeBytes($0.baseAddress!, strideBytes: nil) }
+var reshapeRead = [Float](repeating: 0, count: 6)
+reshapeRead.withUnsafeMutableBytes { reshapeSource.readBytes($0.baseAddress!, strideBytes: nil) }
+precondition(reshapeRead == reshapeValues && MPSHostBoundary.lastRefusedAPI == nil)
+
+let sliceImage = MPSImage(device: device,
+    imageDescriptor: MPSImageDescriptor(channelFormat: .unorm8, width: 2, height: 1, featureChannels: 5))
+let sliceValues: [UInt8] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+sliceValues.withUnsafeBytes { sliceImage.writeBytes($0.baseAddress!, dataLayout: .HeightxWidthxFeatureChannels, imageIndex: 0) }
+precondition(sliceImage.texture.arrayLength == 2 && sliceImage.resourceSize() == 16)
+let reshapedImage = MPSNNReshape(device: device).encode(commandBuffer: commandBuffer, sourceImage: sliceImage,
+    reshapedWidth: 1, reshapedHeight: 5, reshapedFeatureChannels: 2)
+var sliceRead = [UInt8](repeating: 0, count: 10)
+sliceRead.withUnsafeMutableBytes { reshapedImage.readBytes($0.baseAddress!, dataLayout: .HeightxWidthxFeatureChannels, imageIndex: 0) }
+precondition(sliceRead == sliceValues && reshapedImage.height == 5)
+
 print("METALPERFORMANCESHADERS_AGENT_RUNTIME_OK")
