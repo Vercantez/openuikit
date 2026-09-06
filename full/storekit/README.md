@@ -14,16 +14,16 @@ seed `7147ef0e`, PR #115). Immutable seed files were not rewritten.
 
 ## Coverage (measured)
 
-| status | first pass | after 2026-09 wave 8 | after depth pass 3 |
-| --- | ---: | ---: | ---: |
-| implemented | 824 | 933 | 1107 |
-| declared | 14483 | 14352 | 6893 |
-| deferred | 368 | 348 | 310 |
-| unavailable | 0 | 0 | 0 |
-| not-applicable | 20 | 62 | 7385 |
+| status | first pass | after 2026-09 wave 8 | after depth pass 3 | after depth pass 4 |
+| --- | ---: | ---: | ---: | ---: |
+| implemented | 824 | 933 | 1107 | 1298 |
+| declared | 14483 | 14352 | 6893 | 6759 |
+| deferred | 368 | 348 | 310 | 253 |
+| unavailable | 0 | 0 | 0 | 0 |
+| not-applicable | 20 | 62 | 7385 | 7385 |
 
 Floor of 7848 nondeferred (`implemented` + `declared`) remains met
-(8000). CryptoKit `P256` JWS `signature` stays deferred.
+(8057). CryptoKit `P256` JWS `signature` stays deferred.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -40,6 +40,7 @@ rules, and model-level overlay/view types. Tests that previously waited on
 | after depth pass | 933 | 14352 | 346 | 0 | 64 |
 | after merge repair | 933 | 14352 | 348 | 0 | 62 |
 | after depth pass 3 | 1107 | 6893 | 310 | 0 | 7385 |
+| after depth pass 4 | 1298 | 6759 | 253 | 0 | 7385 |
 
 Nondeferred: 15307 → 15285 (wave 8) → **8000** (pass 3, floor 7848). Unique
 `implemented` evidence tests after pass 3: 72. Top-5 evidence distribution
@@ -113,7 +114,51 @@ does not print
 That campaign token is the host-inventory stamp; the sealed framework gate
 prints the four lines above. The verify script's success line on a complete
 image is `products=scratch-corpus`, not `products=clean`. Starting commit
-was `bff8535c68425cc39fb45cb00d447b0981b57242`.
+was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+
+## Depth pass 2026-09 (wave 8, pass 4)
+
+Next StoreKit 2 / SK1 behavioral pass over the pass-3 tree. Existing sources
+and tests stay green. This pass adds:
+
+- `SKOverlay.present` fail-closed: `storeOverlayWillStartPresentation` then
+  `storeOverlayDidFailToLoad` with `SKError.overlayInvalidConfiguration`.
+  `dismiss` fires `willStartDismissal` / `didFinishDismissal`.
+  `storeOverlayDidFinishPresentation` is on the protocol but is not invented
+  on a successful present.
+- `SKTerminateForInvalidReceipt` records a portable call count and does not
+  abort.
+- `SKError` / `SKANError` as `CustomNSError` + `LocalizedError`, including
+  `Code.~=` pattern matching.
+- Real `OptionSet`/`SetAlgebra` operations on `SKCloudServiceCapability` and
+  `Product.SubscriptionRelationship` (previously over-deferred).
+- `SKPaymentQueue` observers: storefront-change on configuration load,
+  `didRevokeEntitlementsForProductIdentifiers` on `StoreKitTesting.revoke`,
+  and `portableAskShouldAddStorePayment`.
+- Subscription status / storefront snapshots from the local testing store.
+- Equatable `!=`, `hash(into:)`, `hashValue`, and `Comparable` operators on
+  StoreKit-owned enums/option sets.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before (pass 3) | 1107 | 6893 | 310 | 0 | 7385 |
+| after depth pass 4 | 1298 | 6759 | 253 | 0 | 7385 |
+
+Nondeferred: **8057** (floor 7848). Unique `implemented` evidence tests: 83.
+Top-5 evidence distribution (of 1298 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (8.9%)
+2. `testAdvancedCommerceTypes` — 111 (8.6%)
+3. `testJWSUnverifiedFields` — 67 (5.2%)
+4. `testHashableRawRepresentableMixing` — 48 (3.7%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (3.2%)
+
+No cited test covers more than 40% of implemented rows. Remaining
+`s:7SwiftUI4View…` synthesized modifier specializations stay `declared` so
+the 7848 nondeferred floor stays met; they are not marked `implemented`.
+SwiftUI overlay re-exports already `not-applicable` are unchanged.
+
+The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`.
 
 ## What is real (isolated host)
 
@@ -146,8 +191,11 @@ store** modelled on Xcode StoreKit Testing `.storekit` JSON
   completions return `success == false`. `AppStore.showManageSubscriptions`
   throws `StoreKitError.notAvailableInStorefront`.
 - `SKStoreReviewController.requestReview()` increments
-  `portableRequestCount` and never presents UI. `SKOverlay.present` /
-  `dismiss` increment `portablePresentCount`.
+  `portableRequestCount` and never presents UI. `SKOverlay.present`
+  fires `willStartPresentation` then `didFailToLoad` with
+  `SKError.overlayInvalidConfiguration`; `dismiss` fires dismissal
+  callbacks. `SKTerminateForInvalidReceipt` increments a portable
+  count and does not abort.
 - `SKError.Code` raw values 0...20, `SKErrorDomain`, `StoreKitError` cases.
 - ProductView / StoreView / SubscriptionStoreView are model-level (data +
   configuration), not rendering.
