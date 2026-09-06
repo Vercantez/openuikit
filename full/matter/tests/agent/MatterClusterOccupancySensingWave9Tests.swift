@@ -1,0 +1,75 @@
+import Foundation
+import Dispatch
+import Matter
+
+func testClusterOccupancySensingInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterOccupancySensing(device: device, endpoint: 1, queue: DispatchQueue.global())
+    _ = MTRClusterOccupancySensing(device: device, endpointID: n(1), queue: DispatchQueue.global())
+}
+
+func testClusterOccupancySensingDeviceCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRClusterOccupancySensing(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRClusterOccupancySensing init")
+        return
+    }
+    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
+    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
+    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
+    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeHoldTimeLimits(with: MTRReadParams())
+    _ = cluster.readAttributeHoldTime(with: MTRReadParams())
+    _ = cluster.readAttributeOccupancySensorTypeBitmap(with: MTRReadParams())
+    _ = cluster.readAttributeOccupancySensorType(with: MTRReadParams())
+    _ = cluster.readAttributeOccupancy(with: MTRReadParams())
+    _ = cluster.readAttributePIROccupiedToUnoccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributePIRUnoccupiedToOccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributePIRUnoccupiedToOccupiedThreshold(with: MTRReadParams())
+    _ = cluster.readAttributePhysicalContactOccupiedToUnoccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributePhysicalContactUnoccupiedToOccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributePhysicalContactUnoccupiedToOccupiedThreshold(with: MTRReadParams())
+    _ = cluster.readAttributePirOccupiedToUnoccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributePirUnoccupiedToOccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributePirUnoccupiedToOccupiedThreshold(with: MTRReadParams())
+    _ = cluster.readAttributeUltrasonicOccupiedToUnoccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributeUltrasonicUnoccupiedToOccupiedDelay(with: MTRReadParams())
+    _ = cluster.readAttributeUltrasonicUnoccupiedToOccupiedThreshold(with: MTRReadParams())
+    cluster.writeAttributeHoldTime(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeHoldTime(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePIROccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePIROccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePIRUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePIRUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePIRUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePIRUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePhysicalContactOccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePhysicalContactOccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePhysicalContactUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePhysicalContactUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePhysicalContactUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePhysicalContactUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePirOccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePirOccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePirUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePirUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributePirUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributePirUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributeUltrasonicOccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeUltrasonicOccupiedToUnoccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributeUltrasonicUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeUltrasonicUnoccupiedToOccupiedDelay(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    cluster.writeAttributeUltrasonicUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeUltrasonicUnoccupiedToOccupiedThreshold(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
+    cluster.writeAttributeHoldTime(withValue: probe, expectedValueInterval: n(1))
+    let cached = cluster.readAttributeHoldTime(with: nil)
+    mtrRequire(cached != nil, "expected-value cache round-trip")
+}

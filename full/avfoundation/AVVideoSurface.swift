@@ -61,7 +61,22 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
     public var sourceSampleDataTrackIDs: [CMPersistentTrackID] = []
     public var sourceTrackIDForFrameTiming: CMPersistentTrackID = 0
     public init(for asset: AVAsset, prototypeInstruction: AVVideoCompositionInstruction? = nil) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-    public init(animationTool: AVVideoCompositionCoreAnimationTool? = nil, colorPrimaries: String? = nil, colorTransferFunction: String? = nil, colorYCbCrMatrix: String? = nil, customVideoCompositorClass: (any AVVideoCompositing.Type)? = nil, frameDuration: CMTime = CMTime.zero, instructions: [any AVVideoCompositionInstructionProtocol] = [any AVVideoCompositionInstructionProtocol](), outputBufferDescription: [[CMTag]]? = nil, perFrameHDRDisplayMetadataPolicy: AVVideoComposition.PerFrameHDRDisplayMetadataPolicy = .propagate, renderScale: Float = 1.0, renderSize: CGSize = .zero, sourceSampleDataTrackIDs: [CMPersistentTrackID] = [CMPersistentTrackID](), sourceTrackIDForFrameTiming: Int32 = CMPersistentTrackID.zero, spatialVideoConfigurations: [AVSpatialVideoConfiguration] = []) {}
+    public init(animationTool: AVVideoCompositionCoreAnimationTool? = nil, colorPrimaries: String? = nil, colorTransferFunction: String? = nil, colorYCbCrMatrix: String? = nil, customVideoCompositorClass: (any AVVideoCompositing.Type)? = nil, frameDuration: CMTime = CMTime.zero, instructions: [any AVVideoCompositionInstructionProtocol] = [any AVVideoCompositionInstructionProtocol](), outputBufferDescription: [[CMTag]]? = nil, perFrameHDRDisplayMetadataPolicy: AVVideoComposition.PerFrameHDRDisplayMetadataPolicy = .propagate, renderScale: Float = 1.0, renderSize: CGSize = .zero, sourceSampleDataTrackIDs: [CMPersistentTrackID] = [CMPersistentTrackID](), sourceTrackIDForFrameTiming: Int32 = CMPersistentTrackID.zero, spatialVideoConfigurations: [AVSpatialVideoConfiguration] = []) {
+      self.animationTool = animationTool
+      self.colorPrimaries = colorPrimaries
+      self.colorTransferFunction = colorTransferFunction
+      self.colorYCbCrMatrix = colorYCbCrMatrix
+      self.customVideoCompositorClass = customVideoCompositorClass
+      self.frameDuration = frameDuration
+      self.instructions = instructions
+      self.outputBufferDescription = outputBufferDescription
+      self.perFrameHDRDisplayMetadataPolicy = perFrameHDRDisplayMetadataPolicy
+      self.renderScale = renderScale
+      self.renderSize = renderSize
+      self.sourceSampleDataTrackIDs = sourceSampleDataTrackIDs
+      self.sourceTrackIDForFrameTiming = sourceTrackIDForFrameTiming
+      self.spatialVideoConfigurations = spatialVideoConfigurations
+    }
   }
   public struct PerFrameHDRDisplayMetadataPolicy: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
     public let rawValue: String
@@ -70,11 +85,23 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
     public static let propagate = PerFrameHDRDisplayMetadataPolicy(rawValue: "propagate")
     public static let generate = PerFrameHDRDisplayMetadataPolicy(rawValue: "generate")
   }
-  public dynamic var sourceSampleDataTrackIDs: [CMPersistentTrackID] { [] }
-  public var outputBufferDescription: [[CMTag]]? { nil }
-  public var spatialVideoConfigurations: [AVSpatialVideoConfiguration] { [] }
+  public var storedSourceSampleDataTrackIDs: [CMPersistentTrackID] = []
+  public var storedOutputBufferDescription: [[CMTag]]?
+  public var storedSpatialVideoConfigurations: [AVSpatialVideoConfiguration] = []
+  public dynamic var sourceSampleDataTrackIDs: [CMPersistentTrackID] {
+    get { storedSourceSampleDataTrackIDs }
+    set { storedSourceSampleDataTrackIDs = newValue }
+  }
+  public var outputBufferDescription: [[CMTag]]? {
+    get { storedOutputBufferDescription }
+    set { storedOutputBufferDescription = newValue }
+  }
+  public var spatialVideoConfigurations: [AVSpatialVideoConfiguration] {
+    get { storedSpatialVideoConfigurations }
+    set { storedSpatialVideoConfigurations = newValue }
+  }
   convenience init(applyingFiltersTo asset: AVAsset, applier: @escaping (AVCIImageFilteringParameters) async throws -> AVCIImageFilteringResult) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
-  convenience init(configuration: AVVideoComposition.Configuration) {
+  public convenience init(configuration: AVVideoComposition.Configuration) {
     self.init()
     animationTool = configuration.animationTool
     colorPrimaries = configuration.colorPrimaries
@@ -87,8 +114,11 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
     renderSize = configuration.renderSize
     sourceTrackIDForFrameTiming = configuration.sourceTrackIDForFrameTiming
     perFrameHDRDisplayMetadataPolicy = configuration.perFrameHDRDisplayMetadataPolicy
+    storedSourceSampleDataTrackIDs = configuration.sourceSampleDataTrackIDs
+    storedOutputBufferDescription = configuration.outputBufferDescription
+    storedSpatialVideoConfigurations = configuration.spatialVideoConfigurations
   }
-  convenience init(propertiesOf asset: AVAsset) { self.init() }
+  public convenience init(propertiesOf asset: AVAsset) { self.init() }
   public class func videoComposition(withPropertiesOf asset: AVAsset) async throws -> AVVideoComposition { return AVVideoComposition() }
   public var customVideoCompositorClass: (any AVVideoCompositing.Type)?
   public var frameDuration: CMTime = .zero
@@ -101,7 +131,7 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
   public var colorYCbCrMatrix: String?
   public var colorTransferFunction: String?
   public var perFrameHDRDisplayMetadataPolicy: AVVideoComposition.PerFrameHDRDisplayMetadataPolicy = .propagate
-  convenience init(asset: AVAsset, applyingCIFiltersWithHandler applier: @escaping (AVAsynchronousCIImageFilteringRequest) -> Void) { self.init() }
+  public convenience init(asset: AVAsset, applyingCIFiltersWithHandler applier: @escaping (AVAsynchronousCIImageFilteringRequest) -> Void) { self.init() }
   public class func videoComposition(with asset: AVAsset, applyingCIFiltersWithHandler applier: @escaping (AVAsynchronousCIImageFilteringRequest) -> Void) async throws -> AVVideoComposition { return AVVideoComposition() }
   public func isValid(for asset: AVAsset?, timeRange: CMTimeRange, validationDelegate: (any AVVideoCompositionValidationHandling)?) -> Bool { false }
   public func isValid(for asset: AVAsset?, timeRange: CMTimeRange, validationDelegate: (any AVVideoCompositionValidationHandling)?) async throws -> Bool { return false }
@@ -125,7 +155,13 @@ open class AVVideoCompositionInstruction: NSObject, AVVideoCompositionInstructio
     public var layerInstructions: [AVVideoCompositionLayerInstruction] = []
     public var requiredSourceSampleDataTrackIDs: [CMPersistentTrackID] = []
     public var timeRange: CMTimeRange = .zero
-    public init(backgroundColor: CGColor? = nil, enablePostProcessing: Bool = true, layerInstructions: [AVVideoCompositionLayerInstruction] = [], requiredSourceSampleDataTrackIDs: [CMPersistentTrackID] = [], timeRange: CMTimeRange = .zero) {}
+    public init(backgroundColor: CGColor? = nil, enablePostProcessing: Bool = true, layerInstructions: [AVVideoCompositionLayerInstruction] = [], requiredSourceSampleDataTrackIDs: [CMPersistentTrackID] = [], timeRange: CMTimeRange = .zero) {
+      self.backgroundColor = backgroundColor
+      self.enablePostProcessing = enablePostProcessing
+      self.layerInstructions = layerInstructions
+      self.requiredSourceSampleDataTrackIDs = requiredSourceSampleDataTrackIDs
+      self.timeRange = timeRange
+    }
   }
   convenience init(configuration: AVVideoCompositionInstruction.Configuration) {
     self.init()
@@ -159,19 +195,47 @@ open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
   public struct Configuration: Sendable {
     public init() {}
     public var trackID: CMPersistentTrackID = 0
-    public init(trackID: CMPersistentTrackID = .zero) {}
-    public init(assetTrack: AVAssetTrack) {}
-    public func cropRectangleRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.CropRectangleRamp? { nil }
-    public func opacityRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.OpacityRamp? { nil }
-    public func transformRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.TransformRamp? { nil }
-    public mutating func setOpacity(_ opacity: Float, at time: CMTime) {}
-    public mutating func addOpacityRamp(_ ramp: AVVideoCompositionLayerInstruction.OpacityRamp) {}
-    public mutating func setTransform(_ transform: CGAffineTransform, at time: CMTime) {}
-    public mutating func addTransformRamp(_ ramp: AVVideoCompositionLayerInstruction.TransformRamp) {}
-    public mutating func setCropRectangle(_ rect: CGRect, at time: CMTime) {}
-    public mutating func addCropRectangleRamp(_ ramp: AVVideoCompositionLayerInstruction.CropRectangleRamp) {}
+    var storedOpacity: AVVideoCompositionLayerInstruction.OpacityRamp?
+    var storedTransform: AVVideoCompositionLayerInstruction.TransformRamp?
+    var storedCrop: AVVideoCompositionLayerInstruction.CropRectangleRamp?
+    public init(trackID: CMPersistentTrackID = .zero) {
+      self.trackID = trackID
+    }
+    public init(assetTrack: AVAssetTrack) {
+      self.trackID = assetTrack.trackID
+    }
+    public func cropRectangleRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.CropRectangleRamp? {
+      guard let ramp = storedCrop, ramp.timeRange.containsTime(time) else { return storedCrop }
+      return ramp
+    }
+    public func opacityRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.OpacityRamp? {
+      guard let ramp = storedOpacity, ramp.timeRange.containsTime(time) else { return storedOpacity }
+      return ramp
+    }
+    public func transformRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.TransformRamp? {
+      guard let ramp = storedTransform, ramp.timeRange.containsTime(time) else { return storedTransform }
+      return ramp
+    }
+    public mutating func setOpacity(_ opacity: Float, at time: CMTime) {
+      storedOpacity = OpacityRamp(timeRange: CMTimeRange(start: time, duration: .zero), start: opacity, end: opacity)
+    }
+    public mutating func addOpacityRamp(_ ramp: AVVideoCompositionLayerInstruction.OpacityRamp) {
+      storedOpacity = ramp
+    }
+    public mutating func setTransform(_ transform: CGAffineTransform, at time: CMTime) {
+      storedTransform = TransformRamp(timeRange: CMTimeRange(start: time, duration: .zero), start: transform, end: transform)
+    }
+    public mutating func addTransformRamp(_ ramp: AVVideoCompositionLayerInstruction.TransformRamp) {
+      storedTransform = ramp
+    }
+    public mutating func setCropRectangle(_ rect: CGRect, at time: CMTime) {
+      storedCrop = CropRectangleRamp(timeRange: CMTimeRange(start: time, duration: .zero), start: rect, end: rect)
+    }
+    public mutating func addCropRectangleRamp(_ ramp: AVVideoCompositionLayerInstruction.CropRectangleRamp) {
+      storedCrop = ramp
+    }
   }
-  public struct CropRectangleRamp: Sendable {
+  public struct CropRectangleRamp: Sendable, Equatable {
     public init() {}
     public var timeRange: CMTimeRange = .zero
     public var start: CGRect = .zero
@@ -182,7 +246,7 @@ open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
       self.end = end
     }
   }
-  public struct OpacityRamp: Sendable {
+  public struct OpacityRamp: Sendable, Equatable {
     public init() {}
     public var timeRange: CMTimeRange = .zero
     public var start: Float = 0
@@ -193,7 +257,7 @@ open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
       self.end = end
     }
   }
-  public struct TransformRamp: Sendable {
+  public struct TransformRamp: Sendable, Equatable {
     public init() {}
     public var timeRange: CMTimeRange = .zero
     public var start: CGAffineTransform = .identity
@@ -204,9 +268,12 @@ open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
       self.end = end
     }
   }
-  convenience init(configuration: AVVideoCompositionLayerInstruction.Configuration) {
+  public convenience init(configuration: AVVideoCompositionLayerInstruction.Configuration) {
     self.init()
     portableTrackID = configuration.trackID
+    storedOpacity = configuration.storedOpacity
+    storedTransform = configuration.storedTransform
+    storedCrop = configuration.storedCrop
   }
   public func cropRectangleRamp(at time: CMTime) -> AVVideoCompositionLayerInstruction.CropRectangleRamp? {
     _ = time

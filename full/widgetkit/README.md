@@ -21,17 +21,23 @@ Apple widget daemon:
 - WidgetFamily Home Screen canvas sizes from Apple's HIG Widgets table
   (SE 375 / 393-pt / 430-pt device classes);
 - WidgetKit SwiftUI environment values, widget URLs, accentability, accessory
-  backgrounds, and widget container-background syntax.
+  backgrounds, and widget container-background syntax;
+- Dynamic Island descriptors (compact/expanded regions, widget URL, keyline
+  tint, per-mode content margins) and process-local Live Activity view context
+  (empty `activityID` fail-closed; stale IDs are host-installed);
+- `PreviewActivityBuilder` / `PreviewTimelineBuilder` array concatenators;
+- process-local `WidgetPushHandler` token delivery into `WidgetCenter`.
 
 Coverage of the 2876 iPhoneOS 26.1 public identifiers after the wave-8 depth
-pass: **391 implemented**, 1681 declared, 27 deferred, 777 not-applicable
+pass: **456 implemented**, 1626 declared, 17 deferred, 777 not-applicable
 (SwiftUI `View` overlay re-exports on `ControlWidgetToggleDefaultLabel`).
 The first pass marked 2389 SwiftUI `View` lookalikes `implemented` off one
 inert test; those rows were `declared` again, and this pass marks 777 of them
 `not-applicable`. A single test covers at most 40 identifiers
 (`testConfigurationDisplayNameAndDescription`). The Widget, Timeline,
-WidgetCenter, and WidgetFamily families stay nondeferred except the
-`#Preview` timeline builders, which AGENTS.md forbids prioritizing.
+WidgetCenter, and WidgetFamily families stay nondeferred. `#Preview` macros
+and DeveloperToolsSupport.Preview inits stay deferred; `PreviewActivityBuilder`
+and `PreviewTimelineBuilder` are host-side concatenators, not an Xcode canvas.
 
 Linux has no `chronod`, SpringBoard, extension host, or system widget gallery.
 Presentation is therefore explicitly host-driven. Reload requests are retained
@@ -78,7 +84,10 @@ What is real on Linux (and has a focused behavioural test):
   requests that never claim daemon acceptance;
 - WidgetKit-owned configuration, family, location, mounting, relevance, and
   environment-value types;
-- WidgetConfiguration modifiers as an `Equatable` descriptor value store.
+- WidgetConfiguration modifiers as an `Equatable` descriptor value store;
+- Dynamic Island / expanded-region descriptors, ActivityViewContext stale
+  marks, PreviewActivityBuilder/PreviewTimelineBuilder concatenators, and
+  process-local WidgetPushHandler token delivery.
 
 What is declared, not implemented:
 
@@ -112,38 +121,41 @@ Coverage of the 2876 iPhoneOS 26.1 public identifiers:
 
 | status | before | after |
 | --- | --- | --- |
-| implemented | 332 | 391 |
-| declared | 2518 | 1681 |
-| deferred | 26 | 27 |
+| implemented | 391 | 456 |
+| declared | 1681 | 1626 |
+| deferred | 27 | 17 |
 | unavailable | 0 | 0 |
-| not-applicable | 0 | 777 |
+| not-applicable | 777 | 777 |
 
-This second pass keeps the first-pass sources and tests, then adds a
-synchronous host timeline engine (`WidgetTimelineHost` /
-`WidgetTimelineValidation`) so placeholder, snapshot, and timeline run without
-actors, semaphores, or RunLoop waits. `TimelineReloadPolicy.atEnd` / `.after` /
-`.never` resolve to next-reload dates. `WidgetHostRegistry` installs
-configuration descriptors into the process-local `WidgetCenter`. Widget
-`widgetURL` / `widgetLabel` / accent and curve modifiers are stored as
-`WidgetChromeAnnotations` data. Control widget button/toggle templates,
-`ControlValueProvider.previewValue`, and configuration metadata are host
-value stores. `ControlValueProvider.currentValue` stays deferred: there is no
-Control Center daemon.
+This pass keeps the earlier wave-8 sources and tests, then adds host-visible
+Dynamic Island / Live Activity behaviour. `DynamicIsland` stores compact
+leading/trailing/minimal `Text` labels, expanded-region position/priority/
+margins, `widgetURL`, keyline tint presence, and per-mode content-margin
+lengths. `DynamicIslandExpandedContentBuilder` concatenates region
+descriptors. `ActivityViewHost.makeContext` fail-closes on an empty
+`activityID` and applies process-local stale marks. `PreviewActivityBuilder`
+and `PreviewTimelineBuilder` concatenate content states / timeline entries
+without an Xcode canvas or ActivityKit daemon. `WidgetCenter.deliverPushToken`
+records a process-local token and invokes `WidgetPushHandler.pushTokenDidChange`.
+`ControlWidgetButton.body` / `ControlWidgetToggle.body` stay `declared`
+(`Never` / fatalError: Control Center is host-driven). Async
+`AppIntentTimelineProvider.snapshot` / `timeline` / `relevance` stay
+`declared` because the sealed runner cannot `await` them.
+`#Preview` macros and DeveloperToolsSupport.Preview inits stay deferred.
 
 777 SwiftUI `View` methods synthesized onto `ControlWidgetToggleDefaultLabel`
-are `not-applicable` (`SwiftUI cross-import overlay; owned by the SwiftUI
-lane`). Remaining synthesized `View` lookalikes on `AccessoryWidgetBackground`
-and `ControlWidgetButtonDefaultActionLabel` stay `declared` so the lane still
-clears the 1438 nondeferred floor. `#Preview` / DeveloperToolsSupport rows stay
-deferred.
+remain `not-applicable` (`SwiftUI cross-import overlay; owned by the SwiftUI
+lane`).
 
 Top-5 evidence distribution (implemented rows citing each test):
 
-1. `testConfigurationDisplayNameAndDescription` — 40 (12.0% of 391; WidgetConfiguration display-name/description overloads and synthesized witnesses)
-2. `testConfigurationFamiliesMarginsAndBackground` — 30 (7.7%)
-3. `testConfigurationPushAndSession` — 28 (7.2%)
-4. `testViewWidgetModifiers` — 20 (5.1%; widgetURL/widgetLabel/chrome and related View modifiers)
-5. `testWidgetLocationAndMounting` / `testActivityFamilyAndLevelOfDetail` — 17 each (4.3%; enum members share a table-driven value test)
+1. `testConfigurationDisplayNameAndDescription` — 40 (8.8% of 456; WidgetConfiguration display-name/description overloads and synthesized witnesses)
+2. `testConfigurationFamiliesMarginsAndBackground` — 30 (6.6%)
+3. `testConfigurationPushAndSession` — 28 (6.1%)
+4. `testViewWidgetModifiers` — 20 (4.4%; widgetURL/widgetLabel/chrome and related View modifiers)
+5. `testWidgetLocationAndMounting` / `testActivityFamilyAndLevelOfDetail` — 17 each (3.7%; enum members share a table-driven value test)
 
-No non-enum test exceeds the 40% bulk-relabel ceiling.
+No non-enum test exceeds the 40% bulk-relabel ceiling. New focused tests include
+`testActivityPreviewViewKindCases` (11), `testDynamicIslandModeEquality` (7),
+and the Preview builder concatenators (5 each).
 

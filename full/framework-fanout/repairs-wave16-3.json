@@ -1,0 +1,31 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave16-repair-3",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "StoreKit",
+      "slug": "storekit",
+      "agentId": "bc-4731d98d-2982-5580-b3d4-50419c41c0a8",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/279",
+      "expectedPriorHead": "5b834b482ab51c51bbe1623786f5cf7d23656a09",
+      "prompt": "Continue repairing StoreKit in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at 5b834b482ab5:\nFW_MERGE REFUSED: no depth gain \u2014 implemented rows 1370 -> 1370; reclassifying SwiftUI-overlay rows to not-applicable is bookkeeping, the depth task (real behaviour with per-identifier tests) is unaddressed\n\nFix the coverage ledger, not just the code: every `implemented` row in full/storekit/coverage.tsv must cite evidence of the exact form `test:full/storekit/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/storekit/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/storekit/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    },
+    {
+      "module": "CoreML",
+      "slug": "coreml",
+      "agentId": "bc-4b5449c0-3d51-5c55-aeea-9ce21a33292c",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/290",
+      "expectedPriorHead": "f38a68e0c07c81727f23b8ad7220a305dbf8a3ab",
+      "prompt": "Continue repairing CoreML in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at f38a68e0c07c:\nFW_MERGE REFUSED: 578 not-applicable rows are not SwiftUI cross-import overlay IDs (e.g. s:SLsE1goiySbx_xtFZ::SYNTHESIZED::s:Si) \u2014 they must be implemented/declared/deferred/unavailable\n\nFix the coverage ledger, not just the code: every `implemented` row in full/coreml/coverage.tsv must cite evidence of the exact form `test:full/coreml/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/coreml/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/coreml/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}

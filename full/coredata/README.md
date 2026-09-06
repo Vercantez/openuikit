@@ -47,7 +47,17 @@ build real guest Foundation and Dispatch, compile this module against those
   on swift-corelibs-foundation; tests use block predicates and comparator
   sort descriptors. Result types `.managedObjectResultType` /
   `.countResultType` / `.dictionaryResultType` / `.managedObjectIDResultType`
-  and fetchLimit/offset still run.
+  plus fetchLimit/offset, `includesPendingChanges`, `includesSubentities`,
+  `includesPropertyValues`, `returnsDistinctResults`, `fetchBatchSize`
+  faulting, `shouldRefreshRefetchedObjects`, and
+  `relationshipKeyPathsForPrefetching` still run.
+- `NSAtomicStore` cache-node CRUD and `NSIncrementalStore` node/execute
+  adapters on Linux in-memory backing. Register either class via
+  `registerStoreClass`. Apple binary on-disk layout is not decoded.
+- `NSMigrationManager` instance association / source-destination lookup.
+  `migrateStore` still throws `NSMigrationError` / cancelled errors.
+- Entity inheritance: `subentities` / `isKindOf(entity:)` and inherited
+  attributes on child entities.
 - `NSFetchedResultsController`: sections, indexPath lookups, and delegate
   callbacks in willChange → section/object edits → didChange order.
 - In-memory `NSBatchInsertRequest` / `NSBatchUpdateRequest` /
@@ -61,7 +71,7 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair → wave 8): **88 → 1206 → 682 → 774 implemented** / 520 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9): **88 → 1206 → 682 → 774 → 949 implemented** / 345 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Fail-closed boundaries
 
@@ -239,6 +249,84 @@ New focused tests this pass:
 | `propertiesToGroupBy` | `testPropertiesToGroupBy` |
 | KVC accessors / validation / refresh | `testManagedObjectKVCAccessors` |
 | uniqueness `NSConstraintConflict` | `testConstraintConflictOnSave` |
+
+Isolated-gate markers from this host:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+COREDATA_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CoreData dylib=libCoreData.dylib
+```
+
+## Depth pass 2026-09 (wave 9)
+
+Fourth behavioral pass on `cursor/port-coredata-to-linux-5769` from expected
+start `6bf18072` (wave-8 ledger). Kept the in-memory graph, XML model load,
+SQLite store, and every existing synchronous test. Added entity inheritance
+(including inherited attributes), fetch-option behavior (`includesPendingChanges`,
+`includesSubentities`, `returnsDistinctResults`, `fetchBatchSize` faults,
+prefetch, `includesPropertyValues`), batch-insert dictionary/object handlers,
+working `NSAtomicStore` cache nodes and `NSIncrementalStore` node adapters,
+`NSMigrationManager` associate/lookup (store rewrite still fail-closed),
+in-memory `migratePersistentStore` / SQLite `replacePersistentStore`, and
+focused context/coordinator/object lifecycle tests. CloudKit Event and
+persistent-history transaction rows stay fail-closed (empty/nil, no invented
+Apple history or CloudKit success). Nine `NSExpression`/`UndoManager` rows
+stay `deferred`. Async `perform(schedule:)` stays `declared` because a
+synchronous host probe cannot await it without a run-loop wait.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift
+6.2.4 / linux and the sealed gate compiles with a clean product tree
+(`products=clean`). Starting commit `6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0`
+matched.
+
+**Coverage before / after this wave 9 pass** (1319 public IDs):
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before (tree at expected start `6bf18072`, wave 8) | 774 | 520 | 15 | 10 | 0 |
+| After (inheritance + stores + focused tests) | 949 | 345 | 15 | 10 | 0 |
+
+Every `implemented` row cites
+`test:full/coredata/tests/agent/<File>Tests.swift#testName` naming a real
+top-level synchronous `func testName()`. Enum / option-set members and C
+`k…`/`err…`/`NS*Error` constants still share two table-driven value tests.
+No other test is cited by more than 40% of implemented rows (largest
+non-catalog/error: `testFailClosedSurfaces` at 49 / 949 ≈ 5.2%). Tests do
+not wait on `DispatchQueue.main`, `DispatchSemaphore`, `RunLoop`, or
+`Task`.
+
+Top-5 implemented evidence distribution (949 rows):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 257 | 27.1% | `CoreDataCatalogTests.swift#testEnumOptionSetAndConstantValues` |
+| 218 | 23.0% | `CoreDataErrorCodeTests.swift#testErrorCodes` |
+| 49 | 5.2% | `CoreDataFailClosedTests.swift#testFailClosedSurfaces` |
+| 38 | 4.0% | `CoreDataDepthPassTests.swift#testContextLifecycleMergeAndExecute` |
+| 23 | 2.4% | `CoreDataBatchTests.swift#testBatchRequests` |
+
+New focused tests this pass (`CoreDataDepthPassTests.swift`):
+
+| Family | Test |
+| --- | --- |
+| entity inheritance / indexes | `testEntityInheritanceAndIndexes` |
+| property metadata + predicates | `testPropertyDescriptionMetadataAndValidation` |
+| fetch options / distinct / prefetch | `testFetchRequestOptionsAndDistinct` |
+| batch insert handlers | `testBatchInsertHandlers` |
+| atomic store cache nodes | `testAtomicStoreCacheNodes` |
+| incremental store adapter | `testIncrementalStoreAdapter` |
+| migration associate / fail-closed rewrite | `testMigrationManagerAssociations` |
+| context lifecycle / merge / overlay enums | `testContextLifecycleMergeAndExecute` |
+| coordinator migrate / replace / URI | `testCoordinatorStoreLifecycle` |
+| managed object flags | `testManagedObjectLifecycleFlags` |
+| entity mapping properties | `testEntityMappingProperties` |
+| CloudKit Event fail-closed | `testCloudKitContainerEventFailClosed` |
+| history transaction fail-closed | `testPersistentHistoryTransactionFailClosed` |
 
 Isolated-gate markers from this host:
 
