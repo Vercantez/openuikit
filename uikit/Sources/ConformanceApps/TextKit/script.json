@@ -1,0 +1,9 @@
+{
+  "comment": "TextKit attachment conformance. Rest captures after default 24×24 baseline attachment (t200), hanging origin.y = −24 (t1200), custom view provider (t2200). Same file drives Tools/oracle2/confprobe and openhost --app TextKit. Window 375×667 scale 2, iPhone SE.",
+  "app": "TextKit",
+  "events": [
+    { "t": 0.40, "action": "hang" },
+    { "t": 1.40, "action": "provider" }
+  ],
+  "captures": [0.20, 1.20, 2.20]
+}

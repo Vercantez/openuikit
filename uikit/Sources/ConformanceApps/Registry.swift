@@ -22,6 +22,7 @@ extension ConformanceApps {
         "Present",
         "TableEditor",
         "Tabs",
+        "TextKit",
     ]
 
     /// Force every app's one-line `static let _register<Name>` to run.
@@ -39,5 +40,6 @@ extension ConformanceApps {
         _ = _registerPresent
         _ = _registerTableEditor
         _ = _registerTabs
+        _ = _registerTextKit
     }
 }
