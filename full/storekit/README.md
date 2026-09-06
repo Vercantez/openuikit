@@ -159,6 +159,24 @@ the 7848 nondeferred floor stays met; they are not marked `implemented`.
 SwiftUI overlay re-exports already `not-applicable` are unchanged.
 
 The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`.
+Depth pass 4 ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=StoreKit lane=medium-full symbols=15695
+FRAMEWORK_FANOUT_REFERENCE_OK
+STOREKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=StoreKit dylib=libStoreKit.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` fails on this snapshot with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios` and therefore
+does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+That campaign token is the host-inventory stamp; the sealed framework gate
+prints the four lines above. The verify script's success line on a complete
+image is `products=scratch-corpus`, not `products=clean`. Starting commit
+was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
 
 ## What is real (isolated host)
 
