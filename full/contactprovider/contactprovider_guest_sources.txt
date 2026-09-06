@@ -1,0 +1,8 @@
+full/contactprovider/ContactItem.swift
+full/contactprovider/ContactProvider.swift
+full/contactprovider/ContactProviderDomain.swift
+full/contactprovider/ContactProviderEnumeration.swift
+full/contactprovider/ContactProviderError.swift
+full/contactprovider/ContactProviderExtension.swift
+full/contactprovider/ContactProviderLookalikes.swift
+full/contactprovider/ContactProviderManager.swift
