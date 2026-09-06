@@ -1,0 +1,30 @@
+{
+  "app_sha": "a2832521c1daa0c23419c73705ae043ed60c9791",
+  "build_settings_sha256": "4afeaa9d30a8b6fc087664ce326b207e601f55114b6418e5f4814abb99754c39",
+  "capture_command": "SIM_DEVICE_SUFFIX=-focus-golden scripts/focus_probe_sim.sh /tmp/golden-focus-browser-ios",
+  "device": {
+    "build": "23B86",
+    "ios": "26.1",
+    "name": "OpenUIKit-FocusOracle-focus-golden",
+    "pixels": [
+      750,
+      1334
+    ],
+    "points": [
+      375,
+      667
+    ],
+    "scale": 2,
+    "type": "com.apple.CoreSimulator.SimDeviceType.iPhone-SE-3rd-generation",
+    "udid": "879CC1C4-F4F8-4D1B-BD19-D5EBC3111117"
+  },
+  "golden_layout": "goldens/ios/golden_realapp_ios/realapp_focus_browser_light.layout.json",
+  "golden_png": "goldens/ios/golden_realapp_ios/realapp_focus_browser_light.png",
+  "layout_anchor": "URLBar",
+  "name": "realapp_focus_browser_light",
+  "oracle": "Apple UIKit, Blockzilla.xcodeproj / Focus / FocusDebug",
+  "png_sha256": "e2f17415edd5dae113b14ba69ecab2112de7ce30dd81510adbcca06f8c5ca692",
+  "provenance": "goldens/ios/golden_realapp_ios/realapp_focus_browser_light.provenance.json",
+  "scorer": "Tools/compare/compare_realapp.py --golden-straight-alpha --scale 2",
+  "state": "returning user; URLBar Cancel activated; keyboard dismissed"
+}
