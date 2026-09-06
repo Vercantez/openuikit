@@ -1,0 +1,5 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/AppClip.framework/AppClip (for architecture arm64):	System/Library/Frameworks/AppClip.framework/AppClip.tbd
+_APActivationPayloadErrorDomain	System/Library/Frameworks/AppClip.framework/AppClip.tbd
+_OBJC_CLASS_$_APActivationPayload	System/Library/Frameworks/AppClip.framework/AppClip.tbd
+_OBJC_METACLASS_$_APActivationPayload	System/Library/Frameworks/AppClip.framework/AppClip.tbd

@@ -1,0 +1,31 @@
+precise	kind	title	path	declaration
+c:@T@STWebHistoryProfileIdentifier	swift.struct	STWebHistory.ProfileIdentifier	STWebHistory.ProfileIdentifier	struct ProfileIdentifier
+c:objc(cs)STScreenTimeConfiguration	swift.class	STScreenTimeConfiguration	STScreenTimeConfiguration	class STScreenTimeConfiguration
+c:objc(cs)STScreenTimeConfiguration(py)enforcesChildRestrictions	swift.property	enforcesChildRestrictions	STScreenTimeConfiguration.enforcesChildRestrictions	var enforcesChildRestrictions: Bool { get }
+c:objc(cs)STScreenTimeConfigurationObserver	swift.class	STScreenTimeConfigurationObserver	STScreenTimeConfigurationObserver	class STScreenTimeConfigurationObserver
+c:objc(cs)STScreenTimeConfigurationObserver(im)initWithUpdateQueue:	swift.init	init(updateQueue:)	STScreenTimeConfigurationObserver.init(updateQueue:)	init(updateQueue: dispatch_queue_t)
+c:objc(cs)STScreenTimeConfigurationObserver(im)startObserving	swift.method	startObserving()	STScreenTimeConfigurationObserver.startObserving()	func startObserving()
+c:objc(cs)STScreenTimeConfigurationObserver(im)stopObserving	swift.method	stopObserving()	STScreenTimeConfigurationObserver.stopObserving()	func stopObserving()
+c:objc(cs)STScreenTimeConfigurationObserver(py)configuration	swift.property	configuration	STScreenTimeConfigurationObserver.configuration	var configuration: STScreenTimeConfiguration? { get }
+c:objc(cs)STWebHistory	swift.class	STWebHistory	STWebHistory	class STWebHistory
+c:objc(cs)STWebHistory(im)deleteAllHistory	swift.method	deleteAllHistory()	STWebHistory.deleteAllHistory()	func deleteAllHistory()
+c:objc(cs)STWebHistory(im)deleteHistoryDuringInterval:	swift.method	deleteHistory(during:)	STWebHistory.deleteHistory(during:)	func deleteHistory(during interval: DateInterval)
+c:objc(cs)STWebHistory(im)deleteHistoryForURL:	swift.method	deleteHistory(for:)	STWebHistory.deleteHistory(for:)	func deleteHistory(for url: URL)
+c:objc(cs)STWebHistory(im)fetchAllHistoryWithCompletionHandler:	swift.method	fetchAllHistory(completionHandler:)	STWebHistory.fetchAllHistory(completionHandler:)	func fetchAllHistory(completionHandler: @escaping (Set<URL>?, (any Error)?) -> Void)
+c:objc(cs)STWebHistory(im)fetchHistoryDuringInterval:completionHandler:	swift.method	fetchHistory(during:)	STWebHistory.fetchHistory(during:)	func fetchHistory(during interval: DateInterval) async throws -> Set<URL>
+c:objc(cs)STWebHistory(im)initWithBundleIdentifier:error:	swift.init	init(bundleIdentifier:)	STWebHistory.init(bundleIdentifier:)	init(bundleIdentifier: String) throws
+c:objc(cs)STWebHistory(im)initWithBundleIdentifier:profileIdentifier:error:	swift.init	init(bundleIdentifier:profileIdentifier:)	STWebHistory.init(bundleIdentifier:profileIdentifier:)	init(bundleIdentifier: String, profileIdentifier: STWebHistory.ProfileIdentifier?) throws
+c:objc(cs)STWebHistory(im)initWithProfileIdentifier:	swift.init	init(profileIdentifier:)	STWebHistory.init(profileIdentifier:)	init(profileIdentifier: STWebHistory.ProfileIdentifier?)
+c:objc(cs)STWebpageController	swift.class	STWebpageController	STWebpageController	@MainActor class STWebpageController
+c:objc(cs)STWebpageController(im)setBundleIdentifier:error:	swift.method	setBundleIdentifier(_:)	STWebpageController.setBundleIdentifier(_:)	@MainActor func setBundleIdentifier(_ bundleIdentifier: String) throws
+c:objc(cs)STWebpageController(py)URL	swift.property	url	STWebpageController.url	@MainActor var url: URL? { get set }
+c:objc(cs)STWebpageController(py)URLIsBlocked	swift.property	urlIsBlocked	STWebpageController.urlIsBlocked	@MainActor var urlIsBlocked: Bool { get }
+c:objc(cs)STWebpageController(py)URLIsPictureInPicture	swift.property	urlIsPictureInPicture	STWebpageController.urlIsPictureInPicture	@MainActor var urlIsPictureInPicture: Bool { get set }
+c:objc(cs)STWebpageController(py)URLIsPlayingVideo	swift.property	urlIsPlayingVideo	STWebpageController.urlIsPlayingVideo	@MainActor var urlIsPlayingVideo: Bool { get set }
+c:objc(cs)STWebpageController(py)profileIdentifier	swift.property	profileIdentifier	STWebpageController.profileIdentifier	@MainActor var profileIdentifier: STWebHistory.ProfileIdentifier? { get set }
+c:objc(cs)STWebpageController(py)suppressUsageRecording	swift.property	suppressUsageRecording	STWebpageController.suppressUsageRecording	@MainActor var suppressUsageRecording: Bool { get set }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@STWebHistoryProfileIdentifier	swift.func.op	!=(_:_:)	STWebHistory.ProfileIdentifier.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:So29STWebHistoryProfileIdentifiera8rawValueABSS_tcfc	swift.init	init(rawValue:)	STWebHistory.ProfileIdentifier.init(rawValue:)	init(rawValue: String)
+s:So29STWebHistoryProfileIdentifierayABSScfc	swift.init	init(_:)	STWebHistory.ProfileIdentifier.init(_:)	init(_ rawValue: String)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@STWebHistoryProfileIdentifier	swift.property	hashValue	STWebHistory.ProfileIdentifier.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@STWebHistoryProfileIdentifier	swift.method	hash(into:)	STWebHistory.ProfileIdentifier.hash(into:)	func hash(into hasher: inout Hasher)

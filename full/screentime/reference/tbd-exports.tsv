@@ -1,0 +1,17 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/ScreenTime.framework/ScreenTime (for architecture arm64):	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STScreenTimeAgentConnection	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STScreenTimeConfiguration	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STScreenTimeConfigurationObserver	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STWebHistory	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STWebRemoteViewController	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STWebService	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_CLASS_$_STWebpageController	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STScreenTimeAgentConnection	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STScreenTimeConfiguration	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STScreenTimeConfigurationObserver	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STWebHistory	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STWebRemoteViewController	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STWebService	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_OBJC_METACLASS_$_STWebpageController	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd
+_STMachServiceNameScreenTime	System/Library/Frameworks/ScreenTime.framework/ScreenTime.tbd

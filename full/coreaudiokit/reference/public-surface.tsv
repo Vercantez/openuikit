@@ -1,0 +1,47 @@
+precise	kind	title	path	declaration
+c:@CM@CoreAudioKit@objc(cs)AUGenericViewInternal(im)collectionView:willDisplayCell:forItemAtIndexPath:	swift.method	collectionView(_:willDisplay:forItemAt:)	AUGenericViewInternal.collectionView(_:willDisplay:forItemAt:)	@MainActor @preconcurrency dynamic func collectionView(_ collectionView: UICollectionView, willDisplay item: UICollectionViewCell, forItemAt indexPath: IndexPath)
+c:@CM@CoreAudioKit@objc(cs)AUGenericViewInternal(im)collectionView:willDisplaySupplementaryView:forElementKind:atIndexPath:	swift.method	collectionView(_:willDisplaySupplementaryView:forElementKind:at:)	AUGenericViewInternal.collectionView(_:willDisplaySupplementaryView:forElementKind:at:)	@MainActor @preconcurrency dynamic func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: StringLiteralType, at indexPath: IndexPath)
+c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader	swift.class	AUAppleCustomViewLoader	AUAppleCustomViewLoader	@objc class AUAppleCustomViewLoader
+c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader(im)customViewControllerFor:audioUnit:v3AU:	swift.method	customViewController(for:audioUnit:v3AU:)	AUAppleCustomViewLoader.customViewController(for:audioUnit:v3AU:)	@objc func customViewController(for componentDescription: AudioComponentDescription, audioUnit: AudioUnit, v3AU: AUAudioUnit? = nil) -> UIViewController?
+c:@M@CoreAudioKit@objc(cs)AUAppleCustomViewLoader(im)init	swift.init	init()	AUAppleCustomViewLoader.init()	override dynamic init()
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal	swift.class	AUGenericViewInternal	AUGenericViewInternal	@MainActor @objc @preconcurrency class AUGenericViewInternal
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)initWithCoder:	swift.init	init(coder:)	AUGenericViewInternal.init(coder:)	@MainActor @preconcurrency required dynamic init?(coder: NSCoder)
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)initWithFrame:	swift.init	init(frame:)	AUGenericViewInternal.init(frame:)	@MainActor @preconcurrency override dynamic init(frame: CGRect)
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)removeFromSuperview	swift.method	removeFromSuperview()	AUGenericViewInternal.removeFromSuperview()	@MainActor @preconcurrency override dynamic func removeFromSuperview()
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)removeScheduledUpdatesTimer	swift.method	removeScheduledUpdatesTimer()	AUGenericViewInternal.removeScheduledUpdatesTimer()	@MainActor @objc @preconcurrency func removeScheduledUpdatesTimer()
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(im)traitCollectionDidChange:	swift.method	traitCollectionDidChange(_:)	AUGenericViewInternal.traitCollectionDidChange(_:)	@MainActor @preconcurrency override dynamic func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?)
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(py)auAudioUnit	swift.property	auAudioUnit	AUGenericViewInternal.auAudioUnit	@MainActor @objc @preconcurrency var auAudioUnit: AUAudioUnit? { get set }
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(py)owningController	swift.property	owningController	AUGenericViewInternal.owningController	@MainActor @objc @preconcurrency var owningController: UIViewController?
+c:@M@CoreAudioKit@objc(cs)AUGenericViewInternal(py)paramObserverToken	swift.property	paramObserverToken	AUGenericViewInternal.paramObserverToken	@MainActor @objc @preconcurrency var paramObserverToken: AUParameterObserverToken?
+c:objc(cs)AUAudioUnit(im)requestViewControllerWithCompletionHandler:	swift.method	requestViewController(completionHandler:)	AUAudioUnit.requestViewController(completionHandler:)	func requestViewController(completionHandler: @escaping (UIViewController?) -> Void)
+c:objc(cs)AUAudioUnit(im)selectViewConfiguration:	swift.method	select(_:)	AUAudioUnit.select(_:)	func select(_ viewConfiguration: AUAudioUnitViewConfiguration)
+c:objc(cs)AUAudioUnit(im)supportedViewConfigurations:	swift.method	supportedViewConfigurations(_:)	AUAudioUnit.supportedViewConfigurations(_:)	func supportedViewConfigurations(_ availableViewConfigurations: [AUAudioUnitViewConfiguration]) -> IndexSet
+c:objc(cs)AUAudioUnitViewConfiguration	swift.class	AUAudioUnitViewConfiguration	AUAudioUnitViewConfiguration	class AUAudioUnitViewConfiguration
+c:objc(cs)AUAudioUnitViewConfiguration(im)initWithWidth:height:hostHasController:	swift.init	init(width:height:hostHasController:)	AUAudioUnitViewConfiguration.init(width:height:hostHasController:)	init(width: CGFloat, height: CGFloat, hostHasController: Bool)
+c:objc(cs)AUAudioUnitViewConfiguration(py)height	swift.property	height	AUAudioUnitViewConfiguration.height	var height: CGFloat { get }
+c:objc(cs)AUAudioUnitViewConfiguration(py)hostHasController	swift.property	hostHasController	AUAudioUnitViewConfiguration.hostHasController	var hostHasController: Bool { get }
+c:objc(cs)AUAudioUnitViewConfiguration(py)width	swift.property	width	AUAudioUnitViewConfiguration.width	var width: CGFloat { get }
+c:objc(cs)AUGenericViewController	swift.class	AUGenericViewController	AUGenericViewController	@MainActor class AUGenericViewController
+c:objc(cs)AUGenericViewController(py)auAudioUnit	swift.property	auAudioUnit	AUGenericViewController.auAudioUnit	@MainActor var auAudioUnit: AUAudioUnit? { get set }
+c:objc(cs)AUViewController	swift.class	AUViewController	AUViewController	@MainActor class AUViewController
+c:objc(cs)CABTMIDICentralViewController	swift.class	CABTMIDICentralViewController	CABTMIDICentralViewController	@MainActor class CABTMIDICentralViewController
+c:objc(cs)CABTMIDILocalPeripheralViewController	swift.class	CABTMIDILocalPeripheralViewController	CABTMIDILocalPeripheralViewController	@MainActor class CABTMIDILocalPeripheralViewController
+c:objc(cs)CAInterAppAudioSwitcherView	swift.class	CAInterAppAudioSwitcherView	CAInterAppAudioSwitcherView	@MainActor class CAInterAppAudioSwitcherView
+c:objc(cs)CAInterAppAudioSwitcherView(im)contentWidth	swift.method	contentWidth()	CAInterAppAudioSwitcherView.contentWidth()	@MainActor func contentWidth() -> CGFloat
+c:objc(cs)CAInterAppAudioSwitcherView(im)setOutputAudioUnit:	swift.method	setOutputAudioUnit(_:)	CAInterAppAudioSwitcherView.setOutputAudioUnit(_:)	@MainActor func setOutputAudioUnit(_ au: AudioUnit?)
+c:objc(cs)CAInterAppAudioSwitcherView(py)showingAppNames	swift.property	isShowingAppNames	CAInterAppAudioSwitcherView.isShowingAppNames	@MainActor var isShowingAppNames: Bool { get set }
+c:objc(cs)CAInterAppAudioTransportView	swift.class	CAInterAppAudioTransportView	CAInterAppAudioTransportView	@MainActor class CAInterAppAudioTransportView
+c:objc(cs)CAInterAppAudioTransportView(im)setOutputAudioUnit:	swift.method	setOutputAudioUnit(_:)	CAInterAppAudioTransportView.setOutputAudioUnit(_:)	@MainActor func setOutputAudioUnit(_ au: AudioUnit)
+c:objc(cs)CAInterAppAudioTransportView(py)connected	swift.property	isConnected	CAInterAppAudioTransportView.isConnected	@MainActor var isConnected: Bool { get }
+c:objc(cs)CAInterAppAudioTransportView(py)currentTimeLabelFont	swift.property	currentTimeLabelFont	CAInterAppAudioTransportView.currentTimeLabelFont	@MainActor var currentTimeLabelFont: UIFont { get set }
+c:objc(cs)CAInterAppAudioTransportView(py)enabled	swift.property	isEnabled	CAInterAppAudioTransportView.isEnabled	@MainActor var isEnabled: Bool { get set }
+c:objc(cs)CAInterAppAudioTransportView(py)labelColor	swift.property	labelColor	CAInterAppAudioTransportView.labelColor	@MainActor var labelColor: UIColor { get set }
+c:objc(cs)CAInterAppAudioTransportView(py)pauseButtonColor	swift.property	pauseButtonColor	CAInterAppAudioTransportView.pauseButtonColor	@MainActor var pauseButtonColor: UIColor { get set }
+c:objc(cs)CAInterAppAudioTransportView(py)playButtonColor	swift.property	playButtonColor	CAInterAppAudioTransportView.playButtonColor	@MainActor var playButtonColor: UIColor { get set }
+c:objc(cs)CAInterAppAudioTransportView(py)playing	swift.property	isPlaying	CAInterAppAudioTransportView.isPlaying	@MainActor var isPlaying: Bool { get }
+c:objc(cs)CAInterAppAudioTransportView(py)recordButtonColor	swift.property	recordButtonColor	CAInterAppAudioTransportView.recordButtonColor	@MainActor var recordButtonColor: UIColor { get set }
+c:objc(cs)CAInterAppAudioTransportView(py)recording	swift.property	isRecording	CAInterAppAudioTransportView.isRecording	@MainActor var isRecording: Bool { get }
+c:objc(cs)CAInterAppAudioTransportView(py)rewindButtonColor	swift.property	rewindButtonColor	CAInterAppAudioTransportView.rewindButtonColor	@MainActor var rewindButtonColor: UIColor { get set }
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)AUAudioUnitViewConfiguration	swift.init	init(coder:)	AUAudioUnitViewConfiguration.init(coder:)	init?(coder: NSCoder)
+s:12CoreAudioKit21AUGenericViewInternalC20showSingleClumpIndexSiSgvp	swift.property	showSingleClumpIndex	AUGenericViewInternal.showSingleClumpIndex	@MainActor @preconcurrency var showSingleClumpIndex: Int? { get set }
+s:12CoreAudioKit25AUGenericViewInternalBasea	swift.typealias	AUGenericViewInternalBase	AUGenericViewInternalBase	typealias AUGenericViewInternalBase = UIView

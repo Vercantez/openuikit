@@ -1,0 +1,5 @@
+precise	graphKind	graphPath	status	basis	rawCandidateCount	compatibleCandidateCount	selectedNodePath	candidateNodePaths
+c:objc(cs)ASIdentifierManager	swift.class	["ASIdentifierManager"]	import-name	exported-import-name	1	1	/ABIRoot/children/0	["/ABIRoot/children/0"]
+c:objc(cs)ASIdentifierManager(cm)sharedManager	swift.type.method	["ASIdentifierManager","shared()"]	unmatched	none	0	0		[]
+c:objc(cs)ASIdentifierManager(py)advertisingIdentifier	swift.property	["ASIdentifierManager","advertisingIdentifier"]	unmatched	none	0	0		[]
+c:objc(cs)ASIdentifierManager(py)advertisingTrackingEnabled	swift.property	["ASIdentifierManager","isAdvertisingTrackingEnabled"]	unmatched	none	0	0		[]

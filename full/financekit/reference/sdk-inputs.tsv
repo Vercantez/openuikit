@@ -1,0 +1,4 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/FinanceKit.framework/FinanceKit.tbd	2514438	d753c0ce1e7e2da44638ba380d6dabcd90cf8fff1b5f1f5bce8dddb6230b1b34
+swiftinterface	System/Library/Frameworks/FinanceKit.framework/Modules/FinanceKit.swiftmodule/arm64e-apple-ios.swiftinterface	34540	dc5370323cab6d22107379e3843ede500d24bf3c6e9ac8c6a98a72bc329c1fed
+modulemap	System/Library/Frameworks/FinanceKit.framework/Modules/module.modulemap	41	e87b267c12dd9fac99647e3fe79e3e4f7019b242e5bedfb8037a9caa2e4d3dce
