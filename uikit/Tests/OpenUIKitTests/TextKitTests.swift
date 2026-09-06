@@ -153,13 +153,13 @@ final class TextKitTests: XCTestCase {
     func testTextStorageNotificationsAndDelegate() {
         let storage = NSTextStorage(string: "hi")
         var did = 0
-        let token = NotificationCenter.default.addObserver(
+        let token = OpenUIKit.NotificationCenter.default.addObserver(
             forName: NSTextStorage.didProcessEditingNotification,
             object: storage, queue: nil) { _ in did += 1 }
         storage.replaceCharacters(in: NSRange(location: 2, length: 0), with: "!")
         XCTAssertEqual(storage.string, "hi!")
         XCTAssertGreaterThanOrEqual(did, 1)
-        NotificationCenter.default.removeObserver(token)
+        OpenUIKit.NotificationCenter.default.removeObserver(token)
     }
 
     func testTextViewExposesLiveTextKitStack() {
