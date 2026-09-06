@@ -327,6 +327,85 @@ overlay re-exports stay `not-applicable`. Lookalike
 are `Int`; tests use `CGFloat` literals and contextual types. Apple
 overload ranking is unobserved (see `oracle-questions.tsv`).
 
+### Fourth pass (NumberBins / DateBins collection + PrimitivePlottable)
+
+Next SDK-depth pass on the wave-8 / third-pass tree. First-pass, wave-8,
+and third-pass sources and tests stay in place. This pass implements the
+plot-space histogram binning engine and honest PrimitivePlottable
+witnesses. Stdlib `FixedWidthInteger` / `AdditiveArithmetic` / integer
+operator overlays stay `deferred` (Charts does not redeclare them).
+`Chart3D` / `SurfaceMark` stay fail-closed.
+
+Before this pass (third-pass ledger):
+
+| status | before |
+| --- | ---: |
+| implemented | 1892 |
+| declared | 2845 |
+| deferred | 1083 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+After this pass:
+
+| status | after |
+| --- | ---: |
+| implemented | 2046 |
+| declared | 2783 |
+| deferred | 991 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+Implemented gain is +154. Nondeferred (`implemented` + `declared`) is
+4829, above the 4737 floor. Unique cited tests: 165. Every
+`not-applicable` row remains a SwiftUI cross-import overlay
+(`s:7SwiftUI…`) with the note `SwiftUI cross-import overlay; owned by
+the SwiftUI lane`. `unavailable` stays 0.
+
+Top-5 implemented evidence after this pass (2046 rows; cap 40% = 818):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
+| 41 | 2.0% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |
+
+No single test exceeds 40% of implemented rows.
+
+Public surface added in this pass:
+
+- `NumberBins` is `RandomAccessCollection` of `ChartBinRange`. Owned
+  inits: `thresholds`, `range:count:` (integer and floating),
+  `size:range:`, `range:desiredCount:minimumStride:` (1-2-5×10^n nice
+  ticks: `0.2...9.7` desired 5 → `0, 2, 4, 6, 8, 10`), and
+  `data:desiredCount:minimumStride:`. `index(for:)` clamps below the
+  first threshold to 0 and values at/above the last threshold onto the
+  last bin.
+- `DateBins` collection plus `init(thresholds:)`,
+  `init(timeInterval:range:)`, `init(unit:by:range:calendar:)`,
+  `init(range:desiredCount:calendar:)`, `init(data:desiredCount:calendar:)`.
+  The first-pass `init(unit:range:)` convenience remains.
+- `ChartBinRange` is `RangeExpression`: half-open `contains`,
+  `relative(to:)`, and `~=`.
+- Histogram geometry: bins `0...10` count 2, data `[1,2,3,8,9]` →
+  counts `[3,2]`; two category bars on a 100×40 plot match hand-computed
+  frames (inset 4, band 50, y domain 0...4 inverted).
+- `PrimitivePlottableProtocol` identity witnesses on numeric types
+  including `Float16`, plus `String`/`Date`. `Decimal` plots through
+  `Double`. String raw-value enumerations use `rawValue`. `Never`
+  typealias is exercised; `Never` values stay uninhabited (`declared`).
+- Collection/Sequence algorithms on `NumberBins` and `DateBins` are
+  exercised (map/filter/reduce/prefix/suffix/…). Combine `publisher`,
+  Foundation `FormatStyle`/`SortComparator`, deprecated optional
+  `flatMap`, and `indices` where `Indices == Self` stay `deferred`.
+
+Fail-closed (unchanged): `Chart3D` / `SurfaceMark` have no RealityKit
+renderer. Scroll and selection store host models only. SwiftUI overlay
+re-exports stay `not-applicable`. Stdlib integer operator overlays stay
+`deferred`.
+
 Environment: this pod booted from Cursor Build
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not campaign
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`.

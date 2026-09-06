@@ -161,6 +161,11 @@ func testBinsAndRanges() {
     let range = ChartBinRange(uncheckedBounds: (lower: 0, upper: 10))
     precondition(range.lowerBound == 0)
     precondition(range.upperBound == 10)
+    precondition(range.contains(0))
+    precondition(range.contains(9))
+    precondition(!range.contains(10))
+    let relative = ChartBinRange(uncheckedBounds: (lower: 1, upper: 3)).relative(to: [10, 20, 30, 40])
+    precondition(relative == 1..<3)
 }
 
 func testChartProxyLookupsFailClosed() {
@@ -211,6 +216,10 @@ func testPrimitivePlottable() {
     precondition(("A" as String).primitivePlottable == "A")
     let day = Date(timeIntervalSinceReferenceDate: 3)
     precondition(day.primitivePlottable == day)
+    precondition((Float16(1.25)).primitivePlottable == Float16(1.25))
+    let decimal = Decimal(8)
+    precondition(decimal.primitivePlottable == 8)
+    precondition(Decimal(primitivePlottable: 8) == Decimal(8))
 }
 
 func testMarkChartContentModifiers() {
