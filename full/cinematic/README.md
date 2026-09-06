@@ -82,6 +82,23 @@ disparity sampling, cinematic load error codes, Metal pixel formats, tracker
 availability, spatial-audio defaults, `isUserDecision` on init, and transition
 ramp timing.
 
+`.cursor/verify-cloud-environment.sh` does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK` on this snapshot because
+`scratch/ladder-corpus/focus-ios` is missing. `swiftc` is Swift 6.2.4 /
+`x86_64-unknown-linux-gnu`. The sealed gate compiled with a clean product
+tree. Host gate output:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Cinematic lane=medium-full symbols=237
+FRAMEWORK_FANOUT_REFERENCE_OK
+CINEMATIC_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Cinematic dylib=libCinematic.dylib
+```
+
+The campaign inventory stamp
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a
+host-inventory token, not printed by the sealed framework gate.
+
 Run the immutable host gate:
 
 ```sh
