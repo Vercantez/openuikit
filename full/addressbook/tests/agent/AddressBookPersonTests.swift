@@ -121,7 +121,6 @@ func testGroupCreate() {
 }
 
 func testGroupMembers() {
-    let book = abFreshBook()
     let group = abTake(ABGroupCreate())
     _ = ABRecordSetValue(group, kABGroupNameProperty, abCF("Engineers"), nil)
     let ada = abFreshPerson()
