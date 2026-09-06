@@ -982,9 +982,13 @@ public enum LayerBridge {
     /// clock fill semantics: FROM before `delay`, MODEL at
     /// `delay + duration` and later (CA removes completed animations).
     static func animationProgress(_ a: UIViewAnimation, at t: Double) -> CGFloat {
-        var local = t - a.begin - a.delay
+        var local = a.localTime(at: t)
         if local <= 0 { return 0 }
         guard a.duration > 1e-12 else { return 1 }
+        if a.pacesLinearly {
+            if local >= a.duration - 1e-9 { return 1 }
+            return CGFloat(local / a.duration)
+        }
         if a.repeats {
             // Extend the host's finite redraw lease one leg at a time. This
             // keeps a mounted repeat live without poisoning the global work

@@ -1,0 +1,3 @@
+import TelephonyMessagingKit
+
+let frameworkLoadSmokeMarker = "TELEPHONYMESSAGINGKIT_AGENT_RUNTIME_OK"

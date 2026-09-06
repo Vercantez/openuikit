@@ -29,9 +29,25 @@ open class SKPhysicsBody: NSObject, NSCopying, NSSecureCoding {
     public var restitution: CGFloat = 0.2
     public var linearDamping: CGFloat = 0.1
     public var angularDamping: CGFloat = 0.1
-    public var density: CGFloat = 1
-    public var mass: CGFloat = 1
+    public var density: CGFloat {
+        get { _density }
+        set {
+            _density = max(0, newValue)
+            _mass = _density * max(area, 0.0001)
+        }
+    }
+    public var mass: CGFloat {
+        get { _mass }
+        set {
+            _mass = max(0, newValue)
+            if area > 0 {
+                _density = _mass / area
+            }
+        }
+    }
     public var area: CGFloat = 1
+    var _mass: CGFloat = 1
+    var _density: CGFloat = 1
     public var charge: CGFloat = 0
     public var velocity: CGVector = CGVector()
     public var angularVelocity: CGFloat = 0
@@ -55,7 +71,8 @@ open class SKPhysicsBody: NSObject, NSCopying, NSSecureCoding {
         self.init()
         shape = .circle(radius: r, center: center)
         area = .pi * r * r
-        mass = density * max(area, 0.0001)
+        _density = 1
+        _mass = _density * max(area, 0.0001)
     }
 
     public convenience init(rectangleOf s: CGSize) {
@@ -70,7 +87,8 @@ open class SKPhysicsBody: NSObject, NSCopying, NSSecureCoding {
         self.init()
         shape = .rectangle(size: s, center: center)
         area = abs(s.width * s.height)
-        mass = density * max(area, 0.0001)
+        _density = 1
+        _mass = _density * max(area, 0.0001)
     }
 
     public convenience init(rectangleOfSize s: CGSize, center: CGPoint) {
@@ -137,11 +155,12 @@ open class SKPhysicsBody: NSObject, NSCopying, NSSecureCoding {
         self.init()
         shape = .compound
         area = bodies.reduce(0) { $0 + $1.area }
-        mass = bodies.reduce(0) { $0 + $1.mass }
+        _mass = bodies.reduce(0) { $0 + $1.mass }
+        _density = area > 0 ? _mass / area : 0
     }
 
     public required init?(coder: NSCoder) {
-        mass = CGFloat(coder.decodeDouble(forKey: "mass"))
+        _mass = CGFloat(coder.decodeDouble(forKey: "mass"))
         super.init()
     }
 
@@ -154,7 +173,8 @@ open class SKPhysicsBody: NSObject, NSCopying, NSSecureCoding {
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = SKPhysicsBody()
         copy.isDynamic = isDynamic
-        copy.mass = mass
+        copy._mass = _mass
+        copy._density = _density
         copy.area = area
         copy.velocity = velocity
         copy.shape = shape
@@ -197,6 +217,23 @@ open class SKPhysicsBody: NSObject, NSCopying, NSSecureCoding {
         return world._contacts(involving: self).compactMap { contact in
             contact.bodyA === self ? contact.bodyB : contact.bodyA
         }
+    }
+
+    func _radius() -> CGFloat? {
+        if case .circle(let radius, _) = shape { return radius }
+        return nil
+    }
+
+    func _overlaps(_ other: SKPhysicsBody) -> Bool {
+        if let radiusA = _radius(), let radiusB = other._radius() {
+            let a = _node?.position ?? .zero
+            let b = other._node?.position ?? .zero
+            let dx = b.x - a.x
+            let dy = b.y - a.y
+            let limit = radiusA + radiusB
+            return dx * dx + dy * dy <= limit * limit
+        }
+        return _aabb().intersects(other._aabb())
     }
 
     func _aabb() -> CGRect {
@@ -388,16 +425,54 @@ open class SKPhysicsWorld: NSObject, NSSecureCoding {
                 let b = bodies[j]
                 let mask = (a.categoryBitMask & b.contactTestBitMask) | (b.categoryBitMask & a.contactTestBitMask)
                 let collide = (a.categoryBitMask & b.collisionBitMask) != 0 && (b.categoryBitMask & a.collisionBitMask) != 0
-                guard a._aabb().intersects(b._aabb()) else { continue }
+                guard a._overlaps(b) else { continue }
                 let point = CGPoint(
                     x: (a._aabb().midX + b._aabb().midX) / 2,
                     y: (a._aabb().midY + b._aabb().midY) / 2
                 )
+                var normal = CGVector(dx: 0, dy: 1)
+                if let radiusA = a._radius(), let radiusB = b._radius() {
+                    let dx = (b.node?.position.x ?? 0) - (a.node?.position.x ?? 0)
+                    let dy = (b.node?.position.y ?? 0) - (a.node?.position.y ?? 0)
+                    let dist = sk_hypot(dx, dy)
+                    if dist > 0 {
+                        normal = CGVector(dx: dx / dist, dy: dy / dist)
+                    }
+                    if collide, a.isDynamic || b.isDynamic {
+                        let overlap = radiusA + radiusB - dist
+                        let push = overlap / 2
+                        if dist > 0 {
+                            if a.isDynamic {
+                                a.node?.position.x -= normal.dx * push
+                                a.node?.position.y -= normal.dy * push
+                            }
+                            if b.isDynamic {
+                                b.node?.position.x += normal.dx * push
+                                b.node?.position.y += normal.dy * push
+                            }
+                        }
+                        let restitution = min(a.restitution, b.restitution)
+                        if a.isDynamic {
+                            let closing = a.velocity.dx * normal.dx + a.velocity.dy * normal.dy
+                            if closing > 0 {
+                                a.velocity.dx -= (1 + restitution) * closing * normal.dx
+                                a.velocity.dy -= (1 + restitution) * closing * normal.dy
+                            }
+                        }
+                        if b.isDynamic {
+                            let closing = b.velocity.dx * (-normal.dx) + b.velocity.dy * (-normal.dy)
+                            if closing > 0 {
+                                b.velocity.dx += (1 + restitution) * closing * normal.dx
+                                b.velocity.dy += (1 + restitution) * closing * normal.dy
+                            }
+                        }
+                    }
+                }
                 let contact = SKPhysicsContact(
                     bodyA: a,
                     bodyB: b,
                     point: point,
-                    normal: CGVector(dx: 0, dy: 1),
+                    normal: normal,
                     impulse: 0
                 )
                 if mask != 0 {
@@ -406,7 +481,7 @@ open class SKPhysicsWorld: NSObject, NSSecureCoding {
                         contactDelegate?.didBegin(contact)
                     }
                 }
-                if collide, a.isDynamic || b.isDynamic {
+                if collide, a._radius() == nil || b._radius() == nil, a.isDynamic || b.isDynamic {
                     let overlapX = min(a._aabb().maxX, b._aabb().maxX) - max(a._aabb().minX, b._aabb().minX)
                     let overlapY = min(a._aabb().maxY, b._aabb().maxY) - max(a._aabb().minY, b._aabb().minY)
                     if overlapX < overlapY {

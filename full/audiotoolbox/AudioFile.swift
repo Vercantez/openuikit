@@ -63,6 +63,7 @@ internal final class ATAudioFileObject: ATObject {
     var permissions: AudioFilePermissions
     var packetCursor: Int64 = 0
     var closed = false
+    var deferSizeUpdates = false
 
     init(
         urlPath: String,
@@ -1010,6 +1011,139 @@ public func ExtAudioFileGetPropertyInfo(
         return 0
     default:
         return kExtAudioFileError_InvalidProperty
+    }
+}
+
+public func AudioFileSetProperty(
+    _ inAudioFile: AudioFileID?,
+    _ inPropertyID: AudioFilePropertyID,
+    _ inDataSize: UInt32,
+    _ inPropertyData: UnsafeRawPointer?
+) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self) else {
+        return kAudioFileNotOpenError
+    }
+    switch inPropertyID {
+    case kAudioFilePropertyDeferSizeUpdates:
+        guard let inPropertyData, inDataSize >= 4 else { return kAudioFileBadPropertySizeError }
+        file.deferSizeUpdates = inPropertyData.loadUnaligned(as: UInt32.self) != 0
+        return 0
+    default:
+        return kAudioFileUnsupportedPropertyError
+    }
+}
+
+@_cdecl("AudioFileOptimize")
+public func AudioFileOptimize(_ inAudioFile: AudioFileID?) -> Int32 {
+    guard let file = ATRegistry.shared.lookup(inAudioFile, as: ATAudioFileObject.self) else {
+        return kAudioFileNotOpenError
+    }
+    if file.permissions == .readPermission {
+        return kAudioFilePermissionsError
+    }
+    return 0
+}
+
+public func AudioFileReadPacketData(
+    _ inAudioFile: AudioFileID?,
+    _ inUseCache: Bool,
+    _ outNumBytes: UnsafeMutablePointer<UInt32>?,
+    _ outPacketDescriptions: UnsafeMutableRawPointer?,
+    _ inStartingPacket: Int64,
+    _ ioNumPackets: UnsafeMutablePointer<UInt32>?,
+    _ outBuffer: UnsafeMutableRawPointer?
+) -> Int32 {
+    return AudioFileReadPackets(
+        inAudioFile,
+        inUseCache,
+        outNumBytes,
+        outPacketDescriptions,
+        inStartingPacket,
+        ioNumPackets,
+        outBuffer
+    )
+}
+
+private let atHostedAudioFileTypes: [AudioFileTypeID] = [
+    kAudioFileWAVEType,
+    kAudioFileAIFFType,
+    kAudioFileCAFType,
+]
+
+public func AudioFileGetGlobalInfoSize(
+    _ inPropertyID: AudioFilePropertyID,
+    _ inSpecifierSize: UInt32,
+    _ inSpecifier: UnsafeMutableRawPointer?,
+    _ outDataSize: UnsafeMutablePointer<UInt32>?
+) -> Int32 {
+    _ = inSpecifierSize
+    _ = inSpecifier
+    switch inPropertyID {
+    case kAudioFileGlobalInfo_ReadableTypes, kAudioFileGlobalInfo_WritableTypes:
+        outDataSize?.pointee = UInt32(atHostedAudioFileTypes.count * 4)
+        return 0
+    case kAudioFileGlobalInfo_AvailableFormatIDs:
+        outDataSize?.pointee = 4
+        return 0
+    case kAudioFileGlobalInfo_FileTypeName:
+        outDataSize?.pointee = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        return 0
+    default:
+        return kAudioFileUnsupportedPropertyError
+    }
+}
+
+public func AudioFileGetGlobalInfo(
+    _ inPropertyID: AudioFilePropertyID,
+    _ inSpecifierSize: UInt32,
+    _ inSpecifier: UnsafeMutableRawPointer?,
+    _ ioDataSize: UnsafeMutablePointer<UInt32>?,
+    _ outPropertyData: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inSpecifierSize
+    switch inPropertyID {
+    case kAudioFileGlobalInfo_ReadableTypes, kAudioFileGlobalInfo_WritableTypes:
+        let size = UInt32(atHostedAudioFileTypes.count * 4)
+        if let ioDataSize, ioDataSize.pointee < size {
+            return kAudioFileBadPropertySizeError
+        }
+        ioDataSize?.pointee = size
+        if let outPropertyData {
+            for (index, type) in atHostedAudioFileTypes.enumerated() {
+                outPropertyData.storeBytes(of: type, toByteOffset: index * 4, as: UInt32.self)
+            }
+        }
+        return 0
+    case kAudioFileGlobalInfo_AvailableFormatIDs:
+        if let ioDataSize, ioDataSize.pointee < 4 {
+            return kAudioFileBadPropertySizeError
+        }
+        ioDataSize?.pointee = 4
+        outPropertyData?.storeBytes(of: atFormatLinearPCM, as: UInt32.self)
+        return 0
+    case kAudioFileGlobalInfo_FileTypeName:
+        let fileType = inSpecifier?.loadUnaligned(as: AudioFileTypeID.self) ?? 0
+        let name: String
+        switch fileType {
+        case kAudioFileWAVEType: name = "WAVE"
+        case kAudioFileAIFFType: name = "AIFF"
+        case kAudioFileCAFType: name = "CAF"
+        default: name = "Unknown"
+        }
+        ioDataSize?.pointee = UInt32(MemoryLayout<Unmanaged<CFString>?>.size)
+        if let outPropertyData {
+            let cf = name.withCString { pointer in
+                CFStringCreateWithCString(
+                    kCFAllocatorDefault,
+                    pointer,
+                    CFStringBuiltInEncodings.UTF8.rawValue
+                )
+            }!
+            outPropertyData.storeBytes(of: Unmanaged.passRetained(cf), as: Unmanaged<CFString>.self)
+        }
+        return 0
+    default:
+        return kAudioFileUnsupportedPropertyError
     }
 }
 #endif

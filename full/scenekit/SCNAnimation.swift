@@ -1,5 +1,27 @@
 import Foundation
 
+/// Linux data stand-in for QuartzCore's `CAAnimation`. Isolated SceneKit
+/// compiles without QuartzCore; properties are stored, not executed as
+/// CoreAnimation. Not claimed Apple-identical.
+open class CAAnimation: NSObject {
+    public var duration: TimeInterval = 0
+    public var animationEvents: [SCNAnimationEvent]?
+    public var fadeInDuration: CGFloat = 0
+    public var fadeOutDuration: CGFloat = 0
+    public var usesSceneTimeBase: Bool = false
+
+    public override init() { super.init() }
+
+    public convenience init(SCNAnimation animation: SCNAnimation) {
+        self.init()
+        self.duration = animation.duration
+        self.usesSceneTimeBase = animation.usesSceneTimeBase
+        self.fadeInDuration = CGFloat(animation.blendInDuration)
+        self.fadeOutDuration = CGFloat(animation.blendOutDuration)
+        self.animationEvents = animation.animationEvents
+    }
+}
+
 open class SCNMorpher: NSObject, NSSecureCoding, SCNAnimatable {
     public var targets: [SCNGeometry] = []
     public var weights: [NSNumber] = []
@@ -111,6 +133,17 @@ open class SCNAnimation: NSObject, NSCopying, NSSecureCoding, SCNAnimationProtoc
     public convenience init?(named name: String) { self.init(); self.keyPath = name }
     public convenience init?(contentsOf url: URL) { self.init(); _ = url }
     public convenience init?(contentsOfURL url: URL) { self.init(contentsOf: url) }
+    public convenience init(caAnimation: CAAnimation) {
+        self.init()
+        duration = caAnimation.duration
+        usesSceneTimeBase = caAnimation.usesSceneTimeBase
+        blendInDuration = TimeInterval(caAnimation.fadeInDuration)
+        blendOutDuration = TimeInterval(caAnimation.fadeOutDuration)
+        animationEvents = caAnimation.animationEvents
+    }
+    public convenience init(CAAnimation caAnimation: CAAnimation) {
+        self.init(caAnimation: caAnimation)
+    }
 
     public func copy(with zone: NSZone? = nil) -> Any {
         let copy = SCNAnimation()
@@ -243,8 +276,13 @@ open class SCNParticlePropertyController: NSObject, NSSecureCoding {
     public var inputProperty: String?
     public var inputScale: CGFloat = 1
     public var inputBias: CGFloat = 0
+    public var animation: CAAnimation = CAAnimation()
 
     public override init() { super.init() }
+    public convenience init(animation: CAAnimation) {
+        self.init()
+        self.animation = animation
+    }
     public static var supportsSecureCoding: Bool { true }
     public required init?(coder: NSCoder) { return nil }
     public func encode(with coder: NSCoder) {}

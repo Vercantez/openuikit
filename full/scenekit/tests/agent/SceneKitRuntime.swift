@@ -97,6 +97,47 @@ func testActionEasing() {
     _ = SCNAction.customAction(duration: 0, action: { _, _ in })
 }
 
+func testCustomActionAndRotate() {
+    let node = SCNNode()
+    var samples: [CGFloat] = []
+    node.runAction(SCNAction.customAction(duration: 1, action: { _, t in
+        samples.append(t)
+    }))
+    node.linux_advanceTime(0.5)
+    precondition(!samples.isEmpty)
+    precondition(abs(Float(samples.last ?? 0) - 0.5) < 1e-3)
+    node.linux_advanceTime(0.5)
+    precondition(abs(Float(samples.last ?? 0) - 1) < 1e-3)
+    let spinner = SCNNode()
+    spinner.runAction(SCNAction.rotateBy(x: 0, y: CGFloat.pi / 2, z: 0, duration: 1))
+    spinner.linux_advanceTime(1)
+    precondition(abs(spinner.eulerAngles.y - Float.pi / 2) < 1e-3)
+    let scaled = SCNNode()
+    scaled.runAction(SCNAction.scale(to: 3, duration: 1))
+    scaled.linux_advanceTime(1)
+    precondition(abs(scaled.scale.x - 3) < 1e-3)
+    let mover = SCNNode()
+    mover.runAction(SCNAction.move(to: SCNVector3(4, 0, 0), duration: 1))
+    mover.linux_advanceTime(1)
+    precondition(abs(mover.position.x - 4) < 1e-3)
+    let by = SCNNode()
+    by.runAction(SCNAction.moveBy(x: 2, y: 0, z: 0, duration: 1))
+    by.linux_advanceTime(1)
+    precondition(abs(by.position.x - 2) < 1e-3)
+    let rev = SCNAction.move(by: SCNVector3(3, 0, 0), duration: 1).reversed()
+    let back = SCNNode()
+    back.position = SCNVector3(3, 0, 0)
+    back.runAction(rev)
+    back.linux_advanceTime(1)
+    precondition(abs(back.position.x) < 1e-3)
+    let timed = SCNAction.move(by: SCNVector3(10, 0, 0), duration: 1)
+    timed.timingFunction = { t in t * t }
+    let eased = SCNNode()
+    eased.runAction(timed)
+    eased.linux_advanceTime(0.5)
+    precondition(abs(eased.position.x - 2.5) < 1e-3)
+}
+
 // ---- SceneKitAnimationTests.swift ----
 
 func testAnimatableKeys() {
@@ -139,6 +180,38 @@ func testAnimatableKeys() {
     _ = morph.calculationMode
 }
 
+func testCAAnimationBridge() {
+    let scn = SCNAnimation()
+    scn.duration = 2
+    scn.blendInDuration = 0.1
+    scn.blendOutDuration = 0.2
+    scn.usesSceneTimeBase = true
+    scn.isAdditive = true
+    scn.isCumulative = true
+    scn.fillsForward = true
+    scn.fillsBackward = true
+    scn.animationEvents = [SCNAnimationEvent(keyTime: 0.25, block: { _, _, _ in })]
+    var started = false
+    scn.animationDidStart = { _, _ in started = true }
+    scn.animationDidStop = { _, _, _ in }
+    _ = scn.animationDidStart
+    _ = started
+    let ca = CAAnimation(SCNAnimation: scn)
+    precondition(abs(ca.duration - 2) < 1e-9)
+    precondition(ca.usesSceneTimeBase)
+    precondition(abs(Float(ca.fadeInDuration) - 0.1) < 1e-4)
+    let back = SCNAnimation(caAnimation: ca)
+    precondition(abs(back.duration - 2) < 1e-9)
+    let alt = SCNAnimation(CAAnimation: ca)
+    precondition(abs(alt.duration - 2) < 1e-9)
+    let node = SCNNode()
+    node.addAnimation(scn, forKey: "pos")
+    let retrieved = node.animation(forKey: "pos")
+    precondition(retrieved != nil)
+    let controller = SCNParticlePropertyController(animation: ca)
+    precondition(abs(controller.animation.duration - 2) < 1e-9)
+}
+
 // ---- SceneKitCameraTests.swift ----
 
 func testCameraProjection() {
@@ -156,6 +229,17 @@ func testCameraProjection() {
     let ortho = cam.projectionTransform(withViewportSize: CGSize(width: 200, height: 100))
     precondition(abs(ortho.m11 - 0.25) < 1e-4)
     precondition(abs(ortho.m22 - 0.5) < 1e-4)
+    cam.usesOrthographicProjection = false
+    cam.fieldOfView = 90
+    cam.zNear = 1
+    cam.zFar = 100
+    let persp2 = cam.projectionTransform(withViewportSize: CGSize(width: 100, height: 100))
+    let n: Float = 1
+    let far: Float = 100
+    let expectedM33 = -(far + n) / (far - n)
+    let expectedM43 = -2 * far * n / (far - n)
+    precondition(abs(persp2.m33 - expectedM33) < 1e-4)
+    precondition(abs(persp2.m43 - expectedM43) < 1e-4)
 }
 
 func testCameraStores() {
@@ -247,6 +331,31 @@ func testLookAtDistanceBillboard() {
     _ = slider.offset
     _ = repl.orientationOffset
     _ = avoid.occluderCategoryBitMask
+}
+
+func testReplicatorConstraintMath() {
+    let scene = SCNScene()
+    let target = SCNNode()
+    target.position = SCNVector3(3, 4, 5)
+    target.scale = SCNVector3(2, 2, 2)
+    target.eulerAngles = SCNVector3(0, Float.pi / 2, 0)
+    let follower = SCNNode()
+    scene.rootNode.addChildNode(target)
+    scene.rootNode.addChildNode(follower)
+    let repl = SCNReplicatorConstraint(target: target)
+    repl.replicatesPosition = true
+    repl.replicatesOrientation = true
+    repl.replicatesScale = true
+    repl.positionOffset = SCNVector3(1, 0, 0)
+    repl.scaleOffset = SCNVector3(0.5, 0.5, 0.5)
+    repl.orientationOffset = SCNQuaternion(x: 0, y: 0, z: 0, w: 1)
+    repl.influenceFactor = 1
+    follower.constraints = [repl]
+    follower.linux_advanceTime(0)
+    precondition(abs(follower.worldPosition.x - 4) < 1e-3)
+    precondition(abs(follower.worldPosition.y - 4) < 1e-3)
+    precondition(abs(follower.scale.x - 2.5) < 1e-3)
+    precondition(abs(follower.worldOrientation.y - target.worldOrientation.y) < 0.05)
 }
 
 // ---- SceneKitEnumTests.swift ----
@@ -631,8 +740,24 @@ func testEnumOptionSetAndConstantValues() {
     _ = SCNBillboardAxis(rawValue: 1)
     _ = SCNPhysicsShape.Option(rawValue: "x")
     _ = SCNHitTestOption(rawValue: "firstFoundOnly")
+    _ = SCNPhysicsWorld.TestOption.backfaceCulling
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask
+    _ = SCNPhysicsWorld.TestOption.searchMode
+    _ = SCNPhysicsWorld.TestSearchMode.any
+    _ = SCNPhysicsWorld.TestSearchMode.closest
+    _ = SCNPhysicsWorld.TestSearchMode.all
+    _ = SCNPhysicsWorld.TestOption.self
+    _ = SCNPhysicsWorld.TestSearchMode.self
+    _ = SCNPhysicsWorld.TestOption(rawValue: "collisionBitMask")
+    _ = SCNPhysicsWorld.TestSearchMode(rawValue: "closest")
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask != .searchMode
+    _ = SCNPhysicsWorld.TestSearchMode.closest != .any
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask.hashValue
+    _ = SCNPhysicsWorld.TestSearchMode.closest.hashValue
+    var physHasher = Hasher()
+    SCNPhysicsWorld.TestOption.collisionBitMask.hash(into: &physHasher)
+    SCNPhysicsWorld.TestSearchMode.closest.hash(into: &physHasher)
 }
-
 
 // ---- SceneKitGeometryTests.swift ----
 
@@ -726,6 +851,60 @@ func testCustomGeometrySource() {
     _ = geom.sources(for: .vertex)
 }
 
+func testPrimitiveVertexCounts() {
+    let box = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
+    precondition(box.widthSegmentCount == 1)
+    precondition(box.heightSegmentCount == 1)
+    precondition(box.lengthSegmentCount == 1)
+    precondition(box.sources(for: .vertex).first?.vectorCount == 36)
+    precondition(box.elements.first?.primitiveCount == 12)
+    let plane = SCNPlane(width: 4, height: 2)
+    precondition(plane.widthSegmentCount == 1 && plane.heightSegmentCount == 1)
+    precondition(plane.sources(for: .vertex).first?.vectorCount == 6)
+    let sphere = SCNSphere(radius: 1)
+    precondition(sphere.segmentCount == 24)
+    precondition(sphere.sources(for: .vertex).first?.vectorCount == 24 * 48 * 6)
+    let cyl = SCNCylinder(radius: 1, height: 2)
+    precondition(cyl.radialSegmentCount == 24)
+    precondition(cyl.heightSegmentCount == 1)
+    precondition(cyl.sources(for: .vertex).first?.vectorCount == 288)
+    let cone = SCNCone(topRadius: 0, bottomRadius: 1, height: 2)
+    precondition(cone.radialSegmentCount == 24)
+    precondition(cone.sources(for: .vertex).first?.vectorCount == 144)
+    let torus = SCNTorus(ringRadius: 1, pipeRadius: 0.2)
+    precondition(torus.ringSegmentCount == 24 && torus.pipeSegmentCount == 24)
+    precondition(torus.sources(for: .vertex).first?.vectorCount == 24 * 24 * 6)
+    let pyr = SCNPyramid(width: 1, height: 2, length: 1)
+    precondition(pyr.sources(for: .vertex).first?.vectorCount == 18)
+    let floor = SCNFloor()
+    precondition(floor.sources(for: .vertex).first?.vectorCount == 6)
+    let text = SCNText(string: "Hi", extrusionDepth: 1)
+    precondition((text.string as? String) == "Hi")
+    precondition((text.sources(for: .vertex).first?.vectorCount ?? 0) >= 36)
+    text.alignmentMode = "center"
+    text.truncationMode = "end"
+    text.isWrapped = true
+    text.containerFrame = CGRect(x: 0, y: 0, width: 10, height: 1)
+    precondition(text.alignmentMode == "center")
+    precondition(text.isWrapped)
+    let verts = SCNGeometrySource(vertices: [
+        SCNVector3(0, 0, 0), SCNVector3(1, 0, 0), SCNVector3(0, 1, 0)
+    ])
+    precondition(verts.vectorCount == 3)
+    precondition(verts.semantic == .vertex)
+    precondition(verts.componentsPerVector == 3)
+    precondition(verts.dataStride == 12)
+    let norms = SCNGeometrySource(normals: [SCNVector3(0, 0, 1)])
+    precondition(norms.semantic == .normal)
+    let uvs = SCNGeometrySource(textureCoordinates: [CGPoint(x: 0, y: 0), CGPoint(x: 1, y: 1)])
+    precondition(uvs.semantic == .texcoord)
+    precondition(uvs.componentsPerVector == 2)
+    let elem = SCNGeometryElement(indices: [UInt32]([0, 1, 2, 0, 2, 3]), primitiveType: .triangles)
+    precondition(elem.primitiveType == .triangles)
+    precondition(elem.primitiveCount == 2)
+    precondition(elem.bytesPerIndex == 4)
+}
+
 // ---- SceneKitHitTestTests.swift ----
 
 func testHitTestSegment() {
@@ -763,6 +942,16 @@ func testHitTestSegment() {
         options: [SCNHitTestOption.ignoreHiddenNodes.rawValue: true]
     )
     precondition(ignoreHidden.isEmpty)
+}
+
+func testHitTestFailClosedWithoutScene() {
+    let renderer = SCNRenderer()
+    renderer.scene = nil
+    let empty = renderer.hitTest(CGPoint(x: 16, y: 16), options: nil)
+    precondition(empty.isEmpty)
+    let view = SCNView(frame: CGRect(x: 0, y: 0, width: 32, height: 32), options: nil)
+    view.scene = nil
+    precondition(view.hitTest(CGPoint.zero, options: nil).isEmpty)
 }
 
 // ---- SceneKitLightTests.swift ----
@@ -1027,6 +1216,26 @@ func testNodeCloneAndBounds() {
     node.rotate(by: SCNVector4(0, 1, 0, 0.2), aroundTarget: SCNVector3Zero)
 }
 
+func testNodeHiddenOpacityPropagation() {
+    let parent = SCNNode()
+    parent.opacity = 0.5
+    parent.categoryBitMask = 1
+    let child = SCNNode()
+    child.opacity = 0.5
+    child.categoryBitMask = 3
+    parent.addChildNode(child)
+    precondition(abs(Float(child.linux_worldOpacity) - 0.25) < 1e-4)
+    precondition(!child.linux_worldHidden)
+    parent.isHidden = true
+    precondition(child.linux_worldHidden)
+    parent.isHidden = false
+    precondition(child.linux_worldCategoryBitMask == 1)
+    child.look(at: SCNVector3(0, 0, 1))
+    let converted = parent.convertPosition(SCNVector3(1, 0, 0), from: nil)
+    _ = parent.convertTransform(SCNMatrix4Identity, from: child)
+    _ = converted
+}
+
 func testNodeAudioAndParticlesAttach() {
     let node = SCNNode()
     let player = SCNAudioPlayer(source: SCNAudioSource())
@@ -1092,6 +1301,9 @@ func testPhysicsBookkeeping() {
     node.physicsBody = body
     let scene = SCNScene()
     scene.rootNode.addChildNode(node)
+    scene.physicsWorld.gravity = SCNVector3Zero
+    body.isAffectedByGravity = false
+    body.damping = 0
     let before = node.position
     scene.physicsWorld.step()
     precondition(SCNVector3EqualToVector3(node.position, before))
@@ -1127,6 +1339,206 @@ func testPhysicsBookkeeping() {
     _ = body.angularVelocity
     world.speed = 1
     world.timeStep = 1.0 / 60
+    _ = SCNPhysicsWorld.TestOption.collisionBitMask
+    _ = SCNPhysicsWorld.TestSearchMode.closest
+}
+
+final class _SCNContactProbe: NSObject, SCNPhysicsContactDelegate {
+    var began = 0
+    var updated = 0
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
+        began += 1
+        _ = contact.nodeA
+        _ = contact.nodeB
+        _ = contact.contactPoint
+        _ = contact.contactNormal
+        _ = contact.penetrationDistance
+        _ = contact.collisionImpulse
+        _ = contact.sweepTestFraction
+    }
+    func physicsWorld(_ world: SCNPhysicsWorld, didUpdate contact: SCNPhysicsContact) {
+        updated += 1
+    }
+}
+
+func testPhysicsGravityIntegration() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3(0, -10, 0)
+    scene.physicsWorld.timeStep = 1
+    scene.physicsWorld.speed = 1
+    let node = SCNNode()
+    let body = SCNPhysicsBody.dynamic()
+    body.mass = 1
+    body.damping = 0
+    body.isAffectedByGravity = true
+    node.physicsBody = body
+    scene.rootNode.addChildNode(node)
+    scene.physicsWorld.step()
+    // Semi-implicit Euler: v = -10, p = -10.
+    precondition(abs(body.velocity.y + 10) < 1e-3)
+    precondition(abs(node.position.y + 10) < 1e-3)
+    let staticNode = SCNNode()
+    staticNode.physicsBody = SCNPhysicsBody.static()
+    staticNode.physicsBody?.isAffectedByGravity = true
+    scene.rootNode.addChildNode(staticNode)
+    let sy = staticNode.position.y
+    scene.physicsWorld.step()
+    precondition(abs(staticNode.position.y - sy) < 1e-4)
+}
+
+func testPhysicsSphereContacts() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3Zero
+    scene.physicsWorld.timeStep = 1
+    let a = SCNNode(geometry: SCNSphere(radius: 0.5))
+    let b = SCNNode(geometry: SCNSphere(radius: 0.5))
+    a.position = SCNVector3(-0.25, 0, 0)
+    b.position = SCNVector3(0.25, 0, 0)
+    let bodyA = SCNPhysicsBody.dynamic()
+    bodyA.mass = 1
+    bodyA.damping = 0
+    bodyA.restitution = 0
+    bodyA.isAffectedByGravity = false
+    bodyA.physicsShape = SCNPhysicsShape(geometry: a.geometry!, options: nil)
+    let bodyB = SCNPhysicsBody.dynamic()
+    bodyB.mass = 1
+    bodyB.damping = 0
+    bodyB.restitution = 0
+    bodyB.isAffectedByGravity = false
+    bodyB.physicsShape = SCNPhysicsShape(geometry: b.geometry!, options: nil)
+    a.physicsBody = bodyA
+    b.physicsBody = bodyB
+    scene.rootNode.addChildNode(a)
+    scene.rootNode.addChildNode(b)
+    let overlap = scene.physicsWorld.contactTestBetween(bodyA, bodyB, options: nil)
+    precondition(!overlap.isEmpty)
+    precondition(overlap[0].penetrationDistance > 0)
+    scene.physicsWorld.step()
+    let dx = abs(b.worldPosition.x - a.worldPosition.x)
+    precondition(dx >= 0.99)
+}
+
+func testPhysicsBoxAABBContacts() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3Zero
+    scene.physicsWorld.timeStep = 1
+    let boxGeom = SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0)
+    let moving = SCNNode(geometry: boxGeom)
+    let wall = SCNNode(geometry: boxGeom)
+    moving.position = SCNVector3(0, 0, 0)
+    wall.position = SCNVector3(1.5, 0, 0)
+    let dyn = SCNPhysicsBody.dynamic()
+    dyn.mass = 1
+    dyn.damping = 0
+    dyn.restitution = 0
+    dyn.isAffectedByGravity = false
+    dyn.physicsShape = SCNPhysicsShape(geometry: boxGeom, options: nil)
+    let stat = SCNPhysicsBody.static()
+    stat.physicsShape = SCNPhysicsShape(geometry: boxGeom, options: nil)
+    moving.physicsBody = dyn
+    wall.physicsBody = stat
+    scene.rootNode.addChildNode(moving)
+    scene.rootNode.addChildNode(wall)
+    let hits = scene.physicsWorld.contactTest(with: dyn, options: nil)
+    precondition(!hits.isEmpty)
+    scene.physicsWorld.step()
+    precondition(moving.worldPosition.x <= 0.01)
+}
+
+func testPhysicsContactDelegate() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3Zero
+    scene.physicsWorld.timeStep = 1
+    let probe = _SCNContactProbe()
+    scene.physicsWorld.contactDelegate = probe
+    let a = SCNNode(geometry: SCNSphere(radius: 1))
+    let b = SCNNode(geometry: SCNSphere(radius: 1))
+    a.position = SCNVector3(-0.5, 0, 0)
+    b.position = SCNVector3(0.5, 0, 0)
+    let bodyA = SCNPhysicsBody.dynamic()
+    bodyA.mass = 1
+    bodyA.damping = 0
+    bodyA.isAffectedByGravity = false
+    bodyA.contactTestBitMask = .max
+    bodyA.physicsShape = SCNPhysicsShape(geometry: a.geometry!, options: nil)
+    let bodyB = SCNPhysicsBody.static()
+    bodyB.physicsShape = SCNPhysicsShape(geometry: b.geometry!, options: nil)
+    a.physicsBody = bodyA
+    b.physicsBody = bodyB
+    scene.rootNode.addChildNode(a)
+    scene.rootNode.addChildNode(b)
+    scene.physicsWorld.step()
+    precondition(probe.began >= 1)
+    scene.physicsWorld.updateCollisionPairs()
+}
+
+func testPhysicsForces() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3Zero
+    scene.physicsWorld.timeStep = 1
+    let node = SCNNode()
+    let body = SCNPhysicsBody.dynamic()
+    body.mass = 2
+    body.damping = 0
+    body.isAffectedByGravity = false
+    node.physicsBody = body
+    scene.rootNode.addChildNode(node)
+    body.applyForce(SCNVector3(4, 0, 0), asImpulse: false)
+    scene.physicsWorld.step()
+    // a = 4/2 = 2, v = 2, p = 2
+    precondition(abs(body.velocity.x - 2) < 1e-3)
+    precondition(abs(node.position.x - 2) < 1e-3)
+    body.clearAllForces()
+    body.applyForce(SCNVector3(0, 6, 0), asImpulse: true)
+    scene.physicsWorld.step()
+    precondition(abs(body.velocity.y - 3) < 1e-3)
+    body.applyForce(SCNVector3(0, 0, 1), at: SCNVector3(1, 0, 0), asImpulse: true)
+    body.applyTorque(SCNVector4(0, 1, 0, 0.2), asImpulse: true)
+    body.setResting(true)
+    precondition(body.isResting)
+    precondition(abs(body.velocity.x) < 1e-4)
+    body.resetTransform()
+    precondition(!body.isResting)
+    _ = body.allowsResting
+    _ = body.angularDamping
+    _ = body.angularRestingThreshold
+    _ = body.angularVelocityFactor
+    _ = body.centerOfMassOffset
+    _ = body.charge
+    _ = body.collisionBitMask
+    _ = body.contactTestBitMask
+    _ = body.continuousCollisionDetectionThreshold
+    _ = body.linearRestingThreshold
+    _ = body.momentOfInertia
+    _ = body.physicsShape
+    _ = body.rollingFriction
+    _ = body.usesDefaultMomentOfInertia
+    _ = body.velocityFactor
+}
+
+func testPhysicsRayAndContactQuery() {
+    let scene = SCNScene()
+    let box = SCNNode(geometry: SCNBox(width: 2, height: 2, length: 2, chamferRadius: 0))
+    scene.rootNode.addChildNode(box)
+    let hits = scene.physicsWorld.rayTestWithSegment(
+        from: SCNVector3(0, 0, 5),
+        to: SCNVector3(0, 0, -5),
+        options: nil
+    )
+    precondition(!hits.isEmpty)
+    let world = SCNPhysicsWorld()
+    world.removeAllBehaviors()
+    let hinge = SCNPhysicsHingeJoint(body: SCNPhysicsBody.kinematic(), axis: SCNVector3(0, 1, 0), anchor: SCNVector3Zero)
+    world.addBehavior(hinge)
+    world.removeBehavior(hinge)
+    precondition(world.allBehaviors.isEmpty)
+    let sweep = world.convexSweepTest(
+        with: SCNPhysicsShape(geometry: SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0), options: nil),
+        from: SCNMatrix4Identity,
+        to: SCNMatrix4MakeTranslation(1, 0, 0),
+        options: nil
+    )
+    precondition(sweep.isEmpty)
 }
 
 // ---- SceneKitRendererTests.swift ----
@@ -1235,6 +1647,26 @@ func testSceneGraphAndLoad() {
     precondition(program.isOpaque)
 }
 
+func testSceneSourceMetadata() {
+    let tmp = URL(fileURLWithPath: "/tmp/scenekit-linux-meta-\(ProcessInfo.processInfo.processIdentifier).scn")
+    try? Data([0x00]).write(to: tmp)
+    let src = SCNSceneSource(url: tmp, options: nil)
+    precondition(src != nil)
+    _ = src?.property(forKey: SCNSceneSourceAssetAuthorKey)
+    _ = src?.property(forKey: SCNSceneSourceAssetCreatedDateKey)
+    precondition((try? src?.scene(options: nil)) == nil)
+    precondition(src?.identifiersOfEntries(withClass: SCNNode.self).isEmpty == true)
+    precondition(src?.entryWithIdentifier("x", withClass: SCNNode.self) == nil)
+    precondition(src?.entries(passingTest: { _, _, _ in true }).isEmpty == true)
+    let empty = SCNSceneSource(data: Data(), options: [.checkConsistency: true])
+    var sawError = false
+    _ = empty?.scene(options: nil, statusHandler: { _, status, _, _ in
+        if status == .error { sawError = true }
+    })
+    precondition(sawError)
+    try? FileManager.default.removeItem(at: tmp)
+}
+
 // ---- SceneKitSurfaceTests.swift ----
 
 func testProtocolAndTypealiasSurface() {
@@ -1310,6 +1742,17 @@ func testTransactionBeginCommit() {
     SCNTransaction.unlock()
 }
 
+func testTransactionFlush() {
+    SCNTransaction.begin()
+    SCNTransaction.animationDuration = 0.5
+    var flushed = false
+    SCNTransaction.completionBlock = { flushed = true }
+    SCNTransaction.flush()
+    precondition(abs(SCNTransaction.animationDuration) < 1e-9)
+    precondition(flushed)
+    SCNTransaction.commit()
+}
+
 // ---- SceneKitViewTests.swift ----
 
 func testSCNViewStores() {
@@ -1364,14 +1807,19 @@ func testSCNViewStores() {
 func runSceneKitFocusedTests() {
     testActionClock()
     testActionEasing()
+    testCustomActionAndRotate()
     testAnimatableKeys()
+    testCAAnimationBridge()
     testCameraProjection()
     testCameraStores()
     testLookAtDistanceBillboard()
+    testReplicatorConstraintMath()
     testEnumOptionSetAndConstantValues()
     testPrimitiveLayouts()
     testCustomGeometrySource()
+    testPrimitiveVertexCounts()
     testHitTestSegment()
+    testHitTestFailClosedWithoutScene()
     testLightStores()
     testMaterialLightingAndBlend()
     testVectorMath()
@@ -1380,14 +1828,23 @@ func runSceneKitFocusedTests() {
     testNodeHierarchy()
     testNodeTransforms()
     testNodeCloneAndBounds()
+    testNodeHiddenOpacityPropagation()
     testNodeAudioAndParticlesAttach()
     testParticleSystemStores()
     testPhysicsBookkeeping()
+    testPhysicsGravityIntegration()
+    testPhysicsSphereContacts()
+    testPhysicsBoxAABBContacts()
+    testPhysicsContactDelegate()
+    testPhysicsForces()
+    testPhysicsRayAndContactQuery()
     testCPURasterizer()
     testSceneGraphAndLoad()
+    testSceneSourceMetadata()
     testProtocolAndTypealiasSurface()
     testSkinnerAndProgramAndFloorExtras()
     testTransactionBeginCommit()
+    testTransactionFlush()
     testSCNViewStores()
 }
 

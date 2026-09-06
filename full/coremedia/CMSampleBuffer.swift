@@ -37,6 +37,8 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     private var invalidateCallback: CMSampleBufferInvalidateCallback?
     private var invalidateRefcon: UInt64 = 0
     private var invalidateFired = false
+    fileprivate var makeDataReadyCallback: CMSampleBufferMakeDataReadyCallback?
+    fileprivate var makeDataReadyRefcon: UnsafeMutableRawPointer?
     fileprivate var ownedDataBuffer: CMBlockBuffer?
     fileprivate var ownedFormat: CMFormatDescription?
     fileprivate var timings: [CMSampleTimingInfo]
@@ -217,9 +219,32 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     }
 
     public func makeDataReady() throws {
+        var callback: CMSampleBufferMakeDataReadyCallback?
+        var refcon: UnsafeMutableRawPointer?
+        try lock.locked {
+            if !valid { throw Error.invalidated }
+            callback = makeDataReadyCallback
+            refcon = makeDataReadyRefcon
+        }
+        if let callback {
+            let status = callback(self, refcon)
+            if status != 0 {
+                throw cmNSError(code: Int(status))
+            }
+        }
         try lock.locked {
             if !valid { throw Error.invalidated }
             ready = true
+        }
+    }
+
+    fileprivate func installMakeDataReadyCallback(
+        _ callback: CMSampleBufferMakeDataReadyCallback?,
+        refcon: UnsafeMutableRawPointer?
+    ) {
+        lock.locked {
+            makeDataReadyCallback = callback
+            makeDataReadyRefcon = refcon
         }
     }
 
@@ -374,7 +399,6 @@ public func CMSampleBufferCreate(
     sampleSizeArray: UnsafePointer<Int>?,
     sampleBufferOut: UnsafeMutablePointer<CMSampleBuffer?>
 ) -> OSStatus {
-    _ = (makeDataReadyCallback, makeDataReadyRefcon)
     let status = CMSampleBufferCreateReady(
         allocator: allocator,
         dataBuffer: dataBuffer,
@@ -386,8 +410,11 @@ public func CMSampleBufferCreate(
         sampleSizeArray: sampleSizeArray,
         sampleBufferOut: sampleBufferOut
     )
-    if status == 0, !dataReady, let sample = sampleBufferOut.pointee {
-        sample.forceNotReady()
+    if status == 0, let sample = sampleBufferOut.pointee {
+        sample.installMakeDataReadyCallback(makeDataReadyCallback, refcon: makeDataReadyRefcon)
+        if !dataReady {
+            sample.forceNotReady()
+        }
     }
     return status
 }
@@ -508,6 +535,31 @@ public func CMPropagateAttachments(_ source: CMAttachmentBearer, destination: CM
           let dst = destination as? CMAttachmentBearerProtocol
     else { return }
     src.propagateAttachments(to: dst)
+}
+
+public func CMSetAttachments(
+    _ target: CMAttachmentBearer,
+    attachments theAttachments: CFDictionary,
+    attachmentMode: CMAttachmentMode
+) {
+    let count = Int(CFDictionaryGetCount(theAttachments))
+    if count <= 0 { return }
+    var keys = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+    var values = Array<UnsafeRawPointer?>(repeating: nil, count: count)
+    keys.withUnsafeMutableBufferPointer { keyBuf in
+        values.withUnsafeMutableBufferPointer { valBuf in
+            CFDictionaryGetKeysAndValues(theAttachments, keyBuf.baseAddress, valBuf.baseAddress)
+        }
+    }
+    for index in 0..<count {
+        guard let keyPtr = keys[index], let valPtr = values[index] else { continue }
+        CMSetAttachment(
+            target,
+            key: unsafeBitCast(keyPtr, to: CFString.self),
+            value: unsafeBitCast(valPtr, to: CFTypeRef.self),
+            attachmentMode: attachmentMode
+        )
+    }
 }
 
 public func CMCopyDictionaryOfAttachments(

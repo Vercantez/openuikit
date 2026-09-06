@@ -386,6 +386,8 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
     internal var timeCodeFlagBits: UInt32 = 0
     internal var metadataIdentifiers: [CFString] = []
     internal var magicCookieBytes: Data? = nil
+    private var magicCookieCache: UnsafeMutableRawPointer?
+    private var magicCookieCacheCount: Int = 0
 
     public init(
         mediaType: MediaType,
@@ -440,6 +442,10 @@ public final class CMFormatDescription: CMAttachmentBearerProtocol, @unchecked S
         self.timeCodeFlagBits = object.timeCodeFlagBits
         self.metadataIdentifiers = object.metadataIdentifiers
         self.magicCookieBytes = object.magicCookieBytes
+    }
+
+    deinit {
+        magicCookieCache?.deallocate()
     }
 
     public func equalTo(
@@ -722,6 +728,42 @@ extension CMFormatDescription {
         }
         if status != 0 { throw Error.valueNotAvailable }
         return (Int(fontID), bold, italic, underline, fontSize, color)
+    }
+
+    public func withMagicCookie<R>(_ body: (UnsafeRawBufferPointer?) throws -> R) rethrows -> R {
+        guard let data = magicCookieBytes, !data.isEmpty else {
+            return try body(nil)
+        }
+        return try data.withUnsafeBytes { try body($0) }
+    }
+
+    internal func storeMagicCookie(_ data: Data?) {
+        magicCookieCache?.deallocate()
+        magicCookieCache = nil
+        magicCookieCacheCount = 0
+        if let data, !data.isEmpty {
+            magicCookieBytes = data
+        } else {
+            magicCookieBytes = nil
+        }
+    }
+
+    internal func magicCookiePointer(sizeOut: UnsafeMutablePointer<Int>?) -> UnsafeRawPointer? {
+        guard let data = magicCookieBytes, !data.isEmpty else {
+            sizeOut?.pointee = 0
+            return nil
+        }
+        if magicCookieCache == nil || magicCookieCacheCount != data.count {
+            magicCookieCache?.deallocate()
+            let pointer = UnsafeMutableRawPointer.allocate(byteCount: data.count, alignment: 1)
+            data.withUnsafeBytes { source in
+                pointer.copyMemory(from: source.baseAddress!, byteCount: data.count)
+            }
+            magicCookieCache = pointer
+            magicCookieCacheCount = data.count
+        }
+        sizeOut?.pointee = data.count
+        return UnsafeRawPointer(magicCookieCache)
     }
 }
 

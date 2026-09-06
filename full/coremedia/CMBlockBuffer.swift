@@ -346,11 +346,30 @@ public func CMBlockBufferCreateWithMemoryBlock(
     flags: CMBlockBufferFlags,
     blockBufferOut: UnsafeMutablePointer<CMBlockBuffer?>
 ) -> OSStatus {
-    _ = (structureAllocator, blockAllocator, customBlockSource, flags)
+    _ = (structureAllocator, blockAllocator, flags)
     if offsetToData < 0 { return kCMBlockBufferBadOffsetParameterErr }
     if dataLength < 0 { return kCMBlockBufferBadLengthParameterErr }
     if offsetToData > blockLength || dataLength > blockLength - offsetToData {
         return kCMBlockBufferBadOffsetParameterErr
+    }
+    if let custom = customBlockSource?.pointee {
+        if custom.version != kCMBlockBufferCustomBlockSourceVersion {
+            blockBufferOut.pointee = nil
+            return kCMBlockBufferBadCustomBlockSourceErr
+        }
+        if memoryBlock == nil, let allocate = custom.AllocateBlock {
+            guard let allocated = allocate(custom.refCon, blockLength) else {
+                blockBufferOut.pointee = nil
+                return kCMBlockBufferBlockAllocationFailedErr
+            }
+            let buffer = UnsafeRawBufferPointer(
+                start: allocated.advanced(by: offsetToData),
+                count: dataLength
+            )
+            blockBufferOut.pointee = CMBlockBuffer(copying: buffer)
+            custom.FreeBlock?(custom.refCon, allocated, blockLength)
+            return kCMBlockBufferNoErr
+        }
     }
     if let memoryBlock {
         let buffer = UnsafeRawBufferPointer(start: memoryBlock.advanced(by: offsetToData), count: dataLength)
