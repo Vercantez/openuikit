@@ -109,7 +109,7 @@ flags.
 | unavailable | 0 | 0 |
 | not-applicable | 0 | 0 |
 
-Remaining `declared` rows are Foundation `Sequence.compare` /
+At the end of that pass, the remaining `declared` rows were Foundation `Sequence.compare` /
 `Sequence.formatted` overlays on `PHPersistentChangeFetchResult` (no
 established `SortComparator` / `FormatStyle` round-trip on this host).
 Remaining `deferred` rows still need another module (`UTType`, `CLLocation`,
@@ -139,3 +139,62 @@ linux and the sealed gate compiles with a clean product tree
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+### Depth pass local repair 2026-09-06 (wave 18)
+
+Branch `agent/fw-photos-r` was based on current `origin/main` at `8332a8f2`.
+The requested Cursor head `042e60d1` was already merged into main by
+`5f17fd1a`; merging both refs reported "Already up to date" and required no
+conflict resolution. `/tmp/fw_merge_gate-photos.log` contained no `error:` or
+`REFUSING` lines and ended in `FRAMEWORK_FANOUT_HOST_OK module=Photos`.
+An unchanged-tree rerun in the operator's `uikit-linux` container also passed.
+The earlier refusal therefore could not be reproduced from the supplied log
+and current refs.
+
+This repair closes a remaining evidence gap without changing product code:
+
+- `PhotosFormattingTests.swift#testPersistentChangeFormattedStyle` calls the
+  real Foundation `Sequence.formatted(_:)` overlay on
+  `PHPersistentChangeFetchResult`. A custom `FormatStyle` reads inserted asset
+  counts from actual local transactions: empty results yield `[]`, one
+  transaction yields `[1]`, and two transactions yield `[1, 2]`. A supplied
+  multiplier of 10 yields `[10, 20]`; repeated formatting and previously fetched
+  snapshots retain their results. The test resets its own store, uses the
+  synchronous authorization SPI, and cleans up with `defer`; it has no task,
+  callback wait, or dependence on another test.
+- `testPersistentChangeSortedUsingComparators` replaces broad sequence-test
+  citations for both Foundation `sorted(using:)` overloads. It checks forward
+  and reverse sorting of transaction sizes `[2, 1, 2]`, tied elements, an empty
+  comparator array, and preservation of the input sequence. The prior cited
+  test exercised `sorted(by:)` but did not call either `sorted(using:)` overload.
+- The compiler-synthesized `Sequence.compare(_:_:)` row is `not-applicable`.
+  Its sealed graph signature requires `Element: SortComparator`, whereas
+  `Element` is `PHPersistentChange`. The API crosswalk records the overlay as
+  unmatched, and the digester records the concrete Photos element type. An
+  isolated Linux Swift 6.2.4 typecheck of `result.compare(1, 2)` rejects the call
+  because `PHPersistentChange` does not conform to `SortComparator`. No
+  framework-local conformance or replacement Foundation type was added.
+
+| status | current main | local repair |
+| --- | ---: | ---: |
+| implemented | 748 | 749 |
+| declared | 2 | 0 |
+| deferred | 37 | 37 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 1 |
+
+All 748 previously implemented IDs are retained. The gain over
+current main is **+1 implemented**, with 55 distinct cited synchronous,
+no-argument tests (previously 53). The largest citation group remains the
+96-row error-code table (12.82% of 749); the largest non-table group is the
+52-row on-disk-library test (6.94%), below the 40% limit. The sole
+`not-applicable` ID is explicitly `::SYNTHESIZED::`.
+
+Validation uses the unmodified sealed acceptance script and shared validators,
+copied with Photos to `/gate-codex-photos` in `uikit-linux` (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`). Both baseline and repaired trees end with
+`PHOTOS_AGENT_RUNTIME_OK` and
+`FRAMEWORK_FANOUT_HOST_OK module=Photos dylib=libPhotos.dylib`.
+Both new tests also pass twice consecutively in an independent runner.
+Local logs: `/tmp/fw-photos-r-baseline.log`, `/tmp/fw-photos-r-repaired.log`,
+`/tmp/fw-photos-r-formatting.log`, and `/tmp/fw-photos-r-comparator.log`.
