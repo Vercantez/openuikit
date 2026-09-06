@@ -1,0 +1,5 @@
+full/lockedcameracapture/LockedCameraCapture.swift
+full/lockedcameracapture/LockedCameraCaptureExtension.swift
+full/lockedcameracapture/LockedCameraCaptureLookalikes.swift
+full/lockedcameracapture/LockedCameraCaptureManager.swift
+full/lockedcameracapture/LockedCameraCaptureSession.swift

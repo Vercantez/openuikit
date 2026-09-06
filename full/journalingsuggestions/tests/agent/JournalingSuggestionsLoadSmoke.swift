@@ -1,0 +1,3 @@
+import JournalingSuggestions
+
+let frameworkLoadSmokeMarker = "JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK"

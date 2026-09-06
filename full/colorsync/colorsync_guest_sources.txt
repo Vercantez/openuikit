@@ -1,0 +1,7 @@
+full/colorsync/ColorSync.swift
+full/colorsync/ColorSyncBridging.swift
+full/colorsync/ColorSyncConstants.swift
+full/colorsync/ColorSyncICC.swift
+full/colorsync/ColorSyncProfile.swift
+full/colorsync/ColorSyncTransform.swift
+full/colorsync/ColorSyncTypes.swift

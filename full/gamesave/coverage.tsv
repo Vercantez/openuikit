@@ -1,0 +1,63 @@
+precise	status	evidence	notes
+c:@E@GSSyncState	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateType	Int enum; raw values from pinned macios Native order.
+c:@E@GSSyncState@GSSyncStateClosed	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 6.
+c:@E@GSSyncState@GSSyncStateConflicted	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 4.
+c:@E@GSSyncState@GSSyncStateError	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 5.
+c:@E@GSSyncState@GSSyncStateLocal	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 2.
+c:@E@GSSyncState@GSSyncStateOffline	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 1.
+c:@E@GSSyncState@GSSyncStateReady	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 0.
+c:@E@GSSyncState@GSSyncStateSyncing	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateRawValues	Table-driven raw value 3.
+c:objc(cs)GSSyncedDirectory	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSSyncedDirectoryType	NSObject overlay wrapping GameSaveSyncedDirectory.
+c:objc(cs)GSSyncedDirectory(cm)openDirectoryForContainerIdentifier:	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSOpenForContainerIdentifier	Opens local-only; no iCloud daemon.
+c:objc(cs)GSSyncedDirectory(im)close	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSClose	Records .closed; does not resume cloud sync.
+c:objc(cs)GSSyncedDirectory(im)finishSyncing:completionHandler:	deferred		UIWindow status-display API requires UIKit, which is not a GameSave dependency.
+c:objc(cs)GSSyncedDirectory(im)finishSyncingWithCompletionHandler:	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSFinishSyncingCompletionHandler	Synchronous completion; host-injected .syncing settles to .local.
+c:objc(cs)GSSyncedDirectory(im)resolveConflictsWithVersion:	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSResolveConflicts	Fail-closed resolve from injected conflicted versions.
+c:objc(cs)GSSyncedDirectory(im)triggerPendingUploadWithCompletionHandler:	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSTriggerPendingUploadCompletionHandler	Always false; no iCloud upload queue.
+c:objc(cs)GSSyncedDirectory(py)directoryState	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryTests.swift#testGSDirectoryState	Snapshot of current Linux state.
+c:objc(cs)GSSyncedDirectoryState	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryStateTests.swift#testGSDirectoryStateType	NSObject snapshot of GameSaveSyncedDirectory.State.
+c:objc(cs)GSSyncedDirectoryState(py)conflictedVersions	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryStateTests.swift#testGSDirectoryStateConflictedVersions	Nil unless conflicted.
+c:objc(cs)GSSyncedDirectoryState(py)error	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryStateTests.swift#testGSDirectoryStateError	Nil unless .error; domain GameSaveErrorDomain.
+c:objc(cs)GSSyncedDirectoryState(py)state	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryStateTests.swift#testGSDirectoryStateState	Maps overlay State onto GSSyncState.
+c:objc(cs)GSSyncedDirectoryState(py)url	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryStateTests.swift#testGSDirectoryStateURL	Present for local/ready/offline; nil otherwise.
+c:objc(cs)GSSyncedDirectoryVersion	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryVersionTests.swift#testGSVersionType	NSObject wrapper of GameSaveSyncedDirectory.Version.
+c:objc(cs)GSSyncedDirectoryVersion(py)description	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryVersionTests.swift#testGSVersionDescription	Overrides NSObject.description.
+c:objc(cs)GSSyncedDirectoryVersion(py)isLocal	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryVersionTests.swift#testGSVersionIsLocal	Local versus non-local version flag.
+c:objc(cs)GSSyncedDirectoryVersion(py)localizedNameOfSavingComputer	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryVersionTests.swift#testGSVersionLocalizedName	Stored device name.
+c:objc(cs)GSSyncedDirectoryVersion(py)modifiedDate	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryVersionTests.swift#testGSVersionModifiedDate	Stored modification date.
+c:objc(cs)GSSyncedDirectoryVersion(py)url	implemented	test:full/gamesave/tests/agent/GSSyncedDirectoryVersionTests.swift#testGSVersionURL	Version directory URL.
+s:7SwiftUI4ViewP8GameSaveE04gameE12SyncingAlert9directory15finishedLoadingQrAA7BindingVyAD0dE15SyncedDirectoryCSgG_yyctF	deferred		SwiftUI View.gameSaveSyncingAlert requires SwiftUICore; SwiftUI is not a GameSave dependency.
+s:8GameSave0aB11ErrorDomainSSvp	implemented	test:full/gamesave/tests/agent/GameSaveErrorDomainTests.swift#testGameSaveErrorDomain	Constant identity GameSaveErrorDomain.
+s:8GameSave0aB15SyncedDirectoryC	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryType	Swift overlay class; Identifiable and Equatable.
+s:8GameSave0aB15SyncedDirectoryC04openD019containerIdentifierACSSSg_tFZ	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testOpenDirectory	Creates a real local directory; never claims iCloud ready.
+s:8GameSave0aB15SyncedDirectoryC13finishSyncing13statusDisplayySo8UIWindowC_tYaF	deferred		UIWindow status-display API requires UIKit, which is not a GameSave dependency.
+s:8GameSave0aB15SyncedDirectoryC13finishSyncingyyYaF	declared	source:full/gamesave/GameSaveSyncedDirectory.swift#finishSyncing	Async overlay; sealed runner has no run loop so the completion-handler path is the tested settle.
+s:8GameSave0aB15SyncedDirectoryC16resolveConflicts4withyAC7VersionC_tF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testResolveConflicts	No-op unless conflicted; then .local(chosen URL).
+s:8GameSave0aB15SyncedDirectoryC20triggerPendingUploadSbyYaF	declared	source:full/gamesave/GameSaveSyncedDirectory.swift#triggerPendingUpload	Async overlay of the fail-closed false return; completion-handler path is tested.
+s:8GameSave0aB15SyncedDirectoryC2IDa	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryIDTypealias	typealias ID = String.
+s:8GameSave0aB15SyncedDirectoryC2eeoiySbAC_ACtFZ	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryEquality	Equality by container id.
+s:8GameSave0aB15SyncedDirectoryC2idSSvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryId	Container identifier identity.
+s:8GameSave0aB15SyncedDirectoryC5StateO	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateType	Documented directory state machine enum.
+s:8GameSave0aB15SyncedDirectoryC5StateO10conflictedyAESayAC7VersionCG_tcAEmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateConflicted	Associated [Version] payload.
+s:8GameSave0aB15SyncedDirectoryC5StateO11descriptionSSvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateDescription	CustomStringConvertible case-name format.
+s:8GameSave0aB15SyncedDirectoryC5StateO5erroryAEs5Error_pcAEmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateError	Associated Error payload.
+s:8GameSave0aB15SyncedDirectoryC5StateO5localyAE10Foundation3URLVcAEmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateLocal	Associated local URL payload.
+s:8GameSave0aB15SyncedDirectoryC5StateO5readyyAE10Foundation3URLVcAEmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateReady	Associated ready URL payload.
+s:8GameSave0aB15SyncedDirectoryC5StateO6closedyA2EmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateClosed	Closed case.
+s:8GameSave0aB15SyncedDirectoryC5StateO7offlineyAE10Foundation3URLVcAEmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateOffline	Associated offline URL payload.
+s:8GameSave0aB15SyncedDirectoryC5StateO7syncingyA2EmF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryStateTests.swift#testStateSyncing	Syncing case.
+s:8GameSave0aB15SyncedDirectoryC5closeyyF	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryClose	Transitions to .closed.
+s:8GameSave0aB15SyncedDirectoryC5stateAC5StateOvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryState	Current overlay state including host-injected cases.
+s:8GameSave0aB15SyncedDirectoryC7VersionC	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionType	Conflict/local version object.
+s:8GameSave0aB15SyncedDirectoryC7VersionC11descriptionSSvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionDescription	CustomStringConvertible debug-style string.
+s:8GameSave0aB15SyncedDirectoryC7VersionC12modifiedDate10Foundation0G0Vvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionModifiedDate	Get/set stored date.
+s:8GameSave0aB15SyncedDirectoryC7VersionC29localizedNameOfSavingComputerSSvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionLocalizedNameOfSavingComputer	Stored device name.
+s:8GameSave0aB15SyncedDirectoryC7VersionC2IDa	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionIDTypealias	typealias ID = URL.
+s:8GameSave0aB15SyncedDirectoryC7VersionC2id10Foundation3URLVvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionId	Identifiable id equals url.
+s:8GameSave0aB15SyncedDirectoryC7VersionC3url10Foundation3URLVvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionURL	Version directory URL.
+s:8GameSave0aB15SyncedDirectoryC7VersionC7isLocalSbvp	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryVersionTests.swift#testVersionIsLocal	Local versus non-local flag.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@GSSyncState	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateInequality	Synthesized Equatable.!=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:8GameSave0aB15SyncedDirectoryC	implemented	test:full/gamesave/tests/agent/GameSaveSyncedDirectoryTests.swift#testSyncedDirectoryInequality	Synthesized Equatable.!= from custom ==.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@GSSyncState	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateHashValue	Synthesized Hashable.hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@GSSyncState	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateHashInto	Synthesized Hashable.hash(into:)
+s:So11GSSyncStateV8rawValueABSgSi_tcfc	implemented	test:full/gamesave/tests/agent/GSSyncStateTests.swift#testGSSyncStateInitRawValue	Failable init?(rawValue: Int)
