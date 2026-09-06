@@ -134,6 +134,19 @@ absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Starting commit
 `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.
 
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`, exit 0,
+~1802s):
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
+FRAMEWORK_FANOUT_REFERENCE_OK
+MATTER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
+```
+
+Host inventory token expected by the campaign (not printed by the gate):
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+
 ### Added this pass
 
 - **Controller startup params.** `MTRDeviceControllerStartupParams` stores
