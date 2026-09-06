@@ -1141,6 +1141,199 @@ final class LinuxMTLRenderCommandEncoder: NSObject, MTLRenderCommandEncoder, @un
         _ = (buffer, indirectRangeBuffer, offset)
         commandBuffer.failClosed(.notPermitted, reason: "no shader execution")
     }
+
+    func setMeshBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
+        recordedState.append("meshB:\(index):\(offset):\(buffer?.length ?? -1)")
+    }
+
+    func setMeshBufferOffset(_ offset: Int, index: Int) {
+        recordedState.append("meshBO:\(index):\(offset)")
+    }
+
+    func setMeshBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int) {
+        _ = bytes
+        recordedState.append("meshBytes:\(index):\(length)")
+    }
+
+    func setMeshTexture(_ texture: (any MTLTexture)?, index: Int) {
+        recordedState.append("meshT:\(index):\(texture?.width ?? -1)")
+    }
+
+    func setMeshSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
+        recordedState.append("meshS:\(index):\(sampler != nil)")
+    }
+
+    func setMeshSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int) {
+        _ = (lodMinClamp, lodMaxClamp)
+        setMeshSamplerState(sampler, index: index)
+    }
+
+    func setObjectBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
+        recordedState.append("objB:\(index):\(offset):\(buffer?.length ?? -1)")
+    }
+
+    func setObjectBufferOffset(_ offset: Int, index: Int) {
+        recordedState.append("objBO:\(index):\(offset)")
+    }
+
+    func setObjectBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int) {
+        _ = bytes
+        recordedState.append("objBytes:\(index):\(length)")
+    }
+
+    func setObjectTexture(_ texture: (any MTLTexture)?, index: Int) {
+        recordedState.append("objT:\(index):\(texture?.width ?? -1)")
+    }
+
+    func setObjectSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
+        recordedState.append("objS:\(index):\(sampler != nil)")
+    }
+
+    func setObjectSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int) {
+        _ = (lodMinClamp, lodMaxClamp)
+        setObjectSamplerState(sampler, index: index)
+    }
+
+    func setObjectThreadgroupMemoryLength(_ length: Int, index: Int) {
+        recordedState.append("objTG:\(index):\(length)")
+    }
+
+    func setTileBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int) {
+        recordedState.append("tileB:\(index):\(offset):\(buffer?.length ?? -1)")
+    }
+
+    func setTileBufferOffset(_ offset: Int, index: Int) {
+        recordedState.append("tileBO:\(index):\(offset)")
+    }
+
+    func setTileBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int) {
+        _ = bytes
+        recordedState.append("tileBytes:\(index):\(length)")
+    }
+
+    func setTileTexture(_ texture: (any MTLTexture)?, index: Int) {
+        recordedState.append("tileT:\(index):\(texture?.width ?? -1)")
+    }
+
+    func setTileSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
+        recordedState.append("tileS:\(index):\(sampler != nil)")
+    }
+
+    func setTileSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int) {
+        _ = (lodMinClamp, lodMaxClamp)
+        setTileSamplerState(sampler, index: index)
+    }
+
+    func setThreadgroupMemoryLength(_ length: Int, offset: Int, index: Int) {
+        recordedState.append("tg:\(index):\(offset):\(length)")
+    }
+
+    func setTessellationFactorBuffer(_ buffer: (any MTLBuffer)?, offset: Int, instanceStride: Int) {
+        recordedState.append("tess:\(offset):\(instanceStride):\(buffer?.length ?? -1)")
+    }
+
+    func setTessellationFactorScale(_ scale: Float) {
+        recordedState.append("tessScale:\(scale)")
+    }
+
+    func setDepthTestBounds(_ bounds: ClosedRange<Float>) {
+        recordedState.append("depthBounds:\(bounds.lowerBound):\(bounds.upperBound)")
+    }
+
+    func dispatchThreadsPerTile(_ threadsPerTile: MTLSize) {
+        recordedState.append("tileDispatch:\(threadsPerTile.width)x\(threadsPerTile.height)")
+    }
+
+    func drawMeshThreadgroups(
+        _ threadgroupsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    ) {
+        recordedState.append(
+            "meshTG:\(threadgroupsPerGrid.width):\(threadsPerObjectThreadgroup.width):\(threadsPerMeshThreadgroup.width)"
+        )
+    }
+
+    func drawMeshThreadgroups(
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    ) {
+        recordedState.append(
+            "meshTGIndirect:\(indirectBuffer.length):\(indirectBufferOffset):\(threadsPerObjectThreadgroup.width):\(threadsPerMeshThreadgroup.width)"
+        )
+    }
+
+    func drawMeshThreads(
+        _ threadsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    ) {
+        recordedState.append(
+            "meshThreads:\(threadsPerGrid.width):\(threadsPerObjectThreadgroup.width):\(threadsPerMeshThreadgroup.width)"
+        )
+    }
+
+    func drawPatches(
+        numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    ) {
+        recordedState.append(
+            "patches:\(numberOfPatchControlPoints):\(patchStart):\(patchCount):\(patchIndexBufferOffset):\(instanceCount):\(baseInstance)"
+        )
+    }
+
+    func drawPatches(
+        numberOfPatchControlPoints: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    ) {
+        recordedState.append(
+            "patchesIndirect:\(numberOfPatchControlPoints):\(patchIndexBufferOffset):\(indirectBuffer.length):\(indirectBufferOffset)"
+        )
+    }
+
+    func drawIndexedPatches(
+        numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    ) {
+        recordedState.append(
+            "idxPatches:\(numberOfPatchControlPoints):\(patchStart):\(patchCount):\(controlPointIndexBuffer.length):\(instanceCount):\(baseInstance)"
+        )
+    }
+
+    func drawIndexedPatches(
+        numberOfPatchControlPoints: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    ) {
+        recordedState.append(
+            "idxPatchesIndirect:\(numberOfPatchControlPoints):\(controlPointIndexBuffer.length):\(indirectBuffer.length):\(indirectBufferOffset)"
+        )
+    }
+
+    func memoryBarrier(resources: [any MTLResource], after: MTLRenderStages, before: MTLRenderStages) {
+        recordedState.append("barrierResources:\(resources.count):\(after.rawValue):\(before.rawValue)")
+    }
 }
 
 final class LinuxMTLLibrary: NSObject, MTLLibrary, @unchecked Sendable {

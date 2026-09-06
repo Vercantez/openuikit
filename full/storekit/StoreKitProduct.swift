@@ -507,13 +507,28 @@ public struct Product: Identifiable, Hashable, Sendable, CustomDebugStringConver
 
             public struct Statuses: AsyncSequence {
                 public typealias Element = Product.SubscriptionInfo.Status
-                public struct AsyncIterator: AsyncIteratorProtocol {
-                    public mutating func next() async -> Element? { nil }
+                let snapshot: [Element]
+                public init(snapshot: [Element] = []) {
+                    self.snapshot = snapshot
                 }
-                public func makeAsyncIterator() -> AsyncIterator { AsyncIterator() }
+                public struct AsyncIterator: AsyncIteratorProtocol {
+                    var snapshot: [Element]
+                    var index = 0
+                    public mutating func next() async -> Element? {
+                        guard index < snapshot.count else { return nil }
+                        let value = snapshot[index]
+                        index += 1
+                        return value
+                    }
+                }
+                public func makeAsyncIterator() -> AsyncIterator {
+                    AsyncIterator(snapshot: snapshot)
+                }
             }
 
-            public static var updates: Statuses { Statuses() }
+            public static var updates: Statuses {
+                Statuses(snapshot: LocalTestingStore.shared.allSubscriptionStatuses())
+            }
             public static var all: AsyncStream<(groupID: String, statuses: [Product.SubscriptionInfo.Status])> {
                 AsyncStream { $0.finish() }
             }

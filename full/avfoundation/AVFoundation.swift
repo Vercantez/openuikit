@@ -284,7 +284,7 @@ public extension Notification.Name {
     )
 }
 
-public enum AVPlayerAudiovisualBackgroundPlaybackPolicy: Int, Sendable {
+public enum AVPlayerAudiovisualBackgroundPlaybackPolicy: Int, Hashable, Sendable {
     case automatic = 1
     case pauses = 2
     case continuesIfPossible = 3
@@ -518,7 +518,7 @@ public let AVAssetExportPreset1920x1080 = "AVAssetExportPreset1920x1080"
 public let AVAssetExportPresetPassthrough = "AVAssetExportPresetPassthrough"
 
 open class AVAssetExportSession: NSObject, @unchecked Sendable {
-    public enum Status: Int, Sendable {
+    public enum Status: Int, Hashable, Sendable {
         case unknown = 0
         case waiting = 1
         case exporting = 2

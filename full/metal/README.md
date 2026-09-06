@@ -227,3 +227,42 @@ No non-table test exceeds 40% of the remaining 809 implemented rows
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
 linux and the sealed gate compiles with a clean product tree (`products=clean`).
 
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r16`, framework `Metal`, lane `large-partitioned`.
+Third pass on the existing CPU reference: keep prior tests green, then add a
+software mesh/tile pipeline descriptor surface, acceleration-structure
+instance value types (no BLAS/TLAS), render-encoder mesh/object/tile
+bindings and Swift array overlays, host-clock `sampleTimestamps`, sparse
+tile size 0, and fail-closed mesh/tile pipeline creation.
+
+| Status | Before (wave-8 r15 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 2128 | 2658 |
+| declared | 312 | 275 |
+| deferred | 2104 | 1611 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+530**. Evidence is `test:full/metal/tests/agent/<File>Tests.swift#testName`
+naming a real synchronous `test*` function. MetalRuntime.swift now *calls*
+every `test*` function before printing `METAL_AGENT_RUNTIME_OK`.
+
+Top-5 implemented evidence distribution (of 2658):
+
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 1633 (enum / option-set / C constant table)
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 224
+3. `MetalGeometryTests.swift#testGeometryHelpers` — 106
+4. `MetalGeometryTests.swift#testAccelerationStructureDescriptors` — 66
+5. `MetalRenderTests.swift#testRenderEncoderStageBindings` — 65
+
+No non-table test exceeds 40% of the remaining 1025 implemented rows
+(cap 410; largest family test is 224). New focused tests:
+`testMeshAndTilePipelineDescriptors`, `testAccelerationStructureDescriptors`,
+`testRenderEncoderStageBindings`, `testDeviceFactoryAndFailClosed`.
+
+Fail-closed this pass: mesh/tile `makeRenderPipelineState` throws
+`MTLLibraryError.compileFailure` + `"no shader compiler"`; `makeLibrary(data:)`
+throws `.fileNotFound`; `accelerationStructureSizes` and `sparseTileSize`
+return zeros (no RT/sparse GPU). Metal 4 command encoders remain deferred.
+

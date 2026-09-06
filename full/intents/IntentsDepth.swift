@@ -141,6 +141,96 @@ public enum INHostIntentDispatcher {
             typed.handle(intent: bills) { response = $0 }
             return response ?? INSearchForBillsIntentResponse(code: .failure, userActivity: nil)
         }
+        if let profile = intent as? INSetProfileInCarIntent,
+           let typed = handler as? any INSetProfileInCarIntentHandling {
+            var response: INSetProfileInCarIntentResponse?
+            typed.handle(intent: profile) { response = $0 }
+            return response ?? INSetProfileInCarIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let play = intent as? INPlayMediaIntent,
+           let typed = handler as? any INPlayMediaIntentHandling {
+            var response: INPlayMediaIntentResponse?
+            typed.handle(intent: play) { response = $0 }
+            return response ?? INPlayMediaIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let requestPay = intent as? INRequestPaymentIntent,
+           let typed = handler as? any INRequestPaymentIntentHandling {
+            var response: INRequestPaymentIntentResponse?
+            typed.handle(intent: requestPay) { response = $0 }
+            return response ?? INRequestPaymentIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let sendPay = intent as? INSendPaymentIntent,
+           let typed = handler as? any INSendPaymentIntentHandling {
+            var response: INSendPaymentIntentResponse?
+            typed.handle(intent: sendPay) { response = $0 }
+            return response ?? INSendPaymentIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let seat = intent as? INSetSeatSettingsInCarIntent,
+           let typed = handler as? any INSetSeatSettingsInCarIntentHandling {
+            var response: INSetSeatSettingsInCarIntentResponse?
+            typed.handle(intent: seat) { response = $0 }
+            return response ?? INSetSeatSettingsInCarIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let radio = intent as? INSetRadioStationIntent,
+           let typed = handler as? any INSetRadioStationIntentHandling {
+            var response: INSetRadioStationIntentResponse?
+            typed.handle(intent: radio) { response = $0 }
+            return response ?? INSetRadioStationIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let workout = intent as? INStartWorkoutIntent,
+           let typed = handler as? any INStartWorkoutIntentHandling {
+            var response: INStartWorkoutIntentResponse?
+            typed.handle(intent: workout) { response = $0 }
+            return response ?? INStartWorkoutIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let note = intent as? INCreateNoteIntent,
+           let typed = handler as? any INCreateNoteIntentHandling {
+            var response: INCreateNoteIntentResponse?
+            typed.handle(intent: note) { response = $0 }
+            return response ?? INCreateNoteIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let list = intent as? INCreateTaskListIntent,
+           let typed = handler as? any INCreateTaskListIntentHandling {
+            var response: INCreateTaskListIntentResponse?
+            typed.handle(intent: list) { response = $0 }
+            return response ?? INCreateTaskListIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let deleteTasks = intent as? INDeleteTasksIntent,
+           let typed = handler as? any INDeleteTasksIntentHandling {
+            var response: INDeleteTasksIntentResponse?
+            typed.handle(intent: deleteTasks) { response = $0 }
+            return response ?? INDeleteTasksIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let defroster = intent as? INSetDefrosterSettingsInCarIntent,
+           let typed = handler as? any INSetDefrosterSettingsInCarIntentHandling {
+            var response: INSetDefrosterSettingsInCarIntentResponse?
+            typed.handle(intent: defroster) { response = $0 }
+            return response ?? INSetDefrosterSettingsInCarIntentResponse(code: .failure, userActivity: nil)
+        }
+        if let defaults = intent as? INGetAvailableRestaurantReservationBookingDefaultsIntent,
+           let typed = handler as? any INGetAvailableRestaurantReservationBookingDefaultsIntentHandling {
+            var response: INGetAvailableRestaurantReservationBookingDefaultsIntentResponse?
+            typed.handle(getAvailableRestaurantReservationBookingDefaults: defaults) { response = $0 }
+            return response ?? INGetAvailableRestaurantReservationBookingDefaultsIntentResponse()
+        }
+        if let bookings = intent as? INGetAvailableRestaurantReservationBookingsIntent,
+           let typed = handler as? any INGetAvailableRestaurantReservationBookingsIntentHandling {
+            var response: INGetAvailableRestaurantReservationBookingsIntentResponse?
+            typed.handle(getAvailableRestaurantReservationBookings: bookings) { response = $0 }
+            return response ?? INGetAvailableRestaurantReservationBookingsIntentResponse()
+        }
+        if let current = intent as? INGetUserCurrentRestaurantReservationBookingsIntent,
+           let typed = handler as? any INGetUserCurrentRestaurantReservationBookingsIntentHandling {
+            var response: INGetUserCurrentRestaurantReservationBookingsIntentResponse?
+            typed.handle(getUserCurrentRestaurantReservationBookings: current) { response = $0 }
+            return response ?? INGetUserCurrentRestaurantReservationBookingsIntentResponse()
+        }
+        if let addMedia = intent as? INAddMediaIntent,
+           let typed = handler as? any INAddMediaIntentHandling {
+            var response: INAddMediaIntentResponse?
+            typed.handle(intent: addMedia) { response = $0 }
+            return response ?? INAddMediaIntentResponse(code: .failure, userActivity: nil)
+        }
         return INIntentResponse()
     }
 
@@ -259,6 +349,96 @@ public enum INHostIntentDispatcher {
             typed.confirm(intent: bills) { response = $0 }
             return response ?? INSearchForBillsIntentResponse(code: .ready, userActivity: nil)
         }
+        if let profile = intent as? INSetProfileInCarIntent,
+           let typed = handler as? any INSetProfileInCarIntentHandling {
+            var response: INSetProfileInCarIntentResponse?
+            typed.confirm(intent: profile) { response = $0 }
+            return response ?? INSetProfileInCarIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let play = intent as? INPlayMediaIntent,
+           let typed = handler as? any INPlayMediaIntentHandling {
+            var response: INPlayMediaIntentResponse?
+            typed.confirm(intent: play) { response = $0 }
+            return response ?? INPlayMediaIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let requestPay = intent as? INRequestPaymentIntent,
+           let typed = handler as? any INRequestPaymentIntentHandling {
+            var response: INRequestPaymentIntentResponse?
+            typed.confirm(intent: requestPay) { response = $0 }
+            return response ?? INRequestPaymentIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let sendPay = intent as? INSendPaymentIntent,
+           let typed = handler as? any INSendPaymentIntentHandling {
+            var response: INSendPaymentIntentResponse?
+            typed.confirm(intent: sendPay) { response = $0 }
+            return response ?? INSendPaymentIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let seat = intent as? INSetSeatSettingsInCarIntent,
+           let typed = handler as? any INSetSeatSettingsInCarIntentHandling {
+            var response: INSetSeatSettingsInCarIntentResponse?
+            typed.confirm(intent: seat) { response = $0 }
+            return response ?? INSetSeatSettingsInCarIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let radio = intent as? INSetRadioStationIntent,
+           let typed = handler as? any INSetRadioStationIntentHandling {
+            var response: INSetRadioStationIntentResponse?
+            typed.confirm(intent: radio) { response = $0 }
+            return response ?? INSetRadioStationIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let workout = intent as? INStartWorkoutIntent,
+           let typed = handler as? any INStartWorkoutIntentHandling {
+            var response: INStartWorkoutIntentResponse?
+            typed.confirm(intent: workout) { response = $0 }
+            return response ?? INStartWorkoutIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let note = intent as? INCreateNoteIntent,
+           let typed = handler as? any INCreateNoteIntentHandling {
+            var response: INCreateNoteIntentResponse?
+            typed.confirm(intent: note) { response = $0 }
+            return response ?? INCreateNoteIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let list = intent as? INCreateTaskListIntent,
+           let typed = handler as? any INCreateTaskListIntentHandling {
+            var response: INCreateTaskListIntentResponse?
+            typed.confirm(intent: list) { response = $0 }
+            return response ?? INCreateTaskListIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let deleteTasks = intent as? INDeleteTasksIntent,
+           let typed = handler as? any INDeleteTasksIntentHandling {
+            var response: INDeleteTasksIntentResponse?
+            typed.confirm(intent: deleteTasks) { response = $0 }
+            return response ?? INDeleteTasksIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let defroster = intent as? INSetDefrosterSettingsInCarIntent,
+           let typed = handler as? any INSetDefrosterSettingsInCarIntentHandling {
+            var response: INSetDefrosterSettingsInCarIntentResponse?
+            typed.confirm(intent: defroster) { response = $0 }
+            return response ?? INSetDefrosterSettingsInCarIntentResponse(code: .ready, userActivity: nil)
+        }
+        if let defaults = intent as? INGetAvailableRestaurantReservationBookingDefaultsIntent,
+           let typed = handler as? any INGetAvailableRestaurantReservationBookingDefaultsIntentHandling {
+            var response: INGetAvailableRestaurantReservationBookingDefaultsIntentResponse?
+            typed.confirm(getAvailableRestaurantReservationBookingDefaults: defaults) { response = $0 }
+            return response ?? INGetAvailableRestaurantReservationBookingDefaultsIntentResponse()
+        }
+        if let bookings = intent as? INGetAvailableRestaurantReservationBookingsIntent,
+           let typed = handler as? any INGetAvailableRestaurantReservationBookingsIntentHandling {
+            var response: INGetAvailableRestaurantReservationBookingsIntentResponse?
+            typed.confirm(getAvailableRestaurantReservationBookings: bookings) { response = $0 }
+            return response ?? INGetAvailableRestaurantReservationBookingsIntentResponse()
+        }
+        if let current = intent as? INGetUserCurrentRestaurantReservationBookingsIntent,
+           let typed = handler as? any INGetUserCurrentRestaurantReservationBookingsIntentHandling {
+            var response: INGetUserCurrentRestaurantReservationBookingsIntentResponse?
+            typed.confirm(getUserCurrentRestaurantReservationBookings: current) { response = $0 }
+            return response ?? INGetUserCurrentRestaurantReservationBookingsIntentResponse()
+        }
+        if let addMedia = intent as? INAddMediaIntent,
+           let typed = handler as? any INAddMediaIntentHandling {
+            var response: INAddMediaIntentResponse?
+            typed.confirm(intent: addMedia) { response = $0 }
+            return response ?? INAddMediaIntentResponse(code: .ready, userActivity: nil)
+        }
         return INIntentResponse()
     }
 
@@ -275,6 +455,10 @@ public enum INHostIntentDispatcher {
             var results: [INIntentResolutionResult] = []
             typed.resolveAttributes(for: search) { results.append($0) }
             typed.resolveDateTimeRange(for: search) { results.append($0) }
+            typed.resolveGroupNames(for: search) { results.append(contentsOf: $0) }
+            typed.resolveRecipients(for: search) { results.append(contentsOf: $0) }
+            typed.resolveSenders(for: search) { results.append(contentsOf: $0) }
+            typed.resolveSpeakableGroupNames(for: search) { results.append(contentsOf: $0) }
             return results
         }
         if let start = intent as? INStartCallIntent,
@@ -418,6 +602,124 @@ public enum INHostIntentDispatcher {
             typed.resolveStatus(for: bills) { results.append($0) }
             return results
         }
+        if let profile = intent as? INSetProfileInCarIntent,
+           let typed = handler as? any INSetProfileInCarIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveCarName(for: profile) { results.append($0) }
+            typed.resolveDefaultProfile(forSetProfileInCar: profile) { results.append($0) }
+            typed.resolveProfileName(for: profile) { results.append($0) }
+            typed.resolveProfileNumber(for: profile) { results.append($0) }
+            return results
+        }
+        if let play = intent as? INPlayMediaIntent,
+           let typed = handler as? any INPlayMediaIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveMediaItems(for: play) { results.append(contentsOf: $0) }
+            typed.resolvePlayShuffled(for: play) { results.append($0) }
+            typed.resolvePlaybackQueueLocation(for: play) { results.append($0) }
+            typed.resolvePlaybackRepeatMode(for: play) { results.append($0) }
+            typed.resolvePlaybackSpeed(for: play) { results.append($0) }
+            typed.resolveResumePlayback(for: play) { results.append($0) }
+            return results
+        }
+        if let requestPay = intent as? INRequestPaymentIntent,
+           let typed = handler as? any INRequestPaymentIntentHandling {
+            return resolveRequestPayment(requestPay, handler: typed)
+        }
+        if let sendPay = intent as? INSendPaymentIntent,
+           let typed = handler as? any INSendPaymentIntentHandling {
+            return resolveSendPayment(sendPay, handler: typed)
+        }
+        if let seat = intent as? INSetSeatSettingsInCarIntent,
+           let typed = handler as? any INSetSeatSettingsInCarIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveCarName(for: seat) { results.append($0) }
+            typed.resolveEnableCooling(for: seat) { results.append($0) }
+            typed.resolveEnableHeating(for: seat) { results.append($0) }
+            typed.resolveEnableMassage(for: seat) { results.append($0) }
+            typed.resolveLevel(for: seat) { results.append($0) }
+            typed.resolveRelativeLevelSetting(for: seat) { results.append($0) }
+            typed.resolveSeat(for: seat) { results.append($0) }
+            return results
+        }
+        if let radio = intent as? INSetRadioStationIntent,
+           let typed = handler as? any INSetRadioStationIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveChannel(for: radio) { results.append($0) }
+            typed.resolveFrequency(for: radio) { results.append($0) }
+            typed.resolvePresetNumber(for: radio) { results.append($0) }
+            typed.resolveRadioType(for: radio) { results.append($0) }
+            typed.resolveStationName(for: radio) { results.append($0) }
+            return results
+        }
+        if let workout = intent as? INStartWorkoutIntent,
+           let typed = handler as? any INStartWorkoutIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveGoalValue(for: workout) { results.append($0) }
+            typed.resolveIsOpenEnded(for: workout) { results.append($0) }
+            typed.resolveWorkoutGoalUnitType(for: workout) { results.append($0) }
+            typed.resolveWorkoutLocationType(for: workout) { results.append($0) }
+            typed.resolveWorkoutName(for: workout) { results.append($0) }
+            return results
+        }
+        if let note = intent as? INCreateNoteIntent,
+           let typed = handler as? any INCreateNoteIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveContent(for: note) { results.append($0) }
+            typed.resolveGroupName(for: note) { results.append($0) }
+            typed.resolveTitle(for: note) { results.append($0) }
+            return results
+        }
+        if let list = intent as? INCreateTaskListIntent,
+           let typed = handler as? any INCreateTaskListIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveGroupName(for: list) { results.append($0) }
+            typed.resolveTaskTitles(for: list) { results.append(contentsOf: $0) }
+            typed.resolveTitle(for: list) { results.append($0) }
+            return results
+        }
+        if let deleteTasks = intent as? INDeleteTasksIntent,
+           let typed = handler as? any INDeleteTasksIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveTaskList(for: deleteTasks) { results.append($0) }
+            typed.resolveTasks(for: deleteTasks) { results.append(contentsOf: $0) }
+            return results
+        }
+        if let defroster = intent as? INSetDefrosterSettingsInCarIntent,
+           let typed = handler as? any INSetDefrosterSettingsInCarIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveCarName(for: defroster) { results.append($0) }
+            typed.resolveDefroster(for: defroster) { results.append($0) }
+            typed.resolveEnable(for: defroster) { results.append($0) }
+            return results
+        }
+        if let defaults = intent as? INGetAvailableRestaurantReservationBookingDefaultsIntent,
+           let typed = handler as? any INGetAvailableRestaurantReservationBookingDefaultsIntentHandling {
+            var result: INRestaurantResolutionResult?
+            typed.resolveRestaurant(for: defaults) { result = $0 }
+            return [result ?? INRestaurantResolutionResult.needsValue()]
+        }
+        if let bookings = intent as? INGetAvailableRestaurantReservationBookingsIntent,
+           let typed = handler as? any INGetAvailableRestaurantReservationBookingsIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolvePartySize(for: bookings) { results.append($0) }
+            typed.resolvePreferredBookingDateComponents(for: bookings) { results.append($0) }
+            typed.resolveRestaurant(for: bookings) { results.append($0) }
+            return results
+        }
+        if let current = intent as? INGetUserCurrentRestaurantReservationBookingsIntent,
+           let typed = handler as? any INGetUserCurrentRestaurantReservationBookingsIntentHandling {
+            var result: INRestaurantResolutionResult?
+            typed.resolveRestaurant(for: current) { result = $0 }
+            return [result ?? INRestaurantResolutionResult.needsValue()]
+        }
+        if let addMedia = intent as? INAddMediaIntent,
+           let typed = handler as? any INAddMediaIntentHandling {
+            var results: [INIntentResolutionResult] = []
+            typed.resolveMediaDestination(for: addMedia) { results.append($0) }
+            typed.resolveMediaItems(for: addMedia) { results.append(contentsOf: $0) }
+            return results
+        }
         return [INIntentResolutionResult.needsValue()]
     }
 
@@ -456,6 +758,40 @@ public enum INHostIntentDispatcher {
         let legacyTrigger: (INTemporalEventTriggerResolutionResult) -> Void = { results.append($0) }
         handler.resolveTemporalEventTrigger(for: intent, completion: specializedTrigger)
         handler.resolveTemporalEventTrigger(for: intent, with: legacyTrigger)
+        return results
+    }
+
+    private static func resolveRequestPayment<H: INRequestPaymentIntentHandling>(
+        _ intent: INRequestPaymentIntent,
+        handler: H
+    ) -> [INIntentResolutionResult] {
+        var results: [INIntentResolutionResult] = []
+        let specializedAmount: (INRequestPaymentCurrencyAmountResolutionResult) -> Void = { results.append($0) }
+        let legacyAmount: (INCurrencyAmountResolutionResult) -> Void = { results.append($0) }
+        handler.resolveCurrencyAmount(for: intent, completion: specializedAmount)
+        handler.resolveCurrencyAmount(for: intent, with: legacyAmount)
+        handler.resolveNote(for: intent) { results.append($0) }
+        let specializedPayer: (INRequestPaymentPayerResolutionResult) -> Void = { results.append($0) }
+        let legacyPayer: (INPersonResolutionResult) -> Void = { results.append($0) }
+        handler.resolvePayer(for: intent, completion: specializedPayer)
+        handler.resolvePayer(for: intent, with: legacyPayer)
+        return results
+    }
+
+    private static func resolveSendPayment<H: INSendPaymentIntentHandling>(
+        _ intent: INSendPaymentIntent,
+        handler: H
+    ) -> [INIntentResolutionResult] {
+        var results: [INIntentResolutionResult] = []
+        let specializedAmount: (INSendPaymentCurrencyAmountResolutionResult) -> Void = { results.append($0) }
+        let legacyAmount: (INCurrencyAmountResolutionResult) -> Void = { results.append($0) }
+        handler.resolveCurrencyAmount(for: intent, completion: specializedAmount)
+        handler.resolveCurrencyAmount(for: intent, with: legacyAmount)
+        handler.resolveNote(for: intent) { results.append($0) }
+        let specializedPayee: (INSendPaymentPayeeResolutionResult) -> Void = { results.append($0) }
+        let legacyPayee: (INPersonResolutionResult) -> Void = { results.append($0) }
+        handler.resolvePayee(for: intent, completion: specializedPayee)
+        handler.resolvePayee(for: intent, with: legacyPayee)
         return results
     }
 }

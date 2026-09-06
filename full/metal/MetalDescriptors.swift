@@ -448,7 +448,18 @@ open class MTLRenderPipelineDescriptor: NSObject, @unchecked Sendable {
             attachment.isBlendingEnabled = false
             attachment.writeMask = .all
         }
+        vertexBuffers[0].mutability = .default
+        fragmentBuffers[0].mutability = .default
+        vertexLinkedFunctions = MTLLinkedFunctions()
+        fragmentLinkedFunctions = MTLLinkedFunctions()
+        binaryArchives = nil
     }
+
+    public var vertexBuffers = MTLPipelineBufferDescriptorArray()
+    public var fragmentBuffers = MTLPipelineBufferDescriptorArray()
+    public var vertexLinkedFunctions: MTLLinkedFunctions! = MTLLinkedFunctions()
+    public var fragmentLinkedFunctions: MTLLinkedFunctions! = MTLLinkedFunctions()
+    public var binaryArchives: [any MTLBinaryArchive]?
 }
 
 /// Nominal Metal 4 pass type for clients such as MetalKit's
@@ -488,6 +499,7 @@ open class MTLComputePipelineDescriptor: NSObject, @unchecked Sendable {
     public var shaderValidation: MTLShaderValidation = .default
     public var linkedFunctions: MTLLinkedFunctions?
     public var stageInputDescriptor: MTLStageInputOutputDescriptor?
+    public let buffers = MTLPipelineBufferDescriptorArray()
 
     public override init() {
         super.init()
@@ -741,6 +753,176 @@ open class MTLVisibleFunctionTableDescriptor: NSObject, @unchecked Sendable {
 }
 
 open class MTLIntersectionFunctionDescriptor: MTLFunctionDescriptor, @unchecked Sendable {}
+
+open class MTLPipelineBufferDescriptor: NSObject, @unchecked Sendable {
+    public var mutability: MTLMutability = .default
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLPipelineBufferDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLPipelineBufferDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(bufferIndex: Int) -> MTLPipelineBufferDescriptor! {
+        get {
+            if let existing = storage[bufferIndex] {
+                return existing
+            }
+            let created = MTLPipelineBufferDescriptor()
+            storage[bufferIndex] = created
+            return created
+        }
+        set {
+            storage[bufferIndex] = newValue
+        }
+    }
+}
+
+open class MTLMeshRenderPipelineDescriptor: NSObject, @unchecked Sendable {
+    public var label: String?
+    public var objectFunction: (any MTLFunction)?
+    public var meshFunction: (any MTLFunction)?
+    public var fragmentFunction: (any MTLFunction)?
+    public let colorAttachments = MTLRenderPipelineColorAttachmentDescriptorArray()
+    public var depthAttachmentPixelFormat: MTLPixelFormat = .invalid
+    public var stencilAttachmentPixelFormat: MTLPixelFormat = .invalid
+    public var rasterSampleCount: Int = 1
+    public var isAlphaToCoverageEnabled: Bool = false
+    public var isAlphaToOneEnabled: Bool = false
+    public var isRasterizationEnabled: Bool = true
+    public var maxVertexAmplificationCount: Int = 1
+    public var maxTotalThreadsPerObjectThreadgroup: Int = 0
+    public var maxTotalThreadsPerMeshThreadgroup: Int = 0
+    public var maxTotalThreadgroupsPerMeshGrid: Int = 0
+    public var payloadMemoryLength: Int = 0
+    public var objectThreadgroupSizeIsMultipleOfThreadExecutionWidth: Bool = false
+    public var meshThreadgroupSizeIsMultipleOfThreadExecutionWidth: Bool = false
+    public var requiredThreadsPerObjectThreadgroup = MTLSize()
+    public var requiredThreadsPerMeshThreadgroup = MTLSize()
+    public var supportIndirectCommandBuffers: Bool = false
+    public var shaderValidation: MTLShaderValidation = .default
+    public var binaryArchives: [any MTLBinaryArchive]?
+    public let objectBuffers = MTLPipelineBufferDescriptorArray()
+    public let meshBuffers = MTLPipelineBufferDescriptorArray()
+    public let fragmentBuffers = MTLPipelineBufferDescriptorArray()
+    public var objectLinkedFunctions: MTLLinkedFunctions! = MTLLinkedFunctions()
+    public var meshLinkedFunctions: MTLLinkedFunctions! = MTLLinkedFunctions()
+    public var fragmentLinkedFunctions: MTLLinkedFunctions! = MTLLinkedFunctions()
+
+    public override init() {
+        super.init()
+    }
+
+    public func reset() {
+        label = nil
+        objectFunction = nil
+        meshFunction = nil
+        fragmentFunction = nil
+        depthAttachmentPixelFormat = .invalid
+        stencilAttachmentPixelFormat = .invalid
+        rasterSampleCount = 1
+        isAlphaToCoverageEnabled = false
+        isAlphaToOneEnabled = false
+        isRasterizationEnabled = true
+        maxVertexAmplificationCount = 1
+        maxTotalThreadsPerObjectThreadgroup = 0
+        maxTotalThreadsPerMeshThreadgroup = 0
+        maxTotalThreadgroupsPerMeshGrid = 0
+        payloadMemoryLength = 0
+        objectThreadgroupSizeIsMultipleOfThreadExecutionWidth = false
+        meshThreadgroupSizeIsMultipleOfThreadExecutionWidth = false
+        requiredThreadsPerObjectThreadgroup = MTLSize()
+        requiredThreadsPerMeshThreadgroup = MTLSize()
+        supportIndirectCommandBuffers = false
+        shaderValidation = .default
+        binaryArchives = nil
+        objectLinkedFunctions = MTLLinkedFunctions()
+        meshLinkedFunctions = MTLLinkedFunctions()
+        fragmentLinkedFunctions = MTLLinkedFunctions()
+        for index in 0..<8 {
+            colorAttachments[index].pixelFormat = .invalid
+            objectBuffers[index].mutability = .default
+            meshBuffers[index].mutability = .default
+            fragmentBuffers[index].mutability = .default
+        }
+    }
+}
+
+open class MTLTileRenderPipelineColorAttachmentDescriptor: NSObject, @unchecked Sendable {
+    public var pixelFormat: MTLPixelFormat = .invalid
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLTileRenderPipelineColorAttachmentDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLTileRenderPipelineColorAttachmentDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(attachmentIndex: Int) -> MTLTileRenderPipelineColorAttachmentDescriptor {
+        get {
+            if let existing = storage[attachmentIndex] {
+                return existing
+            }
+            let created = MTLTileRenderPipelineColorAttachmentDescriptor()
+            storage[attachmentIndex] = created
+            return created
+        }
+        set {
+            storage[attachmentIndex] = newValue
+        }
+    }
+}
+
+open class MTLTileRenderPipelineDescriptor: NSObject, @unchecked Sendable {
+    public var label: String?
+    public var tileFunction: (any MTLFunction)!
+    public let colorAttachments = MTLTileRenderPipelineColorAttachmentDescriptorArray()
+    public var rasterSampleCount: Int = 1
+    public var threadgroupSizeMatchesTileSize: Bool = false
+    public var maxTotalThreadsPerThreadgroup: Int = 0
+    public var maxCallStackDepth: Int = 1
+    public var supportAddingBinaryFunctions: Bool = false
+    public var requiredThreadsPerThreadgroup = MTLSize()
+    public var shaderValidation: MTLShaderValidation = .default
+    public var binaryArchives: [any MTLBinaryArchive]?
+    public var preloadedLibraries: [any MTLDynamicLibrary] = []
+    public var linkedFunctions: MTLLinkedFunctions! = MTLLinkedFunctions()
+    public let tileBuffers = MTLPipelineBufferDescriptorArray()
+
+    public override init() {
+        super.init()
+    }
+
+    public func reset() {
+        label = nil
+        tileFunction = nil
+        rasterSampleCount = 1
+        threadgroupSizeMatchesTileSize = false
+        maxTotalThreadsPerThreadgroup = 0
+        maxCallStackDepth = 1
+        supportAddingBinaryFunctions = false
+        requiredThreadsPerThreadgroup = MTLSize()
+        shaderValidation = .default
+        binaryArchives = nil
+        preloadedLibraries = []
+        linkedFunctions = MTLLinkedFunctions()
+        for index in 0..<8 {
+            colorAttachments[index].pixelFormat = .invalid
+            tileBuffers[index].mutability = .default
+        }
+    }
+}
 
 open class MTLLinkedFunctions: NSObject, @unchecked Sendable {
     public var functions: [any MTLFunction]?

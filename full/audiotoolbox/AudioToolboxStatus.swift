@@ -21,6 +21,7 @@ public let kAudioFileNotOptimizedError: Int32 = atSignedFourCC("optm")
 public let kAudioFileInvalidChunkError: Int32 = atSignedFourCC("chk?")
 public let kAudioFileDoesNotAllow64BitDataSizeError: Int32 = atSignedFourCC("off?")
 public let kAudioFileInvalidPacketOffsetError: Int32 = atSignedFourCC("pck?")
+public let kAudioFileInvalidPacketDependencyError: Int32 = atSignedFourCC("dep?")
 public let kAudioFileInvalidFileError: Int32 = atSignedFourCC("dta?")
 public let kAudioFileOperationNotSupportedError: Int32 = atSignedFourCC("op??")
 public let kAudioFileNotOpenError: Int32 = -38
