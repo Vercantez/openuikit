@@ -139,3 +139,78 @@ file, pixel-tests a constant-red cube, and prints `SCENEKIT_AGENT_RUNTIME_OK`.
 projection NDC, Mult associativity vs Darwin, euler convention vs Apple,
 implicit CA animation, sceneNamed search, physics solver, C ABI exports,
 constraint order vs Apple, `.scn` NSSecureCoding layout).
+
+## Depth pass 2026-09 (wave 8)
+
+SDK depth for `SceneKit` in `full/scenekit/` (2611 IDs). This is a second
+behaviour pass on the first-pass tree (1369 implemented / 350 declared /
+892 deferred / 0 unavailable / 0 not-applicable). It keeps the existing
+focused tests green and adds real graph/physics/action evaluation.
+
+**Coverage after wave 8:** **1455 implemented / 274 declared / 73 deferred /
+0 unavailable / 809 not-applicable**.
+
+Implemented gain vs the previous ledger: **+86**. SwiftUI `SceneView` /
+`s:7SwiftUI4View…` / `_SceneKit_SwiftUI` overlay re-exports (809) moved from
+`deferred` to `not-applicable` with note `SwiftUI cross-import overlay;
+owned by the SwiftUI lane`. Remaining deferred are Metal, GLKit, Darwin
+`simd_float4x4`/`simd_quatf`, UIKit/CoreImage, AVAudio, and UIImage snapshot.
+
+**Top-5 implemented evidence (of 1455):**
+
+| citations | evidence |
+| ---: | --- |
+| 581 | `test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues` |
+| 94 | `test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath` |
+| 62 | `test:full/scenekit/tests/agent/SceneKitGeometryTests.swift#testPrimitiveLayouts` |
+| 61 | `test:full/scenekit/tests/agent/SceneKitPhysicsTests.swift#testPhysicsBookkeeping` |
+| 56 | `test:full/scenekit/tests/agent/SceneKitNodeTests.swift#testNodeTransforms` |
+
+The enum/option-set/C-constant table is the allowed shared value test (581).
+Of the remaining 874 implemented rows, the largest non-enum citation is
+`testVectorMath` at 94 (10.8%, under the 40% bulk-relabel ceiling).
+
+**Behaviour added in this pass:**
+
+- `SCNPhysicsWorld` fixed-`timeStep` semi-implicit Euler; gravity; linear
+  damping; `applyForce`/`applyTorque` (force and impulse); sphere/sphere,
+  box AABB, and sphere-AABB contacts with positional correction and restitution
+  impulse; `SCNPhysicsContactDelegate` begin/update/end; `contactTest` /
+  `contactTestBetween`; `rayTestWithSegment` via the CPU segment tester.
+  `convexSweepTest` stays fail-closed (no GJK).
+- `SCNReplicatorConstraint` position/orientation/scale math.
+- `isHidden` / `opacity` / `categoryBitMask` ancestor propagation
+  (`linux_worldHidden`, `linux_worldOpacity`, `linux_worldCategoryBitMask`)
+  used by hit-test and the CPU rasterizer.
+- `SCNTransaction.flush` zeros `animationDuration` and runs the completion
+  block.
+- `SCNSceneSource.property(forKey:)` returns filesystem dates when a URL
+  exists; `.scn` decode remains fail-closed.
+- `SCNAnimation`/`CAAnimation` data bridging (Linux stand-in, not
+  CoreAnimation playback).
+- Primitive vertex-count rules (box 36, plane 6, sphere 24×48×6, cylinder
+  288, cone 144, torus 24×24×6, pyramid 18) and `SCNText` box fallback
+  sized by character count (not glyph tessellation).
+- `SCNAction.customAction` samples elapsed `t`; `rotateBy` applies Euler
+  deltas; `reversed()` inverts `moveBy`.
+- Camera projection `m33`/`m43` checked against the hand-computed OpenGL
+  formula for `zNear=1`, `zFar=100`.
+- Screen `hitTest` with no scene returns `[]` (GPU/UIImage snapshot still
+  deferred).
+
+**Fail-closed:** Metal/EAGL/GPU render and snapshot, `.scn`/USD/DAE decode,
+convex sweep, particle emission, audio playback, SwiftUI `SceneView`,
+Darwin `simd_float4x4`/`simd_quatf`, GLKit.
+
+**Tests:** `bash full/scenekit/tests/acceptance/test_host.sh`. Every cited
+`func test*()` is synchronous and lives in `tests/agent/*Tests.swift`;
+`SceneKitRuntime.swift` concatenates them for the sealed one-file guest
+runtime.
+
+**Environment:** Swift 6.2.4, `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` still fails in this snapshot
+(missing `scratch/ladder-corpus/focus-ios`). The sealed host gate only
+requires `swiftc`. Active Cursor Build on this VM was
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign listed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). HEAD at start was
+`bff8535c68425cc39fb45cb00d447b0981b57242`.
