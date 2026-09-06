@@ -308,3 +308,84 @@ Added Linux behaviour this pass:
 Still fail-closed / not invented: Apple ML models (person segmentation, animals,
 trajectories, CoreML, pose, classify, text rectangles), homography, learned
 feature prints, async overlay `perform(on:orientation:)`.
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r18`, lane `large-partitioned`, framework `Vision`
+(3584 IDs). Starting commit `39dc25a2769fb88a50f0853964137a4f96d50322`.
+Branch `cursor/port-vision-to-linux-248f`. Next pass on top of the ledger
+already in this tree (2559 implemented / 937 declared / 88 deferred).
+
+`.cursor/verify-cloud-environment.sh` failed on missing
+`scratch/ladder-corpus/focus-ios`. `swiftc` is Swift 6.2.4 /
+`x86_64-unknown-linux-gnu`. The sealed host gate was run directly on this Linux
+host. Active Cursor Build on this VM was
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token (Swift 6.2.4 / linux; the sealed gate refuses stale
+`.build` / `build` / `scratch` products). Exact sealed-gate output:
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_REFERENCE_OK
+VISION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Vision dylib=libVision.dylib
+```
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before (prior wave-8 ledger) | 2559 | 937 | 88 | 0 | 0 |
+| After this pass | **3001** | **525** | **58** | **0** | **0** |
+
+Nondeferred 3526. Gain **+442 implemented**. Every `implemented` row cites
+`test:full/vision/tests/agent/<File>Tests.swift#testName`. SwiftUI overlay
+re-exports were not present (none marked `not-applicable`). Async overlay
+`perform(on:orientation:)` overloads for the newly covered request types stay
+`declared`: tests exercise the same fail-closed or classical path through a
+synchronous `@_spi(OpenUIKitHost)` `performOnHandler` so the sealed runtime
+does not wait on a semaphore.
+
+Top-5 implemented evidence distribution (3001 rows):
+
+1. `VisionOverlayRequestTests.swift#testOverlayRevisionComparableOperators` — 319 (10.6%) — Comparable / range operators on overlay `Revision` enums
+2. `VisionEnumTests.swift#testValueCatalog` — 270 (9.0%) — table-driven enums, revisions, and error codes
+3. `VisionOverlayValueTests.swift#testOverlayPoseValueTypes` — 233 (7.8%) — overlay pose joints/groups
+4. `VisionOverlayValueTests.swift#testOverlayFaceAndDocumentValues` — 172 (5.7%) — face landmarks and document container values
+5. `VisionPoseTests.swift#testHumanBodyPose3DObservationJoints` — 59 (2.0%)
+
+No non-enum test exceeds 40% of implemented rows. The largest newly cited
+focused test is `VisionDepthPassTests.swift#testDetectHumanRectanglesRequestConfig`
+(26 rows).
+
+Added Linux behaviour this pass:
+
+- Overlay request config for lens smudge, face landmarks (constellation /
+  `inputFaceObservations`), human rectangles (`upperBodyOnly`), face capture
+  quality, aesthetics scores, document segmentation, person/foreground instance
+  masks, attention and objectness saliency, overlay `TrackObjectRequest`
+  spacing, and overlay text/horizon extras (`minimumTextHeightFraction`,
+  `recognitionLanguages`).
+- Fail-closed VN classes: `VNDetectHumanRectanglesRequest`,
+  `VNDetectFaceCaptureQualityRequest`, `VNCalculateImageAestheticsScoresRequest`,
+  `VNGeneratePersonInstanceMaskRequest`, `VNGenerateForegroundInstanceMaskRequest`,
+  `VNGenerateObjectnessBasedSaliencyImageRequest`,
+  `VNTrackHomographicImageRegistrationRequest` (`unsupportedRequest`).
+- Sequential `VNTrackTranslationalImageRegistrationRequest` using classical
+  phase correlation (first frame identity; later frames vs previous raster).
+- Observation values from supplied data: overlay `TextObservation` /
+  `HumanObservation` / `SmudgeObservation` / `InstanceMaskObservation` /
+  `SaliencyImageObservation` / `ImageAestheticsScoresObservation`, including
+  instance-mask `generateMask` / `generateMaskedImage` / nearest-neighbour
+  scale-to-image.
+- `VNFaceObservationAccepting`, `VNRequestProgressProviding` (indeterminate;
+  handler stored, no model ticks), `VNRequestRevisionProviding` on
+  `VNObservation`.
+
+Still fail-closed / not invented: Apple ML models (faces, humans, aesthetics,
+document segmentation, instance masks, saliency, lens smudge, OCR),
+homographic tracking, video processor / AVFoundation cadence, Core ML feature
+values, async overlay `perform(on:orientation:)`. Video-processor and Core ML
+feature-value rows remain `deferred` (no video daemon / no Core ML runtime),
+not `unavailable`.
