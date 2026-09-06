@@ -39,6 +39,15 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `origin/agent/fw-identitylookupui` did not exist; this pass publishes that
 branch from the Cursor-created work branch.
 
+`bash full/identitylookupui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=IdentityLookupUI lane=leaf-full symbols=6
+FRAMEWORK_FANOUT_REFERENCE_OK
+IDENTITYLOOKUPUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=IdentityLookupUI dylib=libIdentityLookupUI.dylib
+```
+
 ### What is real
 
 - `ILClassificationUIExtensionContext.isReadyForClassificationResponse`
