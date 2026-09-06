@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 0,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/ColorSync.symbols.json",
+      "relationshipCount": 42,
+      "sha256": "1ceb41faf6e7dd416a4dbb1598bcff85fb8ac5778eaca29c2981748275f65a69",
+      "symbolCount": 207
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "ColorSync",
+  "relationshipCount": 42,
+  "relationshipMultisetSHA256": "7c47cfec51cb1d706a90c2662849e9044b92ec01ca3ce1477811241a4b9140aa",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 207,
+  "symbolMultisetSHA256": "eb73a6512c120a7a9e52665715f8b6cb180f18730646fdc1e7ee592b41a7bb28",
+  "target": "arm64-apple-ios26.0"
+}

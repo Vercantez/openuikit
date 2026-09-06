@@ -1,0 +1,1080 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GeoToolbox",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GeoToolbox",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GeoToolbox",
+        "name": "_LocationEssentials",
+        "printedName": "_LocationEssentials"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GeoToolbox",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "GeoToolbox",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "String",
+                            "printedName": "Swift.String",
+                            "usr": "s:SS"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.String) -> GeoToolbox.PlaceDescriptor.PlaceRepresentation"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GeoToolbox.PlaceDescriptor.PlaceRepresentation.Type) -> (Swift.String) -> GeoToolbox.PlaceDescriptor.PlaceRepresentation"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO7addressyAESScAEmF",
+                "moduleName": "GeoToolbox",
+                "name": "address",
+                "printedName": "address",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO7addressyAESScAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CLLocationCoordinate2D",
+                            "printedName": "_LocationEssentials.CLLocationCoordinate2D",
+                            "usr": "c:@S@CLLocationCoordinate2D"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(_LocationEssentials.CLLocationCoordinate2D) -> GeoToolbox.PlaceDescriptor.PlaceRepresentation"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GeoToolbox.PlaceDescriptor.PlaceRepresentation.Type) -> (_LocationEssentials.CLLocationCoordinate2D) -> GeoToolbox.PlaceDescriptor.PlaceRepresentation"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO10coordinateyAESo22CLLocationCoordinate2DVcAEmF",
+                "moduleName": "GeoToolbox",
+                "name": "coordinate",
+                "printedName": "coordinate",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO10coordinateyAESo22CLLocationCoordinate2DVcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "CLLocation",
+                            "printedName": "_LocationEssentials.CLLocation",
+                            "usr": "c:objc(cs)CLLocation"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(_LocationEssentials.CLLocation) -> GeoToolbox.PlaceDescriptor.PlaceRepresentation"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "PlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GeoToolbox.PlaceDescriptor.PlaceRepresentation.Type) -> (_LocationEssentials.CLLocation) -> GeoToolbox.PlaceDescriptor.PlaceRepresentation"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO14deviceLocationyAESo10CLLocationCcAEmF",
+                "moduleName": "GeoToolbox",
+                "name": "deviceLocation",
+                "printedName": "deviceLocation",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO14deviceLocationyAESo10CLLocationCcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO6encode2toys7Encoder_p_tKF",
+                "moduleName": "GeoToolbox",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "GeoToolbox",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO4fromAEs7Decoder_p_tKcfc"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO2eeoiySbAE_AEtFZ",
+                "moduleName": "GeoToolbox",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO2eeoiySbAE_AEtFZ"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV0C14RepresentationO",
+            "moduleName": "GeoToolbox",
+            "name": "PlaceRepresentation",
+            "printedName": "PlaceRepresentation",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SupportingPlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "String",
+                                "printedName": "Swift.String",
+                                "usr": "s:SS"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Dictionary",
+                            "printedName": "[Swift.String : Swift.String]",
+                            "usr": "s:SD"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "([Swift.String : Swift.String]) -> GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "SupportingPlaceRepresentation",
+                            "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                            "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation.Type) -> ([Swift.String : Swift.String]) -> GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO18serviceIdentifiersyAESDyS2SGcAEmF",
+                "moduleName": "GeoToolbox",
+                "name": "serviceIdentifiers",
+                "printedName": "serviceIdentifiers",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO18serviceIdentifiersyAESDyS2SGcAEmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SupportingPlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SupportingPlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO2eeoiySbAE_AEtFZ",
+                "moduleName": "GeoToolbox",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Encoder",
+                    "printedName": "any Swift.Encoder",
+                    "usr": "s:s7EncoderP"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO6encode2toys7Encoder_p_tKF",
+                "moduleName": "GeoToolbox",
+                "name": "encode",
+                "printedName": "encode(to:)",
+                "throwing": true,
+                "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO6encode2toys7Encoder_p_tKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SupportingPlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Decoder",
+                    "printedName": "any Swift.Decoder",
+                    "usr": "s:s7DecoderP"
+                  }
+                ],
+                "declKind": "Constructor",
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO4fromAEs7Decoder_p_tKcfc",
+                "moduleName": "GeoToolbox",
+                "name": "init",
+                "printedName": "init(from:)",
+                "throwing": true,
+                "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO4fromAEs7Decoder_p_tKcfc"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSe",
+                "name": "Decodable",
+                "printedName": "Decodable",
+                "usr": "s:Se"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSE",
+                "name": "Encodable",
+                "printedName": "Encodable",
+                "usr": "s:SE"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declKind": "Enum",
+            "kind": "TypeDecl",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO",
+            "moduleName": "GeoToolbox",
+            "name": "SupportingPlaceRepresentation",
+            "printedName": "SupportingPlaceRepresentation",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PlaceDescriptor",
+                "printedName": "GeoToolbox.PlaceDescriptor",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[GeoToolbox.PlaceDescriptor.PlaceRepresentation]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SupportingPlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV15representations10commonName25supportingRepresentationsACSayAC0C14RepresentationOG_SSSgSayAC010SupportingcJ0OGtcfc",
+            "moduleName": "GeoToolbox",
+            "name": "init",
+            "printedName": "init(representations:commonName:supportingRepresentations:)",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV15representations10commonName25supportingRepresentationsACSayAC0C14RepresentationOG_SSSgSayAC010SupportingcJ0OGtcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PlaceDescriptor",
+                "printedName": "GeoToolbox.PlaceDescriptor",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "PlaceDescriptor",
+                "printedName": "GeoToolbox.PlaceDescriptor",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV2eeoiySbAC_ACtFZ",
+            "moduleName": "GeoToolbox",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:10GeoToolbox15PlaceDescriptorV2eeoiySbAC_ACtFZ"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV10commonNameSSSgvg",
+                "moduleName": "GeoToolbox",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV10commonNameSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV10commonNameSSSgvp",
+            "moduleName": "GeoToolbox",
+            "name": "commonName",
+            "printedName": "commonName",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV10commonNameSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "PlaceRepresentation",
+                        "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                        "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[GeoToolbox.PlaceDescriptor.PlaceRepresentation]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV15representationsSayAC0C14RepresentationOGvg",
+                "moduleName": "GeoToolbox",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV15representationsSayAC0C14RepresentationOGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "PlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.PlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV0C14RepresentationO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[GeoToolbox.PlaceDescriptor.PlaceRepresentation]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV15representationsSayAC0C14RepresentationOGvp",
+            "moduleName": "GeoToolbox",
+            "name": "representations",
+            "printedName": "representations",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV15representationsSayAC0C14RepresentationOGvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "SupportingPlaceRepresentation",
+                        "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                        "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV25supportingRepresentationsSayAC010SupportingC14RepresentationOGvg",
+                "moduleName": "GeoToolbox",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV25supportingRepresentationsSayAC010SupportingC14RepresentationOGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "SupportingPlaceRepresentation",
+                    "printedName": "GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation",
+                    "usr": "s:10GeoToolbox15PlaceDescriptorV010SupportingC14RepresentationO"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[GeoToolbox.PlaceDescriptor.SupportingPlaceRepresentation]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV25supportingRepresentationsSayAC010SupportingC14RepresentationOGvp",
+            "moduleName": "GeoToolbox",
+            "name": "supportingRepresentations",
+            "printedName": "supportingRepresentations",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV25supportingRepresentationsSayAC010SupportingC14RepresentationOGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Encoder",
+                "printedName": "any Swift.Encoder",
+                "usr": "s:s7EncoderP"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV6encode2toys7Encoder_p_tKF",
+            "moduleName": "GeoToolbox",
+            "name": "encode",
+            "printedName": "encode(to:)",
+            "throwing": true,
+            "usr": "s:10GeoToolbox15PlaceDescriptorV6encode2toys7Encoder_p_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "PlaceDescriptor",
+                "printedName": "GeoToolbox.PlaceDescriptor",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Decoder",
+                "printedName": "any Swift.Decoder",
+                "usr": "s:s7DecoderP"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV4fromACs7Decoder_p_tKcfc",
+            "moduleName": "GeoToolbox",
+            "name": "init",
+            "printedName": "init(from:)",
+            "throwing": true,
+            "usr": "s:10GeoToolbox15PlaceDescriptorV4fromACs7Decoder_p_tKcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.String?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV7addressSSSgvg",
+                "moduleName": "GeoToolbox",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV7addressSSSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV7addressSSSgvp",
+            "moduleName": "GeoToolbox",
+            "name": "address",
+            "printedName": "address",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV7addressSSSgvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CLLocationCoordinate2D",
+                        "printedName": "_LocationEssentials.CLLocationCoordinate2D",
+                        "usr": "c:@S@CLLocationCoordinate2D"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "_LocationEssentials.CLLocationCoordinate2D?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$s10GeoToolbox15PlaceDescriptorV10coordinateSo22CLLocationCoordinate2DVSgvg",
+                "moduleName": "GeoToolbox",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:10GeoToolbox15PlaceDescriptorV10coordinateSo22CLLocationCoordinate2DVSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CLLocationCoordinate2D",
+                    "printedName": "_LocationEssentials.CLLocationCoordinate2D",
+                    "usr": "c:@S@CLLocationCoordinate2D"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "_LocationEssentials.CLLocationCoordinate2D?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV10coordinateSo22CLLocationCoordinate2DVSgvp",
+            "moduleName": "GeoToolbox",
+            "name": "coordinate",
+            "printedName": "coordinate",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV10coordinateSo22CLLocationCoordinate2DVSgvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s10GeoToolbox15PlaceDescriptorV17serviceIdentifier3forSSSgSS_tF",
+            "moduleName": "GeoToolbox",
+            "name": "serviceIdentifier",
+            "printedName": "serviceIdentifier(for:)",
+            "usr": "s:10GeoToolbox15PlaceDescriptorV17serviceIdentifier3forSSSgSS_tF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSe",
+            "name": "Decodable",
+            "printedName": "Decodable",
+            "usr": "s:Se"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSE",
+            "name": "Encodable",
+            "printedName": "Encodable",
+            "usr": "s:SE"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "26.0",
+        "intro_iOS": "26.0",
+        "intro_tvOS": "26.0",
+        "intro_watchOS": "26.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s10GeoToolbox15PlaceDescriptorV",
+        "moduleName": "GeoToolbox",
+        "name": "PlaceDescriptor",
+        "printedName": "PlaceDescriptor",
+        "usr": "s:10GeoToolbox15PlaceDescriptorV"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "GeoToolbox",
+    "printedName": "GeoToolbox"
+  }
+}

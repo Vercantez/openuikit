@@ -1,0 +1,7 @@
+full/livecommunicationkit/Conversation.swift
+full/livecommunicationkit/ConversationAction.swift
+full/livecommunicationkit/ConversationHistory.swift
+full/livecommunicationkit/ConversationManager.swift
+full/livecommunicationkit/Handle.swift
+full/livecommunicationkit/LiveCommunicationKit.swift
+full/livecommunicationkit/Telephony.swift

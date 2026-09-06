@@ -1,0 +1,3989 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CarKey",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CarKey",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CarKey",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "CarKey",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSession",
+                "printedName": "CarKey.CarKeyRemoteControlSession",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSessionDelegate",
+                "printedName": "any CarKey.CarKeyRemoteControlSessionDelegate",
+                "usr": "s:6CarKey0aB28RemoteControlSessionDelegateP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "ClosedRange",
+                    "printedName": "Swift.ClosedRange<Swift.Int>",
+                    "usr": "s:SN"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.ClosedRange<Swift.Int>?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "DispatchQueue",
+                    "printedName": "Dispatch.DispatchQueue",
+                    "usr": "c:objc(cs)OS_dispatch_queue"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Dispatch.DispatchQueue?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB13RemoteControlC5start8delegate17subscriptionRange4withAA0abcD7SessionCAA0abcdJ8Delegate_p_SNySiGSgSo17OS_dispatch_queueCSgtYaKFZ",
+            "moduleName": "CarKey",
+            "name": "start",
+            "printedName": "start(delegate:subscriptionRange:with:)",
+            "static": true,
+            "throwing": true,
+            "usr": "s:6CarKey0aB13RemoteControlC5start8delegate17subscriptionRange4withAA0abcD7SessionCAA0abcdJ8Delegate_p_SNySiGSgSo17OS_dispatch_queueCSgtYaKFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB13RemoteControlC019registerForLaunchOnaB5EventyyKFZ",
+            "moduleName": "CarKey",
+            "name": "registerForLaunchOnCarKeyEvent",
+            "printedName": "registerForLaunchOnCarKeyEvent()",
+            "static": true,
+            "throwing": true,
+            "usr": "s:6CarKey0aB13RemoteControlC019registerForLaunchOnaB5EventyyKFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "26.0",
+            "intro_iOS": "26.0",
+            "intro_watchOS": "26.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB13RemoteControlC021unregisterForLaunchOnaB5EventyyKFZ",
+            "moduleName": "CarKey",
+            "name": "unregisterForLaunchOnCarKeyEvent",
+            "printedName": "unregisterForLaunchOnCarKeyEvent()",
+            "static": true,
+            "throwing": true,
+            "usr": "s:6CarKey0aB13RemoteControlC021unregisterForLaunchOnaB5EventyyKFZ"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey0aB13RemoteControlC",
+        "moduleName": "CarKey",
+        "name": "CarKeyRemoteControl",
+        "printedName": "CarKeyRemoteControl",
+        "usr": "s:6CarKey0aB13RemoteControlC"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "VehicleReport",
+                        "printedName": "CarKey.VehicleReport",
+                        "usr": "s:6CarKey13VehicleReportV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[CarKey.VehicleReport]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC14vehicleReportsSayAA13VehicleReportVGvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "throwing": true,
+                "usr": "s:6CarKey0aB20RemoteControlSessionC14vehicleReportsSayAA13VehicleReportVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "VehicleReport",
+                    "printedName": "CarKey.VehicleReport",
+                    "usr": "s:6CarKey13VehicleReportV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CarKey.VehicleReport]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC14vehicleReportsSayAA13VehicleReportVGvp",
+            "moduleName": "CarKey",
+            "name": "vehicleReports",
+            "printedName": "vehicleReports",
+            "usr": "s:6CarKey0aB20RemoteControlSessionC14vehicleReportsSayAA13VehicleReportVGvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC3endyyKF",
+            "moduleName": "CarKey",
+            "name": "end",
+            "printedName": "end()",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC3endyyKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ExecutionRequest",
+                "printedName": "CarKey.RemoteKeylessEntryAction.ExecutionRequest",
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV16ExecutionRequestC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RemoteKeylessEntryAction",
+                "printedName": "CarKey.RemoteKeylessEntryAction",
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC7performyAA0C18KeylessEntryActionV16ExecutionRequestCAFKF",
+            "moduleName": "CarKey",
+            "name": "perform",
+            "printedName": "perform(_:)",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC7performyAA0C18KeylessEntryActionV16ExecutionRequestCAFKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "EnduringExecutionRequest",
+                "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RemoteKeylessEntryConfigurableEnduringAction",
+                "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ContinuationStrategy",
+                "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "intro_watchOS": "11.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC7perform_20continuationStrategyAA0C38KeylessEntryConfigurableEnduringActionV0L16ExecutionRequestCAG_AC012ContinuationH0OtKF",
+            "moduleName": "CarKey",
+            "name": "perform",
+            "printedName": "perform(_:continuationStrategy:)",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC7perform_20continuationStrategyAA0C38KeylessEntryConfigurableEnduringActionV0L16ExecutionRequestCAG_AC012ContinuationH0OtKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "EnduringExecutionRequest",
+                "printedName": "CarKey.RemoteKeylessEntryEnduringAction.EnduringExecutionRequest",
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RemoteKeylessEntryEnduringAction",
+                "printedName": "CarKey.RemoteKeylessEntryEnduringAction",
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "deprecated": true,
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC7performyAA0C26KeylessEntryEnduringActionV0I16ExecutionRequestCAFKF",
+            "moduleName": "CarKey",
+            "name": "perform",
+            "printedName": "perform(_:)",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC7performyAA0C26KeylessEntryEnduringActionV0I16ExecutionRequestCAFKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC19sendPassthroughData_9toVehicley10Foundation0H0V_SStKF",
+            "moduleName": "CarKey",
+            "name": "sendPassthroughData",
+            "printedName": "sendPassthroughData(_:toVehicle:)",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC19sendPassthroughData_9toVehicley10Foundation0H0V_SStKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC23isPassiveEntryAvailable10forVehicleSbSS_tKF",
+            "moduleName": "CarKey",
+            "name": "isPassiveEntryAvailable",
+            "printedName": "isPassiveEntryAvailable(forVehicle:)",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC23isPassiveEntryAvailable10forVehicleSbSS_tKF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Attestation",
+                "printedName": "CarKey.CarKeyRemoteControlSession.Attestation",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "intro_watchOS": "11.0",
+            "isOpen": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC4sign4data10forVehicleAC11AttestationV10Foundation4DataV_SStKF",
+            "moduleName": "CarKey",
+            "name": "sign",
+            "printedName": "sign(data:forVehicle:)",
+            "throwing": true,
+            "usr": "s:6CarKey0aB20RemoteControlSessionC4sign4data10forVehicleAC11AttestationV10Foundation4DataV_SStKF"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "String",
+                        "printedName": "Swift.String",
+                        "usr": "s:SS"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV19appBundleIdentifierSSvg",
+                    "moduleName": "CarKey",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV19appBundleIdentifierSSvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV19appBundleIdentifierSSvp",
+                "moduleName": "CarKey",
+                "name": "appBundleIdentifier",
+                "printedName": "appBundleIdentifier",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV19appBundleIdentifierSSvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV5nonce10Foundation4DataVvg",
+                    "moduleName": "CarKey",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV5nonce10Foundation4DataVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV5nonce10Foundation4DataVvp",
+                "moduleName": "CarKey",
+                "name": "nonce",
+                "printedName": "nonce",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV5nonce10Foundation4DataVvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV10signedData10Foundation0H0Vvg",
+                    "moduleName": "CarKey",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV10signedData10Foundation0H0Vvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV10signedData10Foundation0H0Vvp",
+                "moduleName": "CarKey",
+                "name": "signedData",
+                "printedName": "signedData",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV10signedData10Foundation0H0Vvp"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Data",
+                        "printedName": "Foundation.Data",
+                        "usr": "s:10Foundation4DataV"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV9signature10Foundation4DataVvg",
+                    "moduleName": "CarKey",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV9signature10Foundation4DataVvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "declAttributes": [
+                  "HasStorage"
+                ],
+                "declKind": "Var",
+                "hasStorage": true,
+                "isLet": true,
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV9signature10Foundation4DataVvp",
+                "moduleName": "CarKey",
+                "name": "signature",
+                "printedName": "signature",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV9signature10Foundation4DataVvp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Struct",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "intro_watchOS": "11.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC11AttestationV",
+            "moduleName": "CarKey",
+            "name": "Attestation",
+            "printedName": "Attestation",
+            "usr": "s:6CarKey0aB20RemoteControlSessionC11AttestationV"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContinuationStrategy",
+                        "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                        "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ContinuationStrategy",
+                            "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                            "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CarKey.CarKeyRemoteControlSession.ContinuationStrategy.Type) -> CarKey.CarKeyRemoteControlSession.ContinuationStrategy"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO9automaticyA2EmF",
+                "moduleName": "CarKey",
+                "name": "automatic",
+                "printedName": "automatic",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO9automaticyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "ContinuationStrategy",
+                        "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                        "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "ContinuationStrategy",
+                            "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                            "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(CarKey.CarKeyRemoteControlSession.ContinuationStrategy.Type) -> CarKey.CarKeyRemoteControlSession.ContinuationStrategy"
+                  }
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO6manualyA2EmF",
+                "moduleName": "CarKey",
+                "name": "manual",
+                "printedName": "manual",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO6manualyA2EmF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContinuationStrategy",
+                    "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ContinuationStrategy",
+                    "printedName": "CarKey.CarKeyRemoteControlSession.ContinuationStrategy",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO2eeoiySbAE_AEtFZ",
+                "moduleName": "CarKey",
+                "name": "==",
+                "printedName": "==(_:_:)",
+                "static": true,
+                "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO2eeoiySbAE_AEtFZ"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Hasher",
+                    "paramValueOwnership": "InOut",
+                    "printedName": "Swift.Hasher",
+                    "usr": "s:s6HasherV"
+                  }
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO4hash4intoys6HasherVz_tF",
+                "moduleName": "CarKey",
+                "name": "hash",
+                "printedName": "hash(into:)",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO4hash4intoys6HasherVz_tF"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO9hashValueSivg",
+                    "moduleName": "CarKey",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO9hashValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO9hashValueSivp",
+                "moduleName": "CarKey",
+                "name": "hashValue",
+                "printedName": "hashValue",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO9hashValueSivp"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Enum",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "intro_watchOS": "11.0",
+            "kind": "TypeDecl",
+            "mangledName": "$s6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO",
+            "moduleName": "CarKey",
+            "name": "ContinuationStrategy",
+            "printedName": "ContinuationStrategy",
+            "usr": "s:6CarKey0aB20RemoteControlSessionC20ContinuationStrategyO"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Class",
+        "hasMissingDesignatedInitializers": true,
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey0aB20RemoteControlSessionC",
+        "moduleName": "CarKey",
+        "name": "CarKeyRemoteControlSession",
+        "printedName": "CarKeyRemoteControlSession",
+        "usr": "s:6CarKey0aB20RemoteControlSessionC"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSession",
+                "printedName": "CarKey.CarKeyRemoteControlSession",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyErrorCode",
+                "printedName": "CarKey.CarKeyErrorCode",
+                "usr": "s:6CarKey0aB9ErrorCodeO"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : CarKey.CarKeyRemoteControlSessionDelegate>",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_22didInvalidateWithErroryAA0abcdE0C_AA0abK4CodeOtF",
+            "moduleName": "CarKey",
+            "name": "remoteControlSession",
+            "printedName": "remoteControlSession(_:didInvalidateWithError:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_22didInvalidateWithErroryAA0abcdE0C_AA0abK4CodeOtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSession",
+                "printedName": "CarKey.CarKeyRemoteControlSession",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : CarKey.CarKeyRemoteControlSessionDelegate>",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "intro_watchOS": "11.0",
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_09didCreateB010forVehicleyAA0abcdE0C_S2StF",
+            "moduleName": "CarKey",
+            "name": "remoteControlSession",
+            "printedName": "remoteControlSession(_:didCreateKey:forVehicle:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_09didCreateB010forVehicleyAA0abcdE0C_S2StF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSession",
+                "printedName": "CarKey.CarKeyRemoteControlSession",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "VehicleReport",
+                "printedName": "CarKey.VehicleReport",
+                "usr": "s:6CarKey13VehicleReportV"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : CarKey.CarKeyRemoteControlSessionDelegate>",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_22vehicleDidUpdateReportyAA0abcdE0C_AA07VehicleK0VtF",
+            "moduleName": "CarKey",
+            "name": "remoteControlSession",
+            "printedName": "remoteControlSession(_:vehicleDidUpdateReport:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_22vehicleDidUpdateReportyAA0abcdE0C_AA07VehicleK0VtF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSession",
+                "printedName": "CarKey.CarKeyRemoteControlSession",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Data",
+                "printedName": "Foundation.Data",
+                "usr": "s:10Foundation4DataV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : CarKey.CarKeyRemoteControlSessionDelegate>",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_25didReceivePassthroughData11fromVehicleyAA0abcdE0C_10Foundation0K0VSStF",
+            "moduleName": "CarKey",
+            "name": "remoteControlSession",
+            "printedName": "remoteControlSession(_:didReceivePassthroughData:fromVehicle:)",
+            "protocolReq": true,
+            "reqNewWitnessTableEntry": true,
+            "usr": "s:6CarKey0aB28RemoteControlSessionDelegateP06remotedE0_25didReceivePassthroughData11fromVehicleyAA0abcdE0C_10Foundation0K0VSStF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyRemoteControlSession",
+                "printedName": "CarKey.CarKeyRemoteControlSession",
+                "usr": "s:6CarKey0aB20RemoteControlSessionC"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "genericSig": "<Self where Self : CarKey.CarKeyRemoteControlSessionDelegate>",
+            "intro_Macosx": "15.0",
+            "intro_iOS": "18.0",
+            "intro_watchOS": "11.0",
+            "isFromExtension": true,
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB28RemoteControlSessionDelegatePAAE06remotedE0_09didCreateB010forVehicleyAA0abcdE0C_S2StF",
+            "moduleName": "CarKey",
+            "name": "remoteControlSession",
+            "printedName": "remoteControlSession(_:didCreateKey:forVehicle:)",
+            "usr": "s:6CarKey0aB28RemoteControlSessionDelegatePAAE06remotedE0_09didCreateB010forVehicleyAA0abcdE0C_S2StF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Protocol",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey0aB28RemoteControlSessionDelegateP",
+        "moduleName": "CarKey",
+        "name": "CarKeyRemoteControlSessionDelegate",
+        "printedName": "CarKeyRemoteControlSessionDelegate",
+        "usr": "s:6CarKey0aB28RemoteControlSessionDelegateP"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey13VehicleReportV10identifierSSvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey13VehicleReportV10identifierSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey13VehicleReportV10identifierSSvp",
+            "moduleName": "CarKey",
+            "name": "identifier",
+            "printedName": "identifier",
+            "usr": "s:6CarKey13VehicleReportV10identifierSSvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey13VehicleReportV11isConnectedSbvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey13VehicleReportV11isConnectedSbvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s6CarKey13VehicleReportV11isConnectedSbvp",
+            "moduleName": "CarKey",
+            "name": "isConnected",
+            "printedName": "isConnected",
+            "usr": "s:6CarKey13VehicleReportV11isConnectedSbvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "FunctionIdentifier",
+                        "printedName": "CarKey.FunctionIdentifier",
+                        "usr": "s:6CarKey18FunctionIdentifierV"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Array",
+                    "printedName": "[CarKey.FunctionIdentifier]",
+                    "usr": "s:Sa"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey13VehicleReportV18supportedFunctionsSayAA18FunctionIdentifierVGvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey13VehicleReportV18supportedFunctionsSayAA18FunctionIdentifierVGvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FunctionIdentifier",
+                    "printedName": "CarKey.FunctionIdentifier",
+                    "usr": "s:6CarKey18FunctionIdentifierV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[CarKey.FunctionIdentifier]",
+                "usr": "s:Sa"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s6CarKey13VehicleReportV18supportedFunctionsSayAA18FunctionIdentifierVGvp",
+            "moduleName": "CarKey",
+            "name": "supportedFunctions",
+            "printedName": "supportedFunctions",
+            "usr": "s:6CarKey13VehicleReportV18supportedFunctionsSayAA18FunctionIdentifierVGvp"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FunctionStatus",
+                    "printedName": "CarKey.FunctionStatus",
+                    "usr": "s:6CarKey14FunctionStatusV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "CarKey.FunctionStatus?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s6CarKey13VehicleReportV6status3forAA14FunctionStatusVSgAA0G10IdentifierV_tKF",
+            "moduleName": "CarKey",
+            "name": "status",
+            "printedName": "status(for:)",
+            "throwing": true,
+            "usr": "s:6CarKey13VehicleReportV6status3forAA14FunctionStatusVSgAA0G10IdentifierV_tKF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Data",
+                    "printedName": "Foundation.Data",
+                    "usr": "s:10Foundation4DataV"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Foundation.Data?",
+                "usr": "s:Sq"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s6CarKey13VehicleReportV15proprietaryData3for10Foundation0F0VSgAA18FunctionIdentifierV_tKF",
+            "moduleName": "CarKey",
+            "name": "proprietaryData",
+            "printedName": "proprietaryData(for:)",
+            "throwing": true,
+            "usr": "s:6CarKey13VehicleReportV15proprietaryData3for10Foundation0F0VSgAA18FunctionIdentifierV_tKF"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey13VehicleReportV",
+        "moduleName": "CarKey",
+        "name": "VehicleReport",
+        "printedName": "VehicleReport",
+        "usr": "s:6CarKey13VehicleReportV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FunctionIdentifier",
+                    "printedName": "CarKey.FunctionIdentifier",
+                    "usr": "s:6CarKey18FunctionIdentifierV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey24RemoteKeylessEntryActionV10functionIDAA18FunctionIdentifierVvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV10functionIDAA18FunctionIdentifierVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey24RemoteKeylessEntryActionV10functionIDAA18FunctionIdentifierVvp",
+            "moduleName": "CarKey",
+            "name": "functionID",
+            "printedName": "functionID",
+            "usr": "s:6CarKey24RemoteKeylessEntryActionV10functionIDAA18FunctionIdentifierVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ActionIdentifier",
+                    "printedName": "CarKey.ActionIdentifier",
+                    "usr": "s:6CarKey16ActionIdentifierV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey24RemoteKeylessEntryActionV8actionIDAA0F10IdentifierVvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV8actionIDAA0F10IdentifierVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey24RemoteKeylessEntryActionV8actionIDAA0F10IdentifierVvp",
+            "moduleName": "CarKey",
+            "name": "actionID",
+            "printedName": "actionID",
+            "usr": "s:6CarKey24RemoteKeylessEntryActionV8actionIDAA0F10IdentifierVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey24RemoteKeylessEntryActionV18recipientVehicleIDSSvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV18recipientVehicleIDSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey24RemoteKeylessEntryActionV18recipientVehicleIDSSvp",
+            "moduleName": "CarKey",
+            "name": "recipientVehicleID",
+            "printedName": "recipientVehicleID",
+            "usr": "s:6CarKey24RemoteKeylessEntryActionV18recipientVehicleIDSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RemoteKeylessEntryAction",
+                "printedName": "CarKey.RemoteKeylessEntryAction",
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey24RemoteKeylessEntryActionV10functionID06actionH007vehicleH0AcA18FunctionIdentifierV_AA0fL0VSStcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(functionID:actionID:vehicleID:)",
+            "usr": "s:6CarKey24RemoteKeylessEntryActionV10functionID06actionH007vehicleH0AcA18FunctionIdentifierV_AA0fL0VSStcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ExecutionStatus",
+                    "printedName": "CarKey.ExecutionStatus",
+                    "usr": "s:6CarKey15ExecutionStatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey24RemoteKeylessEntryActionV16ExecutionRequestC7resultsAA0G6StatusVyYaKF",
+                "moduleName": "CarKey",
+                "name": "results",
+                "printedName": "results()",
+                "throwing": true,
+                "usr": "s:6CarKey24RemoteKeylessEntryActionV16ExecutionRequestC7resultsAA0G6StatusVyYaKF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s6CarKey24RemoteKeylessEntryActionV16ExecutionRequestC",
+            "moduleName": "CarKey",
+            "name": "ExecutionRequest",
+            "printedName": "ExecutionRequest",
+            "usr": "s:6CarKey24RemoteKeylessEntryActionV16ExecutionRequestC"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey24RemoteKeylessEntryActionV",
+        "moduleName": "CarKey",
+        "name": "RemoteKeylessEntryAction",
+        "printedName": "RemoteKeylessEntryAction",
+        "usr": "s:6CarKey24RemoteKeylessEntryActionV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FunctionIdentifier",
+                    "printedName": "CarKey.FunctionIdentifier",
+                    "usr": "s:6CarKey18FunctionIdentifierV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV10functionIDAA18FunctionIdentifierVvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV10functionIDAA18FunctionIdentifierVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV10functionIDAA18FunctionIdentifierVvp",
+            "moduleName": "CarKey",
+            "name": "functionID",
+            "printedName": "functionID",
+            "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV10functionIDAA18FunctionIdentifierVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ActionIdentifier",
+                    "printedName": "CarKey.ActionIdentifier",
+                    "usr": "s:6CarKey16ActionIdentifierV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV8actionIDAA0H10IdentifierVvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV8actionIDAA0H10IdentifierVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV8actionIDAA0H10IdentifierVvp",
+            "moduleName": "CarKey",
+            "name": "actionID",
+            "printedName": "actionID",
+            "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV8actionIDAA0H10IdentifierVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV18recipientVehicleIDSSvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV18recipientVehicleIDSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV18recipientVehicleIDSSvp",
+            "moduleName": "CarKey",
+            "name": "recipientVehicleID",
+            "printedName": "recipientVehicleID",
+            "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV18recipientVehicleIDSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RemoteKeylessEntryConfigurableEnduringAction",
+                "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV10functionID06actionJ007vehicleJ0AcA18FunctionIdentifierV_AA0hN0VSStcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(functionID:actionID:vehicleID:)",
+            "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV10functionID06actionJ007vehicleJ0AcA18FunctionIdentifierV_AA0hN0VSStcfc"
+          },
+          {
+            "children": [
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Event",
+                            "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event",
+                            "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "AsyncStream",
+                        "printedName": "_Concurrency.AsyncStream<CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event>",
+                        "usr": "s:ScS"
+                      }
+                    ],
+                    "declAttributes": [
+                      "Final"
+                    ],
+                    "declKind": "Accessor",
+                    "kind": "Accessor",
+                    "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC11eventStreamScSyAE5EventOGvg",
+                    "moduleName": "CarKey",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC11eventStreamScSyAE5EventOGvg"
+                  }
+                ],
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Event",
+                        "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event",
+                        "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "AsyncStream",
+                    "printedName": "_Concurrency.AsyncStream<CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event>",
+                    "usr": "s:ScS"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Var",
+                "kind": "Var",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC11eventStreamScSyAE5EventOGvp",
+                "moduleName": "CarKey",
+                "name": "eventStream",
+                "printedName": "eventStream",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC11eventStreamScSyAE5EventOGvp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ExecutionStatus",
+                    "printedName": "CarKey.ExecutionStatus",
+                    "usr": "s:6CarKey15ExecutionStatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC7resultsAA0I6StatusVyYaKF",
+                "moduleName": "CarKey",
+                "name": "results",
+                "printedName": "results()",
+                "throwing": true,
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC7resultsAA0I6StatusVyYaKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC4stopyyKF",
+                "moduleName": "CarKey",
+                "name": "stop",
+                "printedName": "stop()",
+                "throwing": true,
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC4stopyyKF"
+              },
+              {
+                "children": [
+                  {
+                    "accessors": [
+                      {
+                        "accessorKind": "get",
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Data",
+                                "printedName": "Foundation.Data",
+                                "usr": "s:10Foundation4DataV"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Optional",
+                            "printedName": "Foundation.Data?",
+                            "usr": "s:Sq"
+                          }
+                        ],
+                        "declKind": "Accessor",
+                        "implicit": true,
+                        "kind": "Accessor",
+                        "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V4data10Foundation4DataVSgvg",
+                        "moduleName": "CarKey",
+                        "name": "Get",
+                        "printedName": "Get()",
+                        "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V4data10Foundation4DataVSgvg"
+                      }
+                    ],
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.Data?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declAttributes": [
+                      "HasStorage"
+                    ],
+                    "declKind": "Var",
+                    "hasStorage": true,
+                    "isLet": true,
+                    "kind": "Var",
+                    "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V4data10Foundation4DataVSgvp",
+                    "moduleName": "CarKey",
+                    "name": "data",
+                    "printedName": "data",
+                    "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V4data10Foundation4DataVSgvp"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Data",
+                            "printedName": "Foundation.Data",
+                            "usr": "s:10Foundation4DataV"
+                          }
+                        ],
+                        "hasDefaultArg": true,
+                        "kind": "TypeNominal",
+                        "name": "Optional",
+                        "printedName": "Foundation.Data?",
+                        "usr": "s:Sq"
+                      }
+                    ],
+                    "declKind": "Func",
+                    "funcSelfKind": "NonMutating",
+                    "kind": "Function",
+                    "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V7confirmyy10Foundation4DataVSgKF",
+                    "moduleName": "CarKey",
+                    "name": "confirm",
+                    "printedName": "confirm(_:)",
+                    "throwing": true,
+                    "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V7confirmyy10Foundation4DataVSgKF"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Struct",
+                "kind": "TypeDecl",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V",
+                "moduleName": "CarKey",
+                "name": "ContinuationRequest",
+                "printedName": "ContinuationRequest",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Event",
+                                "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event",
+                                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO"
+                              },
+                              {
+                                "kind": "TypeNominal",
+                                "name": "ContinuationRequest",
+                                "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.ContinuationRequest",
+                                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC012ContinuationJ0V"
+                              }
+                            ],
+                            "kind": "TypeFunc",
+                            "name": "Function",
+                            "printedName": "(CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.ContinuationRequest) -> CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event"
+                          },
+                          {
+                            "children": [
+                              {
+                                "kind": "TypeNominal",
+                                "name": "Event",
+                                "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event",
+                                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO"
+                              }
+                            ],
+                            "kind": "TypeNominal",
+                            "name": "Metatype",
+                            "printedName": "CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event.Type"
+                          }
+                        ],
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event.Type) -> (CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.ContinuationRequest) -> CarKey.RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event"
+                      }
+                    ],
+                    "declKind": "EnumElement",
+                    "kind": "Var",
+                    "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO020receivedContinuationJ0yAgE0mJ0VcAGmF",
+                    "moduleName": "CarKey",
+                    "name": "receivedContinuationRequest",
+                    "printedName": "receivedContinuationRequest",
+                    "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO020receivedContinuationJ0yAgE0mJ0VcAGmF"
+                  }
+                ],
+                "conformances": [
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss8CopyableP",
+                    "name": "Copyable",
+                    "printedName": "Copyable",
+                    "usr": "s:s8CopyableP"
+                  },
+                  {
+                    "kind": "Conformance",
+                    "mangledName": "$ss9EscapableP",
+                    "name": "Escapable",
+                    "printedName": "Escapable",
+                    "usr": "s:s9EscapableP"
+                  }
+                ],
+                "declKind": "Enum",
+                "kind": "TypeDecl",
+                "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO",
+                "moduleName": "CarKey",
+                "name": "Event",
+                "printedName": "Event",
+                "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC5EventO"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "kind": "Conformance",
+                "name": "NSObjectProtocol",
+                "printedName": "NSObjectProtocol",
+                "usr": "c:objc(pl)NSObject"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss7CVarArgP",
+                "name": "CVarArg",
+                "printedName": "CVarArg",
+                "usr": "s:s7CVarArgP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss23CustomStringConvertibleP",
+                "name": "CustomStringConvertible",
+                "printedName": "CustomStringConvertible",
+                "usr": "s:s23CustomStringConvertibleP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss28CustomDebugStringConvertibleP",
+                "name": "CustomDebugStringConvertible",
+                "printedName": "CustomDebugStringConvertible",
+                "usr": "s:s28CustomDebugStringConvertibleP"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "ObjC"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "inheritsConvenienceInitializers": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC",
+            "moduleName": "CarKey",
+            "name": "EnduringExecutionRequest",
+            "printedName": "EnduringExecutionRequest",
+            "superclassNames": [
+              "ObjectiveC.NSObject"
+            ],
+            "superclassUsr": "c:objc(cs)NSObject",
+            "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV0G16ExecutionRequestC"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "15.0",
+        "intro_iOS": "18.0",
+        "intro_watchOS": "11.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey44RemoteKeylessEntryConfigurableEnduringActionV",
+        "moduleName": "CarKey",
+        "name": "RemoteKeylessEntryConfigurableEnduringAction",
+        "printedName": "RemoteKeylessEntryConfigurableEnduringAction",
+        "usr": "s:6CarKey44RemoteKeylessEntryConfigurableEnduringActionV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "FunctionIdentifier",
+                    "printedName": "CarKey.FunctionIdentifier",
+                    "usr": "s:6CarKey18FunctionIdentifierV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV10functionIDAA18FunctionIdentifierVvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV10functionIDAA18FunctionIdentifierVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV10functionIDAA18FunctionIdentifierVvp",
+            "moduleName": "CarKey",
+            "name": "functionID",
+            "printedName": "functionID",
+            "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV10functionIDAA18FunctionIdentifierVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ActionIdentifier",
+                    "printedName": "CarKey.ActionIdentifier",
+                    "usr": "s:6CarKey16ActionIdentifierV"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV8actionIDAA0G10IdentifierVvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV8actionIDAA0G10IdentifierVvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV8actionIDAA0G10IdentifierVvp",
+            "moduleName": "CarKey",
+            "name": "actionID",
+            "printedName": "actionID",
+            "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV8actionIDAA0G10IdentifierVvp"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV18recipientVehicleIDSSvg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV18recipientVehicleIDSSvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV18recipientVehicleIDSSvp",
+            "moduleName": "CarKey",
+            "name": "recipientVehicleID",
+            "printedName": "recipientVehicleID",
+            "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV18recipientVehicleIDSSvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "RemoteKeylessEntryEnduringAction",
+                "printedName": "CarKey.RemoteKeylessEntryEnduringAction",
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV10functionID06actionI007vehicleI0AcA18FunctionIdentifierV_AA0gM0VSStcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(functionID:actionID:vehicleID:)",
+            "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV10functionID06actionI007vehicleI0AcA18FunctionIdentifierV_AA0gM0VSStcfc"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ExecutionStatus",
+                    "printedName": "CarKey.ExecutionStatus",
+                    "usr": "s:6CarKey15ExecutionStatusV"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC7resultsAA0H6StatusVyYaKF",
+                "moduleName": "CarKey",
+                "name": "results",
+                "printedName": "results()",
+                "throwing": true,
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC7resultsAA0H6StatusVyYaKF"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declAttributes": [
+                  "Final"
+                ],
+                "declKind": "Func",
+                "funcSelfKind": "NonMutating",
+                "kind": "Function",
+                "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC4stopyyKF",
+                "moduleName": "CarKey",
+                "name": "stop",
+                "printedName": "stop()",
+                "throwing": true,
+                "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC4stopyyKF"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              }
+            ],
+            "declAttributes": [
+              "Final"
+            ],
+            "declKind": "Class",
+            "hasMissingDesignatedInitializers": true,
+            "kind": "TypeDecl",
+            "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC",
+            "moduleName": "CarKey",
+            "name": "EnduringExecutionRequest",
+            "printedName": "EnduringExecutionRequest",
+            "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV0F16ExecutionRequestC"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "deprecated": true,
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey32RemoteKeylessEntryEnduringActionV",
+        "moduleName": "CarKey",
+        "name": "RemoteKeylessEntryEnduringAction",
+        "printedName": "RemoteKeylessEntryEnduringAction",
+        "usr": "s:6CarKey32RemoteKeylessEntryEnduringActionV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey18FunctionIdentifierV8rawValueSivg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey18FunctionIdentifierV8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey18FunctionIdentifierV8rawValueSivp",
+            "moduleName": "CarKey",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:6CarKey18FunctionIdentifierV8rawValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey18FunctionIdentifierVyACSicfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:6CarKey18FunctionIdentifierVyACSicfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionIdentifier",
+                "printedName": "CarKey.FunctionIdentifier",
+                "usr": "s:6CarKey18FunctionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey18FunctionIdentifierV8rawValueACSi_tcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:6CarKey18FunctionIdentifierV8rawValueACSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s6CarKey18FunctionIdentifierV8RawValuea",
+            "moduleName": "CarKey",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:6CarKey18FunctionIdentifierV8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "CarKey.FunctionIdentifier.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey18FunctionIdentifierV",
+        "moduleName": "CarKey",
+        "name": "FunctionIdentifier",
+        "printedName": "FunctionIdentifier",
+        "usr": "s:6CarKey18FunctionIdentifierV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey16ActionIdentifierV8rawValueSivg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey16ActionIdentifierV8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey16ActionIdentifierV8rawValueSivp",
+            "moduleName": "CarKey",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:6CarKey16ActionIdentifierV8rawValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey16ActionIdentifierVyACSicfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:6CarKey16ActionIdentifierVyACSicfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ActionIdentifier",
+                "printedName": "CarKey.ActionIdentifier",
+                "usr": "s:6CarKey16ActionIdentifierV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey16ActionIdentifierV8rawValueACSi_tcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:6CarKey16ActionIdentifierV8rawValueACSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s6CarKey16ActionIdentifierV8RawValuea",
+            "moduleName": "CarKey",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:6CarKey16ActionIdentifierV8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "CarKey.ActionIdentifier.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey16ActionIdentifierV",
+        "moduleName": "CarKey",
+        "name": "ActionIdentifier",
+        "printedName": "ActionIdentifier",
+        "usr": "s:6CarKey16ActionIdentifierV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey15ExecutionStatusV8rawValueSivg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey15ExecutionStatusV8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey15ExecutionStatusV8rawValueSivp",
+            "moduleName": "CarKey",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:6CarKey15ExecutionStatusV8rawValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ExecutionStatus",
+                "printedName": "CarKey.ExecutionStatus",
+                "usr": "s:6CarKey15ExecutionStatusV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey15ExecutionStatusVyACSicfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:6CarKey15ExecutionStatusVyACSicfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ExecutionStatus",
+                "printedName": "CarKey.ExecutionStatus",
+                "usr": "s:6CarKey15ExecutionStatusV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey15ExecutionStatusV8rawValueACSi_tcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:6CarKey15ExecutionStatusV8rawValueACSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s6CarKey15ExecutionStatusV8RawValuea",
+            "moduleName": "CarKey",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:6CarKey15ExecutionStatusV8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "CarKey.ExecutionStatus.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey15ExecutionStatusV",
+        "moduleName": "CarKey",
+        "name": "ExecutionStatus",
+        "printedName": "ExecutionStatus",
+        "usr": "s:6CarKey15ExecutionStatusV"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey14FunctionStatusV8rawValueSivg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey14FunctionStatusV8rawValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s6CarKey14FunctionStatusV8rawValueSivp",
+            "moduleName": "CarKey",
+            "name": "rawValue",
+            "printedName": "rawValue",
+            "usr": "s:6CarKey14FunctionStatusV8rawValueSivp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionStatus",
+                "printedName": "CarKey.FunctionStatus",
+                "usr": "s:6CarKey14FunctionStatusV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey14FunctionStatusVyACSicfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(_:)",
+            "usr": "s:6CarKey14FunctionStatusVyACSicfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "FunctionStatus",
+                "printedName": "CarKey.FunctionStatus",
+                "usr": "s:6CarKey14FunctionStatusV"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s6CarKey14FunctionStatusV8rawValueACSi_tcfc",
+            "moduleName": "CarKey",
+            "name": "init",
+            "printedName": "init(rawValue:)",
+            "usr": "s:6CarKey14FunctionStatusV8rawValueACSi_tcfc"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "Available",
+              "Available"
+            ],
+            "declKind": "TypeAlias",
+            "intro_Macosx": "13.3",
+            "intro_iOS": "16.0",
+            "intro_watchOS": "9.0",
+            "kind": "TypeAlias",
+            "mangledName": "$s6CarKey14FunctionStatusV8RawValuea",
+            "moduleName": "CarKey",
+            "name": "RawValue",
+            "printedName": "RawValue",
+            "usr": "s:6CarKey14FunctionStatusV8RawValuea"
+          }
+        ],
+        "conformances": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "RawValue",
+                    "printedName": "CarKey.FunctionStatus.RawValue"
+                  }
+                ],
+                "kind": "TypeWitness",
+                "name": "RawValue",
+                "printedName": "RawValue"
+              }
+            ],
+            "kind": "Conformance",
+            "mangledName": "$sSY",
+            "name": "RawRepresentable",
+            "printedName": "RawRepresentable",
+            "usr": "s:SY"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Struct",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey14FunctionStatusV",
+        "moduleName": "CarKey",
+        "name": "FunctionStatus",
+        "printedName": "FunctionStatus",
+        "usr": "s:6CarKey14FunctionStatusV"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO8InternalyA2CmF",
+            "moduleName": "CarKey",
+            "name": "Internal",
+            "printedName": "Internal",
+            "usr": "s:6CarKey0aB9ErrorCodeO8InternalyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO19VehicleNotConnectedyA2CmF",
+            "moduleName": "CarKey",
+            "name": "VehicleNotConnected",
+            "printedName": "VehicleNotConnected",
+            "usr": "s:6CarKey0aB9ErrorCodeO19VehicleNotConnectedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO24AnotherRequestInProgressyA2CmF",
+            "moduleName": "CarKey",
+            "name": "AnotherRequestInProgress",
+            "printedName": "AnotherRequestInProgress",
+            "usr": "s:6CarKey0aB9ErrorCodeO24AnotherRequestInProgressyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO16SessionNotActiveyA2CmF",
+            "moduleName": "CarKey",
+            "name": "SessionNotActive",
+            "printedName": "SessionNotActive",
+            "usr": "s:6CarKey0aB9ErrorCodeO16SessionNotActiveyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO15FunctionUnknownyA2CmF",
+            "moduleName": "CarKey",
+            "name": "FunctionUnknown",
+            "printedName": "FunctionUnknown",
+            "usr": "s:6CarKey0aB9ErrorCodeO15FunctionUnknownyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO17SecurityViolationyA2CmF",
+            "moduleName": "CarKey",
+            "name": "SecurityViolation",
+            "printedName": "SecurityViolation",
+            "usr": "s:6CarKey0aB9ErrorCodeO17SecurityViolationyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO15VehicleNotFoundyA2CmF",
+            "moduleName": "CarKey",
+            "name": "VehicleNotFound",
+            "printedName": "VehicleNotFound",
+            "usr": "s:6CarKey0aB9ErrorCodeO15VehicleNotFoundyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO14MessageTooLongyA2CmF",
+            "moduleName": "CarKey",
+            "name": "MessageTooLong",
+            "printedName": "MessageTooLong",
+            "usr": "s:6CarKey0aB9ErrorCodeO14MessageTooLongyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO15RequestTimedOutyA2CmF",
+            "moduleName": "CarKey",
+            "name": "RequestTimedOut",
+            "printedName": "RequestTimedOut",
+            "usr": "s:6CarKey0aB9ErrorCodeO15RequestTimedOutyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO31EnduringRequestUsingEventMethodyA2CmF",
+            "moduleName": "CarKey",
+            "name": "EnduringRequestUsingEventMethod",
+            "printedName": "EnduringRequestUsingEventMethod",
+            "usr": "s:6CarKey0aB9ErrorCodeO31EnduringRequestUsingEventMethodyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO20RequestNotInProgressyA2CmF",
+            "moduleName": "CarKey",
+            "name": "RequestNotInProgress",
+            "printedName": "RequestNotInProgress",
+            "usr": "s:6CarKey0aB9ErrorCodeO20RequestNotInProgressyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO18ClientInBackgroundyA2CmF",
+            "moduleName": "CarKey",
+            "name": "ClientInBackground",
+            "printedName": "ClientInBackground",
+            "usr": "s:6CarKey0aB9ErrorCodeO18ClientInBackgroundyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "CarKeyErrorCode",
+                    "printedName": "CarKey.CarKeyErrorCode",
+                    "usr": "s:6CarKey0aB9ErrorCodeO"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "CarKeyErrorCode",
+                        "printedName": "CarKey.CarKeyErrorCode",
+                        "usr": "s:6CarKey0aB9ErrorCodeO"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Metatype",
+                    "printedName": "CarKey.CarKeyErrorCode.Type"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "(CarKey.CarKeyErrorCode.Type) -> CarKey.CarKeyErrorCode"
+              }
+            ],
+            "declKind": "EnumElement",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO19FeatureNotSupportedyA2CmF",
+            "moduleName": "CarKey",
+            "name": "FeatureNotSupported",
+            "printedName": "FeatureNotSupported",
+            "usr": "s:6CarKey0aB9ErrorCodeO19FeatureNotSupportedyA2CmF"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyErrorCode",
+                "printedName": "CarKey.CarKeyErrorCode",
+                "usr": "s:6CarKey0aB9ErrorCodeO"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "CarKeyErrorCode",
+                "printedName": "CarKey.CarKeyErrorCode",
+                "usr": "s:6CarKey0aB9ErrorCodeO"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO2eeoiySbAC_ACtFZ",
+            "moduleName": "CarKey",
+            "name": "==",
+            "printedName": "==(_:_:)",
+            "static": true,
+            "usr": "s:6CarKey0aB9ErrorCodeO2eeoiySbAC_ACtFZ"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "Hasher",
+                "paramValueOwnership": "InOut",
+                "printedName": "Swift.Hasher",
+                "usr": "s:s6HasherV"
+              }
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO4hash4intoys6HasherVz_tF",
+            "moduleName": "CarKey",
+            "name": "hash",
+            "printedName": "hash(into:)",
+            "usr": "s:6CarKey0aB9ErrorCodeO4hash4intoys6HasherVz_tF"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$s6CarKey0aB9ErrorCodeO9hashValueSivg",
+                "moduleName": "CarKey",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:6CarKey0aB9ErrorCodeO9hashValueSivg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$s6CarKey0aB9ErrorCodeO9hashValueSivp",
+            "moduleName": "CarKey",
+            "name": "hashValue",
+            "printedName": "hashValue",
+            "usr": "s:6CarKey0aB9ErrorCodeO9hashValueSivp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "Available",
+          "Available"
+        ],
+        "declKind": "Enum",
+        "intro_Macosx": "13.3",
+        "intro_iOS": "16.0",
+        "intro_watchOS": "9.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s6CarKey0aB9ErrorCodeO",
+        "moduleName": "CarKey",
+        "name": "CarKeyErrorCode",
+        "printedName": "CarKeyErrorCode",
+        "usr": "s:6CarKey0aB9ErrorCodeO"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "CarKey",
+    "printedName": "CarKey"
+  }
+}

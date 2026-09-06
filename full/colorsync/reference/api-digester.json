@@ -1,0 +1,189 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ColorSync",
+        "name": "ColorSync.ColorSyncBase",
+        "printedName": "ColorSync.ColorSyncBase"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ColorSync",
+        "name": "ColorSync.ColorSyncProfile",
+        "printedName": "ColorSync.ColorSyncProfile"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ColorSync",
+        "name": "ColorSync.ColorSyncTransform",
+        "printedName": "ColorSync.ColorSyncTransform"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "UInt32",
+            "printedName": "Swift.UInt32",
+            "usr": "s:s6UInt32V"
+          }
+        ],
+        "declAttributes": [
+          "DiscardableResult"
+        ],
+        "declKind": "Func",
+        "funcSelfKind": "NonMutating",
+        "kind": "Function",
+        "moduleName": "ColorSync",
+        "name": "ColorSyncAPIVersion",
+        "printedName": "ColorSyncAPIVersion()",
+        "usr": "c:@F@ColorSyncAPIVersion"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "accessors": [
+          {
+            "accessorKind": "get",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Int",
+                "printedName": "Swift.Int",
+                "usr": "s:Si"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Accessor",
+            "kind": "Accessor",
+            "mangledName": "$sSC21COLORSYNC_API_VERSIONSivg",
+            "moduleName": "ColorSync",
+            "name": "Get",
+            "printedName": "Get()",
+            "usr": "s:SC21COLORSYNC_API_VERSIONSivg"
+          }
+        ],
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "Int",
+            "printedName": "Swift.Int",
+            "usr": "s:Si"
+          }
+        ],
+        "declAttributes": [
+          "Nonisolated"
+        ],
+        "declKind": "Var",
+        "kind": "Var",
+        "moduleName": "ColorSync",
+        "name": "COLORSYNC_API_VERSION",
+        "printedName": "COLORSYNC_API_VERSION",
+        "usr": "c:@macro@COLORSYNC_API_VERSION"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ColorSync",
+    "printedName": "ColorSync"
+  }
+}

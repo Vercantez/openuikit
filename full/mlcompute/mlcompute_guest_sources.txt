@@ -1,0 +1,8 @@
+full/mlcompute/MLCompute.swift
+full/mlcompute/MLComputeDescriptors.swift
+full/mlcompute/MLComputeEnums.swift
+full/mlcompute/MLComputeGraph.swift
+full/mlcompute/MLComputeLayers.swift
+full/mlcompute/MLComputeOptimizers.swift
+full/mlcompute/MLComputeTensor.swift
+full/mlcompute/MLComputeWeightedLayers.swift

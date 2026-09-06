@@ -1,0 +1,8 @@
+full/metalperformanceshadersgraph/MPSGraph.swift
+full/metalperformanceshadersgraph/MPSGraphCPU.swift
+full/metalperformanceshadersgraph/MPSGraphCore.swift
+full/metalperformanceshadersgraph/MPSGraphDescriptors.swift
+full/metalperformanceshadersgraph/MPSGraphExecutable.swift
+full/metalperformanceshadersgraph/MPSGraphOps.swift
+full/metalperformanceshadersgraph/MPSGraphTypes.swift
+full/metalperformanceshadersgraph/MetalPerformanceShadersGraph.swift

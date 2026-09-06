@@ -1,0 +1,36 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/JournalingSuggestions.symbols.json",
+      "relationshipCount": 957,
+      "sha256": "3475b6a23fc57505196ab73fb4d7f284c225a4578b83d928bc30eda5bd5e646d",
+      "symbolCount": 928
+    },
+    {
+      "path": "reference/symbol-graphs/JournalingSuggestions@SwiftUICore.symbols.json",
+      "relationshipCount": 5,
+      "sha256": "6539c0010baa375deb5b3a2dcb0f6785db1424459b324a22ffee96de54aa31e6",
+      "symbolCount": 3
+    },
+    {
+      "path": "reference/symbol-graphs/JournalingSuggestions@UIKit.symbols.json",
+      "relationshipCount": 2,
+      "sha256": "a1b715e1cfc0f364c0dac1b87e656238f711cbd919d981b7e493eb0159f0abc7",
+      "symbolCount": 0
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "JournalingSuggestions",
+  "relationshipCount": 964,
+  "relationshipMultisetSHA256": "d8089792270cb7b3877ae047beadde62d61bdc182c42f33f069bc27a0093ee06",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 931,
+  "symbolMultisetSHA256": "3d38f854318c75b024d6ffccafe7c3e13644e017516cd42dc24077c91957a150",
+  "target": "arm64-apple-ios26.0"
+}

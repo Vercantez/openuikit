@@ -339,11 +339,21 @@ open class UITableView: UIScrollView {
         // The iOS margin above depends on the window's width.
         if UITableView.isIOSChrome, _insetGroupedSideInsetOverride == nil { setNeedsMetrics() }
     }
-    /// Classic-cell text inset for non-plain styles. Phone and Catalyst
-    /// keep 16 (`UITableViewCell.labelX`). Pad inset-grouped is 20.
+    /// Classic-cell text inset for non-plain styles. Phone `.large` and
+    /// Catalyst keep 16 (`UITableViewCell.labelX`). Pad inset-grouped is 20.
+    /// Compact-height phone inset-grouped is the window's `iOSMargin` (20
+    /// on the 667-wide SE).
     var groupedTextInset: CGFloat {
         if style == .insetGrouped, UITableView.isPadChrome {
             return UITableView.iOSPadInsetGroupedInnerInset
+        }
+        // MEASURED NavFlow t200.landscape, iPhone SE 2x / iOS 26.1:
+        // inset-grouped `UITableViewLabel` cell-local x **20** (abs 40);
+        // portrait SE t200 stays 16 (abs 32). Compact-height window is 667
+        // so `iOSMargin` is 20; a hardcoded 16 left labels at 36.
+        if style == .insetGrouped, UITableView.isIOSChrome,
+           UINavigationBar.isCompactHeight {
+            return iOSMargin
         }
         return UITableViewCell.labelX
     }
@@ -354,10 +364,18 @@ open class UITableView: UIScrollView {
         // + 16` is the insetGrouped reading (card at 16, header at 32) and
         // stays the rule for `.insetGrouped` / Catalyst, except pad
         // inset-grouped which adds 20 (table_inset_nav header abs 40 =
-        // card 20 + 20).
+        // card 20 + 20). Compact-height phone inset-grouped adds `iOSMargin`
+        // (NavFlow t200.landscape "General" abs 40 = card 20 + 20).
         if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
-        let inner = (style == .insetGrouped && UITableView.isPadChrome)
-            ? UITableView.iOSPadInsetGroupedInnerInset : 16
+        let inner: CGFloat
+        if style == .insetGrouped, UITableView.isPadChrome {
+            inner = UITableView.iOSPadInsetGroupedInnerInset
+        } else if style == .insetGrouped, UITableView.isIOSChrome,
+                  UINavigationBar.isCompactHeight {
+            inner = iOSMargin
+        } else {
+            inner = 16
+        }
         return insetGroupedSideInset + inner
     }
 
@@ -1911,10 +1929,16 @@ open class UITableView: UIScrollView {
             // MEASURED `/tmp/ipad-open-cap` table_inset_nav, iPad (A16)
             // 820×1180 @2x / iOS 26.1: NavFlow-ipad mid-row separators
             // start at abs x **40** = card 20 + inner 20. Phone / Catalyst
-            // inset-grouped keep `separatorLeftInset` 16.
-            let left = UITableView.isPadChrome
-                ? UITableView.iOSPadInsetGroupedInnerInset
-                : UITableView.separatorLeftInset
+            // inset-grouped keep `separatorLeftInset` 16, except compact
+            // height (NavFlow t200.landscape cell-local separator x **20**).
+            let left: CGFloat
+            if UITableView.isPadChrome {
+                left = UITableView.iOSPadInsetGroupedInnerInset
+            } else if UITableView.isIOSChrome, UINavigationBar.isCompactHeight {
+                left = iOSMargin
+            } else {
+                left = UITableView.separatorLeftInset
+            }
             defaults = (left, UITableView.groupedSeparatorRightInset)
         }
         // A table-wide inset displaces the style default. `fromCellEdges`

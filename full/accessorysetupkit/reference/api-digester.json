@@ -1,0 +1,2338 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASCommon",
+        "printedName": "AccessorySetupKit.ASCommon"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASErrors",
+        "printedName": "AccessorySetupKit.ASErrors"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASAccessory",
+        "printedName": "AccessorySetupKit.ASAccessory"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASAccessoryEvent",
+        "printedName": "AccessorySetupKit.ASAccessoryEvent"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASAccessorySession",
+        "printedName": "AccessorySetupKit.ASAccessorySession"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASAccessorySettings",
+        "printedName": "AccessorySetupKit.ASAccessorySettings"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASDiscoveryDescriptor",
+        "printedName": "AccessorySetupKit.ASDiscoveryDescriptor"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASPickerDisplayItem",
+        "printedName": "AccessorySetupKit.ASPickerDisplayItem"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit.ASPickerDisplaySettings",
+        "printedName": "AccessorySetupKit.ASPickerDisplaySettings"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11ASErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11ASErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "AccessorySetupKit",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11ASErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ASError",
+                "printedName": "AccessorySetupKit.ASError",
+                "usr": "c:@E@ASErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11ASErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "AccessorySetupKit",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11ASErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11ASErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "AccessorySetupKit",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11ASErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "AccessorySetupKit.ASError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11ASErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "AccessorySetupKit",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11ASErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11ASErrorCodeV8rawValueSivg",
+                    "moduleName": "AccessorySetupKit",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11ASErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11ASErrorCodeV8rawValueSivp",
+                "moduleName": "AccessorySetupKit",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11ASErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11ASErrorCodeV8RawValuea",
+                "moduleName": "AccessorySetupKit",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11ASErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ASError",
+                    "printedName": "AccessorySetupKit.ASError",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "AccessorySetupKit",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@ASErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "success",
+                "printedName": "success",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeSuccess"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "activationFailed",
+                "printedName": "activationFailed",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeActivationFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "connectionFailed",
+                "printedName": "connectionFailed",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeConnectionFailed"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "discoveryTimeout",
+                "printedName": "discoveryTimeout",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeDiscoveryTimeout"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "extensionNotFound",
+                "printedName": "extensionNotFound",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeExtensionNotFound"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "invalidated",
+                "printedName": "invalidated",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeInvalidated"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "invalidRequest",
+                "printedName": "invalidRequest",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeInvalidRequest"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "pickerAlreadyActive",
+                "printedName": "pickerAlreadyActive",
+                "usr": "c:@E@ASErrorCode@ASErrorCodePickerAlreadyActive"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "pickerRestricted",
+                "printedName": "pickerRestricted",
+                "usr": "c:@E@ASErrorCode@ASErrorCodePickerRestricted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "userCancelled",
+                "printedName": "userCancelled",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeUserCancelled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "AccessorySetupKit.ASError.Code",
+                        "usr": "c:@E@ASErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "AccessorySetupKit.ASError.Code",
+                            "usr": "c:@E@ASErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "AccessorySetupKit.ASError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(AccessorySetupKit.ASError.Code.Type) -> AccessorySetupKit.ASError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "AccessorySetupKit",
+                "name": "userRestricted",
+                "printedName": "userRestricted",
+                "usr": "c:@E@ASErrorCode@ASErrorCodeUserRestricted"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "AccessorySetupKit.ASError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "18.0",
+            "kind": "TypeDecl",
+            "moduleName": "AccessorySetupKit",
+            "name": "Code",
+            "objc_name": "ASErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@ASErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV7successSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV7successSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "success",
+            "printedName": "success",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeSuccess"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV16activationFailedSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV16activationFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "activationFailed",
+            "printedName": "activationFailed",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeActivationFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV16connectionFailedSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV16connectionFailedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "connectionFailed",
+            "printedName": "connectionFailed",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeConnectionFailed"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV16discoveryTimeoutSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV16discoveryTimeoutSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "discoveryTimeout",
+            "printedName": "discoveryTimeout",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeDiscoveryTimeout"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV17extensionNotFoundSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV17extensionNotFoundSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "extensionNotFound",
+            "printedName": "extensionNotFound",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeExtensionNotFound"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV11invalidatedSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV11invalidatedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "invalidated",
+            "printedName": "invalidated",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeInvalidated"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV14invalidRequestSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV14invalidRequestSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "invalidRequest",
+            "printedName": "invalidRequest",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeInvalidRequest"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV19pickerAlreadyActiveSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV19pickerAlreadyActiveSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "pickerAlreadyActive",
+            "printedName": "pickerAlreadyActive",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodePickerAlreadyActive"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV16pickerRestrictedSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV16pickerRestrictedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "pickerRestricted",
+            "printedName": "pickerRestricted",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodePickerRestricted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV13userCancelledSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV13userCancelledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "userCancelled",
+            "printedName": "userCancelled",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeUserCancelled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "AccessorySetupKit.ASError.Code",
+                    "usr": "c:@E@ASErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ASErrorCodeLeV14userRestrictedSoAAVvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ASErrorCodeLeV14userRestrictedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "AccessorySetupKit.ASError.Code",
+                "usr": "c:@E@ASErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "AccessorySetupKit",
+            "name": "userRestricted",
+            "printedName": "userRestricted",
+            "static": true,
+            "usr": "c:@E@ASErrorCode@ASErrorCodeUserRestricted"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "moduleName": "AccessorySetupKit",
+        "name": "ASError",
+        "printedName": "ASError",
+        "usr": "c:@E@ASErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "AccessorySetupKit",
+        "printedName": "AccessorySetupKit"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "CoreBluetooth",
+        "printedName": "CoreBluetooth"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "Foundation",
+        "printedName": "Foundation"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "_Concurrency",
+        "printedName": "_Concurrency"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "_StringProcessing",
+        "printedName": "_StringProcessing"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "_SwiftConcurrencyShims",
+        "printedName": "_SwiftConcurrencyShims"
+      },
+      {
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "AccessorySetupKit",
+        "name": "os",
+        "printedName": "os"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ASUIClientManager",
+                    "printedName": "AccessorySetupKit.ASUIClientManager",
+                    "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager"
+                  }
+                ],
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC6sharedACvgZ",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "spi_group_names": [
+                  "Private"
+                ],
+                "static": true,
+                "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(cm)shared"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ASUIClientManager",
+                "printedName": "AccessorySetupKit.ASUIClientManager",
+                "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager"
+              }
+            ],
+            "declAttributes": [
+              "Final",
+              "ObjC",
+              "SPIAccessControl",
+              "HasStorage"
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC6sharedACvpZ",
+            "moduleName": "AccessorySetupKit",
+            "name": "shared",
+            "printedName": "shared",
+            "spi_group_names": [
+              "Private"
+            ],
+            "static": true,
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(cpy)shared"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ASAccessorySession",
+                "printedName": "AccessorySetupKit.ASAccessorySession",
+                "usr": "c:objc(cs)ASAccessorySession"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ASPickerDisplayItem",
+                    "printedName": "AccessorySetupKit.ASPickerDisplayItem",
+                    "usr": "c:objc(cs)ASPickerDisplayItem"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[AccessorySetupKit.ASPickerDisplayItem]",
+                "usr": "s:Sa"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ASPickerDisplaySettings",
+                "printedName": "AccessorySetupKit.ASPickerDisplaySettings",
+                "usr": "c:objc(cs)ASPickerDisplaySettings"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any Swift.Error)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "((any Swift.Error)?) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "SPIAccessControl"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC18activateConnection7session4with14pickerSettings3for17completionHandlerySo18ASAccessorySessionC_SaySo19ASPickerDisplayItemCGSo0qrK0CSSSgys5Error_pSgctF",
+            "moduleName": "AccessorySetupKit",
+            "name": "activateConnection",
+            "objc_name": "activateConnectionWithSession:with:pickerSettings:for:completionHandler:",
+            "printedName": "activateConnection(session:with:pickerSettings:for:completionHandler:)",
+            "spi_group_names": [
+              "Private"
+            ],
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(im)activateConnectionWithSession:with:pickerSettings:for:completionHandler:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ASAccessory",
+                "printedName": "AccessorySetupKit.ASAccessory",
+                "usr": "c:objc(cs)ASAccessory"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any Swift.Error)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "((any Swift.Error)?) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "SPIAccessControl"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC4fail9accessory17completionHandlerySo11ASAccessoryC_ys5Error_pSgctF",
+            "moduleName": "AccessorySetupKit",
+            "name": "fail",
+            "objc_name": "failWithAccessory:completionHandler:",
+            "printedName": "fail(accessory:completionHandler:)",
+            "spi_group_names": [
+              "Private"
+            ],
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(im)failWithAccessory:completionHandler:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "ASAccessory",
+                "printedName": "AccessorySetupKit.ASAccessory",
+                "usr": "c:objc(cs)ASAccessory"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "RenameOptions",
+                "printedName": "AccessorySetupKit.ASAccessory.RenameOptions",
+                "usr": "c:@E@ASAccessoryRenameOptions"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "hasDefaultArg": true,
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.String?",
+                "usr": "s:Sq"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any Swift.Error)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "((any Swift.Error)?) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "SPIAccessControl"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC6update9accessory7options3for17completionHandlerySo11ASAccessoryC_So0L13RenameOptionsVSSSgys5Error_pSgctF",
+            "moduleName": "AccessorySetupKit",
+            "name": "update",
+            "objc_name": "updateWithAccessory:options:for:completionHandler:",
+            "printedName": "update(accessory:options:for:completionHandler:)",
+            "spi_group_names": [
+              "Private"
+            ],
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(im)updateWithAccessory:options:for:completionHandler:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ASPickerDisplayItem",
+                    "printedName": "AccessorySetupKit.ASPickerDisplayItem",
+                    "usr": "c:objc(cs)ASPickerDisplayItem"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Array",
+                "printedName": "[AccessorySetupKit.ASPickerDisplayItem]",
+                "usr": "s:Sa"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any Swift.Error)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "((any Swift.Error)?) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "SPIAccessControl"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC12updatePicker4with17completionHandlerySaySo19ASPickerDisplayItemCG_ys5Error_pSgctF",
+            "moduleName": "AccessorySetupKit",
+            "name": "updatePicker",
+            "objc_name": "updatePickerWith:completionHandler:",
+            "printedName": "updatePicker(with:completionHandler:)",
+            "spi_group_names": [
+              "Private"
+            ],
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(im)updatePickerWith:completionHandler:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      }
+                    ],
+                    "kind": "TypeNameAlias",
+                    "name": "Void",
+                    "printedName": "Swift.Void"
+                  },
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Error",
+                        "printedName": "any Swift.Error",
+                        "usr": "s:s5ErrorP"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "(any Swift.Error)?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "kind": "TypeFunc",
+                "name": "Function",
+                "printedName": "((any Swift.Error)?) -> Swift.Void"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "SPIAccessControl"
+            ],
+            "declKind": "Func",
+            "funcSelfKind": "NonMutating",
+            "kind": "Function",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC15finishDiscovery4withyys5Error_pSgc_tF",
+            "moduleName": "AccessorySetupKit",
+            "name": "finishDiscovery",
+            "objc_name": "finishDiscoveryWith:",
+            "printedName": "finishDiscovery(with:)",
+            "spi_group_names": [
+              "Private"
+            ],
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(im)finishDiscoveryWith:"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ASUIClientManager",
+                "printedName": "AccessorySetupKit.ASUIClientManager",
+                "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager"
+              }
+            ],
+            "declAttributes": [
+              "ObjC",
+              "Dynamic",
+              "SPIAccessControl",
+              "Override"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$s17AccessorySetupKit17ASUIClientManagerCACycfc",
+            "moduleName": "AccessorySetupKit",
+            "name": "init",
+            "objc_name": "init",
+            "overriding": true,
+            "printedName": "init()",
+            "spi_group_names": [
+              "Private"
+            ],
+            "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager(im)init"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          }
+        ],
+        "declAttributes": [
+          "ObjC",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "Available",
+          "SPIAccessControl"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "18.0",
+        "kind": "TypeDecl",
+        "mangledName": "$s17AccessorySetupKit17ASUIClientManagerC",
+        "moduleName": "AccessorySetupKit",
+        "name": "ASUIClientManager",
+        "printedName": "ASUIClientManager",
+        "spi_group_names": [
+          "Private"
+        ],
+        "superclassNames": [
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)NSObject",
+        "usr": "c:@M@AccessorySetupKit@objc(cs)ASUIClientManager"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "Swift.Int?",
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "isFromExtension": true,
+                "kind": "Accessor",
+                "mangledName": "$sSo21ASDiscoveredAccessoryC0B8SetupKitE13bluetoothRSSISiSgvg",
+                "moduleName": "AccessorySetupKit",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:So21ASDiscoveredAccessoryC0B8SetupKitE13bluetoothRSSISiSgvg"
+              }
+            ],
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "Swift.Int?",
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "isFromExtension": true,
+            "kind": "Var",
+            "mangledName": "$sSo21ASDiscoveredAccessoryC0B8SetupKitE13bluetoothRSSISiSgvp",
+            "moduleName": "AccessorySetupKit",
+            "name": "bluetoothRSSI",
+            "printedName": "bluetoothRSSI",
+            "usr": "s:So21ASDiscoveredAccessoryC0B8SetupKitE13bluetoothRSSISiSgvp"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "NSObjectProtocol",
+            "printedName": "NSObjectProtocol",
+            "usr": "c:objc(pl)NSObject"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss7CVarArgP",
+            "name": "CVarArg",
+            "printedName": "CVarArg",
+            "usr": "s:s7CVarArgP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss23CustomStringConvertibleP",
+            "name": "CustomStringConvertible",
+            "printedName": "CustomStringConvertible",
+            "usr": "s:s23CustomStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss28CustomDebugStringConvertibleP",
+            "name": "CustomDebugStringConvertible",
+            "printedName": "CustomDebugStringConvertible",
+            "usr": "s:s28CustomDebugStringConvertibleP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "ObjC",
+          "SynthesizedProtocol",
+          "Sendable",
+          "Dynamic"
+        ],
+        "declKind": "Class",
+        "inheritsConvenienceInitializers": true,
+        "intro_iOS": "26.1",
+        "isExternal": true,
+        "isOpen": true,
+        "kind": "TypeDecl",
+        "moduleName": "AccessorySetupKit",
+        "name": "ASDiscoveredAccessory",
+        "objc_name": "ASDiscoveredAccessory",
+        "printedName": "ASDiscoveredAccessory",
+        "superclassNames": [
+          "AccessorySetupKit.ASAccessory",
+          "ObjectiveC.NSObject"
+        ],
+        "superclassUsr": "c:objc(cs)ASAccessory",
+        "usr": "c:objc(cs)ASDiscoveredAccessory"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "AccessorySetupKit",
+    "printedName": "AccessorySetupKit"
+  }
+}

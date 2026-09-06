@@ -1,0 +1,208 @@
+precise	kind	title	path	declaration
+c:@E@ColorSyncAlphaInfo	swift.struct	ColorSyncAlphaInfo	ColorSyncAlphaInfo	struct ColorSyncAlphaInfo
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaFirst	swift.var	kColorSyncAlphaFirst	kColorSyncAlphaFirst	var kColorSyncAlphaFirst: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaLast	swift.var	kColorSyncAlphaLast	kColorSyncAlphaLast	var kColorSyncAlphaLast: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaNone	swift.var	kColorSyncAlphaNone	kColorSyncAlphaNone	var kColorSyncAlphaNone: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaNoneSkipFirst	swift.var	kColorSyncAlphaNoneSkipFirst	kColorSyncAlphaNoneSkipFirst	var kColorSyncAlphaNoneSkipFirst: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaNoneSkipLast	swift.var	kColorSyncAlphaNoneSkipLast	kColorSyncAlphaNoneSkipLast	var kColorSyncAlphaNoneSkipLast: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaPremultipliedFirst	swift.var	kColorSyncAlphaPremultipliedFirst	kColorSyncAlphaPremultipliedFirst	var kColorSyncAlphaPremultipliedFirst: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncAlphaInfo@kColorSyncAlphaPremultipliedLast	swift.var	kColorSyncAlphaPremultipliedLast	kColorSyncAlphaPremultipliedLast	var kColorSyncAlphaPremultipliedLast: ColorSyncAlphaInfo { get }
+c:@E@ColorSyncDataDepth	swift.struct	ColorSyncDataDepth	ColorSyncDataDepth	struct ColorSyncDataDepth
+c:@E@ColorSyncDataDepth@kColorSync10BitInteger	swift.var	kColorSync10BitInteger	kColorSync10BitInteger	var kColorSync10BitInteger: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync16BitFloat	swift.var	kColorSync16BitFloat	kColorSync16BitFloat	var kColorSync16BitFloat: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync16BitInteger	swift.var	kColorSync16BitInteger	kColorSync16BitInteger	var kColorSync16BitInteger: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync1BitGamut	swift.var	kColorSync1BitGamut	kColorSync1BitGamut	var kColorSync1BitGamut: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync32BitFloat	swift.var	kColorSync32BitFloat	kColorSync32BitFloat	var kColorSync32BitFloat: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync32BitInteger	swift.var	kColorSync32BitInteger	kColorSync32BitInteger	var kColorSync32BitInteger: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync32BitNamedColorIndex	swift.var	kColorSync32BitNamedColorIndex	kColorSync32BitNamedColorIndex	var kColorSync32BitNamedColorIndex: ColorSyncDataDepth { get }
+c:@E@ColorSyncDataDepth@kColorSync8BitInteger	swift.var	kColorSync8BitInteger	kColorSync8BitInteger	var kColorSync8BitInteger: ColorSyncDataDepth { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncAlphaInfoMask	swift.var	kColorSyncAlphaInfoMask	kColorSyncAlphaInfoMask	var kColorSyncAlphaInfoMask: Int { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder16Big	swift.var	kColorSyncByteOrder16Big	kColorSyncByteOrder16Big	var kColorSyncByteOrder16Big: Int { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder16Little	swift.var	kColorSyncByteOrder16Little	kColorSyncByteOrder16Little	var kColorSyncByteOrder16Little: Int { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder32Big	swift.var	kColorSyncByteOrder32Big	kColorSyncByteOrder32Big	var kColorSyncByteOrder32Big: Int { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrder32Little	swift.var	kColorSyncByteOrder32Little	kColorSyncByteOrder32Little	var kColorSyncByteOrder32Little: Int { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrderDefault	swift.var	kColorSyncByteOrderDefault	kColorSyncByteOrderDefault	var kColorSyncByteOrderDefault: Int { get }
+c:@Ea@kColorSyncAlphaInfoMask@kColorSyncByteOrderMask	swift.var	kColorSyncByteOrderMask	kColorSyncByteOrderMask	var kColorSyncByteOrderMask: Int { get }
+c:@F@ColorSyncAPIVersion	swift.func	ColorSyncAPIVersion()	ColorSyncAPIVersion()	func ColorSyncAPIVersion() -> UInt32
+c:@F@ColorSyncCreateCodeFragment	swift.func	ColorSyncCreateCodeFragment(_:_:)	ColorSyncCreateCodeFragment(_:_:)	func ColorSyncCreateCodeFragment(_ profileSequence: CFArray!, _ options: CFDictionary!) -> Unmanaged<CFTypeRef>!
+c:@F@ColorSyncIterateInstalledProfiles	swift.func	ColorSyncIterateInstalledProfiles(_:_:_:_:)	ColorSyncIterateInstalledProfiles(_:_:_:_:)	func ColorSyncIterateInstalledProfiles(_ callBack: ColorSyncProfileIterateCallback?, _ seed: UnsafeMutablePointer<UInt32>?, _ userInfo: UnsafeMutableRawPointer?, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?)
+c:@F@ColorSyncProfileContainsTag	swift.func	ColorSyncProfileContainsTag(_:_:)	ColorSyncProfileContainsTag(_:_:)	func ColorSyncProfileContainsTag(_ prof: ColorSyncProfile!, _ signature: CFString!) -> Bool
+c:@F@ColorSyncProfileCopyData	swift.func	ColorSyncProfileCopyData(_:_:)	ColorSyncProfileCopyData(_:_:)	func ColorSyncProfileCopyData(_ prof: ColorSyncProfile!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Unmanaged<CFData>!
+c:@F@ColorSyncProfileCopyDescriptionString	swift.func	ColorSyncProfileCopyDescriptionString(_:)	ColorSyncProfileCopyDescriptionString(_:)	func ColorSyncProfileCopyDescriptionString(_ prof: ColorSyncProfile!) -> Unmanaged<CFString>?
+c:@F@ColorSyncProfileCopyHeader	swift.func	ColorSyncProfileCopyHeader(_:)	ColorSyncProfileCopyHeader(_:)	func ColorSyncProfileCopyHeader(_ prof: ColorSyncProfile!) -> Unmanaged<CFData>!
+c:@F@ColorSyncProfileCopyTag	swift.func	ColorSyncProfileCopyTag(_:_:)	ColorSyncProfileCopyTag(_:_:)	func ColorSyncProfileCopyTag(_ prof: ColorSyncProfile!, _ signature: CFString!) -> Unmanaged<CFData>?
+c:@F@ColorSyncProfileCopyTagSignatures	swift.func	ColorSyncProfileCopyTagSignatures(_:)	ColorSyncProfileCopyTagSignatures(_:)	func ColorSyncProfileCopyTagSignatures(_ prof: ColorSyncProfile!) -> Unmanaged<CFArray>?
+c:@F@ColorSyncProfileCreate	swift.func	ColorSyncProfileCreate(_:_:)	ColorSyncProfileCreate(_:_:)	func ColorSyncProfileCreate(_ data: CFData!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Unmanaged<ColorSyncProfile>?
+c:@F@ColorSyncProfileCreateLink	swift.func	ColorSyncProfileCreateLink(_:_:)	ColorSyncProfileCreateLink(_:_:)	func ColorSyncProfileCreateLink(_ profileInfo: CFArray!, _ options: CFDictionary?) -> Unmanaged<ColorSyncProfile>?
+c:@F@ColorSyncProfileCreateMutable	swift.func	ColorSyncProfileCreateMutable()	ColorSyncProfileCreateMutable()	func ColorSyncProfileCreateMutable() -> Unmanaged<ColorSyncMutableProfile>?
+c:@F@ColorSyncProfileCreateMutableCopy	swift.func	ColorSyncProfileCreateMutableCopy(_:)	ColorSyncProfileCreateMutableCopy(_:)	func ColorSyncProfileCreateMutableCopy(_ prof: ColorSyncProfile!) -> Unmanaged<ColorSyncMutableProfile>?
+c:@F@ColorSyncProfileCreateWithName	swift.func	ColorSyncProfileCreateWithName(_:)	ColorSyncProfileCreateWithName(_:)	func ColorSyncProfileCreateWithName(_ name: CFString!) -> Unmanaged<ColorSyncProfile>?
+c:@F@ColorSyncProfileCreateWithURL	swift.func	ColorSyncProfileCreateWithURL(_:_:)	ColorSyncProfileCreateWithURL(_:_:)	func ColorSyncProfileCreateWithURL(_ url: CFURL!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Unmanaged<ColorSyncProfile>?
+c:@F@ColorSyncProfileCreateWithURLAndOptions	swift.func	ColorSyncProfileCreateWithURLAndOptions(_:_:_:)	ColorSyncProfileCreateWithURLAndOptions(_:_:_:)	func ColorSyncProfileCreateWithURLAndOptions(_ url: CFURL!, _ options: CFDictionary?, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Unmanaged<ColorSyncProfile>?
+c:@F@ColorSyncProfileEstimateGamma	swift.func	ColorSyncProfileEstimateGamma(_:_:)	ColorSyncProfileEstimateGamma(_:_:)	func ColorSyncProfileEstimateGamma(_ prof: ColorSyncProfile!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Float
+c:@F@ColorSyncProfileGetMD5	swift.func	ColorSyncProfileGetMD5(_:)	ColorSyncProfileGetMD5(_:)	func ColorSyncProfileGetMD5(_ prof: ColorSyncProfile!) -> ColorSyncMD5
+c:@F@ColorSyncProfileGetTagCount	swift.func	ColorSyncProfileGetTagCount(_:)	ColorSyncProfileGetTagCount(_:)	func ColorSyncProfileGetTagCount(_: ColorSyncProfile!) -> Int
+c:@F@ColorSyncProfileGetTypeID	swift.func	ColorSyncProfileGetTypeID()	ColorSyncProfileGetTypeID()	func ColorSyncProfileGetTypeID() -> CFTypeID
+c:@F@ColorSyncProfileGetURL	swift.func	ColorSyncProfileGetURL(_:_:)	ColorSyncProfileGetURL(_:_:)	func ColorSyncProfileGetURL(_ prof: ColorSyncProfile!, _ error: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Unmanaged<CFURL>!
+c:@F@ColorSyncProfileIsHLGBased	swift.func	ColorSyncProfileIsHLGBased(_:)	ColorSyncProfileIsHLGBased(_:)	func ColorSyncProfileIsHLGBased(_: ColorSyncProfile!) -> Bool
+c:@F@ColorSyncProfileIsMatrixBased	swift.func	ColorSyncProfileIsMatrixBased(_:)	ColorSyncProfileIsMatrixBased(_:)	func ColorSyncProfileIsMatrixBased(_: ColorSyncProfile!) -> Bool
+c:@F@ColorSyncProfileIsPQBased	swift.func	ColorSyncProfileIsPQBased(_:)	ColorSyncProfileIsPQBased(_:)	func ColorSyncProfileIsPQBased(_: ColorSyncProfile!) -> Bool
+c:@F@ColorSyncProfileIsWideGamut	swift.func	ColorSyncProfileIsWideGamut(_:)	ColorSyncProfileIsWideGamut(_:)	func ColorSyncProfileIsWideGamut(_: ColorSyncProfile!) -> Bool
+c:@F@ColorSyncProfileRemoveTag	swift.func	ColorSyncProfileRemoveTag(_:_:)	ColorSyncProfileRemoveTag(_:_:)	func ColorSyncProfileRemoveTag(_ prof: ColorSyncMutableProfile!, _ signature: CFString!)
+c:@F@ColorSyncProfileSetHeader	swift.func	ColorSyncProfileSetHeader(_:_:)	ColorSyncProfileSetHeader(_:_:)	func ColorSyncProfileSetHeader(_ prof: ColorSyncMutableProfile!, _ header: CFData!)
+c:@F@ColorSyncProfileSetTag	swift.func	ColorSyncProfileSetTag(_:_:_:)	ColorSyncProfileSetTag(_:_:_:)	func ColorSyncProfileSetTag(_ prof: ColorSyncMutableProfile!, _ signature: CFString!, _ data: CFData!)
+c:@F@ColorSyncProfileVerify	swift.func	ColorSyncProfileVerify(_:_:_:)	ColorSyncProfileVerify(_:_:_:)	func ColorSyncProfileVerify(_ prof: ColorSyncProfile!, _ errors: UnsafeMutablePointer<Unmanaged<CFError>?>?, _ warnings: UnsafeMutablePointer<Unmanaged<CFError>?>?) -> Bool
+c:@F@ColorSyncTransformConvert	swift.func	ColorSyncTransformConvert(_:_:_:_:_:_:_:_:_:_:_:_:)	ColorSyncTransformConvert(_:_:_:_:_:_:_:_:_:_:_:_:)	func ColorSyncTransformConvert(_ transform: ColorSyncTransform!, _ width: Int, _ height: Int, _ dst: UnsafeMutableRawPointer!, _ dstDepth: ColorSyncDataDepth, _ dstLayout: ColorSyncDataLayout, _ dstBytesPerRow: Int, _ src: UnsafeRawPointer!, _ srcDepth: ColorSyncDataDepth, _ srcLayout: ColorSyncDataLayout, _ srcBytesPerRow: Int, _ options: CFDictionary?) -> Bool
+c:@F@ColorSyncTransformCopyProperty	swift.func	ColorSyncTransformCopyProperty(_:_:_:)	ColorSyncTransformCopyProperty(_:_:_:)	func ColorSyncTransformCopyProperty(_ transform: ColorSyncTransform!, _ key: CFTypeRef!, _ options: CFDictionary?) -> Unmanaged<CFTypeRef>?
+c:@F@ColorSyncTransformCreate	swift.func	ColorSyncTransformCreate(_:_:)	ColorSyncTransformCreate(_:_:)	func ColorSyncTransformCreate(_ profileSequence: CFArray?, _ options: CFDictionary?) -> Unmanaged<ColorSyncTransform>?
+c:@F@ColorSyncTransformGetProfileSequence	swift.func	ColorSyncTransformGetProfileSequence(_:)	ColorSyncTransformGetProfileSequence(_:)	func ColorSyncTransformGetProfileSequence(_ transform: ColorSyncTransform!) -> Unmanaged<CFArray>?
+c:@F@ColorSyncTransformGetTypeID	swift.func	ColorSyncTransformGetTypeID()	ColorSyncTransformGetTypeID()	func ColorSyncTransformGetTypeID() -> CFTypeID
+c:@F@ColorSyncTransformSetProperty	swift.func	ColorSyncTransformSetProperty(_:_:_:)	ColorSyncTransformSetProperty(_:_:_:)	func ColorSyncTransformSetProperty(_ transform: ColorSyncTransform!, _ key: CFTypeRef!, _ property: CFTypeRef?)
+c:@SA@ColorSyncMD5	swift.struct	ColorSyncMD5	ColorSyncMD5	struct ColorSyncMD5
+c:@SA@ColorSyncMD5@FI@digest	swift.property	digest	ColorSyncMD5.digest	var digest: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
+c:@T@ColorSyncDataLayout	swift.typealias	ColorSyncDataLayout	ColorSyncDataLayout	typealias ColorSyncDataLayout = UInt32
+c:@T@ColorSyncMutableProfileRef	swift.class	ColorSyncMutableProfile	ColorSyncMutableProfile	class ColorSyncMutableProfile
+c:@T@ColorSyncProfileIterateCallback	swift.typealias	ColorSyncProfileIterateCallback	ColorSyncProfileIterateCallback	typealias ColorSyncProfileIterateCallback = (CFDictionary?, UnsafeMutableRawPointer?) -> Bool
+c:@T@ColorSyncProfileRef	swift.class	ColorSyncProfile	ColorSyncProfile	class ColorSyncProfile
+c:@T@ColorSyncTransformRef	swift.class	ColorSyncTransform	ColorSyncTransform	class ColorSyncTransform
+c:@kColorSyncACESCGLinearProfile	swift.var	kColorSyncACESCGLinearProfile	kColorSyncACESCGLinearProfile	var kColorSyncACESCGLinearProfile: Unmanaged<CFString>!
+c:@kColorSyncAdobeRGB1998Profile	swift.var	kColorSyncAdobeRGB1998Profile	kColorSyncAdobeRGB1998Profile	var kColorSyncAdobeRGB1998Profile: Unmanaged<CFString>!
+c:@kColorSyncBestQuality	swift.var	kColorSyncBestQuality	kColorSyncBestQuality	var kColorSyncBestQuality: Unmanaged<CFString>!
+c:@kColorSyncBlackPointCompensation	swift.var	kColorSyncBlackPointCompensation	kColorSyncBlackPointCompensation	var kColorSyncBlackPointCompensation: Unmanaged<CFString>!
+c:@kColorSyncConversion1DLut	swift.var	kColorSyncConversion1DLut	kColorSyncConversion1DLut	var kColorSyncConversion1DLut: Unmanaged<CFString>!
+c:@kColorSyncConversion3DLut	swift.var	kColorSyncConversion3DLut	kColorSyncConversion3DLut	var kColorSyncConversion3DLut: Unmanaged<CFString>!
+c:@kColorSyncConversionBPC	swift.var	kColorSyncConversionBPC	kColorSyncConversionBPC	var kColorSyncConversionBPC: Unmanaged<CFString>!
+c:@kColorSyncConversionChannelID	swift.var	kColorSyncConversionChannelID	kColorSyncConversionChannelID	var kColorSyncConversionChannelID: Unmanaged<CFString>!
+c:@kColorSyncConversionGridPoints	swift.var	kColorSyncConversionGridPoints	kColorSyncConversionGridPoints	var kColorSyncConversionGridPoints: Unmanaged<CFString>!
+c:@kColorSyncConversionInpChan	swift.var	kColorSyncConversionInpChan	kColorSyncConversionInpChan	var kColorSyncConversionInpChan: Unmanaged<CFString>!
+c:@kColorSyncConversionMatrix	swift.var	kColorSyncConversionMatrix	kColorSyncConversionMatrix	var kColorSyncConversionMatrix: Unmanaged<CFString>!
+c:@kColorSyncConversionNDLut	swift.var	kColorSyncConversionNDLut	kColorSyncConversionNDLut	var kColorSyncConversionNDLut: Unmanaged<CFString>!
+c:@kColorSyncConversionOutChan	swift.var	kColorSyncConversionOutChan	kColorSyncConversionOutChan	var kColorSyncConversionOutChan: Unmanaged<CFString>!
+c:@kColorSyncConversionParamCurve0	swift.var	kColorSyncConversionParamCurve0	kColorSyncConversionParamCurve0	var kColorSyncConversionParamCurve0: Unmanaged<CFString>!
+c:@kColorSyncConversionParamCurve1	swift.var	kColorSyncConversionParamCurve1	kColorSyncConversionParamCurve1	var kColorSyncConversionParamCurve1: Unmanaged<CFString>!
+c:@kColorSyncConversionParamCurve2	swift.var	kColorSyncConversionParamCurve2	kColorSyncConversionParamCurve2	var kColorSyncConversionParamCurve2: Unmanaged<CFString>!
+c:@kColorSyncConversionParamCurve3	swift.var	kColorSyncConversionParamCurve3	kColorSyncConversionParamCurve3	var kColorSyncConversionParamCurve3: Unmanaged<CFString>!
+c:@kColorSyncConversionParamCurve4	swift.var	kColorSyncConversionParamCurve4	kColorSyncConversionParamCurve4	var kColorSyncConversionParamCurve4: Unmanaged<CFString>!
+c:@kColorSyncConvertQuality	swift.var	kColorSyncConvertQuality	kColorSyncConvertQuality	var kColorSyncConvertQuality: Unmanaged<CFString>!
+c:@kColorSyncConvertUseExtendedRange	swift.var	kColorSyncConvertUseExtendedRange	kColorSyncConvertUseExtendedRange	var kColorSyncConvertUseExtendedRange: Unmanaged<CFString>!
+c:@kColorSyncDCIP3Profile	swift.var	kColorSyncDCIP3Profile	kColorSyncDCIP3Profile	var kColorSyncDCIP3Profile: Unmanaged<CFString>!
+c:@kColorSyncDisplayP3Profile	swift.var	kColorSyncDisplayP3Profile	kColorSyncDisplayP3Profile	var kColorSyncDisplayP3Profile: Unmanaged<CFString>!
+c:@kColorSyncDoNotSubstituteProfiles	swift.var	kColorSyncDoNotSubstituteProfiles	kColorSyncDoNotSubstituteProfiles	var kColorSyncDoNotSubstituteProfiles: Unmanaged<CFString>!
+c:@kColorSyncDraftQuality	swift.var	kColorSyncDraftQuality	kColorSyncDraftQuality	var kColorSyncDraftQuality: Unmanaged<CFString>!
+c:@kColorSyncExtendedRange	swift.var	kColorSyncExtendedRange	kColorSyncExtendedRange	var kColorSyncExtendedRange: Unmanaged<CFString>!
+c:@kColorSyncFixedPointRange	swift.var	kColorSyncFixedPointRange	kColorSyncFixedPointRange	var kColorSyncFixedPointRange: Unmanaged<CFString>!
+c:@kColorSyncGenericCMYKProfile	swift.var	kColorSyncGenericCMYKProfile	kColorSyncGenericCMYKProfile	var kColorSyncGenericCMYKProfile: Unmanaged<CFString>!
+c:@kColorSyncGenericGrayGamma22Profile	swift.var	kColorSyncGenericGrayGamma22Profile	kColorSyncGenericGrayGamma22Profile	var kColorSyncGenericGrayGamma22Profile: Unmanaged<CFString>!
+c:@kColorSyncGenericGrayProfile	swift.var	kColorSyncGenericGrayProfile	kColorSyncGenericGrayProfile	var kColorSyncGenericGrayProfile: Unmanaged<CFString>!
+c:@kColorSyncGenericLabProfile	swift.var	kColorSyncGenericLabProfile	kColorSyncGenericLabProfile	var kColorSyncGenericLabProfile: Unmanaged<CFString>!
+c:@kColorSyncGenericRGBProfile	swift.var	kColorSyncGenericRGBProfile	kColorSyncGenericRGBProfile	var kColorSyncGenericRGBProfile: Unmanaged<CFString>!
+c:@kColorSyncGenericXYZProfile	swift.var	kColorSyncGenericXYZProfile	kColorSyncGenericXYZProfile	var kColorSyncGenericXYZProfile: Unmanaged<CFString>!
+c:@kColorSyncHDRDerivative	swift.var	kColorSyncHDRDerivative	kColorSyncHDRDerivative	var kColorSyncHDRDerivative: Unmanaged<CFString>!
+c:@kColorSyncHLGDerivative	swift.var	kColorSyncHLGDerivative	kColorSyncHLGDerivative	var kColorSyncHLGDerivative: Unmanaged<CFString>!
+c:@kColorSyncITUR2020Profile	swift.var	kColorSyncITUR2020Profile	kColorSyncITUR2020Profile	var kColorSyncITUR2020Profile: Unmanaged<CFString>!
+c:@kColorSyncITUR709Profile	swift.var	kColorSyncITUR709Profile	kColorSyncITUR709Profile	var kColorSyncITUR709Profile: Unmanaged<CFString>!
+c:@kColorSyncNormalQuality	swift.var	kColorSyncNormalQuality	kColorSyncNormalQuality	var kColorSyncNormalQuality: Unmanaged<CFString>!
+c:@kColorSyncPQDerivative	swift.var	kColorSyncPQDerivative	kColorSyncPQDerivative	var kColorSyncPQDerivative: Unmanaged<CFString>!
+c:@kColorSyncPreferredCMM	swift.var	kColorSyncPreferredCMM	kColorSyncPreferredCMM	var kColorSyncPreferredCMM: Unmanaged<CFString>!
+c:@kColorSyncProfile	swift.var	kColorSyncProfile	kColorSyncProfile	var kColorSyncProfile: Unmanaged<CFString>!
+c:@kColorSyncProfileCacheSeed	swift.var	kColorSyncProfileCacheSeed	kColorSyncProfileCacheSeed	var kColorSyncProfileCacheSeed: Unmanaged<CFString>!
+c:@kColorSyncProfileClass	swift.var	kColorSyncProfileClass	kColorSyncProfileClass	var kColorSyncProfileClass: Unmanaged<CFString>!
+c:@kColorSyncProfileColorSpace	swift.var	kColorSyncProfileColorSpace	kColorSyncProfileColorSpace	var kColorSyncProfileColorSpace: Unmanaged<CFString>!
+c:@kColorSyncProfileDescription	swift.var	kColorSyncProfileDescription	kColorSyncProfileDescription	var kColorSyncProfileDescription: Unmanaged<CFString>!
+c:@kColorSyncProfileHeader	swift.var	kColorSyncProfileHeader	kColorSyncProfileHeader	var kColorSyncProfileHeader: Unmanaged<CFString>!
+c:@kColorSyncProfileIsValid	swift.var	kColorSyncProfileIsValid	kColorSyncProfileIsValid	var kColorSyncProfileIsValid: Unmanaged<CFString>!
+c:@kColorSyncProfileMD5Digest	swift.var	kColorSyncProfileMD5Digest	kColorSyncProfileMD5Digest	var kColorSyncProfileMD5Digest: Unmanaged<CFString>!
+c:@kColorSyncProfilePCS	swift.var	kColorSyncProfilePCS	kColorSyncProfilePCS	var kColorSyncProfilePCS: Unmanaged<CFString>!
+c:@kColorSyncProfileURL	swift.var	kColorSyncProfileURL	kColorSyncProfileURL	var kColorSyncProfileURL: Unmanaged<CFString>!
+c:@kColorSyncROMMRGBProfile	swift.var	kColorSyncROMMRGBProfile	kColorSyncROMMRGBProfile	var kColorSyncROMMRGBProfile: Unmanaged<CFString>!
+c:@kColorSyncRenderingIntent	swift.var	kColorSyncRenderingIntent	kColorSyncRenderingIntent	var kColorSyncRenderingIntent: Unmanaged<CFString>!
+c:@kColorSyncRenderingIntentAbsolute	swift.var	kColorSyncRenderingIntentAbsolute	kColorSyncRenderingIntentAbsolute	var kColorSyncRenderingIntentAbsolute: Unmanaged<CFString>!
+c:@kColorSyncRenderingIntentPerceptual	swift.var	kColorSyncRenderingIntentPerceptual	kColorSyncRenderingIntentPerceptual	var kColorSyncRenderingIntentPerceptual: Unmanaged<CFString>!
+c:@kColorSyncRenderingIntentRelative	swift.var	kColorSyncRenderingIntentRelative	kColorSyncRenderingIntentRelative	var kColorSyncRenderingIntentRelative: Unmanaged<CFString>!
+c:@kColorSyncRenderingIntentSaturation	swift.var	kColorSyncRenderingIntentSaturation	kColorSyncRenderingIntentSaturation	var kColorSyncRenderingIntentSaturation: Unmanaged<CFString>!
+c:@kColorSyncRenderingIntentUseProfileHeader	swift.var	kColorSyncRenderingIntentUseProfileHeader	kColorSyncRenderingIntentUseProfileHeader	var kColorSyncRenderingIntentUseProfileHeader: Unmanaged<CFString>!
+c:@kColorSyncSRGBProfile	swift.var	kColorSyncSRGBProfile	kColorSyncSRGBProfile	var kColorSyncSRGBProfile: Unmanaged<CFString>!
+c:@kColorSyncSigAToB0Tag	swift.var	kColorSyncSigAToB0Tag	kColorSyncSigAToB0Tag	var kColorSyncSigAToB0Tag: Unmanaged<CFString>!
+c:@kColorSyncSigAToB1Tag	swift.var	kColorSyncSigAToB1Tag	kColorSyncSigAToB1Tag	var kColorSyncSigAToB1Tag: Unmanaged<CFString>!
+c:@kColorSyncSigAToB2Tag	swift.var	kColorSyncSigAToB2Tag	kColorSyncSigAToB2Tag	var kColorSyncSigAToB2Tag: Unmanaged<CFString>!
+c:@kColorSyncSigAbstractClass	swift.var	kColorSyncSigAbstractClass	kColorSyncSigAbstractClass	var kColorSyncSigAbstractClass: Unmanaged<CFString>!
+c:@kColorSyncSigBToA0Tag	swift.var	kColorSyncSigBToA0Tag	kColorSyncSigBToA0Tag	var kColorSyncSigBToA0Tag: Unmanaged<CFString>!
+c:@kColorSyncSigBToA1Tag	swift.var	kColorSyncSigBToA1Tag	kColorSyncSigBToA1Tag	var kColorSyncSigBToA1Tag: Unmanaged<CFString>!
+c:@kColorSyncSigBToA2Tag	swift.var	kColorSyncSigBToA2Tag	kColorSyncSigBToA2Tag	var kColorSyncSigBToA2Tag: Unmanaged<CFString>!
+c:@kColorSyncSigBlueColorantTag	swift.var	kColorSyncSigBlueColorantTag	kColorSyncSigBlueColorantTag	var kColorSyncSigBlueColorantTag: Unmanaged<CFString>!
+c:@kColorSyncSigBlueTRCTag	swift.var	kColorSyncSigBlueTRCTag	kColorSyncSigBlueTRCTag	var kColorSyncSigBlueTRCTag: Unmanaged<CFString>!
+c:@kColorSyncSigCmykData	swift.var	kColorSyncSigCmykData	kColorSyncSigCmykData	var kColorSyncSigCmykData: Unmanaged<CFString>!
+c:@kColorSyncSigColorSpaceClass	swift.var	kColorSyncSigColorSpaceClass	kColorSyncSigColorSpaceClass	var kColorSyncSigColorSpaceClass: Unmanaged<CFString>!
+c:@kColorSyncSigCopyrightTag	swift.var	kColorSyncSigCopyrightTag	kColorSyncSigCopyrightTag	var kColorSyncSigCopyrightTag: Unmanaged<CFString>!
+c:@kColorSyncSigDeviceMfgDescTag	swift.var	kColorSyncSigDeviceMfgDescTag	kColorSyncSigDeviceMfgDescTag	var kColorSyncSigDeviceMfgDescTag: Unmanaged<CFString>!
+c:@kColorSyncSigDeviceModelDescTag	swift.var	kColorSyncSigDeviceModelDescTag	kColorSyncSigDeviceModelDescTag	var kColorSyncSigDeviceModelDescTag: Unmanaged<CFString>!
+c:@kColorSyncSigDisplayClass	swift.var	kColorSyncSigDisplayClass	kColorSyncSigDisplayClass	var kColorSyncSigDisplayClass: Unmanaged<CFString>!
+c:@kColorSyncSigGamutTag	swift.var	kColorSyncSigGamutTag	kColorSyncSigGamutTag	var kColorSyncSigGamutTag: Unmanaged<CFString>!
+c:@kColorSyncSigGrayData	swift.var	kColorSyncSigGrayData	kColorSyncSigGrayData	var kColorSyncSigGrayData: Unmanaged<CFString>!
+c:@kColorSyncSigGrayTRCTag	swift.var	kColorSyncSigGrayTRCTag	kColorSyncSigGrayTRCTag	var kColorSyncSigGrayTRCTag: Unmanaged<CFString>!
+c:@kColorSyncSigGreenColorantTag	swift.var	kColorSyncSigGreenColorantTag	kColorSyncSigGreenColorantTag	var kColorSyncSigGreenColorantTag: Unmanaged<CFString>!
+c:@kColorSyncSigGreenTRCTag	swift.var	kColorSyncSigGreenTRCTag	kColorSyncSigGreenTRCTag	var kColorSyncSigGreenTRCTag: Unmanaged<CFString>!
+c:@kColorSyncSigInputClass	swift.var	kColorSyncSigInputClass	kColorSyncSigInputClass	var kColorSyncSigInputClass: Unmanaged<CFString>!
+c:@kColorSyncSigLabData	swift.var	kColorSyncSigLabData	kColorSyncSigLabData	var kColorSyncSigLabData: Unmanaged<CFString>!
+c:@kColorSyncSigLinkClass	swift.var	kColorSyncSigLinkClass	kColorSyncSigLinkClass	var kColorSyncSigLinkClass: Unmanaged<CFString>!
+c:@kColorSyncSigMediaBlackPointTag	swift.var	kColorSyncSigMediaBlackPointTag	kColorSyncSigMediaBlackPointTag	var kColorSyncSigMediaBlackPointTag: Unmanaged<CFString>!
+c:@kColorSyncSigMediaWhitePointTag	swift.var	kColorSyncSigMediaWhitePointTag	kColorSyncSigMediaWhitePointTag	var kColorSyncSigMediaWhitePointTag: Unmanaged<CFString>!
+c:@kColorSyncSigNamedColor2Tag	swift.var	kColorSyncSigNamedColor2Tag	kColorSyncSigNamedColor2Tag	var kColorSyncSigNamedColor2Tag: Unmanaged<CFString>!
+c:@kColorSyncSigNamedColorClass	swift.var	kColorSyncSigNamedColorClass	kColorSyncSigNamedColorClass	var kColorSyncSigNamedColorClass: Unmanaged<CFString>!
+c:@kColorSyncSigOutputClass	swift.var	kColorSyncSigOutputClass	kColorSyncSigOutputClass	var kColorSyncSigOutputClass: Unmanaged<CFString>!
+c:@kColorSyncSigPreview0Tag	swift.var	kColorSyncSigPreview0Tag	kColorSyncSigPreview0Tag	var kColorSyncSigPreview0Tag: Unmanaged<CFString>!
+c:@kColorSyncSigPreview1Tag	swift.var	kColorSyncSigPreview1Tag	kColorSyncSigPreview1Tag	var kColorSyncSigPreview1Tag: Unmanaged<CFString>!
+c:@kColorSyncSigPreview2Tag	swift.var	kColorSyncSigPreview2Tag	kColorSyncSigPreview2Tag	var kColorSyncSigPreview2Tag: Unmanaged<CFString>!
+c:@kColorSyncSigProfileDescriptionTag	swift.var	kColorSyncSigProfileDescriptionTag	kColorSyncSigProfileDescriptionTag	var kColorSyncSigProfileDescriptionTag: Unmanaged<CFString>!
+c:@kColorSyncSigProfileSequenceDescTag	swift.var	kColorSyncSigProfileSequenceDescTag	kColorSyncSigProfileSequenceDescTag	var kColorSyncSigProfileSequenceDescTag: Unmanaged<CFString>!
+c:@kColorSyncSigRedColorantTag	swift.var	kColorSyncSigRedColorantTag	kColorSyncSigRedColorantTag	var kColorSyncSigRedColorantTag: Unmanaged<CFString>!
+c:@kColorSyncSigRedTRCTag	swift.var	kColorSyncSigRedTRCTag	kColorSyncSigRedTRCTag	var kColorSyncSigRedTRCTag: Unmanaged<CFString>!
+c:@kColorSyncSigRgbData	swift.var	kColorSyncSigRgbData	kColorSyncSigRgbData	var kColorSyncSigRgbData: Unmanaged<CFString>!
+c:@kColorSyncSigTechnologyTag	swift.var	kColorSyncSigTechnologyTag	kColorSyncSigTechnologyTag	var kColorSyncSigTechnologyTag: Unmanaged<CFString>!
+c:@kColorSyncSigViewingCondDescTag	swift.var	kColorSyncSigViewingCondDescTag	kColorSyncSigViewingCondDescTag	var kColorSyncSigViewingCondDescTag: Unmanaged<CFString>!
+c:@kColorSyncSigViewingConditionsTag	swift.var	kColorSyncSigViewingConditionsTag	kColorSyncSigViewingConditionsTag	var kColorSyncSigViewingConditionsTag: Unmanaged<CFString>!
+c:@kColorSyncSigXYZData	swift.var	kColorSyncSigXYZData	kColorSyncSigXYZData	var kColorSyncSigXYZData: Unmanaged<CFString>!
+c:@kColorSyncTransformCodeFragmentMD5	swift.var	kColorSyncTransformCodeFragmentMD5	kColorSyncTransformCodeFragmentMD5	var kColorSyncTransformCodeFragmentMD5: Unmanaged<CFString>!
+c:@kColorSyncTransformCodeFragmentType	swift.var	kColorSyncTransformCodeFragmentType	kColorSyncTransformCodeFragmentType	var kColorSyncTransformCodeFragmentType: Unmanaged<CFString>!
+c:@kColorSyncTransformCreator	swift.var	kColorSyncTransformCreator	kColorSyncTransformCreator	var kColorSyncTransformCreator: Unmanaged<CFString>!
+c:@kColorSyncTransformDeviceToDevice	swift.var	kColorSyncTransformDeviceToDevice	kColorSyncTransformDeviceToDevice	var kColorSyncTransformDeviceToDevice: Unmanaged<CFString>!
+c:@kColorSyncTransformDeviceToPCS	swift.var	kColorSyncTransformDeviceToPCS	kColorSyncTransformDeviceToPCS	var kColorSyncTransformDeviceToPCS: Unmanaged<CFString>!
+c:@kColorSyncTransformDstSpace	swift.var	kColorSyncTransformDstSpace	kColorSyncTransformDstSpace	var kColorSyncTransformDstSpace: Unmanaged<CFString>!
+c:@kColorSyncTransformFullConversionData	swift.var	kColorSyncTransformFullConversionData	kColorSyncTransformFullConversionData	var kColorSyncTransformFullConversionData: Unmanaged<CFString>!
+c:@kColorSyncTransformGamutCheck	swift.var	kColorSyncTransformGamutCheck	kColorSyncTransformGamutCheck	var kColorSyncTransformGamutCheck: Unmanaged<CFString>!
+c:@kColorSyncTransformInfo	swift.var	kColorSyncTransformInfo	kColorSyncTransformInfo	var kColorSyncTransformInfo: Unmanaged<CFString>!
+c:@kColorSyncTransformPCSToDevice	swift.var	kColorSyncTransformPCSToDevice	kColorSyncTransformPCSToDevice	var kColorSyncTransformPCSToDevice: Unmanaged<CFString>!
+c:@kColorSyncTransformPCSToPCS	swift.var	kColorSyncTransformPCSToPCS	kColorSyncTransformPCSToPCS	var kColorSyncTransformPCSToPCS: Unmanaged<CFString>!
+c:@kColorSyncTransformParametricConversionData	swift.var	kColorSyncTransformParametricConversionData	kColorSyncTransformParametricConversionData	var kColorSyncTransformParametricConversionData: Unmanaged<CFString>!
+c:@kColorSyncTransformProfileSequnce	swift.var	kColorSyncTransformProfileSequnce	kColorSyncTransformProfileSequnce	var kColorSyncTransformProfileSequnce: Unmanaged<CFString>!
+c:@kColorSyncTransformSimplifiedConversionData	swift.var	kColorSyncTransformSimplifiedConversionData	kColorSyncTransformSimplifiedConversionData	var kColorSyncTransformSimplifiedConversionData: Unmanaged<CFString>!
+c:@kColorSyncTransformSrcSpace	swift.var	kColorSyncTransformSrcSpace	kColorSyncTransformSrcSpace	var kColorSyncTransformSrcSpace: Unmanaged<CFString>!
+c:@kColorSyncTransformTag	swift.var	kColorSyncTransformTag	kColorSyncTransformTag	var kColorSyncTransformTag: Unmanaged<CFString>!
+c:@kColorSyncTransformUseITU709OETF	swift.var	kColorSyncTransformUseITU709OETF	kColorSyncTransformUseITU709OETF	var kColorSyncTransformUseITU709OETF: Unmanaged<CFString>!
+c:@kColorSyncWebSafeColorsProfile	swift.var	kColorSyncWebSafeColorsProfile	kColorSyncWebSafeColorsProfile	var kColorSyncWebSafeColorsProfile: Unmanaged<CFString>!
+c:@macro@COLORSYNC_API_VERSION	swift.var	COLORSYNC_API_VERSION	COLORSYNC_API_VERSION	var COLORSYNC_API_VERSION: Int { get }
+c:@macro@COLORSYNC_MD5_LENGTH	swift.var	COLORSYNC_MD5_LENGTH	COLORSYNC_MD5_LENGTH	var COLORSYNC_MD5_LENGTH: Int32 { get }
+c:@macro@icVersion4Number	swift.var	icVersion4Number	icVersion4Number	var icVersion4Number: Int { get }
+c:@macro@icVersion4Point4Number	swift.var	icVersion4Point4Number	icVersion4Point4Number	var icVersion4Point4Number: Int { get }
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncProfileRef	swift.func.op	==(_:_:)	ColorSyncProfile.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncTransformRef	swift.func.op	==(_:_:)	ColorSyncTransform.==(_:_:)	static func == (left: Self, right: Self) -> Bool
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ColorSyncProfileRef	swift.method	hash(into:)	ColorSyncProfile.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ColorSyncTransformRef	swift.method	hash(into:)	ColorSyncTransform.hash(into:)	func hash(into hasher: inout Hasher)
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@ColorSyncProfileRef	swift.property	hashValue	ColorSyncProfile.hashValue	var hashValue: Int { get }
+s:14CoreFoundation9_CFObjectPAAE9hashValueSivp::SYNTHESIZED::c:@T@ColorSyncTransformRef	swift.property	hashValue	ColorSyncTransform.hashValue	var hashValue: Int { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ColorSyncAlphaInfo	swift.func.op	!=(_:_:)	ColorSyncAlphaInfo.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ColorSyncDataDepth	swift.func.op	!=(_:_:)	ColorSyncDataDepth.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncProfileRef	swift.func.op	!=(_:_:)	ColorSyncProfile.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ColorSyncTransformRef	swift.func.op	!=(_:_:)	ColorSyncTransform.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ColorSyncAlphaInfo	swift.property	hashValue	ColorSyncAlphaInfo.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ColorSyncDataDepth	swift.property	hashValue	ColorSyncDataDepth.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ColorSyncAlphaInfo	swift.method	hash(into:)	ColorSyncAlphaInfo.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ColorSyncDataDepth	swift.method	hash(into:)	ColorSyncDataDepth.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12ColorSyncMD5a6digestABs5UInt8V_A15Et_tcfc	swift.init	init(digest:)	ColorSyncMD5.init(digest:)	init(digest: (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8))
+s:So12ColorSyncMD5aABycfc	swift.init	init()	ColorSyncMD5.init()	init()
+s:So18ColorSyncAlphaInfoV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	ColorSyncAlphaInfo.init(rawValue:)	init(rawValue: UInt32)
+s:So18ColorSyncAlphaInfoV8rawValues6UInt32Vvp	swift.property	rawValue	ColorSyncAlphaInfo.rawValue	var rawValue: UInt32
+s:So18ColorSyncAlphaInfoVyABs6UInt32Vcfc	swift.init	init(_:)	ColorSyncAlphaInfo.init(_:)	init(_ rawValue: UInt32)
+s:So18ColorSyncDataDepthV8rawValueABs6UInt32V_tcfc	swift.init	init(rawValue:)	ColorSyncDataDepth.init(rawValue:)	init(rawValue: UInt32)
+s:So18ColorSyncDataDepthV8rawValues6UInt32Vvp	swift.property	rawValue	ColorSyncDataDepth.rawValue	var rawValue: UInt32
+s:So18ColorSyncDataDepthVyABs6UInt32Vcfc	swift.init	init(_:)	ColorSyncDataDepth.init(_:)	init(_ rawValue: UInt32)

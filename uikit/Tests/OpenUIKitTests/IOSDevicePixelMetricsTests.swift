@@ -860,6 +860,48 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
                        accuracy: 1e-9)
         XCTAssertEqual(tab.transitionView.safeAreaInsets.bottom, 64)
     }
+
+    // MARK: NavFlow ax1 / xxxl disclosure + compact-height inner 20 / bar 38
+
+    /// MEASURED NavFlow t200.ax1 / t200.xxxl / t200, iPhone SE 2x / iOS 26.1.
+    func testDisclosureSizeFollowsContentSizeCategory() {
+        device(375, 667, scale: 2)
+        XCTAssertEqual(UITableViewCell.disclosureSize, CGSize(width: 10.5, height: 14))
+        let large = UITraitCollection(preferredContentSizeCategory: .large)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: large),
+                       CGSize(width: 10.5, height: 14))
+        let ax1 = UITraitCollection(preferredContentSizeCategory: .accessibilityLarge)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: ax1),
+                       CGSize(width: 20, height: 28.5))
+        let xxxl = UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: xxxl),
+                       CGSize(width: 14, height: 19.5))
+    }
+
+    /// MEASURED NavFlow t200.landscape, iPhone SE 2x / iOS 26.1:
+    /// inset-grouped inner 20 (labels abs 40) and Filter platter trailing 38.
+    func testCompactHeightInsetGroupedInnerAndNavBarSideMargin() {
+        device(667, 375, scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        XCTAssertTrue(UINavigationBar.isCompactHeight)
+        XCTAssertEqual(_UIBarMetrics.itemSideMargin, 38)
+        XCTAssertEqual(_UIBarMetrics.sideMargin, 16)
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 667, height: 375),
+                                style: .insetGrouped)
+        XCTAssertEqual(table.insetGroupedSideInset, 20)
+        XCTAssertEqual(table.groupedTextInset, 20)
+        XCTAssertEqual(table.groupedHeaderLabelX, 40)
+
+        UITraitCollection.current = savedTraits
+        device(375, 667, scale: 2)
+        let portrait = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                    style: .insetGrouped)
+        XCTAssertEqual(portrait.groupedTextInset, 16)
+        XCTAssertEqual(portrait.groupedHeaderLabelX, 32)
+        XCTAssertEqual(_UIBarMetrics.itemSideMargin, 16)
+    }
 }
 
 #if !os(Linux)

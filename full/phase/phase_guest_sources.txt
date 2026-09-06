@@ -1,0 +1,15 @@
+full/phase/PHASE.swift
+full/phase/PHASEAssets.swift
+full/phase/PHASEDirectivity.swift
+full/phase/PHASEEngine.swift
+full/phase/PHASEEnums.swift
+full/phase/PHASEEnvelope.swift
+full/phase/PHASEErrors.swift
+full/phase/PHASEGroup.swift
+full/phase/PHASEMetaParameters.swift
+full/phase/PHASENodes.swift
+full/phase/PHASEObject.swift
+full/phase/PHASEOptionSets.swift
+full/phase/PHASESIMD.swift
+full/phase/PHASESoundEvent.swift
+full/phase/PHASESpatial.swift

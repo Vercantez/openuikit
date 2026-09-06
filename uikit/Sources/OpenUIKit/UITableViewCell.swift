@@ -165,22 +165,26 @@ final class UITableCellAccessoryView: UIView {
         case .none:
             break
         case .disclosureIndicator:
-            // 10.5x14 box; ink fitted to the golden chevron (2 pt stroke,
-            // round caps, apex right of center). RTL (MEASURED /tmp/rtlprobe,
-            // iPhone SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron
-            // points toward trailing (left), mirrored in the 10.5 box.
+            // Fitted in the .large 10.5×14 box (2 pt stroke, round caps,
+            // apex right of center). RTL (MEASURED /tmp/rtlprobe, iPhone
+            // SE 2x / iOS 26.1, disclosure abs.x = 16): the chevron points
+            // toward trailing (left). ax1 / xxxl scale the same polyline
+            // into the measured 20×28.5 / 14×19.5 boxes (NavFlow t200.ax1
+            // / t200.xxxl).
             let color = UIColor.tertiaryLabel.resolvedCGColor(with: traitCollection)
+            let sx = bounds.width / 10.5
+            let sy = bounds.height / 14
             let points: [CGPoint]
             if _layoutIsRTL {
-                points = [CGPoint(x: 7.3, y: 1.1),
-                          CGPoint(x: 2.5, y: 5.85),
-                          CGPoint(x: 7.3, y: 10.6)]
+                points = [CGPoint(x: 7.3 * sx, y: 1.1 * sy),
+                          CGPoint(x: 2.5 * sx, y: 5.85 * sy),
+                          CGPoint(x: 7.3 * sx, y: 10.6 * sy)]
             } else {
-                points = [CGPoint(x: 3.2, y: 1.1),
-                          CGPoint(x: 8.0, y: 5.85),
-                          CGPoint(x: 3.2, y: 10.6)]
+                points = [CGPoint(x: 3.2 * sx, y: 1.1 * sy),
+                          CGPoint(x: 8.0 * sx, y: 5.85 * sy),
+                          CGPoint(x: 3.2 * sx, y: 10.6 * sy)]
             }
-            strokePolyline(points, width: 2, in: canvas, color: color)
+            strokePolyline(points, width: 2 * sx, in: canvas, color: color)
         case .checkmark:
             // 19x18 box; tintColor stroke fitted to the golden checkmark.
             let color = tintColor.resolvedCGColor(with: traitCollection)
@@ -571,8 +575,24 @@ open class UITableViewCell: UIView, ReusableView {
     static var detailTrailingMargin: CGFloat { isIOSChrome ? 16 : 16 }
     /// iOS: the chevron symbol is 10.333 wide at 3x and 10.5 at 2x — a
     /// width in (10, 10.333] rounded up to the device pixel; 14 tall on both.
+    /// `.large` / unspecified. Dynamic Type uses ``effectiveDisclosureSize``.
     static var disclosureSize: CGSize {
         isIOSChrome ? CGSize(width: UITableView.iOSCeilToPixel(10.2), height: 14) : CGSize(width: 10.5, height: 14)
+    }
+    /// MEASURED NavFlow t200.ax1, iPhone SE 2x / iOS 26.1:
+    /// `_UITableCellAccessoryButton [307, 2, 20, 28.5]` in the 44 pt
+    /// inset-grouped cell (343 − 16 trailing − 20 = contentView 307).
+    /// MEASURED NavFlow t200.xxxl: `[313, 10, 14, 19.5]` (contentView 313).
+    /// `.large` t200 stays 10.5×14 (contentView 316.5).
+    static func disclosureSize(compatibleWith traits: UITraitCollection) -> CGSize {
+        guard isIOSChrome else { return disclosureSize }
+        let cat = traits.preferredContentSizeCategory
+        if cat.isAccessibilityCategory { return CGSize(width: 20, height: 28.5) }
+        if cat == .extraExtraExtraLarge { return CGSize(width: 14, height: 19.5) }
+        return disclosureSize
+    }
+    var effectiveDisclosureSize: CGSize {
+        UITableViewCell.disclosureSize(compatibleWith: traitCollection)
     }
     /// iOS: 19 x 17.333 at 3x, 19 x 18 at 2x (measured; no single rounding
     /// of one value gives both, so the two readings are carried as such).
@@ -589,6 +609,12 @@ open class UITableViewCell: UIView, ReusableView {
     static let checkmarkContentGap: CGFloat = 2.5
     /// value1 detail gap from the content edge when an accessory is present.
     static let detailAccessoryGap: CGFloat = 8
+    /// Minimum gap between a value1 primary and its detail when they
+    /// would overlap. MEASURED NavFlow t200.ax1, iPhone SE 2x / iOS 26.1:
+    /// "Appearance" maxX 188 + **6** = "Automatic" x 194 (detail width 105
+    /// against content 307 − 8). "Manage Downloads" maxX 297 leaves 2 pt
+    /// so "1.2 GB" collapses to width 0 at x 299.
+    static let value1TitleDetailGap: CGFloat = 6
     static let separatorThickness: CGFloat = 1
     static let highlightFadeDuration: Double = 0.3
 
@@ -946,7 +972,7 @@ open class UITableViewCell: UIView, ReusableView {
             return available
         case .disclosureIndicator:
             return max(0, available - trailingMargin
-                       - UITableViewCell.disclosureSize.width)
+                       - effectiveDisclosureSize.width)
         case .checkmark:
             return max(0, available - checkmarkTrailingMargin
                        - UITableViewCell.checkmarkSize.width
@@ -1066,7 +1092,7 @@ open class UITableViewCell: UIView, ReusableView {
                 _accessoryGlyphView.isHidden = true
             case .disclosureIndicator:
                 _accessoryGlyphView.isHidden = false
-                let s = UITableViewCell.disclosureSize
+                let s = effectiveDisclosureSize
                 _accessoryGlyphView.frame = CGRect(
                     x: w - trailingMargin - s.width,
                     y: pad + UITableViewCell.ceilHalf((h - s.height) / 2),
@@ -1098,7 +1124,17 @@ open class UITableViewCell: UIView, ReusableView {
         } else {
             imageView?.isHidden = true
         }
-        let maxTextW = contentWidth - labelX - _textInset
+        let maxTextW: CGFloat
+        if UITableViewCell.isIOSChrome, style == .value1 || style == .value2,
+           detailTextLabel != nil {
+            // MEASURED NavFlow t200.ax1: value1 primary is not inset a
+            // second 16 pt from the content trailing edge — "Manage
+            // Downloads" is 281 at x 16 in a 307 content view (16+281=297).
+            // The detail then takes whatever remains after `value1TitleDetailGap`.
+            maxTextW = contentWidth - labelX
+        } else {
+            maxTextW = contentWidth - labelX - _textInset
+        }
         let primary = textLabel.sizeThatFits(
             CGSize(width: CGFloat.greatestFiniteMagnitude, height: h))
         // iOS: a single-line primary is centred and its top rounded UP to
@@ -1130,7 +1166,15 @@ open class UITableViewCell: UIView, ReusableView {
                 ? UITableViewCell.plainSubtitlePrimaryY
                 : UITableViewCell.subtitlePrimaryY
         } else if UITableViewCell.isIOSChrome {
-            primaryY = UITableView.iOSCeilToPixel((h - primary.height) / 2)
+            if style == .value1 || style == .value2 {
+                // MEASURED NavFlow t200.ax1: 39.5 body in a 44 pt row at
+                // y **3** (`ceil((44−39.5)/2)`), not the 2x pixel-ceil 2.5.
+                // t200.xxxl: 27.5 at y **9** (`ceil(8.25)=9` vs pixel 8.5).
+                // `.large` 20.5 → 12 on both grids.
+                primaryY = ((h - primary.height) / 2).rounded(.up)
+            } else {
+                primaryY = UITableView.iOSCeilToPixel((h - primary.height) / 2)
+            }
         } else {
             primaryY = UITableViewCell.primaryLabelY
         }
@@ -1170,9 +1214,14 @@ open class UITableViewCell: UIView, ReusableView {
                 let right = accessoryView == nil && accessoryType == .none
                     ? bounds.width - UITableViewCell.detailTrailingMargin
                     : contentWidth - UITableViewCell.detailAccessoryGap
-                d.frame = CGRect(x: right - s.width,
+                // MEASURED NavFlow t200.ax1: "Automatic" is 105 at x 194
+                // against Appearance maxX 188 (gap 6), not the intrinsic
+                // 145; "1.2 GB" collapses to width 0 at the right edge.
+                let leftMin = textLabel.frame.maxX + UITableViewCell.value1TitleDetailGap
+                let fitted = min(s.width, max(0, right - leftMin))
+                d.frame = CGRect(x: right - fitted,
                                  y: primaryY,
-                                 width: s.width, height: s.height)
+                                 width: fitted, height: s.height)
             }
         }
 

@@ -1,0 +1,3 @@
+category	sdkRelativePath	size	sha256
+tbd	System/Library/Frameworks/EnergyKit.framework/EnergyKit.tbd	91930	f09f357f6b155d193839d41dd3e565fdb274f14fd963781ba5d01aab7ee9f55b
+swiftinterface	System/Library/Frameworks/EnergyKit.framework/Modules/EnergyKit.swiftmodule/arm64e-apple-ios.swiftinterface	20683	1b9f35a97c19d42a18a0f8b54d0de258033bf63b2f7880fd777daf1103cabbbc

@@ -1,0 +1,24 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 0,
+  "duplicateOccurrenceCount": 0,
+  "duplicateRelationshipOccurrenceCount": 4,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CarKey.symbols.json",
+      "relationshipCount": 136,
+      "sha256": "2dca95d2d4b6bbc04a8201cb810578ba12203d81e313c1fb2d78096f975819d6",
+      "symbolCount": 114
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CarKey",
+  "relationshipCount": 136,
+  "relationshipMultisetSHA256": "e5e9dcf621b8d85c80121ae68b6349a9e8fa37756fac298777f68836a6125abc",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 114,
+  "symbolMultisetSHA256": "bcae0ae16f0438b7eb9c045ba23f56f17e32f16ce97bf19347e9b54dff1a97f6",
+  "target": "arm64-apple-ios26.0"
+}
