@@ -223,6 +223,71 @@ public class UIColor: Hashable, @unchecked Sendable {
         return true
     }
 
+    /// Standard sRGB → HSV. Pattern colours do not exist here, so this
+    /// always succeeds (UIKit returns false only for pattern colours).
+    @discardableResult
+    public func getHue(
+        _ hue: UnsafeMutablePointer<CGFloat>?,
+        saturation: UnsafeMutablePointer<CGFloat>?,
+        brightness: UnsafeMutablePointer<CGFloat>?,
+        alpha: UnsafeMutablePointer<CGFloat>?
+    ) -> Bool {
+        let color = resolvedCGColor(with: .current)
+        let (h, s, v) = UIColor._rgbToHSB(red: color.red, green: color.green, blue: color.blue)
+        hue?.pointee = h
+        saturation?.pointee = s
+        brightness?.pointee = v
+        alpha?.pointee = color.alpha
+        return true
+    }
+
+    public convenience init(hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat) {
+        let (r, g, b) = UIColor._hsbToRGB(hue: hue, saturation: saturation, brightness: brightness)
+        self.init(red: r, green: g, blue: b, alpha: alpha)
+    }
+
+    static func _rgbToHSB(red: CGFloat, green: CGFloat, blue: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
+        let maxC = Swift.max(red, Swift.max(green, blue))
+        let minC = Swift.min(red, Swift.min(green, blue))
+        let delta = maxC - minC
+        var h: CGFloat = 0
+        if delta > 0 {
+            if maxC == red {
+                h = (green - blue) / delta
+                if h < 0 { h += 6 }
+            } else if maxC == green {
+                h = 2 + (blue - red) / delta
+            } else {
+                h = 4 + (red - green) / delta
+            }
+            h /= 6
+        }
+        let s: CGFloat = maxC == 0 ? 0 : delta / maxC
+        return (h, s, maxC)
+    }
+
+    static func _hsbToRGB(hue: CGFloat, saturation: CGFloat, brightness: CGFloat) -> (CGFloat, CGFloat, CGFloat) {
+        var h = hue.truncatingRemainder(dividingBy: 1)
+        if h < 0 { h += 1 }
+        let s = Swift.min(Swift.max(saturation, 0), 1)
+        let v = Swift.min(Swift.max(brightness, 0), 1)
+        if s == 0 { return (v, v, v) }
+        let sextant = h * 6
+        let i = Swift.min(5, Int(sextant))
+        let f = sextant - CGFloat(i)
+        let p = v * (1 - s)
+        let q = v * (1 - s * f)
+        let t = v * (1 - s * (1 - f))
+        switch i {
+        case 0: return (v, t, p)
+        case 1: return (q, v, p)
+        case 2: return (p, v, t)
+        case 3: return (p, q, v)
+        case 4: return (t, p, v)
+        default: return (v, p, q)
+        }
+    }
+
     /// Returns a monochrome decomposition only when all resolved channels
     /// agree. This preserves UIKit's fail-closed color-model contract instead
     /// of silently discarding chroma.

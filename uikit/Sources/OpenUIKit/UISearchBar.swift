@@ -524,13 +524,42 @@ open class UISearchBar: UIView {
         showsCancelButton = shows
     }
 
-    /// Stored for source compatibility; no scope bar is drawn.
-    public var scopeButtonTitles: [String]?
-    public var selectedScopeIndex: Int = 0 {
+    /// Stored; drawing the scope bar is OPEN (no measured height). The
+    /// search controller still flips this from `scopeBarActivation`.
+    public var scopeButtonTitles: [String]? {
+        didSet { _owningSearchController?.applyScopeBarVisibility() }
+    }
+    public var selectedScopeButtonIndex: Int = 0 {
         didSet {
-            guard selectedScopeIndex != oldValue else { return }
-            delegate?.searchBar(self, selectedScopeButtonIndexDidChange: selectedScopeIndex)
+            guard selectedScopeButtonIndex != oldValue else { return }
+            delegate?.searchBar(self, selectedScopeButtonIndexDidChange: selectedScopeButtonIndex)
         }
+    }
+    /// Pre-iOS-name for `selectedScopeButtonIndex`.
+    public var selectedScopeIndex: Int {
+        get { selectedScopeButtonIndex }
+        set { selectedScopeButtonIndex = newValue }
+    }
+    public var showsScopeBar: Bool = false {
+        didSet {
+            if showsScopeBar != oldValue,
+               !showsScopeBarAppliesFromController,
+               let owner = _owningSearchController {
+                owner.scopeBarActivation = .manual
+            }
+        }
+    }
+    public func setShowsScopeBar(_ show: Bool, animated: Bool) {
+        showsScopeBar = show
+    }
+    /// The search controller that owns this bar, if any.
+    weak var _owningSearchController: UISearchController?
+    var showsScopeBarAppliesFromController = false
+
+    func _setShowsScopeBarFromController(_ show: Bool) {
+        showsScopeBarAppliesFromController = true
+        showsScopeBar = show
+        showsScopeBarAppliesFromController = false
     }
 
     public override init(frame: CGRect) {

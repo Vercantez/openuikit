@@ -84,7 +84,7 @@ let linuxXCTestSupportTargets: [Target] = [
 ]
 let openUIKitTestDeps: [Target.Dependency] = [
     "OpenUIKit", "UIKit", "ConformanceApps",
-    "SafariServices", "MessageUI", "LinkPresentation",
+    "SafariServices", "MessageUI", "LinkPresentation", "PhotosUI",
     "CLinuxXCTestSupport",
 ]
 let openUIKitCTestDeps: [Target.Dependency] = [
@@ -98,7 +98,7 @@ let swiftUITestLinuxDeps: [Target.Dependency] = [
 let linuxXCTestSupportTargets: [Target] = []
 let openUIKitTestDeps: [Target.Dependency] = [
     "OpenUIKit", "UIKit", "ConformanceApps",
-    "SafariServices", "MessageUI", "LinkPresentation",
+    "SafariServices", "MessageUI", "LinkPresentation", "PhotosUI",
 ]
 let openUIKitCTestDeps: [Target.Dependency] = [
     "OpenUIKitC", "OpenUIKit", "COpenUIKitABI",
@@ -226,6 +226,7 @@ let frameworkProducts: [Product] = [
     .library(name: "SafariServices", targets: ["SafariServices"]),
     .library(name: "MessageUI", targets: ["MessageUI"]),
     .library(name: "LinkPresentation", targets: ["LinkPresentation"]),
+    .library(name: "PhotosUI", targets: ["PhotosUI"]),
     // Harness stubs RealAppProbe already compiles (Focus Settings).
     // Publishing them lets an ingested Blockzilla `import Glean` on
     // Linux without a second target of the same name (SwiftPM refuses
@@ -449,6 +450,10 @@ let frameworkTargets: [Target] = [
     ),
     .target(
         name: "LinkPresentation",
+        dependencies: ["OpenUIKit", "UIKit"]
+    ),
+    .target(
+        name: "PhotosUI",
         dependencies: ["OpenUIKit", "UIKit"]
     ),
     .target(name: "os"),
