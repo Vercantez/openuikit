@@ -1978,7 +1978,7 @@ public func nw_txt_record_access_bytes(_ txt_record: nw_txt_record_t, _ access_b
         blob.append(contentsOf: chunk.prefix(255))
     }
     return blob.withUnsafeBytes { buffer in
-        let base = buffer.bindMemory(to: UInt8.self).baseAddress
+        let base = buffer.bindMemory(to: UInt8.self).baseAddress ?? UnsafePointer(bitPattern: 1)!
         return access_bytes(base, blob.count)
     }
 }
@@ -1990,7 +1990,7 @@ public func nw_txt_record_access_key(_ txt_record: nw_txt_record_t, _ key: Unsaf
         return access_value(key, nw_txt_record_find_key_not_present, nil, 0)
     }
     return entry.value.withUnsafeBytes { buffer in
-        let base = buffer.bindMemory(to: UInt8.self).baseAddress
+        let base = buffer.bindMemory(to: UInt8.self).baseAddress ?? UnsafePointer(bitPattern: 1)!
         return access_value(key, nw_txt_record_find_key_non_empty_value, base, entry.value.count)
     }
 }
