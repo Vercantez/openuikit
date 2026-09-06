@@ -40,6 +40,28 @@ public final class sec_protocol_metadata: NSObject, @unchecked Sendable {
 }
 public typealias sec_protocol_metadata_t = sec_protocol_metadata
 
+/// Opaque Security identity/trust stand-ins. Linux never loads a keychain
+/// identity or evaluates a trust object.
+public final class sec_identity: NSObject, @unchecked Sendable {}
+public typealias sec_identity_t = sec_identity
+public final class sec_trust: NSObject, @unchecked Sendable {}
+public typealias sec_trust_t = sec_trust
+
+public struct tls_ciphersuite_t: RawRepresentable, Hashable, Sendable {
+    public var rawValue: UInt16
+    public init(rawValue: UInt16) { self.rawValue = rawValue }
+}
+
+public struct tls_ciphersuite_group_t: RawRepresentable, Hashable, Sendable {
+    public var rawValue: UInt16
+    public init(rawValue: UInt16) { self.rawValue = rawValue }
+}
+
+public struct tls_protocol_version_t: RawRepresentable, Hashable, Sendable {
+    public var rawValue: UInt16
+    public init(rawValue: UInt16) { self.rawValue = rawValue }
+}
+
 public let kNWErrorDomainPOSIX: CFString = "kNWErrorDomainPOSIX" as NSString
 public let kNWErrorDomainDNS: CFString = "kNWErrorDomainDNS" as NSString
 public let kNWErrorDomainTLS: CFString = "kNWErrorDomainTLS" as NSString
@@ -567,7 +589,17 @@ final class _NWLinux_nw_error: NSObject, OS_nw_error {
     var code = Int32(POSIXErrorCode.EOPNOTSUPP.rawValue)
 }
 
-final class _NWLinux_nw_establishment_report: NSObject, OS_nw_establishment_report {}
+final class _NWLinux_nw_establishment_report: NSObject, OS_nw_establishment_report {
+    var durationMilliseconds: UInt64 = 0
+    var attemptStartedAfterMilliseconds: UInt64 = 0
+    var previousAttemptCount: UInt32 = 0
+    var proxyConfigured = false
+    var usedProxy = false
+    var proxyEndpoint: nw_endpoint_t?
+    var protocols: [(nw_protocol_definition_t, UInt64, UInt64)] = []
+    var resolutions: [(nw_report_resolution_source_t, UInt64, UInt32, nw_endpoint_t, nw_endpoint_t)] = []
+    var resolutionReports: [nw_resolution_report_t] = []
+}
 final class _NWLinux_nw_ethernet_channel: NSObject, OS_nw_ethernet_channel {}
 
 final class _NWLinux_nw_framer: NSObject, OS_nw_framer {

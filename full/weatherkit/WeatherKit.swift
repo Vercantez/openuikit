@@ -18,6 +18,15 @@ enum WeatherKitHost {
     static func fail<T>() throws -> T {
         throw unsupportedError()
     }
+
+    static func validateCoordinates(latitude: Double, longitude: Double) throws {
+        guard latitude.isFinite, longitude.isFinite,
+              (-90...90).contains(latitude),
+              (-180...180).contains(longitude)
+        else {
+            throw WeatherError.unknown
+        }
+    }
 }
 
 /// Query token selecting a WeatherKit data set.
@@ -39,6 +48,20 @@ public struct WeatherQuery<T>: Sendable {
 
     public static func hourly(startDate: Date, endDate: Date) -> WeatherQuery<T> {
         WeatherQuery<T>(kind: .hourlyRange(startDate, endDate))
+    }
+
+    /// Date-range queries require `startDate < endDate`. Named data-set tokens are valid.
+    public var isValid: Bool {
+        switch kind {
+        case .named:
+            return true
+        case .dailyRange(let start, let end), .hourlyRange(let start, let end):
+            return start < end
+        }
+    }
+
+    public func validate() throws {
+        guard isValid else { throw WeatherError.unknown }
     }
 }
 
@@ -155,6 +178,20 @@ public final class WeatherService: @unchecked Sendable {
 
     private init(marker: Void) {}
 
+    /// Fail-closed host fetch used by the sealed Linux runner. Apple
+    /// `weather(for:including:)` still requires `CLLocation` on the integration
+    /// toolchain. This path never contacts a network: it validates inputs, then
+    /// throws `WeatherError.unknown`.
+    public func weather<T>(
+        latitude: Double,
+        longitude: Double,
+        including dataSet: WeatherQuery<T>
+    ) throws -> T {
+        try WeatherKitHost.validateCoordinates(latitude: latitude, longitude: longitude)
+        try dataSet.validate()
+        return try WeatherKitHost.fail()
+    }
+
     public var attribution: WeatherAttribution {
         get async throws {
             throw WeatherKitHost.unsupportedError()
@@ -163,7 +200,10 @@ public final class WeatherService: @unchecked Sendable {
 
     #if canImport(CoreLocation)
     public func weather(for location: CLLocation) async throws -> Weather {
-        _ = location
+        try WeatherKitHost.validateCoordinates(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
         return try WeatherKitHost.fail()
     }
 
@@ -172,7 +212,11 @@ public final class WeatherService: @unchecked Sendable {
         for location: CLLocation,
         including dataSet: WeatherQuery<T>
     ) async throws -> T {
-        _ = (location, dataSet)
+        try WeatherKitHost.validateCoordinates(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
+        try dataSet.validate()
         return try WeatherKitHost.fail()
     }
 

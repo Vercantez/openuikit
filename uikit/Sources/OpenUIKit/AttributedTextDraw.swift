@@ -22,6 +22,9 @@ extension AttributedTextLayout {
         var traits: UITraitCollection
         var bounds: CGRect
         var alignment: NSTextAlignment
+        /// When false, attachment images are skipped (UITextView hosts a
+        /// UIImageView instead). UILabel leaves this true.
+        var drawAttachments: Bool = true
     }
 
     /// Draw `lines` of `t` inside `ctx.bounds`, block-centered vertically the
@@ -122,7 +125,38 @@ extension AttributedTextLayout {
             var k = i
             while k < j {
                 let ch = t.scalars[k]
-                if ch != " " && ch.value != 0x00A0 && ch != "\n" && color.alpha > 0 {
+                if let att = st.attachment {
+                    let b = att.attachmentBounds(
+                        for: nil,
+                        proposedLineFragment: CGRect(x: 0, y: 0, width: 0, height: 0),
+                        glyphPosition: CGPoint(x: 0, y: 0),
+                        characterIndex: k)
+                    let pad = att.lineLayoutPadding
+                    // CoreText origin.y is UP from the baseline. UIKit y-down:
+                    // top = baseline − (origin.y + height). MEASURED
+                    // attach_probe path 0: 24×24 at y=0 of a 28.5 label;
+                    // path 2 origin.y=−24: image top at the baseline
+                    // (label-relative y 16 = ascender).
+                    // lineLayoutPadding insets BOTH edges of the advance
+                    // box (path 5, padding 4, SE 2x): image x 19→23 and
+                    // right edge 43→39, width 24−2×4; advance stays 24.
+                    let imgY = baselineY - (b.origin.y + b.height)
+                    let imgX = x + pad + b.origin.x
+                    let imgW = Swift.max(0, b.width - 2 * pad)
+                    if ctx.drawAttachments, imgW > 0, b.height > 0,
+                       let img = att.image(forBounds: CGRect(x: imgX, y: imgY,
+                                                             width: imgW, height: b.height),
+                                           textContainer: nil, characterIndex: k) {
+                        canvas.draw(img.bitmap, in: CGRect(x: imgX, y: imgY,
+                                                           width: imgW, height: b.height),
+                                    interpolate: false)
+                    }
+                    x += b.width
+                    if k + 1 < end { x += kerning(t, k) }
+                    k += 1
+                    continue
+                }
+                if ch != " " && ch.value != 0x00A0 && ch != "\n" && ch.value != 0xFFFC && color.alpha > 0 {
                     UILabel.drawGlyph(ch, penX: x, baselineY: baselineY, in: canvas,
                                       font: st.font, dark: dark, color: color,
                                       glyphFont: glyphFont, inkEligible: inkEligible,

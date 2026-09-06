@@ -260,7 +260,31 @@ func attributedStringFrom(_ j: SceneJSON) -> NSAttributedString {
     }
     let out = NSMutableAttributedString()
     for rv in runs {
-        guard let r = rv.objectValue, let text = r["text"]?.stringValue else {
+        guard let r = rv.objectValue else {
+            fatalError("run needs an object")
+        }
+        if let attJ = r["attachment"]?.objectValue {
+            let att = NSTextAttachment()
+            if let ij = attJ["image"]?.objectValue {
+                att.image = makeImage(ij, scale: UITraitCollection.current.displayScale)
+            }
+            if let b = numArray(attJ["bounds"]), b.count == 4 {
+                att.bounds = CGRect(x: b[0], y: b[1], width: b[2], height: b[3])
+            }
+            if let p = num(attJ["lineLayoutPadding"]) { att.lineLayoutPadding = p }
+            if let ft = attJ["fileType"]?.stringValue { att.fileType = ft }
+            if let allow = attJ["allowsTextAttachmentView"]?.boolValue {
+                att.allowsTextAttachmentView = allow
+            }
+            let piece = NSMutableAttributedString(
+                attributedString: NSAttributedString(attachment: att))
+            var extra: [NSAttributedString.Key: Any] = [.font: fontFrom(r)]
+            extra[.foregroundColor] = colorOrDie(r["color"], "attributed run") ?? UIColor.label
+            piece.addAttributes(extra, range: NSRange(location: 0, length: piece.length))
+            out.append(piece)
+            continue
+        }
+        guard let text = r["text"]?.stringValue else {
             fatalError("run needs \"text\"")
         }
         var a: [NSAttributedString.Key: Any] = [.font: fontFrom(r)]

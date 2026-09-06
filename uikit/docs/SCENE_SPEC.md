@@ -162,6 +162,7 @@ Run keys:
 | `underline` | string or bool | `none` (default), `single`, `thick`, `double`; `true` == `single`. |
 | `strikethrough` | string or bool | same values. |
 | `underlineColor` / `strikethroughColor` | color | default: the run's `color`. |
+| `attachment` | object | v5.4 — `NSTextAttachment`. When present the run's `text` is ignored and U+FFFC is inserted. Keys: `image` (same synthesized-image object as `UIImageView`), optional `bounds` `[x, y, w, h]` in CoreText coordinates (origin.y positive UP from the baseline; omit for image size at origin 0), optional `lineLayoutPadding`, `fileType`, `allowsTextAttachmentView`. MEASURED iPhone SE 2x / iOS 26.1: a 24×24 image at 17 pt between "A" and "B" sizes the label 46×28.5. |
 
 Paragraph keys (all optional, all `NSMutableParagraphStyle` properties):
 `alignment`, `lineSpacing`, `paragraphSpacing`, `paragraphSpacingBefore`,

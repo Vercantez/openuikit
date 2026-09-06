@@ -1572,6 +1572,571 @@ func testTensorConcatenatingAndInitializers() {
     }
 }
 
+func testTensorArithmeticAndMatmul() {
+    let a = MLTensor(shape: [2, 2], scalars: [Float(1), 2, 3, 4])
+    let b = MLTensor(shape: [2, 2], scalars: [Float(5), 6, 7, 8])
+    a.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 2, 3, 4])
+    }
+    let sum = a + b
+    sum.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [6, 8, 10, 12])
+    }
+    let scaled = a * Float(2)
+    scaled.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [2, 4, 6, 8])
+    }
+    let shifted = Float(1) + a
+    shifted.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [2, 3, 4, 5])
+    }
+    let sub = b - a
+    sub.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [4, 4, 4, 4])
+    }
+    let negated = -a
+    negated.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [-1, -2, -3, -4])
+    }
+    let divided = b / a
+    divided.withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 5)
+    }
+    let remainder = MLTensor([Float(5), 6]) % MLTensor([Float(2), 4])
+    remainder.withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 1)
+    }
+    var acc = a
+    acc += b
+    acc.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [6, 8, 10, 12])
+    }
+    acc -= b
+    acc *= b
+    acc /= b
+    acc %= b
+    let product = a.matmul(b)
+    // [1 2; 3 4] x [5 6; 7 8] = [19 22; 43 50]
+    product.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [19, 22, 43, 50])
+    }
+    let pointMax = pointwiseMax(a, b)
+    pointMax.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [5, 6, 7, 8])
+    }
+    let pointMin = pointwiseMin(a, Float(2))
+    pointMin.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 2, 2, 2])
+    }
+    let scalarMax = pointwiseMax(Float(3), a)
+    scalarMax.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [3, 3, 3, 4])
+    }
+    _ = pointwiseMin(a, b)
+    _ = pointwiseMin(Float(1), a)
+}
+
+func testTensorReductionsAndElementwise() {
+    let a = MLTensor(shape: [2, 2], scalars: [Float(1), 2, 3, 4])
+    a.sum().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 10)
+    }
+    a.product().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 24)
+    }
+    a.mean().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 2.5)
+    }
+    a.max().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 4)
+    }
+    a.min().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 1)
+    }
+    a.sum(alongAxes: 1).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [3, 7])
+    }
+    a.mean(alongAxes: [0]).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [2, 3])
+    }
+    a.max(alongAxes: 0).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [3, 4])
+    }
+    a.min(alongAxes: 1).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 3])
+    }
+    a.argmax().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 3)
+    }
+    a.argmin().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 0)
+    }
+    let softmax = MLTensor([Float(1), 1]).softmax()
+    softmax.withUnsafeBufferPointer { buffer in
+        precondition(abs(buffer[0] - 0.5) < 0.0001)
+    }
+    a.abs().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 1)
+    }
+    a.squared().withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 4, 9, 16])
+    }
+    a.reciprocal().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 1)
+    }
+    MLTensor([Float(4)]).squareRoot().withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 2)
+    }
+    MLTensor([Float(4)]).rsqrt().withUnsafeBufferPointer { buffer in
+        precondition(abs(buffer[0] - 0.5) < 0.0001)
+    }
+    MLTensor([Float(-2), 0, 3]).sign().withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [-1, 0, 1])
+    }
+    MLTensor([Float(1)]).exp().withUnsafeBufferPointer { buffer in
+        precondition(abs(buffer[0] - Foundation.exp(Float(1))) < 0.0001)
+    }
+    _ = a.exp2()
+    _ = a.log()
+    _ = a.sin()
+    _ = a.cos()
+    _ = a.tan()
+    _ = a.asin()
+    _ = a.acos()
+    _ = a.atan()
+    _ = a.sinh()
+    _ = a.cosh()
+    _ = a.tanh()
+    _ = a.asinh()
+    _ = a.acosh()
+    _ = a.atanh()
+    _ = a.ceil()
+    _ = a.floor()
+    _ = a.round()
+    _ = a.pow(2 as Float)
+    _ = a.pow(MLTensor(repeating: 2, shape: [2, 2]))
+    _ = a.clamped(to: 0...3)
+    _ = a.clamped(to: 2...)
+    _ = a.clamped(to: ...2)
+    _ = a.cast(to: Int32.self)
+    _ = a.cast(like: MLTensor([Int32(1)]))
+    _ = a.cumulativeSum(alongAxis: 1)
+    _ = a.cumulativeProduct(alongAxis: 0)
+    _ = a.all()
+    _ = a.any()
+    _ = a.all(alongAxes: 0)
+    _ = a.any(alongAxes: 1)
+    _ = a.product(alongAxes: 0)
+    _ = a.product(alongAxes: [0])
+    _ = a.all(alongAxes: [0])
+    _ = a.any(alongAxes: [1])
+    _ = a.sum(alongAxes: [1])
+    _ = a.max(alongAxes: [0])
+    _ = a.min(alongAxes: [1])
+    _ = a.argmax(alongAxis: 1)
+    _ = a.argmin(alongAxis: 0)
+    _ = a.argsort()
+    let top = a.flattened().topK(2)
+    top.values.withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 4)
+    }
+}
+
+func testTensorShapeOpsAndEnums() {
+    let a = MLTensor(shape: [2, 2], scalars: [Float(1), 2, 3, 4])
+    let transposed = a.transposed()
+    transposed.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 3, 2, 4])
+    }
+    _ = a.transposed(permutation: 1, 0)
+    _ = a.transposed(permutation: [1, 0])
+    let expanded = a.expandingShape(at: 0)
+    precondition(expanded.shape == [1, 2, 2])
+    _ = a.expandingShape(at: [0])
+    precondition(expanded.squeezingShape().shape == [2, 2])
+    _ = expanded.squeezingShape(at: 0)
+    _ = expanded.squeezingShape(at: [0])
+    let stacked = MLTensor(stacking: [a, a], alongAxis: 0)
+    precondition(stacked.shape == [2, 2, 2])
+    let concat = a.concatenated(with: a, alongAxis: 0)
+    precondition(concat.shape == [4, 2])
+    precondition(a.unstacked().count == 2)
+    precondition(a.split(count: 2, alongAxis: 0).count == 2)
+    precondition(a.split(sizes: [1, 1], alongAxis: 0).count == 2)
+    let tiled = a.tiled(multiples: [2, 1])
+    precondition(tiled.shape == [4, 2])
+    _ = a.reversed(alongAxes: 0)
+    _ = a.reversed(alongAxes: [1])
+    let padded = a.padded(forSizes: [(1, 1), (0, 0)], with: 0)
+    precondition(padded.shape == [4, 2])
+    _ = a.padded(forSizes: [(0, 0), (1, 1)], mode: .constant(0))
+    _ = a.padded(forSizes: [(1, 0), (0, 0)], mode: .reflection)
+    _ = a.padded(forSizes: [(1, 0), (0, 0)], mode: .symmetric)
+    let nearest = a.resized(to: (newHeight: 4, newWidth: 2), method: .nearestNeighbor)
+    precondition(nearest.shape == [4, 2])
+    _ = a.resized(to: (newHeight: 2, newWidth: 2), method: .bilinear(alignCorners: false))
+    let gathered = a.gathering(atIndices: MLTensor([Int32(1)]), alongAxis: 0)
+    precondition(gathered.shape[0] == 1)
+    _ = a.gathering(atIndices: MLTensor([Int32(0)]))
+    let mask = MLTensor(shape: [2, 2], scalars: [Float(1), 0, 1, 0])
+    _ = a.replacing(with: bZero(), where: mask)
+    _ = a.replacing(with: Float(9), where: mask)
+    _ = a.replacing(with: MLTensor([Float(9), 9]), atIndices: MLTensor([Int32(0)]), alongAxis: 0)
+    _ = a.replacing(atIndices: MLTensor([Int32(1)]), with: Float(0), alongAxis: 0)
+    _ = a.bandPart(lowerBandCount: 0, upperBandCount: 0)
+    let ones = MLTensor(ones: [2], scalarType: Float.self)
+    ones.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 1])
+    }
+    _ = MLTensor(ones: [2], scalarType: Int32.self)
+    _ = MLTensor(repeating: Int32(3), shape: [2], scalarType: Int32.self)
+    _ = MLTensor(Float(2), scalarType: Float.self)
+    _ = MLTensor([Float(1), 2], scalarType: Float.self)
+    _ = MLTensor(shape: [2], scalars: [Int32(1), 2], scalarType: Int32.self)
+    _ = MLTensor(MLShapedArray<Float>(scalars: [1, 2], shape: [2]))
+    _ = MLTensor([a.flattened(), a.flattened()], alongAxis: 0)
+    let linspace = MLTensor(linearSpaceFrom: Float(0), through: 2, count: 3)
+    linspace.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [0, 1, 2])
+    }
+    _ = MLTensor(linearSpaceFrom: Float(0), through: 1, count: 2, scalarType: Float.self)
+    let ranged = MLTensor(rangeFrom: Float(0), to: 3, by: 1)
+    ranged.withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [0, 1, 2])
+    }
+    _ = MLTensor(rangeFrom: Float(0), to: 2, by: 1, scalarType: Float.self)
+    _ = MLTensor(randomNormal: [2], seed: 1, scalarType: Float.self)
+    _ = MLTensor(randomUniform: [2], in: Float(0)..<1, seed: 1, scalarType: Float.self)
+    _ = MLTensor(randomUniform: [2], in: Int32(0)...3, seed: 1, scalarType: Int32.self)
+    let scalar: MLTensor = 1.5
+    precondition(scalar.isScalar)
+    let intLiteral: MLTensor = 3
+    _ = intLiteral
+    let boolLiteral: MLTensor = true
+    _ = boolLiteral
+    let arrayLiteral: MLTensor = [MLTensor([Float(1)]), MLTensor([Float(2)])]
+    precondition(arrayLiteral.rank >= 1)
+    let bytes = UnsafeMutablePointer<Float>.allocate(capacity: 2)
+    bytes.initialize(repeating: 3, count: 2)
+    let copied = MLTensor(
+        bytesNoCopy: UnsafeRawBufferPointer(start: UnsafeRawPointer(bytes), count: 8),
+        shape: [2],
+        scalarType: Float.self,
+        deallocator: .none
+    )
+    copied.withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 3)
+    }
+    bytes.deinitialize(count: 2)
+    bytes.deallocate()
+    let uninit = MLTensor(
+        unsafeUninitializedShape: [2],
+        scalarType: Float.self,
+        initializingWith: { buffer in
+            buffer.bindMemory(to: Float.self).initialize(repeating: 4)
+        }
+    )
+    uninit.withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 4)
+    }
+    precondition(MLTensor.PaddingMode.reflection == .reflection)
+    precondition(MLTensor.PaddingMode.symmetric != .constant(0))
+    _ = MLTensor.PaddingMode.constant(1).hashValue
+    var hasher = Hasher()
+    MLTensor.PaddingMode.reflection.hash(into: &hasher)
+    _ = MLTensor.PaddingMode.reflection.description
+    _ = MLTensor.PaddingMode.symmetric.description
+    _ = MLTensor.PaddingMode.constant(1).description
+    precondition(MLTensor.ResizeMethod.nearestNeighbor == .nearestNeighbor)
+    precondition(MLTensor.ResizeMethod.bilinear(alignCorners: true) != .nearestNeighbor)
+    _ = MLTensor.ResizeMethod.nearestNeighbor.hashValue
+    MLTensor.ResizeMethod.nearestNeighbor.hash(into: &hasher)
+    _ = MLTensor.ResizeMethod.nearestNeighbor.description
+    _ = MLTensor.ResizeMethod.bilinear(alignCorners: false).description
+    _ = CoreMLTensorRange.range(0..<1)
+    _ = CoreMLTensorRange.closedRange(0...0)
+    _ = CoreMLTensorRange.partialRangeFrom(0...)
+    _ = CoreMLTensorRange.partialRangeUpTo(..<1)
+    _ = CoreMLTensorRange.partialRangeUpTo(...0)
+    _ = CoreMLTensorRange.index(0)
+    _ = CoreMLTensorRange.fillAll
+    _ = CoreMLTensorRange.newAxis
+    _ = CoreMLTensorRange.squeezeAxis
+    let sliced = a[CoreMLTensorRange.index(0)]
+    precondition(sliced.rank == 1)
+    _ = a[...]
+    _ = a.cpuShapedArray(of: Float.self)
+}
+
+private func bZero() -> MLTensor {
+    MLTensor(zeros: [2, 2], scalarType: Float.self)
+}
+
+func testTensorComparisonsAndBitwise() {
+    let a = MLTensor([Float(1), 2, 3])
+    let b = MLTensor([Float(1), 0, 4])
+    (a .== b).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 0, 0])
+    }
+    (a .!= Float(2)).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [1, 0, 1])
+    }
+    (a .< b).withUnsafeBufferPointer { buffer in
+        precondition(buffer[2] == 1)
+    }
+    (a .> Float(1)).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [0, 1, 1])
+    }
+    (a .<= b).withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 1)
+    }
+    (a .>= Float(3)).withUnsafeBufferPointer { buffer in
+        precondition(Array(buffer) == [0, 0, 1])
+    }
+    _ = a .== Float(1)
+    _ = a .!= b
+    _ = a .< Float(2)
+    _ = a .> b
+    _ = a .<= Float(2)
+    _ = a .>= b
+    let bits = MLTensor([Int32(1), 3])
+    (bits .& bits).withUnsafeBufferPointer { buffer in
+        precondition(buffer[0] == 1)
+    }
+    _ = bits .| bits
+    _ = bits .^ bits
+    _ = (.!)(a)
+}
+
+
+func testGLMLinearPrediction() {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+    try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let glmURL = directory.appendingPathComponent("linear.mlmodel")
+    try! CoreMLSpecification.glmRegressorModel(
+        weights: [3, 4],
+        offset: 5,
+        author: "wave8"
+    ).write(to: glmURL)
+    let compiled = try! MLModel.compileModel(at: glmURL)
+    precondition(FileManager.default.fileExists(atPath: compiled.appendingPathComponent("metadata.plist").path))
+    let model = try! MLModel(contentsOf: compiled)
+    precondition(model.modelDescription.metadata[.author] as? String == "wave8")
+    precondition(model.modelDescription.metadata[.license] as? String == "BSD")
+    precondition(model.modelDescription.metadata[.versionString] as? String == "1.0")
+    let inputArray = try! MLMultiArray(shape: [2], dataType: .double)
+    inputArray[0] = 1
+    inputArray[1] = 2
+    let input = try! MLDictionaryFeatureProvider(dictionary: ["x": MLFeatureValue(multiArray: inputArray)])
+    let output = try! model.prediction(from: input)
+    // y = 3*1 + 4*2 + 5 = 16
+    precondition(output.featureValue(for: "y")?.multiArrayValue?[0].doubleValue == 16)
+    try! model.write(to: directory.appendingPathComponent("written.mlmodelc"))
+    precondition(FileManager.default.fileExists(atPath: directory.appendingPathComponent("written.mlmodelc/metadata.plist").path))
+}
+
+func testCompiledPlistMetadataLoad() {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+    try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let identityURL = directory.appendingPathComponent("identity.mlmodel")
+    try! CoreMLSpecification.identityModel(
+        inputName: "in",
+        outputName: "out",
+        shape: [2],
+        author: "plist-author"
+    ).write(to: identityURL)
+    let compiled = try! MLModel.compileModel(at: identityURL)
+    try? FileManager.default.removeItem(at: compiled.appendingPathComponent("metadata.json"))
+    let reloaded = try! MLModel(contentsOf: compiled)
+    precondition(reloaded.modelDescription.inputDescriptionsByName["in"]?.type == .multiArray)
+    precondition(reloaded.modelDescription.metadata[.author] as? String == "plist-author")
+}
+
+
+func testUpdateContextFailClosedModel() {
+    let context = MLUpdateContext.linuxFailClosedContext(
+        event: .epochEnd,
+        metrics: [.lossValue: 0.25],
+        parameters: [.epochs: 2]
+    )
+    precondition(context.event == .epochEnd)
+    precondition((context.metrics[.lossValue] as? Double) == 0.25)
+    precondition((context.parameters[.epochs] as? Int) == 2)
+    _ = context.task.taskIdentifier
+    precondition(context.task.state == .failed)
+    let writable: any MLModel & MLWritable = context.model
+    coremlRequireThrows(.io) {
+        try writable.write(to: URL(fileURLWithPath: "/tmp/updated.mlmodelc"))
+    }
+}
+
+func testModelCollectionFailsClosed() {
+    let beginOnce = DispatchSemaphore(value: 0)
+    let progress = MLModelCollection.beginAccessing(identifier: "bundle") { collection, error in
+        precondition(collection == nil)
+        coremlRequireError(error!, .modelCollection)
+        beginOnce.signal()
+    }
+    _ = progress
+    precondition(beginOnce.wait(timeout: .now() + 5) == .success)
+    let resultOnce = DispatchSemaphore(value: 0)
+    let resultProgress = MLModelCollection.beginAccessing(identifier: "bundle") { (result: Result<MLModelCollection, any Error>) in
+        if case .failure(let error) = result {
+            coremlRequireError(error, .modelCollection)
+        } else {
+            fatalError("collection begin must fail closed")
+        }
+        resultOnce.signal()
+    }
+    _ = resultProgress
+    precondition(resultOnce.wait(timeout: .now() + 5) == .success)
+    let delivered = DispatchSemaphore(value: 0)
+    MLModelCollection.endAccessing(identifier: "bundle") { error in
+        coremlRequireError(error!, .modelCollection)
+        delivered.signal()
+    }
+    precondition(delivered.wait(timeout: .now() + 5) == .success)
+    let endOnce = DispatchSemaphore(value: 0)
+    MLModelCollection.endAccessing(identifier: "bundle") { (result: Result<Void, any Error>) in
+        if case .failure(let error) = result {
+            coremlRequireError(error, .modelCollection)
+        } else {
+            fatalError("collection end Result must fail closed")
+        }
+        endOnce.signal()
+    }
+    precondition(endOnce.wait(timeout: .now() + 5) == .success)
+    let entry = MLModelCollectionEntry(
+        modelIdentifier: "m",
+        modelURL: URL(fileURLWithPath: "/tmp/x.mlmodelc")
+    )
+    precondition(entry.modelIdentifier == "m")
+    precondition(entry.isEqual(entry))
+}
+
+
+func testMultiArrayCopyDataAndTranspose() {
+    let source = try! MLMultiArray(shape: [2, 2], dataType: .float32)
+    source[0] = 1
+    source[1] = 2
+    source[2] = 3
+    source[3] = 4
+    let copied = source.copy() as! MLMultiArray
+    precondition(copied !== source)
+    precondition(copied[3].floatValue == 4)
+    copied[0] = 9
+    precondition(source[0].floatValue == 1)
+    let data = source.data
+    precondition(data.count >= 16)
+    let fromData = try! MLMultiArray(data: data, shape: [2, 2], dataType: .float32)
+    precondition(fromData[1].floatValue == 2)
+    let transposed = try! source.transposed()
+    precondition(transposed.shape.map(\.intValue) == [2, 2])
+    precondition(transposed[[NSNumber(value: 0), NSNumber(value: 1)]].floatValue == 3)
+    let int8 = try! MLMultiArray(shape: [2], dataType: .int8)
+    int8[0] = 7
+    precondition(int8[0].int8Value == 7)
+    let float16 = try! MLMultiArray(shape: [2], dataType: .float16)
+    float16[0] = 1.5
+    precondition(abs(float16[0].floatValue - 1.5) < 0.01)
+    let doubles = try! MLMultiArray(shape: [1], dataType: .double)
+    doubles[0] = 2.5
+    precondition(doubles.dataType == .double)
+    let witness: any Foundation.NSCopying = source
+    _ = witness
+}
+
+
+func testShapedArrayEquatableCollectionOps() {
+    let array = MLShapedArray<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    let first = array[0]
+    let second = array[1]
+    precondition(array.contains(first))
+    precondition(array.firstIndex(of: first) == 0)
+    precondition(array.elementsEqual([first, second]))
+    precondition(array.starts(with: [first]))
+    precondition(array.contains([first]))
+    let slice = MLShapedArraySlice<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    precondition(slice.contains(slice[0]))
+    precondition(slice.firstIndex(of: slice[0]) == 0)
+    precondition(slice.elementsEqual([slice[0], slice[1]]))
+    precondition(slice.starts(with: [slice[0]]))
+    precondition(slice.contains([slice[0]]))
+    precondition(array.difference(from: array).isEmpty)
+    precondition(slice.difference(from: slice).isEmpty)
+}
+
+func testShapedArrayProtocolWitnesses() {
+    func inspect<T: MLShapedArrayProtocol>(_ value: T, expected: [T.Scalar], shape: [Int])
+    where T.Scalar: Equatable {
+        precondition(value.shape == shape)
+        precondition(value.strides == [1] || value.strides.count == shape.count)
+        precondition(value.scalarCount == expected.count)
+        precondition(value.scalars == expected)
+        precondition(value.isScalar == shape.isEmpty)
+        if shape.isEmpty {
+            precondition(value.scalar == expected.first)
+        } else {
+            precondition(value.scalar == nil)
+        }
+    }
+    inspect(MLShapedArray<Float>(scalars: [1, 2], shape: [2]), expected: [1, 2], shape: [2])
+    inspect(MLShapedArraySlice<Float>(scalars: [1, 2], shape: [2]), expected: [1, 2], shape: [2])
+    inspect(MLShapedArray<Float>(scalar: 3), expected: [3], shape: [])
+}
+
+func testShapedArraySequenceHelpers() {
+    let array = MLShapedArray<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    precondition(array.allSatisfy { $0.scalarCount == 2 })
+    precondition(array.contains(where: { $0.scalars.first == 1 }))
+    precondition(array.first(where: { $0.scalars.first == 3 })?.scalars == [3, 4])
+    precondition(array.filter { $0.scalars.first == 1 }.count == 1)
+    precondition(array.reduce(0) { $0 + ($1.scalars.first ?? 0) } == 4)
+    var walked = 0
+    array.forEach { sum in walked += Int(sum.scalars.first ?? 0) }
+    precondition(walked == 4)
+    precondition(array.compactMap { $0.scalars.first }.count == 2)
+    precondition(Array(array.enumerated()).count == 2)
+    precondition(array.underestimatedCount >= 2)
+    precondition(array.dropLast(1).count == 1)
+    precondition(array.suffix(1).count == 1)
+    precondition(array.lastIndex(of: array[1]) == 1)
+    let slice = MLShapedArraySlice<Float>(scalars: [1, 2, 3, 4], shape: [2, 2])
+    precondition(slice.allSatisfy { $0.scalarCount == 2 })
+    precondition(slice.contains(where: { $0.scalars.first == 1 }))
+    precondition(slice.filter { $0.scalars.first == 1 }.count == 1)
+    precondition(slice.reduce(0) { $0 + ($1.scalars.first ?? 0) } == 4)
+}
+
+
+func testUpdateProgressEventSetAlgebra() {
+    let begin = MLUpdateProgressEvent.trainingBegin
+    let epoch = MLUpdateProgressEvent.epochEnd
+    let combined: MLUpdateProgressEvent = [.trainingBegin, .miniBatchEnd]
+    precondition(combined.contains(.trainingBegin))
+    precondition(begin.isSubset(of: combined))
+    precondition(combined.isSuperset(of: begin))
+    precondition(begin.isDisjoint(with: epoch))
+    precondition(begin.isStrictSubset(of: combined))
+    precondition(combined.isStrictSuperset(of: begin))
+    precondition(combined.subtracting(begin).contains(.miniBatchEnd))
+    precondition(begin != epoch)
+    precondition(combined.intersection(begin) == begin)
+    precondition(begin.union(epoch).contains(.epochEnd))
+    precondition(combined.symmetricDifference(begin).contains(.miniBatchEnd))
+    var mutable = combined
+    mutable.subtract(begin)
+    precondition(!mutable.contains(.trainingBegin))
+    mutable.formUnion(.trainingBegin)
+    mutable.formIntersection(combined)
+    mutable.formSymmetricDifference(epoch)
+    _ = mutable.remove(.miniBatchEnd)
+    _ = mutable.update(with: .trainingBegin)
+    precondition(MLUpdateProgressEvent().isEmpty)
+}
+
 enum CoreMLRuntime {
     static func main() {
         testEnumAndConstantRawValues()
@@ -1614,6 +2179,19 @@ enum CoreMLRuntime {
         testComputePlanDeviceUsageAndCost()
         testTensorShapeRankAndFlatten()
         testTensorConcatenatingAndInitializers()
+        testTensorArithmeticAndMatmul()
+        testTensorReductionsAndElementwise()
+        testTensorShapeOpsAndEnums()
+        testTensorComparisonsAndBitwise()
+        testGLMLinearPrediction()
+        testCompiledPlistMetadataLoad()
+        testUpdateContextFailClosedModel()
+        testModelCollectionFailsClosed()
+        testMultiArrayCopyDataAndTranspose()
+        testShapedArrayEquatableCollectionOps()
+        testShapedArrayProtocolWitnesses()
+        testShapedArraySequenceHelpers()
+        testUpdateProgressEventSetAlgebra()
         print("COREML_AGENT_RUNTIME_OK")
     }
 }

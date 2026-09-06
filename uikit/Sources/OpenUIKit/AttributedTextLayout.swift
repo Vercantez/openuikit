@@ -52,6 +52,7 @@ enum AttributedTextLayout {
         var underlineColor: UIColor? = nil
         var strikethrough: NSUnderlineStyle = []
         var strikethroughColor: UIColor? = nil
+        var attachment: NSTextAttachment? = nil
     }
 
     /// Character-indexed view of an attributed string (unicode scalars, the
@@ -111,6 +112,7 @@ enum AttributedTextLayout {
                 st.strikethrough = NSUnderlineStyle(rawValue: u)
             }
             st.strikethroughColor = r.attributes[.strikethroughColor] as? UIColor
+            st.attachment = r.attributes[.attachment] as? NSTextAttachment
             out.styles.append(st)
             styleCache.append(out.styles.count - 1)
             runStart += r.length
@@ -156,8 +158,19 @@ enum AttributedTextLayout {
     // MARK: - Measurement
 
     /// Advance of scalar `i` including its run's `.kern`.
+    /// Attachments: the box width (MEASURED attach_probe path 0, 24×24
+    /// between "A" and "B" at 17 pt: label width 46 = 11 + 24 + 11).
+    /// `lineLayoutPadding` is a drawing inset, not an advance (path 5,
+    /// padding 4, width stayed 46).
     static func advance(_ t: Text, _ i: Int) -> CGFloat {
         let st = t.style(i)
+        if let att = st.attachment {
+            let b = att.attachmentBounds(for: nil,
+                                         proposedLineFragment: CGRect(x: 0, y: 0, width: 0, height: 0),
+                                         glyphPosition: CGPoint(x: 0, y: 0),
+                                         characterIndex: i)
+            return b.width
+        }
         return FontEngine.advance(of: t.scalars[i], font: st.font) + st.kern
     }
 
@@ -165,6 +178,7 @@ enum AttributedTextLayout {
     static func kerning(_ t: Text, _ i: Int) -> CGFloat {
         guard i + 1 < t.count else { return 0 }
         let a = t.style(i), b = t.style(i + 1)
+        if a.attachment != nil || b.attachment != nil { return 0 }
         if a.kernSet && a.kern == 0 { return 0 }
         if b.kernSet && b.kern == 0 { return 0 }
         guard a.font == b.font else { return 0 }
@@ -236,8 +250,28 @@ enum AttributedTextLayout {
                 : FontEngine.labelLineHeight(for: st.font)
             let d = box - a
             let bo = st.baselineOffset
-            ascent = Swift.max(seen ? ascent : 0, a + Swift.max(0, bo))
-            descent = Swift.max(seen ? descent : 0, d + Swift.max(0, -bo))
+            var runAscent = a + Swift.max(0, bo)
+            var runDescent = d + Swift.max(0, -bo)
+            if let att = st.attachment {
+                // MEASURED attach_probe / attach_bounds_sweep, SE 2x /
+                // iOS 26.1. origin.y is CoreText (positive UP from the
+                // baseline). Default 24×24 at origin.y 0: ascent 24,
+                // descent 4.101, height 28.101 → 28.5 after 2x ceil.
+                // origin.y −24: ascent 16.187, descent 24, height 40.5.
+                // 28 pt font + 24×24: image shorter than ascender, height
+                // stays the font line (33.5).
+                let b = att.attachmentBounds(
+                    for: nil,
+                    proposedLineFragment: CGRect(x: 0, y: 0, width: 0, height: 0),
+                    glyphPosition: CGPoint(x: 0, y: 0),
+                    characterIndex: i)
+                let attAscent = Swift.max(0, b.origin.y + b.height)
+                let attDescent = Swift.max(0, -b.origin.y)
+                runAscent = Swift.max(runAscent, attAscent)
+                runDescent = Swift.max(runDescent, attDescent)
+            }
+            ascent = Swift.max(seen ? ascent : 0, runAscent)
+            descent = Swift.max(seen ? descent : 0, runDescent)
             seen = true
         }
         guard seen else { return (0, 0) }
@@ -291,7 +325,12 @@ enum AttributedTextLayout {
             // (real UIKit measures that one without it; same rule as the
             // plain TextLayout path).
             if !hardBreak && next < t.count && next > lineEnd && !isLastAllowed {
-                measured = width(t, from: i, to: next)
+                let withSpace = width(t, from: i, to: next)
+                // MEASURED attach_probe path 6, SE 2x / iOS 26.1:
+                // "Hello ￼ world that wraps over two lines here" at 200:
+                // drawWidth 198.292, trailing wrap-space 202.641, sizeThatFits
+                // 200×48.5. The space counts but is clipped to the wrap width.
+                measured = Swift.min(withSpace, available)
             }
             // iOS 26.1 (MEASURED 2026-09-04, attrtext_paragraph path 2 and
             // probes on the SE 2x): a RIGHT-aligned wrap counts the

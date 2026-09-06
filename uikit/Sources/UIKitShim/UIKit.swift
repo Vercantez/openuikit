@@ -317,3 +317,18 @@ public typealias NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentif
 public typealias UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
     = OpenUIKit.UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
     where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable
+
+// TextKit-1 types live in OpenUIKit and shadow Foundation's names. UIKit
+// applications resolve the portable ones through this module, matching
+// `import UIKit` on iOS (where Foundation's types are the only ones).
+public typealias NSAttributedString = OpenUIKit.NSAttributedString
+public typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
+public typealias NSTextAttachment = OpenUIKit.NSTextAttachment
+public typealias NSTextStorage = OpenUIKit.NSTextStorage
+public typealias NSTextContainer = OpenUIKit.NSTextContainer
+public typealias NSLayoutManager = OpenUIKit.NSLayoutManager
+public typealias NSTextAttachmentViewProvider = OpenUIKit.NSTextAttachmentViewProvider
+public typealias NSAdaptiveImageGlyph = OpenUIKit.NSAdaptiveImageGlyph
+public typealias NSTextAttachmentContainer = OpenUIKit.NSTextAttachmentContainer
+public typealias NSTextStorageDelegate = OpenUIKit.NSTextStorageDelegate
+public typealias NSLayoutManagerDelegate = OpenUIKit.NSLayoutManagerDelegate

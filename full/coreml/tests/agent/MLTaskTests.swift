@@ -1,4 +1,5 @@
 import CoreML
+import Dispatch
 import Foundation
 
 func testUpdateTaskFailsClosed() {
@@ -99,4 +100,65 @@ func testEmptyStateFailsClosed() {
     } catch {
         coremlRequireError(error, .generic)
     }
+}
+
+func testUpdateContextFailClosedModel() {
+    let context = MLUpdateContext.linuxFailClosedContext(
+        event: .epochEnd,
+        metrics: [.lossValue: 0.25],
+        parameters: [.epochs: 2]
+    )
+    precondition(context.event == .epochEnd)
+    precondition((context.metrics[.lossValue] as? Double) == 0.25)
+    precondition((context.parameters[.epochs] as? Int) == 2)
+    _ = context.task.taskIdentifier
+    precondition(context.task.state == .failed)
+    let writable: any MLModel & MLWritable = context.model
+    coremlRequireThrows(.io) {
+        try writable.write(to: URL(fileURLWithPath: "/tmp/updated.mlmodelc"))
+    }
+}
+
+func testModelCollectionFailsClosed() {
+    let beginOnce = DispatchSemaphore(value: 0)
+    let progress = MLModelCollection.beginAccessing(identifier: "bundle") { collection, error in
+        precondition(collection == nil)
+        coremlRequireError(error!, .modelCollection)
+        beginOnce.signal()
+    }
+    _ = progress
+    precondition(beginOnce.wait(timeout: .now() + 5) == .success)
+    let resultOnce = DispatchSemaphore(value: 0)
+    let resultProgress = MLModelCollection.beginAccessing(identifier: "bundle") { (result: Result<MLModelCollection, any Error>) in
+        if case .failure(let error) = result {
+            coremlRequireError(error, .modelCollection)
+        } else {
+            fatalError("collection begin must fail closed")
+        }
+        resultOnce.signal()
+    }
+    _ = resultProgress
+    precondition(resultOnce.wait(timeout: .now() + 5) == .success)
+    let delivered = DispatchSemaphore(value: 0)
+    MLModelCollection.endAccessing(identifier: "bundle") { error in
+        coremlRequireError(error!, .modelCollection)
+        delivered.signal()
+    }
+    precondition(delivered.wait(timeout: .now() + 5) == .success)
+    let endOnce = DispatchSemaphore(value: 0)
+    MLModelCollection.endAccessing(identifier: "bundle") { (result: Result<Void, any Error>) in
+        if case .failure(let error) = result {
+            coremlRequireError(error, .modelCollection)
+        } else {
+            fatalError("collection end Result must fail closed")
+        }
+        endOnce.signal()
+    }
+    precondition(endOnce.wait(timeout: .now() + 5) == .success)
+    let entry = MLModelCollectionEntry(
+        modelIdentifier: "m",
+        modelURL: URL(fileURLWithPath: "/tmp/x.mlmodelc")
+    )
+    precondition(entry.modelIdentifier == "m")
+    precondition(entry.isEqual(entry))
 }

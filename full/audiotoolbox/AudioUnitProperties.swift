@@ -97,6 +97,48 @@ public let kAudioUnitProperty_DeferredRendererPullSize: AudioUnitPropertyID = 33
 public let kAudioUnitProperty_DeferredRendererExtraLatency: AudioUnitPropertyID = 3321
 public let kAudioUnitProperty_DeferredRendererWaitFrames: AudioUnitPropertyID = 3322
 
+public let kAudioOutputUnitProperty_CurrentDevice: AudioUnitPropertyID = 2000
+public let kAudioOutputUnitProperty_IsRunning: AudioUnitPropertyID = 2001
+public let kAudioOutputUnitProperty_ChannelMap: AudioUnitPropertyID = 2002
+public let kAudioOutputUnitProperty_EnableIO: AudioUnitPropertyID = 2003
+public let kAudioOutputUnitProperty_StartTime: AudioUnitPropertyID = 2004
+public let kAudioOutputUnitProperty_SetInputCallback: AudioUnitPropertyID = 2005
+public let kAudioOutputUnitProperty_HasIO: AudioUnitPropertyID = 2006
+public let kAudioOutputUnitProperty_StartTimestampsAtZero: AudioUnitPropertyID = 2007
+public let kAudioOutputUnitProperty_MIDICallbacks: AudioUnitPropertyID = 2010
+public let kAudioOutputUnitProperty_HostReceivesRemoteControlEvents: AudioUnitPropertyID = 2011
+public let kAudioOutputUnitProperty_RemoteControlToHost: AudioUnitPropertyID = 2012
+public let kAudioOutputUnitProperty_HostTransportState: AudioUnitPropertyID = 2013
+public let kAudioOutputUnitProperty_NodeComponentDescription: AudioUnitPropertyID = 2014
+
+public let kAudioUnitRange: Int = 0x0000
+public let kAudioUnitInitializeSelect: Int = 0x0001
+public let kAudioUnitUninitializeSelect: Int = 0x0002
+public let kAudioUnitGetPropertyInfoSelect: Int = 0x0003
+public let kAudioUnitGetPropertySelect: Int = 0x0004
+public let kAudioUnitSetPropertySelect: Int = 0x0005
+public let kAudioUnitGetParameterSelect: Int = 0x0006
+public let kAudioUnitSetParameterSelect: Int = 0x0007
+public let kAudioUnitResetSelect: Int = 0x0009
+public let kAudioUnitAddPropertyListenerSelect: Int = 0x000A
+public let kAudioUnitRemovePropertyListenerSelect: Int = 0x000B
+public let kAudioUnitRenderSelect: Int = 0x000E
+public let kAudioUnitAddRenderNotifySelect: Int = 0x000F
+public let kAudioUnitRemoveRenderNotifySelect: Int = 0x0010
+public let kAudioUnitScheduleParametersSelect: Int = 0x0011
+public let kAudioUnitRemovePropertyListenerWithUserDataSelect: Int = 0x0012
+public let kAudioUnitComplexRenderSelect: Int = 0x0013
+public let kAudioUnitProcessSelect: Int = 0x0014
+public let kAudioUnitProcessMultipleSelect: Int = 0x0015
+
+public let kAudioOutputUnitRange: Int = 0x0200
+public let kAudioOutputUnitStartSelect: Int = 0x0201
+public let kAudioOutputUnitStopSelect: Int = 0x0202
+
+public let kAudioUnitSampleRateConverterComplexity_Linear: UInt32 = atFourCC("line")
+public let kAudioUnitSampleRateConverterComplexity_Normal: UInt32 = atFourCC("norm")
+public let kAudioUnitSampleRateConverterComplexity_Mastering: UInt32 = atFourCC("bats")
+
 public struct AudioUnitRenderActionFlags: OptionSet, Sendable, Hashable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }

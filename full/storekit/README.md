@@ -14,16 +14,16 @@ seed `7147ef0e`, PR #115). Immutable seed files were not rewritten.
 
 ## Coverage (measured)
 
-| status | first pass | after 2026-09 wave 8 | after depth pass 3 |
-| --- | ---: | ---: | ---: |
-| implemented | 824 | 933 | 1107 |
-| declared | 14483 | 14352 | 6893 |
-| deferred | 368 | 348 | 310 |
-| unavailable | 0 | 0 | 0 |
-| not-applicable | 20 | 62 | 7385 |
+| status | first pass | after 2026-09 wave 8 | after depth pass 3 | after depth pass 4 | after NA repair |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| implemented | 824 | 933 | 1107 | 1298 | 1370 |
+| declared | 14483 | 14352 | 6893 | 6759 | 6753 |
+| deferred | 368 | 348 | 310 | 253 | 271 |
+| unavailable | 0 | 0 | 0 | 0 | 0 |
+| not-applicable | 20 | 62 | 7385 | 7385 | 7301 |
 
 Floor of 7848 nondeferred (`implemented` + `declared`) remains met
-(8000). CryptoKit `P256` JWS `signature` stays deferred.
+(8123). CryptoKit `P256` JWS `signature` stays deferred.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -40,6 +40,7 @@ rules, and model-level overlay/view types. Tests that previously waited on
 | after depth pass | 933 | 14352 | 346 | 0 | 64 |
 | after merge repair | 933 | 14352 | 348 | 0 | 62 |
 | after depth pass 3 | 1107 | 6893 | 310 | 0 | 7385 |
+| after depth pass 4 | 1298 | 6759 | 253 | 0 | 7385 |
 
 Nondeferred: 15307 → 15285 (wave 8) → **8000** (pass 3, floor 7848). Unique
 `implemented` evidence tests after pass 3: 72. Top-5 evidence distribution
@@ -113,7 +114,102 @@ does not print
 That campaign token is the host-inventory stamp; the sealed framework gate
 prints the four lines above. The verify script's success line on a complete
 image is `products=scratch-corpus`, not `products=clean`. Starting commit
-was `bff8535c68425cc39fb45cb00d447b0981b57242`.
+was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+
+## Depth pass 2026-09 (wave 8, pass 4)
+
+Next StoreKit 2 / SK1 behavioral pass over the pass-3 tree. Existing sources
+and tests stay green. This pass adds:
+
+- `SKOverlay.present` fail-closed: `storeOverlayWillStartPresentation` then
+  `storeOverlayDidFailToLoad` with `SKError.overlayInvalidConfiguration`.
+  `dismiss` fires `willStartDismissal` / `didFinishDismissal`.
+  `storeOverlayDidFinishPresentation` is on the protocol but is not invented
+  on a successful present.
+- `SKTerminateForInvalidReceipt` records a portable call count and does not
+  abort.
+- `SKError` / `SKANError` as `CustomNSError` + `LocalizedError`, including
+  `Code.~=` pattern matching.
+- Real `OptionSet`/`SetAlgebra` operations on `SKCloudServiceCapability` and
+  `Product.SubscriptionRelationship` (previously over-deferred).
+- `SKPaymentQueue` observers: storefront-change on configuration load,
+  `didRevokeEntitlementsForProductIdentifiers` on `StoreKitTesting.revoke`,
+  and `portableAskShouldAddStorePayment`.
+- Subscription status / storefront snapshots from the local testing store.
+- Equatable `!=`, `hash(into:)`, `hashValue`, and `Comparable` operators on
+  StoreKit-owned enums/option sets.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before (pass 3) | 1107 | 6893 | 310 | 0 | 7385 |
+| after depth pass 4 | 1298 | 6759 | 253 | 0 | 7385 |
+
+Nondeferred: **8057** (floor 7848). Unique `implemented` evidence tests: 83.
+Top-5 evidence distribution (of 1298 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (8.9%)
+2. `testAdvancedCommerceTypes` — 111 (8.6%)
+3. `testJWSUnverifiedFields` — 67 (5.2%)
+4. `testHashableRawRepresentableMixing` — 48 (3.7%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (3.2%)
+
+No cited test covers more than 40% of implemented rows. Remaining
+`s:7SwiftUI4View…` synthesized modifier specializations stay `declared` so
+the 7848 nondeferred floor stays met; they are not marked `implemented`.
+SwiftUI overlay re-exports already `not-applicable` are unchanged.
+
+The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`.
+Depth pass 4 ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=StoreKit lane=medium-full symbols=15695
+FRAMEWORK_FANOUT_REFERENCE_OK
+STOREKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=StoreKit dylib=libStoreKit.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` fails on this snapshot with
+`missing corpus checkout: scratch/ladder-corpus/focus-ios` and therefore
+does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+That campaign token is the host-inventory stamp; the sealed framework gate
+prints the four lines above. The verify script's success line on a complete
+image is `products=scratch-corpus`, not `products=clean`. Starting commit
+was `2de7152a12f3beb34a4c1e92dc0e849af9a1d88b`.
+
+## Depth pass 2026-09 (wave 8, NA repair)
+
+Checked merge of `43103bf1` refused 18 `not-applicable` rows that are not
+SwiftUI `View` overlay IDs (`s:7SwiftUI4View…`). `_StoreKit_SwiftUI`
+`StoreContent` protocol methods, style `.automatic`/`.large`/`.regular`
+witnesses, `EnvironmentValues` StoreKit actions, and
+`ContainerBackgroundPlacement.subscriptionStore*` are StoreKit-owned.
+This repair implements those APIs as model-level declarations and cites
+focused tests in `StoreKitDepthPass5Tests.swift`. Optional/Never
+`StoreContent` method witnesses stay `deferred` (same reason as
+`Optional.Body` / `Optional.body`). Remaining NA is 7301
+`s:7SwiftUI4View…` overlay re-exports.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before (pass 4 / refused merge) | 1298 | 6759 | 253 | 0 | 7385 |
+| after NA repair | 1370 | 6753 | 271 | 0 | 7301 |
+
+Nondeferred: **8123** (floor 7848). Unique `implemented` evidence tests: 93.
+Top-5 evidence distribution (of 1370 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (8.4%)
+2. `testAdvancedCommerceTypes` — 111 (8.1%)
+3. `testJWSUnverifiedFields` — 67 (4.9%)
+4. `testHashableRawRepresentableMixing` — 48 (3.5%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (3.0%)
+
+No cited test covers more than 40% of implemented rows. New tests each
+cover one family (StoreContent modifiers per conforming type, product
+view style statics, overlay style statics, environment actions,
+container-background placements). Enum / option-set members and C
+`k…`/`err…` constants still share table-driven value tests.
 
 ## What is real (isolated host)
 
@@ -146,8 +242,11 @@ store** modelled on Xcode StoreKit Testing `.storekit` JSON
   completions return `success == false`. `AppStore.showManageSubscriptions`
   throws `StoreKitError.notAvailableInStorefront`.
 - `SKStoreReviewController.requestReview()` increments
-  `portableRequestCount` and never presents UI. `SKOverlay.present` /
-  `dismiss` increment `portablePresentCount`.
+  `portableRequestCount` and never presents UI. `SKOverlay.present`
+  fires `willStartPresentation` then `didFailToLoad` with
+  `SKError.overlayInvalidConfiguration`; `dismiss` fires dismissal
+  callbacks. `SKTerminateForInvalidReceipt` increments a portable
+  count and does not abort.
 - `SKError.Code` raw values 0...20, `SKErrorDomain`, `StoreKitError` cases.
 - ProductView / StoreView / SubscriptionStoreView are model-level (data +
   configuration), not rendering.

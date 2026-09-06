@@ -105,7 +105,6 @@ enum TextTestSupport {
     static func attributedString(_ j: [String: Any]) -> OpenUIKit.NSAttributedString {
         let out = OpenUIKit.NSMutableAttributedString()
         for r in (j["runs"] as? [[String: Any]]) ?? [] {
-            let text = (r["text"] as? String) ?? ""
             let size = (r["fontSize"] as? Double) ?? 17
             let w = weight((r["fontWeight"] as? String) ?? "regular") ?? .regular
             let f: UIFont
@@ -113,6 +112,32 @@ enum TextTestSupport {
             else if (r["monospaced"] as? Bool) == true {
                 f = .monospacedSystemFont(ofSize: size, weight: w)
             } else { f = .systemFont(ofSize: size, weight: w) }
+            if let attJ = r["attachment"] as? [String: Any] {
+                let att = NSTextAttachment()
+                if let imgJ = attJ["image"] as? [String: Any] {
+                    att.image = solidImage(from: imgJ)
+                }
+                if let b = attJ["bounds"] as? [Double], b.count == 4 {
+                    att.bounds = CGRect(x: b[0], y: b[1], width: b[2], height: b[3])
+                }
+                if let p = attJ["lineLayoutPadding"] as? Double {
+                    att.lineLayoutPadding = OpenUIKit.CGFloat(p)
+                }
+                if let ft = attJ["fileType"] as? String { att.fileType = ft }
+                if let allow = attJ["allowsTextAttachmentView"] as? Bool {
+                    att.allowsTextAttachmentView = allow
+                }
+                let piece = OpenUIKit.NSMutableAttributedString(
+                    attributedString: OpenUIKit.NSAttributedString(attachment: att))
+                var extra: [OpenUIKit.NSAttributedString.Key: Any] = [.font: f]
+                if let c = r["color"] as? String, let color = namedColor(c) {
+                    extra[.foregroundColor] = color
+                }
+                piece.addAttributes(extra, range: NSRange(location: 0, length: piece.length))
+                out.append(piece)
+                continue
+            }
+            let text = (r["text"] as? String) ?? ""
             var a: [OpenUIKit.NSAttributedString.Key: Any] = [.font: f]
             if let c = r["color"] as? String, let color = namedColor(c) {
                 a[.foregroundColor] = color
@@ -167,5 +192,44 @@ enum TextTestSupport {
         case "systemRed": return .systemRed
         default: return nil
         }
+    }
+
+    /// Solid bitmap matching openrender `makeImage` `{kind: solid, colors, size}`.
+    static func solidImage(from j: [String: Any]) -> UIImage {
+        let sz = (j["size"] as? [Double]) ?? [24, 24]
+        let w = OpenUIKit.CGFloat(sz[0])
+        let h = OpenUIKit.CGFloat(sz.count > 1 ? sz[1] : sz[0])
+        let scale: OpenUIKit.CGFloat = 2
+        let pw = Swift.max(1, Int((w * scale).rounded()))
+        let ph = Swift.max(1, Int((h * scale).rounded()))
+        let bmp = Bitmap(width: pw, height: ph)
+        var r: UInt8 = 255, g: UInt8 = 0, b: UInt8 = 0, a: UInt8 = 255
+        if let colors = j["colors"] as? [String], let hex = colors.first,
+           let parsed = parseHex(hex) {
+            r = parsed.0; g = parsed.1; b = parsed.2; a = parsed.3
+        }
+        var i = 0
+        while i + 3 < bmp.pixels.count {
+            bmp.pixels[i] = r
+            bmp.pixels[i + 1] = g
+            bmp.pixels[i + 2] = b
+            bmp.pixels[i + 3] = a
+            i += 4
+        }
+        return UIImage(bitmap: bmp, scale: scale)
+    }
+
+    static func parseHex(_ s: String) -> (UInt8, UInt8, UInt8, UInt8)? {
+        var hex = s
+        if hex.hasPrefix("#") { hex.removeFirst() }
+        guard hex.count == 6 || hex.count == 8 else { return nil }
+        var value: UInt64 = 0
+        guard Scanner(string: hex).scanHexInt64(&value) else { return nil }
+        if hex.count == 6 {
+            return (UInt8((value >> 16) & 0xFF), UInt8((value >> 8) & 0xFF),
+                    UInt8(value & 0xFF), 255)
+        }
+        return (UInt8((value >> 24) & 0xFF), UInt8((value >> 16) & 0xFF),
+                UInt8((value >> 8) & 0xFF), UInt8(value & 0xFF))
     }
 }

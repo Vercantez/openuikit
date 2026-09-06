@@ -206,7 +206,10 @@ public enum ControlSize: Int, Hashable, Sendable, Comparable {
     case regular = 0
     public static func < (lhs: ControlSize, rhs: ControlSize) -> Bool { lhs.rawValue < rhs.rawValue }
 }
-public struct ContainerBackgroundPlacement: Hashable, Sendable { public init() {} }
+public struct ContainerBackgroundPlacement: Hashable, Sendable {
+    var storeKitKind: String = ""
+    public init() {}
+}
 public enum ColorScheme: Hashable, Sendable { case light, dark }
 public struct Angle: Hashable, Sendable {
     public var radians: Double = 0

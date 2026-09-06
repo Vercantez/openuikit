@@ -15,6 +15,7 @@ extension ConformanceApps {
         "Feed",
         "Forms",
         "Ledger",
+        "Materials",
         "Modal",
         "NavFlow",
         "Notes",
@@ -22,6 +23,7 @@ extension ConformanceApps {
         "Present",
         "TableEditor",
         "Tabs",
+        "TextKit",
     ]
 
     /// Force every app's one-line `static let _register<Name>` to run.
@@ -32,6 +34,7 @@ extension ConformanceApps {
         _ = _registerFeed
         _ = _registerForms
         _ = _registerLedger
+        _ = _registerMaterials
         _ = _registerModal
         _ = _registerNavFlow
         _ = _registerNotes
@@ -39,5 +42,6 @@ extension ConformanceApps {
         _ = _registerPresent
         _ = _registerTableEditor
         _ = _registerTabs
+        _ = _registerTextKit
     }
 }

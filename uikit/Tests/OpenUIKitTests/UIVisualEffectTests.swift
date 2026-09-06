@@ -175,6 +175,40 @@ final class UIVisualEffectTests: XCTestCase {
                 style: .secondaryLabel)._descriptor,
             .vibrancy(blurStyle: .systemMaterial,
                       style: .secondaryLabel))
+
+        // MEASURED /tmp/materials-probe, iPhone SE 2x / iOS 26.1 UIGlassEffect.h
+        XCTAssertEqual(UIGlassEffect.Style.regular.rawValue, 0)
+        XCTAssertEqual(UIGlassEffect.Style.clear.rawValue, 1)
+        XCTAssertEqual(UIGlassEffect()._descriptor, .glass(style: .regular))
+        XCTAssertEqual(UIGlassEffect(style: .clear)._descriptor,
+                       .glass(style: .clear))
+        XCTAssertEqual(UIGlassContainerEffect()._descriptor,
+                       .glassContainer(spacing: 0))
+    }
+
+    #if !os(Linux)
+    @MainActor
+    #endif
+    func testGlassEffectCopyIsNewObjectContainerCopyIsSelf() {
+        let glass = UIGlassEffect(style: .regular)
+        XCTAssertFalse(glass.isInteractive)
+        XCTAssertNil(glass.tintColor)
+        glass.isInteractive = true
+        glass.tintColor = .red
+        let other = UIGlassEffect(style: .regular)
+        XCTAssertFalse(glass === other)
+        XCTAssertFalse(glass.isEqual(other))
+        let copied = glass.copy() as! UIGlassEffect
+        XCTAssertFalse(copied === glass)
+        XCTAssertTrue(copied.isInteractive)
+        XCTAssertNotNil(copied.tintColor)
+        XCTAssertEqual(copied.storedStyle, .regular)
+        let container = UIGlassContainerEffect()
+        XCTAssertEqual(container.spacing, 0)
+        container.spacing = 12
+        let ccopy = container.copy() as! UIGlassContainerEffect
+        XCTAssertTrue(ccopy === container)
+        XCTAssertEqual(ccopy.spacing, 12)
     }
 
     #if !os(Linux)
@@ -909,6 +943,14 @@ final class UIVisualEffectTests: XCTestCase {
                       "immutable UIKit effects return identity from copy")
         XCTAssertEqual(view._visualEffectDescriptor,
                        .blur(style: .systemMaterial))
+        XCTAssertEqual(view.subviews.filter {
+            $0 is _UIVisualEffectBackdropView
+        }.count, 1)
+        XCTAssertTrue(view.subviews.last === content)
+
+        let glass = UIGlassEffect(style: .regular)
+        view.effect = glass
+        XCTAssertEqual(view._visualEffectDescriptor, .glass(style: .regular))
         XCTAssertEqual(view.subviews.filter {
             $0 is _UIVisualEffectBackdropView
         }.count, 1)
