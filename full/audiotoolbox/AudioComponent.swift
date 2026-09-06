@@ -89,10 +89,34 @@ internal final class ATAudioUnitObject: ATObject {
     var lastRenderError: Int32 = 0
     var maximumFrames: UInt32 = 4096
     var parameters: [UInt32: Float32] = [:]
+    var scopedParameters: [UInt64: Float32] = [:]
     var connections: [UInt32: ATUnitConnection] = [:]
     var inputCallbacks: [UInt32: AURenderCallbackStruct] = [:]
     var renderCallback = AURenderCallbackStruct()
+    var renderNotifies: [AURenderCallbackStruct] = [:]
     var sampleCounter: Int64 = 0
+
+    func parameterKey(scope: AudioUnitScope, element: AudioUnitElement, id: AudioUnitParameterID) -> UInt64 {
+        (UInt64(scope) << 48) | (UInt64(element) << 32) | UInt64(id)
+    }
+
+    func mixerGain(element: AudioUnitElement) -> Float {
+        let enable = scopedParameters[parameterKey(scope: kAudioUnitScope_Input, element: element, id: kMultiChannelMixerParam_Enable)]
+            ?? parameters[kMultiChannelMixerParam_Enable]
+            ?? 1
+        if enable <= 0 {
+            return 0
+        }
+        return scopedParameters[parameterKey(scope: kAudioUnitScope_Input, element: element, id: kMultiChannelMixerParam_Volume)]
+            ?? parameters[kMultiChannelMixerParam_Volume]
+            ?? 1
+    }
+
+    func mixerPan(element: AudioUnitElement) -> Float {
+        scopedParameters[parameterKey(scope: kAudioUnitScope_Input, element: element, id: kMultiChannelMixerParam_Pan)]
+            ?? parameters[kMultiChannelMixerParam_Pan]
+            ?? 0
+    }
 
     var isRemoteIO: Bool {
         description.componentSubType == kAudioUnitSubType_RemoteIO
