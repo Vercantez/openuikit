@@ -228,6 +228,157 @@ public struct IntentPerson: @unchecked Sendable, Hashable, _IntentValue {
             case applicationDefined(String)
         }
     }
+
+    public typealias ValueType = IntentPerson
+    public typealias UnwrappedType = IntentPerson
+}
+
+extension IntentPerson.Identifier: Codable {
+    private enum CodingKeys: String, CodingKey { case applicationDefined, contact, unknown }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(String.self, forKey: .applicationDefined) {
+            self = .applicationDefined(value)
+        } else if let value = try container.decodeIfPresent(String.self, forKey: .contact) {
+            self = .contact(value)
+        } else {
+            self = .unknown
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .applicationDefined(let value):
+            try container.encode(value, forKey: .applicationDefined)
+        case .contact(let value):
+            try container.encode(value, forKey: .contact)
+        case .unknown:
+            try container.encode(true, forKey: .unknown)
+        }
+    }
+}
+
+extension IntentPerson.Name: Codable {
+    private enum CodingKeys: String, CodingKey { case displayName, components, unknown }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(String.self, forKey: .displayName) {
+            self = .displayName(value)
+        } else if let value = try container.decodeIfPresent(PersonNameComponents.self, forKey: .components) {
+            self = .components(value)
+        } else {
+            self = .unknown
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .displayName(let value):
+            try container.encode(value, forKey: .displayName)
+        case .components(let value):
+            try container.encode(value, forKey: .components)
+        case .unknown:
+            try container.encode(true, forKey: .unknown)
+        }
+    }
+}
+
+extension IntentPerson.Handle.Label: Codable {
+    private enum CodingKeys: String, CodingKey { case named, custom }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let custom = try container.decodeIfPresent(String.self, forKey: .custom) {
+            self = .custom(custom)
+            return
+        }
+        switch try container.decode(String.self, forKey: .named) {
+        case "home": self = .home
+        case "main": self = .main
+        case "work": self = .work
+        case "pager": self = .pager
+        case "iPhone": self = .iPhone
+        case "mobile": self = .mobile
+        case "school": self = .school
+        case "homeFax": self = .homeFax
+        case "workFax": self = .workFax
+        default: self = .other
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .custom(let value):
+            try container.encode(value, forKey: .custom)
+        case .home: try container.encode("home", forKey: .named)
+        case .main: try container.encode("main", forKey: .named)
+        case .work: try container.encode("work", forKey: .named)
+        case .other: try container.encode("other", forKey: .named)
+        case .pager: try container.encode("pager", forKey: .named)
+        case .iPhone: try container.encode("iPhone", forKey: .named)
+        case .mobile: try container.encode("mobile", forKey: .named)
+        case .school: try container.encode("school", forKey: .named)
+        case .homeFax: try container.encode("homeFax", forKey: .named)
+        case .workFax: try container.encode("workFax", forKey: .named)
+        }
+    }
+}
+
+extension IntentPerson.Handle.Value: Codable {
+    private enum CodingKeys: String, CodingKey { case phoneNumber, emailAddress, applicationDefined }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let value = try container.decodeIfPresent(String.self, forKey: .phoneNumber) {
+            self = .phoneNumber(value)
+        } else if let value = try container.decodeIfPresent(String.self, forKey: .emailAddress) {
+            self = .emailAddress(value)
+        } else {
+            self = .applicationDefined(try container.decode(String.self, forKey: .applicationDefined))
+        }
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .phoneNumber(let value):
+            try container.encode(value, forKey: .phoneNumber)
+        case .emailAddress(let value):
+            try container.encode(value, forKey: .emailAddress)
+        case .applicationDefined(let value):
+            try container.encode(value, forKey: .applicationDefined)
+        }
+    }
+}
+
+extension IntentPerson.Handle: Codable {}
+
+extension IntentPerson: Codable {
+    private enum CodingKeys: String, CodingKey { case identifier, name, handle, aliases, isMe }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let identifier = try container.decode(Identifier.self, forKey: .identifier)
+        let name = try container.decode(Name.self, forKey: .name)
+        let handle = try container.decodeIfPresent(Handle.self, forKey: .handle)
+        let aliases = try container.decodeIfPresent([Handle].self, forKey: .aliases) ?? []
+        let isMe = try container.decodeIfPresent(Bool.self, forKey: .isMe) ?? false
+        self.init(identifier: identifier, name: name, handle: handle, aliases: aliases, isMe: isMe, image: nil)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(identifier, forKey: .identifier)
+        try container.encode(name, forKey: .name)
+        try container.encodeIfPresent(handle, forKey: .handle)
+        try container.encode(aliases, forKey: .aliases)
+        try container.encode(isMe, forKey: .isMe)
+    }
 }
 
 public struct DoubleResolver: @unchecked Sendable {
@@ -569,6 +720,10 @@ public struct BoolFromStringResolver: @unchecked Sendable {
 public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     public var title: LocalizedStringResource
     public var isOptional: Bool
+    public var storedDefaultUnit: Any?
+    public var storedUnit: Any?
+    public var storedUnitAdjustForLocale: Bool?
+    public var storedSupportsNegativeNumbers: Bool?
 
     public init(title: LocalizedStringResource = LocalizedStringResource(""), isOptional: Bool = true) {
         self.title = title
@@ -692,8 +847,12 @@ public struct EntityQuerySortingOptions<Entity>: @unchecked Sendable {
     public init() {}
 }
 
-public struct EmptyResolverSpecification<Value>: @unchecked Sendable {
+public struct EmptyResolverSpecification<Value>: ResolverSpecification {
     public init() {}
+    public static func == (lhs: EmptyResolverSpecification<Value>, rhs: EmptyResolverSpecification<Value>) -> Bool {
+        true
+    }
+    public func hash(into hasher: inout Hasher) {}
 }
 
 public struct FocusFilterSuggestionContext: @unchecked Sendable {

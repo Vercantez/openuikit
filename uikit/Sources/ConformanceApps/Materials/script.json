@@ -1,0 +1,14 @@
+{
+  "comment": "Materials conformance timeline. First capture at 1.0 s so the tab-bar lens is at rest. Classic set-* stay on probe yellow (242,179,64); set-material / set-glass / set-clear switch to probe gray33 because the two-unknown mix is the closed rule and yellow chroma is OPEN (docs/MATERIALS.md). select-tab-2 is the tab-bar platter over Tabs-like coloured blocks. Same file drives confprobe and openhost --app Materials.",
+  "app": "Materials",
+  "events": [
+    { "t": 1.50, "action": "set-light" },
+    { "t": 2.50, "action": "set-dark" },
+    { "t": 3.50, "action": "set-regular" },
+    { "t": 4.50, "action": "set-material" },
+    { "t": 5.50, "action": "set-glass" },
+    { "t": 6.50, "action": "set-clear" },
+    { "t": 7.50, "action": "select-tab-2" }
+  ],
+  "captures": [1.00, 2.00, 3.00, 4.00, 5.00, 6.00, 7.00, 8.00]
+}

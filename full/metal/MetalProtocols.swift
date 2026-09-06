@@ -345,6 +345,83 @@ public protocol MTLRenderCommandEncoder: MTLCommandEncoder {
         indirectBuffer indirectRangeBuffer: any MTLBuffer,
         offset: Int
     )
+    func setMeshBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setMeshBufferOffset(_ offset: Int, index: Int)
+    func setMeshBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int)
+    func setMeshTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setMeshSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setMeshSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setObjectBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setObjectBufferOffset(_ offset: Int, index: Int)
+    func setObjectBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int)
+    func setObjectTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setObjectSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setObjectSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setObjectThreadgroupMemoryLength(_ length: Int, index: Int)
+    func setTileBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setTileBufferOffset(_ offset: Int, index: Int)
+    func setTileBytes(_ bytes: UnsafeRawPointer, length: Int, index: Int)
+    func setTileTexture(_ texture: (any MTLTexture)?, index: Int)
+    func setTileSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
+    func setTileSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setThreadgroupMemoryLength(_ length: Int, offset: Int, index: Int)
+    func setTessellationFactorBuffer(_ buffer: (any MTLBuffer)?, offset: Int, instanceStride: Int)
+    func setTessellationFactorScale(_ scale: Float)
+    func setDepthTestBounds(_ bounds: ClosedRange<Float>)
+    func dispatchThreadsPerTile(_ threadsPerTile: MTLSize)
+    func drawMeshThreadgroups(
+        _ threadgroupsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    )
+    func drawMeshThreadgroups(
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    )
+    func drawMeshThreads(
+        _ threadsPerGrid: MTLSize,
+        threadsPerObjectThreadgroup: MTLSize,
+        threadsPerMeshThreadgroup: MTLSize
+    )
+    func drawPatches(
+        numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    )
+    func drawPatches(
+        numberOfPatchControlPoints: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    )
+    func drawIndexedPatches(
+        numberOfPatchControlPoints: Int,
+        patchStart: Int,
+        patchCount: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        instanceCount: Int,
+        baseInstance: Int
+    )
+    func drawIndexedPatches(
+        numberOfPatchControlPoints: Int,
+        patchIndexBuffer: (any MTLBuffer)?,
+        patchIndexBufferOffset: Int,
+        controlPointIndexBuffer: any MTLBuffer,
+        controlPointIndexBufferOffset: Int,
+        indirectBuffer: any MTLBuffer,
+        indirectBufferOffset: Int
+    )
+    func memoryBarrier(resources: [any MTLResource], after: MTLRenderStages, before: MTLRenderStages)
 }
 
 public protocol MTLCommandQueue: NSObjectProtocol, Sendable {

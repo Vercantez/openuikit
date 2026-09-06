@@ -197,3 +197,29 @@ func testModelErrorValueSemantics() {
     error.hash(into: &hasher)
     _ = error.localizedDescription
 }
+
+func testUpdateProgressEventSetAlgebra() {
+    let begin = MLUpdateProgressEvent.trainingBegin
+    let epoch = MLUpdateProgressEvent.epochEnd
+    let combined: MLUpdateProgressEvent = [.trainingBegin, .miniBatchEnd]
+    precondition(combined.contains(.trainingBegin))
+    precondition(begin.isSubset(of: combined))
+    precondition(combined.isSuperset(of: begin))
+    precondition(begin.isDisjoint(with: epoch))
+    precondition(begin.isStrictSubset(of: combined))
+    precondition(combined.isStrictSuperset(of: begin))
+    precondition(combined.subtracting(begin).contains(.miniBatchEnd))
+    precondition(begin != epoch)
+    precondition(combined.intersection(begin) == begin)
+    precondition(begin.union(epoch).contains(.epochEnd))
+    precondition(combined.symmetricDifference(begin).contains(.miniBatchEnd))
+    var mutable = combined
+    mutable.subtract(begin)
+    precondition(!mutable.contains(.trainingBegin))
+    mutable.formUnion(.trainingBegin)
+    mutable.formIntersection(combined)
+    mutable.formSymmetricDifference(epoch)
+    _ = mutable.remove(.miniBatchEnd)
+    _ = mutable.update(with: .trainingBegin)
+    precondition(MLUpdateProgressEvent().isEmpty)
+}

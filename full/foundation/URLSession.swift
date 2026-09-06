@@ -1396,8 +1396,12 @@ open class URLSessionTask: NSObject, @unchecked Sendable {
     fileprivate func finish(
         data: Data?, response: URLResponse?, file: URL?, error: (any Error)?
     ) {
-        let handler: (@Sendable (Data?, URLResponse?, (any Error)?) -> Void)?
-        let downloadHandler: (@Sendable (URL?, URLResponse?, (any Error)?) -> Void)?
+        // `var`, not `let`: the x86 verify box's toolchain refuses initialising a
+        // `let` from inside the `withLock` closure ("cannot assign to value:
+        // 'handler' is a 'let' constant", verify82) although Swift 6.2.4 on the
+        // Mac and in the Docker leg accepted it.
+        var handler: (@Sendable (Data?, URLResponse?, (any Error)?) -> Void)? = nil
+        var downloadHandler: (@Sendable (URL?, URLResponse?, (any Error)?) -> Void)? = nil
         lock.withLock {
             storedState = .completed
             self.response = response

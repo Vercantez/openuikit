@@ -404,6 +404,10 @@ extension CMFormatDescription.Extensions.Value {
         public static let allSubtitlesForced = TextDisplayFlags(
             rawValue: kCMTextDisplayFlag_allSubtitlesForced
         )
+
+        public var scrollDirection: TextDisplayFlags {
+            TextDisplayFlags(rawValue: rawValue & kCMTextDisplayFlag_scrollDirectionMask)
+        }
     }
 
     public struct FontFace: OptionSet, Hashable, Sendable {
@@ -413,6 +417,60 @@ extension CMFormatDescription.Extensions.Value {
         public static let italic = FontFace(rawValue: 1 << 1)
         public static let underline = FontFace(rawValue: 1 << 2)
         public static let all: FontFace = [.bold, .italic, .underline]
+    }
+
+    public struct ContentColorVolume: Hashable {
+        public typealias RawValue = CMFormatDescription.Extensions.Value
+
+        @frozen
+        public struct ColorVolume: Hashable {
+            public var green: Int32
+            public var blue: Int32
+            public var red: Int32
+
+            public init(green: Int32, blue: Int32, red: Int32) {
+                self.green = green
+                self.blue = blue
+                self.red = red
+            }
+        }
+
+        @frozen
+        public struct ColorPrimaries: Hashable {
+            public var x: ColorVolume
+            public var y: ColorVolume
+
+            public init(x: ColorVolume, y: ColorVolume) {
+                self.x = x
+                self.y = y
+            }
+        }
+
+        public var colorPrimaries: ColorPrimaries?
+        public var minimumLuminance: UInt32?
+        public var maximumLuminance: UInt32?
+        public var averageLuminance: UInt32?
+
+        public init(
+            colorPrimaries: ColorPrimaries? = nil,
+            minimumLuminance: UInt32? = nil,
+            maximumLuminance: UInt32? = nil,
+            averageLuminance: UInt32? = nil
+        ) {
+            self.colorPrimaries = colorPrimaries
+            self.minimumLuminance = minimumLuminance
+            self.maximumLuminance = maximumLuminance
+            self.averageLuminance = averageLuminance
+        }
+
+        public var rawValue: CMFormatDescription.Extensions.Value {
+            .number(Int(maximumLuminance ?? 0))
+        }
+
+        public init?(rawValue: CMFormatDescription.Extensions.Value) {
+            _ = rawValue
+            return nil
+        }
     }
 
     public static func fieldDetail(_ fieldDetail: FieldDetail) -> CMFormatDescription.Extensions.Value {
@@ -481,21 +539,47 @@ extension CMFormatDescription.Extensions {
     public typealias Iterator = IndexingIterator<[(key: Key, value: Value)]>
 
     public var startIndex: Index { Index(0) }
-    public var endIndex: Index { Index(0) }
+    public var endIndex: Index { Index(pairs.count) }
 
     public func index(after i: Index) -> Index { Index(i.rawValue + 1) }
 
     public subscript(position: Index) -> Element {
-        (key: .formatName, value: Value())
+        pairs[position.rawValue]
     }
 
     public subscript(key: Key) -> Value? {
-        get { nil }
-        set { _ = newValue }
+        get {
+            pairs.first(where: { $0.0.rawValue == key.rawValue })?.1
+        }
+        set {
+            if let index = pairs.firstIndex(where: { $0.0.rawValue == key.rawValue }) {
+                if let newValue {
+                    pairs[index] = (key, newValue)
+                } else {
+                    pairs.remove(at: index)
+                }
+            } else if let newValue {
+                pairs.append((key, newValue))
+            }
+        }
+    }
+
+    public subscript(key: CFString) -> CFPropertyList? {
+        get {
+            let name = unsafeBitCast(key, to: NSString.self) as String
+            return self[Key(rawValue: name)]?.stored
+        }
+        set {
+            let name = unsafeBitCast(key, to: NSString.self) as String
+            self[Key(rawValue: name)] = newValue.map { Value($0 as CFTypeRef) }
+        }
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(0)
+        hasher.combine(pairs.count)
+        for (key, _) in pairs {
+            hasher.combine(key.rawValue)
+        }
     }
 }
 

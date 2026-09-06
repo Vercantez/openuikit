@@ -1,31 +1,38 @@
 import Foundation
 
 @discardableResult
-public func BNNSApplyMultiheadAttention(_ F: BNNSFilter?, _ batch_size: Int, _ query: UnsafeRawPointer, _ query_stride: Int, _ key: UnsafeRawPointer, _ key_stride: Int, _ key_mask: UnsafePointer<BNNSNDArrayDescriptor>?, _ key_mask_stride: Int, _ value: UnsafeRawPointer, _ value_stride: Int, _ output: UnsafeMutableRawPointer, _ output_stride: Int, _ add_to_attention: UnsafePointer<BNNSNDArrayDescriptor>?, _ backprop_cache_size: UnsafeMutablePointer<Int>?, _ backprop_cache: UnsafeMutableRawPointer?, _ workspace_size: UnsafeMutablePointer<Int>?, _ workspace: UnsafeMutableRawPointer?) -> Int32 { return 0 }
+public func BNNSApplyMultiheadAttention(_ F: BNNSFilter?, _ batch_size: Int, _ query: UnsafeRawPointer, _ query_stride: Int, _ key: UnsafeRawPointer, _ key_stride: Int, _ key_mask: UnsafePointer<BNNSNDArrayDescriptor>?, _ key_mask_stride: Int, _ value: UnsafeRawPointer, _ value_stride: Int, _ output: UnsafeMutableRawPointer, _ output_stride: Int, _ add_to_attention: UnsafePointer<BNNSNDArrayDescriptor>?, _ backprop_cache_size: UnsafeMutablePointer<Int>?, _ backprop_cache: UnsafeMutableRawPointer?, _ workspace_size: UnsafeMutablePointer<Int>?, _ workspace: UnsafeMutableRawPointer?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSApplyMultiheadAttentionBackward(_ F: BNNSFilter?, _ batch_size: Int, _ query: UnsafeRawPointer?, _ query_stride: Int, _ query_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>?, _ key: UnsafeRawPointer?, _ key_stride: Int, _ key_mask: UnsafePointer<BNNSNDArrayDescriptor>?, _ key_mask_stride: Int, _ key_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>?, _ value: UnsafeRawPointer?, _ value_stride: Int, _ value_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>?, _ add_to_attention: UnsafePointer<BNNSNDArrayDescriptor>?, _ key_attn_bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ value_attn_bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ output: UnsafeRawPointer?, _ output_stride: Int, _ output_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>, _ backprop_cache_size: Int, _ backprop_cache: UnsafeMutableRawPointer?, _ workspace_size: UnsafeMutablePointer<Int>?, _ workspace: UnsafeMutableRawPointer?) -> Int32 { return 0 }
+public func BNNSApplyMultiheadAttentionBackward(_ F: BNNSFilter?, _ batch_size: Int, _ query: UnsafeRawPointer?, _ query_stride: Int, _ query_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>?, _ key: UnsafeRawPointer?, _ key_stride: Int, _ key_mask: UnsafePointer<BNNSNDArrayDescriptor>?, _ key_mask_stride: Int, _ key_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>?, _ value: UnsafeRawPointer?, _ value_stride: Int, _ value_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>?, _ add_to_attention: UnsafePointer<BNNSNDArrayDescriptor>?, _ key_attn_bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ value_attn_bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ output: UnsafeRawPointer?, _ output_stride: Int, _ output_param_delta: UnsafeMutablePointer<BNNSMHAProjectionParameters>, _ backprop_cache_size: Int, _ backprop_cache: UnsafeMutableRawPointer?, _ workspace_size: UnsafeMutablePointer<Int>?, _ workspace: UnsafeMutableRawPointer?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSArithmeticFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer?>?, _ in_stride: UnsafePointer<Int>?, _ in_delta: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ in_delta_stride: UnsafePointer<Int>, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int) -> Int32 { return 0 }
+public func BNNSArithmeticFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer?>?, _ in_stride: UnsafePointer<Int>?, _ in_delta: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ in_delta_stride: UnsafePointer<Int>, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSArithmeticFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer>, _ in_stride: UnsafePointer<Int>, _ out: UnsafeMutableRawPointer, _ out_stride: Int) -> Int32 { return 0 }
+public func BNNSArithmeticFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer>, _ in_stride: UnsafePointer<Int>, _ out: UnsafeMutableRawPointer, _ out_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSBandPart(_ num_lower: Int32, _ num_upper: Int32, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSBandPart(_ num_lower: Int32, _ num_upper: Int32, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSClipByGlobalNorm(_ dest: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ src: UnsafeMutablePointer<UnsafePointer<BNNSNDArrayDescriptor>>, _ count: Int, _ max_norm: Float, _ use_norm: Float) -> Int32 { return 0 }
+public func BNNSClipByGlobalNorm(_ dest: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ src: UnsafeMutablePointer<UnsafePointer<BNNSNDArrayDescriptor>>, _ count: Int, _ max_norm: Float, _ use_norm: Float) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSClipByNorm(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ max_norm: Float, _ axis_flags: UInt32) -> Int32 { return 0 }
+public func BNNSClipByNorm(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ max_norm: Float, _ axis_flags: UInt32) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSClipByValue(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ min_val: Float, _ max_val: Float) -> Int32 { return 0 }
+public func BNNSClipByValue(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ min_val: Float, _ max_val: Float) -> Int32 {
+    return _bnnsClipByValueFloat(dest: &dest.pointee, src: src.pointee, minVal: min_val, maxVal: max_val)
+}
 @discardableResult
-public func BNNSCompareTensor(_ in0: UnsafePointer<BNNSNDArrayDescriptor>, _ in1: UnsafePointer<BNNSNDArrayDescriptor>, _ op: BNNSRelationalOperator, _ out: UnsafeMutablePointer<BNNSNDArrayDescriptor>) -> Int32 { return 0 }
+public func BNNSCompareTensor(_ in0: UnsafePointer<BNNSNDArrayDescriptor>, _ in1: UnsafePointer<BNNSNDArrayDescriptor>, _ op: BNNSRelationalOperator, _ out: UnsafeMutablePointer<BNNSNDArrayDescriptor>) -> Int32 {
+    return _bnnsCompareFloat(in0: in0.pointee, in1: in1.pointee, op: op, out: &out.pointee)
+}
 @discardableResult
 public func BNNSComputeLSTMTrainingCacheCapacity(_ layer_params: UnsafePointer<BNNSLayerParametersLSTM>) -> Int { return 0 }
 @discardableResult
-public func BNNSComputeNorm(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ norm_type: BNNSNormType, _ axis_flags: UInt32) -> Int32 { return 0 }
+public func BNNSComputeNorm(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ norm_type: BNNSNormType, _ axis_flags: UInt32) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSComputeNormBackward(_ in: UnsafeRawPointer, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out: UnsafeRawPointer, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ norm_type: BNNSNormType, _ axis_flags: UInt32) -> Int32 { return 0 }
+public func BNNSComputeNormBackward(_ in: UnsafeRawPointer, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out: UnsafeRawPointer, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ norm_type: BNNSNormType, _ axis_flags: UInt32) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSCopy(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSCopy(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 {
+    _ = filter_params
+    return _bnnsCopyFloat(dest: &dest.pointee, src: src.pointee)
+}
 @discardableResult
 public func BNNSCreateNearestNeighbors(_ max_n_samples: UInt32, _ n_features: UInt32, _ n_neighbors: UInt32, _ data_type: BNNSDataType, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> BNNSNearestNeighbors? { return nil }
 @discardableResult
@@ -33,40 +40,40 @@ public func BNNSCreateRandomGenerator(_ method: BNNSRandomGeneratorMethod, _ fil
 @discardableResult
 public func BNNSCreateRandomGeneratorWithSeed(_ method: BNNSRandomGeneratorMethod, _ seed: UInt64, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> BNNSRandomGenerator? { return nil }
 @discardableResult
-public func BNNSCropResize(_ layer_params: UnsafePointer<BNNSLayerParametersCropResize>, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ roi: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSCropResize(_ layer_params: UnsafePointer<BNNSLayerParametersCropResize>, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ roi: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSCropResizeBackward(_ layer_params: UnsafePointer<BNNSLayerParametersCropResize>, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ roi: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSCropResizeBackward(_ layer_params: UnsafePointer<BNNSLayerParametersCropResize>, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ roi: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSDataLayoutGetRank(_ layout: BNNSDataLayout) -> Int { return 0 }
 public func BNNSDestroyNearestNeighbors(_ knn: BNNSNearestNeighbors?) { }
 public func BNNSDestroyRandomGenerator(_ generator: BNNSRandomGenerator?) { }
 @discardableResult
-public func BNNSDirectApplyActivationBatch(_ layer_params: UnsafePointer<BNNSLayerParametersActivation>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ batch_size: Int, _ in_stride: Int, _ out_stride: Int) -> Int32 { return 0 }
+public func BNNSDirectApplyActivationBatch(_ layer_params: UnsafePointer<BNNSLayerParametersActivation>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ batch_size: Int, _ in_stride: Int, _ out_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 public func BNNSDirectApplyBroadcastMatMul(_ transA: Bool, _ transB: Bool, _ alpha: Float, _ inputA: UnsafePointer<BNNSNDArrayDescriptor>, _ inputB: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) { }
 @discardableResult
-public func BNNSDirectApplyInTopK(_ K: Int, _ axis: Int, _ batch_size: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ input_batch_stride: Int, _ test_indices: UnsafePointer<BNNSNDArrayDescriptor>, _ test_indices_batch_stride: Int, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ output_batch_stride: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSDirectApplyInTopK(_ K: Int, _ axis: Int, _ batch_size: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ input_batch_stride: Int, _ test_indices: UnsafePointer<BNNSNDArrayDescriptor>, _ test_indices_batch_stride: Int, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ output_batch_stride: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSDirectApplyLSTMBatchBackward(_ layer_params: UnsafePointer<BNNSLayerParametersLSTM>, _ layer_delta_params: UnsafePointer<BNNSLayerParametersLSTM>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ training_cache_ptr: UnsafeRawPointer?, _ training_cache_capacity: Int) -> Int32 { return 0 }
+public func BNNSDirectApplyLSTMBatchBackward(_ layer_params: UnsafePointer<BNNSLayerParametersLSTM>, _ layer_delta_params: UnsafePointer<BNNSLayerParametersLSTM>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ training_cache_ptr: UnsafeRawPointer?, _ training_cache_capacity: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSDirectApplyLSTMBatchTrainingCaching(_ layer_params: UnsafePointer<BNNSLayerParametersLSTM>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ training_cache_ptr: UnsafeMutableRawPointer?, _ training_cache_capacity: Int) -> Int32 { return 0 }
+public func BNNSDirectApplyLSTMBatchTrainingCaching(_ layer_params: UnsafePointer<BNNSLayerParametersLSTM>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ training_cache_ptr: UnsafeMutableRawPointer?, _ training_cache_capacity: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSDirectApplyQuantizer(_ layer_params: UnsafePointer<BNNSLayerParametersQuantization>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ batch_size: Int, _ input_stride: Int, _ output_stride: Int) -> Int32 { return 0 }
+public func BNNSDirectApplyQuantizer(_ layer_params: UnsafePointer<BNNSLayerParametersQuantization>, _ filter_params: UnsafePointer<BNNSFilterParameters>?, _ batch_size: Int, _ input_stride: Int, _ output_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSDirectApplyReduction(_ layer_params: UnsafePointer<BNNSLayerParametersReduction>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSDirectApplyReduction(_ layer_params: UnsafePointer<BNNSLayerParametersReduction>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSDirectApplyTopK(_ K: Int, _ axis: Int, _ batch_size: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ input_batch_stride: Int, _ best_values: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ best_values_batch_stride: Int, _ best_indices: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ best_indices_batch_stride: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSDirectApplyTopK(_ K: Int, _ axis: Int, _ batch_size: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ input_batch_stride: Int, _ best_values: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ best_values_batch_stride: Int, _ best_indices: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ best_indices_batch_stride: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFilterApply(_ filter: BNNSFilter?, _ in: UnsafeRawPointer, _ out: UnsafeMutableRawPointer) -> Int32 { return 0 }
+public func BNNSFilterApply(_ filter: BNNSFilter?, _ in: UnsafeRawPointer, _ out: UnsafeMutableRawPointer) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ weights_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?) -> Int32 { return 0 }
+public func BNNSFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ weights_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFilterApplyBackwardTwoInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ inA: UnsafeRawPointer?, _ inA_stride: Int, _ inA_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ inA_delta_stride: Int, _ inB: UnsafeRawPointer?, _ inB_stride: Int, _ inB_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ inB_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ weights_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?) -> Int32 { return 0 }
+public func BNNSFilterApplyBackwardTwoInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ inA: UnsafeRawPointer?, _ inA_stride: Int, _ inA_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ inA_delta_stride: Int, _ inB: UnsafeRawPointer?, _ inB_stride: Int, _ inB_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ inB_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ weights_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int) -> Int32 { return 0 }
+public func BNNSFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFilterApplyTwoInput(_ filter: BNNSFilter?, _ inA: UnsafeRawPointer, _ inB: UnsafeRawPointer, _ out: UnsafeMutableRawPointer) -> Int32 { return 0 }
+public func BNNSFilterApplyTwoInput(_ filter: BNNSFilter?, _ inA: UnsafeRawPointer, _ inB: UnsafeRawPointer, _ out: UnsafeMutableRawPointer) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFilterApplyTwoInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ inA: UnsafeRawPointer, _ inA_stride: Int, _ inB: UnsafeRawPointer, _ inB_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int) -> Int32 { return 0 }
+public func BNNSFilterApplyTwoInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ inA: UnsafeRawPointer, _ inA_stride: Int, _ inB: UnsafeRawPointer, _ inB_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSFilterCreateConvolutionLayer(_ in_desc: UnsafePointer<BNNSImageStackDescriptor>, _ out_desc: UnsafePointer<BNNSImageStackDescriptor>, _ layer_params: UnsafePointer<BNNSConvolutionLayerParameters>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> BNNSFilter? { return nil }
 @discardableResult
@@ -115,17 +122,17 @@ public func BNNSFilterCreatePoolingLayer(_ in_desc: UnsafePointer<BNNSImageStack
 public func BNNSFilterCreateVectorActivationLayer(_ in_desc: UnsafePointer<BNNSVectorDescriptor>, _ out_desc: UnsafePointer<BNNSVectorDescriptor>, _ activation: UnsafePointer<BNNSActivation>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> BNNSFilter? { return nil }
 public func BNNSFilterDestroy(_ filter: BNNSFilter?) { }
 @discardableResult
-public func BNNSFusedFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ delta_parameters: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>?>?) -> Int32 { return 0 }
+public func BNNSFusedFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ delta_parameters: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>?>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFusedFilterApplyBackwardMultiInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer?>?, _ in_stride: UnsafePointer<Int>?, _ in_delta: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ in_delta_stride: UnsafePointer<Int>, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ delta_parameters: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>?>?) -> Int32 { return 0 }
+public func BNNSFusedFilterApplyBackwardMultiInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer?>?, _ in_stride: UnsafePointer<Int>?, _ in_delta: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ in_delta_stride: UnsafePointer<Int>, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ delta_parameters: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>?>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFusedFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return 0 }
+public func BNNSFusedFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSFusedFilterApplyMultiInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer>, _ in_stride: UnsafePointer<Int>, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return 0 }
+public func BNNSFusedFilterApplyMultiInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer>, _ in_stride: UnsafePointer<Int>, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGather(_ axis: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSGather(_ axis: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGatherND(_ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSGatherND(_ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGetPointer(_ filter: BNNSFilter?, _ target: BNNSPointerSpecifier) -> BNNSNDArrayDescriptor { return BNNSNDArrayDescriptor() }
 @discardableResult
@@ -136,7 +143,7 @@ public func BNNSGraphCompileOptionsGetGenerateDebugInfo(_ options: bnns_graph_co
 @discardableResult
 public func BNNSGraphCompileOptionsGetOptimizationPreference(_ options: bnns_graph_compile_options_t) -> BNNSGraphOptimizationPreference { return BNNSGraphOptimizationPreference(rawValue: 0) }
 @discardableResult
-public func BNNSGraphCompileOptionsGetOutputFD(_ options: bnns_graph_compile_options_t) -> Int32 { return 0 }
+public func BNNSGraphCompileOptionsGetOutputFD(_ options: bnns_graph_compile_options_t) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGraphCompileOptionsGetOutputPath(_ options: bnns_graph_compile_options_t) -> UnsafePointer<CChar>? { return nil }
 @discardableResult
@@ -153,9 +160,9 @@ public func BNNSGraphCompileOptionsSetTargetSingleThread(_ options: bnns_graph_c
 public func BNNSGraphContextDestroy(_ context: bnns_graph_context_t) { }
 public func BNNSGraphContextEnableNanAndInfChecks(_ context: bnns_graph_context_t, _ enable_check_for_nans_inf: Bool) { }
 @discardableResult
-public func BNNSGraphContextExecute(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ argument_count: Int, _ arguments: UnsafeMutablePointer<bnns_graph_argument_t>, _ workspace_size: Int, _ workspace: UnsafeMutablePointer<CChar>?) -> Int32 { return 0 }
+public func BNNSGraphContextExecute(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ argument_count: Int, _ arguments: UnsafeMutablePointer<bnns_graph_argument_t>, _ workspace_size: Int, _ workspace: UnsafeMutablePointer<CChar>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextGetTensor(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ argument: UnsafePointer<CChar>, _ fill_known_dynamic_shapes: Bool, _ tensor: UnsafeMutablePointer<BNNSTensor>) -> Int32 { return 0 }
+public func BNNSGraphContextGetTensor(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ argument: UnsafePointer<CChar>, _ fill_known_dynamic_shapes: Bool, _ tensor: UnsafeMutablePointer<BNNSTensor>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGraphContextGetWorkspaceSize(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?) -> Int { return 0 }
 @discardableResult
@@ -163,115 +170,127 @@ public func BNNSGraphContextMake(_ graph: bnns_graph_t) -> bnns_graph_context_t 
 @discardableResult
 public func BNNSGraphContextMakeStreaming(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ initial_states_count: Int, _ initial_states: UnsafePointer<BNNSTensor>?) -> bnns_graph_context_t { return bnns_graph_context_t() }
 @discardableResult
-public func BNNSGraphContextSetArgumentType(_ context: bnns_graph_context_t, _ argument_type: BNNSGraphArgumentType) -> Int32 { return 0 }
+public func BNNSGraphContextSetArgumentType(_ context: bnns_graph_context_t, _ argument_type: BNNSGraphArgumentType) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetBatchSize(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ batch_size: UInt64) -> Int32 { return 0 }
+public func BNNSGraphContextSetBatchSize(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ batch_size: UInt64) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetDynamicShapes(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ shapes_count: Int, _ shapes: UnsafeMutablePointer<bnns_graph_shape_t>) -> Int32 { return 0 }
+public func BNNSGraphContextSetDynamicShapes(_ context: bnns_graph_context_t, _ function: UnsafePointer<CChar>?, _ shapes_count: Int, _ shapes: UnsafeMutablePointer<bnns_graph_shape_t>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetMessageLogCallback(_ context: bnns_graph_context_t, _ log_callback_fn: bnns_graph_execute_message_fn_t, _ additional_logging_arguments: UnsafeMutablePointer<bnns_user_message_data_t>?) -> Int32 { return 0 }
+public func BNNSGraphContextSetMessageLogCallback(_ context: bnns_graph_context_t, _ log_callback_fn: bnns_graph_execute_message_fn_t, _ additional_logging_arguments: UnsafeMutablePointer<bnns_user_message_data_t>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetMessageLogMask(_ context: bnns_graph_context_t, _ log_level_mask: UInt32) -> Int32 { return 0 }
+public func BNNSGraphContextSetMessageLogMask(_ context: bnns_graph_context_t, _ log_level_mask: UInt32) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetOutputAllocationCallback(_ context: bnns_graph_context_t, _ realloc: bnns_graph_realloc_fn_t?, _ free: bnns_graph_free_all_fn_t?, _ user_memory_context_size: Int, _ user_memory_context: UnsafeMutableRawPointer?) -> Int32 { return 0 }
+public func BNNSGraphContextSetOutputAllocationCallback(_ context: bnns_graph_context_t, _ realloc: bnns_graph_realloc_fn_t?, _ free: bnns_graph_free_all_fn_t?, _ user_memory_context_size: Int, _ user_memory_context: UnsafeMutableRawPointer?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetStreamingAdvanceCount(_ context: bnns_graph_context_t, _ advance_count: Int) -> Int32 { return 0 }
+public func BNNSGraphContextSetStreamingAdvanceCount(_ context: bnns_graph_context_t, _ advance_count: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphContextSetWorkspaceAllocationCallback(_ context: bnns_graph_context_t, _ realloc: bnns_graph_realloc_fn_t?, _ free: bnns_graph_free_all_fn_t?, _ user_memory_context_size: Int, _ user_memory_context: UnsafeMutableRawPointer?) -> Int32 { return 0 }
+public func BNNSGraphContextSetWorkspaceAllocationCallback(_ context: bnns_graph_context_t, _ realloc: bnns_graph_realloc_fn_t?, _ free: bnns_graph_free_all_fn_t?, _ user_memory_context_size: Int, _ user_memory_context: UnsafeMutableRawPointer?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGraphGetArgumentCount(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?) -> Int { return 0 }
 @discardableResult
-public func BNNSGraphGetArgumentIntents(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument_intents_count: Int, _ argument_intents: UnsafeMutablePointer<BNNSGraphArgumentIntent>) -> Int32 { return 0 }
+public func BNNSGraphGetArgumentIntents(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument_intents_count: Int, _ argument_intents: UnsafeMutablePointer<BNNSGraphArgumentIntent>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphGetArgumentInterleaveFactors(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument_count: Int, _ argument_interleave: UnsafeMutablePointer<UnsafePointer<UInt16>?>, _ argument_interleave_counts: UnsafeMutablePointer<Int>) -> Int32 { return 0 }
+public func BNNSGraphGetArgumentInterleaveFactors(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument_count: Int, _ argument_interleave: UnsafeMutablePointer<UnsafePointer<UInt16>?>, _ argument_interleave_counts: UnsafeMutablePointer<Int>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphGetArgumentNames(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument_names_count: Int, _ argument_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return 0 }
+public func BNNSGraphGetArgumentNames(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument_names_count: Int, _ argument_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGraphGetArgumentPosition(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument: UnsafePointer<CChar>) -> Int { return 0 }
 @discardableResult
 public func BNNSGraphGetFunctionCount(_ graph: bnns_graph_t) -> Int { return 0 }
 @discardableResult
-public func BNNSGraphGetFunctionNames(_ graph: bnns_graph_t, _ function_name_count: Int, _ function_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return 0 }
+public func BNNSGraphGetFunctionNames(_ graph: bnns_graph_t, _ function_name_count: Int, _ function_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGraphGetInputCount(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?) -> Int { return 0 }
 @discardableResult
-public func BNNSGraphGetInputNames(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ input_names_count: Int, _ input_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return 0 }
+public func BNNSGraphGetInputNames(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ input_names_count: Int, _ input_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSGraphGetOutputCount(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?) -> Int { return 0 }
 @discardableResult
-public func BNNSGraphGetOutputNames(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ output_names_count: Int, _ output_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return 0 }
+public func BNNSGraphGetOutputNames(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ output_names_count: Int, _ output_names: UnsafeMutablePointer<UnsafePointer<CChar>?>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGraphTensorFillStrides(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument: UnsafePointer<CChar>, _ tensor: UnsafeMutablePointer<BNNSTensor>) -> Int32 { return 0 }
+public func BNNSGraphTensorFillStrides(_ graph: bnns_graph_t, _ function: UnsafePointer<CChar>?, _ argument: UnsafePointer<CChar>, _ tensor: UnsafeMutablePointer<BNNSTensor>) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSLossFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ in_delta_stride: Int, _ labels: UnsafeRawPointer, _ labels_stride: Int, _ weights: UnsafeRawPointer?, _ weights_size: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int) -> Int32 { return 0 }
+public func BNNSLossFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ in_delta_stride: Int, _ labels: UnsafeRawPointer, _ labels_stride: Int, _ weights: UnsafeRawPointer?, _ weights_size: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSLossFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ labels: UnsafeRawPointer, _ labels_stride: Int, _ weights: UnsafeRawPointer?, _ weights_size: Int, _ out: UnsafeMutableRawPointer, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int) -> Int32 { return 0 }
+public func BNNSLossFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ labels: UnsafeRawPointer, _ labels_stride: Int, _ weights: UnsafeRawPointer?, _ weights_size: Int, _ out: UnsafeMutableRawPointer, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSMatMul(_ transA: Bool, _ transB: Bool, _ alpha: Float, _ inputA: UnsafePointer<BNNSNDArrayDescriptor>, _ inputB: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafePointer<BNNSNDArrayDescriptor>, _ workspace: UnsafeMutableRawPointer?, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSMatMul(_ transA: Bool, _ transB: Bool, _ alpha: Float, _ inputA: UnsafePointer<BNNSNDArrayDescriptor>, _ inputB: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafePointer<BNNSNDArrayDescriptor>, _ workspace: UnsafeMutableRawPointer?, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 {
+    _ = workspace
+    _ = filter_params
+    return _bnnsMatMulFloat(transA: transA, transB: transB, alpha: alpha, inputA: inputA.pointee, inputB: inputB.pointee, output: output.pointee)
+}
 @discardableResult
 public func BNNSMatMulWorkspaceSize(_ transA: Bool, _ transB: Bool, _ alpha: Float, _ inputA: UnsafePointer<BNNSNDArrayDescriptor>, _ inputB: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int { return 0 }
 @discardableResult
-public func BNNSNDArrayFullyConnectedSparsifySparseCOO(_ in_dense_shape: UnsafePointer<BNNSNDArrayDescriptor>, _ in_indices: UnsafePointer<BNNSNDArrayDescriptor>, _ in_values: UnsafePointer<BNNSNDArrayDescriptor>, _ out: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ sparse_params: UnsafePointer<BNNSSparsityParameters>?, _ batch_size: Int, _ workspace: UnsafeMutableRawPointer?, _ workspace_size: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSNDArrayFullyConnectedSparsifySparseCOO(_ in_dense_shape: UnsafePointer<BNNSNDArrayDescriptor>, _ in_indices: UnsafePointer<BNNSNDArrayDescriptor>, _ in_values: UnsafePointer<BNNSNDArrayDescriptor>, _ out: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ sparse_params: UnsafePointer<BNNSSparsityParameters>?, _ batch_size: Int, _ workspace: UnsafeMutableRawPointer?, _ workspace_size: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSNDArrayFullyConnectedSparsifySparseCSR(_ in_dense_shape: UnsafePointer<BNNSNDArrayDescriptor>, _ in_column_indices: UnsafePointer<BNNSNDArrayDescriptor>, _ in_row_starts: UnsafePointer<BNNSNDArrayDescriptor>, _ in_values: UnsafePointer<BNNSNDArrayDescriptor>, _ out: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ sparse_params: UnsafePointer<BNNSSparsityParameters>?, _ batch_size: Int, _ workspace: UnsafeMutableRawPointer?, _ workspace_size: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSNDArrayFullyConnectedSparsifySparseCSR(_ in_dense_shape: UnsafePointer<BNNSNDArrayDescriptor>, _ in_column_indices: UnsafePointer<BNNSNDArrayDescriptor>, _ in_row_starts: UnsafePointer<BNNSNDArrayDescriptor>, _ in_values: UnsafePointer<BNNSNDArrayDescriptor>, _ out: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ sparse_params: UnsafePointer<BNNSSparsityParameters>?, _ batch_size: Int, _ workspace: UnsafeMutableRawPointer?, _ workspace_size: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSNDArrayGetDataSize(_ array: UnsafePointer<BNNSNDArrayDescriptor>) -> Int { return 0 }
+public func BNNSNDArrayGetDataSize(_ array: UnsafePointer<BNNSNDArrayDescriptor>) -> Int {
+    return _bnnsNDArrayCount(array.pointee) * MemoryLayout<Float>.size
+}
 @discardableResult
-public func BNNSNearestNeighborsGetInfo(_ knn: BNNSNearestNeighbors?, _ sample_number: Int32, _ indices: UnsafeMutablePointer<Int32>?, _ distances: UnsafeMutableRawPointer?) -> Int32 { return 0 }
+public func BNNSNearestNeighborsGetInfo(_ knn: BNNSNearestNeighbors?, _ sample_number: Int32, _ indices: UnsafeMutablePointer<Int32>?, _ distances: UnsafeMutableRawPointer?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSNearestNeighborsLoad(_ knn: BNNSNearestNeighbors?, _ n_new_samples: UInt32, _ data_ptr: UnsafeRawPointer) -> Int32 { return 0 }
+public func BNNSNearestNeighborsLoad(_ knn: BNNSNearestNeighbors?, _ n_new_samples: UInt32, _ data_ptr: UnsafeRawPointer) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSNormalizationFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ beta_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ gamma_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?) -> Int32 { return 0 }
+public func BNNSNormalizationFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ beta_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ gamma_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSNormalizationFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return 0 }
+public func BNNSNormalizationFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSOptimizerStep(_ function: BNNSOptimizerFunction, _ OptimizerAlgFields: UnsafeRawPointer, _ number_of_parameters: Int, _ parameters: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ gradients: UnsafeMutablePointer<UnsafePointer<BNNSNDArrayDescriptor>>, _ accumulators: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>?>?, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSOptimizerStep(_ function: BNNSOptimizerFunction, _ OptimizerAlgFields: UnsafeRawPointer, _ number_of_parameters: Int, _ parameters: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>>, _ gradients: UnsafeMutablePointer<UnsafePointer<BNNSNDArrayDescriptor>>, _ accumulators: UnsafeMutablePointer<UnsafeMutablePointer<BNNSNDArrayDescriptor>?>?, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSPermuteFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ in_delta_stride: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int) -> Int32 { return 0 }
+public func BNNSPermuteFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ in_delta_stride: Int, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSPoolingFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ indices: UnsafePointer<Int>?, _ idx_stride: Int) -> Int32 { return 0 }
+public func BNNSPoolingFilterApplyBackwardBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ indices: UnsafePointer<Int>?, _ idx_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSPoolingFilterApplyBackwardBatchEx(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ indices_data_type: BNNSDataType, _ indices: UnsafeRawPointer?, _ idx_stride: Int) -> Int32 { return 0 }
+public func BNNSPoolingFilterApplyBackwardBatchEx(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer?, _ in_stride: Int, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ in_delta_stride: Int, _ out: UnsafeRawPointer?, _ out_stride: Int, _ out_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta_stride: Int, _ bias_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>?, _ indices_data_type: BNNSDataType, _ indices: UnsafeRawPointer?, _ idx_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSPoolingFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ indices: UnsafeMutablePointer<Int>?, _ idx_stride: Int) -> Int32 { return 0 }
+public func BNNSPoolingFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ indices: UnsafeMutablePointer<Int>?, _ idx_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSPoolingFilterApplyBatchEx(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ indices_data_type: BNNSDataType, _ indices: UnsafeMutableRawPointer?, _ idx_stride: Int) -> Int32 { return 0 }
+public func BNNSPoolingFilterApplyBatchEx(_ filter: BNNSFilter?, _ batch_size: Int, _ in: UnsafeRawPointer, _ in_stride: Int, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ indices_data_type: BNNSDataType, _ indices: UnsafeMutableRawPointer?, _ idx_stride: Int) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSRandomFillCategoricalFloat(_ generator: BNNSRandomGenerator?, _ desc: UnsafePointer<BNNSNDArrayDescriptor>, _ probabilities: UnsafePointer<BNNSNDArrayDescriptor>, _ log_probabilities: Bool) -> Int32 { return 0 }
+public func BNNSRandomFillCategoricalFloat(_ generator: BNNSRandomGenerator?, _ desc: UnsafePointer<BNNSNDArrayDescriptor>, _ probabilities: UnsafePointer<BNNSNDArrayDescriptor>, _ log_probabilities: Bool) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSRandomFillNormalFloat(_ generator: BNNSRandomGenerator?, _ desc: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ mean: Float, _ stddev: Float) -> Int32 { return 0 }
+public func BNNSRandomFillNormalFloat(_ generator: BNNSRandomGenerator?, _ desc: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ mean: Float, _ stddev: Float) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSRandomFillUniformFloat(_ generator: BNNSRandomGenerator?, _ desc: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ a: Float, _ b: Float) -> Int32 { return 0 }
+public func BNNSRandomFillUniformFloat(_ generator: BNNSRandomGenerator?, _ desc: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ a: Float, _ b: Float) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSRandomFillUniformInt(_ generator: BNNSRandomGenerator?, _ desc: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ a: Int64, _ b: Int64) -> Int32 { return 0 }
+public func BNNSRandomFillUniformInt(_ generator: BNNSRandomGenerator?, _ desc: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ a: Int64, _ b: Int64) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSRandomGeneratorGetState(_ generator: BNNSRandomGenerator?, _ state_size: Int, _ state: UnsafeMutableRawPointer) -> Int32 { return 0 }
+public func BNNSRandomGeneratorGetState(_ generator: BNNSRandomGenerator?, _ state_size: Int, _ state: UnsafeMutableRawPointer) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSRandomGeneratorSetState(_ generator: BNNSRandomGenerator?, _ state_size: Int, _ state: UnsafeMutableRawPointer) -> Int32 { return 0 }
+public func BNNSRandomGeneratorSetState(_ generator: BNNSRandomGenerator?, _ state_size: Int, _ state: UnsafeMutableRawPointer) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSRandomGeneratorStateSize(_ generator: BNNSRandomGenerator?) -> Int { return 0 }
 @discardableResult
-public func BNNSScatter(_ axis: Int, _ op: BNNSReduceFunction, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSScatter(_ axis: Int, _ op: BNNSReduceFunction, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSScatterND(_ op: BNNSReduceFunction, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSScatterND(_ op: BNNSReduceFunction, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSShuffle(_ type: BNNSShuffleType, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSShuffle(_ type: BNNSShuffleType, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
 public func BNNSTensorGetAllocationSize(_ tensor: UnsafePointer<BNNSTensor>) -> Int { return 0 }
 @discardableResult
-public func BNNSTile(_ input: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSTile(_ input: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 {
+    _ = filter_params
+    return _bnnsTileFloat(dest: &output.pointee, src: input.pointee)
+}
 @discardableResult
-public func BNNSTileBackward(_ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSTileBackward(_ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSTranspose(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ axis0: Int, _ axis1: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return 0 }
+public func BNNSTranspose(_ dest: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ src: UnsafePointer<BNNSNDArrayDescriptor>, _ axis0: Int, _ axis1: Int, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 {
+    _ = filter_params
+    return _bnnsTransposeFloat(dest: &dest.pointee, src: src.pointee, axis0: axis0, axis1: axis1)
+}
 public func SparseCleanup(_ toFree: SparseMatrix_Complex_Double) { }
 public func SparseCleanup(_ toFree: SparseMatrix_Complex_Float) { }
 public func SparseCleanup(_ toFree: SparseMatrix_Double) { _sparseCleanupDouble(toFree) }
 public func SparseCleanup(_ toFree: SparseMatrix_Float) { _sparseCleanupFloat(toFree) }
 public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Complex_Double) { }
 public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Complex_Float) { }
-public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Double) { }
-public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Float) { }
+public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Double) { _sparseReleaseFactorDouble(toFree) }
+public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Float) { _sparseReleaseFactorFloat(toFree) }
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Complex_Double) { }
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Complex_Float) { }
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Double) { }
@@ -282,9 +301,18 @@ public func SparseCleanup(_ toFree: SparseOpaqueSubfactor_Double) { }
 public func SparseCleanup(_ toFree: SparseOpaqueSubfactor_Float) { }
 public func SparseCleanup(_ toFree: SparseOpaqueSymbolicFactorization) { }
 @discardableResult
-public func SparseConjugateGradient() -> SparseIterativeMethod { return SparseIterativeMethod() }
+public func SparseConjugateGradient() -> SparseIterativeMethod {
+    var method = SparseIterativeMethod()
+    method.method = 1
+    return method
+}
 @discardableResult
-public func SparseConjugateGradient(_ options: SparseCGOptions) -> SparseIterativeMethod { return SparseIterativeMethod() }
+public func SparseConjugateGradient(_ options: SparseCGOptions) -> SparseIterativeMethod {
+    _ = options
+    var method = SparseIterativeMethod()
+    method.method = 1
+    return method
+}
 @discardableResult
 public func SparseConvertFromCoordinate(_ rowCount: Int32, _ columnCount: Int32, _ blockCount: Int, _ blockSize: UInt8, _ attributes: SparseAttributesComplex_t, _ row: UnsafePointer<Int32>, _ column: UnsafePointer<Int32>, _ data: OpaquePointer) -> SparseMatrix_Complex_Double { return SparseMatrix_Complex_Double() }
 @discardableResult
@@ -368,13 +396,13 @@ public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_C
 @discardableResult
 public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Complex_Float, _ options: SparseSymbolicFactorOptions, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Complex_Float { return SparseOpaqueFactorization_Complex_Float() }
 @discardableResult
-public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Double) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Double) -> SparseOpaqueFactorization_Double { _ = type; return _sparseFactorDouble(Matrix) }
 @discardableResult
-public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Double, _ options: SparseSymbolicFactorOptions, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Double, _ options: SparseSymbolicFactorOptions, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Double { _ = type; _ = options; _ = nfoptions; return _sparseFactorDouble(Matrix) }
 @discardableResult
-public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Float) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Float) -> SparseOpaqueFactorization_Float { _ = type; return _sparseFactorFloat(Matrix) }
 @discardableResult
-public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Float, _ options: SparseSymbolicFactorOptions, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseFactor(_ type: SparseFactorization_t, _ Matrix: SparseMatrix_Float, _ options: SparseSymbolicFactorOptions, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Float { _ = type; _ = options; _ = nfoptions; return _sparseFactorFloat(Matrix) }
 @discardableResult
 public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Complex_Double) -> SparseOpaqueFactorization_Complex_Double { return SparseOpaqueFactorization_Complex_Double() }
 @discardableResult
@@ -388,21 +416,21 @@ public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ 
 @discardableResult
 public func SparseFactor(_ symbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Complex_Float, _ nfoptions: SparseNumericFactorOptions, _ factorStorage: UnsafeMutableRawPointer?, _ workspace: UnsafeMutableRawPointer?) -> SparseOpaqueFactorization_Complex_Float { return SparseOpaqueFactorization_Complex_Float() }
 @discardableResult
-public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Double) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Double) -> SparseOpaqueFactorization_Double { _ = SymbolicFactor; return _sparseFactorDouble(Matrix) }
 @discardableResult
-public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Double, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Double, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Double { _ = SymbolicFactor; _ = nfoptions; return _sparseFactorDouble(Matrix) }
 @discardableResult
-public func SparseFactor(_ symbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Double, _ nfoptions: SparseNumericFactorOptions, _ factorStorage: UnsafeMutableRawPointer?, _ workspace: UnsafeMutableRawPointer?) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseFactor(_ symbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Double, _ nfoptions: SparseNumericFactorOptions, _ factorStorage: UnsafeMutableRawPointer?, _ workspace: UnsafeMutableRawPointer?) -> SparseOpaqueFactorization_Double { _ = symbolicFactor; _ = nfoptions; _ = factorStorage; _ = workspace; return _sparseFactorDouble(Matrix) }
 @discardableResult
-public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Float) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Float) -> SparseOpaqueFactorization_Float { _ = SymbolicFactor; return _sparseFactorFloat(Matrix) }
 @discardableResult
-public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Float, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseFactor(_ SymbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Float, _ nfoptions: SparseNumericFactorOptions) -> SparseOpaqueFactorization_Float { _ = SymbolicFactor; _ = nfoptions; return _sparseFactorFloat(Matrix) }
 @discardableResult
-public func SparseFactor(_ symbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Float, _ nfoptions: SparseNumericFactorOptions, _ factorStorage: UnsafeMutableRawPointer?, _ workspace: UnsafeMutableRawPointer?) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseFactor(_ symbolicFactor: SparseOpaqueSymbolicFactorization, _ Matrix: SparseMatrix_Float, _ nfoptions: SparseNumericFactorOptions, _ factorStorage: UnsafeMutableRawPointer?, _ workspace: UnsafeMutableRawPointer?) -> SparseOpaqueFactorization_Float { _ = symbolicFactor; _ = nfoptions; _ = factorStorage; _ = workspace; return _sparseFactorFloat(Matrix) }
 @discardableResult
-public func SparseGMRES() -> SparseIterativeMethod { return SparseIterativeMethod() }
+public func SparseGMRES() -> SparseIterativeMethod { var method = SparseIterativeMethod(); method.method = 2; return method }
 @discardableResult
-public func SparseGMRES(_ options: SparseGMRESOptions) -> SparseIterativeMethod { return SparseIterativeMethod() }
+public func SparseGMRES(_ options: SparseGMRESOptions) -> SparseIterativeMethod { _ = options; var method = SparseIterativeMethod(); method.method = 2; return method }
 @discardableResult
 public func SparseGetConjugateTranspose(_ Matrix: SparseMatrix_Complex_Double) -> SparseMatrix_Complex_Double { return SparseMatrix_Complex_Double() }
 @discardableResult
@@ -464,9 +492,9 @@ public func SparseIterate(_ method: SparseIterativeMethod, _ iteration: Int32, _
 public func SparseIterate(_ method: SparseIterativeMethod, _ iteration: Int32, _ converged: UnsafePointer<Bool>, _ state: UnsafeMutableRawPointer, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Float, DenseMatrix_Float) -> Void, _ B: DenseMatrix_Float, _ R: DenseMatrix_Float, _ X: DenseMatrix_Float) { }
 public func SparseIterate(_ method: SparseIterativeMethod, _ iteration: Int32, _ converged: UnsafePointer<Bool>, _ state: UnsafeMutableRawPointer, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Float, DenseMatrix_Float) -> Void, _ B: DenseMatrix_Float, _ R: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) { }
 @discardableResult
-public func SparseLSMR() -> SparseIterativeMethod { return SparseIterativeMethod() }
+public func SparseLSMR() -> SparseIterativeMethod { var method = SparseIterativeMethod(); method.method = 3; return method }
 @discardableResult
-public func SparseLSMR(_ options: SparseLSMROptions) -> SparseIterativeMethod { return SparseIterativeMethod() }
+public func SparseLSMR(_ options: SparseLSMROptions) -> SparseIterativeMethod { _ = options; var method = SparseIterativeMethod(); method.method = 3; return method }
 public func SparseMultiply(_ A: SparseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Y: DenseMatrix_Complex_Double) { }
 public func SparseMultiply(_ A: SparseMatrix_Complex_Double, _ x: DenseVector_Complex_Double, _ y: DenseVector_Complex_Double) { }
 public func SparseMultiply(_ A: SparseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Y: DenseMatrix_Complex_Float) { }
@@ -590,85 +618,85 @@ public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Float) -> SparseOpaq
 @discardableResult
 public func SparseRetain(_ SymbolicFactor: SparseOpaqueSymbolicFactorization) -> SparseOpaqueSymbolicFactorization { return SparseOpaqueSymbolicFactorization() }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) -> SparseIterativeStatus_t { _ = method; return _sparseSolveMatrixDouble(A, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveMatrixDouble(A, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveMatrixDouble(A, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ b: DenseVector_Double, _ x: DenseVector_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ b: DenseVector_Double, _ x: DenseVector_Double) -> SparseIterativeStatus_t { _ = method; return _sparseSolveVectorDouble(A, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ b: DenseVector_Double, _ x: DenseVector_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ b: DenseVector_Double, _ x: DenseVector_Double, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveVectorDouble(A, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ b: DenseVector_Double, _ x: DenseVector_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Double, _ b: DenseVector_Double, _ x: DenseVector_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveVectorDouble(A, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) -> SparseIterativeStatus_t { _ = method; return _sparseSolveMatrixFloat(A, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveMatrixFloat(A, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveMatrixFloat(A, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ b: DenseVector_Float, _ x: DenseVector_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ b: DenseVector_Float, _ x: DenseVector_Float) -> SparseIterativeStatus_t { _ = method; return _sparseSolveVectorFloat(A, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ b: DenseVector_Float, _ x: DenseVector_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ b: DenseVector_Float, _ x: DenseVector_Float, _ Preconditioner: SparsePreconditioner_t) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveVectorFloat(A, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ b: DenseVector_Float, _ x: DenseVector_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Float, _ b: DenseVector_Float, _ x: DenseVector_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveVectorFloat(A, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Double, DenseMatrix_Complex_Double) -> Void, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Double, DenseMatrix_Complex_Double) -> Void, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Double, DenseMatrix_Complex_Double) -> Void, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Double, DenseMatrix_Complex_Double) -> Void, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Float, DenseMatrix_Complex_Float) -> Void, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Float, DenseMatrix_Complex_Float) -> Void, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Float, DenseMatrix_Complex_Float) -> Void, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Complex_Float, DenseMatrix_Complex_Float) -> Void, _ B: DenseMatrix_Complex_Float, _ X: DenseMatrix_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Double, DenseMatrix_Double) -> Void, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Double, DenseMatrix_Double) -> Void, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) -> SparseIterativeStatus_t { _ = method; return _sparseSolveApplyMatrixDouble(ApplyOperator, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Double, DenseMatrix_Double) -> Void, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Double, DenseMatrix_Double) -> Void, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveApplyMatrixDouble(ApplyOperator, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Float, DenseMatrix_Float) -> Void, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Float, DenseMatrix_Float) -> Void, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) -> SparseIterativeStatus_t { _ = method; return _sparseSolveApplyMatrixFloat(ApplyOperator, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Float, DenseMatrix_Float) -> Void, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseMatrix_Float, DenseMatrix_Float) -> Void, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveApplyMatrixFloat(ApplyOperator, B, X) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Double, DenseVector_Complex_Double) -> Void, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Double, DenseVector_Complex_Double) -> Void, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Double, DenseVector_Complex_Double) -> Void, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Double, DenseVector_Complex_Double) -> Void, _ b: DenseVector_Complex_Double, _ x: DenseVector_Complex_Double, _ Preconditioner: SparseOpaquePreconditioner_Complex_Double) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Float, DenseVector_Complex_Float) -> Void, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Float, DenseVector_Complex_Float) -> Void, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Float, DenseVector_Complex_Float) -> Void, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Complex_Float, DenseVector_Complex_Float) -> Void, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ Preconditioner: SparseOpaquePreconditioner_Complex_Float) -> SparseIterativeStatus_t { _ = method; _ = ApplyOperator; return SparseIterativeParameterError }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Double, DenseVector_Double) -> Void, _ b: DenseVector_Double, _ x: DenseVector_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Double, DenseVector_Double) -> Void, _ b: DenseVector_Double, _ x: DenseVector_Double) -> SparseIterativeStatus_t { _ = method; return _sparseSolveApplyVectorDouble(ApplyOperator, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Double, DenseVector_Double) -> Void, _ b: DenseVector_Double, _ x: DenseVector_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Double, DenseVector_Double) -> Void, _ b: DenseVector_Double, _ x: DenseVector_Double, _ Preconditioner: SparseOpaquePreconditioner_Double) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveApplyVectorDouble(ApplyOperator, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Float, DenseVector_Float) -> Void, _ b: DenseVector_Float, _ x: DenseVector_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Float, DenseVector_Float) -> Void, _ b: DenseVector_Float, _ x: DenseVector_Float) -> SparseIterativeStatus_t { _ = method; return _sparseSolveApplyVectorFloat(ApplyOperator, b, x) }
 @discardableResult
-public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Float, DenseVector_Float) -> Void, _ b: DenseVector_Float, _ x: DenseVector_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { return SparseIterativeStatus_t(rawValue: 0) }
+public func SparseSolve(_ method: SparseIterativeMethod, _ ApplyOperator: @escaping (Bool, CBLAS_TRANSPOSE, DenseVector_Float, DenseVector_Float) -> Void, _ b: DenseVector_Float, _ x: DenseVector_Float, _ Preconditioner: SparseOpaquePreconditioner_Float) -> SparseIterativeStatus_t { _ = method; _ = Preconditioner; return _sparseSolveApplyVectorFloat(ApplyOperator, b, x) }
 public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Double, _ XB: DenseMatrix_Complex_Double) { }
 public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Double, _ XB: DenseMatrix_Complex_Double, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) { }
@@ -685,22 +713,22 @@ public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Float, _ x
 public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Float, _ xb: DenseVector_Complex_Float, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float) { }
 public func SparseSolve(_ Factored: SparseOpaqueFactorization_Complex_Float, _ b: DenseVector_Complex_Float, _ x: DenseVector_Complex_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ XB: DenseMatrix_Double) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ XB: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ xb: DenseVector_Double) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ xb: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ b: DenseVector_Double, _ x: DenseVector_Double) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ b: DenseVector_Double, _ x: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ XB: DenseMatrix_Float) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ XB: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ xb: DenseVector_Float) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ xb: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ b: DenseVector_Float, _ x: DenseVector_Float) { }
-public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ b: DenseVector_Float, _ x: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ XB: DenseMatrix_Double) { _sparseSolveFactoredInPlaceMatrixDouble(Factored, XB) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ XB: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceMatrixDouble(Factored, XB) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double) { _ = _sparseSolveFactoredMatrixDouble(Factored, B, X) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ B: DenseMatrix_Double, _ X: DenseMatrix_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredMatrixDouble(Factored, B, X) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ xb: DenseVector_Double) { _sparseSolveFactoredInPlaceVectorDouble(Factored, xb) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ xb: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceVectorDouble(Factored, xb) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ b: DenseVector_Double, _ x: DenseVector_Double) { _ = _sparseSolveFactoredVectorDouble(Factored, b, x) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Double, _ b: DenseVector_Double, _ x: DenseVector_Double, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredVectorDouble(Factored, b, x) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ XB: DenseMatrix_Float) { _sparseSolveFactoredInPlaceMatrixFloat(Factored, XB) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ XB: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceMatrixFloat(Factored, XB) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float) { _ = _sparseSolveFactoredMatrixFloat(Factored, B, X) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ B: DenseMatrix_Float, _ X: DenseMatrix_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredMatrixFloat(Factored, B, X) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ xb: DenseVector_Float) { _sparseSolveFactoredInPlaceVectorFloat(Factored, xb) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ xb: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _sparseSolveFactoredInPlaceVectorFloat(Factored, xb) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ b: DenseVector_Float, _ x: DenseVector_Float) { _ = _sparseSolveFactoredVectorFloat(Factored, b, x) }
+public func SparseSolve(_ Factored: SparseOpaqueFactorization_Float, _ b: DenseVector_Float, _ x: DenseVector_Float, _ workspace: UnsafeMutableRawPointer) { _ = workspace; _ = _sparseSolveFactoredVectorFloat(Factored, b, x) }
 public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Double, _ XB: DenseMatrix_Complex_Double) { }
 public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Double, _ XB: DenseMatrix_Complex_Double, _ workspace: UnsafeMutableRawPointer) { }
 public func SparseSolve(_ Subfactor: SparseOpaqueSubfactor_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) { }

@@ -18,11 +18,16 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
         public static let invalidSampleData = cmNSError(code: -12742)
         public static let invalidMediaFormat = cmNSError(code: -12743)
         public static let invalidated = cmNSError(code: -12744)
+        public static let dataFailed = cmNSError(code: Int(kCMSampleBufferError_DataFailed))
+        public static let dataCanceled = cmNSError(code: Int(kCMSampleBufferError_DataCanceled))
     }
 
     public struct Flags: OptionSet, Sendable, Hashable {
         public let rawValue: UInt32
         public init(rawValue: UInt32) { self.rawValue = rawValue }
+        public static let audioBufferListAssure16ByteAlignment = Flags(
+            rawValue: kCMSampleBufferFlag_AudioBufferList_Assure16ByteAlignment
+        )
     }
 
     public typealias T = CMSampleBuffer
@@ -287,6 +292,47 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
             if !ready { throw Error.bufferNotReady }
             guard let buffer = ownedDataBuffer else { throw Error.requiredParameterMissing }
             return try buffer.dataBytes()
+        }
+    }
+
+    internal func copyTimingsAndSizes() -> (timings: [CMSampleTimingInfo], sizes: [Int], count: Int) {
+        lock.locked { (timings, sizes, sampleCount) }
+    }
+
+    internal func replaceTimings(_ newTimings: [CMSampleTimingInfo]) {
+        lock.locked { timings = newTimings }
+    }
+
+    internal func slicedCopy(location: Int, length: Int) throws -> CMSampleBuffer {
+        try lock.locked {
+            if !valid { throw Error.invalidated }
+            if location < 0 || length < 0 || location + length > sampleCount {
+                throw Error.sampleIndexOutOfRange
+            }
+            var slicedTimings: [CMSampleTimingInfo] = []
+            if !timings.isEmpty {
+                if timings.count == 1 {
+                    slicedTimings = [timings[0]]
+                } else {
+                    slicedTimings = Array(timings[location..<(location + length)])
+                }
+            }
+            var slicedSizes: [Int] = []
+            if !sizes.isEmpty {
+                if sizes.count == 1 {
+                    slicedSizes = [sizes[0]]
+                } else {
+                    slicedSizes = Array(sizes[location..<(location + length)])
+                }
+            }
+            return try CMSampleBuffer(
+                dataBuffer: ownedDataBuffer,
+                formatDescription: ownedFormat,
+                numSamples: length,
+                sampleTimings: slicedTimings,
+                sampleSizes: slicedSizes,
+                dataReady: ready
+            )
         }
     }
 }

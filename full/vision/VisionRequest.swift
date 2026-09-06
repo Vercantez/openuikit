@@ -550,7 +550,15 @@ open class VNTrackOpticalFlowRequest: VNTrackingRequest {
         case veryHigh = 3
     }
 
+    public override class var currentRevision: Int { VNTrackOpticalFlowRequestRevision1 }
+    public override class var defaultRevision: Int { VNTrackOpticalFlowRequestRevision1 }
+    public override class var supportedRevisions: IndexSet {
+        IndexSet(integer: VNTrackOpticalFlowRequestRevision1)
+    }
+
     public var computationAccuracy: ComputationAccuracy = .medium
+    public var keepNetworkOutput: Bool = false
+    public var outputPixelFormat: OSType = kCVPixelFormatType_32BGRA
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context

@@ -53,10 +53,8 @@ open class LPLinkMetadata: NSObject {
     open var title: String?
     open var url: URL?
     open var originalURL: URL?
-#if !os(Linux)
     open var imageProvider: NSItemProvider?
     open var iconProvider: NSItemProvider?
-#endif
 
     public override init() { super.init() }
 
@@ -65,10 +63,8 @@ open class LPLinkMetadata: NSObject {
         copied.title = title
         copied.url = url
         copied.originalURL = originalURL
-#if !os(Linux)
         copied.imageProvider = imageProvider
         copied.iconProvider = iconProvider
-#endif
         return copied
     }
 }

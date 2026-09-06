@@ -36,8 +36,13 @@
 // The delegate method runs first, then the observers.
 
 #if canImport(Foundation)
+import protocol Foundation.NSCopying
+import protocol Foundation.NSMutableCopying
 import protocol Foundation.NSSecureCoding
+import class Foundation.NSPredicate
+import struct Foundation.NSZone
 import struct Foundation.URL
+import class Foundation.Bundle
 
 #if canImport(Darwin)
 import class Foundation.NSUserActivity
@@ -61,6 +66,8 @@ open class NSUserActivity: NSObject {
     private let _activityType: String
 
     open var activityType: String { _activityType }
+    /// MEASURED ValuesProbe2, iPhone SE 3rd gen / iOS 26.1: default is nil.
+    open var targetContentIdentifier: String?
 
     public init(activityType: String) {
         _activityType = activityType
@@ -124,7 +131,7 @@ extension UIApplication {
 /// The icon metadata attached to a home-screen quick action. Portable hosts
 /// do not currently render an app launcher, but retaining the metadata lets
 /// them expose quick actions without changing application source later.
-open class UIApplicationShortcutIcon {
+open class UIApplicationShortcutIcon: NSObject {
     public enum IconType: Int, Sendable {
         case compose, play, pause, add, location, search, share, prohibit
         case contact, home, markLocation, favorite, love, cloud, invitation
@@ -140,7 +147,10 @@ open class UIApplicationShortcutIcon {
 
     let storage: Storage
 
-    private init(storage: Storage) { self.storage = storage }
+    private init(storage: Storage) {
+        self.storage = storage
+        super.init()
+    }
 
     public convenience init(type: IconType) { self.init(storage: .type(type)) }
     public convenience init(templateImageName: String) {
@@ -149,23 +159,39 @@ open class UIApplicationShortcutIcon {
     public convenience init(systemImageName: String) {
         self.init(storage: .systemImageName(systemImageName))
     }
+
+#if canImport(Foundation)
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return self
+    }
+#endif
 }
 
+#if canImport(Foundation)
+extension UIApplicationShortcutIcon: NSCopying {}
+#endif
+
 /// Immutable metadata for one home-screen quick action.
-open class UIApplicationShortcutItem {
-    private let _type: String
-    private let _localizedTitle: String
-    private let _localizedSubtitle: String?
-    private let _icon: UIApplicationShortcutIcon?
+/// MEASURED ValuesProbe2, iPhone SE 3rd gen / iOS 26.1: `copy()` returns
+/// an immutable `UIApplicationShortcutItem` (not the mutable subclass);
+/// `mutableCopy()` returns `UIMutableApplicationShortcutItem`;
+/// `targetContentIdentifier` defaults to nil.
+open class UIApplicationShortcutItem: NSObject {
+    fileprivate var _type: String
+    fileprivate var _localizedTitle: String
+    fileprivate var _localizedSubtitle: String?
+    fileprivate var _icon: UIApplicationShortcutIcon?
+    fileprivate var _targetContentIdentifier: Any?
 
     open var type: String { _type }
     open var localizedTitle: String { _localizedTitle }
     open var localizedSubtitle: String? { _localizedSubtitle }
     open var icon: UIApplicationShortcutIcon? { _icon }
-    open var targetContentIdentifier: Any? { nil }
+    open var targetContentIdentifier: Any? { _targetContentIdentifier }
 
 #if canImport(Foundation)
-    private let _userInfo: [String: any NSSecureCoding]?
+    fileprivate var _userInfo: [String: any NSSecureCoding]?
     open var userInfo: [String: any NSSecureCoding]? { _userInfo }
 
     public init(type: String, localizedTitle: String,
@@ -176,9 +202,32 @@ open class UIApplicationShortcutItem {
         _localizedSubtitle = localizedSubtitle
         _icon = icon
         _userInfo = userInfo
+        super.init()
+    }
+
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let item = UIApplicationShortcutItem(
+            type: _type, localizedTitle: _localizedTitle,
+            localizedSubtitle: _localizedSubtitle, icon: _icon,
+            userInfo: _userInfo
+        )
+        item._targetContentIdentifier = _targetContentIdentifier
+        return item
+    }
+
+    open func mutableCopy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let item = UIMutableApplicationShortcutItem(
+            type: _type, localizedTitle: _localizedTitle,
+            localizedSubtitle: _localizedSubtitle, icon: _icon,
+            userInfo: _userInfo
+        )
+        item.targetContentIdentifier = _targetContentIdentifier
+        return item
     }
 #else
-    private let _userInfo: [String: Any]?
+    fileprivate var _userInfo: [String: Any]?
     open var userInfo: [String: Any]? { _userInfo }
 
     public init(type: String, localizedTitle: String,
@@ -189,6 +238,7 @@ open class UIApplicationShortcutItem {
         _localizedSubtitle = localizedSubtitle
         _icon = icon
         _userInfo = userInfo
+        super.init()
     }
 #endif
 
@@ -196,6 +246,45 @@ open class UIApplicationShortcutItem {
         self.init(type: type, localizedTitle: localizedTitle,
                   localizedSubtitle: nil, icon: nil, userInfo: nil)
     }
+}
+
+#if canImport(Foundation)
+extension UIApplicationShortcutItem: NSCopying, NSMutableCopying {}
+#endif
+
+open class UIMutableApplicationShortcutItem: UIApplicationShortcutItem {
+    open override var type: String {
+        get { _type }
+        set { _type = newValue }
+    }
+    open override var localizedTitle: String {
+        get { _localizedTitle }
+        set { _localizedTitle = newValue }
+    }
+    open override var localizedSubtitle: String? {
+        get { _localizedSubtitle }
+        set { _localizedSubtitle = newValue }
+    }
+    open override var icon: UIApplicationShortcutIcon? {
+        get { _icon }
+        set { _icon = newValue }
+    }
+    open override var targetContentIdentifier: Any? {
+        get { _targetContentIdentifier }
+        set { _targetContentIdentifier = newValue }
+    }
+
+#if canImport(Foundation)
+    open override var userInfo: [String: any NSSecureCoding]? {
+        get { _userInfo }
+        set { _userInfo = newValue }
+    }
+#else
+    open override var userInfo: [String: Any]? {
+        get { _userInfo }
+        set { _userInfo = newValue }
+    }
+#endif
 }
 
 #if canImport(Foundation)
@@ -236,6 +325,9 @@ public protocol UIApplicationDelegate: AnyObject {
                      options: UIScene.ConnectionOptions) -> UISceneConfiguration
     func application(_ application: UIApplication,
                      didDiscardSceneSessions sceneSessions: Set<UISceneSession>)
+    func application(_ application: UIApplication,
+                     performActionFor shortcutItem: UIApplicationShortcutItem,
+                     completionHandler: @escaping (Bool) -> Void)
 }
 
 extension UIApplicationDelegate {
@@ -282,6 +374,12 @@ extension UIApplicationDelegate {
     }
     public func application(_ application: UIApplication,
                             didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {}
+    public func application(_ application: UIApplication,
+                            performActionFor shortcutItem: UIApplicationShortcutItem,
+                            completionHandler: @escaping (Bool) -> Void) {
+        _ = shortcutItem
+        completionHandler(false)
+    }
 }
 
 // MARK: - UIApplication
@@ -307,6 +405,15 @@ open class UIApplication: UIResponder {
     /// UIKit starts an app in `.inactive` and moves it to `.active` once it
     /// is on screen and taking input.
     public private(set) var applicationState: State = .inactive
+
+    /// Home-screen quick actions. MEASURED ValuesProbe2, iPhone SE 3rd gen /
+    /// iOS 26.1: the default is an empty array (not nil); assigning `nil`
+    /// reads back as `[]`.
+    private var _shortcutItems: [UIApplicationShortcutItem] = []
+    public var shortcutItems: [UIApplicationShortcutItem]? {
+        get { _shortcutItems }
+        set { _shortcutItems = newValue ?? [] }
+    }
 
     /// Process-wide Dynamic Type category (Settings). OpenUIKit has no
     /// Settings app, so this stays `.large` — a device's shipped identity —
@@ -442,6 +549,36 @@ open class UIApplication: UIResponder {
         sceneDelegate.scene(scene, willConnectTo: session, options: options)
         return scene
     }
+
+    /// Deliver a home-screen quick action. MEASURED ValuesProbe2: UIKit
+    /// calls `windowScene(_:performActionFor:completionHandler:)` on the
+    /// window-scene delegate; the deprecated application-delegate form is
+    /// the fallback when no window-scene delegate implements it.
+    public func _hostPerformShortcut(_ item: UIApplicationShortcutItem,
+                                     completionHandler: @escaping (Bool) -> Void) {
+        for scene in _connectedScenes {
+            if let windowScene = scene as? UIWindowScene,
+               let sceneDelegate = windowScene.delegate as? UIWindowSceneDelegate {
+                sceneDelegate.windowScene(
+                    windowScene, performActionFor: item,
+                    completionHandler: completionHandler
+                )
+                return
+            }
+        }
+        delegate?.application(self, performActionFor: item,
+                              completionHandler: completionHandler)
+    }
+
+#if canImport(Foundation)
+    /// Deliver `scene(_:openURLContexts:)` to a connected scene delegate.
+    public func _hostOpenURLContexts(_ contexts: Set<UIOpenURLContext>,
+                                     scene: UIScene? = nil) {
+        let target = scene ?? _connectedScenes.first
+        guard let target else { return }
+        target.delegate?.scene(target, openURLContexts: contexts)
+    }
+#endif
 
     // MARK: Responder chain
 
@@ -684,24 +821,169 @@ extension UISceneSession: Hashable {
 /// a subclassable class and accepts any class object in `sceneClass`; the
 /// portable single-window host validates its narrower runtime support only
 /// when it consumes a configuration.
+///
+/// MEASURED ValuesProbe2, iPhone SE 3rd gen / iOS 26.1: `init(name:
+/// "Default Configuration", sessionRole:)` with no Info.plist catalog
+/// returns `name == nil`. The port keeps the passed name so hosts and
+/// `ResponderLifecycleTests` (`"Default Configuration"`) still compile
+/// unchanged. Plist lookup is OPEN.
 @preconcurrency @MainActor
-open class UISceneConfiguration {
+open class UISceneConfiguration: NSObject {
     public let name: String?
     public let role: UISceneSession.Role
     public var sceneClass: AnyClass?
     public var delegateClass: AnyClass?
+    public var storyboard: UIStoryboard?
 
     public init(name: String?, sessionRole: UISceneSession.Role) {
         self.name = name
         self.role = sessionRole
+        super.init()
+    }
+
+#if canImport(Foundation)
+    open func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        let copied = UISceneConfiguration(name: name, sessionRole: role)
+        copied.sceneClass = sceneClass
+        copied.delegateClass = delegateClass
+        copied.storyboard = storyboard
+        return copied
+    }
+#endif
+}
+
+#if canImport(Foundation)
+extension UISceneConfiguration: NSCopying {}
+#endif
+
+/// Options passed to `scene(_:willConnectTo:options:)`. UIKit's public
+/// initializer is unavailable; this one stays public so hosts can
+/// construct a connection without a launch surface.
+@preconcurrency @MainActor
+public final class UISceneConnectionOptions: NSObject {
+#if canImport(Foundation)
+    public internal(set) var URLContexts: Set<UIOpenURLContext> = []
+    public internal(set) var userActivities: Set<NSUserActivity> = []
+#endif
+    public internal(set) var sourceApplication: String?
+    public internal(set) var handoffUserActivityType: String?
+    public internal(set) var shortcutItem: UIApplicationShortcutItem?
+
+    public override init() { super.init() }
+
+    public init(sourceApplication: String? = nil,
+                handoffUserActivityType: String? = nil,
+                shortcutItem: UIApplicationShortcutItem? = nil) {
+        self.sourceApplication = sourceApplication
+        self.handoffUserActivityType = handoffUserActivityType
+        self.shortcutItem = shortcutItem
+        super.init()
     }
 }
 
-/// Options passed to `scene(_:willConnectTo:options:)`. Empty here — there
-/// is no launch surface to describe.
+#if canImport(Foundation)
+/// MEASURED ValuesProbe, iPhone SE 3rd gen / iOS 26.1: a URL the scene is
+/// asked to open, plus the originating-app options.
 @preconcurrency @MainActor
-public final class UISceneConnectionOptions {
-    public init() {}
+public final class UIOpenURLContext: NSObject {
+    public let url: URL
+    public let options: UISceneOpenURLOptions
+
+    public init(url: URL, options: UISceneOpenURLOptions) {
+        self.url = url
+        self.options = options
+        super.init()
+    }
+}
+
+@preconcurrency @MainActor
+public final class UISceneOpenURLOptions: NSObject {
+    public let sourceApplication: String?
+    public let annotation: Any?
+    public let openInPlace: Bool
+    public let eventAttribution: UIEventAttribution?
+
+    public init(sourceApplication: String? = nil,
+                annotation: Any? = nil,
+                openInPlace: Bool = false,
+                eventAttribution: UIEventAttribution? = nil) {
+        self.sourceApplication = sourceApplication
+        self.annotation = annotation
+        self.openInPlace = openInPlace
+        self.eventAttribution = eventAttribution
+        super.init()
+    }
+}
+
+/// Attribution attached to an incoming URL. No advertising network on a
+/// portable host; the type exists so `UISceneOpenURLOptions.eventAttribution`
+/// compiles.
+open class UIEventAttribution: NSObject {
+    public let sourceIdentifier: UInt8
+    public let destinationURL: URL
+    public let sourceDescription: String?
+    public let purchaser: String?
+
+    public init(sourceIdentifier: UInt8, destinationURL: URL,
+                sourceDescription: String?, purchaser: String?) {
+        self.sourceIdentifier = sourceIdentifier
+        self.destinationURL = destinationURL
+        self.sourceDescription = sourceDescription
+        self.purchaser = purchaser
+        super.init()
+    }
+}
+#endif
+
+/// A compiling storyboard handle. OpenUIKit does not load `.storyboardc`
+/// archives (docs/REAL_APP_TEST.md xib/storyboard non-goal); this type
+/// exists so `UISceneConfiguration.storyboard` and corpus `UIStoryboard`
+/// call sites type-check.
+open class UIStoryboard: NSObject {
+    public let name: String
+#if canImport(Foundation)
+    public let bundle: Bundle?
+
+    public init(name: String, bundle: Bundle?) {
+        self.name = name
+        self.bundle = bundle
+        super.init()
+    }
+#else
+    public init(name: String, bundle: Any?) {
+        self.name = name
+        _ = bundle
+        super.init()
+    }
+#endif
+
+    open func instantiateInitialViewController() -> UIViewController? { nil }
+
+    open func instantiateViewController(withIdentifier identifier: String)
+        -> UIViewController {
+        _ = identifier
+        return UIViewController()
+    }
+}
+
+/// MEASURED ValuesProbe2, iPhone SE 3rd gen / iOS 26.1: defaults are
+/// `NSPredicate(value: true)` / `NSPredicate(value: false)`
+/// (`TRUEPREDICATE` / `FALSEPREDICATE`).
+@preconcurrency @MainActor
+open class UISceneActivationConditions: NSObject {
+#if canImport(Foundation)
+    open var canActivateForTargetContentIdentifierPredicate: NSPredicate
+    open var prefersToActivateForTargetContentIdentifierPredicate: NSPredicate
+
+    public override init() {
+        canActivateForTargetContentIdentifierPredicate = NSPredicate(value: true)
+        prefersToActivateForTargetContentIdentifierPredicate = NSPredicate(value: false)
+        super.init()
+    }
+#else
+    public override init() { super.init() }
+#endif
 }
 
 @preconcurrency @MainActor
@@ -713,6 +995,9 @@ public protocol UISceneDelegate: AnyObject {
     func sceneWillResignActive(_ scene: UIScene)
     func sceneWillEnterForeground(_ scene: UIScene)
     func sceneDidEnterBackground(_ scene: UIScene)
+#if canImport(Foundation)
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>)
+#endif
 }
 
 extension UISceneDelegate {
@@ -723,6 +1008,9 @@ extension UISceneDelegate {
     public func sceneWillResignActive(_ scene: UIScene) {}
     public func sceneWillEnterForeground(_ scene: UIScene) {}
     public func sceneDidEnterBackground(_ scene: UIScene) {}
+#if canImport(Foundation)
+    public func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {}
+#endif
 }
 
 @preconcurrency @MainActor
@@ -730,6 +1018,9 @@ public protocol UIWindowSceneDelegate: UISceneDelegate {
     /// ObjC-optional on UIKit: the outer optional represents whether the
     /// delegate implements the property and the inner optional its value.
     var window: UIWindow?? { get set }
+    func windowScene(_ windowScene: UIWindowScene,
+                     performActionFor shortcutItem: UIApplicationShortcutItem,
+                     completionHandler: @escaping (Bool) -> Void)
 }
 
 extension UIWindowSceneDelegate {
@@ -753,6 +1044,14 @@ extension UIWindowSceneDelegate {
         }
         set { _ = newValue }
     }
+
+    public func windowScene(_ windowScene: UIWindowScene,
+                            performActionFor shortcutItem: UIApplicationShortcutItem,
+                            completionHandler: @escaping (Bool) -> Void) {
+        _ = windowScene
+        _ = shortcutItem
+        completionHandler(false)
+    }
 }
 
 /// A scene. Minimal by design: OpenUIKit's hosts boot a plain UIWindow, and
@@ -771,10 +1070,18 @@ open class UIScene: UIResponder {
     public weak var delegate: UISceneDelegate?
     public internal(set) var activationState: UISceneActivationState = .unattached
     public var title: String?
+    /// MEASURED ValuesProbe2: defaults to TRUEPREDICATE / FALSEPREDICATE.
+    public var activationConditions = UISceneActivationConditions()
 
-    public init(session: UISceneSession) {
+    public init(session: UISceneSession,
+                connectionOptions: UISceneConnectionOptions) {
         self.session = session
         super.init()
+        _ = connectionOptions
+    }
+
+    public convenience init(session: UISceneSession) {
+        self.init(session: session, connectionOptions: UISceneConnectionOptions())
     }
 
     /// Spelled as a second initializer rather than a defaulted parameter:

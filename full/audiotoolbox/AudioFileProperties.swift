@@ -56,6 +56,29 @@ public let kExtAudioFileProperty_PacketTable: ExtAudioFilePropertyID = atFourCC(
 public let kExtAudioFilePacketTableInfoOverride_UseFileValue: ExtAudioFilePacketTableInfoOverride = -1
 public let kExtAudioFilePacketTableInfoOverride_UseFileValueIfValid: ExtAudioFilePacketTableInfoOverride = 1
 
+public let kAFInfoDictionary_Album = "album"
+public let kAFInfoDictionary_ApproximateDurationInSeconds = "approximate duration in seconds"
+public let kAFInfoDictionary_Artist = "artist"
+public let kAFInfoDictionary_ChannelLayout = "channel layout"
+public let kAFInfoDictionary_Comments = "comments"
+public let kAFInfoDictionary_Composer = "composer"
+public let kAFInfoDictionary_Copyright = "copyright"
+public let kAFInfoDictionary_EncodingApplication = "encoding application"
+public let kAFInfoDictionary_Genre = "genre"
+public let kAFInfoDictionary_ISRC = "ISRC"
+public let kAFInfoDictionary_KeySignature = "key signature"
+public let kAFInfoDictionary_Lyricist = "lyricist"
+public let kAFInfoDictionary_NominalBitRate = "nominal bit rate"
+public let kAFInfoDictionary_RecordedDate = "recorded date"
+public let kAFInfoDictionary_SourceBitDepth = "source bit depth"
+public let kAFInfoDictionary_SourceEncoder = "source encoder"
+public let kAFInfoDictionary_SubTitle = "subtitle"
+public let kAFInfoDictionary_Tempo = "tempo"
+public let kAFInfoDictionary_TimeSignature = "time signature"
+public let kAFInfoDictionary_Title = "title"
+public let kAFInfoDictionary_TrackNumber = "track number"
+public let kAFInfoDictionary_Year = "year"
+
 public struct AudioFileRegionFlags: OptionSet, Sendable, Hashable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
