@@ -23,8 +23,8 @@ The first-pass census was 1507 implemented / 1873 declared / 780
 deferred. After the wave-8 depth pass plus coverage-ledger repair it was
 1800 implemented / 1583 declared / 777 deferred. After the third behavioral
 pass plus merge repair it was **2249 implemented / 1141 declared / 770
-deferred**. After the fourth behavioral pass it is **2940 implemented /
-751 declared / 469 deferred**. The
+deferred**. After the fourth behavioral pass it is **2950 implemented /
+741 declared / 469 deferred**. The
 in-process donation, voice-shortcut, relevant-shortcut, resolution,
 person/image/media/call-record, notebook/payment/photos/climate families,
 Siri-denied, and identifier-constant slice is `implemented` with
@@ -250,8 +250,8 @@ Linux `NSStringFromClass` cannot keyed-archive generic classes as roots.
 
 Keeps the first-, second-, and third-pass sources and tests. Before this
 pass: **2249 implemented / 1141 declared / 770 deferred / 0 unavailable /
-0 not-applicable**. After: **2940 implemented / 751 declared / 469
-deferred / 0 unavailable / 0 not-applicable**. Implemented gain is +691
+0 not-applicable**. After: **2950 implemented / 741 declared / 469
+deferred / 0 unavailable / 0 not-applicable**. Implemented gain is +701
 from property-retaining construction, NSSecureCoding, host dispatcher
 routing, and per-type OptionSet/SetAlgebra — not a relabel of
 `testEnumRawValues`. Nondeferred (3691) stays above the medium-full floor
