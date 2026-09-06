@@ -1,0 +1,7 @@
+full/paperkit/FeatureSet.swift
+full/paperkit/MarkupEditViewController.swift
+full/paperkit/PaperKit.swift
+full/paperkit/PaperKitHost.swift
+full/paperkit/PaperMarkup.swift
+full/paperkit/PaperMarkupViewController.swift
+full/paperkit/ShapeConfiguration.swift
