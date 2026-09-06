@@ -1,0 +1,22 @@
+precise	status	evidence	notes
+c:@BCParameterNameBody	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterBody	Static let body; raw value is the TBD export name.
+c:@BCParameterNameGroup	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterGroup	Static let group; raw value is the TBD export name.
+c:@BCParameterNameIntent	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterIntent	Static let intent; raw value is the TBD export name.
+c:@E@BCChatButtonStyle	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleType	Int enum; macios Native order light/dark.
+c:@E@BCChatButtonStyle@BCChatButtonStyleDark	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleCases	Table-driven case dark; raw value 1.
+c:@E@BCChatButtonStyle@BCChatButtonStyleLight	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleCases	Table-driven case light; raw value 0.
+c:@T@BCParameterName	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterType	String newtype wrapper; Hashable dictionary key.
+c:objc(cs)BCChatAction	implemented	test:full/businesschat/tests/agent/BCChatActionTests.swift#testChatActionClass	NSObject subclass; DisableDefaultCtor; no Messages daemon.
+c:objc(cs)BCChatAction(cm)openTranscript:intentParameters:	implemented	test:full/businesschat/tests/agent/BCChatActionTests.swift#testOpenTranscriptFailClosed	Records identifier and parameters; never opens a transcript.
+c:objc(cs)BCChatButton	implemented	test:full/businesschat/tests/agent/BCChatButtonTests.swift#testChatButtonClass	NSObject (UIControl when UIKit is linked); no Messages chrome.
+c:objc(cs)BCChatButton(im)initWithCoder:	implemented	test:full/businesschat/tests/agent/BCChatButtonTests.swift#testChatButtonInitCoderFailsClosed	Failable init; Linux returns nil; no Apple UI archive.
+c:objc(cs)BCChatButton(im)initWithStyle:	implemented	test:full/businesschat/tests/agent/BCChatButtonTests.swift#testChatButtonInitStyle	Stores style; does not present Messages UI.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@BCChatButtonStyle	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleInequality	Synthesized Equatable.!=
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@BCParameterName	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterInequality	Synthesized Equatable.!=
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@BCChatButtonStyle	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleHashValue	Synthesized Hashable.hashValue
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@BCChatButtonStyle	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleHashInto	Synthesized Hashable.hash(into:)
+s:So15BCParameterNamea8rawValueABSS_tcfc	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterInitRawValue	init(rawValue:)
+s:So15BCParameterNameayABSScfc	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterInitString	init(_:)
+s:So17BCChatButtonStyleV8rawValueABSgSi_tcfc	implemented	test:full/businesschat/tests/agent/BCChatButtonStyleTests.swift#testStyleInitRawValue	Failable init?(rawValue: Int)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@BCParameterName	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterHashValue	Synthesized Hashable.hashValue
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@BCParameterName	implemented	test:full/businesschat/tests/agent/BCChatActionParameterTests.swift#testParameterHashInto	Synthesized Hashable.hash(into:)
