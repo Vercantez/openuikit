@@ -30,9 +30,8 @@ func testVImageAffineIdentityAndScale() {
         dest.withUnsafeMutableBytes { db in
             var inb = vImage_Buffer(data: sb.baseAddress, height: 2, width: 2, rowBytes: 2)
             var outb = vImage_Buffer(data: db.baseAddress, height: 2, width: 2, rowBytes: 2)
-            var back: UInt8 = 0
             let status = vImageAffineWarp_Planar8(
-                &inb, &outb, nil, &identity, back, vImage_Flags(kvImageNoFlags)
+                &inb, &outb, nil, &identity, 0, vImage_Flags(kvImageNoFlags)
             )
             precondition(status == kvImageNoError)
         }
