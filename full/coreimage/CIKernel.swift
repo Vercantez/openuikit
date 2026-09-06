@@ -79,7 +79,8 @@ public class CIWarpKernel: CIKernel, @unchecked Sendable {
         image: CIImage,
         arguments args: [Any]
     ) -> CIImage? {
-        _ = (extent, callback, image, args)
+        _ = callback(0, extent)
+        _ = (image, args)
         return nil
     }
 }
