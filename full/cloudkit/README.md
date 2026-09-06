@@ -66,12 +66,11 @@ observed on Apple.
 
 ## Deferred / unavailable
 
-- **CKSyncEngine** and event/state types
-- **CKLocationSortDescriptor** (`CLLocation` is not a declared
-  CloudKit seed dependency)
+- **CKLocationSortDescriptor** — CoreLocation `CLLocation` hardware/daemon
 - **CKShare.AccessRequester.contact** / **CKShare.BlockedIdentity.contact**
   (Contacts)
-- **CKShareTransferRepresentation** (Transferable / sharing UI)
+- **CKShareTransferRepresentation** — Apple Transferable share-transfer UI
+- **NSItemProvider.registerCKShare** — UIKit/AppKit share-sheet pasteboard
 
 ## Tests
 
@@ -160,6 +159,67 @@ compiles only that file):
 - Notification parse + share value semantics
 - Fail-closed identity, sharing, and web-auth operations
 
+## Depth pass 2026-09 (wave 8)
+
+Next SDK depth pass on `cursor/port-cloudkit-to-linux-cfad` from starting
+commit `39dc25a2769fb88a50f0853964137a4f96d50322`. Campaign
+`ios26.1-fwdepth-r18`, lane `large-partitioned`. The simulated container
+from earlier passes is kept; this pass adds a local `CKSyncEngine` state
+machine.
+
+### Ledger
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 802 | 1030 |
+| declared | 0 | 0 |
+| deferred | 212 | 2 |
+| unavailable | 22 | 28 |
+| not-applicable | 1209 | 1185 |
+
+Nondeferred floor is 150. Gain is +228 `implemented` (204 previously
+`deferred` CKSyncEngine identifiers plus 24 Swift-synthesized `!=` /
+`hashValue` / `hash(into:)` operators that were mislabeled
+`not-applicable` — they are CloudKit enum members, not SwiftUI overlays).
+
+### Public surface (this pass)
+
+`CKSyncEngine` value types, pending-change queues, `State.Serialization`
+Codable round-trip, and send/fetch against the in-process simulated
+store. Delegate `handleEvent` / `nextRecordZoneChangeBatch` /
+`nextFetchChangesOptions` (including the protocol default) fire with
+real payloads. `automaticallySync` is stored and never schedules Apple
+iCloud work. `cancelOperations()` fails later send/fetch with
+`CKError.operationCancelled`. Account-change events are constructible
+value types and are never emitted by send/fetch (no Apple identity).
+
+Still fail-closed / unavailable:
+
+- `CKShareTransferRepresentation` — Apple Transferable share-transfer UI
+- `NSItemProvider.registerCKShare` — UIKit/AppKit share-sheet pasteboard
+- `CKLocationSortDescriptor` — CoreLocation `CLLocation` hardware/daemon
+- `CKShare.AccessRequester.contact` / `CKShare.BlockedIdentity.contact` —
+  Contacts, still deferred
+
+### Top-5 evidence distribution (this pass's new implemented rows)
+
+1. `testCKSyncEngineEventPayloads` — 75 (33%)
+2. `testCKSyncEngineCEnumRawValues` — 54 (24%, table-driven C enums)
+3. `testCKSyncEngineSyncReasonAndScopes` — 45 (20%)
+4. `testCKSyncEngineConfigurationAndState` — 23 (10%)
+5. `testCKSyncEnginePendingChangeValues` — 16 (7%)
+
+No non-enum test exceeds 40% of the new implemented rows.
+
+### Tests run
+
+`bash full/cloudkit/tests/acceptance/test_host.sh` (gate output recorded
+after the sealed run). `.cursor/verify-cloud-environment.sh` still fails
+on this snapshot with `missing corpus checkout: scratch/ladder-corpus/focus-ios`.
+Active Cursor Build is `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`
+versus seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`. `swiftc`
+is Swift 6.2.4 / linux.
+
 ### Unresolved behavioral questions
 
 See `oracle-questions.tsv`. Still open: accountStatus pairing on a real
@@ -167,5 +227,7 @@ Apple ID, save/fetch error payloads vs the simulated store, constant
 string bytes, enum integers vs Apple ABI, `CKRecord.allTokens()`,
 Sequence iteration order, callback queue identity, CKShare owner
 defaults before iCloud participants exist, notification `ck`+`aps`
-class-cluster subclassing, and Apple's query page size when
-`CKQueryOperationMaximumResults` is 0.
+class-cluster subclassing, Apple's query page size when
+`CKQueryOperationMaximumResults` is 0, CKSyncEngine event order versus
+the local simulated-store sequence, and whether `automaticallySync`
+emits a scheduled Apple sync without an explicit send/fetch.
