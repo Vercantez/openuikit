@@ -41,10 +41,11 @@ extension UIRectEdge {
     public static let all: UIRectEdge = [.top, .left, .bottom, .right]
 }
 
-/// Left/right screen-edge pan (the subset UINavigationController needs):
-/// recognition additionally requires the touch to start within
-/// `edgeActivationWidth` of the configured edge and the drag to be
-/// predominantly horizontal, away from that edge.
+/// Screen-edge pan. Recognition requires the touch to start within
+/// `edgeActivationWidth` of a configured edge and the drag to lead away
+/// from that edge. MEASURED nav interactive pop, iPhone SE 2x / iOS 26.1:
+/// left/right start within ~20 pt. Top/bottom use the same width (Apple's
+/// `edges` is a `UIRectEdge` mask; the previous subset was left/right only).
 @preconcurrency @MainActor
 public final class UIScreenEdgePanGestureRecognizer: UIPanGestureRecognizer {
     public var edges: UIRectEdge = []
@@ -59,22 +60,31 @@ public final class UIScreenEdgePanGestureRecognizer: UIPanGestureRecognizer {
         let p = location(in: v)
         startedAtEdge =
             (edges.contains(.left) && p.x <= edgeActivationWidth)
-            || (edges.contains(.right)
-                && p.x >= v.bounds.width - edgeActivationWidth)
+            || (edges.contains(.right) && p.x >= v.bounds.width - edgeActivationWidth)
+            || (edges.contains(.top) && p.y <= edgeActivationWidth)
+            || (edges.contains(.bottom) && p.y >= v.bounds.height - edgeActivationWidth)
         if !startedAtEdge { state = .failed }
     }
 
     public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         if _state == .possible, startedAtEdge {
-            // Direction gate before the base class can recognize: the drag
-            // must lead horizontally, away from the edge.
             let p = location(in: nil)
             let dx = p.x - startLocation.x, dy = p.y - startLocation.y
             if dx * dx + dy * dy > activationDistance * activationDistance {
-                let leadsAway = edges.contains(.left) ? dx > 0 : dx < 0
-                if !leadsAway || dx.magnitude < dy.magnitude {
-                    state = .failed
-                    return
+                let horizontal = edges.contains(.left) || edges.contains(.right)
+                let vertical = edges.contains(.top) || edges.contains(.bottom)
+                if horizontal && !vertical {
+                    let leadsAway = edges.contains(.left) ? dx > 0 : dx < 0
+                    if !leadsAway || dx.magnitude < dy.magnitude {
+                        state = .failed
+                        return
+                    }
+                } else if vertical && !horizontal {
+                    let leadsAway = edges.contains(.top) ? dy > 0 : dy < 0
+                    if !leadsAway || dy.magnitude < dx.magnitude {
+                        state = .failed
+                        return
+                    }
                 }
             }
         }

@@ -171,6 +171,91 @@ public typealias TimeInterval = Foundation.TimeInterval
 /// initializer signature.
 public typealias NSCoder = Foundation.NSCoder
 
+// MARK: - NSItemProvider
+
+#if os(Linux)
+/// corelibs-Foundation does not declare `NSItemProvider` (APP LADDER §4
+/// row 6: 13 apps / 103 uses still missing from OpenUIKit until this type
+/// is in `uikit/Sources`). Guest Darwin Foundation already has the type;
+/// the alias below is used there. This Linux class keeps in-process items
+/// and exact type-identifier identity — the same bounded contract as
+/// `full/foundation/NSExtensionHost.swift`.
+open class NSItemProvider: NSObject {
+    public private(set) var registeredTypeIdentifiers: [String] = []
+    public var suggestedName: String?
+    var _item: Any?
+
+    public override init() {
+        super.init()
+    }
+
+    public init(item: Any?, typeIdentifier: String?) {
+        _item = item
+        if let typeIdentifier { registeredTypeIdentifiers = [typeIdentifier] }
+        super.init()
+    }
+
+    public convenience init(object: Any) {
+        let identifier = NSItemProvider._typeIdentifier(for: object)
+        self.init(item: object, typeIdentifier: identifier)
+    }
+
+    public convenience init(contentsOf fileURL: URL) {
+        self.init(item: fileURL, typeIdentifier: "public.file-url")
+        suggestedName = fileURL.lastPathComponent
+    }
+
+    public func hasItemConformingToTypeIdentifier(_ typeIdentifier: String) -> Bool {
+        if registeredTypeIdentifiers.contains(typeIdentifier) { return true }
+        return registeredTypeIdentifiers.contains { NSItemProvider._conforms($0, to: typeIdentifier) }
+    }
+
+    static func _typeIdentifier(for object: Any) -> String {
+        switch object {
+        case is String: return "public.utf8-plain-text"
+        case is URL: return "public.url"
+        case is Data: return "public.data"
+        default: return "public.item"
+        }
+    }
+
+    static func _conforms(_ identifier: String, to requested: String) -> Bool {
+        if identifier == requested { return true }
+        if requested == "public.text" {
+            return identifier == "public.utf8-plain-text" || identifier == "public.plain-text"
+        }
+        if requested == "public.image" {
+            return identifier == "public.png" || identifier == "public.jpeg"
+        }
+        return false
+    }
+
+    func _canLoad(_ type: Any.Type) -> Bool {
+        if type == String.self {
+            return hasItemConformingToTypeIdentifier("public.utf8-plain-text")
+                || hasItemConformingToTypeIdentifier("public.text")
+        }
+        if type == URL.self {
+            return hasItemConformingToTypeIdentifier("public.url")
+                || hasItemConformingToTypeIdentifier("public.file-url")
+        }
+        if type == Data.self {
+            return hasItemConformingToTypeIdentifier("public.data")
+                || _item is Data
+        }
+        return _item != nil
+    }
+
+    func _load<T>(_ type: T.Type) -> T? {
+        _item as? T
+    }
+}
+#else
+/// Darwin / guest Foundation's `NSItemProvider`. One identity with
+/// `import Foundation` (APP LADDER §4 row 6).
+public typealias NSItemProvider = Foundation.NSItemProvider
+#endif
+
 // MARK: - Bundle
 
 /// Foundation's resource bundle type. UIViewController's nib initializer
