@@ -192,3 +192,84 @@ Host inventory token expected by the campaign (not printed by the gate):
 The Swift `async throws` overlay spelling of those ObjC selectors is still
 not awaitable on the sealed runner; Apple's empty-cache error (CHIP IM vs
 `invalidState`) remains an oracle question.
+
+## Depth pass 2026-09 (wave 10)
+
+Next pass on the existing Linux starting point (wave 8 ledger is the
+before-state). Earlier passes and their tests stay green; this pass
+implements fail-closed `MTRBaseCluster*` / `MTRCluster*` I/O for the
+largest remaining families, plus in-memory `MTRCluster*` expected-value
+cache reads/writes. Completions run synchronously with
+`MTRError.invalidState` (no Matter radio).
+
+**Coverage before:** 19372 implemented / 834 declared / 8216 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 21953 implemented / 778 declared / 5691 deferred / 40 unavailable / 0 not-applicable
+(+2581 implemented; 22731 nondeferred; floor 150).
+
+**Top-5 implemented evidence distribution**
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 3788 | 17.3% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
+| 3212 | 14.6% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2541 | 11.6% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 4.1% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 4.1% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
+
+**Top remaining (non table-driven) evidence** — 10600 rows after excluding
+enum/option-set/C-constant table tests; largest share 2.6% (cap 40%):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 277 | 2.6% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
+| 266 | 2.5% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
+| 266 | 2.5% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
+| 253 | 2.4% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
+| 245 | 2.3% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
+
+Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`). Starting commit
+`39dc25a2769fb88a50f0853964137a4f96d50322` matched.
+
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`):
+
+```
+CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
+FRAMEWORK_FANOUT_REFERENCE_OK
+MATTER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
+```
+
+### Added this pass
+
+- **New cluster I/O** in `MTRClustersWave10.swift`: AccessControl, Actions,
+  ApplicationBasic, BasicInformation (+ legacy Basic subclass),
+  BridgedDeviceBasicInformation (+ BridgedDeviceBasic),
+  ElectricalPowerMeasurement, EnergyEVSE, EthernetNetworkDiagnostics,
+  GeneralCommissioning, GeneralDiagnostics, ModeSelect,
+  OperationalCredentials, PressureMeasurement, GroupKeyManagement,
+  IlluminanceMeasurement, Descriptor, FlowMeasurement, MediaInput,
+  AdministratorCommissioning, SoftwareDiagnostics,
+  ThermostatUserInterfaceConfiguration, Channel, SmokeCOAlarm,
+  TimeFormatLocalization, ApplicationLauncher, ValveConfigurationAndControl.
+- **Fail-closed completions.** ObjC `completion` / `completionHandler` /
+  subscribe `reportHandler` selectors invoke `MTRError.invalidState`
+  synchronously. Canonical surface rows whose printed declaration is the
+  Swift `async throws` overlay are implemented via the completion-handler
+  spelling of the same USR.
+- **MTRCluster* device cache.** `readAttribute*(with:)` /
+  `writeAttribute*(withValue:expectedValueInterval:)` use the in-memory
+  expected-value cache (write then read is non-nil).
+- **Unavailable (40)** still name NSXPCConnection / Security.SecKey /
+  XPC daemon reasons; none were reclassified as `not-applicable`.
+
+The Swift `async throws` overlay is still not awaitable on the sealed
+runner; CHIP IM empty-cache status versus `invalidState` remains an
+oracle question. Remaining mass is other `MTRBaseCluster*` families
+(TimeSynchronization, measurement clusters, ContentLauncher, Groups,
+Identify, DeviceEnergyManagement, …) plus `s:` Swift overlays.
