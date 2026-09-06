@@ -1,0 +1,4 @@
+full/managedsettingsui/ManagedSettingsUI.swift
+full/managedsettingsui/ManagedSettingsUILookalikes.swift
+full/managedsettingsui/ShieldConfiguration.swift
+full/managedsettingsui/ShieldConfigurationDataSource.swift
