@@ -307,13 +307,18 @@ final class SystemPickerTests: XCTestCase {
             var finished = 0
             func safariViewControllerDidFinish(_ controller: SFSafariViewController) { finished += 1 }
         }
-        let url = URL(string: "http://127.0.0.1/")!
-        let safari = SFSafariViewController(url: url)
-        let probe = Probe()
-        safari.delegate = probe
-        let items = probe.safariViewController(safari, activityItemsFor: url, title: nil)
-        XCTAssertTrue(items.isEmpty)
-        XCTAssertTrue(probe.safariViewController(safari, excludedActivityTypesFor: url, title: nil).isEmpty)
+        // The class is @MainActor only off Linux (project rule for XCTest there);
+        // the picker init and delegate defaults are main-actor isolated, so the
+        // Linux test bundle needs the explicit hop.
+        MainActor.assumeIsolated {
+            let url = URL(string: "http://127.0.0.1/")!
+            let safari = SFSafariViewController(url: url)
+            let probe = Probe()
+            safari.delegate = probe
+            let items = probe.safariViewController(safari, activityItemsFor: url, title: nil)
+            XCTAssertTrue(items.isEmpty)
+            XCTAssertTrue(probe.safariViewController(safari, excludedActivityTypesFor: url, title: nil).isEmpty)
+        }
         probe.safariViewController(safari, initialLoadDidRedirectTo: url)
         probe.safariViewControllerWillOpenInBrowser(safari)
         probe.safariViewControllerDidFinish(safari)
