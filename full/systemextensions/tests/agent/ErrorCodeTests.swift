@@ -57,12 +57,9 @@ func testOSSystemExtensionErrorCodePatternMatch() {
     precondition(OSSystemExtensionError.Code.validationFailed ~= error)
     precondition(!(OSSystemExtensionError.Code.unknown ~= error))
     precondition(!(OSSystemExtensionError.Code.validationFailed ~= NSError(domain: "other", code: 9)))
-    switch error {
-    case OSSystemExtensionError.Code.validationFailed:
-        break
-    default:
-        preconditionFailure("code pattern match failed")
-    }
+    let wrapped: any Error = error
+    precondition(OSSystemExtensionError.Code.validationFailed ~= wrapped)
+    precondition(!(OSSystemExtensionError.Code.extensionNotFound ~= wrapped))
 }
 
 func testOSSystemExtensionErrorCodeHashValue() {

@@ -36,6 +36,15 @@ target `x86_64-unknown-linux-gnu`.
 from this snapshot; the sealed framework gate does not require that
 checkout.
 
+`bash full/systemextensions/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=SystemExtensions lane=leaf-full symbols=57
+FRAMEWORK_FANOUT_REFERENCE_OK
+SYSTEMEXTENSIONS_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=SystemExtensions dylib=libSystemExtensions.dylib
+```
+
 The campaign inventory stamp
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
 is a host-inventory token, not printed by the sealed framework gate.
