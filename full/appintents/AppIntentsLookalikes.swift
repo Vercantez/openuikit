@@ -200,6 +200,10 @@ public protocol UISceneDelegate: AnyObject {}
 
 #if !canImport(CoreSpotlight)
 open class CSSearchableItemAttributeSet: NSObject, @unchecked Sendable {
+    public var displayName: String?
+    public var title: String?
+    public var keywords: [String]?
+    public var contentType: String?
     public override init() { super.init() }
 }
 
