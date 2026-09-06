@@ -1,0 +1,3 @@
+import ManagedAppDistribution
+
+let frameworkLoadSmokeMarker = "MANAGEDAPPDISTRIBUTION_AGENT_RUNTIME_OK"
