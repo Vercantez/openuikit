@@ -27,7 +27,8 @@ mkdir -p "$WORK"/{fonts,linux_out,mac_out,linux_host,mac_host}
 
 # Apple's fonts are not redistributable. Headless realapp on Linux is the
 # guest path: iOS cut, scale 2, harvested glyph_ink_ios.json, no FONT_DIR
-# (MEASURED Mac OPENUIKIT_INK_LOG of all 14 screens: empty). openhost replay
+# (MEASURED Mac+Linux OPENUIKIT_INK_LOG of all 14 screens: empty after
+# ledger-ink 17 pt medium harvest). openhost replay
 # still uses /out/fonts when the Mac host copied SFNS.
 for f in SFNS.ttf SFNSMono.ttf SFNSItalic.ttf; do
   [ -f "/System/Library/Fonts/$f" ] && cp -f "/System/Library/Fonts/$f" "$WORK/fonts/$f"
@@ -98,7 +99,8 @@ run_suites ink \
 echo "    unit tests passed"
 
 echo "==> no-font iOS cut (2x harvested masks; Linux trial had blank labels)"
-# glyph_ink_ios.json 8799 keys (2026-09-05, +13pt regular euro F0.25). "Hello" at 17 pt regular F0.0 is
+# glyph_ink_ios.json 9091 keys (2026-09-05, +17pt medium ASCII F0.0/F0.5 for
+# Ledger "Regex"). "Hello" at 17 pt regular F0.0 is
 # a HIT for H/e/l/o (383 opaque pixels measured). "Q" (U+0051) has metrics
 # but is not in that table — U+2603 sizeToFits to width 0 and never draws.
 # No OPENUIKIT_FONT_DIR on this path.
@@ -139,8 +141,8 @@ grep -F "OPENUIKIT_IOS_INK_MISS:" /tmp/inkprobe/miss.log | head -1
 grep -F "OPENUIKIT_IOS_INK_MISS: I|system-regular|17|light|F0.0|81" /tmp/inkprobe/miss.log
 
 echo "==> headless render (iOS cut; 2x harvested masks; 14 screens)"
-# MEASURED Mac OPENUIKIT_INK_LOG scale 2 of all 14 screens: empty
-# (focus-home-ink + this branch). Guest/corelibs realapp is scale 2.
+# MEASURED Mac+Linux OPENUIKIT_INK_LOG scale 2 of all 14 screens: empty
+# after the 17 pt medium "Regex" harvest (ledger-ink). Guest realapp is scale 2.
 # The 3x table is 848 keys and is not a full alphabet — do not render
 # realapp at 3x without SFNS. A miss here must be OPENUIKIT_IOS_INK_MISS.
 unset OPENUIKIT_FONT_DIR

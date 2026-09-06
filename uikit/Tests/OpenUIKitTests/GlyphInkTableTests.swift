@@ -307,5 +307,11 @@ final class GlyphInkTableTests: XCTestCase {
                                               dark: false, tag: "F0.25",
                                               scalar: Unicode.Scalar(UInt32(8364))!,
                                               scale: 2))
+        // MEASURED linux_realapp_verify 78: Ledger search placeholder
+        // "Regex" at system medium 17 F0.0 (`UISearchBar` field font).
+        XCTAssertNotNil(GlyphInkTable.maskIOS(familyKey: "system-medium", sizeKey: 17,
+                                              dark: false, tag: "F0.0",
+                                              scalar: Unicode.Scalar(UInt32(82))!,
+                                              scale: 2))
     }
 }
