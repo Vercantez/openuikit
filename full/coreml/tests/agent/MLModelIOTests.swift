@@ -149,6 +149,51 @@ func testParameterValueFromConfiguration() {
     precondition((try! withParams.parameterValue(for: .learningRate) as? Double) == 0.2)
 }
 
+func testGLMLinearPrediction() {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+    try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let glmURL = directory.appendingPathComponent("linear.mlmodel")
+    try! CoreMLSpecification.glmRegressorModel(
+        weights: [3, 4],
+        offset: 5,
+        author: "wave8"
+    ).write(to: glmURL)
+    let compiled = try! MLModel.compileModel(at: glmURL)
+    precondition(FileManager.default.fileExists(atPath: compiled.appendingPathComponent("metadata.plist").path))
+    let model = try! MLModel(contentsOf: compiled)
+    precondition(model.modelDescription.metadata[.author] as? String == "wave8")
+    precondition(model.modelDescription.metadata[.license] as? String == "BSD")
+    precondition(model.modelDescription.metadata[.versionString] as? String == "1.0")
+    let inputArray = try! MLMultiArray(shape: [2], dataType: .double)
+    inputArray[0] = 1
+    inputArray[1] = 2
+    let input = try! MLDictionaryFeatureProvider(dictionary: ["x": MLFeatureValue(multiArray: inputArray)])
+    let output = try! model.prediction(from: input)
+    // y = 3*1 + 4*2 + 5 = 16
+    precondition(output.featureValue(for: "y")?.multiArrayValue?[0].doubleValue == 16)
+    try! model.write(to: directory.appendingPathComponent("written.mlmodelc"))
+    precondition(FileManager.default.fileExists(atPath: directory.appendingPathComponent("written.mlmodelc/metadata.plist").path))
+}
+
+func testCompiledPlistMetadataLoad() {
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+    try! FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+    defer { try? FileManager.default.removeItem(at: directory) }
+    let identityURL = directory.appendingPathComponent("identity.mlmodel")
+    try! CoreMLSpecification.identityModel(
+        inputName: "in",
+        outputName: "out",
+        shape: [2],
+        author: "plist-author"
+    ).write(to: identityURL)
+    let compiled = try! MLModel.compileModel(at: identityURL)
+    try? FileManager.default.removeItem(at: compiled.appendingPathComponent("metadata.json"))
+    let reloaded = try! MLModel(contentsOf: compiled)
+    precondition(reloaded.modelDescription.inputDescriptionsByName["in"]?.type == .multiArray)
+    precondition(reloaded.modelDescription.metadata[.author] as? String == "plist-author")
+}
+
 func testCompletionDeliveryIsOffCaller() {
     let url = URL(fileURLWithPath: "/tmp/missing.mlmodelc")
     let asset = try! MLModelAsset(url: url)
