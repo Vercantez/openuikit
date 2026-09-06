@@ -189,7 +189,7 @@ c:@PHLivePhotoRequestIDInvalid	implemented	test:full/photos/tests/agent/PhotosTe
 c:@PHLivePhotoShouldRenderAtPlaybackTime	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testInfoDictionaryAndConstantKeys	Focused Linux host assertion; not Apple photo-library success.
 c:@PHLocalIdentifiersErrorKey	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testInfoDictionaryAndConstantKeys	Focused Linux host assertion; not Apple photo-library success.
 c:@PHPhotosErrorDomain	implemented	test:full/photos/tests/agent/PhotosTests.swift#testPhotosErrorCodes	Focused Linux host assertion; not Apple photo-library success.
-c:@PHPhotosErrorInvalidDeprecated	deferred		PHPhotosErrorInvalid raw value is not in the pinned macios enum or digester payload.
+c:@PHPhotosErrorInvalidDeprecated	implemented	test:full/photos/tests/agent/PhotosInvalidErrorTests.swift#testInvalidErrorLegacyConstant	iPhone 17 / iOS 26.1 (23B86) oracle: invalid is the -1 internalError alias; synchronous host regression.
 c:@PHPhotosErrorLibraryVolumeOfflineDeprecated	implemented	test:full/photos/tests/agent/PhotosTests.swift#testPhotosErrorCodes	Focused Linux host assertion; not Apple photo-library success.
 c:@PHPhotosErrorRelinquishingLibraryBundleToWriterDeprecated	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testPhotosErrorCodeSurface	Focused Linux host assertion; not Apple photo-library success.
 c:@PHPhotosErrorSwitchingSystemPhotoLibraryDeprecated	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testPhotosErrorCodeSurface	Focused Linux host assertion; not Apple photo-library success.
@@ -568,7 +568,7 @@ s:SC13PHPhotosErrorLeV28persistentChangeTokenExpiredSoAAVvpZ	implemented	test:fu
 s:SC13PHPhotosErrorLeV29libraryInFileProviderSyncRootSoAAVvpZ	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testPhotosErrorCodeSurface	Focused Linux host assertion; not Apple photo-library success.
 s:SC13PHPhotosErrorLeV34persistentChangeDetailsUnavailableSoAAVvpZ	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testPhotosErrorCodeSurface	Focused Linux host assertion; not Apple photo-library success.
 s:SC13PHPhotosErrorLeV34relinquishingLibraryBundleToWriterSoAAVvpZ	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testPhotosErrorCodeSurface	Focused Linux host assertion; not Apple photo-library success.
-s:SC13PHPhotosErrorLeV7invalidSoAAVvpZ	deferred		PHPhotosError.invalid static code is deprecated; raw value is not established.
+s:SC13PHPhotosErrorLeV7invalidSoAAVvpZ	implemented	test:full/photos/tests/agent/PhotosInvalidErrorTests.swift#testInvalidErrorOverlayAlias	iPhone 17 / iOS 26.1 (23B86) oracle: invalid is the -1 internalError alias; synchronous host regression.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAccessLevel	implemented	test:full/photos/tests/agent/PhotosDepthTests.swift#testEnumRawValueInitsAndInequality	Focused Linux host assertion; not Apple photo-library success.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetBurstSelectionType	implemented	test:full/photos/tests/agent/PhotosDepthTests.swift#testEnumRawValueInitsAndInequality	Focused Linux host assertion; not Apple photo-library success.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHAssetCollectionSubtype	implemented	test:full/photos/tests/agent/PhotosDepthTests.swift#testEnumRawValueInitsAndInequality	Focused Linux host assertion; not Apple photo-library success.
@@ -685,7 +685,7 @@ s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHVideoR
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::s:6Photos42PHBackgroundResourceUploadProcessingResultO	implemented	test:full/photos/tests/agent/PhotosSurfaceTests.swift#testPhotosErrorCodeSurface	Focused Linux host assertion; not Apple photo-library success.
 s:So12PHObjectTypeV8rawValueABSgSi_tcfc	implemented	test:full/photos/tests/agent/PhotosDepthTests.swift#testEnumRawValueInitsAndInequality	Focused Linux host assertion; not Apple photo-library success.
 s:So13PHAccessLevelV8rawValueABSgSi_tcfc	implemented	test:full/photos/tests/agent/PhotosDepthTests.swift#testEnumRawValueInitsAndInequality	Focused Linux host assertion; not Apple photo-library success.
-s:So13PHPhotosErrorV7invalidABvpZ	deferred		PHPhotosError.Code.invalid is deprecated; its raw value is not established by Apple-derived inputs.
+s:So13PHPhotosErrorV7invalidABvpZ	implemented	test:full/photos/tests/agent/PhotosInvalidErrorTests.swift#testInvalidErrorCodeAlias	iPhone 17 / iOS 26.1 (23B86) oracle: invalid is the -1 internalError alias; synchronous host regression.
 s:So13PHPhotosErrorV8rawValueABSgSi_tcfc	implemented	test:full/photos/tests/agent/PhotosTests.swift#testPhotosErrorCodes	Focused Linux host assertion; not Apple photo-library success.
 s:So14PHPhotoLibraryC6PhotosE23cloudIdentifierMappings19forLocalIdentifiersSDySSs6ResultOySo07PHCloudE0Cs5Error_pGGSaySSG_tF	implemented	test:full/photos/tests/agent/PhotosTests.swift#testCloudIdentifierMappingsFailClosed	Focused Linux host assertion; not Apple photo-library success.
 s:So14PHPhotoLibraryC6PhotosE23localIdentifierMappings3forSDySo07PHCloudE0Cs6ResultOySSs5Error_pGGSayAGG_tF	implemented	test:full/photos/tests/agent/PhotosTests.swift#testCloudIdentifierMappingsFailClosed	Focused Linux host assertion; not Apple photo-library success.
