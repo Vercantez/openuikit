@@ -22,7 +22,8 @@ no coverage file (0 implemented / 0 declared / 0 deferred of 4160 public IDs).
 The first-pass census was 1507 implemented / 1873 declared / 780
 deferred. After the wave-8 depth pass plus coverage-ledger repair it was
 1800 implemented / 1583 declared / 777 deferred. After the third behavioral
-pass it is **2252 implemented / 1141 declared / 767 deferred**. The
+pass plus merge repair it is **2249 implemented / 1141 declared / 770
+deferred**. The
 in-process donation, voice-shortcut, relevant-shortcut, resolution,
 person/image/media/call-record, notebook/payment/photos/climate families,
 Siri-denied, and identifier-constant slice is `implemented` with
@@ -150,26 +151,44 @@ this census.
 
 Keeps the first- and second-pass sources and tests. Before this pass:
 **1800 implemented / 1583 declared / 777 deferred / 0 unavailable / 0
-not-applicable**. After: **2252 implemented / 1141 declared / 767
-deferred / 0 unavailable / 0 not-applicable**. Nondeferred (3393) stays
-above the medium-full floor of 2080. Implemented gain is +452, from
-property-retaining intent/response families, host dispatcher routing,
-resolution-result exact codes, and Swift climate overlays — not a
-relabel of `testEnumRawValues`.
+not-applicable**. After the third-pass runtime (pre-merge repair):
+**2252 implemented / 1141 declared / 767 deferred**. Implemented gain
+is +452, from property-retaining intent/response families, host
+dispatcher routing, resolution-result exact codes, and Swift climate
+overlays — not a relabel of `testEnumRawValues`.
 
-Top-5 implemented evidence distribution after this pass:
+### Merge repair (overload + ledger)
+
+The operator merge gate refused `a27394e3` for ambiguous
+`resolveTargetTaskList` / `resolveTemporalEventTrigger` calls through
+`any INAddTasksIntentHandling` / `any INSetTaskAttributeIntentHandling`.
+The dispatcher now opens those existentials into generic helpers and
+selects each overload with an explicitly typed completion function.
+
+Mixed Wave-9 tests are split per family so each `implemented` row cites
+the focused test that actually constructs or dispatches that identifier.
+Three `INRideStatus` CLPlacemark properties (`dropOffLocation`,
+`pickupLocation`, `waypoints`) were relabeled `deferred`: they are not
+present on the Linux class and depend on CoreLocation.
+
+After this repair: **2249 implemented / 1141 declared / 770 deferred /
+0 unavailable / 0 not-applicable**. Nondeferred (3390) stays above the
+medium-full floor of 2080. Net versus the second-pass 1800 census is
++449 implemented.
+
+Top-5 implemented evidence distribution after this repair:
 
 | Citations | Evidence |
 | ---: | --- |
 | 1106 | `IntentsSurfaceTests.swift#testEnumRawValues` |
 | 80 | `IntentsSurfaceTests.swift#testOptionSetFamilies` |
 | 64 | `IntentsSurfaceTests.swift#testIntentErrorCodesCatalog` |
-| 50 | `IntentsWave9Tests.swift#testGuestDisplayPreferencesAndResolutionFamily` |
-| 47 | `IntentsWave9Tests.swift#testPaymentAccountBillDetailsAndRideValues` |
+| 38 | `IntentsSurfaceTests.swift#testPersonRelationshipAndWorkoutIdentifiers` |
+| 28 | `IntentsDepthTests.swift#testTravelValueCoding` |
 
 Allowed shared table-driven tests remain enum/option-set/error-code/
-identifier catalogs. The largest remaining non-table test is 50/938
-(5.3%), under the 40% bulk-relabel bound. Seven climate Swift overlays
+identifier catalogs. The largest remaining non-table test is 28/1143
+(2.4%), under the 40% bulk-relabel bound. Seven climate Swift overlays
 moved from `deferred` to `implemented` with a real
 `init(enableFan:enableAirConditioner:…)` and stored Bool/Int/Double
 properties. No SwiftUI cross-import overlay rows exist in this census.

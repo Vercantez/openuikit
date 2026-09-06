@@ -442,7 +442,7 @@ func testBookRestaurantReservationIntentAndResponse() {
     precondition(response.userBooking?.dateStatusModified == Date(timeIntervalSince1970: 1))
 }
 
-func testSearchForPhotosAndStartPlaybackIntents() {
+func testSearchForPhotosIntentAndResponse() {
     var day = DateComponents()
     day.year = 2025
     let range = INDateComponentsRange(start: day, end: day)
@@ -466,7 +466,12 @@ func testSearchForPhotosAndStartPlaybackIntents() {
     precondition(search.peopleInPhotoOperator == .any)
     let searchResponse = INSearchForPhotosIntentResponse(code: .continueInApp, userActivity: nil)
     precondition(searchResponse.code == .continueInApp)
+}
 
+func testStartPhotoPlaybackIntentAndResponse() {
+    var day = DateComponents()
+    day.year = 2025
+    let range = INDateComponentsRange(start: day, end: day)
     let playback = INStartPhotoPlaybackIntent()
     playback.albumName = "Trip"
     playback.dateCreated = range
@@ -474,7 +479,7 @@ func testSearchForPhotosAndStartPlaybackIntents() {
     playback.searchTermsOperator = .all
     playback.includedAttributes = [.livePhoto]
     playback.excludedAttributes = [.hdrPhoto]
-    playback.peopleInPhoto = people
+    playback.peopleInPhoto = [wave9Person()]
     playback.peopleInPhotoOperator = INConditionalOperator.none
     precondition(playback.albumName == "Trip")
     precondition(playback.dateCreated?.startDateComponents?.year == 2025)
@@ -521,7 +526,7 @@ func testSetClimateSettingsInCarIntentOverlay() {
     precondition(response.code == .success)
 }
 
-func testSearchForAccountsAndBillsIntents() {
+func testSearchForAccountsIntentAndResponse() {
     let accounts = INSearchForAccountsIntent(
         accountNickname: INSpeakableString(spokenPhrase: "Checking"),
         accountType: .checking,
@@ -536,7 +541,9 @@ func testSearchForAccountsAndBillsIntents() {
     accountResponse.accounts = [wave9Account("Checking")]
     precondition(accountResponse.code == .success)
     precondition(accountResponse.accounts?.count == 1)
+}
 
+func testSearchForBillsIntentAndResponse() {
     var day = DateComponents()
     day.year = 2026
     let range = INDateComponentsRange(start: day, end: day)
@@ -560,7 +567,7 @@ func testSearchForAccountsAndBillsIntents() {
     precondition(billResponse.bills?.isEmpty == true)
 }
 
-func testTaskAndTaskListConstructionAndCoding() {
+func testTaskConstructionAndCoding() {
     var created = DateComponents()
     created.year = 2026
     var modified = DateComponents()
@@ -597,6 +604,23 @@ func testTaskAndTaskListConstructionAndCoding() {
         identifier: "task-short"
     )
     precondition(shorter.identifier == "task-short")
+}
+
+func testTaskListConstructionAndCoding() {
+    var created = DateComponents()
+    created.year = 2026
+    var modified = DateComponents()
+    modified.year = 2027
+    let task = INTask(
+        title: INSpeakableString(spokenPhrase: "Pack"),
+        status: .notCompleted,
+        taskType: .completable,
+        spatialEventTrigger: nil,
+        temporalEventTrigger: nil,
+        createdDateComponents: created,
+        modifiedDateComponents: modified,
+        identifier: "task-pack"
+    )
     let list = INTaskList(
         title: INSpeakableString(spokenPhrase: "Trip"),
         tasks: [task],
@@ -614,7 +638,7 @@ func testTaskAndTaskListConstructionAndCoding() {
     precondition(wave9ArchiveRoundTrip(list).identifier == "list-trip")
 }
 
-func testPaymentAccountBillDetailsAndRideValues() {
+func testPaymentAccountConstructionAndCoding() {
     let nick = INSpeakableString(spokenPhrase: "Savings")
     let org = INSpeakableString(spokenPhrase: "OpenBank")
     let failable = INPaymentAccount(nickname: nick, number: "99", accountType: .saving, organizationName: org)
@@ -634,7 +658,9 @@ func testPaymentAccountBillDetailsAndRideValues() {
     precondition(full.balance != nil)
     precondition(full.secondaryBalance != nil)
     precondition(wave9ArchiveRoundTrip(full).accountNumber == "100")
+}
 
+func testBillDetailsProperties() {
     var due = DateComponents()
     due.year = 2026
     let details = INBillDetails(
@@ -655,7 +681,9 @@ func testPaymentAccountBillDetailsAndRideValues() {
     precondition(details?.lateFee?.currencyCode == "USD")
     precondition(details?.dueDate?.year == 2026)
     precondition(details?.paymentDate?.year == 2026)
+}
 
+func testRideDriverInitsAndCoding() {
     let driver = INRideDriver(
         handle: "driver@example.com",
         displayName: "Lin",
@@ -692,7 +720,9 @@ func testPaymentAccountBillDetailsAndRideValues() {
     )
     precondition(phone.phoneNumber == "555-0113")
     precondition(wave9ArchiveRoundTrip(driver).rating == "4.9")
+}
 
+func testRideOptionRemainingProperties() {
     let option = INRideOption(name: "Pool", estimatedPickupDate: Date(timeIntervalSince1970: 20))
     option.availablePartySizeOptions = []
     option.availablePartySizeOptionsSelectionPrompt = "How many?"
@@ -713,7 +743,17 @@ func testPaymentAccountBillDetailsAndRideValues() {
     precondition(option.specialPricing == "off-peak")
     precondition(option.specialPricingBadgeImage != nil)
     precondition(option.userActivityForBookingInApplication?.activityType == "book")
+}
 
+func testRideStatusRemainingProperties() {
+    let driver = INRideDriver(
+        handle: "driver@example.com",
+        displayName: "Lin",
+        image: nil,
+        rating: "4.9",
+        phoneNumber: "555-0110"
+    )
+    let option = INRideOption(name: "Pool", estimatedPickupDate: Date(timeIntervalSince1970: 20))
     let status = INRideStatus()
     status.driver = driver
     status.rideOption = option
@@ -737,7 +777,7 @@ func testPaymentAccountBillDetailsAndRideValues() {
     precondition(status.additionalActionActivities?.isEmpty == true)
 }
 
-func testPersonInitsAndMessageAttachments() {
+func testPersonConvenienceInits() {
     let handle = INPersonHandle(value: "ada@example.com", type: .emailAddress)
     precondition(handle.value == "ada@example.com")
     precondition(handle.type == .emailAddress)
@@ -814,7 +854,9 @@ func testPersonInitsAndMessageAttachments() {
         relationship: INPersonRelationship(rawValue: "friend")
     )
     precondition(related.relationship?.rawValue == "friend")
+}
 
+func testMessageAttachmentReactionAndLinkInits() {
     let person = wave9Person()
     let file = INFile(data: Data([0x01]), filename: "a.bin", typeIdentifier: "public.data")
     let short = INMessage(
@@ -972,9 +1014,10 @@ func testCarPowerRemainingMeasurements() {
     precondition(response.minimumBatteryCapacity?.value == 5)
 }
 
-func testGuestDisplayPreferencesAndResolutionFamily() {
+func testRestaurantGuestDisplayPreferences() {
     let guest = INRestaurantGuest(nameComponents: nil, phoneNumber: "555", emailAddress: "a@b.c")
     precondition(wave9ArchiveRoundTrip(guest).emailAddress == "a@b.c")
+    precondition(guest.phoneNumber == "555")
     let prefs = INRestaurantGuestDisplayPreferences()
     prefs.emailAddressEditable = true
     prefs.emailAddressFieldShouldBeDisplayed = true
@@ -992,22 +1035,30 @@ func testGuestDisplayPreferencesAndResolutionFamily() {
     precondition(prefs.nameFieldShouldBeDisplayed)
     precondition(prefs.phoneNumberEditable)
     precondition(prefs.phoneNumberFieldShouldBeDisplayed)
+}
 
+func testPaymentAccountResolutionResult() {
     let account = wave9Account("A")
     precondition(INPaymentAccountResolutionResult.success(with: account).outcome == .success)
     precondition(INPaymentAccountResolutionResult.disambiguation(with: [account]).outcome == .disambiguation)
     precondition(INPaymentAccountResolutionResult.confirmationRequired(with: account).outcome == .confirmationRequired)
+}
 
+func testBillPayeeResolutionResult() {
     let payee = INBillPayee()
     precondition(INBillPayeeResolutionResult.success(with: payee).outcome == .success)
     precondition(INBillPayeeResolutionResult.disambiguation(with: [payee]).outcome == .disambiguation)
     precondition(INBillPayeeResolutionResult.confirmationRequired(with: payee).outcome == .confirmationRequired)
+}
 
+func testTaskResolutionResult() {
     let task = INTask()
     precondition(INTaskResolutionResult.success(with: task).outcome == .success)
     precondition(INTaskResolutionResult.disambiguation(with: [task]).outcome == .disambiguation)
     precondition(INTaskResolutionResult.confirmationRequired(with: task).outcome == .confirmationRequired)
+}
 
+func testTaskListResolutionResult() {
     let list = INTaskList(
         title: INSpeakableString(spokenPhrase: "L"),
         tasks: [],
@@ -1019,19 +1070,25 @@ func testGuestDisplayPreferencesAndResolutionFamily() {
     precondition(INTaskListResolutionResult.success(with: list).outcome == .success)
     precondition(INTaskListResolutionResult.disambiguation(with: [list]).outcome == .disambiguation)
     precondition(INTaskListResolutionResult.confirmationRequired(with: list).outcome == .confirmationRequired)
+}
 
+func testMessageAttributeResolutionResult() {
     precondition(INMessageAttributeResolutionResult.success(with: .unread).outcome == .success)
     precondition(INMessageAttributeResolutionResult.confirmationRequired(with: .flagged).outcome == .confirmationRequired)
     precondition(INMessageAttributeOptionsResolutionResult.success(with: [.unread]).outcome == .success)
     precondition(
         INMessageAttributeOptionsResolutionResult.confirmationRequired(with: [.flagged]).outcome == .confirmationRequired
     )
+}
 
+func testCurrencyAmountResolutionResult() {
     let currency = INCurrencyAmount(amount: NSDecimalNumber(value: 3), currencyCode: "USD")
     precondition(INCurrencyAmountResolutionResult.success(with: currency).outcome == .success)
     precondition(INCurrencyAmountResolutionResult.disambiguation(with: [currency]).outcome == .disambiguation)
     precondition(INCurrencyAmountResolutionResult.confirmationRequired(with: currency).outcome == .confirmationRequired)
+}
 
+func testNoteResolutionResult() {
     let note = INNote(
         title: INSpeakableString(spokenPhrase: "n"),
         contents: [],
@@ -1043,21 +1100,30 @@ func testGuestDisplayPreferencesAndResolutionFamily() {
     precondition(INNoteResolutionResult.success(with: note).outcome == .success)
     precondition(INNoteResolutionResult.disambiguation(with: [note]).outcome == .disambiguation)
     precondition(INNoteResolutionResult.confirmationRequired(with: note).outcome == .confirmationRequired)
+}
 
+func testObjectResolutionResult() {
     let object = INObject(identifier: "id", display: "Ada")
     precondition(INObjectResolutionResult.success(with: object).outcome == .success)
     precondition(INObjectResolutionResult.disambiguation(with: [object]).outcome == .disambiguation)
     precondition(INObjectResolutionResult.confirmationRequired(with: object).outcome == .confirmationRequired)
+}
 
+func testRestaurantGuestResolutionResult() {
+    let guest = INRestaurantGuest(nameComponents: nil, phoneNumber: "555", emailAddress: "a@b.c")
     precondition(INRestaurantGuestResolutionResult.success(with: guest).outcome == .success)
     precondition(INRestaurantGuestResolutionResult.disambiguation(with: [guest]).outcome == .disambiguation)
     precondition(INRestaurantGuestResolutionResult.confirmationRequired(with: guest).outcome == .confirmationRequired)
+}
 
+func testSpeakableStringResolutionResult() {
     let spoken = INSpeakableString(spokenPhrase: "Hello")
     precondition(INSpeakableStringResolutionResult.success(with: spoken).outcome == .success)
     precondition(INSpeakableStringResolutionResult.disambiguation(with: [spoken]).outcome == .disambiguation)
     precondition(INSpeakableStringResolutionResult.confirmationRequired(with: spoken).outcome == .confirmationRequired)
+}
 
+func testBooleanResolutionResultConfirmationRequired() {
     let booleanConfirm = INBooleanResolutionResult.confirmationRequired(with: Optional<Bool>.some(true))
     precondition(booleanConfirm.outcome == .confirmationRequired)
 }
@@ -1071,6 +1137,22 @@ func testAddTasksHandlerDispatch() {
     precondition(confirmed?.code == .ready)
     let resolved = INHostIntentDispatcher.resolve(intent, handler: handler)
     precondition(resolved.contains { $0.outcome == .needsValue })
+
+    var specializedList: INAddTasksTargetTaskListResolutionResult?
+    handler.resolveTargetTaskList(for: intent, completion: { specializedList = $0 })
+    precondition(specializedList?.outcome == .needsValue)
+    var legacyList: INTaskListResolutionResult?
+    handler.resolveTargetTaskList(for: intent, with: { legacyList = $0 })
+    precondition(legacyList?.outcome == .needsValue)
+    var titles: [INSpeakableStringResolutionResult]?
+    handler.resolveTaskTitles(for: intent) { titles = $0 }
+    precondition(titles != nil)
+    var specializedTrigger: INAddTasksTemporalEventTriggerResolutionResult?
+    handler.resolveTemporalEventTrigger(for: intent, completion: { specializedTrigger = $0 })
+    precondition(specializedTrigger?.outcome == .needsValue)
+    var legacyTrigger: INTemporalEventTriggerResolutionResult?
+    handler.resolveTemporalEventTrigger(for: intent, with: { legacyTrigger = $0 })
+    precondition(legacyTrigger?.outcome == .needsValue)
 }
 
 func testPayBillHandlerDispatch() {
@@ -1115,6 +1197,13 @@ func testSetTaskAttributeHandlerDispatch() {
     precondition(confirmed?.code == .ready)
     let resolved = INHostIntentDispatcher.resolve(intent, handler: handler)
     precondition(resolved.count == 7)
+
+    var specializedTrigger: INSetTaskAttributeTemporalEventTriggerResolutionResult?
+    handler.resolveTemporalEventTrigger(for: intent, completion: { specializedTrigger = $0 })
+    precondition(specializedTrigger?.outcome == .needsValue)
+    var legacyTrigger: INTemporalEventTriggerResolutionResult?
+    handler.resolveTemporalEventTrigger(for: intent, with: { legacyTrigger = $0 })
+    precondition(legacyTrigger?.outcome == .needsValue)
 }
 
 func testSearchCallHistoryHandlerDispatch() {
@@ -1139,7 +1228,7 @@ func testBookRestaurantHandlerDispatch() {
     precondition(resolved.count == 5)
 }
 
-func testPhotosHandlerDispatch() {
+func testSearchForPhotosHandlerDispatch() {
     let search = INSearchForPhotosIntent()
     let searchHandler = Wave9PhotosHandler()
     let searchHandled = INHostIntentDispatcher.handle(search, handler: searchHandler) as? INSearchForPhotosIntentResponse
@@ -1148,7 +1237,9 @@ func testPhotosHandlerDispatch() {
     precondition(searchConfirmed?.code == .ready)
     let searchResolved = INHostIntentDispatcher.resolve(search, handler: searchHandler)
     precondition(searchResolved.contains { $0.outcome == .needsValue })
+}
 
+func testStartPhotoPlaybackHandlerDispatch() {
     let playback = INStartPhotoPlaybackIntent()
     let playbackHandler = Wave9PlaybackHandler()
     let playbackHandled = INHostIntentDispatcher.handle(playback, handler: playbackHandler) as? INStartPhotoPlaybackIntentResponse
@@ -1170,7 +1261,7 @@ func testClimateHandlerDispatch() {
     precondition(resolved.count == 12)
 }
 
-func testAccountsAndBillsHandlerDispatch() {
+func testSearchForAccountsHandlerDispatch() {
     let accounts = INSearchForAccountsIntent()
     let accountsHandler = Wave9AccountsHandler()
     let accountsHandled = INHostIntentDispatcher.handle(accounts, handler: accountsHandler) as? INSearchForAccountsIntentResponse
@@ -1179,7 +1270,9 @@ func testAccountsAndBillsHandlerDispatch() {
     precondition(accountsConfirmed?.code == .ready)
     let accountsResolved = INHostIntentDispatcher.resolve(accounts, handler: accountsHandler)
     precondition(accountsResolved.count == 4)
+}
 
+func testSearchForBillsHandlerDispatch() {
     let bills = INSearchForBillsIntent()
     let billsHandler = Wave9BillsHandler()
     let billsHandled = INHostIntentDispatcher.handle(bills, handler: billsHandler) as? INSearchForBillsIntentResponse

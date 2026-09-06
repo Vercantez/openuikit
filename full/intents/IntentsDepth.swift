@@ -300,14 +300,7 @@ public enum INHostIntentDispatcher {
         }
         if let add = intent as? INAddTasksIntent,
            let typed = handler as? any INAddTasksIntentHandling {
-            var results: [INIntentResolutionResult] = []
-            typed.resolvePriority(for: add) { results.append($0) }
-            typed.resolveSpatialEventTrigger(for: add) { results.append($0) }
-            typed.resolveTargetTaskList(for: add, completion: { results.append($0) })
-            typed.resolveTargetTaskList(for: add, with: { results.append($0) })
-            typed.resolveTemporalEventTrigger(for: add, completion: { results.append($0) })
-            typed.resolveTemporalEventTrigger(for: add, with: { results.append($0) })
-            return results
+            return resolveAddTasks(add, handler: typed)
         }
         if let pay = intent as? INPayBillIntent,
            let typed = handler as? any INPayBillIntentHandling {
@@ -348,15 +341,7 @@ public enum INHostIntentDispatcher {
         }
         if let setTask = intent as? INSetTaskAttributeIntent,
            let typed = handler as? any INSetTaskAttributeIntentHandling {
-            var results: [INIntentResolutionResult] = []
-            typed.resolvePriority(for: setTask) { results.append($0) }
-            typed.resolveSpatialEventTrigger(for: setTask) { results.append($0) }
-            typed.resolveStatus(for: setTask) { results.append($0) }
-            typed.resolveTargetTask(for: setTask) { results.append($0) }
-            typed.resolveTaskTitle(for: setTask) { results.append($0) }
-            typed.resolveTemporalEventTrigger(for: setTask, completion: { results.append($0) })
-            typed.resolveTemporalEventTrigger(for: setTask, with: { results.append($0) })
-            return results
+            return resolveSetTaskAttribute(setTask, handler: typed)
         }
         if let history = intent as? INSearchCallHistoryIntent,
            let typed = handler as? any INSearchCallHistoryIntentHandling {
@@ -434,6 +419,44 @@ public enum INHostIntentDispatcher {
             return results
         }
         return [INIntentResolutionResult.needsValue()]
+    }
+
+    // Generic helpers open the existential so overloaded resolve methods
+    // that differ only by completion type are not ambiguous.
+    private static func resolveAddTasks<H: INAddTasksIntentHandling>(
+        _ intent: INAddTasksIntent,
+        handler: H
+    ) -> [INIntentResolutionResult] {
+        var results: [INIntentResolutionResult] = []
+        handler.resolvePriority(for: intent) { results.append($0) }
+        handler.resolveSpatialEventTrigger(for: intent) { results.append($0) }
+        let specializedList: (INAddTasksTargetTaskListResolutionResult) -> Void = { results.append($0) }
+        let legacyList: (INTaskListResolutionResult) -> Void = { results.append($0) }
+        handler.resolveTargetTaskList(for: intent, completion: specializedList)
+        handler.resolveTargetTaskList(for: intent, with: legacyList)
+        handler.resolveTaskTitles(for: intent) { results.append(contentsOf: $0) }
+        let specializedTrigger: (INAddTasksTemporalEventTriggerResolutionResult) -> Void = { results.append($0) }
+        let legacyTrigger: (INTemporalEventTriggerResolutionResult) -> Void = { results.append($0) }
+        handler.resolveTemporalEventTrigger(for: intent, completion: specializedTrigger)
+        handler.resolveTemporalEventTrigger(for: intent, with: legacyTrigger)
+        return results
+    }
+
+    private static func resolveSetTaskAttribute<H: INSetTaskAttributeIntentHandling>(
+        _ intent: INSetTaskAttributeIntent,
+        handler: H
+    ) -> [INIntentResolutionResult] {
+        var results: [INIntentResolutionResult] = []
+        handler.resolvePriority(for: intent) { results.append($0) }
+        handler.resolveSpatialEventTrigger(for: intent) { results.append($0) }
+        handler.resolveStatus(for: intent) { results.append($0) }
+        handler.resolveTargetTask(for: intent) { results.append($0) }
+        handler.resolveTaskTitle(for: intent) { results.append($0) }
+        let specializedTrigger: (INSetTaskAttributeTemporalEventTriggerResolutionResult) -> Void = { results.append($0) }
+        let legacyTrigger: (INTemporalEventTriggerResolutionResult) -> Void = { results.append($0) }
+        handler.resolveTemporalEventTrigger(for: intent, completion: specializedTrigger)
+        handler.resolveTemporalEventTrigger(for: intent, with: legacyTrigger)
+        return results
     }
 }
 
