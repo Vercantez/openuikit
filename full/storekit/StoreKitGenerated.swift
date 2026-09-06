@@ -24,6 +24,25 @@ public let SKStoreProductParameterITunesItemIdentifier = "SKStoreProductParamete
 public let SKStoreProductParameterProductIdentifier = "SKStoreProductParameterProductIdentifier"
 public let SKStoreProductParameterProviderToken = "SKStoreProductParameterProviderToken"
 
+extension NSNotification.Name {
+    public static let SKCloudServiceCapabilitiesDidChange = NSNotification.Name(
+        "SKCloudServiceCapabilitiesDidChangeNotification"
+    )
+    public static let SKStorefrontCountryCodeDidChange = NSNotification.Name(
+        "SKStorefrontCountryCodeDidChangeNotification"
+    )
+    public static let SKStorefrontIdentifierDidChange = NSNotification.Name(
+        "SKStorefrontIdentifierDidChangeNotification"
+    )
+}
+
+public let SKCloudServiceCapabilitiesDidChangeNotification =
+    NSNotification.Name.SKCloudServiceCapabilitiesDidChange
+public let SKStorefrontCountryCodeDidChangeNotification =
+    NSNotification.Name.SKStorefrontCountryCodeDidChange
+public let SKStorefrontIdentifierDidChangeNotification =
+    NSNotification.Name.SKStorefrontIdentifierDidChange
+
 /// Apple terminates the process when the app receipt is invalid.
 /// Linux records the call and does not abort.
 public private(set) var SKTerminateForInvalidReceiptCallCount = 0
