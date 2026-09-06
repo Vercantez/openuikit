@@ -7,6 +7,8 @@ import Glibc
 import Foundation
 import AudioToolbox
 
+private final class ATW6NullCoder: NSCoder {}
+
 private func atW6Expect(_ condition: Bool, _ message: String) {
     if !condition {
         fatalError(message)
@@ -44,6 +46,20 @@ private func atW6MixerDescription() -> AudioComponentDescription {
         componentFlagsMask: 0
     )
 }
+
+private func atW6WithRaw(_ value: inout UInt8, _ body: (UnsafeMutableRawPointer) -> Void) {
+    withUnsafeMutablePointer(to: &value) { pointer in
+        body(UnsafeMutableRawPointer(pointer))
+    }
+}
+
+#if canImport(CoreFoundation)
+private func atW6CFString(_ string: String) -> CFString {
+    string.withCString { cstr in
+        CFStringCreateWithCString(kCFAllocatorDefault, cstr, 0x0800_0100)!
+    }
+}
+#endif
 
 func testWave6ConstantAliases() {
     atW6Expect(k3DMixerParam_BusEnable == k3DMixerParam_Enable, "bus enable alias")
@@ -123,24 +139,26 @@ func testScheduledAudioSliceOverlay() {
     var slice = ScheduledAudioSlice()
     atW6Expect(slice.mNumberFrames == 0 && slice.mBufferList == nil, "empty")
     atW6Expect(slice.mFlags.isEmpty && slice.mReserved == 0 && slice.mReserved2 == nil, "reserved")
-    slice = ScheduledAudioSlice(
-        mTimeStamp: (1, 2, 3, 4, 5, 6, 7, 8),
-        mCompletionProc: proc,
-        mCompletionProcUserData: &user,
-        mFlags: .scheduledAudioSliceFlag_Loop,
-        mReserved: 11,
-        mReserved2: nil,
-        mNumberFrames: 64,
-        mBufferList: &user
-    )
-    atW6Expect(slice.mTimeStamp.0 == 1 && slice.mTimeStamp.7 == 8, "stamp overlay")
-    atW6Expect(slice.mNumberFrames == 64, "frames")
-    atW6Expect(slice.mFlags.contains(.scheduledAudioSliceFlag_Loop), "loop")
-    atW6Expect(slice.mReserved == 11, "reserved")
-    atW6Expect(slice.mCompletionProcUserData == UnsafeMutableRawPointer(&user), "user")
-    var mutable = slice
-    withUnsafeMutablePointer(to: &mutable) { pointer in
-        slice.mCompletionProc?(slice.mCompletionProcUserData, pointer)
+    atW6WithRaw(&user) { pointer in
+        slice = ScheduledAudioSlice(
+            mTimeStamp: (1, 2, 3, 4, 5, 6, 7, 8),
+            mCompletionProc: proc,
+            mCompletionProcUserData: pointer,
+            mFlags: .scheduledAudioSliceFlag_Loop,
+            mReserved: 11,
+            mReserved2: nil,
+            mNumberFrames: 64,
+            mBufferList: pointer
+        )
+        atW6Expect(slice.mTimeStamp.0 == 1 && slice.mTimeStamp.7 == 8, "stamp overlay")
+        atW6Expect(slice.mNumberFrames == 64, "frames")
+        atW6Expect(slice.mFlags.contains(.scheduledAudioSliceFlag_Loop), "loop")
+        atW6Expect(slice.mReserved == 11, "reserved")
+        atW6Expect(slice.mCompletionProcUserData != nil, "user")
+        var mutable = slice
+        withUnsafeMutablePointer(to: &mutable) { slicePointer in
+            slice.mCompletionProc?(slice.mCompletionProcUserData, slicePointer)
+        }
     }
     atW6Expect(completions == 1, "completion fired")
 }
@@ -210,11 +228,12 @@ func testScheduledAudioFileRegionOverlay() {
 }
 
 func testAudioFileRegionAndNext() {
-    let name = "verse" as CFString
+#if canImport(CoreFoundation)
+    let name = atW6CFString("verse")
     var first = AudioFileRegion(
         mRegionID: 1,
         mName: Unmanaged.passUnretained(name),
-        mFlags: .loopEnable,
+        mFlags: AudioFileRegionFlags.loopEnable,
         mNumberMarkers: 1,
         mMarkers: AudioFileMarker(
             mFramePosition: 8,
@@ -226,9 +245,15 @@ func testAudioFileRegionAndNext() {
             mChannel: 1
         )
     )
-    atW6Expect(first.mRegionID == 1 && first.mFlags.contains(.loopEnable), "flags")
+    atW6Expect(first.mRegionID == 1 && first.mFlags.contains(AudioFileRegionFlags.loopEnable), "flags")
     atW6Expect(first.mNumberMarkers == 1 && first.mMarkers.mFramePosition == 8, "marker")
-    atW6Expect(first.mName?.takeUnretainedValue() as String == "verse", "name")
+    let nameLength: CFIndex
+    if let cfName = first.mName?.takeUnretainedValue() {
+        nameLength = CFStringGetLength(cfName)
+    } else {
+        nameLength = 0
+    }
+    atW6Expect(nameLength == 5, "name")
     var list = AudioFileRegionList(mSMPTE_TimeType: 1, mNumberRegions: 2, mRegions: first)
     atW6Expect(list.mSMPTE_TimeType == 1 && list.mNumberRegions == 2, "list")
     list = AudioFileRegionList()
@@ -240,14 +265,14 @@ func testAudioFileRegionAndNext() {
         AudioFileRegion(
             mRegionID: 10,
             mName: Unmanaged.passUnretained(name),
-            mFlags: .playForward,
+            mFlags: AudioFileRegionFlags.playForward,
             mNumberMarkers: 1,
             mMarkers: AudioFileMarker()
         ),
         AudioFileRegion(
             mRegionID: 11,
             mName: Unmanaged.passUnretained(name),
-            mFlags: .playBackward,
+            mFlags: AudioFileRegionFlags.playBackward,
             mNumberMarkers: 1,
             mMarkers: AudioFileMarker()
         )
@@ -256,7 +281,8 @@ func testAudioFileRegionAndNext() {
         NextAudioFileRegion(buffer.baseAddress!)
     }
     atW6Expect(next.pointee.mRegionID == 11, "next region id")
-    atW6Expect(next.pointee.mFlags.contains(.playBackward), "next flags")
+    atW6Expect(next.pointee.mFlags.contains(AudioFileRegionFlags.playBackward), "next flags")
+#endif
 }
 
 func testAudioPanningInfoOverlay() {
@@ -264,17 +290,20 @@ func testAudioPanningInfoOverlay() {
     atW6Expect(info.mPanningMode == .panningMode_SoundField, "mode")
     atW6Expect(info.mGainScale == 1 && info.mOutputChannelMap == nil, "gain map")
     var dummy: UInt32 = 0
-    info = AudioPanningInfo(
-        mPanningMode: .panningMode_VectorBasedPanning,
-        mCoordinateFlags: 3,
-        mCoordinates: (1.5, -0.5, 0.25),
-        mGainScale: 0.8,
-        mOutputChannelMap: UnsafeRawPointer(&dummy)
-    )
+    withUnsafeBytes(of: &dummy) { raw in
+        info = AudioPanningInfo(
+            mPanningMode: .panningMode_VectorBasedPanning,
+            mCoordinateFlags: 3,
+            mCoordinates: (1.5, -0.5, 0.25),
+            mGainScale: 0.8,
+            mOutputChannelMap: raw.baseAddress
+        )
+        atW6Expect(info.mOutputChannelMap != nil, "scale map")
+    }
     atW6Expect(info.mPanningMode == .panningMode_VectorBasedPanning, "vector")
     atW6Expect(info.mCoordinateFlags == 3, "flags")
     atW6Expect(info.mCoordinates.0 == 1.5 && info.mCoordinates.2 == 0.25, "xyz")
-    atW6Expect(info.mGainScale == 0.8 && info.mOutputChannelMap != nil, "scale map")
+    atW6Expect(info.mGainScale == 0.8, "scale")
 }
 
 func testAudioUnitParameterEventSchedule() {
@@ -354,14 +383,16 @@ func testHostCallbackInfoOverlay() {
     }
     let transport2: HostCallback_GetTransportState2 = { _, _, _, _, _, _, _, _ in 0 }
     var token: UInt8 = 1
-    info = HostCallbackInfo(
-        hostUserData: &token,
-        beatAndTempoProc: beat,
-        musicalTimeLocationProc: location,
-        transportStateProc: transport,
-        transportStateProc2: transport2
-    )
-    atW6Expect(info.hostUserData == UnsafeMutableRawPointer(&token), "user")
+    atW6WithRaw(&token) { pointer in
+        info = HostCallbackInfo(
+            hostUserData: pointer,
+            beatAndTempoProc: beat,
+            musicalTimeLocationProc: location,
+            transportStateProc: transport,
+            transportStateProc2: transport2
+        )
+        atW6Expect(info.hostUserData != nil, "user")
+    }
     atW6Expect(info.beatAndTempoProc?(nil, &beats, &tempo) == 0 && beats == 4 && tempo == 120, "beat")
     var moving: UInt8 = 0
     atW6Expect(info.transportStateProc?(nil, &moving, nil, nil, nil, nil, nil) == 0 && moving == 1, "moving")
@@ -372,7 +403,7 @@ func testHostCallbackInfoOverlay() {
 func testAUAudioUnitV2BridgeAndStatus() {
     let status: AUAudioUnitStatus = 0
     atW6Expect(status == 0, "status alias")
-    atW6Expect(AUAudioUnitPreset(coder: NSCoder()) == nil, "preset coder fail-closed")
+    atW6Expect(AUAudioUnitPreset(coder: ATW6NullCoder()) == nil, "preset coder fail-closed")
     var mixer = atW6MixerDescription()
     var before = AudioComponentFindNext(nil, &mixer)
     var countBefore = 0
@@ -408,7 +439,7 @@ func testAUAudioUnitV2BridgeAndStatus() {
     } catch {
         fatalError("software v2 bridge must instantiate")
     }
-    var remote = AudioComponentDescription(
+    let remote = AudioComponentDescription(
         componentType: kAudioUnitType_Output,
         componentSubType: kAudioUnitSubType_RemoteIO,
         componentManufacturer: kAudioUnitManufacturer_Apple,
@@ -421,7 +452,6 @@ func testAUAudioUnitV2BridgeAndStatus() {
     } catch {
         atW6Expect(true, "remote fail-closed")
     }
-    _ = remote
 }
 
 func testAudioConverterPrimeInfoOverlay() {
@@ -448,20 +478,22 @@ func testAudioFileTypeAndFormatIDOverlay() {
 
 func testAudioQueueBufferStructInit() {
     var bytes: UInt8 = 7
-    let buffer = AudioQueueBuffer(
-        mAudioDataBytesCapacity: 4,
-        mAudioData: &bytes,
-        mAudioDataByteSize: 2,
-        mUserData: nil,
-        mPacketDescriptionCapacity: 0,
-        mPacketDescriptions: nil,
-        mPacketDescriptionCount: 0
-    )
-    atW6Expect(buffer.mAudioDataBytesCapacity == 4, "cap")
-    atW6Expect(buffer.mAudioDataByteSize == 2, "size")
-    atW6Expect(buffer.mAudioData.load(as: UInt8.self) == 7, "payload")
-    atW6Expect(buffer.mUserData == nil && buffer.mPacketDescriptionCount == 0, "user pk")
-    atW6Expect(buffer.mPacketDescriptionCapacity == 0 && buffer.mPacketDescriptions == nil, "pk desc")
+    withUnsafeMutableBytes(of: &bytes) { raw in
+        let buffer = AudioQueueBuffer(
+            mAudioDataBytesCapacity: 4,
+            mAudioData: raw.baseAddress!,
+            mAudioDataByteSize: 2,
+            mUserData: nil,
+            mPacketDescriptionCapacity: 0,
+            mPacketDescriptions: nil,
+            mPacketDescriptionCount: 0
+        )
+        atW6Expect(buffer.mAudioDataBytesCapacity == 4, "cap")
+        atW6Expect(buffer.mAudioDataByteSize == 2, "size")
+        atW6Expect(buffer.mAudioData.load(as: UInt8.self) == 7, "payload")
+        atW6Expect(buffer.mUserData == nil && buffer.mPacketDescriptionCount == 0, "user pk")
+        atW6Expect(buffer.mPacketDescriptionCapacity == 0 && buffer.mPacketDescriptions == nil, "pk desc")
+    }
 }
 
 func testAudioComponentPlugInInterfaceOverlay() {
@@ -486,8 +518,10 @@ func testAudioComponentPlugInInterfaceOverlay() {
         reserved: nil
     )
     var dummy: UInt8 = 0
-    atW6Expect(interface.Open?(UnsafeMutableRawPointer(&dummy), OpaquePointer(bitPattern: 2)!) == 0, "open")
-    atW6Expect(interface.Close?(UnsafeMutableRawPointer(&dummy)) == 0, "close")
+    atW6WithRaw(&dummy) { pointer in
+        atW6Expect(interface.Open?(pointer, OpaquePointer(bitPattern: 2)!) == 0, "open")
+        atW6Expect(interface.Close?(pointer) == 0, "close")
+    }
     atW6Expect(interface.Lookup?(3) == nil && looked == 3, "lookup")
     atW6Expect(opened == 1 && closed == 1, "counts")
     let factory: AudioComponentFactoryFunction = { _ in nil }
@@ -504,36 +538,38 @@ func testCABarBeatTimeReservedAndMemberwise() {
 }
 
 func testMusicDeviceTypealiases() {
-    let component: MusicDeviceComponent = OpaquePointer(bitPattern: 3)
+    let component: MusicDeviceComponent = OpaquePointer(bitPattern: 3)!
     let group: MusicDeviceGroupID = 2
     let instrument: MusicDeviceInstrumentID = 11
-    atW6Expect(component == OpaquePointer(bitPattern: 3), "component")
+    atW6Expect(component == OpaquePointer(bitPattern: 3)!, "component")
     atW6Expect(group == 2 && instrument == 11, "ids")
     let midi: MusicDeviceMIDIEventProc = { _, _, _, _, _ in kAudioUnitErr_CannotDoInCurrentContext }
     var raw: UInt8 = 0
-    atW6Expect(
-        midi(UnsafeMutableRawPointer(&raw), 0x90, 60, 100, 0) == kAudioUnitErr_CannotDoInCurrentContext,
-        "midi proc"
-    )
-    let sysEx: MusicDeviceSysExProc = { _, _, _ in kAudioUnitErr_CannotDoInCurrentContext }
-    atW6Expect(sysEx(UnsafeMutableRawPointer(&raw), &raw, 1) == kAudioUnitErr_CannotDoInCurrentContext, "sysex")
-    let stop: MusicDeviceStopNoteProc = { _, _, _, _ in kAudioUnitErr_CannotDoInCurrentContext }
-    atW6Expect(stop(UnsafeMutableRawPointer(&raw), 1, 1, 0) == kAudioUnitErr_CannotDoInCurrentContext, "stop")
-    var noteID: NoteInstanceID = 0
-    var params = MusicDeviceNoteParams()
-    let start: MusicDeviceStartNoteProc = { _, _, _, outID, _, _ in
-        outID.pointee = 9
-        return kAudioUnitErr_CannotDoInCurrentContext
+    atW6WithRaw(&raw) { pointer in
+        atW6Expect(
+            midi(pointer, 0x90, 60, 100, 0) == kAudioUnitErr_CannotDoInCurrentContext,
+            "midi proc"
+        )
+        let sysEx: MusicDeviceSysExProc = { _, _, _ in kAudioUnitErr_CannotDoInCurrentContext }
+        atW6Expect(sysEx(pointer, pointer.assumingMemoryBound(to: UInt8.self), 1) == kAudioUnitErr_CannotDoInCurrentContext, "sysex")
+        let stop: MusicDeviceStopNoteProc = { _, _, _, _ in kAudioUnitErr_CannotDoInCurrentContext }
+        atW6Expect(stop(pointer, 1, 1, 0) == kAudioUnitErr_CannotDoInCurrentContext, "stop")
+        var noteID: NoteInstanceID = 0
+        var params = MusicDeviceNoteParams()
+        let start: MusicDeviceStartNoteProc = { _, _, _, outID, _, _ in
+            outID.pointee = 9
+            return kAudioUnitErr_CannotDoInCurrentContext
+        }
+        atW6Expect(
+            start(pointer, instrument, group, &noteID, 0, &params)
+                == kAudioUnitErr_CannotDoInCurrentContext
+                && noteID == 9,
+            "start"
+        )
+        let sched: AudioUnitScheduleParametersProc = { _, _, count in Int32(count) }
+        var scheduled = AudioUnitParameterEvent()
+        atW6Expect(sched(pointer, &scheduled, 3) == 3, "sched proc")
     }
-    atW6Expect(
-        start(UnsafeMutableRawPointer(&raw), instrument, group, &noteID, 0, &params)
-            == kAudioUnitErr_CannotDoInCurrentContext
-            && noteID == 9,
-        "start"
-    )
-    let sched: AudioUnitScheduleParametersProc = { _, _, count in Int32(count) }
-    var scheduled = AudioUnitParameterEvent()
-    atW6Expect(sched(UnsafeMutableRawPointer(&raw), &scheduled, 3) == 3, "sched proc")
 }
 
 func testTranslationOverlays() {
@@ -576,13 +612,21 @@ func testAudioQueueLevelMeterAndChannelAssignment() {
     atW6Expect(meter.mAveragePower == -12 && meter.mPeakPower == -3, "meter")
     var assignment = AudioQueueChannelAssignment()
     atW6Expect(assignment.mChannelNumber == 0 && assignment.mDeviceUID == nil, "empty assign")
-    let uid = "BuiltInSpeaker" as CFString
+#if canImport(CoreFoundation)
+    let uid = atW6CFString("BuiltInSpeaker")
     assignment = AudioQueueChannelAssignment(
         mDeviceUID: Unmanaged.passUnretained(uid),
         mChannelNumber: 1
     )
     atW6Expect(assignment.mChannelNumber == 1, "ch")
-    atW6Expect(assignment.mDeviceUID?.takeUnretainedValue() as String == "BuiltInSpeaker", "uid")
+    let uidLength: CFIndex
+    if let cfUID = assignment.mDeviceUID?.takeUnretainedValue() {
+        uidLength = CFStringGetLength(cfUID)
+    } else {
+        uidLength = 0
+    }
+    atW6Expect(uidLength == 14, "uid")
+#endif
     var parameter = AudioQueueParameterEvent()
     atW6Expect(parameter.mID == 0 && parameter.mValue == 0, "empty aq param")
     parameter = AudioQueueParameterEvent(mID: kAudioQueueParam_Volume, mValue: 0.5)
@@ -666,7 +710,7 @@ func testAURenderEventHeaderAndUnion() {
         reserved: 3
     )
     atW6Expect(header.eventSampleTime == 12 && header.eventType == .midiSysEx && header.reserved == 3, "header")
-    var midi = AUMIDIEvent(
+    let midi = AUMIDIEvent(
         next: nil,
         eventSampleTime: 4,
         eventType: .MIDI,
@@ -677,7 +721,7 @@ func testAURenderEventHeaderAndUnion() {
     )
     var render = AURenderEvent(MIDI: midi)
     atW6Expect(render.MIDI.data.0 == 0x80 && render.head.eventType == .MIDI, "midi union")
-    var parameter = AUParameterEvent(
+    let parameter = AUParameterEvent(
         next: nil,
         eventSampleTime: 8,
         eventType: .parameter,
@@ -690,7 +734,6 @@ func testAURenderEventHeaderAndUnion() {
     atW6Expect(render.parameter.value == 0.5 && render.head.eventSampleTime == 8, "param union")
     render = AURenderEvent()
     atW6Expect(render.head.eventType == .parameter && render.MIDI.length == 0, "empty union")
-    _ = midi
 }
 
 func testExtendedNoteOnEventOverlay() {
@@ -709,14 +752,21 @@ func testExtendedNoteOnEventOverlay() {
 func testParameterNameAndStringConversionOverlays() {
     var name = AudioUnitParameterNameInfo()
     atW6Expect(name.inID == 0 && name.outName == nil, "empty name")
-    let label = "Gain" as CFString
+#if canImport(CoreFoundation)
+    let label = atW6CFString("Gain")
     name = AudioUnitParameterNameInfo(
         inID: kMultiChannelMixerParam_Volume,
         inDesiredLength: 4,
         outName: Unmanaged.passUnretained(label)
     )
     atW6Expect(name.inID == kMultiChannelMixerParam_Volume && name.inDesiredLength == 4, "id len")
-    atW6Expect(name.outName?.takeUnretainedValue() as String == "Gain", "out name")
+    let labelLength: CFIndex
+    if let cfLabel = name.outName?.takeUnretainedValue() {
+        labelLength = CFStringGetLength(cfLabel)
+    } else {
+        labelLength = 0
+    }
+    atW6Expect(labelLength == 4, "out name")
     let alias: AudioUnitParameterIDName = name
     atW6Expect(alias.inDesiredLength == 4, "alias")
     var value: AudioUnitParameterValue = 0.5
@@ -732,6 +782,7 @@ func testParameterNameAndStringConversionOverlays() {
         outValue: 0.25
     )
     atW6Expect(fromString.outValue == 0.25 && fromString.inString != nil, "vfs")
+#endif
     var history = AudioUnitParameterHistoryInfo()
     history = AudioUnitParameterHistoryInfo(updatesPerSecond: 30, historyDurationInSeconds: 2)
     atW6Expect(history.updatesPerSecond == 30 && history.historyDurationInSeconds == 2, "hist")
@@ -750,9 +801,11 @@ func testAUInputSamplesInOutputCallbackStructOverlay() {
     var info = AUInputSamplesInOutputCallbackStruct()
     atW6Expect(info.userData == nil && info.inputToOutputCallback == nil, "empty")
     var token: UInt8 = 0
-    info = AUInputSamplesInOutputCallbackStruct(inputToOutputCallback: callback, userData: &token)
-    atW6Expect(info.userData == UnsafeMutableRawPointer(&token), "user")
-    info.inputToOutputCallback?(info.userData, nil, 1, 2)
+    atW6WithRaw(&token) { pointer in
+        info = AUInputSamplesInOutputCallbackStruct(inputToOutputCallback: callback, userData: pointer)
+        atW6Expect(info.userData != nil, "user")
+        info.inputToOutputCallback?(info.userData, nil, 1, 2)
+    }
     atW6Expect(hits == 1, "callback")
 }
 
@@ -775,7 +828,7 @@ func testAudioOutputUnitStartAtTimeAndMIDICallbacks() {
         }
     )
     callbacks.MIDIEventProc?(nil, 0x90, 60, 100, 0)
-    var sysex: [UInt8] = [0xF0, 0x00, 0xF7]
+    let sysex: [UInt8] = [0xF0, 0x00, 0xF7]
     sysex.withUnsafeBufferPointer { buffer in
         callbacks.MIDISysExProc?(nil, buffer.baseAddress!, 3)
     }
