@@ -146,33 +146,55 @@ open class WKWebExtension: NSObject {
             public static let matchBidirectionally = Self(rawValue: 1 << 2)
         }
 
+        public static let errorDomain = Error.errorDomain
+
         public let scheme: String
         public let host: String
         public let path: String
-        public var string: String { "\(scheme)://\(host)\(path)" }
-        public var matchesAllHosts: Bool { host == "*" || host == "*." }
-        public var matchesAllURLs: Bool { scheme == "*" && matchesAllHosts }
+        internal let matchesAllURLSchemes: Bool
+        public var string: String {
+            if matchesAllURLSchemes { return "<all_urls>" }
+            if scheme == "file" { return "file://\(path)" }
+            return "\(scheme)://\(host)\(path)"
+        }
+        public var matchesAllHosts: Bool { host == "*" }
+        public var matchesAllURLs: Bool {
+            matchesAllURLSchemes || (scheme == "*" && matchesAllHosts && path == "/*")
+        }
 
-        public init?(string: String) {
-            let parts = string.split(separator: ":", maxSplits: 1).map(String.init)
-            guard parts.count == 2 else { return nil }
-            self.scheme = parts[0]
-            let rest = parts[1].hasPrefix("//") ? String(parts[1].dropFirst(2)) : parts[1]
-            if let slash = rest.firstIndex(of: "/") {
-                self.host = String(rest[..<slash])
-                self.path = String(rest[slash...])
-            } else {
-                self.host = rest
-                self.path = "/"
+        public init(string: String) throws {
+            let parsed: WKPortableParsedMatchPattern
+            do {
+                parsed = try WKPortableParseMatchPattern(string)
+            } catch WKPortableMatchPatternParseError.invalidScheme {
+                throw Error(.invalidScheme, userInfo: ["pattern": string])
+            } catch WKPortableMatchPatternParseError.invalidHost {
+                throw Error(.invalidHost, userInfo: ["pattern": string])
+            } catch WKPortableMatchPatternParseError.invalidPath {
+                throw Error(.invalidPath, userInfo: ["pattern": string])
             }
+            self.scheme = parsed.scheme
+            self.host = parsed.host
+            self.path = parsed.path
+            self.matchesAllURLSchemes = parsed.matchesAllURLSchemes
             super.init()
         }
 
-        public init?(scheme: String, host: String, path: String) {
-            guard !scheme.isEmpty, !host.isEmpty, path.hasPrefix("/") else { return nil }
-            self.scheme = scheme
-            self.host = host
-            self.path = path
+        public init(scheme: String, host: String, path: String) throws {
+            let parsed: WKPortableParsedMatchPattern
+            do {
+                parsed = try WKPortableParseMatchPattern(scheme: scheme, host: host, path: path)
+            } catch WKPortableMatchPatternParseError.invalidScheme {
+                throw Error(.invalidScheme)
+            } catch WKPortableMatchPatternParseError.invalidHost {
+                throw Error(.invalidHost)
+            } catch WKPortableMatchPatternParseError.invalidPath {
+                throw Error(.invalidPath)
+            }
+            self.scheme = parsed.scheme
+            self.host = parsed.host
+            self.path = parsed.path
+            self.matchesAllURLSchemes = parsed.matchesAllURLSchemes
             super.init()
         }
 
@@ -180,15 +202,16 @@ open class WKWebExtension: NSObject {
             self.scheme = "*"
             self.host = "*"
             self.path = "/*"
+            self.matchesAllURLSchemes = true
             super.init()
         }
 
         public static func allURLs() -> WKWebExtension.MatchPattern {
-            WKWebExtension.MatchPattern(string: "*://*/*")!
+            try! WKWebExtension.MatchPattern(string: "<all_urls>")
         }
 
         public static func allHostsAndSchemes() -> WKWebExtension.MatchPattern {
-            WKWebExtension.MatchPattern(string: "*://*/*")!
+            try! WKWebExtension.MatchPattern(string: "*://*/*")
         }
 
         public static func registerCustomURLScheme(_ urlScheme: String) {
@@ -200,10 +223,17 @@ open class WKWebExtension: NSObject {
         }
 
         public func matches(_ url: URL, options: Options) -> Bool {
-            _ = options
-            if matchesAllURLs { return true }
-            if !matchesAllHosts, url.host != host { return false }
-            return url.scheme == scheme || scheme == "*"
+            WKPortableMatchPatternMatchesURL(
+                WKPortableParsedMatchPattern(
+                    scheme: scheme,
+                    host: host,
+                    path: path,
+                    matchesAllURLSchemes: matchesAllURLSchemes
+                ),
+                url: url,
+                ignoreSchemes: options.contains(.ignoreSchemes),
+                ignorePaths: options.contains(.ignorePaths)
+            )
         }
 
         public func matches(_ pattern: WKWebExtension.MatchPattern) -> Bool {
@@ -211,8 +241,38 @@ open class WKWebExtension: NSObject {
         }
 
         public func matches(_ pattern: WKWebExtension.MatchPattern, options: Options) -> Bool {
-            _ = options
-            return scheme == pattern.scheme && host == pattern.host && path == pattern.path
+            if scheme == pattern.scheme && host == pattern.host && path == pattern.path
+                && matchesAllURLSchemes == pattern.matchesAllURLSchemes {
+                return true
+            }
+            let representative = pattern.matchesAllURLSchemes
+                ? URL(string: "https://example.invalid/path")!
+                : (URL(string: pattern.string.replacingOccurrences(of: "*", with: "x"))
+                    ?? URL(string: "https://example.invalid/")!)
+            let forward = matches(representative, options: options)
+            if options.contains(.matchBidirectionally) {
+                let otherURL = URL(string: string.replacingOccurrences(of: "*", with: "x"))
+                    ?? URL(string: "https://example.invalid/")!
+                return forward || pattern.matches(otherURL, options: options)
+            }
+            return forward
+        }
+
+        public override func isEqual(_ object: Any?) -> Bool {
+            guard let other = object as? WKWebExtension.MatchPattern else { return false }
+            return scheme == other.scheme
+                && host == other.host
+                && path == other.path
+                && matchesAllURLSchemes == other.matchesAllURLSchemes
+        }
+
+        public override var hash: Int {
+            var hasher = Hasher()
+            hasher.combine(scheme)
+            hasher.combine(host)
+            hasher.combine(path)
+            hasher.combine(matchesAllURLSchemes)
+            return hasher.finalize()
         }
     }
 
@@ -245,6 +305,8 @@ open class WKWebExtension: NSObject {
                 hasher.combine(code)
             }
         }
+
+        public static let errorDomain = Error.errorDomain
 
         public let displayName: String
         public let uniqueIdentifier: String
@@ -300,6 +362,8 @@ open class WKWebExtension: NSObject {
                 hasher.combine(code)
             }
         }
+
+        public static let errorDomain = Error.errorDomain
 
         public let applicationIdentifier: String?
         public var isDisconnected = false
@@ -417,10 +481,49 @@ open class WKWebExtension: NSObject {
         throw WKWebExtension.Error(.resourceNotFound)
     }
 
-    public convenience init(resourceBaseURL: URL) async throws {
-        _ = resourceBaseURL
+    /// Parses `manifest.json` at `resourceBaseURL` synchronously. The Swift overlay
+    /// `init(resourceBaseURL:) async throws` is a separate overload that shares
+    /// the same loader so tests never await.
+    public convenience init(resourceBaseURL: URL) throws {
+        let state = try WKPortableLoadWebExtension(resourceBaseURL: resourceBaseURL)
         self.init()
-        throw WKWebExtension.Error(.resourceNotFound)
+        _portableApply(state)
+    }
+
+    public convenience init(resourceBaseURL: URL) async throws {
+        let state = try WKPortableLoadWebExtension(resourceBaseURL: resourceBaseURL)
+        self.init()
+        _portableApply(state)
+    }
+
+    internal func _portableApply(_ state: WKPortableWebExtensionState) {
+        errors = []
+        manifest = state.manifest
+        manifestVersion = state.manifestVersion
+        defaultLocale = state.defaultLocale
+        displayName = state.displayName
+        displayShortName = state.displayShortName
+        displayVersion = state.displayVersion
+        displayDescription = state.displayDescription
+        displayActionLabel = state.displayActionLabel
+        version = state.version
+        hasBackgroundContent = state.hasBackgroundContent
+        hasPersistentBackgroundContent = state.hasPersistentBackgroundContent
+        hasCommands = state.hasCommands
+        hasContentModificationRules = state.hasContentModificationRules
+        hasInjectedContent = state.hasInjectedContent
+        hasOptionsPage = state.hasOptionsPage
+        hasOverrideNewTabPage = state.hasOverrideNewTabPage
+        requestedPermissions = Set(state.requestedPermissions.map { Permission($0) })
+        optionalPermissions = Set(state.optionalPermissions.map { Permission($0) })
+        requestedPermissionMatchPatterns = Set(
+            state.requestedMatchPatternStrings.compactMap { try? MatchPattern(string: $0) }
+        )
+        optionalPermissionMatchPatterns = Set(
+            state.optionalMatchPatternStrings.compactMap { try? MatchPattern(string: $0) }
+        )
+        allRequestedMatchPatterns = requestedPermissionMatchPatterns
+            .union(optionalPermissionMatchPatterns)
     }
 
     public func supportsManifestVersion(_ manifestVersion: Double) -> Bool {
@@ -566,16 +669,24 @@ open class WKWebExtensionContext: NSObject {
     public var currentPermissionMatchPatterns: Set<WKWebExtension.MatchPattern> {
         Set(grantedPermissionMatchPatterns.keys)
     }
-    public var hasAccessToAllHosts = false
-    public var hasAccessToAllURLs = false
+    public var hasAccessToAllHosts: Bool {
+        currentPermissionMatchPatterns.contains { $0.matchesAllHosts && $0.scheme == "*" }
+            || currentPermissionMatchPatterns.contains { $0.matchesAllURLSchemes }
+    }
+    public var hasAccessToAllURLs: Bool {
+        currentPermissionMatchPatterns.contains { $0.matchesAllURLs }
+    }
     public var hasAccessToPrivateData = false
-    public var hasContentModificationRules = false
-    public var hasInjectedContent = false
-    public var hasRequestedOptionalAccessToAllHosts = false
+    public var hasContentModificationRules: Bool { webExtension.hasContentModificationRules }
+    public var hasInjectedContent: Bool { webExtension.hasInjectedContent }
+    public var hasRequestedOptionalAccessToAllHosts: Bool {
+        webExtension.optionalPermissionMatchPatterns.contains { $0.matchesAllHosts }
+    }
     public private(set) var commands: [WKWebExtension.Command] = []
     public private(set) var openTabs: [any WKWebExtensionTab] = []
     public private(set) var openWindows: [any WKWebExtensionWindow] = []
     public private(set) var focusedWindow: (any WKWebExtensionWindow)?
+    private var gesturedTabIDs: Set<ObjectIdentifier> = []
 
     public init(for webExtension: WKWebExtension) {
         self.webExtension = webExtension
@@ -586,6 +697,25 @@ open class WKWebExtensionContext: NSObject {
         self.init(for: webExtension)
     }
 
+    internal func _portableMarkLoaded(on controller: WKWebExtensionController) {
+        webExtensionController = controller
+        isLoaded = true
+        if webExtension.hasOptionsPage {
+            optionsPageURL = baseURL.appendingPathComponent("options.html")
+        }
+        if webExtension.hasOverrideNewTabPage {
+            overrideNewTabPageURL = baseURL.appendingPathComponent("newtab.html")
+        }
+    }
+
+    internal func _portableMarkUnloaded() {
+        webExtensionController = nil
+        isLoaded = false
+        openTabs.removeAll()
+        openWindows.removeAll()
+        focusedWindow = nil
+    }
+
     public func action(for tab: (any WKWebExtensionTab)?) -> WKWebExtension.Action {
         let action = WKWebExtension.Action()
         action.associatedTab = tab
@@ -593,31 +723,40 @@ open class WKWebExtensionContext: NSObject {
         return action
     }
 
-    public func clearUserGesture(in tab: any WKWebExtensionTab) { _ = tab }
-    public func userGesturePerformed(in tab: any WKWebExtensionTab) { _ = tab }
+    public func clearUserGesture(in tab: any WKWebExtensionTab) {
+        gesturedTabIDs.remove(ObjectIdentifier(tab))
+    }
+    public func userGesturePerformed(in tab: any WKWebExtensionTab) {
+        gesturedTabIDs.insert(ObjectIdentifier(tab))
+    }
     public func hasActiveUserGesture(in tab: any WKWebExtensionTab) -> Bool {
-        _ = tab
-        return false
+        gesturedTabIDs.contains(ObjectIdentifier(tab))
     }
 
     public func didChangeTabProperties(
         _ properties: WKWebExtension.TabChangedProperties,
         for tab: any WKWebExtensionTab
     ) { _ = (properties, tab) }
-    public func didCloseWindow(_ window: any WKWebExtensionWindow) { _ = window }
+    public func didCloseWindow(_ window: any WKWebExtensionWindow) {
+        openWindows.removeAll { $0 === window }
+        if focusedWindow === window { focusedWindow = nil }
+    }
     public func didDeselectTabs(_ tabs: [any WKWebExtensionTab]) { _ = tabs }
     public func didFocusWindow(_ window: (any WKWebExtensionWindow)?) { focusedWindow = window }
     public func didOpenTab(_ tab: any WKWebExtensionTab) { openTabs.append(tab) }
     public func didOpenWindow(_ window: any WKWebExtensionWindow) { openWindows.append(window) }
     public func didReplaceTab(_ oldTab: any WKWebExtensionTab, with newTab: any WKWebExtensionTab) {
-        _ = (oldTab, newTab)
+        if let index = openTabs.firstIndex(where: { $0 === oldTab }) {
+            openTabs[index] = newTab
+        }
     }
     public func didSelectTabs(_ tabs: [any WKWebExtensionTab]) { _ = tabs }
     public func didMoveTab(_ tab: any WKWebExtensionTab, from index: Int, in window: (any WKWebExtensionWindow)?) {
         _ = (tab, index, window)
     }
     public func didCloseTab(_ tab: any WKWebExtensionTab, windowIsClosing: Bool) {
-        _ = (tab, windowIsClosing)
+        openTabs.removeAll { $0 === tab }
+        _ = windowIsClosing
     }
     public func didActivateTab(
         _ tab: any WKWebExtensionTab,
@@ -626,12 +765,16 @@ open class WKWebExtensionContext: NSObject {
 
     public func hasAccess(to url: URL) -> Bool { hasAccess(to: url, in: nil) }
     public func hasAccess(to url: URL, in tab: (any WKWebExtensionTab)?) -> Bool {
-        _ = (url, tab)
+        _ = tab
+        if hasAccessToAllURLs { return true }
+        for pattern in currentPermissionMatchPatterns where pattern.matches(url) {
+            return true
+        }
         return false
     }
     public func hasInjectedContent(for url: URL) -> Bool {
-        _ = url
-        return false
+        guard webExtension.hasInjectedContent else { return false }
+        return webExtension.allRequestedMatchPatterns.contains { $0.matches(url) }
     }
     public func hasPermission(_ permission: WKWebExtension.Permission) -> Bool {
         hasPermission(permission, in: nil)
@@ -641,7 +784,8 @@ open class WKWebExtensionContext: NSObject {
         in tab: (any WKWebExtensionTab)?
     ) -> Bool {
         _ = tab
-        return grantedPermissions[permission] != nil
+        let status = permissionStatus(for: permission)
+        return status == .grantedExplicitly || status == .grantedImplicitly
     }
 
     public func loadBackgroundContent(completionHandler: @escaping (Error?) -> Void) {
@@ -667,6 +811,8 @@ open class WKWebExtensionContext: NSObject {
         _ = tab
         if grantedPermissions[permission] != nil { return .grantedExplicitly }
         if deniedPermissions[permission] != nil { return .deniedExplicitly }
+        if webExtension.requestedPermissions.contains(permission) { return .requestedExplicitly }
+        if webExtension.optionalPermissions.contains(permission) { return .requestedImplicitly }
         return .unknown
     }
 
@@ -674,7 +820,11 @@ open class WKWebExtensionContext: NSObject {
         permissionStatus(for: url, in: nil)
     }
     public func permissionStatus(for url: URL, in tab: (any WKWebExtensionTab)?) -> PermissionStatus {
-        _ = (url, tab)
+        _ = tab
+        if hasAccess(to: url) { return .grantedExplicitly }
+        if webExtension.allRequestedMatchPatterns.contains(where: { $0.matches(url) }) {
+            return .requestedExplicitly
+        }
         return .unknown
     }
 
@@ -720,7 +870,11 @@ open class WKWebExtensionContext: NSObject {
         for url: URL,
         expirationDate: Date?
     ) {
-        _ = (status, url, expirationDate)
+        guard let host = url.host, let scheme = url.scheme else { return }
+        let path = url.path.isEmpty ? "/*" : url.path
+        if let pattern = try? WKWebExtension.MatchPattern(scheme: scheme, host: host, path: path) {
+            setPermissionStatus(status, for: pattern, expirationDate: expirationDate)
+        }
     }
 
     public func setPermissionStatus(
@@ -969,45 +1123,188 @@ public extension WKWebExtensionWindow {
 @preconcurrency @MainActor
 open class WKWebExtensionController: NSObject {
     public weak var delegate: WKWebExtensionControllerDelegate?
-    public private(set) var extensions: [WKWebExtension] = []
-    public private(set) var extensionContexts: [WKWebExtensionContext] = []
+    private var loadedContexts: [WKWebExtensionContext] = []
+    public var extensions: Set<WKWebExtension> {
+        Set(loadedContexts.map { $0.webExtension })
+    }
+    public var extensionContexts: Set<WKWebExtensionContext> {
+        Set(loadedContexts)
+    }
+    public let configuration: WKWebExtensionController.Configuration
 
     public override init() {
+        self.configuration = .default()
         super.init()
     }
 
     public init(configuration: WKWebExtensionController.Configuration) {
-        _ = configuration
+        self.configuration = configuration
         super.init()
     }
 
     public required init?(coder: NSCoder) {
+        self.configuration = .default()
         super.init()
+    }
+
+    open class var allExtensionDataTypes: Set<WKWebExtension.DataType> {
+        [.local, .session, .synchronized]
     }
 
     open func load(_ context: WKWebExtensionContext) throws {
         if context.isLoaded {
             throw WKWebExtensionContext.Error(.alreadyLoaded)
         }
-        extensionContexts.append(context)
-        extensions.append(context.webExtension)
+        if loadedContexts.contains(where: { $0.baseURL == context.baseURL }) {
+            throw WKWebExtensionContext.Error(.baseURLAlreadyInUse)
+        }
+        loadedContexts.append(context)
+        context._portableMarkLoaded(on: self)
+        delegate?.webExtensionControllerDidUpdateExtensions(self)
     }
 
     open func unload(_ context: WKWebExtensionContext) throws {
-        guard extensionContexts.contains(where: { $0 === context }) else {
+        guard loadedContexts.contains(where: { $0 === context }) else {
             throw WKWebExtensionContext.Error(.notLoaded)
         }
-        extensionContexts.removeAll { $0 === context }
+        loadedContexts.removeAll { $0 === context }
+        context._portableMarkUnloaded()
+        delegate?.webExtensionControllerDidUpdateExtensions(self)
+    }
+
+    open func extensionContext(for webExtension: WKWebExtension) -> WKWebExtensionContext? {
+        loadedContexts.first { $0.webExtension === webExtension }
+    }
+
+    open func extensionContext(for url: URL) -> WKWebExtensionContext? {
+        loadedContexts.first { url.absoluteString.hasPrefix($0.baseURL.absoluteString) }
+    }
+
+    open func didOpenTab(_ newTab: any WKWebExtensionTab) {
+        loadedContexts.forEach { $0.didOpenTab(newTab) }
+    }
+
+    open func didOpenWindow(_ newWindow: any WKWebExtensionWindow) {
+        loadedContexts.forEach { $0.didOpenWindow(newWindow) }
+    }
+
+    open func didCloseWindow(_ closedWindow: any WKWebExtensionWindow) {
+        loadedContexts.forEach { $0.didCloseWindow(closedWindow) }
+    }
+
+    open func didFocusWindow(_ focusedWindow: (any WKWebExtensionWindow)?) {
+        loadedContexts.forEach { $0.didFocusWindow(focusedWindow) }
+    }
+
+    open func didSelectTabs(_ selectedTabs: [any WKWebExtensionTab]) {
+        loadedContexts.forEach { $0.didSelectTabs(selectedTabs) }
+    }
+
+    open func didDeselectTabs(_ deselectedTabs: [any WKWebExtensionTab]) {
+        loadedContexts.forEach { $0.didDeselectTabs(deselectedTabs) }
+    }
+
+    open func didChangeTabProperties(
+        _ properties: WKWebExtension.TabChangedProperties,
+        for changedTab: any WKWebExtensionTab
+    ) {
+        loadedContexts.forEach { $0.didChangeTabProperties(properties, for: changedTab) }
+    }
+
+    open func didReplaceTab(
+        _ oldTab: any WKWebExtensionTab,
+        with newTab: any WKWebExtensionTab
+    ) {
+        loadedContexts.forEach { $0.didReplaceTab(oldTab, with: newTab) }
+    }
+
+    open func didMoveTab(
+        _ movedTab: any WKWebExtensionTab,
+        from index: Int,
+        in oldWindow: (any WKWebExtensionWindow)? = nil
+    ) {
+        loadedContexts.forEach { $0.didMoveTab(movedTab, from: index, in: oldWindow) }
+    }
+
+    open func didCloseTab(
+        _ closedTab: any WKWebExtensionTab,
+        windowIsClosing: Bool = false
+    ) {
+        loadedContexts.forEach { $0.didCloseTab(closedTab, windowIsClosing: windowIsClosing) }
+    }
+
+    open func didActivateTab(
+        _ activatedTab: any WKWebExtensionTab,
+        previousActiveTab previousTab: (any WKWebExtensionTab)? = nil
+    ) {
+        loadedContexts.forEach { $0.didActivateTab(activatedTab, previousActiveTab: previousTab) }
+    }
+
+    open func dataRecord(
+        ofTypes dataTypes: Set<WKWebExtension.DataType>,
+        for extensionContext: WKWebExtensionContext
+    ) async -> WKWebExtension.DataRecord? {
+        WKWebExtension.DataRecord(
+            displayName: extensionContext.webExtension.displayName ?? "",
+            uniqueIdentifier: extensionContext.uniqueIdentifier,
+            containedDataTypes: dataTypes
+        )
+    }
+
+    open func dataRecords(
+        ofTypes dataTypes: Set<WKWebExtension.DataType>
+    ) async -> [WKWebExtension.DataRecord] {
+        loadedContexts.map {
+            WKWebExtension.DataRecord(
+                displayName: $0.webExtension.displayName ?? "",
+                uniqueIdentifier: $0.uniqueIdentifier,
+                containedDataTypes: dataTypes
+            )
+        }
+    }
+
+    open func removeData(
+        ofTypes dataTypes: Set<WKWebExtension.DataType>,
+        from dataRecords: [WKWebExtension.DataRecord]
+    ) async {
+        _ = (dataTypes, dataRecords)
     }
 
     @MainActor
     public final class Configuration: NSObject {
         public var webViewConfiguration: WKWebViewConfiguration
         public var defaultWebsiteDataStore: WKWebsiteDataStore
+        public private(set) var identifier: UUID?
+        public private(set) var isPersistent: Bool
+
         public override init() {
             self.webViewConfiguration = WKWebViewConfiguration()
             self.defaultWebsiteDataStore = WKWebsiteDataStore.default()
+            self.isPersistent = true
             super.init()
+        }
+
+        public convenience init(identifier: UUID) {
+            self.init()
+            self.identifier = identifier
+        }
+
+        public required init?(coder: NSCoder) {
+            self.webViewConfiguration = WKWebViewConfiguration()
+            self.defaultWebsiteDataStore = WKWebsiteDataStore.default()
+            self.isPersistent = true
+            super.init()
+        }
+
+        public class func `default`() -> WKWebExtensionController.Configuration {
+            WKWebExtensionController.Configuration()
+        }
+
+        public class func nonPersistent() -> WKWebExtensionController.Configuration {
+            let configuration = WKWebExtensionController.Configuration()
+            configuration.isPersistent = false
+            configuration.defaultWebsiteDataStore = WKWebsiteDataStore.nonPersistent()
+            return configuration
         }
     }
 }

@@ -73,9 +73,9 @@ func testCategoryScaleBands() {
 
 func testScaleTypeCatalog() {
     let types: [ScaleType] = [
-        .linear, .log, .date, .category, .categorical, .squareRoot, .symmetricLog,
+        .linear, .log, .date, .category, .categorical, .squareRoot, .symmetricLog, .symbolLog,
     ]
-    precondition(Set(types).count == 6)
+    precondition(Set(types).count == 7)
     precondition(ScaleType.linear != .log)
     precondition(ScaleType.date != .category)
     precondition(ScaleType.squareRoot != .linear)

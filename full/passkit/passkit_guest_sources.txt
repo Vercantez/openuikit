@@ -6,4 +6,5 @@ full/passkit/PassKitJPKI.swift
 full/passkit/PassKitLookalikes.swift
 full/passkit/PassKitOverlay.swift
 full/passkit/PassKitPassArchive.swift
+full/passkit/PassKitPaymentValidation.swift
 full/passkit/PassKitViewSurface.swift

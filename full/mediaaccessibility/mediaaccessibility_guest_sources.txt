@@ -1,0 +1,6 @@
+full/mediaaccessibility/MAAudibleMedia.swift
+full/mediaaccessibility/MACaptionAppearance.swift
+full/mediaaccessibility/MAFlashingLights.swift
+full/mediaaccessibility/MAImageCaptioning.swift
+full/mediaaccessibility/MAMusicHaptics.swift
+full/mediaaccessibility/MediaAccessibility.swift

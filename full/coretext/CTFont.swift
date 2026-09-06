@@ -37,6 +37,13 @@ struct _SFNTMetrics {
     var glyphCount: Int = _PortableMetrics.glyphCount
     var boundingBox: CGRect = _PortableMetrics.boundingBox
     var format: CTFontFormat = .unrecognized
+    var tableBytes: [UInt32: Data] = [:]
+    var cmap: [UInt32: UInt16] = [:]
+    var advanceWidths: [CGFloat] = []
+    var glyphBounds: [CGRect] = []
+    var nameIDs: [Int: String] = [:]
+    var hasGSUB = false
+    var hasGPOS = false
 
     static func parse(data: Data) -> _SFNTMetrics {
         var metrics = _SFNTMetrics()
@@ -64,8 +71,14 @@ struct _SFNTMetrics {
             let tableOffset = Int(reader.u32(cursor + 8))
             let tableLength = Int(reader.u32(cursor + 12))
             tables[tableTag] = (tableOffset, tableLength)
+            if tableOffset >= 0, tableLength > 0, tableOffset + tableLength <= data.count {
+                metrics.tableBytes[tableTag] = data.subdata(in: tableOffset..<(tableOffset + tableLength))
+            }
             cursor += 16
         }
+        metrics.hasGSUB = tables[0x4753_5542] != nil
+        metrics.hasGPOS = tables[0x4750_4F53] != nil
+        var locaFormat: Int16 = 0
         if let head = tables[0x6865_6164], head.1 >= 54 { // head
             let o = head.0
             let upe = CGFloat(reader.u16(o + 18))
@@ -78,7 +91,9 @@ struct _SFNTMetrics {
                 origin: CGPoint(x: Double(xMin), y: Double(yMin)),
                 size: CGSize(width: Double(xMax - xMin), height: Double(yMax - yMin))
             )
+            locaFormat = reader.i16(o + 50)
         }
+        var numberOfHMetrics = 0
         if let hhea = tables[0x6868_6561], hhea.1 >= 8 { // hhea
             let o = hhea.0
             metrics.ascent = CGFloat(reader.i16(o + 4))
@@ -86,14 +101,17 @@ struct _SFNTMetrics {
             if hhea.1 >= 10 {
                 metrics.leading = CGFloat(reader.i16(o + 8))
             }
+            if hhea.1 >= 36 {
+                numberOfHMetrics = Int(reader.u16(o + 34))
+            }
         }
         if let maxp = tables[0x6D61_7870], maxp.1 >= 6 { // maxp
             metrics.glyphCount = Int(reader.u16(maxp.0 + 4))
         }
         if let os2 = tables[0x4F53_2F32], os2.1 >= 70 { // OS/2
             let o = os2.0
-            metrics.xHeight = CGFloat(reader.i16(o + 86))
             if os2.1 >= 88 {
+                metrics.xHeight = CGFloat(reader.i16(o + 86))
                 metrics.capHeight = CGFloat(reader.i16(o + 88))
             }
         }
@@ -103,10 +121,32 @@ struct _SFNTMetrics {
         }
         if let name = tables[0x6E61_6D65] {
             let names = reader.nameTable(at: name.0, length: name.1)
+            metrics.nameIDs = names
             if let family = names[1] { metrics.familyName = family }
             if let style = names[2] { metrics.styleName = style }
             if let full = names[4] { metrics.fullName = full }
             if let ps = names[6] { metrics.postScriptName = ps }
+        }
+        if let hmtx = tables[0x686D_7478] {
+            metrics.advanceWidths = reader.hmtx(
+                at: hmtx.0,
+                length: hmtx.1,
+                glyphCount: metrics.glyphCount,
+                numberOfHMetrics: numberOfHMetrics
+            )
+        }
+        if let cmap = tables[0x636D_6170] {
+            metrics.cmap = reader.cmap(at: cmap.0, length: cmap.1)
+        }
+        if let loca = tables[0x6C6F_6361], let glyf = tables[0x676C_7966] {
+            metrics.glyphBounds = reader.glyphBounds(
+                locaOffset: loca.0,
+                locaLength: loca.1,
+                glyfOffset: glyf.0,
+                glyfLength: glyf.1,
+                glyphCount: metrics.glyphCount,
+                longOffsets: locaFormat == 1
+            )
         }
         return metrics
     }
@@ -161,6 +201,164 @@ private struct _SFNTReader {
         }
         _ = length
         return result
+    }
+
+    func hmtx(at offset: Int, length: Int, glyphCount: Int, numberOfHMetrics: Int) -> [CGFloat] {
+        guard glyphCount > 0 else { return [] }
+        let metricsCount = numberOfHMetrics > 0 ? min(numberOfHMetrics, glyphCount) : glyphCount
+        var widths = Array(repeating: CGFloat(0), count: glyphCount)
+        var last: CGFloat = 0
+        for i in 0..<metricsCount {
+            let entry = offset + i * 4
+            guard entry + 2 <= data.count, entry + 2 <= offset + length else { break }
+            last = CGFloat(u16(entry))
+            widths[i] = last
+        }
+        if metricsCount < glyphCount {
+            for i in metricsCount..<glyphCount {
+                widths[i] = last
+            }
+        }
+        return widths
+    }
+
+    func cmap(at offset: Int, length: Int) -> [UInt32: UInt16] {
+        guard offset + 4 <= data.count else { return [:] }
+        let numTables = Int(u16(offset + 2))
+        var mapping: [UInt32: UInt16] = [:]
+        var records: [(UInt16, UInt16, Int)] = []
+        var cursor = offset + 4
+        for _ in 0..<numTables {
+            guard cursor + 8 <= data.count else { break }
+            records.append((u16(cursor), u16(cursor + 2), Int(u32(cursor + 4))))
+            cursor += 8
+        }
+        // Apply format 4 first, then format 12 so supplementary-plane groups win.
+        let ordered = records.sorted { left, right in
+            let lfmt = u16(offset + left.2)
+            let rfmt = u16(offset + right.2)
+            if lfmt == rfmt { return left.2 < right.2 }
+            return lfmt < rfmt
+        }
+        for record in ordered {
+            let sub = offset + record.2
+            guard sub + 2 <= data.count else { continue }
+            let format = u16(sub)
+            if format == 4 {
+                parseCmapFormat4(at: sub, into: &mapping)
+            } else if format == 12 {
+                parseCmapFormat12(at: sub, into: &mapping)
+            }
+        }
+        _ = length
+        return mapping
+    }
+
+    private func parseCmapFormat4(at sub: Int, into mapping: inout [UInt32: UInt16]) {
+        guard sub + 14 <= data.count else { return }
+        let length = Int(u16(sub + 2))
+        let segCount = Int(u16(sub + 6)) / 2
+        guard segCount > 0 else { return }
+        let endOff = sub + 14
+        let reserved = endOff + 2 * segCount
+        let startOff = reserved + 2
+        let deltaOff = startOff + 2 * segCount
+        let rangeOff = deltaOff + 2 * segCount
+        guard rangeOff + 2 * segCount <= sub + length, rangeOff + 2 * segCount <= data.count else { return }
+        for i in 0..<segCount {
+            let endCode = UInt32(u16(endOff + 2 * i))
+            let startCode = UInt32(u16(startOff + 2 * i))
+            let idDelta = i16(deltaOff + 2 * i)
+            let idRangeOffset = u16(rangeOff + 2 * i)
+            if startCode == 0xFFFF && endCode == 0xFFFF { continue }
+            if idRangeOffset == 0 {
+                var cp = startCode
+                while cp <= endCode {
+                    mapping[cp] = UInt16(truncatingIfNeeded: Int(cp) + Int(idDelta))
+                    if cp == endCode { break }
+                    cp += 1
+                }
+            } else {
+                var cp = startCode
+                while cp <= endCode {
+                    let glyphOff = Int(rangeOff + 2 * i)
+                        + Int(idRangeOffset)
+                        + Int(cp - startCode) * 2
+                    if glyphOff + 2 <= data.count {
+                        let glyph = u16(glyphOff)
+                        if glyph != 0 {
+                            mapping[cp] = UInt16(truncatingIfNeeded: Int(glyph) + Int(idDelta))
+                        }
+                    }
+                    if cp == endCode { break }
+                    cp += 1
+                }
+            }
+        }
+    }
+
+    private func parseCmapFormat12(at sub: Int, into mapping: inout [UInt32: UInt16]) {
+        guard sub + 16 <= data.count else { return }
+        let nGroups = Int(u32(sub + 12))
+        var cursor = sub + 16
+        for _ in 0..<nGroups {
+            guard cursor + 12 <= data.count else { break }
+            let start = u32(cursor)
+            let end = u32(cursor + 4)
+            let startGlyph = u32(cursor + 8)
+            var cp = start
+            var gid = startGlyph
+            while cp <= end {
+                mapping[cp] = UInt16(truncatingIfNeeded: gid)
+                if cp == end { break }
+                cp += 1
+                gid += 1
+            }
+            cursor += 12
+        }
+    }
+
+    func glyphBounds(
+        locaOffset: Int,
+        locaLength: Int,
+        glyfOffset: Int,
+        glyfLength: Int,
+        glyphCount: Int,
+        longOffsets: Bool
+    ) -> [CGRect] {
+        guard glyphCount > 0 else { return [] }
+        var offsets: [Int] = []
+        offsets.reserveCapacity(glyphCount + 1)
+        if longOffsets {
+            let need = (glyphCount + 1) * 4
+            guard locaLength >= need else { return [] }
+            for i in 0...glyphCount {
+                offsets.append(Int(u32(locaOffset + i * 4)))
+            }
+        } else {
+            let need = (glyphCount + 1) * 2
+            guard locaLength >= need else { return [] }
+            for i in 0...glyphCount {
+                offsets.append(Int(u16(locaOffset + i * 2)) * 2)
+            }
+        }
+        var boxes = Array(repeating: CGRect.zero, count: glyphCount)
+        for i in 0..<glyphCount {
+            let start = offsets[i]
+            let end = offsets[i + 1]
+            let span = end - start
+            guard span >= 10, start >= 0, start + 10 <= glyfLength else { continue }
+            let o = glyfOffset + start
+            let xMin = CGFloat(i16(o + 2))
+            let yMin = CGFloat(i16(o + 4))
+            let xMax = CGFloat(i16(o + 6))
+            let yMax = CGFloat(i16(o + 8))
+            boxes[i] = CGRect(
+                origin: CGPoint(x: Double(xMin), y: Double(yMin)),
+                size: CGSize(width: Double(xMax - xMin), height: Double(yMax - yMin))
+            )
+        }
+        return boxes
     }
 }
 
@@ -411,7 +609,7 @@ private func _CTFontResolve(name: String, size: CGFloat) -> _ResolvedFont {
     if _SFUITable.isSystemName(name) {
         return _CTFontResolveSFUI(size: requested, bold: _SFUITable.isBoldName(name))
     }
-    for data in _portableCopyRegisteredData() {
+    for (url, data) in _portableCopyRegisteredRecords() {
         let metrics = _SFNTMetrics.parse(data: data)
         if metrics.postScriptName == name
             || metrics.familyName == name
@@ -421,7 +619,10 @@ private func _CTFontResolve(name: String, size: CGFloat) -> _ResolvedFont {
                 attributes: [
                     _ctString(kCTFontNameAttribute): metrics.postScriptName,
                     _ctString(kCTFontFamilyNameAttribute): metrics.familyName,
+                    _ctString(kCTFontDisplayNameAttribute): metrics.fullName,
+                    _ctString(kCTFontStyleNameAttribute): metrics.styleName,
                     _ctString(kCTFontSizeAttribute): requested,
+                    _ctString(kCTFontURLAttribute): url,
                 ]
             )
             return _ResolvedFont(
@@ -597,16 +798,40 @@ public func CTFontDescriptorCreateMatchingFontDescriptor(
     _ descriptor: CTFontDescriptor,
     _ mandatoryAttributes: CFSet?
 ) -> CTFontDescriptor? {
-    _ = mandatoryAttributes
-    return descriptor
+    _ctMatchFontDescriptors(descriptor, mandatoryAttributes).first
 }
 
 public func CTFontDescriptorCreateMatchingFontDescriptors(
     _ descriptor: CTFontDescriptor,
     _ mandatoryAttributes: CFSet?
 ) -> CFArray? {
+    let matches = _ctMatchFontDescriptors(descriptor, mandatoryAttributes)
+    return _ctCFArray(matches as NSArray)
+}
+
+private func _ctMatchFontDescriptors(
+    _ descriptor: CTFontDescriptor,
+    _ mandatoryAttributes: CFSet?
+) -> [CTFontDescriptor] {
     _ = mandatoryAttributes
-    return _ctCFArray([descriptor] as NSArray)
+    let name = descriptor.attributes[_ctString(kCTFontNameAttribute)] as? String
+    let family = descriptor.attributes[_ctString(kCTFontFamilyNameAttribute)] as? String
+    var matches: [CTFontDescriptor] = []
+    for candidate in _portableRegisteredDescriptors() {
+        let candidateName = candidate.attributes[_ctString(kCTFontNameAttribute)] as? String
+        let candidateFamily = candidate.attributes[_ctString(kCTFontFamilyNameAttribute)] as? String
+        if let name, candidateName == name || candidateFamily == name {
+            matches.append(candidate)
+            continue
+        }
+        if let family, candidateFamily == family || candidateName == family {
+            matches.append(candidate)
+        }
+    }
+    if matches.isEmpty {
+        return [descriptor]
+    }
+    return matches
 }
 
 public func CTFontDescriptorGetTypeID() -> CFTypeID { 0x4354_4445 }
@@ -673,10 +898,36 @@ public func CTFontCopyDisplayName(_ font: CTFont) -> CFString {
 public func CTFontCopyName(_ font: CTFont, _ nameKey: CFString) -> CFString? {
     switch _ctString(nameKey) {
     case _ctString(kCTFontFamilyNameKey): return _ctCFString(font.metrics.familyName)
-    case _ctString(kCTFontStyleNameKey): return _ctCFString(font.metrics.styleName)
+    case _ctString(kCTFontStyleNameKey), _ctString(kCTFontSubFamilyNameKey):
+        return _ctCFString(font.metrics.styleName)
     case _ctString(kCTFontFullNameKey): return _ctCFString(font.metrics.fullName)
     case _ctString(kCTFontPostScriptNameKey): return _ctCFString(font.metrics.postScriptName)
-    default: return nil
+    default:
+        if let value = font.metrics.nameIDs[_ctNameID(for: nameKey)] {
+            return _ctCFString(value)
+        }
+        return nil
+    }
+}
+
+private func _ctNameID(for key: CFString) -> Int {
+    switch _ctString(key) {
+    case _ctString(kCTFontCopyrightNameKey): return 0
+    case _ctString(kCTFontFamilyNameKey): return 1
+    case _ctString(kCTFontSubFamilyNameKey), _ctString(kCTFontStyleNameKey): return 2
+    case _ctString(kCTFontUniqueNameKey): return 3
+    case _ctString(kCTFontFullNameKey): return 4
+    case _ctString(kCTFontVersionNameKey): return 5
+    case _ctString(kCTFontPostScriptNameKey): return 6
+    case _ctString(kCTFontTrademarkNameKey): return 7
+    case _ctString(kCTFontManufacturerNameKey): return 8
+    case _ctString(kCTFontDesignerNameKey): return 9
+    case _ctString(kCTFontDescriptionNameKey): return 10
+    case _ctString(kCTFontVendorURLNameKey): return 11
+    case _ctString(kCTFontDesignerURLNameKey): return 12
+    case _ctString(kCTFontLicenseNameKey): return 13
+    case _ctString(kCTFontLicenseURLNameKey): return 14
+    default: return -1
     }
 }
 public func CTFontCopyLocalizedName(
@@ -689,7 +940,24 @@ public func CTFontCopyLocalizedName(
 }
 public func CTFontCopyFontDescriptor(_ font: CTFont) -> CTFontDescriptor { font.descriptor }
 public func CTFontCopyAttribute(_ font: CTFont, _ attribute: CFString) -> CFTypeRef? {
-    CTFontDescriptorCopyAttribute(font.descriptor, attribute)
+    if _ctString(attribute) == _ctString(kCTFontSizeAttribute) {
+        return NSNumber(value: Double(font.size))
+    }
+    if let value = CTFontDescriptorCopyAttribute(font.descriptor, attribute) {
+        return value
+    }
+    switch _ctString(attribute) {
+    case _ctString(kCTFontNameAttribute):
+        return _ctCFString(font.metrics.postScriptName)
+    case _ctString(kCTFontFamilyNameAttribute):
+        return _ctCFString(font.metrics.familyName)
+    case _ctString(kCTFontDisplayNameAttribute):
+        return _ctCFString(font.metrics.fullName)
+    case _ctString(kCTFontStyleNameAttribute):
+        return _ctCFString(font.metrics.styleName)
+    default:
+        return nil
+    }
 }
 public func CTFontCopyTraits(_ font: CTFont) -> CFDictionary {
     // Bold weight 0.4 MEASURED 2026-09-05 Darwin CTFontCopyTraits on
@@ -724,25 +992,37 @@ public func CTFontCopySupportedLanguages(_ font: CTFont) -> CFArray {
     return _ctEmptyCFArray()
 }
 public func CTFontCopyCharacterSet(_ font: CTFont) -> CFCharacterSet {
-    _ = font
+    if !font.metrics.cmap.isEmpty {
+        var scalars: [Unicode.Scalar] = []
+        for code in font.metrics.cmap.keys.sorted() {
+            if let scalar = Unicode.Scalar(code) {
+                scalars.append(scalar)
+            }
+        }
+        return _ctCFCharacterSet(NSCharacterSet(charactersIn: String(String.UnicodeScalarView(scalars))))
+    }
     return _ctCFCharacterSet(NSCharacterSet(charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789") )
 }
 public func CTFontCopyAvailableTables(_ font: CTFont, _ options: CTFontTableOptions) -> CFArray? {
-    _ = (font, options)
-    return nil
+    _ = options
+    let tags = font.metrics.tableBytes.keys.sorted().map { NSNumber(value: $0) }
+    if tags.isEmpty { return nil }
+    return _ctCFArray(tags as NSArray)
 }
 public func CTFontCopyTable(
     _ font: CTFont,
     _ table: CTFontTableTag,
     _ options: CTFontTableOptions
 ) -> CFData? {
-    _ = (font, table, options)
-    return nil
+    _ = options
+    guard let bytes = font.metrics.tableBytes[table] else { return nil }
+    return _ctCFData(bytes)
 }
 public func CTFontHasTable(_ font: CTFont, _ tag: CTFontTableTag) -> Bool {
-    _ = (font, tag)
-    return false
+    font.metrics.tableBytes[tableTagValue(tag)] != nil
 }
+
+private func tableTagValue(_ tag: CTFontTableTag) -> UInt32 { tag }
 public func CTFontCopyDefaultCascadeListForLanguages(
     _ font: CTFont,
     _ languagePrefList: CFArray?
@@ -874,11 +1154,48 @@ public func CTFontCollectionCopyFontAttributes(
     return _ctCFArray(values as NSArray)
 }
 
+func _ctGlyphForCharacter(_ font: CTFont, _ scalar: UInt32) -> CGGlyph {
+    if font.sfui != nil {
+        return CGGlyph(truncatingIfNeeded: scalar)
+    }
+    if !font.metrics.cmap.isEmpty {
+        return CGGlyph(font.metrics.cmap[scalar] ?? 0)
+    }
+    return CGGlyph(truncatingIfNeeded: scalar)
+}
+
+func _ctAdvance(for font: CTFont, glyph: CGGlyph) -> CGFloat {
+    if font.sfui != nil {
+        return _SFUITable.advance(font.sfui!, scalar: UInt32(glyph))
+    }
+    let index = Int(glyph)
+    if index >= 0, index < font.metrics.advanceWidths.count {
+        return _scale(font, font.metrics.advanceWidths[index])
+    }
+    return max(font.size * 0.5, 1)
+}
+
+func _ctGlyphBounds(for font: CTFont, glyph: CGGlyph) -> CGRect {
+    let index = Int(glyph)
+    if index >= 0, index < font.metrics.glyphBounds.count {
+        let box = font.metrics.glyphBounds[index]
+        let s = font.metrics.unitsPerEm > 0 ? font.size / font.metrics.unitsPerEm : 0
+        return CGRect(
+            x: box.origin.x * s,
+            y: box.origin.y * s,
+            width: box.size.width * s,
+            height: box.size.height * s
+        )
+    }
+    let width = _ctAdvance(for: font, glyph: glyph)
+    return CGRect(x: 0, y: -CTFontGetDescent(font), width: width, height: CTFontGetAscent(font) + CTFontGetDescent(font))
+}
+
 func _ctCharAdvance(_ font: CTFont, scalar: UInt32) -> CGFloat {
     if let face = font.sfui {
         return _SFUITable.advance(face, scalar: scalar)
     }
-    return max(font.size * 0.5, 1)
+    return _ctAdvance(for: font, glyph: _ctGlyphForCharacter(font, scalar))
 }
 
 func _ctGlyphForCharacter(_ scalar: UniChar) -> CGGlyph {
@@ -1002,7 +1319,6 @@ public func CTFontGetGlyphsForCharacters(
     _ glyphs: UnsafeMutablePointer<CGGlyph>,
     _ count: CFIndex
 ) -> Bool {
-    _ = font
     guard count > 0 else { return true }
     var missing = false
     for i in 0..<count {
@@ -1010,8 +1326,12 @@ public func CTFontGetGlyphsForCharacters(
         if ch == 0 {
             glyphs[i] = 0
             missing = true
-        } else {
-            glyphs[i] = _ctGlyphForCharacter(ch)
+            continue
+        }
+        let mapped = _ctGlyphForCharacter(font, UInt32(ch))
+        glyphs[i] = mapped
+        if mapped == 0, font.data != nil, font.metrics.cmap[UInt32(ch)] == nil {
+            missing = true
         }
     }
     return !missing
@@ -1027,8 +1347,7 @@ public func CTFontGetAdvancesForGlyphs(
     _ = orientation
     var total: Double = 0
     for i in 0..<count {
-        let glyph = glyphs[i]
-        let width = _ctCharAdvance(font, scalar: UInt32(glyph))
+        let width = _ctAdvance(for: font, glyph: glyphs[i])
         total += Double(width)
         advances?[i] = CGSize(width: width, height: 0)
     }
@@ -1045,11 +1364,8 @@ public func CTFontGetBoundingRectsForGlyphs(
     _ = orientation
     var unionRect = CGRect.zero
     var haveUnion = false
-    let ascent = CTFontGetAscent(font)
-    let descent = CTFontGetDescent(font)
     for i in 0..<count {
-        let width = _ctCharAdvance(font, scalar: UInt32(glyphs[i]))
-        let box = CGRect(x: 0, y: -descent, width: width, height: ascent + descent)
+        let box = _ctGlyphBounds(for: font, glyph: glyphs[i])
         boundingRects?[i] = box
         if !haveUnion {
             unionRect = box
@@ -1090,11 +1406,7 @@ public func CTFontGetLigatureCaretPositions(
     _ positions: UnsafeMutablePointer<CGFloat>?,
     _ maxPositions: CFIndex
 ) -> CFIndex {
-    _ = glyph
-    if maxPositions > 0 {
-        positions?[0] = _ctCharAdvance(font, scalar: UInt32(glyph)) * 0.5
-        return 1
-    }
+    _ = (font, glyph, positions, maxPositions)
     return 0
 }
 
@@ -1121,13 +1433,7 @@ public func CTFontCreatePathForGlyph(
     _ glyph: CGGlyph,
     _ matrix: UnsafePointer<CGAffineTransform>?
 ) -> CGPath? {
-    let width = _ctCharAdvance(font, scalar: UInt32(glyph))
-    let box = CGRect(
-        x: 0,
-        y: -CTFontGetDescent(font),
-        width: width,
-        height: CTFontGetAscent(font) + CTFontGetDescent(font)
-    )
+    let box = _ctGlyphBounds(for: font, glyph: glyph)
     return CGPath(rect: box, transform: matrix)
 }
 

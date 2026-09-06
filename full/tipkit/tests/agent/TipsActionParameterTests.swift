@@ -20,7 +20,7 @@ func testActionStringProtocolInit() {
 }
 
 func testParameterAndRuleSPI() {
-    var parameter = Tips.Parameter(wrappedValue: true, id: "seen-onboarding", options: .transient)
+    let parameter = Tips.Parameter(wrappedValue: true, id: "seen-onboarding", options: .transient)
     precondition(parameter.id == "seen-onboarding")
     precondition(parameter.wrappedValue == true)
     parameter.wrappedValue = false

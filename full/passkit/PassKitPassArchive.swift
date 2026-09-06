@@ -4,9 +4,11 @@ import Foundation
 ///
 /// A pkpass is a ZIP (APPNOTE.TXT) whose payload is Apple's documented Wallet
 /// pass dictionary. This host unpacks compression method 0 (stored) and
-/// reads those keys; it does not inflate method 8 and does not verify the
-/// CMS signature. Unsigned stored archives are accepted as structure, not as
-/// trusted passes.
+/// reads those keys; it does not inflate method 8. When `manifest.json` is
+/// present, each listed file's SHA-1 must match. When a PKCS#7 `signature`
+/// is present, verification is fail-closed (`invalidSignature`): Linux has
+/// no WWDR chain checker. Unsigned stored archives remain accepted as
+/// structure, not as trusted passes.
 ///
 /// Fixture used by `testPassJSONArchive`: stored ZIP containing only
 /// `pass.json` with formatVersion 1, passTypeIdentifier, serialNumber,
@@ -33,6 +35,8 @@ enum PassKitPassArchive {
 
     static func parse(_ data: Data) throws -> Manifest {
         let files = try storedFiles(from: data)
+        try rejectPKCS7SignatureIfPresent(in: files)
+        try verifyManifestSHA1sIfPresent(in: files)
         guard let jsonData = passJSON(in: files) else {
             throw PKPassKitError(.invalidDataError)
         }
@@ -40,12 +44,52 @@ enum PassKitPassArchive {
     }
 
     static func passJSON(in files: [String: Data]) -> Data? {
+        fileNamed("pass.json", in: files)
+    }
+
+    static func fileNamed(_ expected: String, in files: [String: Data]) -> Data? {
         for (name, payload) in files {
-            if lastPathComponent(name) == "pass.json" {
+            if lastPathComponent(name) == expected {
                 return payload
             }
         }
         return nil
+    }
+
+    /// PKCS#7/CMS is a BER SEQUENCE (`0x30`). Presence is fail-closed: this
+    /// host never claims a WWDR-validated signature.
+    static func rejectPKCS7SignatureIfPresent(in files: [String: Data]) throws {
+        guard let signature = fileNamed("signature", in: files) else { return }
+        _ = signature.first == 0x30
+        throw PKPassKitError(.invalidSignature)
+    }
+
+    static func verifyManifestSHA1sIfPresent(in files: [String: Data]) throws {
+        guard let manifestData = fileNamed("manifest.json", in: files) else { return }
+        let object: Any
+        do {
+            object = try JSONSerialization.jsonObject(with: manifestData, options: [])
+        } catch {
+            throw PKPassKitError(.invalidDataError)
+        }
+        guard let map = object as? [String: Any] else {
+            throw PKPassKitError(.invalidDataError)
+        }
+        for (name, value) in map {
+            guard let expected = stringValue(value)?.lowercased(), !expected.isEmpty else {
+                throw PKPassKitError(.invalidDataError)
+            }
+            guard let payload = fileNamed(name, in: files) else {
+                throw PKPassKitError(.invalidDataError)
+            }
+            if sha1Hex(payload) != expected {
+                throw PKPassKitError(.invalidDataError)
+            }
+        }
+    }
+
+    static func sha1Hex(_ data: Data) -> String {
+        PassKitSHA1.hexDigest(data)
     }
 
     static func lastPathComponent(_ name: String) -> String {
@@ -329,5 +373,94 @@ enum PassKitPassArchive {
         let b2 = UInt32(data[offset + 2]) << 16
         let b3 = UInt32(data[offset + 3]) << 24
         return b0 | b1 | b2 | b3
+    }
+}
+
+/// RFC 3174 SHA-1 for `manifest.json` file hashes. Not a CMS verifier.
+enum PassKitSHA1 {
+    static func hexDigest(_ data: Data) -> String {
+        digest(data).map { String(format: "%02x", $0) }.joined()
+    }
+
+    static func digest(_ data: Data) -> [UInt8] {
+        var h0: UInt32 = 0x6745_2301
+        var h1: UInt32 = 0xEFCD_AB89
+        var h2: UInt32 = 0x98BA_DCFE
+        var h3: UInt32 = 0x1032_5476
+        var h4: UInt32 = 0xC3D2_E1F0
+
+        var message = [UInt8](data)
+        let bitCount = UInt64(message.count) * 8
+        message.append(0x80)
+        while (message.count % 64) != 56 {
+            message.append(0)
+        }
+        for i in (0..<8).reversed() {
+            message.append(UInt8((bitCount >> (UInt64(i) * 8)) & 0xFF))
+        }
+
+        var chunkStart = 0
+        while chunkStart < message.count {
+            var w = [UInt32](repeating: 0, count: 80)
+            for i in 0..<16 {
+                let o = chunkStart + i * 4
+                w[i] = (UInt32(message[o]) << 24)
+                    | (UInt32(message[o + 1]) << 16)
+                    | (UInt32(message[o + 2]) << 8)
+                    | UInt32(message[o + 3])
+            }
+            for i in 16..<80 {
+                w[i] = rotateLeft(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1)
+            }
+            var a = h0
+            var b = h1
+            var c = h2
+            var d = h3
+            var e = h4
+            for i in 0..<80 {
+                let f: UInt32
+                let k: UInt32
+                switch i {
+                case 0..<20:
+                    f = (b & c) | ((~b) & d)
+                    k = 0x5A82_7999
+                case 20..<40:
+                    f = b ^ c ^ d
+                    k = 0x6ED9_EBA1
+                case 40..<60:
+                    f = (b & c) | (b & d) | (c & d)
+                    k = 0x8F1B_BCDC
+                default:
+                    f = b ^ c ^ d
+                    k = 0xCA62_C1D6
+                }
+                let temp = rotateLeft(a, 5) &+ f &+ e &+ k &+ w[i]
+                e = d
+                d = c
+                c = rotateLeft(b, 30)
+                b = a
+                a = temp
+            }
+            h0 = h0 &+ a
+            h1 = h1 &+ b
+            h2 = h2 &+ c
+            h3 = h3 &+ d
+            h4 = h4 &+ e
+            chunkStart += 64
+        }
+
+        func bytes(_ value: UInt32) -> [UInt8] {
+            [
+                UInt8((value >> 24) & 0xFF),
+                UInt8((value >> 16) & 0xFF),
+                UInt8((value >> 8) & 0xFF),
+                UInt8(value & 0xFF),
+            ]
+        }
+        return bytes(h0) + bytes(h1) + bytes(h2) + bytes(h3) + bytes(h4)
+    }
+
+    static func rotateLeft(_ value: UInt32, _ bits: UInt32) -> UInt32 {
+        (value << bits) | (value >> (32 - bits))
     }
 }

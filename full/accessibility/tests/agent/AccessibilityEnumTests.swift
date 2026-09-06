@@ -1,0 +1,153 @@
+import Foundation
+import Accessibility
+
+func testContentDirectionRawValues() {
+    precondition(AXChartDescriptor.ContentDirection.leftToRight.rawValue == 0)
+    precondition(AXChartDescriptor.ContentDirection.rightToLeft.rawValue == 1)
+    precondition(AXChartDescriptor.ContentDirection.topToBottom.rawValue == 2)
+    precondition(AXChartDescriptor.ContentDirection.bottomToTop.rawValue == 3)
+    precondition(AXChartDescriptor.ContentDirection.radialClockwise.rawValue == 4)
+    precondition(AXChartDescriptor.ContentDirection.radialCounterClockwise.rawValue == 5)
+    precondition(AXChartDescriptor.ContentDirection(rawValue: 0) == .leftToRight)
+    precondition(AXChartDescriptor.ContentDirection(rawValue: 99) == nil)
+    precondition(AXChartDescriptor.ContentDirection.leftToRight != .rightToLeft)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    AXChartDescriptor.ContentDirection.leftToRight.hash(into: &hasherA)
+    AXChartDescriptor.ContentDirection.leftToRight.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(AXChartDescriptor.ContentDirection.leftToRight.hashValue == AXChartDescriptor.ContentDirection.leftToRight.hashValue)
+}
+
+func testCustomContentImportanceRawValues() {
+    precondition(AXCustomContent.Importance.default.rawValue == 0)
+    precondition(AXCustomContent.Importance.high.rawValue == 1)
+    precondition(AXCustomContent.Importance(rawValue: 0) == .default)
+    precondition(AXCustomContent.Importance(rawValue: 1) == .high)
+    precondition(AXCustomContent.Importance(rawValue: 9) == nil)
+    precondition(AXCustomContent.Importance.default != .high)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    AXCustomContent.Importance.high.hash(into: &hasherA)
+    AXCustomContent.Importance.high.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(AXCustomContent.Importance.high.hashValue == AXCustomContent.Importance.high.hashValue)
+}
+
+func testNumericScaleTypeRawValues() {
+    precondition(AXNumericDataAxisDescriptor.ScaleType.linear.rawValue == 0)
+    precondition(AXNumericDataAxisDescriptor.ScaleType.log10.rawValue == 1)
+    precondition(AXNumericDataAxisDescriptor.ScaleType.ln.rawValue == 2)
+    precondition(AXNumericDataAxisDescriptor.ScaleType(rawValue: 1) == .log10)
+    precondition(AXNumericDataAxisDescriptor.ScaleType(rawValue: -1) == nil)
+    precondition(AXNumericDataAxisDescriptor.ScaleType.linear != .ln)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    AXNumericDataAxisDescriptor.ScaleType.log10.hash(into: &hasherA)
+    AXNumericDataAxisDescriptor.ScaleType.log10.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(AXNumericDataAxisDescriptor.ScaleType.ln.hashValue == AXNumericDataAxisDescriptor.ScaleType.ln.hashValue)
+}
+
+func testSettingsFeatureRawValues() {
+    precondition(AccessibilitySettings.Feature.personalVoiceAllowAppsToRequestToUse.rawValue == 1)
+    precondition(AccessibilitySettings.Feature.allowAppsToAddAudioToCalls.rawValue == 2)
+    precondition(AccessibilitySettings.Feature.assistiveTouch.rawValue == 3)
+    precondition(AccessibilitySettings.Feature.assistiveTouchDevices.rawValue == 4)
+    precondition(AccessibilitySettings.Feature.dwellControl.rawValue == 5)
+    precondition(AccessibilitySettings.Feature(rawValue: 1) == .personalVoiceAllowAppsToRequestToUse)
+    precondition(AccessibilitySettings.Feature(rawValue: 0) == nil)
+    precondition(AccessibilitySettings.Feature.assistiveTouch != .dwellControl)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    AccessibilitySettings.Feature.dwellControl.hash(into: &hasherA)
+    AccessibilitySettings.Feature.dwellControl.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(AccessibilitySettings.Feature.assistiveTouch.hashValue == AccessibilitySettings.Feature.assistiveTouch.hashValue)
+}
+
+func testHeadingLevelRawValues() {
+    typealias Level = AttributeScopes.AccessibilityAttributes.HeadingLevelAttribute.HeadingLevel
+    precondition(Level.unspecified.rawValue == 0)
+    precondition(Level.h1.rawValue == 1)
+    precondition(Level.h2.rawValue == 2)
+    precondition(Level.h3.rawValue == 3)
+    precondition(Level.h4.rawValue == 4)
+    precondition(Level.h5.rawValue == 5)
+    precondition(Level.h6.rawValue == 6)
+    precondition(Level(rawValue: 3) == .h3)
+    precondition(Level(rawValue: 99) == nil)
+    precondition(Level.h1 != .h2)
+    let encoded = try! JSONEncoder().encode(Level.h4)
+    let decoded = try! JSONDecoder().decode(Level.self, from: encoded)
+    precondition(decoded == .h4)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    Level.h6.hash(into: &hasherA)
+    Level.h6.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(Level.h5.hashValue == Level.h5.hashValue)
+}
+
+func testTextualContextRawValues() {
+    typealias Context = AttributeScopes.AccessibilityAttributes.TextualContextAttribute.TextualContext
+    precondition(Context.fileSystem.rawValue == "fileSystem")
+    precondition(Context.sourceCode.rawValue == "sourceCode")
+    precondition(Context.spreadsheet.rawValue == "spreadsheet")
+    precondition(Context.wordProcessing.rawValue == "wordProcessing")
+    precondition(Context.plain.rawValue == "plain")
+    precondition(Context.console.rawValue == "console")
+    precondition(Context.messaging.rawValue == "messaging")
+    precondition(Context.narrative.rawValue == "narrative")
+    precondition(Context(rawValue: "sourceCode") == .sourceCode)
+    precondition(Context(rawValue: "nope") == nil)
+    precondition(Context.plain != .console)
+    let encoded = try! JSONEncoder().encode(Context.messaging)
+    let decoded = try! JSONDecoder().decode(Context.self, from: encoded)
+    precondition(decoded == .messaging)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    Context.narrative.hash(into: &hasherA)
+    Context.narrative.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(Context.console.hashValue == Context.console.hashValue)
+}
+
+func testAnnouncementPriorityRawValues() {
+    typealias Priority = AttributeScopes.AccessibilityAttributes.AnnouncementPriorityAttribute.AnnouncementPriority
+    precondition(Priority.low.rawValue == "low")
+    precondition(Priority.high.rawValue == "high")
+    precondition(Priority.default.rawValue == "default")
+    precondition(Priority(rawValue: "high") == .high)
+    precondition(Priority(rawValue: "nope") == nil)
+    precondition(Priority.low != .high)
+    let encoded = try! JSONEncoder().encode(Priority.default)
+    let decoded = try! JSONDecoder().decode(Priority.self, from: encoded)
+    precondition(decoded == .default)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    Priority.high.hash(into: &hasherA)
+    Priority.high.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(Priority.low.hashValue == Priority.low.hashValue)
+}
+
+func testTechnologyRawValues() {
+    precondition(AccessibilityTechnology.voiceOver.rawValue == "AXTechnologyVoiceOver")
+    precondition(AccessibilityTechnology.switchControl.rawValue == "AXTechnologySwitchControl")
+    precondition(AccessibilityTechnology.voiceControl.rawValue == "AXTechnologyVoiceControl")
+    precondition(AccessibilityTechnology.fullKeyboardAccess.rawValue == "AXTechnologyFullKeyboardAccess")
+    precondition(AccessibilityTechnology.speakScreen.rawValue == "AXTechnologySpeakScreen")
+    precondition(AccessibilityTechnology.automation.rawValue == "AXTechnologyAutomation")
+    precondition(AccessibilityTechnology.hoverText.rawValue == "AXTechnologyHoverText")
+    precondition(AccessibilityTechnology.zoom.rawValue == "AXTechnologyZoom")
+    let custom = AccessibilityTechnology(rawValue: "custom.tech")
+    precondition(custom.rawValue == "custom.tech")
+    precondition(AccessibilityTechnology.voiceOver != .zoom)
+    var hasherA = Hasher()
+    var hasherB = Hasher()
+    AccessibilityTechnology.voiceOver.hash(into: &hasherA)
+    AccessibilityTechnology.voiceOver.hash(into: &hasherB)
+    precondition(hasherA.finalize() == hasherB.finalize())
+    precondition(AccessibilityTechnology.zoom.hashValue == AccessibilityTechnology.zoom.hashValue)
+}

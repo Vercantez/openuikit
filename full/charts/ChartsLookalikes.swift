@@ -157,17 +157,25 @@ public struct ZStack<Content: View>: View {
 }
 
 public struct ForEach<Data: RandomAccessCollection, ID: Hashable, Content: View>: View {
+    let records: [ChartPlotRecord]
+
     public init(
         _ data: Data,
         id: KeyPath<Data.Element, ID>,
         @ViewBuilder content: (Data.Element) -> Content
     ) {
-        _ = data
         _ = id
-        _ = content
+        records = data.flatMap { element -> [ChartPlotRecord] in
+            let view = content(element)
+            return (view as? any ChartContent)?.chartPlotRecords ?? []
+        }
     }
 
     public var body: some View { EmptyView() }
+}
+
+extension ForEach: ChartContent where Content: ChartContent {
+    public var chartPlotRecords: [ChartPlotRecord] { records }
 }
 
 public struct Rectangle: View {
@@ -429,6 +437,13 @@ public struct RoundedCornerStyle: Hashable, Sendable {
 public enum Axis: Hashable, Sendable {
     case horizontal
     case vertical
+
+    public struct Set: OptionSet, Hashable, Sendable {
+        public let rawValue: Int
+        public init(rawValue: Int) { self.rawValue = rawValue }
+        public static let horizontal = Set(rawValue: 1 << 0)
+        public static let vertical = Set(rawValue: 1 << 1)
+    }
 }
 
 public struct UnitPoint: Hashable, Sendable {

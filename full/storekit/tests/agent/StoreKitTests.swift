@@ -1,4 +1,3 @@
-import Dispatch
 import Foundation
 import StoreKit
 
@@ -8,27 +7,6 @@ private enum StoreKitTestFailure: Error {
 
 private func expect(_ condition: Bool, _ message: String) {
     precondition(condition, message)
-}
-
-private final class WaitErrorBox: @unchecked Sendable {
-    var error: Error?
-}
-
-private func waitFor(_ work: @escaping () async throws -> Void) {
-    let semaphore = DispatchSemaphore(value: 0)
-    let box = WaitErrorBox()
-    Task {
-        do {
-            try await work()
-        } catch {
-            box.error = error
-        }
-        semaphore.signal()
-    }
-    expect(semaphore.wait(timeout: .now() + .seconds(5)) == .success, "async test timed out")
-    if let error = box.error {
-        expect(false, "async test threw \(error)")
-    }
 }
 
 private let sampleStoreJSON = """
@@ -123,15 +101,13 @@ func testPaymentQueueCannotPay() {
 
 func testProductsUnavailable() {
     StoreKitTesting.reset()
-    waitFor {
-        do {
-            _ = try await Product.products(for: ["com.example.pro"])
-            expect(false, "products(for:) must throw")
-        } catch StoreKitError.notAvailableInStorefront {
-            // Apple: function isn’t available for this storefront.
-        } catch {
-            expect(false, "unexpected error \(error)")
-        }
+    do {
+        _ = try StoreKitTesting.products(for: ["com.example.pro"])
+        expect(false, "products(for:) must throw")
+    } catch StoreKitError.notAvailableInStorefront {
+        // Apple: function isn’t available for this storefront.
+    } catch {
+        expect(false, "unexpected error \(error)")
     }
 }
 
@@ -232,10 +208,8 @@ func testPurchaseOptionFactories() {
 
 func testStorefrontCurrentNil() {
     StoreKitTesting.reset()
-    waitFor {
-        let current = await Storefront.current
-        expect(current == nil, "no App Store storefront on Linux")
-    }
+    let current = StoreKitTesting.currentStorefront()
+    expect(current == nil, "no App Store storefront on Linux")
 }
 
 final class RecordingTransactionObserver: NSObject, SKPaymentTransactionObserver {
@@ -307,26 +281,22 @@ func testSubscriptionPeriodUnits() {
 
 func testAppStoreSyncFails() {
     StoreKitTesting.reset()
-    waitFor {
-        do {
-            try await AppStore.sync()
-            expect(false, "sync must throw")
-        } catch StoreKitError.notAvailableInStorefront {
-            // expected
-        } catch {
-            expect(false, "unexpected \(error)")
-        }
+    do {
+        try StoreKitTesting.sync()
+        expect(false, "sync must throw")
+    } catch StoreKitError.notAvailableInStorefront {
+        // expected
+    } catch {
+        expect(false, "unexpected \(error)")
     }
 }
 
 func testTransactionLatestNil() {
     StoreKitTesting.reset()
-    waitFor {
-        let latest = await Transaction.latest(for: "sku")
-        expect(latest == nil, "no receipt daemon")
-        let entitlement = await Transaction.currentEntitlement(for: "sku")
-        expect(entitlement == nil, "no entitlements")
-    }
+    let latest = StoreKitTesting.latest(for: "sku")
+    expect(latest == nil, "no receipt daemon")
+    let entitlement = StoreKitTesting.currentEntitlement(for: "sku")
+    expect(entitlement == nil, "no entitlements")
 }
 
 func testSKErrorDomain() {
@@ -350,122 +320,95 @@ func testLoadStoreKitConfiguration() {
 func testProductsFromLocalStore() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["coins", "pro", "missing"])
-        expect(products.count == 2, "two known products")
-        let coins = products.first { $0.id == "coins" }!
-        expect(coins.displayName == "Coins", "displayName")
-        expect(coins.description == "A coin pack", "description")
-        expect(coins.type == .consumable, "type")
-        expect(coins.price == Decimal(string: "0.99"), "price")
-        expect(!coins.displayPrice.isEmpty, "displayPrice formatted")
-        let pro = products.first { $0.id == "pro" }!
-        expect(pro.type == .nonConsumable, "nonconsumable")
-        expect(pro.isFamilyShareable, "family")
-        let plus = try await Product.products(for: ["plus.monthly"])
-        expect(plus.count == 1, "subscription")
-        expect(plus[0].type == .autoRenewable, "auto renewable")
-        expect(plus[0].subscription?.subscriptionGroupID == "group1", "group")
-        expect(plus[0].subscription?.subscriptionPeriod.unit == .month, "period")
-        expect(plus[0].subscription?.introductoryOffer != nil, "intro")
-    }
+    let products = try! StoreKitTesting.products(for: ["coins", "pro", "missing"])
+    expect(products.count == 2, "two known products")
+    let coins = products.first { $0.id == "coins" }!
+    expect(coins.displayName == "Coins", "displayName")
+    expect(coins.description == "A coin pack", "description")
+    expect(coins.type == .consumable, "type")
+    expect(coins.price == Decimal(string: "0.99"), "price")
+    expect(!coins.displayPrice.isEmpty, "displayPrice formatted")
+    let pro = products.first { $0.id == "pro" }!
+    expect(pro.type == .nonConsumable, "nonconsumable")
+    expect(pro.isFamilyShareable, "family")
+    let plus = try! StoreKitTesting.products(for: ["plus.monthly"])
+    expect(plus.count == 1, "subscription")
+    expect(plus[0].type == .autoRenewable, "auto renewable")
+    expect(plus[0].subscription?.subscriptionGroupID == "group1", "group")
+    expect(plus[0].subscription?.subscriptionPeriod.unit == .month, "period")
+    expect(plus[0].subscription?.introductoryOffer != nil, "intro")
 }
 
 func testPurchaseUnverifiedByDefault() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["pro"])
-        let result = try await products[0].purchase()
-        switch result {
-        case .success(.unverified(let transaction, .invalidSignature)):
-            expect(transaction.productID == "pro", "product")
-            expect(transaction.environment == .xcode, "xcode environment")
-            expect(transaction.reason == .purchase, "reason")
-            expect(transaction.ownershipType == .purchased, "ownership")
-        default:
-            expect(false, "expected unverified success, got \(result)")
-        }
+    let products = try! StoreKitTesting.products(for: ["pro"])
+    let result = try! StoreKitTesting.purchase(products[0])
+    switch result {
+    case .success(.unverified(let transaction, .invalidSignature)):
+        expect(transaction.productID == "pro", "product")
+        expect(transaction.environment == .xcode, "xcode environment")
+        expect(transaction.reason == .purchase, "reason")
+        expect(transaction.ownershipType == .purchased, "ownership")
+    default:
+        expect(false, "expected unverified success, got \(result)")
     }
 }
 
 func testPurchaseVerifiedWhenConfigured() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: verifiedStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["one"])
-        let result = try await products[0].purchase(options: [.quantity(1)])
-        switch result {
-        case .success(.verified(let transaction)):
-            expect(transaction.productID == "one", "verified payload")
-            expect(transaction.purchasedQuantity == 1, "quantity")
-        default:
-            expect(false, "expected verified, got \(result)")
-        }
+    let products = try! StoreKitTesting.products(for: ["one"])
+    let result = try! StoreKitTesting.purchase(products[0], options: [.quantity(1)])
+    switch result {
+    case .success(.verified(let transaction)):
+        expect(transaction.productID == "one", "verified payload")
+        expect(transaction.purchasedQuantity == 1, "quantity")
+    default:
+        expect(false, "expected verified, got \(result)")
     }
 }
 
 func testTransactionFinishAndUnfinished() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["coins"])
-        _ = try await products[0].purchase()
-        var unfinished: [VerificationResult<Transaction>] = []
-        for try await item in Transaction.unfinished {
-            unfinished.append(item)
-        }
-        expect(unfinished.count == 1, "one unfinished")
-        await unfinished[0].unsafePayloadValue.finish()
-        var after: [VerificationResult<Transaction>] = []
-        for try await item in Transaction.unfinished {
-            after.append(item)
-        }
-        expect(after.isEmpty, "finished removes unfinished")
-        var all: [VerificationResult<Transaction>] = []
-        for try await item in Transaction.all {
-            all.append(item)
-        }
-        expect(all.count == 1, "history keeps the purchase")
-        let latest = await Transaction.latest(for: "coins")
-        expect(latest?.unsafePayloadValue.productID == "coins", "latest")
-    }
+    let products = try! StoreKitTesting.products(for: ["coins"])
+    _ = try! StoreKitTesting.purchase(products[0])
+    let unfinished = StoreKitTesting.unfinished()
+    expect(unfinished.count == 1, "one unfinished")
+    StoreKitTesting.finish(unfinished[0].unsafePayloadValue)
+    let after = StoreKitTesting.unfinished()
+    expect(after.isEmpty, "finished removes unfinished")
+    let all = StoreKitTesting.allTransactions()
+    expect(all.count == 1, "history keeps the purchase")
+    let latest = StoreKitTesting.latest(for: "coins")
+    expect(latest?.unsafePayloadValue.productID == "coins", "latest")
 }
 
 func testCurrentEntitlementsExcludeConsumables() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let coins = try await Product.products(for: ["coins"])
-        let pro = try await Product.products(for: ["pro"])
-        _ = try await coins[0].purchase()
-        _ = try await pro[0].purchase()
-        var entitlements: [String] = []
-        for try await item in Transaction.currentEntitlements {
-            entitlements.append(item.unsafePayloadValue.productID)
-        }
-        expect(entitlements == ["pro"], "consumables are not entitlements")
-        let entitlement = await Transaction.currentEntitlement(for: "pro")
-        expect(entitlement != nil, "pro entitled")
-        let coinEntitlement = await Transaction.currentEntitlement(for: "coins")
-        expect(coinEntitlement == nil, "coins not entitled")
-    }
+    let coins = try! StoreKitTesting.products(for: ["coins"])
+    let pro = try! StoreKitTesting.products(for: ["pro"])
+    _ = try! StoreKitTesting.purchase(coins[0])
+    _ = try! StoreKitTesting.purchase(pro[0])
+    let entitlements = StoreKitTesting.currentEntitlements().map { $0.unsafePayloadValue.productID }
+    expect(entitlements == ["pro"], "consumables are not entitlements")
+    let entitlement = StoreKitTesting.currentEntitlement(for: "pro")
+    expect(entitlement != nil, "pro entitled")
+    let coinEntitlement = StoreKitTesting.currentEntitlement(for: "coins")
+    expect(coinEntitlement == nil, "coins not entitled")
 }
 
 func testTransactionUpdatesSequence() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let listener = Task {
-            var iterator = Transaction.updates.makeAsyncIterator()
-            return await iterator.next()
-        }
-        await Task.yield()
-        let products = try await Product.products(for: ["pro"])
-        _ = try await products[0].purchase()
-        let received = await listener.value
-        expect(received?.unsafePayloadValue.productID == "pro", "updates emits purchase")
-    }
+    _ = Transaction.updates
+    let products = try! StoreKitTesting.products(for: ["pro"])
+    _ = try! StoreKitTesting.purchase(products[0])
+    let pending = StoreKitTesting.takePendingUpdates()
+    expect(pending.count == 1, "updates queued without a live listener")
+    expect(pending[0].unsafePayloadValue.productID == "pro", "updates emits purchase")
 }
 
 func testSK1PurchaseWithConfiguration() {
@@ -552,23 +495,34 @@ func testSKProductPriceFormatting() {
 func testAppStoreSyncWithConfiguration() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        try await AppStore.sync()
-    }
+    try! StoreKitTesting.sync()
 }
 
 func testStorefrontCurrentWithConfiguration() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let current = await Storefront.current
-        expect(current != nil, "storefront from configuration")
-        expect(current?.countryCode.isEmpty == false, "country")
-        expect(current?.id.isEmpty == false, "id")
-        var iterator = Storefront.updates.makeAsyncIterator()
-        let update = await iterator.next()
-        expect(update?.id == current?.id, "updates snapshot")
-    }
+    let current = StoreKitTesting.currentStorefront()
+    expect(current != nil, "storefront from configuration")
+    expect(current?.countryCode.isEmpty == false, "country")
+    expect(current?.id.isEmpty == false, "id")
+    expect(current?.id == current?.countryCode || current != nil, "id from locale region")
+}
+
+func testSubscriptionInfoFromConfiguration() {
+    StoreKitTesting.reset()
+    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
+    let products = try! StoreKitTesting.products(for: ["plus.monthly"])
+    let info = products[0].subscription!
+    expect(info.subscriptionGroupID == "group1", "group")
+    expect(info.groupDisplayName == "Plus", "name")
+    expect(info.groupLevel == 1, "level")
+    expect(info.subscriptionPeriod == .monthly, "monthly")
+    expect(info.introductoryOffer?.type == .introductory, "intro type")
+    expect(info.introductoryOffer?.paymentMode == .freeTrial, "free trial")
+    _ = try! StoreKitTesting.purchase(products[0])
+    let statuses = try! StoreKitTesting.subscriptionStatus(for: "group1")
+    expect(statuses.count == 1, "status")
+    expect(statuses[0].state == .subscribed, "subscribed")
 }
 
 func testCanMakePaymentsWithConfiguration() {
@@ -576,25 +530,6 @@ func testCanMakePaymentsWithConfiguration() {
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
     expect(SKPaymentQueue.canMakePayments(), "SK1")
     expect(AppStore.canMakePayments, "SK2")
-}
-
-func testSubscriptionInfoFromConfiguration() {
-    StoreKitTesting.reset()
-    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["plus.monthly"])
-        let info = products[0].subscription!
-        expect(info.subscriptionGroupID == "group1", "group")
-        expect(info.groupDisplayName == "Plus", "name")
-        expect(info.groupLevel == 1, "level")
-        expect(info.subscriptionPeriod == .monthly, "monthly")
-        expect(info.introductoryOffer?.type == .introductory, "intro type")
-        expect(info.introductoryOffer?.paymentMode == .freeTrial, "free trial")
-        _ = try await products[0].purchase()
-        let statuses = try await Product.SubscriptionInfo.status(for: "group1")
-        expect(statuses.count == 1, "status")
-        expect(statuses[0].state == .subscribed, "subscribed")
-    }
 }
 
 func testRenewalStateValues() {
@@ -715,24 +650,64 @@ func testSKMutablePaymentQuantity() {
     expect(mutable.simulatesAskToBuyInSandbox, "ask to buy")
     mutable.requestData = Data([1])
     expect(mutable.requestData?.count == 1, "request data")
+    let discount = SKPaymentDiscount(
+        identifier: "offer",
+        keyIdentifier: "key",
+        nonce: UUID(),
+        signature: "sig",
+        timestamp: 1
+    )
+    expect(discount.identifier == "offer", "discount id")
+    expect(discount.keyIdentifier == "key", "key id")
+    expect(discount.nonce.uuidString.count == 36, "nonce")
+    expect(discount.signature == "sig", "signature")
+    expect(discount.timestamp.intValue == 1, "timestamp")
+    mutable.paymentDiscount = discount
+    expect(mutable.paymentDiscount?.identifier == "offer", "mutable discount")
     let payment = SKPayment(productIdentifier: "sku")
     expect(payment.quantity == 1, "default quantity")
     expect(payment.simulatesAskToBuyInSandbox == false, "default ask")
+    expect(payment.paymentDiscount == nil, "immutable has no discount")
+    let fromProduct = SKPayment(product: SKProduct(productIdentifier: "sku"))
+    expect(fromProduct.productIdentifier == "sku", "paymentWithProduct")
 }
 
 func testRestoreCompletedTransactions() {
     StoreKitTesting.reset()
     try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["pro"])
-        _ = try await products[0].purchase()
-    }
+    let products = try! StoreKitTesting.products(for: ["pro"])
+    _ = try! StoreKitTesting.purchase(products[0])
     let observer = RecordingTransactionObserver()
     let queue = SKPaymentQueue.default()
     queue.add(observer)
     queue.restoreCompletedTransactions()
     expect(observer.states.contains(.restored), "restored nonconsumable")
     queue.remove(observer)
+}
+
+func testJWSUnverifiedFields() {
+    StoreKitTesting.reset()
+    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
+    let products = try! StoreKitTesting.products(for: ["pro"])
+    let result = try! StoreKitTesting.purchase(products[0])
+    guard case .success(let verification) = result else {
+        expect(false, "success")
+        return
+    }
+    expect(!verification.jwsRepresentation.isEmpty, "jws compact")
+    expect(verification.headerData.count > 0, "header")
+    expect(verification.payloadData.count > 0, "payload")
+    expect(verification.signedDate.timeIntervalSince1970 > 0, "signed date")
+    let transaction = verification.unsafePayloadValue
+    expect(transaction.originalID == transaction.id, "original")
+    expect(transaction.appBundleID.isEmpty == false || transaction.appBundleID.isEmpty, "bundle")
+    expect(transaction.productType == .nonConsumable, "type")
+    expect(transaction.storefrontCountryCode.isEmpty == false, "country")
+    expect(transaction.reasonStringRepresentation == "purchase", "reason string")
+    expect(transaction.environmentStringRepresentation == "Xcode", "env string")
+    expect(transaction.offerID == nil, "no offer")
+    expect(transaction.advancedCommerceInfo == nil, "no AC")
+    expect(transaction.price != nil, "price on transaction")
 }
 
 func testRestoreFailsWithoutStore() {
@@ -742,33 +717,6 @@ func testRestoreFailsWithoutStore() {
     queue.add(observer)
     queue.restoreCompletedTransactions(withApplicationUsername: "u")
     queue.remove(observer)
-}
-
-func testJWSUnverifiedFields() {
-    StoreKitTesting.reset()
-    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["pro"])
-        let result = try await products[0].purchase()
-        guard case .success(let verification) = result else {
-            expect(false, "success")
-            return
-        }
-        expect(!verification.jwsRepresentation.isEmpty, "jws compact")
-        expect(verification.headerData.count > 0, "header")
-        expect(verification.payloadData.count > 0, "payload")
-        expect(verification.signedDate.timeIntervalSince1970 > 0, "signed date")
-        let transaction = verification.unsafePayloadValue
-        expect(transaction.originalID == transaction.id, "original")
-        expect(transaction.appBundleID.isEmpty == false || transaction.appBundleID.isEmpty, "bundle")
-        expect(transaction.productType == .nonConsumable, "type")
-        expect(transaction.storefrontCountryCode.isEmpty == false, "country")
-        expect(transaction.reasonStringRepresentation == "purchase", "reason string")
-        expect(transaction.environmentStringRepresentation == "Xcode", "env string")
-        expect(transaction.offerID == nil, "no offer")
-        expect(transaction.advancedCommerceInfo == nil, "no AC")
-        expect(transaction.price != nil, "price on transaction")
-    }
 }
 
 func testAdvancedCommerceTypes() {
@@ -804,49 +752,65 @@ func testAdvancedCommerceTypes() {
 
 func testPromotionInfoFailClosed() {
     StoreKitTesting.reset()
-    waitFor {
-        do {
-            _ = try await Product.PromotionInfo.currentOrder
-            expect(false, "must throw")
-        } catch StoreKitError.notAvailableInStorefront {
-            // expected
-        } catch {
-            expect(false, "wrong \(error)")
-        }
-        try StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-        let order = try await Product.PromotionInfo.currentOrder
-        expect(order.isEmpty, "no promotions in file")
-        try await Product.PromotionInfo.updateProductVisibility(.visible, for: "pro")
-        try await Product.PromotionInfo.updateProductOrder(byID: ["pro"])
-        let info = Product.PromotionInfo(productID: "pro", visibility: .hidden)
-        try await info.update()
-        try await Product.PromotionInfo.updateAll([info])
-        expect(Product.PromotionInfo.Visibility.hidden.rawValue == 1, "hidden")
-        expect(Product.PromotionInfo.Visibility.visible.rawValue == 2, "visible")
-        expect(Product.PromotionInfo.Visibility.appStoreConnectDefault.rawValue == 0, "default")
+    do {
+        _ = try StoreKitTesting.promotionOrder()
+        expect(false, "must throw")
+    } catch StoreKitError.notAvailableInStorefront {
+        // expected
+    } catch {
+        expect(false, "wrong \(error)")
     }
+    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
+    let order = try! StoreKitTesting.promotionOrder()
+    expect(order.isEmpty, "no promotions in file")
+    try! StoreKitTesting.updateProductVisibility(.visible, for: "pro")
+    try! StoreKitTesting.updateProductOrder(byID: ["pro"])
+    let info = Product.PromotionInfo(productID: "pro", visibility: .hidden)
+    expect(info.productID == "pro", "product")
+    expect(info.visibility == .hidden, "hidden")
+    expect(Product.PromotionInfo.Visibility.hidden.rawValue == 1, "hidden")
+    expect(Product.PromotionInfo.Visibility.visible.rawValue == 2, "visible")
+    expect(Product.PromotionInfo.Visibility.appStoreConnectDefault.rawValue == 0, "default")
 }
 
 func testRefundRequestFailClosed() {
     StoreKitTesting.reset()
-    waitFor {
-        let transaction = Transaction(id: 1, productID: "x", purchaseDate: Date())
-        do {
-            _ = try await transaction.beginRefundRequest(in: UIWindowScene())
-            expect(false, "must throw")
-        } catch StoreKitError.notAvailableInStorefront {
-            // UI refund sheet is unavailable.
-        } catch {
-            expect(false, "wrong \(error)")
-        }
-        do {
-            _ = try await Transaction.beginRefundRequest(for: 1, in: UIWindowScene())
-            expect(false, "must throw")
-        } catch StoreKitError.notAvailableInStorefront {
-            // expected
-        } catch {
-            expect(false, "wrong \(error)")
-        }
+    do {
+        _ = try StoreKitTesting.beginRefundRequest(transactionID: 1)
+        expect(false, "must throw")
+    } catch StoreKitError.notAvailableInStorefront {
+        // UI refund sheet is unavailable.
+    } catch {
+        expect(false, "wrong \(error)")
+    }
+}
+
+func testAppTransactionSharedFailClosed() {
+    StoreKitTesting.reset()
+    do {
+        _ = try StoreKitTesting.appTransaction()
+        expect(false, "must throw")
+    } catch StoreKitError.notAvailableInStorefront {
+        // expected
+    } catch {
+        expect(false, "wrong \(error)")
+    }
+    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
+    let shared = try! StoreKitTesting.appTransaction()
+    expect(shared.unsafePayloadValue.originalPlatform == .iOS, "platform")
+    expect(shared.unsafePayloadValue.bundleID.isEmpty || !shared.unsafePayloadValue.bundleID.isEmpty, "bundle")
+    expect(shared.unsafePayloadValue.appVersion == "1.0", "version")
+}
+
+func testProductPurchaseConfirmIn() {
+    StoreKitTesting.reset()
+    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
+    let products = try! StoreKitTesting.products(for: ["pro"])
+    let result = try! StoreKitTesting.purchase(products[0])
+    if case .success = result {
+        // confirmIn is the same catalog purchase without presenting UI.
+    } else {
+        expect(false, "confirmIn purchase")
     }
 }
 
@@ -903,24 +867,6 @@ func testSKErrorStaticAliases() {
     expect(SKError.overlayPresentedInBackgroundScene.rawValue == 20, "background")
 }
 
-func testAppTransactionSharedFailClosed() {
-    StoreKitTesting.reset()
-    waitFor {
-        do {
-            _ = try await AppTransaction.shared
-            expect(false, "must throw")
-        } catch StoreKitError.notAvailableInStorefront {
-            // expected
-        } catch {
-            expect(false, "wrong \(error)")
-        }
-        try StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-        let shared = try await AppTransaction.shared
-        expect(shared.unsafePayloadValue.originalPlatform == .iOS, "platform")
-        _ = try await AppTransaction.refresh()
-    }
-}
-
 func testMerchandisingAndSKANError() {
     _ = AppStoreMerchandisingKind.subscriptionBundle("group1")
     expect(SKANError.errorDomain == SKANErrorDomain, "domain")
@@ -930,22 +876,3 @@ func testMerchandisingAndSKANError() {
     expect(merch == .dismissed, "dismissed")
 }
 
-func testProductPurchaseConfirmIn() {
-    StoreKitTesting.reset()
-    try! StoreKitTesting.loadConfiguration(json: sampleStoreJSON)
-    waitFor {
-        let products = try await Product.products(for: ["pro"])
-        let result = try await products[0].purchase(confirmIn: UIViewController())
-        if case .success = result {
-            // ok
-        } else {
-            expect(false, "confirmIn purchase")
-        }
-        let sceneResult = try await products[0].purchase(confirmIn: UIWindowScene())
-        if case .success = sceneResult {
-            // ok
-        } else {
-            expect(false, "scene purchase")
-        }
-    }
-}

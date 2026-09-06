@@ -132,3 +132,118 @@ func testPickerFilterPlaybackStyleAssets() {
     precondition(!PHPickerFilter.playbackStyle(.unsupported)._matches(jpeg))
     precondition(!PHPickerFilter.playbackStyle(.video)._matches(jpeg))
 }
+
+func testPickerFilterImages() {
+    let jpeg = imageAsset("jpeg")
+    let live = imageAsset("live", playbackStyle: .livePhoto, isLivePhoto: true)
+    let movie = videoAsset("movie")
+    precondition(PHPickerFilter.images._matches(jpeg))
+    precondition(PHPickerFilter.images._matches(live))
+    precondition(!PHPickerFilter.images._matches(movie))
+}
+
+func testPickerFilterVideos() {
+    let jpeg = imageAsset("jpeg")
+    let movie = videoAsset("movie")
+    precondition(PHPickerFilter.videos._matches(movie))
+    precondition(!PHPickerFilter.videos._matches(jpeg))
+}
+
+func testPickerFilterLivePhotos() {
+    let jpeg = imageAsset("jpeg")
+    let live = imageAsset("live", playbackStyle: .livePhoto, isLivePhoto: true)
+    precondition(PHPickerFilter.livePhotos._matches(live))
+    precondition(!PHPickerFilter.livePhotos._matches(jpeg))
+}
+
+func testPickerFilterScreenshots() {
+    let jpeg = imageAsset("jpeg")
+    let shot = imageAsset("shot", isScreenshot: true)
+    precondition(PHPickerFilter.screenshots._matches(shot))
+    precondition(!PHPickerFilter.screenshots._matches(jpeg))
+}
+
+func testPickerFilterPanoramas() {
+    let jpeg = imageAsset("jpeg")
+    let pan = imageAsset("pan", isPanorama: true)
+    precondition(PHPickerFilter.panoramas._matches(pan))
+    precondition(!PHPickerFilter.panoramas._matches(jpeg))
+}
+
+func testPickerFilterDepthEffectPhotos() {
+    let jpeg = imageAsset("jpeg")
+    let depth = imageAsset("depth", isDepthEffect: true)
+    precondition(PHPickerFilter.depthEffectPhotos._matches(depth))
+    precondition(!PHPickerFilter.depthEffectPhotos._matches(jpeg))
+}
+
+func testPickerFilterBursts() {
+    let jpeg = imageAsset("jpeg")
+    let burst = imageAsset("burst", representsBurst: true)
+    precondition(PHPickerFilter.bursts._matches(burst))
+    precondition(!PHPickerFilter.bursts._matches(jpeg))
+}
+
+func testPickerFilterSpatialMedia() {
+    let jpeg = imageAsset("jpeg")
+    let spatial = imageAsset("spatial", isSpatial: true)
+    precondition(PHPickerFilter.spatialMedia._matches(spatial))
+    precondition(!PHPickerFilter.spatialMedia._matches(jpeg))
+}
+
+func testPickerFilterCinematicVideos() {
+    let movie = videoAsset("movie")
+    let cine = videoAsset("cine", isCinematic: true)
+    precondition(PHPickerFilter.cinematicVideos._matches(cine))
+    precondition(!PHPickerFilter.cinematicVideos._matches(movie))
+}
+
+func testPickerFilterSlomoVideos() {
+    let movie = videoAsset("movie")
+    let slomo = videoAsset("slomo", playbackStyle: .videoLooping, isSlomo: true)
+    precondition(PHPickerFilter.slomoVideos._matches(slomo))
+    precondition(!PHPickerFilter.slomoVideos._matches(movie))
+}
+
+func testPickerFilterTimelapseVideos() {
+    let movie = videoAsset("movie")
+    let time = videoAsset("time", isTimelapse: true)
+    precondition(PHPickerFilter.timelapseVideos._matches(time))
+    precondition(!PHPickerFilter.timelapseVideos._matches(movie))
+}
+
+func testPickerFilterScreenRecordings() {
+    let jpeg = imageAsset("jpeg")
+    let rec = videoAsset("rec", isScreenRecording: true)
+    precondition(PHPickerFilter.screenRecordings._matches(rec))
+    precondition(!PHPickerFilter.screenRecordings._matches(jpeg))
+}
+
+func testPickerFilterAnyOf() {
+    let jpeg = imageAsset("jpeg")
+    let movie = videoAsset("movie")
+    let any = PHPickerFilter.any(of: [.images, .videos])
+    precondition(any._matches(jpeg))
+    precondition(any._matches(movie))
+    precondition(!PHPickerFilter.any(of: [])._matches(jpeg))
+}
+
+func testPickerFilterAllOf() {
+    let jpeg = imageAsset("jpeg")
+    let live = imageAsset("live", playbackStyle: .livePhoto, isLivePhoto: true)
+    let movie = videoAsset("movie")
+    let stills = PHPickerFilter.all(of: [.images, .not(.livePhotos)])
+    precondition(stills._matches(jpeg))
+    precondition(!stills._matches(live))
+    precondition(!stills._matches(movie))
+    precondition(PHPickerFilter.all(of: [])._matches(jpeg))
+}
+
+func testPickerFilterNot() {
+    let jpeg = imageAsset("jpeg")
+    let movie = videoAsset("movie")
+    let shot = imageAsset("shot", isScreenshot: true)
+    precondition(PHPickerFilter.not(.videos)._matches(jpeg))
+    precondition(!PHPickerFilter.not(.videos)._matches(movie))
+    precondition(!PHPickerFilter.not(.images)._matches(shot))
+}

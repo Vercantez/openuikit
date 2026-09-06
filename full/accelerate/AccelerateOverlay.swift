@@ -940,22 +940,32 @@ public enum vDSP {
     public struct Biquad<T> where T : vDSP_FloatingPointBiquadFilterable {
     }
     public class DCT {
+        internal var count: Int = 0
+        internal var transformType: vDSP.DCTTransformType = .II
     }
-    public enum DCTTransformType {
+    public enum DCTTransformType: Equatable, Hashable, Sendable {
         case II
         case IV
         case III
         public typealias AllCases = [vDSP.DCTTransformType]
-        public var dctType: vDSP_DCT_Type { preconditionFailure("Accelerate Linux: unread property") }
-        public nonisolated static var allCases: [vDSP.DCTTransformType] { preconditionFailure("Accelerate Linux: unread property") }
+        public var dctType: vDSP_DCT_Type {
+            switch self {
+            case .II: return .II
+            case .III: return .III
+            case .IV: return .IV
+            }
+        }
+        public nonisolated static var allCases: [vDSP.DCTTransformType] { [.II, .III, .IV] }
     }
     public class DFT<T> where T : vDSP_FloatingPointDiscreteFourierTransformable {
+        internal var count: Int = 0
+        internal var inverse: Bool = false
     }
     public struct DFTDoublePrecisionInterleavedFunctions {
     }
     public struct DFTDoublePrecisionSplitComplexFunctions {
     }
-    public enum DFTError {
+    public enum DFTError: Swift.Error {
         case invalidInterleavedCount(count: Int)
         case invalidSplitComplexCount(count: Int, transformType: vDSP.DFTTransformType)
         public var errorDescription: String? { preconditionFailure("Accelerate Linux: unread property") }
@@ -969,37 +979,58 @@ public enum vDSP {
         case complexComplex
     }
     public class DiscreteFourierTransform<T> where T : vDSP_DiscreteFourierTransformable {
+        internal var count: Int = 0
+        internal var inverse: Bool = false
     }
     public class FFT<T> where T : vDSP_FourierTransformable {
+        internal var log2n: vDSP_Length = 0
+        internal var setup: OpaquePointer?
     }
     public class FFT2D<T>: FFT<T> where T : vDSP_FourierTransformable {
+        internal var width: Int = 0
+        internal var height: Int = 0
     }
-    public enum FourierTransformDirection {
+    public enum FourierTransformDirection: Equatable, Hashable, Sendable {
         case forward
         case inverse
-        public var dftDirection: vDSP_DFT_Direction { preconditionFailure("Accelerate Linux: unread property") }
-        public var fftDirection: FFTDirection { preconditionFailure("Accelerate Linux: unread property") }
+        public var dftDirection: vDSP_DFT_Direction {
+            switch self {
+            case .forward: return .FORWARD
+            case .inverse: return .INVERSE
+            }
+        }
+        public var fftDirection: FFTDirection {
+            switch self {
+            case .forward: return FFTDirection(FFT_FORWARD)
+            case .inverse: return FFTDirection(FFT_INVERSE)
+            }
+        }
     }
-    public enum IntegrationRule {
+    public enum IntegrationRule: Equatable, Hashable, Sendable {
         case runningSum
         case trapezoidal
         case simpson
     }
-    public enum Radix {
+    public enum Radix: Equatable, Hashable, Sendable {
         case radix2
         case radix3
         case radix5
-        public var fftRadix: FFTRadix { preconditionFailure("Accelerate Linux: unread property") }
+        public var fftRadix: FFTRadix {
+            switch self {
+            case .radix2: return FFTRadix(FFT_RADIX2)
+            case .radix3: return FFTRadix(FFT_RADIX3)
+            case .radix5: return FFTRadix(FFT_RADIX5)
+            }
+        }
     }
-    public enum RoundingMode {
+    public enum RoundingMode: Equatable, Hashable, Sendable {
         case towardZero
         case towardNearestInteger
     }
-    public enum SortOrder {
-        case descending
+    public enum SortOrder: Int32, Equatable, Hashable, Sendable {
+        case descending = -1
         public typealias RawValue = Int32
-        case ascending
-        public var rawValue: Int32 { preconditionFailure("Accelerate Linux: unread property") }
+        case ascending = 1
     }
     public enum ThresholdRule<T> where T : BinaryFloatingPoint {
         case clampToThreshold
@@ -1012,7 +1043,7 @@ public enum vDSP {
     public struct VectorizableFloat {
         public typealias Scalar = Float
     }
-    public enum WindowSequence {
+    public enum WindowSequence: Equatable, Hashable, Sendable {
         case hanningNormalized
         case hanningDenormalized
         case hamming
@@ -1078,22 +1109,18 @@ public enum vImage {
         case nonpremultipliedToPremultiplied
     }
     public struct ConvolutionKernel {
-        public static var gaussian1Dx3: [Float] { preconditionFailure("Accelerate Linux: unread property") }
-        public static var gaussian1Dx5: [Float] { preconditionFailure("Accelerate Linux: unread property") }
-        public static var gaussian1Dx7: [Float] { preconditionFailure("Accelerate Linux: unread property") }
+        public static var gaussian1Dx3: [Float] { [0.25, 0.5, 0.25] }
+        public static var gaussian1Dx5: [Float] { [1.0 / 16, 4.0 / 16, 6.0 / 16, 4.0 / 16, 1.0 / 16] }
+        public static var gaussian1Dx7: [Float] { [1.0 / 64, 6.0 / 64, 15.0 / 64, 20.0 / 64, 15.0 / 64, 6.0 / 64, 1.0 / 64] }
     }
     public struct ConvolutionKernel2D<ComponentType> {
-        public var width: vImagePixelCount {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var height: vImagePixelCount {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var values: [ComponentType] {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public var width: vImagePixelCount
+        public var height: vImagePixelCount
+        public var values: [ComponentType]
+        public init(values: [ComponentType], size: vImage.Size) {
+            self.values = values
+            self.width = vImagePixelCount(size.width)
+            self.height = vImagePixelCount(size.height)
         }
     }
     public struct DynamicPixelFormat {
@@ -1105,29 +1132,31 @@ public enum vImage {
         case fill(backgroundColor: PixelType)
         case extend
     }
-    public enum Error {
-        case memoryAllocationError
-        case noError
-        case invalidImageFormat
-        case invalidImageObject
-        case internalError
-        case invalidOffset_X
-        case invalidOffset_Y
-        case invalidRowBytes
-        case unknownFlagsBit
-        case invalidEdgeStyle
-        case invalidParameter
-        case colorSyncIsAbsent
-        case coreVideoIsAbsent
-        case invalidKernelSize
-        case bufferSizeMismatch
-        case nullPointerArgument
-        case invalidCVImageFormat
-        case unsupportedConversion
-        case roiLargerThanInputBuffer
-        case outOfPlaceOperationRequired
+    public enum Error: Int, Swift.Error, Equatable, Hashable, Sendable {
+        case noError = 0
+        case roiLargerThanInputBuffer = -21766
+        case invalidKernelSize = -21767
+        case invalidEdgeStyle = -21768
+        case invalidOffset_X = -21769
+        case invalidOffset_Y = -21770
+        case memoryAllocationError = -21771
+        case nullPointerArgument = -21772
+        case invalidParameter = -21773
+        case bufferSizeMismatch = -21774
+        case unknownFlagsBit = -21775
+        case internalError = -21776
+        case invalidRowBytes = -21777
+        case invalidImageFormat = -21778
+        case colorSyncIsAbsent = -21779
+        case outOfPlaceOperationRequired = -21780
+        case invalidCVImageFormat = -21781
+        case unsupportedConversion = -21782
+        case coreVideoIsAbsent = -21783
+        case invalidImageObject = -21784
         public typealias RawValue = Int
-        public var rawValue: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public init(vImageError: vImage_Error) {
+            self = vImage.Error(rawValue: vImageError) ?? .internalError
+        }
     }
     public enum FloodFillConnectivity {
         case edgesAndCorners
@@ -1151,60 +1180,60 @@ public enum vImage {
     }
     public struct Interleaved16Fx2 {
         public typealias ComponentType = Pixel_16F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 2 }
+        public static var bitCountPerPixel: Int { 32 }
     }
     public struct Interleaved16Fx4 {
         public typealias ComponentType = Pixel_16F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 4 }
+        public static var bitCountPerPixel: Int { 64 }
+        public static var bitCountPerComponent: Int { 16 }
     }
     public struct Interleaved16Ux2 {
         public typealias ComponentType = Pixel_16U
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 2 }
+        public static var bitCountPerPixel: Int { 32 }
+        public static var bitCountPerComponent: Int { 16 }
     }
     public struct Interleaved16Ux4 {
         public typealias ComponentType = Pixel_16U
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 4 }
+        public static var bitCountPerPixel: Int { 64 }
+        public static var bitCountPerComponent: Int { 16 }
     }
     public struct Interleaved8x2 {
         public typealias ComponentType = Pixel_8
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 2 }
+        public static var bitCountPerPixel: Int { 16 }
     }
     public struct Interleaved8x3 {
         public typealias ComponentType = Pixel_8
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 3 }
+        public static var bitCountPerPixel: Int { 24 }
+        public static var bitCountPerComponent: Int { 8 }
     }
     public struct Interleaved8x4 {
         public typealias ComponentType = Pixel_8
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 4 }
+        public static var bitCountPerPixel: Int { 32 }
+        public static var bitCountPerComponent: Int { 8 }
     }
     public struct InterleavedFx2 {
         public typealias ComponentType = Pixel_F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 2 }
+        public static var bitCountPerPixel: Int { 64 }
     }
     public struct InterleavedFx3 {
         public typealias ComponentType = Pixel_F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 3 }
+        public static var bitCountPerPixel: Int { 96 }
+        public static var bitCountPerComponent: Int { 32 }
     }
     public struct InterleavedFx4 {
         public typealias ComponentType = Pixel_F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 4 }
+        public static var bitCountPerPixel: Int { 128 }
+        public static var bitCountPerComponent: Int { 32 }
     }
     public enum MorphologyOperation<ComponentType> {
         case erode(structuringElement: vImage.ConvolutionKernel2D<ComponentType>)
@@ -1234,28 +1263,26 @@ public enum vImage {
             case none
         }
     }
-    public struct Options {
+    public struct Options: OptionSet, Hashable, Sendable {
         public typealias ArrayLiteralElement = vImage.Options
         public typealias Element = vImage.Options
         public typealias RawValue = vImage_Flags
-        public static var doNotClamp: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var hdrContent: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var noAllocate: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var copyInPlace: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var imageExtend: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var truncateKernel: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var getTempBufferSize: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var backgroundColorFill: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var leaveAlphaUnchanged: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var highQualityResampling: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public static var printDiagnosticsToConsole: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public var flags: vImage_Flags { preconditionFailure("Accelerate Linux: unread property") }
-        public static var noFlags: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
-        public var rawValue: vImage_Flags {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public static var doNotTile: vImage.Options { preconditionFailure("Accelerate Linux: unread property") }
+        public let rawValue: vImage_Flags
+        public var flags: vImage_Flags { rawValue }
+        public init(rawValue: vImage_Flags) { self.rawValue = rawValue }
+        public static let noFlags = vImage.Options(rawValue: vImage_Flags(kvImageNoFlags))
+        public static let leaveAlphaUnchanged = vImage.Options(rawValue: vImage_Flags(kvImageLeaveAlphaUnchanged))
+        public static let copyInPlace = vImage.Options(rawValue: vImage_Flags(kvImageCopyInPlace))
+        public static let backgroundColorFill = vImage.Options(rawValue: vImage_Flags(kvImageBackgroundColorFill))
+        public static let imageExtend = vImage.Options(rawValue: vImage_Flags(kvImageEdgeExtend))
+        public static let doNotTile = vImage.Options(rawValue: vImage_Flags(kvImageDoNotTile))
+        public static let highQualityResampling = vImage.Options(rawValue: vImage_Flags(kvImageHighQualityResampling))
+        public static let truncateKernel = vImage.Options(rawValue: vImage_Flags(kvImageTruncateKernel))
+        public static let getTempBufferSize = vImage.Options(rawValue: vImage_Flags(kvImageGetTempBufferSize))
+        public static let printDiagnosticsToConsole = vImage.Options(rawValue: vImage_Flags(kvImagePrintDiagnosticsToConsole))
+        public static let noAllocate = vImage.Options(rawValue: vImage_Flags(kvImageNoAllocate))
+        public static let hdrContent = vImage.Options(rawValue: vImage_Flags(kvImageHDRContent))
+        public static let doNotClamp = vImage.Options(rawValue: vImage_Flags(kvImageDoNotClamp))
     }
     public struct PixelBuffer<Format> where Format : PixelFormat {
         public typealias Element = Format.ComponentType
@@ -1263,78 +1290,124 @@ public enum vImage {
         public typealias HistogramFFFF = (binCount: Int, [vImagePixelCount], [vImagePixelCount], [vImagePixelCount], [vImagePixelCount])
         public typealias Histogram888 = ([vImagePixelCount], [vImagePixelCount], [vImagePixelCount])
         public typealias Histogram8888 = ([vImagePixelCount], [vImagePixelCount], [vImagePixelCount], [vImagePixelCount])
-        public var size: vImage.Size { preconditionFailure("Accelerate Linux: unread property") }
-        public var width: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var height: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var byteCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var bytesPerRow: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var columnCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var leadingDimension: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var accelerateMatrixOrder: AccelerateMatrixOrder { preconditionFailure("Accelerate Linux: unread property") }
-        public var array: [Format.ComponentType] { preconditionFailure("Accelerate Linux: unread property") }
-        public var count: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var rowCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var rowStride: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public var width: Int
+        public var height: Int
+        public var rowStride: Int
+        var _storageBox: _PixelStorageBox<Format.ComponentType>
+        public var storage: [Format.ComponentType] {
+            get { _storageBox.values }
+            set { _storageBox.values = newValue }
+        }
+        public var size: vImage.Size { vImage.Size(width: width, height: height) }
+        public var byteCountPerPixel: Int { MemoryLayout<Format.ComponentType>.stride }
+        public var bytesPerRow: Int { rowStride * byteCountPerPixel }
+        public var columnCount: Int { width }
+        public var channelCount: Int { Format.channelCount }
+        public var leadingDimension: Int { rowStride }
+        public var accelerateMatrixOrder: AccelerateMatrixOrder { .rowMajor }
+        public var array: [Format.ComponentType] { storage }
+        public var count: Int { storage.count }
+        public var rowCount: Int { height }
+        public var byteCount: Int { storage.count * byteCountPerPixel }
+        public var rowByteCount: Int { bytesPerRow }
+
+        public init(pixelValues: [Format.ComponentType], size: vImage.Size, pixelFormat: Format.Type = Format.self) {
+            self.width = size.width
+            self.height = size.height
+            self.rowStride = max(size.width, 0)
+            self._storageBox = _PixelStorageBox(pixelValues)
+            _ = pixelFormat
+        }
+
+        public init<U>(pixelValues: U, size: vImage.Size, pixelFormat: Format.Type = Format.self)
+        where U: AccelerateBuffer, Format.ComponentType == U.Element {
+            self.width = size.width
+            self.height = size.height
+            self.rowStride = max(size.width, 0)
+            var copied: [Format.ComponentType] = []
+            pixelValues.withUnsafeBufferPointer { copied = Array($0) }
+            self._storageBox = _PixelStorageBox(copied)
+            _ = pixelFormat
+        }
+
+        public init(size: vImage.Size, pixelFormat: Format.Type = Format.self)
+        where Format.ComponentType: AdditiveArithmetic {
+            self.width = size.width
+            self.height = size.height
+            self.rowStride = max(size.width, 0)
+            self._storageBox = _PixelStorageBox(Array(repeating: .zero, count: max(size.width, 0) * max(size.height, 0)))
+            _ = pixelFormat
+        }
+
+        public init(data: UnsafeMutableRawPointer, width: Int, height: Int, byteCountPerRow: Int, pixelFormat: Format.Type) {
+            let pixelBytes = MemoryLayout<Format.ComponentType>.stride
+            self.width = width
+            self.height = height
+            self.rowStride = pixelBytes == 0 ? width : byteCountPerRow / max(pixelBytes, 1)
+            let count = max(width, 0) * max(height, 0)
+            let typed = data.assumingMemoryBound(to: Format.ComponentType.self)
+            self._storageBox = _PixelStorageBox(Array(UnsafeBufferPointer(start: typed, count: count)))
+            _ = pixelFormat
+        }
     }
     public struct Planar16F {
         public typealias ComponentType = Pixel_16F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 1 }
+        public static var bitCountPerPixel: Int { 16 }
+        public static var bitCountPerComponent: Int { 16 }
     }
     public struct Planar16U {
         public typealias ComponentType = Pixel_16U
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 1 }
+        public static var bitCountPerPixel: Int { 16 }
     }
     public struct Planar8 {
         public typealias ComponentType = Pixel_8
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 1 }
+        public static var bitCountPerPixel: Int { 8 }
+        public static var bitCountPerComponent: Int { 8 }
     }
     public struct Planar8x2 {
         public typealias ComponentType = Pixel_8
         public typealias PlanarPixelFormat = vImage.Planar8
-        public static var planeCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPlanarPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var planeCount: Int { 2 }
+        public static var bitCountPerPlanarPixel: Int { 8 }
     }
     public struct Planar8x3 {
         public typealias ComponentType = Pixel_8
         public typealias PlanarPixelFormat = vImage.Planar8
-        public static var planeCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPlanarPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var planeCount: Int { 3 }
+        public static var bitCountPerPlanarPixel: Int { 8 }
     }
     public struct Planar8x4 {
         public typealias ComponentType = Pixel_8
         public typealias PlanarPixelFormat = vImage.Planar8
-        public static var planeCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPlanarPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var planeCount: Int { 4 }
+        public static var bitCountPerPlanarPixel: Int { 8 }
     }
     public struct PlanarF {
         public typealias ComponentType = Pixel_F
-        public static var channelCount: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var bitCountPerComponent: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var channelCount: Int { 1 }
+        public static var bitCountPerPixel: Int { 32 }
+        public static var bitCountPerComponent: Int { 32 }
     }
     public struct PlanarFx2 {
         public typealias PlanarPixelFormat = vImage.PlanarF
         public typealias ComponentType = Pixel_F
-        public static var bitCountPerPlanarPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var planeCount: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var bitCountPerPlanarPixel: Int { 32 }
+        public static var planeCount: Int { 2 }
     }
     public struct PlanarFx3 {
         public typealias PlanarPixelFormat = vImage.PlanarF
         public typealias ComponentType = Pixel_F
-        public static var bitCountPerPlanarPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var planeCount: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var bitCountPerPlanarPixel: Int { 32 }
+        public static var planeCount: Int { 3 }
     }
     public struct PlanarFx4 {
         public typealias PlanarPixelFormat = vImage.PlanarF
         public typealias ComponentType = Pixel_F
-        public static var bitCountPerPlanarPixel: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var planeCount: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public static var bitCountPerPlanarPixel: Int { 32 }
+        public static var planeCount: Int { 4 }
     }
     public enum ReflectionAxis {
         case horizontal
@@ -1356,14 +1429,27 @@ public enum vImage {
         case horizontal
         case vertical
     }
-    public struct Size {
-        public var width: Int {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+    public struct Size: Equatable, Hashable, Sendable {
+        public let width: Int
+        public let height: Int
+        public init(width: Int, height: Int) {
+            self.width = width
+            self.height = height
         }
-        public var height: Int {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(width: vImagePixelCount, height: vImagePixelCount) {
+            self.width = Int(width)
+            self.height = Int(height)
+        }
+        public init?<T>(exactWidth: T, height: T) where T: BinaryInteger {
+            self.init(width: Int(exactWidth), height: Int(height))
+        }
+        public init?<T>(exactWidth: T, height: T) where T: BinaryFloatingPoint {
+            guard let w = Int(exactly: exactWidth), let h = Int(exactly: height) else { return nil }
+            self.init(width: w, height: h)
+        }
+        public init?(exactly size: CGSize) {
+            guard let w = Int(exactly: size.width), let h = Int(exactly: size.height) else { return nil }
+            self.init(width: w, height: h)
         }
     }
 }

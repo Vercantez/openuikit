@@ -327,4 +327,27 @@ open class WKUserContentController: NSObject {
     public var registeredContentRuleListIdentifiers: [String] {
         rules.keys.sorted()
     }
+
+    internal func _portableDeliver(
+        name: String,
+        body: Any,
+        webView: WKWebView?,
+        world: WKContentWorld
+    ) -> Bool {
+        let message = WKScriptMessage(
+            name: name,
+            body: body,
+            webView: webView,
+            world: world
+        )
+        if let handler = handlers[name] {
+            handler.userContentController(self, didReceive: message)
+            return true
+        }
+        if let handler = replyHandlers[name] {
+            handler.userContentController(self, didReceive: message) { _, _ in }
+            return true
+        }
+        return false
+    }
 }

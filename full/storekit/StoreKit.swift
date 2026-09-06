@@ -109,14 +109,12 @@ public enum AppStore {
     /// App Store. https://developer.apple.com/documentation/storekit/appstore/sync()
     /// Without a loaded `.storekit` configuration this host has no storefront.
     public static func sync() async throws {
-        guard LocalTestingStore.shared.isLoaded else {
-            throw StoreKitError.notAvailableInStorefront
-        }
+        try StoreKitTesting.sync()
     }
 
     public static func showManageSubscriptions(in scene: UIWindowScene) async throws {
         _ = scene
-        throw StoreKitError.notAvailableInStorefront
+        try StoreKitTesting.showManageSubscriptions()
     }
 
     public static func showManageSubscriptions(
@@ -125,7 +123,7 @@ public enum AppStore {
     ) async throws {
         _ = scene
         _ = subscriptionGroupID
-        throw StoreKitError.notAvailableInStorefront
+        try StoreKitTesting.showManageSubscriptions()
     }
 
     @MainActor

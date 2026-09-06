@@ -216,16 +216,33 @@ public extension INGetCarLockStatusIntentHandling {
 public protocol INGetCarPowerLevelStatusIntentHandling: NSObjectProtocol {
     func confirm(intent: INGetCarPowerLevelStatusIntent) async -> INGetCarPowerLevelStatusIntentResponse
     func handle(intent: INGetCarPowerLevelStatusIntent) async -> INGetCarPowerLevelStatusIntentResponse
+    func confirm(intent: INGetCarPowerLevelStatusIntent, completion: @escaping (INGetCarPowerLevelStatusIntentResponse) -> Void)
+    func handle(intent: INGetCarPowerLevelStatusIntent, completion: @escaping (INGetCarPowerLevelStatusIntentResponse) -> Void)
     func resolveCarName(for intent: INGetCarPowerLevelStatusIntent) async -> INSpeakableStringResolutionResult
+    func resolveCarName(for intent: INGetCarPowerLevelStatusIntent, completion: @escaping (INSpeakableStringResolutionResult) -> Void)
     func startSendingUpdates(for intent: INGetCarPowerLevelStatusIntent, to observer: any INGetCarPowerLevelStatusIntentResponseObserver)
     func stopSendingUpdates(for intent: INGetCarPowerLevelStatusIntent)
 }
 
 public extension INGetCarPowerLevelStatusIntentHandling {
-    func confirm(intent: INGetCarPowerLevelStatusIntent) async -> INGetCarPowerLevelStatusIntentResponse { INGetCarPowerLevelStatusIntentResponse() }
+    func confirm(intent: INGetCarPowerLevelStatusIntent) async -> INGetCarPowerLevelStatusIntentResponse {
+        INGetCarPowerLevelStatusIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INGetCarPowerLevelStatusIntent) async -> INGetCarPowerLevelStatusIntentResponse {
+        INGetCarPowerLevelStatusIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INGetCarPowerLevelStatusIntent, completion: @escaping (INGetCarPowerLevelStatusIntentResponse) -> Void) {
+        completion(INGetCarPowerLevelStatusIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INGetCarPowerLevelStatusIntent, completion: @escaping (INGetCarPowerLevelStatusIntentResponse) -> Void) {
+        completion(INGetCarPowerLevelStatusIntentResponse(code: .failure, userActivity: nil))
+    }
     func resolveCarName(for intent: INGetCarPowerLevelStatusIntent) async -> INSpeakableStringResolutionResult { INSpeakableStringResolutionResult.needsValue() }
-    func startSendingUpdates(for intent: INGetCarPowerLevelStatusIntent, to observer: any INGetCarPowerLevelStatusIntentResponseObserver) { fatalError("Intents protocol default is fail-closed") }
-    func stopSendingUpdates(for intent: INGetCarPowerLevelStatusIntent) { fatalError("Intents protocol default is fail-closed") }
+    func resolveCarName(for intent: INGetCarPowerLevelStatusIntent, completion: @escaping (INSpeakableStringResolutionResult) -> Void) {
+        completion(INSpeakableStringResolutionResult.needsValue())
+    }
+    func startSendingUpdates(for intent: INGetCarPowerLevelStatusIntent, to observer: any INGetCarPowerLevelStatusIntentResponseObserver) { }
+    func stopSendingUpdates(for intent: INGetCarPowerLevelStatusIntent) { }
 }
 
 public protocol INGetCarPowerLevelStatusIntentResponseObserver: NSObjectProtocol {
@@ -244,12 +261,27 @@ public extension INGetRestaurantGuestIntentHandling {
 public protocol INGetRideStatusIntentHandling: NSObjectProtocol {
     func confirm(intent: INGetRideStatusIntent) async -> INGetRideStatusIntentResponse
     func handle(intent: INGetRideStatusIntent) async -> INGetRideStatusIntentResponse
+    func confirm(intent: INGetRideStatusIntent, completion: @escaping (INGetRideStatusIntentResponse) -> Void)
+    func handle(intent: INGetRideStatusIntent, completion: @escaping (INGetRideStatusIntentResponse) -> Void)
     func startSendingUpdates(for intent: INGetRideStatusIntent, to observer: any INGetRideStatusIntentResponseObserver)
     func stopSendingUpdates(for intent: INGetRideStatusIntent)
 }
 
 public extension INGetRideStatusIntentHandling {
-    func confirm(intent: INGetRideStatusIntent) async -> INGetRideStatusIntentResponse { INGetRideStatusIntentResponse() }
+    func confirm(intent: INGetRideStatusIntent) async -> INGetRideStatusIntentResponse {
+        INGetRideStatusIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INGetRideStatusIntent) async -> INGetRideStatusIntentResponse {
+        INGetRideStatusIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INGetRideStatusIntent, completion: @escaping (INGetRideStatusIntentResponse) -> Void) {
+        completion(INGetRideStatusIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INGetRideStatusIntent, completion: @escaping (INGetRideStatusIntentResponse) -> Void) {
+        completion(INGetRideStatusIntentResponse(code: .failure, userActivity: nil))
+    }
+    func startSendingUpdates(for intent: INGetRideStatusIntent, to observer: any INGetRideStatusIntentResponseObserver) { }
+    func stopSendingUpdates(for intent: INGetRideStatusIntent) { }
 }
 
 public protocol INGetRideStatusIntentResponseObserver: NSObjectProtocol {
@@ -303,12 +335,25 @@ public extension INListCarsIntentHandling {
 public protocol INListRideOptionsIntentHandling: NSObjectProtocol {
     func confirm(intent: INListRideOptionsIntent) async -> INListRideOptionsIntentResponse
     func handle(intent: INListRideOptionsIntent) async -> INListRideOptionsIntentResponse
+    func confirm(intent: INListRideOptionsIntent, completion: @escaping (INListRideOptionsIntentResponse) -> Void)
+    func handle(intent: INListRideOptionsIntent, completion: @escaping (INListRideOptionsIntentResponse) -> Void)
     func resolveDropOffLocation(for intent: INListRideOptionsIntent) async -> INPlacemarkResolutionResult
     func resolvePickupLocation(for intent: INListRideOptionsIntent) async -> INPlacemarkResolutionResult
 }
 
 public extension INListRideOptionsIntentHandling {
-    func confirm(intent: INListRideOptionsIntent) async -> INListRideOptionsIntentResponse { INListRideOptionsIntentResponse() }
+    func confirm(intent: INListRideOptionsIntent) async -> INListRideOptionsIntentResponse {
+        INListRideOptionsIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INListRideOptionsIntent) async -> INListRideOptionsIntentResponse {
+        INListRideOptionsIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INListRideOptionsIntent, completion: @escaping (INListRideOptionsIntentResponse) -> Void) {
+        completion(INListRideOptionsIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INListRideOptionsIntent, completion: @escaping (INListRideOptionsIntentResponse) -> Void) {
+        completion(INListRideOptionsIntentResponse(code: .failure, userActivity: nil))
+    }
     func resolveDropOffLocation(for intent: INListRideOptionsIntent) async -> INPlacemarkResolutionResult { INPlacemarkResolutionResult.needsValue() }
     func resolvePickupLocation(for intent: INListRideOptionsIntent) async -> INPlacemarkResolutionResult { INPlacemarkResolutionResult.needsValue() }
 }
@@ -381,29 +426,54 @@ public protocol INRequestPaymentIntentHandling: NSObjectProtocol {
 public extension INRequestPaymentIntentHandling {
     func confirm(intent: INRequestPaymentIntent) async -> INRequestPaymentIntentResponse { INRequestPaymentIntentResponse() }
     func resolveCurrencyAmount(for intent: INRequestPaymentIntent) async -> INRequestPaymentCurrencyAmountResolutionResult { INRequestPaymentCurrencyAmountResolutionResult.needsValue() }
-    func resolveCurrencyAmount(for intent: INRequestPaymentIntent, with completion: @escaping (INCurrencyAmountResolutionResult) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolveCurrencyAmount(for intent: INRequestPaymentIntent, with completion: @escaping (INCurrencyAmountResolutionResult) -> Void) { completion(INCurrencyAmountResolutionResult.needsValue()) }
     func resolveNote(for intent: INRequestPaymentIntent) async -> INStringResolutionResult { INStringResolutionResult.needsValue() }
     func resolvePayer(for intent: INRequestPaymentIntent) async -> INRequestPaymentPayerResolutionResult { INRequestPaymentPayerResolutionResult.needsValue() }
-    func resolvePayer(for intent: INRequestPaymentIntent, with completion: @escaping (INPersonResolutionResult) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolvePayer(for intent: INRequestPaymentIntent, with completion: @escaping (INPersonResolutionResult) -> Void) { completion(INPersonResolutionResult.needsValue()) }
 }
 
 public protocol INRequestRideIntentHandling: NSObjectProtocol {
     func confirm(intent: INRequestRideIntent) async -> INRequestRideIntentResponse
     func handle(intent: INRequestRideIntent) async -> INRequestRideIntentResponse
+    func confirm(intent: INRequestRideIntent, completion: @escaping (INRequestRideIntentResponse) -> Void)
+    func handle(intent: INRequestRideIntent, completion: @escaping (INRequestRideIntentResponse) -> Void)
     func resolveDropOffLocation(for intent: INRequestRideIntent) async -> INPlacemarkResolutionResult
     func resolvePartySize(for intent: INRequestRideIntent) async -> INIntegerResolutionResult
+    func resolvePartySize(for intent: INRequestRideIntent, completion: @escaping (INIntegerResolutionResult) -> Void)
     func resolvePickupLocation(for intent: INRequestRideIntent) async -> INPlacemarkResolutionResult
     func resolveRideOptionName(for intent: INRequestRideIntent) async -> INSpeakableStringResolutionResult
+    func resolveRideOptionName(for intent: INRequestRideIntent, completion: @escaping (INSpeakableStringResolutionResult) -> Void)
     func resolveScheduledPickupTime(for intent: INRequestRideIntent) async -> INDateComponentsRangeResolutionResult
+    func resolveScheduledPickupTime(for intent: INRequestRideIntent, completion: @escaping (INDateComponentsRangeResolutionResult) -> Void)
 }
 
 public extension INRequestRideIntentHandling {
-    func confirm(intent: INRequestRideIntent) async -> INRequestRideIntentResponse { INRequestRideIntentResponse() }
+    func confirm(intent: INRequestRideIntent) async -> INRequestRideIntentResponse {
+        INRequestRideIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INRequestRideIntent) async -> INRequestRideIntentResponse {
+        INRequestRideIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INRequestRideIntent, completion: @escaping (INRequestRideIntentResponse) -> Void) {
+        completion(INRequestRideIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INRequestRideIntent, completion: @escaping (INRequestRideIntentResponse) -> Void) {
+        completion(INRequestRideIntentResponse(code: .failure, userActivity: nil))
+    }
     func resolveDropOffLocation(for intent: INRequestRideIntent) async -> INPlacemarkResolutionResult { INPlacemarkResolutionResult.needsValue() }
     func resolvePartySize(for intent: INRequestRideIntent) async -> INIntegerResolutionResult { INIntegerResolutionResult.needsValue() }
+    func resolvePartySize(for intent: INRequestRideIntent, completion: @escaping (INIntegerResolutionResult) -> Void) {
+        completion(INIntegerResolutionResult.needsValue())
+    }
     func resolvePickupLocation(for intent: INRequestRideIntent) async -> INPlacemarkResolutionResult { INPlacemarkResolutionResult.needsValue() }
     func resolveRideOptionName(for intent: INRequestRideIntent) async -> INSpeakableStringResolutionResult { INSpeakableStringResolutionResult.needsValue() }
+    func resolveRideOptionName(for intent: INRequestRideIntent, completion: @escaping (INSpeakableStringResolutionResult) -> Void) {
+        completion(INSpeakableStringResolutionResult.needsValue())
+    }
     func resolveScheduledPickupTime(for intent: INRequestRideIntent) async -> INDateComponentsRangeResolutionResult { INDateComponentsRangeResolutionResult.needsValue() }
+    func resolveScheduledPickupTime(for intent: INRequestRideIntent, completion: @escaping (INDateComponentsRangeResolutionResult) -> Void) {
+        completion(INDateComponentsRangeResolutionResult.needsValue())
+    }
 }
 
 public protocol INResumeWorkoutIntentHandling: NSObjectProtocol {
@@ -499,8 +569,12 @@ public extension INSearchForMediaIntentHandling {
 public protocol INSearchForMessagesIntentHandling: NSObjectProtocol {
     func confirm(intent: INSearchForMessagesIntent) async -> INSearchForMessagesIntentResponse
     func handle(intent: INSearchForMessagesIntent) async -> INSearchForMessagesIntentResponse
+    func confirm(intent: INSearchForMessagesIntent, completion: @escaping (INSearchForMessagesIntentResponse) -> Void)
+    func handle(intent: INSearchForMessagesIntent, completion: @escaping (INSearchForMessagesIntentResponse) -> Void)
     func resolveAttributes(for intent: INSearchForMessagesIntent) async -> INMessageAttributeOptionsResolutionResult
+    func resolveAttributes(for intent: INSearchForMessagesIntent, completion: @escaping (INMessageAttributeOptionsResolutionResult) -> Void)
     func resolveDateTimeRange(for intent: INSearchForMessagesIntent) async -> INDateComponentsRangeResolutionResult
+    func resolveDateTimeRange(for intent: INSearchForMessagesIntent, completion: @escaping (INDateComponentsRangeResolutionResult) -> Void)
     func resolveGroupNames(for intent: INSearchForMessagesIntent, with completion: @escaping ([INStringResolutionResult]) -> Void)
     func resolveRecipients(for intent: INSearchForMessagesIntent) async -> [INPersonResolutionResult]
     func resolveSenders(for intent: INSearchForMessagesIntent) async -> [INPersonResolutionResult]
@@ -508,10 +582,29 @@ public protocol INSearchForMessagesIntentHandling: NSObjectProtocol {
 }
 
 public extension INSearchForMessagesIntentHandling {
-    func confirm(intent: INSearchForMessagesIntent) async -> INSearchForMessagesIntentResponse { INSearchForMessagesIntentResponse() }
+    func confirm(intent: INSearchForMessagesIntent) async -> INSearchForMessagesIntentResponse {
+        INSearchForMessagesIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INSearchForMessagesIntent) async -> INSearchForMessagesIntentResponse {
+        INSearchForMessagesIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INSearchForMessagesIntent, completion: @escaping (INSearchForMessagesIntentResponse) -> Void) {
+        completion(INSearchForMessagesIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INSearchForMessagesIntent, completion: @escaping (INSearchForMessagesIntentResponse) -> Void) {
+        completion(INSearchForMessagesIntentResponse(code: .failure, userActivity: nil))
+    }
     func resolveAttributes(for intent: INSearchForMessagesIntent) async -> INMessageAttributeOptionsResolutionResult { INMessageAttributeOptionsResolutionResult.needsValue() }
+    func resolveAttributes(for intent: INSearchForMessagesIntent, completion: @escaping (INMessageAttributeOptionsResolutionResult) -> Void) {
+        completion(INMessageAttributeOptionsResolutionResult.needsValue())
+    }
     func resolveDateTimeRange(for intent: INSearchForMessagesIntent) async -> INDateComponentsRangeResolutionResult { INDateComponentsRangeResolutionResult.needsValue() }
-    func resolveGroupNames(for intent: INSearchForMessagesIntent, with completion: @escaping ([INStringResolutionResult]) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolveDateTimeRange(for intent: INSearchForMessagesIntent, completion: @escaping (INDateComponentsRangeResolutionResult) -> Void) {
+        completion(INDateComponentsRangeResolutionResult.needsValue())
+    }
+    func resolveGroupNames(for intent: INSearchForMessagesIntent, with completion: @escaping ([INStringResolutionResult]) -> Void) {
+        completion([INStringResolutionResult.needsValue()])
+    }
     func resolveRecipients(for intent: INSearchForMessagesIntent) async -> [INPersonResolutionResult] { [] }
     func resolveSenders(for intent: INSearchForMessagesIntent) async -> [INPersonResolutionResult] { [] }
     func resolveSpeakableGroupNames(for intent: INSearchForMessagesIntent) async -> [INSpeakableStringResolutionResult] { [] }
@@ -568,22 +661,47 @@ public extension INSearchForPhotosIntentHandling {
 public protocol INSendMessageIntentHandling: NSObjectProtocol {
     func confirm(intent: INSendMessageIntent) async -> INSendMessageIntentResponse
     func handle(intent: INSendMessageIntent) async -> INSendMessageIntentResponse
+    func confirm(intent: INSendMessageIntent, completion: @escaping (INSendMessageIntentResponse) -> Void)
+    func handle(intent: INSendMessageIntent, completion: @escaping (INSendMessageIntentResponse) -> Void)
     func resolveContent(for intent: INSendMessageIntent) async -> INStringResolutionResult
+    func resolveContent(for intent: INSendMessageIntent, completion: @escaping (INStringResolutionResult) -> Void)
     func resolveGroupName(for intent: INSendMessageIntent, with completion: @escaping (INStringResolutionResult) -> Void)
     func resolveOutgoingMessageType(for intent: INSendMessageIntent) async -> INOutgoingMessageTypeResolutionResult
     func resolveRecipients(for intent: INSendMessageIntent) async -> [INSendMessageRecipientResolutionResult]
     func resolveRecipients(for intent: INSendMessageIntent, with completion: @escaping ([INPersonResolutionResult]) -> Void)
     func resolveSpeakableGroupName(for intent: INSendMessageIntent) async -> INSpeakableStringResolutionResult
+    func resolveSpeakableGroupName(for intent: INSendMessageIntent, completion: @escaping (INSpeakableStringResolutionResult) -> Void)
 }
 
 public extension INSendMessageIntentHandling {
-    func confirm(intent: INSendMessageIntent) async -> INSendMessageIntentResponse { INSendMessageIntentResponse() }
+    func confirm(intent: INSendMessageIntent) async -> INSendMessageIntentResponse {
+        INSendMessageIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INSendMessageIntent) async -> INSendMessageIntentResponse {
+        INSendMessageIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INSendMessageIntent, completion: @escaping (INSendMessageIntentResponse) -> Void) {
+        completion(INSendMessageIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INSendMessageIntent, completion: @escaping (INSendMessageIntentResponse) -> Void) {
+        completion(INSendMessageIntentResponse(code: .failure, userActivity: nil))
+    }
     func resolveContent(for intent: INSendMessageIntent) async -> INStringResolutionResult { INStringResolutionResult.needsValue() }
-    func resolveGroupName(for intent: INSendMessageIntent, with completion: @escaping (INStringResolutionResult) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolveContent(for intent: INSendMessageIntent, completion: @escaping (INStringResolutionResult) -> Void) {
+        completion(INStringResolutionResult.needsValue())
+    }
+    func resolveGroupName(for intent: INSendMessageIntent, with completion: @escaping (INStringResolutionResult) -> Void) {
+        completion(INStringResolutionResult.needsValue())
+    }
     func resolveOutgoingMessageType(for intent: INSendMessageIntent) async -> INOutgoingMessageTypeResolutionResult { INOutgoingMessageTypeResolutionResult.needsValue() }
     func resolveRecipients(for intent: INSendMessageIntent) async -> [INSendMessageRecipientResolutionResult] { [] }
-    func resolveRecipients(for intent: INSendMessageIntent, with completion: @escaping ([INPersonResolutionResult]) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolveRecipients(for intent: INSendMessageIntent, with completion: @escaping ([INPersonResolutionResult]) -> Void) {
+        completion([INPersonResolutionResult.needsValue()])
+    }
     func resolveSpeakableGroupName(for intent: INSendMessageIntent) async -> INSpeakableStringResolutionResult { INSpeakableStringResolutionResult.needsValue() }
+    func resolveSpeakableGroupName(for intent: INSendMessageIntent, completion: @escaping (INSpeakableStringResolutionResult) -> Void) {
+        completion(INSpeakableStringResolutionResult.needsValue())
+    }
 }
 
 public protocol INSendPaymentIntentHandling: NSObjectProtocol {
@@ -599,10 +717,10 @@ public protocol INSendPaymentIntentHandling: NSObjectProtocol {
 public extension INSendPaymentIntentHandling {
     func confirm(intent: INSendPaymentIntent) async -> INSendPaymentIntentResponse { INSendPaymentIntentResponse() }
     func resolveCurrencyAmount(for intent: INSendPaymentIntent) async -> INSendPaymentCurrencyAmountResolutionResult { INSendPaymentCurrencyAmountResolutionResult.needsValue() }
-    func resolveCurrencyAmount(for intent: INSendPaymentIntent, with completion: @escaping (INCurrencyAmountResolutionResult) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolveCurrencyAmount(for intent: INSendPaymentIntent, with completion: @escaping (INCurrencyAmountResolutionResult) -> Void) { completion(INCurrencyAmountResolutionResult.needsValue()) }
     func resolveNote(for intent: INSendPaymentIntent) async -> INStringResolutionResult { INStringResolutionResult.needsValue() }
     func resolvePayee(for intent: INSendPaymentIntent) async -> INSendPaymentPayeeResolutionResult { INSendPaymentPayeeResolutionResult.needsValue() }
-    func resolvePayee(for intent: INSendPaymentIntent, with completion: @escaping (INPersonResolutionResult) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolvePayee(for intent: INSendPaymentIntent, with completion: @escaping (INPersonResolutionResult) -> Void) { completion(INPersonResolutionResult.needsValue()) }
 }
 
 public protocol INSendRideFeedbackIntentHandling: NSObjectProtocol {
@@ -711,7 +829,7 @@ public protocol INSetProfileInCarIntentHandling: NSObjectProtocol {
 public extension INSetProfileInCarIntentHandling {
     func confirm(intent: INSetProfileInCarIntent) async -> INSetProfileInCarIntentResponse { INSetProfileInCarIntentResponse() }
     func resolveCarName(for intent: INSetProfileInCarIntent) async -> INSpeakableStringResolutionResult { INSpeakableStringResolutionResult.needsValue() }
-    func resolveDefaultProfile(forSetProfileInCar intent: INSetProfileInCarIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) { fatalError("Intents protocol default is fail-closed") }
+    func resolveDefaultProfile(forSetProfileInCar intent: INSetProfileInCarIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) { completion(INBooleanResolutionResult.needsValue()) }
     func resolveProfileName(for intent: INSetProfileInCarIntent) async -> INStringResolutionResult { INStringResolutionResult.needsValue() }
     func resolveProfileNumber(for intent: INSetProfileInCarIntent) async -> INIntegerResolutionResult { INIntegerResolutionResult.needsValue() }
 }
@@ -822,18 +940,39 @@ public extension INStartAudioCallIntentHandling {
 public protocol INStartCallIntentHandling: NSObjectProtocol {
     func confirm(intent: INStartCallIntent) async -> INStartCallIntentResponse
     func handle(intent: INStartCallIntent) async -> INStartCallIntentResponse
+    func confirm(intent: INStartCallIntent, completion: @escaping (INStartCallIntentResponse) -> Void)
+    func handle(intent: INStartCallIntent, completion: @escaping (INStartCallIntentResponse) -> Void)
     func resolveCallCapability(for intent: INStartCallIntent) async -> INStartCallCallCapabilityResolutionResult
+    func resolveCallCapability(for intent: INStartCallIntent, completion: @escaping (INStartCallCallCapabilityResolutionResult) -> Void)
     func resolveCallRecordToCallBack(for intent: INStartCallIntent) async -> INCallRecordResolutionResult
     func resolveContacts(for intent: INStartCallIntent) async -> [INStartCallContactResolutionResult]
     func resolveDestinationType(for intent: INStartCallIntent) async -> INCallDestinationTypeResolutionResult
+    func resolveDestinationType(for intent: INStartCallIntent, completion: @escaping (INCallDestinationTypeResolutionResult) -> Void)
 }
 
 public extension INStartCallIntentHandling {
-    func confirm(intent: INStartCallIntent) async -> INStartCallIntentResponse { INStartCallIntentResponse() }
+    func confirm(intent: INStartCallIntent) async -> INStartCallIntentResponse {
+        INStartCallIntentResponse(code: .failure, userActivity: nil)
+    }
+    func handle(intent: INStartCallIntent) async -> INStartCallIntentResponse {
+        INStartCallIntentResponse(code: .failure, userActivity: nil)
+    }
+    func confirm(intent: INStartCallIntent, completion: @escaping (INStartCallIntentResponse) -> Void) {
+        completion(INStartCallIntentResponse(code: .ready, userActivity: nil))
+    }
+    func handle(intent: INStartCallIntent, completion: @escaping (INStartCallIntentResponse) -> Void) {
+        completion(INStartCallIntentResponse(code: .failure, userActivity: nil))
+    }
     func resolveCallCapability(for intent: INStartCallIntent) async -> INStartCallCallCapabilityResolutionResult { INStartCallCallCapabilityResolutionResult.needsValue() }
+    func resolveCallCapability(for intent: INStartCallIntent, completion: @escaping (INStartCallCallCapabilityResolutionResult) -> Void) {
+        completion(INStartCallCallCapabilityResolutionResult.needsValue())
+    }
     func resolveCallRecordToCallBack(for intent: INStartCallIntent) async -> INCallRecordResolutionResult { INCallRecordResolutionResult.needsValue() }
     func resolveContacts(for intent: INStartCallIntent) async -> [INStartCallContactResolutionResult] { [] }
     func resolveDestinationType(for intent: INStartCallIntent) async -> INCallDestinationTypeResolutionResult { INCallDestinationTypeResolutionResult.needsValue() }
+    func resolveDestinationType(for intent: INStartCallIntent, completion: @escaping (INCallDestinationTypeResolutionResult) -> Void) {
+        completion(INCallDestinationTypeResolutionResult.needsValue())
+    }
 }
 
 public protocol INStartPhotoPlaybackIntentHandling: NSObjectProtocol {

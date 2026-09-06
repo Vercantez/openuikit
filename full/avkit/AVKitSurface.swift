@@ -116,6 +116,15 @@ open class AVCaptureEvent: NSObject {
         super.init()
     }
 
+    /// Host-only constructor. Isolated host never synthesizes hardware events;
+    /// tests use this to observe `phase` / `shouldPlaySound` without claiming
+    /// a capture button fired.
+    public init(openUIKitHostPhase phase: AVCaptureEventPhase, shouldPlaySound: Bool) {
+        self.phase = phase
+        self.shouldPlaySound = shouldPlaySound
+        super.init()
+    }
+
     /// Sound playback requires capture hardware. Isolated host always returns false.
     open func play(_ sound: AVCaptureEventSound) -> Bool {
         _ = sound
@@ -180,6 +189,17 @@ open class AVCaptureEventInteraction: NSObject {
         secondaryEventHandler secondaryHandler: @escaping (AVCaptureEvent) -> Void
     ) {
         self.init(primary: primaryHandler, secondary: secondaryHandler)
+    }
+
+    /// Hardware never delivers capture events on Linux. Host hook invokes the
+    /// stored primary or secondary handler so tests can observe that they were
+    /// retained.
+    public func openUIKitHostDeliver(_ event: AVCaptureEvent, secondary: Bool = false) {
+        if secondary {
+            secondaryHandler?(event)
+        } else {
+            primaryHandler?(event)
+        }
     }
 }
 
@@ -437,6 +457,62 @@ open class AVPictureInPictureController: NSObject {
         _ = playback.pictureInPictureControllerTimeRangeForPlayback(self)
     }
 
+    public func openUIKitHostInvokeSampleBufferDidTransitionToRenderSize(
+        width: Int32,
+        height: Int32
+    ) {
+        contentSource?.sampleBufferPlaybackDelegate?.pictureInPictureController(
+            self,
+            didTransitionToRenderSize: CMVideoDimensions(width: width, height: height)
+        )
+    }
+
+    public func openUIKitHostInvokeSampleBufferSetPlaying(_ playing: Bool) {
+        contentSource?.sampleBufferPlaybackDelegate?.pictureInPictureController(
+            self,
+            setPlaying: playing
+        )
+    }
+
+    public func openUIKitHostQuerySampleBufferIsPlaybackPaused() -> Bool {
+        contentSource?.sampleBufferPlaybackDelegate?
+            .pictureInPictureControllerIsPlaybackPaused(self) ?? true
+    }
+
+    public func openUIKitHostQuerySampleBufferShouldProhibitBackgroundAudioPlayback() -> Bool {
+        contentSource?.sampleBufferPlaybackDelegate?
+            .pictureInPictureControllerShouldProhibitBackgroundAudioPlayback(self) ?? true
+    }
+
+    public func openUIKitHostQuerySampleBufferTimeRangeForPlayback() -> CMTimeRange {
+        contentSource?.sampleBufferPlaybackDelegate?
+            .pictureInPictureControllerTimeRangeForPlayback(self) ?? .zero
+    }
+
+    /// ObjC selector `pictureInPictureController:skipByInterval:completionHandler:`.
+    /// Isolated host invokes the completion-handler form synchronously so the
+    /// sealed runner never awaits the Swift async overlay.
+    public func openUIKitHostInvokeSkipByInterval(_ interval: CMTime) {
+        guard let playback = contentSource?.sampleBufferPlaybackDelegate else { return }
+        playback.pictureInPictureController(
+            self,
+            skipByInterval: interval,
+            completionHandler: {}
+        )
+    }
+
+    /// ObjC selector `pictureInPictureController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:`.
+    /// Linux never restores a PiP interface; the completion is invoked with
+    /// `false`.
+    public func openUIKitHostDeliverRestoreUserInterfaceForPictureInPictureStop() {
+        var restored = true
+        delegate?.pictureInPictureController(
+            self,
+            restoreUserInterfaceForPictureInPictureStopWithCompletionHandler: { restored = $0 }
+        )
+        _ = restored
+    }
+
     public func startPictureInPicture() {
         // Apple: when PiP cannot start, the controller tells the delegate
         // through failedToStartPictureInPictureWithError
@@ -517,6 +593,10 @@ public protocol AVPictureInPictureControllerDelegate: NSObjectProtocol {
     func pictureInPictureController(
         _ pictureInPictureController: AVPictureInPictureController
     ) async -> Bool
+    func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    )
     func pictureInPictureControllerDidStartPictureInPicture(
         _ pictureInPictureController: AVPictureInPictureController
     )
@@ -544,6 +624,14 @@ extension AVPictureInPictureControllerDelegate {
     ) async -> Bool {
         _ = pictureInPictureController
         return false
+    }
+
+    public func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void
+    ) {
+        _ = pictureInPictureController
+        completionHandler(false)
     }
 
     public func pictureInPictureControllerDidStartPictureInPicture(
@@ -584,6 +672,11 @@ public protocol AVPictureInPictureSampleBufferPlaybackDelegate: NSObjectProtocol
         _ pictureInPictureController: AVPictureInPictureController,
         skipByInterval skipInterval: CMTime
     ) async
+    func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        skipByInterval skipInterval: CMTime,
+        completionHandler: @escaping () -> Void
+    )
     func pictureInPictureControllerIsPlaybackPaused(
         _ pictureInPictureController: AVPictureInPictureController
     ) -> Bool
@@ -601,6 +694,22 @@ extension AVPictureInPictureSampleBufferPlaybackDelegate {
     ) -> Bool {
         _ = pictureInPictureController
         return true
+    }
+
+    public func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        skipByInterval skipInterval: CMTime
+    ) async {
+        _ = (pictureInPictureController, skipInterval)
+    }
+
+    public func pictureInPictureController(
+        _ pictureInPictureController: AVPictureInPictureController,
+        skipByInterval skipInterval: CMTime,
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = (pictureInPictureController, skipInterval)
+        completionHandler()
     }
 }
 
@@ -929,6 +1038,12 @@ open class AVRoutePickerView: UIView {
 
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+
+    /// Isolated host never presents an AirPlay / route sheet. Host hook exists
+    /// so tests can observe that `willBegin` / `didEnd` stay silent.
+    public func openUIKitHostAttemptPresentRoutes() {
+        // Fail closed: no route UI, so the delegate is not invoked.
     }
 }
 

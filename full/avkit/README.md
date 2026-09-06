@@ -13,17 +13,27 @@ listed dependency: this seed lists Foundation only.
 
 ## Depth pass 2026-09 (wave 8)
 
-SDK depth, second pass. The first-pass module, fail-closed PiP / route /
-capture paths, and existing `tests/agent/AVKitTests.swift` checks stay in
-place. This pass extends `AVPlayerViewController` display state from the
-AVFoundation-lane player item, adds PiP and sample-buffer delegate dispatch
-hooks, and relabels 150 SwiftUI overlay re-exports.
+SDK depth, second pass, continued. The first-pass module, fail-closed PiP /
+route / capture paths, and existing `tests/agent/AVKitTests.swift` checks
+stay in place. Family models (`AVPlayerViewController`,
+`AVPictureInPictureController`, route picker, capture events, interstitial
+ranges, `VideoPlayer`, `AVKitError`) each have per-identifier synchronous
+tests. ObjC PiP restore and sample-buffer `skipByInterval` completion
+handlers are invoked by host hooks without awaiting Swift async overlays.
 
 Coverage before this pass: **174 implemented / 837 declared / 0 deferred /
 0 unavailable / 0 not-applicable** (1011 nondeferred, floor 506).
 
-Coverage after this pass: **192 implemented / 669 declared / 0 deferred /
-0 unavailable / 150 not-applicable** (861 nondeferred, floor 506).
+Coverage after the overlay bookkeeping revision: **192 implemented / 669
+declared / 0 deferred / 0 unavailable / 150 not-applicable**.
+
+Coverage after this depth continuation: **215 implemented / 646 declared /
+0 deferred / 0 unavailable / 150 not-applicable** (861 nondeferred, floor
+506). Implemented gain is **+23** versus 192 (PiP restore / skip
+completion-handler selectors, remaining `AVVideoFrameAnalysisType`
+SetAlgebra / OptionSet witnesses, and leftover `!=` / `hashValue` /
+`hash(into:)` on `RouteSelection` / `AVDisplayDynamicRange` /
+`AVVideoFrameAnalysisType`).
 
 150 `s:7SwiftUI4View…` members synthesized onto `VideoPlayer` (excluding
 AVKit-owned `onCameraCaptureEvent`) are `not-applicable` with the note
@@ -36,15 +46,16 @@ would drop nondeferred coverage to 227. They are never `implemented`.
 `canStopPictureInPicture`, and `transportBarCustomMenuItems` are absent from
 this iPhoneOS 26.1 public graph and are not invented.
 
-Top-5 implemented evidence (192 rows; no non-enum test exceeds 40%):
+Top-5 implemented evidence (215 rows; 40% cap = 86; enum / option-set
+members may share a table-driven value test):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 15 | 7.8% | `AVKitTests.swift#testAVKitErrorBridging` (bridged `AVKitError` / Foundation witnesses) |
-| 13 | 6.8% | `AVKitTests.swift#testVideoFrameAnalysisOptionSet` (table-driven option-set members) |
-| 10 | 5.2% | `AVKitTests.swift#testCaptureEventPhaseAndSounds` |
-| 10 | 5.2% | `AVKitTests.swift#testPlayerViewControllerMeasuredDefaults` |
-| 9 | 4.7% | `AVKitTests.swift#testPlayerViewControllerDelegateOrder` |
+| 6 | 2.8% | `AVKitTests.swift#testVideoFrameAnalysisOptionSet` (option-set members) |
+| 5 | 2.3% | `AVKitTests.swift#testDisplayDynamicRangeRawValues` (enum cases) |
+| 4 | 1.9% | `AVKitTests.swift#testRouteSelectionRawValues` (enum cases) |
+| 4 | 1.9% | `AVKitTests.swift#testCaptureEventPhaseRawValues` (enum cases) |
+| 3 | 1.4% | `AVKitTests.swift#testAVKitErrorCodes` (error-code cases) |
 
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
@@ -146,11 +157,14 @@ windows, route sheets, or capture-button events.
   with `AVKitError.pictureInPictureStartFailed` (-1001)
   (https://developer.apple.com/documentation/avkit/avpictureinpicturecontrollerdelegate/pictureinpicturecontroller(_:failedtostartpictureinpicturewitherror:)).
   `stopPictureInPicture()` on an inactive session does not fire willStop /
-  didStop. Host hooks can still deliver the documented start/stop order or
-  invoke synchronous sample-buffer playback-delegate methods.
+  didStop. Host hooks can still deliver the documented start/stop order,
+  invoke synchronous sample-buffer playback-delegate methods, call the
+  ObjC `skipByInterval` completion-handler selector, and fail-close restore
+  UI with `false`.
 - `AVCaptureEvent.play(_:)` returns `false`. Custom
-  `AVCaptureEventSound(url:)` throws `AVKitError.unknown`. Interaction
-  handlers are stored and never invoked.
+  `AVCaptureEventSound(url:)` throws `AVKitError.unknown`. Hardware never
+  delivers capture-button events. Host hook `openUIKitHostDeliver` invokes
+  stored primary / secondary handlers so tests can observe retention.
 - `AVInputPickerInteraction.present()` / `dismiss()` keep `isPresented`
   false. No input-picker UI is shown.
 - `AVAudioSession.prepareRouteSelectionForPlayback` invokes the completion
@@ -171,8 +185,9 @@ Remaining work is behavioral, not missing declarations of the iPhoneOS graph:
   Remaining synthesized `View` members, including AVKit-owned
   `onCameraCaptureEvent`, typecheck as identity no-ops and stay `declared`.
   They are not behavioral evidence.
-- The async sample-buffer `skipByInterval` member stays `declared`; the sealed
-  runner cannot await it.
+- The Swift async overlay of sample-buffer `skipByInterval` is still not
+  awaited by the sealed runner. The matching ObjC completion-handler
+  selector is implemented and invoked synchronously.
 - Synthesized Swift operators (`!=`, `~=`) cite their owning type when they
   have no identifier spelling of their own.
 - AVFoundation / SwiftUI / UIKit lookalikes give way to the real modules on a

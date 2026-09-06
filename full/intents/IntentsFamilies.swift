@@ -51,6 +51,7 @@ extension INIntentResponse: NSSecureCoding {
     public func encode(with coder: NSCoder) {
         coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
         coder.encode("INIntentResponse", forKey: INPortableArchive.kindKey)
+        coder.encode(userActivity?.activityType as NSString?, forKey: "userActivityType")
     }
 }
 
@@ -64,6 +65,10 @@ extension INInteraction: NSSecureCoding {
         coder.encode(identifier as NSString?, forKey: "identifier")
         coder.encode(Int64(direction.rawValue), forKey: "direction")
         coder.encode(groupIdentifier as NSString?, forKey: "groupIdentifier")
+        if let dateInterval {
+            coder.encode(dateInterval.start, forKey: "dateIntervalStart")
+            coder.encode(dateInterval.duration, forKey: "dateIntervalDuration")
+        }
     }
 }
 
@@ -135,3 +140,69 @@ extension INShortcut: NSSecureCoding {
         coder.encode(intent, forKey: "intent")
     }
 }
+
+extension INObject: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        coder.encode(identifier as NSString?, forKey: "identifier")
+        coder.encode(displayString as NSString, forKey: "displayString")
+        coder.encode(pronunciationHint as NSString?, forKey: "pronunciationHint")
+    }
+}
+
+extension INObjectCollection: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        coder.encode(Int64(items.count), forKey: "itemCount")
+    }
+}
+
+extension INObjectSection: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        coder.encode(title as NSString?, forKey: "title")
+        coder.encode(Int64(items.count), forKey: "itemCount")
+    }
+}
+
+extension INFocusStatus: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        if let isFocused {
+            coder.encode(isFocused, forKey: "isFocused")
+        }
+    }
+}
+
+extension INMediaSearch: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
+    public func encode(with coder: NSCoder) {
+        inLinuxEncodeStrings(coder, [
+            ("mediaName", mediaName),
+            ("artistName", artistName),
+            ("albumName", albumName),
+            ("mediaIdentifier", mediaIdentifier),
+        ])
+    }
+}
+
+extension INVoiceShortcut: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+
+    public func encode(with coder: NSCoder) {
+        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        coder.encode(identifier.uuidString as NSString, forKey: "identifier")
+        coder.encode(invocationPhrase as NSString, forKey: "invocationPhrase")
+        coder.encode(shortcut, forKey: "shortcut")
+    }
+}
+

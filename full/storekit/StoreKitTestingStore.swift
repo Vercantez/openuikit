@@ -7,11 +7,11 @@ import Foundation
 /// `settings`) used by StoreKit Testing in Xcode. There is no App Store on
 /// Linux: purchases run through this in-memory catalog.
 ///
-/// Signed results are modelled as `VerificationResult.unverified` unless the
-/// configuration's `settings` dictionary contains the portable testing key
-/// `_treatTransactionsAsVerified` = true. Apple's public `.storekit` schema
-/// does not record JWS certificates, so Linux cannot honestly emit `.verified`
-/// without that explicit test mark.
+/// Compact JWS is real (base64url header/payload/signature plus `x5c`).
+/// Signature verification is fail-closed: results are
+/// `VerificationResult.unverified(_, .invalidSignature)` unless `settings`
+/// contains `_treatTransactionsAsVerified` = true. That flag is a portable
+/// testing override, not Apple root validation.
 public enum StoreKitTesting {
     public static func reset() {
         LocalTestingStore.shared.reset()
@@ -37,6 +37,144 @@ public enum StoreKitTesting {
     public static func loadConfiguration(from url: URL) throws {
         let data = try Data(contentsOf: url)
         try loadConfiguration(data: data)
+    }
+
+    /// Synchronous catalog lookup. `Product.products(for:)` is the async
+    /// wrapper around this host path; the catalog does not suspend.
+    public static func products(for identifiers: [String]) throws -> [Product] {
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+        return LocalTestingStore.shared.products(for: identifiers)
+    }
+
+    public static func purchase(
+        _ product: Product,
+        options: Set<Product.PurchaseOption> = []
+    ) throws -> Product.PurchaseResult {
+        var quantity = 1
+        var token: UUID?
+        for option in options {
+            if let value = option.quantityValue { quantity = value }
+            if let value = option.appAccountTokenValue { token = value }
+        }
+        let result = try LocalTestingStore.shared.purchase(
+            product: product,
+            quantity: quantity,
+            appAccountToken: token
+        )
+        return .success(result)
+    }
+
+    public static func currentEntitlements() -> [VerificationResult<Transaction>] {
+        LocalTestingStore.shared.snapshotEntitlements()
+    }
+
+    public static func allTransactions() -> [VerificationResult<Transaction>] {
+        LocalTestingStore.shared.snapshotAll()
+    }
+
+    public static func unfinished() -> [VerificationResult<Transaction>] {
+        LocalTestingStore.shared.snapshotUnfinished()
+    }
+
+    public static func latest(for productID: String) -> VerificationResult<Transaction>? {
+        LocalTestingStore.shared.latest(for: productID)
+    }
+
+    public static func currentEntitlement(
+        for productID: String
+    ) -> VerificationResult<Transaction>? {
+        LocalTestingStore.shared.currentEntitlement(for: productID)
+    }
+
+    public static func finish(_ transaction: Transaction) {
+        LocalTestingStore.shared.finish(id: transaction.id)
+    }
+
+    public static func currentStorefront() -> Storefront? {
+        LocalTestingStore.shared.currentStorefront
+    }
+
+    public static func sync() throws {
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+    }
+
+    public static func appTransaction() throws -> VerificationResult<AppTransaction> {
+        try AppTransaction.currentForTesting()
+    }
+
+    public static func subscriptionStatus(
+        for groupID: String
+    ) throws -> [Product.SubscriptionInfo.Status] {
+        try Product.SubscriptionInfo.statusNow(for: groupID)
+    }
+
+    public static func isEligibleForIntroOffer(for groupID: String) -> Bool {
+        LocalTestingStore.shared.isEligibleForIntroOffer(groupID: groupID)
+    }
+
+    public static func showManageSubscriptions() throws {
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func beginRefundRequest(
+        transactionID: UInt64
+    ) throws -> Transaction.RefundRequestStatus {
+        _ = transactionID
+        throw StoreKitError.notAvailableInStorefront
+    }
+
+    public static func revoke(
+        productID: String,
+        reason: Transaction.RevocationReason
+    ) {
+        LocalTestingStore.shared.revoke(productID: productID, reason: reason)
+    }
+
+    public static func expire(productID: String) {
+        LocalTestingStore.shared.expire(productID: productID)
+    }
+
+    public static func parseJWS(_ compact: String) throws -> StoreKitJWS {
+        try StoreKitJWSCodec.parse(compact)
+    }
+
+    public static func signatureCheck(
+        _ compact: String
+    ) -> VerificationResult<Transaction>.VerificationError {
+        StoreKitJWSCodec.signatureCheck(compact)
+    }
+
+    public static func takePendingUpdates() -> [VerificationResult<Transaction>] {
+        LocalTestingStore.shared.takePendingUpdates()
+    }
+
+    public static func promotionOrder() throws -> [Product.PromotionInfo] {
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+        return []
+    }
+
+    public static func updateProductVisibility(
+        _ visibility: Product.PromotionInfo.Visibility,
+        for productID: String
+    ) throws {
+        _ = visibility
+        _ = productID
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
+    }
+
+    public static func updateProductOrder(byID order: [String]) throws {
+        _ = order
+        guard LocalTestingStore.shared.isLoaded else {
+            throw StoreKitError.notAvailableInStorefront
+        }
     }
 }
 
@@ -80,6 +218,7 @@ final class LocalTestingStore: @unchecked Sendable {
     private var pendingUpdates: [VerificationResult<Transaction>] = []
     private var listeners: [UUID: UpdateListenerBox] = [:]
     private var skTransactions: [SKPaymentTransaction] = []
+    private var introConsumedGroups: Set<String> = []
 
     private init() {}
 
@@ -93,6 +232,12 @@ final class LocalTestingStore: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         return loaded
+    }
+
+    var treatsTransactionsAsVerified: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return treatVerified
     }
 
     var currentStorefront: Storefront? {
@@ -136,6 +281,7 @@ final class LocalTestingStore: @unchecked Sendable {
         let waiting = listeners
         listeners = [:]
         skTransactions = []
+        introConsumedGroups = []
         lock.unlock()
         for box in waiting.values {
             box.continuation?.resume(returning: nil)
@@ -227,11 +373,22 @@ final class LocalTestingStore: @unchecked Sendable {
         if catalogProduct.type == .autoRenewable, let period = catalogProduct.period {
             expiration = period.endDate(from: now)
         }
+        if catalogProduct.type == .autoRenewable, let group = catalogProduct.subscriptionGroupID {
+            introConsumedGroups.insert(group)
+        }
         let storefront = Storefront(id: storefrontID, countryCode: countryCode)
+        let bundleID = Bundle.main.bundleIdentifier ?? "localhost"
+        let nonce = UUID()
         let jws = LocalTestingStore.makeJWS(
             productID: catalogProduct.id,
             transactionID: identifier,
-            date: now
+            date: now,
+            bundleID: bundleID,
+            productType: catalogProduct.type,
+            storefront: storefront,
+            quantity: quantity,
+            environment: "Xcode",
+            expiration: expiration
         )
         let transaction = Transaction(
             id: identifier,
@@ -244,7 +401,7 @@ final class LocalTestingStore: @unchecked Sendable {
             webOrderLineItemID: nil,
             subscriptionGroupID: catalogProduct.subscriptionGroupID,
             productType: catalogProduct.type,
-            appBundleID: Bundle.main.bundleIdentifier ?? "localhost",
+            appBundleID: bundleID,
             appAccountToken: appAccountToken,
             purchasedQuantity: quantity,
             storefront: storefront,
@@ -252,13 +409,13 @@ final class LocalTestingStore: @unchecked Sendable {
             ownershipType: .purchased,
             environment: .xcode,
             signedDate: now,
-            deviceVerification: jws.deviceVerification,
-            deviceVerificationNonce: jws.deviceVerificationNonce,
+            deviceVerification: Data(repeating: 0, count: 16),
+            deviceVerificationNonce: nonce,
             jsonRepresentation: jws.payloadData,
             jwsHeaderData: jws.headerData,
             jwsPayloadData: jws.payloadData,
             jwsSignatureData: jws.signatureData,
-            jwsRepresentation: jws.representation,
+            jwsRepresentation: jws.compactSerialization,
             price: catalogProduct.price,
             currencyCode: currencyCode,
             offer: nil
@@ -268,10 +425,10 @@ final class LocalTestingStore: @unchecked Sendable {
         if treatVerified {
             result = .verified(transaction)
         } else {
-            // Linux has no Apple root to validate JWS compact serialization.
             // Apple: VerificationResult.unverified wraps values that failed
             // automatic verification. https://developer.apple.com/documentation/storekit/verificationresult
-            result = .unverified(transaction, .invalidSignature)
+            let error = StoreKitJWSCodec.signatureCheck(transaction.jwsRepresentation)
+            result = .unverified(transaction, error)
         }
         let waiters = Array(listeners.values)
         let parked = waiters.filter { $0.continuation != nil }
@@ -402,6 +559,51 @@ final class LocalTestingStore: @unchecked Sendable {
         }
     }
 
+    func takePendingUpdates() -> [VerificationResult<Transaction>] {
+        lock.lock()
+        defer { lock.unlock() }
+        let values = pendingUpdates
+        pendingUpdates = []
+        return values
+    }
+
+    func isEligibleForIntroOffer(groupID: String) -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard loaded else { return false }
+        if introConsumedGroups.contains(groupID) {
+            return false
+        }
+        for stored in transactions {
+            if stored.transaction.subscriptionGroupID == groupID {
+                return false
+            }
+        }
+        return true
+    }
+
+    func revoke(productID: String, reason: Transaction.RevocationReason) {
+        lock.lock()
+        defer { lock.unlock() }
+        for index in transactions.indices {
+            if transactions[index].transaction.productID == productID {
+                let current = transactions[index].transaction
+                transactions[index].transaction = current.revoked(at: Date(), reason: reason)
+            }
+        }
+    }
+
+    func expire(productID: String) {
+        lock.lock()
+        defer { lock.unlock() }
+        for index in transactions.indices {
+            if transactions[index].transaction.productID == productID {
+                let current = transactions[index].transaction
+                transactions[index].transaction = current.expired(at: Date())
+            }
+        }
+    }
+
     func restoredNonConsumables() -> [CatalogProduct] {
         lock.lock()
         defer { lock.unlock() }
@@ -437,7 +639,8 @@ final class LocalTestingStore: @unchecked Sendable {
         if treatVerified {
             return .verified(transaction)
         }
-        return .unverified(transaction, .invalidSignature)
+        let error = StoreKitJWSCodec.signatureCheck(transaction.jwsRepresentation)
+        return .unverified(transaction, error)
     }
 
     private func makeProduct(_ catalogProduct: CatalogProduct) -> Product {
@@ -639,50 +842,37 @@ final class LocalTestingStore: @unchecked Sendable {
         return price.description
     }
 
-    private struct JWSPieces {
-        var headerData: Data
-        var payloadData: Data
-        var signatureData: Data
-        var representation: String
-        var deviceVerification: Data
-        var deviceVerificationNonce: UUID
-    }
-
-    private static func makeJWS(productID: String, transactionID: UInt64, date: Date) -> JWSPieces {
-        let headerObject: [String: String] = ["alg": "none", "typ": "JWS"]
-        let payloadObject: [String: Any] = [
+    private static func makeJWS(
+        productID: String,
+        transactionID: UInt64,
+        date: Date,
+        bundleID: String,
+        productType: Product.ProductType,
+        storefront: Storefront,
+        quantity: Int,
+        environment: String,
+        expiration: Date?
+    ) -> StoreKitJWS {
+        let millisecond = NSNumber(value: Int64(date.timeIntervalSince1970 * 1000))
+        var payload: [String: Any] = [
             "transactionId": NSNumber(value: transactionID),
+            "originalTransactionId": NSNumber(value: transactionID),
             "productId": productID,
-            "purchaseDate": NSNumber(value: date.timeIntervalSince1970),
+            "bundleId": bundleID,
+            "purchaseDate": millisecond,
+            "originalPurchaseDate": millisecond,
+            "signedDate": millisecond,
+            "type": productType.rawValue,
+            "quantity": NSNumber(value: quantity),
+            "storefront": storefront.id,
+            "storefrontId": storefront.id,
+            "environment": environment,
+            "inAppOwnershipType": "PURCHASED",
+            "transactionReason": "PURCHASE",
         ]
-        let headerData = (try? JSONSerialization.data(withJSONObject: headerObject)) ?? Data()
-        let payloadData = (try? JSONSerialization.data(withJSONObject: payloadObject)) ?? Data()
-        let signatureData = Data()
-        let representation =
-            base64url(headerData) + "." + base64url(payloadData) + "."
-        return JWSPieces(
-            headerData: headerData,
-            payloadData: payloadData,
-            signatureData: signatureData,
-            representation: representation,
-            deviceVerification: Data(repeating: 0, count: 16),
-            deviceVerificationNonce: UUID()
-        )
-    }
-
-    private static func base64url(_ data: Data) -> String {
-        var output = ""
-        for character in data.base64EncodedString() {
-            if character == "+" {
-                output.append("-")
-            } else if character == "/" {
-                output.append("_")
-            } else if character == "=" {
-                continue
-            } else {
-                output.append(character)
-            }
+        if let expiration {
+            payload["expiresDate"] = NSNumber(value: Int64(expiration.timeIntervalSince1970 * 1000))
         }
-        return output
+        return StoreKitJWSCodec.encode(payload: payload)
     }
 }

@@ -58,9 +58,11 @@ public struct PhotosPickerItem: Hashable, @unchecked Sendable {
     public var itemIdentifier: String? { box.identifier }
     public var supportedContentTypes: [UTType] { box.supportedContentTypes }
 
+    /// Linux host: completes inline. Apple's method is `async throws` and
+    /// hops to a loading executor (oracle-questions.tsv).
     public func loadTransferable<T: Transferable>(
         type: T.Type
-    ) async throws -> T? {
+    ) throws -> T? {
         box.load(type)
     }
 
@@ -193,9 +195,45 @@ public enum PhotosUIPortable {
 
 public struct PhotosPicker<Label: View>: View {
     private let label: Label
+    fileprivate var maxSelectionCount: Int?
+    fileprivate var selectionBehavior: PhotosPickerSelectionBehavior
+    fileprivate var filter: PHPickerFilter?
+    fileprivate var preferredItemEncoding: PhotosPickerItem.EncodingDisambiguationPolicy
+    fileprivate var usesPhotoLibrary: Bool
+    fileprivate var allowsMultipleSelection: Bool
+    fileprivate var appliedStyle: PhotosPickerStyle
+    fileprivate var accessoryVisibility: Visibility
+    fileprivate var accessoryEdges: Edge.Set
+    fileprivate var disabledCapabilities: PHPickerCapabilities
+    fileprivate var presentsUsingModifier: Bool
 
     public var body: Label { label }
 
+    @_spi(OpenUIKitHost)
+    public var _maxSelectionCount: Int? { maxSelectionCount }
+    @_spi(OpenUIKitHost)
+    public var _selectionBehavior: PhotosPickerSelectionBehavior { selectionBehavior }
+    @_spi(OpenUIKitHost)
+    public var _filter: PHPickerFilter? { filter }
+    @_spi(OpenUIKitHost)
+    public var _preferredItemEncoding: PhotosPickerItem.EncodingDisambiguationPolicy {
+        preferredItemEncoding
+    }
+    @_spi(OpenUIKitHost)
+    public var _usesPhotoLibrary: Bool { usesPhotoLibrary }
+    @_spi(OpenUIKitHost)
+    public var _allowsMultipleSelection: Bool { allowsMultipleSelection }
+    @_spi(OpenUIKitHost)
+    public var _appliedStyle: PhotosPickerStyle { appliedStyle }
+    @_spi(OpenUIKitHost)
+    public var _accessoryVisibility: Visibility { accessoryVisibility }
+    @_spi(OpenUIKitHost)
+    public var _accessoryEdges: Edge.Set { accessoryEdges }
+    @_spi(OpenUIKitHost)
+    public var _disabledCapabilities: PHPickerCapabilities { disabledCapabilities }
+    @_spi(OpenUIKitHost)
+    public var _presentsUsingModifier: Bool { presentsUsingModifier }
+
     public init(
         selection: Binding<[PhotosPickerItem]>,
         maxSelectionCount: Int? = nil,
@@ -206,12 +244,19 @@ public struct PhotosPicker<Label: View>: View {
         @ViewBuilder label: () -> Label
     ) {
         _ = selection
-        _ = maxSelectionCount
-        _ = selectionBehavior
-        _ = filter
-        _ = preferredItemEncoding
         _ = photoLibrary
         self.label = label()
+        self.maxSelectionCount = maxSelectionCount
+        self.selectionBehavior = selectionBehavior
+        self.filter = filter
+        self.preferredItemEncoding = preferredItemEncoding
+        self.usesPhotoLibrary = true
+        self.allowsMultipleSelection = true
+        self.appliedStyle = .presentation
+        self.accessoryVisibility = .automatic
+        self.accessoryEdges = .all
+        self.disabledCapabilities = []
+        self.presentsUsingModifier = false
     }
 
     public init(
@@ -223,11 +268,18 @@ public struct PhotosPicker<Label: View>: View {
         @ViewBuilder label: () -> Label
     ) {
         _ = selection
-        _ = maxSelectionCount
-        _ = selectionBehavior
-        _ = filter
-        _ = preferredItemEncoding
         self.label = label()
+        self.maxSelectionCount = maxSelectionCount
+        self.selectionBehavior = selectionBehavior
+        self.filter = filter
+        self.preferredItemEncoding = preferredItemEncoding
+        self.usesPhotoLibrary = false
+        self.allowsMultipleSelection = true
+        self.appliedStyle = .presentation
+        self.accessoryVisibility = .automatic
+        self.accessoryEdges = .all
+        self.disabledCapabilities = []
+        self.presentsUsingModifier = false
     }
 
     public init(
@@ -238,10 +290,19 @@ public struct PhotosPicker<Label: View>: View {
         @ViewBuilder label: () -> Label
     ) {
         _ = selection
-        _ = filter
-        _ = preferredItemEncoding
         _ = photoLibrary
         self.label = label()
+        self.maxSelectionCount = 1
+        self.selectionBehavior = .default
+        self.filter = filter
+        self.preferredItemEncoding = preferredItemEncoding
+        self.usesPhotoLibrary = true
+        self.allowsMultipleSelection = false
+        self.appliedStyle = .presentation
+        self.accessoryVisibility = .automatic
+        self.accessoryEdges = .all
+        self.disabledCapabilities = []
+        self.presentsUsingModifier = false
     }
 
     public init(
@@ -251,9 +312,18 @@ public struct PhotosPicker<Label: View>: View {
         @ViewBuilder label: () -> Label
     ) {
         _ = selection
-        _ = filter
-        _ = preferredItemEncoding
         self.label = label()
+        self.maxSelectionCount = 1
+        self.selectionBehavior = .default
+        self.filter = filter
+        self.preferredItemEncoding = preferredItemEncoding
+        self.usesPhotoLibrary = false
+        self.allowsMultipleSelection = false
+        self.appliedStyle = .presentation
+        self.accessoryVisibility = .automatic
+        self.accessoryEdges = .all
+        self.disabledCapabilities = []
+        self.presentsUsingModifier = false
     }
 }
 
@@ -392,6 +462,116 @@ extension PhotosPicker where Label == Text {
             preferredItemEncoding: preferredItemEncoding,
             label: { Text(String(title)) }
         )
+    }
+}
+
+extension PhotosPicker {
+    public func photosPickerStyle(_ style: PhotosPickerStyle) -> Self {
+        var copy = self
+        copy.appliedStyle = style
+        return copy
+    }
+
+    public func photosPickerAccessoryVisibility(
+        _ visibility: Visibility,
+        edges: Edge.Set = .all
+    ) -> Self {
+        var copy = self
+        copy.accessoryVisibility = visibility
+        copy.accessoryEdges = edges
+        return copy
+    }
+
+    public func photosPickerDisabledCapabilities(
+        _ disabledCapabilities: PHPickerCapabilities
+    ) -> Self {
+        var copy = self
+        copy.disabledCapabilities = disabledCapabilities
+        return copy
+    }
+
+    public func photosPicker(
+        isPresented: Binding<Bool>,
+        selection: Binding<PhotosPickerItem?>,
+        matching filter: PHPickerFilter? = nil,
+        preferredItemEncoding: PhotosPickerItem.EncodingDisambiguationPolicy = .automatic,
+        photoLibrary: PHPhotoLibrary
+    ) -> Self {
+        _ = isPresented
+        _ = selection
+        _ = photoLibrary
+        var copy = self
+        copy.maxSelectionCount = 1
+        copy.selectionBehavior = .default
+        copy.filter = filter
+        copy.preferredItemEncoding = preferredItemEncoding
+        copy.usesPhotoLibrary = true
+        copy.allowsMultipleSelection = false
+        copy.presentsUsingModifier = true
+        return copy
+    }
+
+    public func photosPicker(
+        isPresented: Binding<Bool>,
+        selection: Binding<PhotosPickerItem?>,
+        matching filter: PHPickerFilter? = nil,
+        preferredItemEncoding: PhotosPickerItem.EncodingDisambiguationPolicy = .automatic
+    ) -> Self {
+        _ = isPresented
+        _ = selection
+        var copy = self
+        copy.maxSelectionCount = 1
+        copy.selectionBehavior = .default
+        copy.filter = filter
+        copy.preferredItemEncoding = preferredItemEncoding
+        copy.usesPhotoLibrary = false
+        copy.allowsMultipleSelection = false
+        copy.presentsUsingModifier = true
+        return copy
+    }
+
+    public func photosPicker(
+        isPresented: Binding<Bool>,
+        selection: Binding<[PhotosPickerItem]>,
+        maxSelectionCount: Int? = nil,
+        selectionBehavior: PhotosPickerSelectionBehavior = .default,
+        matching filter: PHPickerFilter? = nil,
+        preferredItemEncoding: PhotosPickerItem.EncodingDisambiguationPolicy = .automatic,
+        photoLibrary: PHPhotoLibrary
+    ) -> Self {
+        _ = isPresented
+        _ = selection
+        _ = photoLibrary
+        var copy = self
+        copy.maxSelectionCount = maxSelectionCount
+        copy.selectionBehavior = selectionBehavior
+        copy.filter = filter
+        copy.preferredItemEncoding = preferredItemEncoding
+        copy.usesPhotoLibrary = true
+        copy.allowsMultipleSelection = true
+        copy.presentsUsingModifier = true
+        return copy
+    }
+
+    public func photosPicker(
+        isPresented: Binding<Bool>,
+        selection: Binding<[PhotosPickerItem]>,
+        maxSelectionCount: Int? = nil,
+        selectionBehavior: PhotosPickerSelectionBehavior = .default,
+        matching filter: PHPickerFilter? = nil,
+        preferredItemEncoding: PhotosPickerItem.EncodingDisambiguationPolicy = .automatic
+    ) -> Self {
+        _ = isPresented
+        _ = selection
+        var copy = self
+        copy.maxSelectionCount = maxSelectionCount
+        copy.selectionBehavior = selectionBehavior
+        copy.filter = filter
+        copy.preferredItemEncoding = preferredItemEncoding
+        copy.usesPhotoLibrary = false
+        copy.allowsMultipleSelection = true
+        copy.presentsUsingModifier = true
+        return copy
     }
 }
 

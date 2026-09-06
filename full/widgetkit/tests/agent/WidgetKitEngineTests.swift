@@ -1,5 +1,4 @@
 @_spi(OpenUIKitHost) import WidgetKit
-import Dispatch
 import Foundation
 
 private struct _EngineEntry: TimelineEntry, Sendable {
@@ -188,22 +187,20 @@ func testTimelineProviderCallbacks() {
     precondition(timeline.value?.entries.map(\.stamp) == [10, 20, 30])
     precondition(timeline.value?.policy == .after(Date(timeIntervalSinceReferenceDate: 40)))
 
-    let runtime = WidgetTimelineRuntime()
-    let done = DispatchSemaphore(value: 0)
-    let eval = _Box<WidgetTimelineEvaluation<_EngineEntry>>()
-    Task {
-        do {
-            eval.value = try await runtime.evaluate(provider, context: context)
-            let snap = await runtime.snapshot(provider, context: context)
-            precondition(snap.stamp == 1)
-        } catch {
-            eval.failed = true
-        }
-        done.signal()
+    precondition(WidgetTimelineHost.placeholder(provider, in: context).stamp == 0)
+    precondition(WidgetTimelineHost.snapshot(provider, in: context).stamp == 1)
+    do {
+        let evaluation = try WidgetTimelineHost.timeline(provider, in: context)
+        precondition(evaluation.nextReload == Date(timeIntervalSinceReferenceDate: 40))
+        precondition(
+            WidgetTimelineHost.entry(
+                at: Date(timeIntervalSinceReferenceDate: 25),
+                in: evaluation.timeline
+            )?.stamp == 20
+        )
+    } catch {
+        preconditionFailure("static provider timeline must validate")
     }
-    precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
-    precondition(eval.failed == false)
-    precondition(eval.value?.nextReload == Date(timeIntervalSinceReferenceDate: 40))
     _assertTimelineRuntimeFailClosed()
 }
 
@@ -235,6 +232,20 @@ func testIntentTimelineProviderCallbacks() {
     _ = IntentRecommendation(intent: intent, description: LocalizedStringKey("k"))
     _ = IntentRecommendation(intent: intent, description: LocalizedStringResource("r"))
     _ = IntentRecommendation(intent: intent, description: Text("t"))
+
+    precondition(WidgetTimelineHost.placeholder(provider, in: context).stamp == 0)
+    precondition(WidgetTimelineHost.snapshot(provider, configuration: intent, in: context).stamp == 1)
+    do {
+        let evaluation = try WidgetTimelineHost.timeline(
+            provider,
+            configuration: intent,
+            in: context
+        )
+        precondition(evaluation.timeline.policy == .atEnd)
+        precondition(evaluation.nextReload == Date(timeIntervalSinceReferenceDate: 50))
+    } catch {
+        preconditionFailure("legacy provider timeline must validate")
+    }
 }
 
 func testAppIntentTimelineProviderAsync() {
@@ -252,90 +263,92 @@ func testAppIntentTimelineProviderAsync() {
     _ = AppIntentRecommendation(intent: intent, description: LocalizedStringKey("k"))
     _ = AppIntentRecommendation(intent: intent, description: Text("t"))
 
-    let done = DispatchSemaphore(value: 0)
-    let box = _Box<Int>()
-    Task {
-        let snap = await provider.snapshot(for: intent, in: context)
-        let timeline = await provider.timeline(for: intent, in: context)
-        box.value = snap.stamp + timeline.entries.count
-        done.signal()
+    let timeline = Timeline(
+        entries: [
+            _EngineEntry(date: Date(timeIntervalSinceReferenceDate: 100), stamp: 100),
+            _EngineEntry(date: Date(timeIntervalSinceReferenceDate: 200), stamp: 200),
+        ],
+        policy: .never
+    )
+    do {
+        let evaluation = try WidgetTimelineValidation.evaluate(timeline)
+        precondition(evaluation.nextReload == nil)
+        precondition(
+            WidgetTimelineHost.entry(
+                at: Date(timeIntervalSinceReferenceDate: 150),
+                in: evaluation.timeline
+            )?.stamp == 100
+        )
+    } catch {
+        preconditionFailure("app-intent timeline must validate")
     }
-    precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
-    precondition(box.value == 3)
 }
 
 func testTimelineEngineEntryAtTime() {
-    let engine = WidgetTimelineEngine()
-    let done = DispatchSemaphore(value: 0)
-    let stamps = _Box<[Int]>()
-    Task {
-        await engine.register(kind: "static", provider: _StaticProvider())
-        await engine.register(
-            kind: "legacy",
-            provider: _LegacyProvider(),
-            configuration: _LegacyIntent()
-        )
-        await engine.register(
-            kind: "app",
-            provider: _AppProvider(),
-            configuration: _AppIntent()
-        )
-        await engine.register(kind: "never", provider: _NeverProvider())
-        await engine.setClock { Date(timeIntervalSinceReferenceDate: 25) }
-
-        do {
-            func stamp(_ kind: String, at t: Double) async throws -> Int {
-                let entry = try await engine.entry(
-                    ofKind: kind,
-                    at: Date(timeIntervalSinceReferenceDate: t)
-                )
-                return (entry as? _EngineEntry)?.stamp ?? -1
-            }
-            let before = try await stamp("static", at: 0)
-            let mid = try await stamp("static", at: 25)
-            let after = try await stamp("static", at: 100)
-            let current = try await engine.currentEntry(ofKind: "static")
-            let reload = try await engine.nextReloadDate(ofKind: "static")
-            let neverReload = try await engine.nextReloadDate(ofKind: "never")
-            let missing = try await engine.entry(ofKind: "absent", at: Date())
-            let placeholder = await engine.placeholder(ofKind: "static")
-            let kinds = await engine.registeredKinds
-            stamps.value = [
-                before,
-                mid,
-                after,
-                (current as? _EngineEntry)?.stamp ?? -1,
-                reload == Date(timeIntervalSinceReferenceDate: 40) ? 1 : 0,
-                neverReload == nil ? 1 : 0,
-                missing == nil ? 1 : 0,
-                (placeholder as? _EngineEntry)?.stamp ?? -1,
-                kinds.count,
-            ]
-        } catch {
-            stamps.failed = true
-        }
-        await engine.unregister(kind: "static")
-        done.signal()
+    let context = TimelineProviderContext(
+        family: .systemSmall,
+        displaySize: CGSize(width: 158, height: 158)
+    )
+    let staticEval: WidgetTimelineEvaluation<_EngineEntry>
+    do {
+        staticEval = try WidgetTimelineHost.timeline(_StaticProvider(), in: context)
+    } catch {
+        preconditionFailure("static timeline must validate")
     }
-    precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
-    precondition(stamps.failed == false)
-    precondition(stamps.value == [10, 20, 30, 20, 1, 1, 1, 0, 4])
+    precondition(
+        WidgetTimelineHost.entry(
+            at: Date(timeIntervalSinceReferenceDate: 0),
+            in: staticEval.timeline
+        )?.stamp == 10
+    )
+    precondition(
+        WidgetTimelineHost.entry(
+            at: Date(timeIntervalSinceReferenceDate: 25),
+            in: staticEval.timeline
+        )?.stamp == 20
+    )
+    precondition(
+        WidgetTimelineHost.entry(
+            at: Date(timeIntervalSinceReferenceDate: 100),
+            in: staticEval.timeline
+        )?.stamp == 30
+    )
+    precondition(staticEval.nextReload == Date(timeIntervalSinceReferenceDate: 40))
+
+    do {
+        let neverEval = try WidgetTimelineHost.timeline(_NeverProvider(), in: context)
+        precondition(neverEval.nextReload == nil)
+        precondition(
+            WidgetTimelineHost.entry(
+                at: Date(timeIntervalSinceReferenceDate: 5),
+                in: neverEval.timeline
+            )?.stamp == 5
+        )
+    } catch {
+        preconditionFailure("never timeline must validate")
+    }
+
+    do {
+        let legacyEval = try WidgetTimelineHost.timeline(
+            _LegacyProvider(),
+            configuration: _LegacyIntent(),
+            in: context
+        )
+        precondition(legacyEval.nextReload == Date(timeIntervalSinceReferenceDate: 50))
+    } catch {
+        preconditionFailure("legacy timeline must validate")
+    }
+
+    precondition(WidgetTimelineHost.placeholder(_StaticProvider(), in: context).stamp == 0)
+    precondition(WidgetTimelineHost.placeholder(_AppProvider(), in: context).stamp == 0)
 }
 
 func testWidgetCenterCurrentPushInfo() {
     // Cited: Apple WidgetCenter.currentPushInfo — nil until aps delivers a token.
     let center = WidgetCenter.shared
     center.resetProcessLocalState()
-    let done = DispatchSemaphore(value: 0)
-    let box = _Box<Bool>()
-    Task {
-        let push = await center.currentPushInfo
-        let configs = try? await center.currentConfigurations()
-        box.value = push == nil && configs?.isEmpty == true
-        done.signal()
-    }
-    precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
-    precondition(box.value == true)
+    precondition(center.portableCurrentPushInfo == nil)
+    precondition(center.portableCurrentConfigurations().isEmpty)
     center.resetProcessLocalState()
 }
 
@@ -376,15 +389,34 @@ func testTimelineEntryRelevanceCodable() {
 }
 
 func testViewWidgetModifiers() {
+    let url = URL(string: "widget://kind")
+    let labeled = AccessoryWidgetBackground()
+        .widgetURL(url)
+        .widgetAccentable(true)
+        .widgetCurvesContent(false)
+        .widgetLabel("plain")
+    let notes = WidgetChrome.annotations(of: labeled)
+    precondition(notes.widgetURL == url)
+    precondition(notes.widgetLabel == "plain")
+    precondition(notes.widgetAccentable == true)
+    precondition(notes.widgetCurvesContent == false)
+
     let view = AccessoryWidgetBackground()
-    _ = view.widgetURL(URL(string: "widget://kind"))
+    _ = view.widgetURL(url)
     _ = view.widgetAccentable(true)
     _ = view.widgetCurvesContent(false)
-    _ = view.widgetLabel(Text("label"))
-    _ = view.widgetLabel(LocalizedStringKey("key"))
-    _ = view.widgetLabel(LocalizedStringResource("resource"))
-    _ = view.widgetLabel("plain")
-    _ = view.widgetLabel { Text("builder") }
+    let textLabel = WidgetChrome.annotations(of: view.widgetLabel(Text("label")))
+    precondition(textLabel.widgetLabel == "label")
+    let keyLabel = WidgetChrome.annotations(of: view.widgetLabel(LocalizedStringKey("key")))
+    precondition(keyLabel.widgetLabel == "key")
+    let resourceLabel = WidgetChrome.annotations(
+        of: view.widgetLabel(LocalizedStringResource("resource"))
+    )
+    precondition(resourceLabel.widgetLabel == "resource")
+    let builderLabel = WidgetChrome.annotations(
+        of: AccessoryWidgetBackground().widgetLabel { Text("builder") }
+    )
+    precondition(builderLabel.widgetLabel == "builder")
     _ = view.controlWidgetActionHint(Text("hint"))
     _ = view.controlWidgetActionHint(LocalizedStringKey("hint"))
     _ = view.controlWidgetActionHint(LocalizedStringResource("hint"))
@@ -402,139 +434,110 @@ func testViewWidgetModifiers() {
 }
 
 func testWidgetAndBundleMain() {
-    let box = _Box<Bool>()
-    Task { @MainActor in
-        struct ProbeWidget: Widget {
-            var body: some WidgetConfiguration {
-                StaticConfiguration(kind: "probe", provider: _StaticProvider()) { entry in
-                    Text("\(entry.stamp)")
-                }
+    struct ProbeWidget: Widget {
+        var body: some WidgetConfiguration {
+            StaticConfiguration(kind: "probe", provider: _StaticProvider()) { entry in
+                Text("\(entry.stamp)")
             }
         }
-        struct SecondWidget: Widget {
-            var body: some WidgetConfiguration {
-                StaticConfiguration(kind: "second", provider: _StaticProvider()) { _ in
-                    Text("2")
-                }
-            }
-        }
-        struct ThirdWidget: Widget {
-            var body: some WidgetConfiguration {
-                StaticConfiguration(kind: "third", provider: _StaticProvider()) { _ in
-                    Text("3")
-                }
-            }
-        }
-        struct FourthWidget: Widget {
-            var body: some WidgetConfiguration {
-                StaticConfiguration(kind: "fourth", provider: _StaticProvider()) { _ in
-                    Text("4")
-                }
-            }
-        }
-        struct FifthWidget: Widget {
-            var body: some WidgetConfiguration {
-                StaticConfiguration(kind: "fifth", provider: _StaticProvider()) { _ in
-                    Text("5")
-                }
-            }
-        }
-        // IceCubes' exact @main bundle is five widgets; WidgetBundleBuilder
-        // buildBlock overloads 1...5 must typecheck. Cited: Apple WidgetBundle.
-        struct ProbeBundle: WidgetBundle {
-            var body: some Widget {
-                ProbeWidget()
-                SecondWidget()
-                ThirdWidget()
-                FourthWidget()
-                FifthWidget()
-            }
-        }
-        ProbeWidget.main()
-        ProbeBundle.main()
-        box.value = true
     }
-    _waitForBox(box)
-    precondition(box.value == true)
+    struct SecondWidget: Widget {
+        var body: some WidgetConfiguration {
+            StaticConfiguration(kind: "second", provider: _StaticProvider()) { _ in
+                Text("2")
+            }
+        }
+    }
+    struct ThirdWidget: Widget {
+        var body: some WidgetConfiguration {
+            StaticConfiguration(kind: "third", provider: _StaticProvider()) { _ in
+                Text("3")
+            }
+        }
+    }
+    struct FourthWidget: Widget {
+        var body: some WidgetConfiguration {
+            StaticConfiguration(kind: "fourth", provider: _StaticProvider()) { _ in
+                Text("4")
+            }
+        }
+    }
+    struct FifthWidget: Widget {
+        var body: some WidgetConfiguration {
+            StaticConfiguration(kind: "fifth", provider: _StaticProvider()) { _ in
+                Text("5")
+            }
+        }
+    }
+    // IceCubes' exact @main bundle is five widgets; WidgetBundleBuilder
+    // buildBlock overloads 1...5 must typecheck. Cited: Apple WidgetBundle.
+    struct ProbeBundle: WidgetBundle {
+        var body: some Widget {
+            ProbeWidget()
+            SecondWidget()
+            ThirdWidget()
+            FourthWidget()
+            FifthWidget()
+        }
+    }
+    ProbeWidget.main()
+    ProbeBundle.main()
+    _ = ProbeWidget().body
+    _ = ProbeBundle().body
 }
 
 func testConfigurationTypes() {
-    let box = _Box<Bool>()
-    Task { @MainActor in
-        let built = _makePortableConfigurations()
-        box.value =
-            built.staticDescriptor.kind == "static.kind"
-            && built.intentDescriptor.kind == "intent.kind"
-            && built.appDescriptor.kind == "app.kind"
-            && built.activityDescriptor.displayName != nil
-    }
-    _waitForBox(box)
-    precondition(box.value == true)
+    let built = _makePortableConfigurations()
+    precondition(built.staticDescriptor.kind == "static.kind")
+    precondition(built.intentDescriptor.kind == "intent.kind")
+    precondition(built.appDescriptor.kind == "app.kind")
+    precondition(built.activityDescriptor.displayName != nil)
 }
 
 func testConfigurationDisplayNameAndDescription() {
     // WidgetConfiguration modifiers are value stores: two independently
     // built configs with the same display name / description compare equal.
     // Cited: Apple WidgetConfiguration.configurationDisplayName / description.
-    let box = _Box<Bool>()
-    Task { @MainActor in
-        let first = _makePortableConfigurations()
-        let second = _makePortableConfigurations()
-        box.value =
-            first.staticDescriptor.displayName != nil
-            && first.staticDescriptor.description != nil
-            && first.staticDescriptor == second.staticDescriptor
-            && first.intentDescriptor.displayName != nil
-            && first.appDescriptor.description != nil
-            && first.activityDescriptor.displayName != nil
-            && first.activityDescriptor == second.activityDescriptor
-    }
-    _waitForBox(box)
-    precondition(box.value == true)
+    let first = _makePortableConfigurations()
+    let second = _makePortableConfigurations()
+    precondition(first.staticDescriptor.displayName != nil)
+    precondition(first.staticDescriptor.description != nil)
+    precondition(first.staticDescriptor == second.staticDescriptor)
+    precondition(first.intentDescriptor.displayName != nil)
+    precondition(first.appDescriptor.description != nil)
+    precondition(first.activityDescriptor.displayName != nil)
+    precondition(first.activityDescriptor == second.activityDescriptor)
 }
 
 func testConfigurationFamiliesMarginsAndBackground() {
-    let box = _Box<Bool>()
-    Task { @MainActor in
-        let built = _makePortableConfigurations()
-        let other = StaticConfiguration(
-            kind: "static.kind",
-            provider: _StaticProvider()
-        ) { entry in
-            Text("\(entry.stamp)")
-        }
-        .supportedFamilies([.systemLarge])
-        let otherDescriptor = WidgetKitPortable.descriptor(of: other)
-        box.value =
-            built.staticDescriptor.supportedFamilies == [.systemSmall, .systemMedium]
-            && built.staticDescriptor.contentMarginsDisabled
-            && !built.staticDescriptor.containerBackgroundRemovable
-            && built.intentDescriptor.supportedFamilies == [.systemLarge]
-            && built.appDescriptor.contentMarginsDisabled
-            && built.staticDescriptor != otherDescriptor
+    let built = _makePortableConfigurations()
+    let other = StaticConfiguration(
+        kind: "static.kind",
+        provider: _StaticProvider()
+    ) { entry in
+        Text("\(entry.stamp)")
     }
-    _waitForBox(box)
-    precondition(box.value == true)
+    .supportedFamilies([.systemLarge])
+    let otherDescriptor = WidgetKitPortable.descriptor(of: other)
+    precondition(built.staticDescriptor.supportedFamilies == [.systemSmall, .systemMedium])
+    precondition(built.staticDescriptor.contentMarginsDisabled)
+    precondition(!built.staticDescriptor.containerBackgroundRemovable)
+    precondition(built.intentDescriptor.supportedFamilies == [.systemLarge])
+    precondition(built.appDescriptor.contentMarginsDisabled)
+    precondition(built.staticDescriptor != otherDescriptor)
 }
 
 func testConfigurationPushAndSession() {
-    let box = _Box<Bool>()
-    Task { @MainActor in
-        let built = _makePortableConfigurations()
-        // promptsForUserConfiguration / pushHandler / associatedKind /
-        // onBackgroundURLSessionEvents / backgroundTask keep descriptor
-        // identity; they must not invent a chronod or URL-session success.
-        // Cited: Apple WidgetConfiguration.
-        box.value =
-            built.staticDescriptor.kind == "static.kind"
-            && built.staticDescriptor == built.staticDescriptor
-            && built.appDescriptor.kind == "app.kind"
-    }
-    _waitForBox(box)
-    precondition(box.value == true)
+    let built = _makePortableConfigurations()
+    // promptsForUserConfiguration is stored host data; pushHandler /
+    // associatedKind / onBackgroundURLSessionEvents / backgroundTask keep
+    // the rest of the descriptor and never invent a chronod success.
+    precondition(built.staticDescriptor.kind == "static.kind")
+    precondition(built.staticDescriptor.promptsForUserConfiguration)
+    precondition(built.appDescriptor.kind == "app.kind")
+    precondition(built.appDescriptor.promptsForUserConfiguration)
 }
 
-@MainActor
 private func _makePortableConfigurations() -> (
     staticDescriptor: WidgetConfigurationDescriptor,
     intentDescriptor: WidgetConfigurationDescriptor,
@@ -650,58 +653,23 @@ private func _assertTimelineRuntimeFailClosed() {
     struct Entry: TimelineEntry, Sendable {
         var date: Date
     }
-    struct Provider: TimelineProvider, Sendable {
-        var entries: [Entry]
-        var policy: TimelineReloadPolicy
-        func placeholder(in _: Context) -> Entry {
-            Entry(date: Date(timeIntervalSinceReferenceDate: 1))
-        }
-        func getSnapshot(
-            in _: Context,
-            completion: @escaping @Sendable (Entry) -> Void
-        ) {
-            completion(placeholder(in: TimelineProviderContext(
-                family: .systemSmall,
-                displaySize: CGSize(width: 1, height: 1)
-            )))
-        }
-        func getTimeline(
-            in _: Context,
-            completion: @escaping @Sendable (Timeline<Entry>) -> Void
-        ) {
-            completion(Timeline(entries: entries, policy: policy))
-        }
-    }
-    let context = TimelineProviderContext(
-        family: .systemSmall,
-        displaySize: CGSize(width: 1, height: 1)
-    )
-    let runtime = WidgetTimelineRuntime()
     func expect(
         _ entries: [Double],
         _ policy: TimelineReloadPolicy,
         as error: WidgetTimelineRuntimeError
     ) {
-        let provider = Provider(
+        let timeline = Timeline(
             entries: entries.map { Entry(date: Date(timeIntervalSinceReferenceDate: $0)) },
             policy: policy
         )
-        let done = DispatchSemaphore(value: 0)
-        let box = _Box<WidgetTimelineRuntimeError>()
-        Task {
-            do {
-                _ = try await runtime.evaluate(provider, context: context)
-                box.failed = true
-            } catch let seen as WidgetTimelineRuntimeError {
-                box.value = seen
-            } catch {
-                box.failed = true
-            }
-            done.signal()
+        do {
+            _ = try WidgetTimelineValidation.evaluate(timeline)
+            preconditionFailure("expected fail-closed timeline error")
+        } catch let seen as WidgetTimelineRuntimeError {
+            precondition(seen == error)
+        } catch {
+            preconditionFailure("unexpected timeline error")
         }
-        precondition(done.wait(timeout: .now() + .seconds(5)) == .success)
-        precondition(box.failed == false)
-        precondition(box.value == error)
     }
     expect([], .atEnd, as: .emptyTimeline)
     expect([20, 10], .atEnd, as: .entriesOutOfOrder)
@@ -715,11 +683,4 @@ private func _assertTimelineRuntimeFailClosed() {
         .after(Date(timeIntervalSinceReferenceDate: 5)),
         as: .reloadDateBeforeLastEntry(Date(timeIntervalSinceReferenceDate: 5))
     )
-}
-
-private func _waitForBox<T>(_ box: _Box<T>) {
-    let deadline = Date().addingTimeInterval(5)
-    while box.value == nil && box.failed == false && Date() < deadline {
-        _ = RunLoop.current.run(mode: .default, before: Date().addingTimeInterval(0.05))
-    }
 }

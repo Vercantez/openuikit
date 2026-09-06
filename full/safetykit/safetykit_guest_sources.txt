@@ -1,0 +1,6 @@
+full/safetykit/SAAuthorization.swift
+full/safetykit/SACrashDetection.swift
+full/safetykit/SAEmergencyResponse.swift
+full/safetykit/SAError.swift
+full/safetykit/SALocation.swift
+full/safetykit/SafetyKit.swift

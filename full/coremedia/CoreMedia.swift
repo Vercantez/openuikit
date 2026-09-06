@@ -47,7 +47,27 @@ public typealias CMAttachmentMode = UInt32
 public typealias CMBlockBufferFlags = UInt32
 public typealias CMPersistentTrackID = Int32
 public typealias CMAudioFormatDescriptionMask = UInt32
+/// Linux stand-in for Darwin's `DarwinBoolean` used by CoreMedia C callbacks.
+public struct DarwinBoolean: ExpressibleByBooleanLiteral, Equatable, Sendable {
+    public var boolValue: Bool
+    public init(_ value: Bool) { self.boolValue = value }
+    public init(booleanLiteral value: Bool) { self.boolValue = value }
+}
+
 public typealias CMBufferQueueTriggerCondition = Int32
+public typealias CMBufferQueueTriggerToken = OpaquePointer
+public typealias CMBufferGetTimeCallback = (CMBuffer, UnsafeMutableRawPointer?) -> CMTime
+public typealias CMBufferGetTimeHandler = (CMBuffer) -> CMTime
+public typealias CMBufferGetBooleanCallback = (CMBuffer, UnsafeMutableRawPointer?) -> DarwinBoolean
+public typealias CMBufferGetBooleanHandler = (CMBuffer) -> Bool
+public typealias CMBufferGetSizeCallback = (CMBuffer, UnsafeMutableRawPointer?) -> Int
+public typealias CMBufferGetSizeHandler = (CMBuffer) -> Int
+public typealias CMBufferCompareCallback = (CMBuffer, CMBuffer, UnsafeMutableRawPointer?) -> CFComparisonResult
+public typealias CMBufferCompareHandler = (CMBuffer, CMBuffer) -> CFComparisonResult
+public typealias CMBufferQueueTriggerCallback = (UnsafeMutableRawPointer?, CMBufferQueueTriggerToken) -> Void
+public typealias CMBufferQueueTriggerHandler = (CMBufferQueueTriggerToken) -> Void
+public typealias CMBufferValidationCallback = (CMBufferQueue, CMBuffer, UnsafeMutableRawPointer?) -> OSStatus
+public typealias CMBufferValidationHandler = (CMBufferQueue, CMBuffer) -> OSStatus
 public typealias CMTextDisplayFlags = UInt32
 public typealias CMTextJustificationValue = Int8
 public typealias CMBaseClassVersion = UInt
@@ -83,6 +103,29 @@ public var kCMTimeRangeInvalid: CMTimeRange { .invalid }
 public var kCMTimeMappingInvalid: CMTimeMapping { .invalid }
 
 public var kCMTimeMaxTimescale: Int { Int(Int32.max) }
+
+/// C `CMITEMCOUNT_MAX` is a preprocessor macro. The Swift overlay exposes it
+/// as `Int.max`, matching 64-bit `CMItemCount` / `CFIndex`.
+public var CMITEMCOUNT_MAX: Int { Int.max }
+
+/// Linux overlay of CoreMedia header feature flags. Annotation macros are
+/// true because this module uses Swift nullability and derived enums;
+/// Darwin C visibility / timebase source terminology stay off.
+public var COREMEDIA_TRUE: Bool { true }
+public var COREMEDIA_FALSE: Bool { false }
+public var COREMEDIA_DECLARE_BRIDGED_TYPES: Bool { true }
+public var COREMEDIA_DECLARE_NULLABILITY: Bool { true }
+public var COREMEDIA_DECLARE_NULLABILITY_BEGIN_END: Bool { true }
+public var COREMEDIA_DECLARE_RELEASES_ARGUMENT: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_NOT_RETAINED_ON_PARAMETERS: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_RETAINED: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_RETAINED_BLOCK: Bool { true }
+public var COREMEDIA_DECLARE_RETURNS_RETAINED_ON_PARAMETERS: Bool { true }
+public var COREMEDIA_USE_DERIVED_ENUMS_FOR_CONSTANTS: Bool { true }
+public var COREMEDIA_CMBASECLASS_VERSION_IS_POINTER_ALIGNED: Bool { true }
+public var COREMEDIA_USE_ALIGNED_CMBASECLASS_VERSION: Bool { true }
+public var COREMEDIA_EXPORTS_USE_EXPLICIT_VISIBILITY: Int32 { 0 }
+public var CMTIMEBASE_USE_SOURCE_TERMINOLOGY: Int32 { 0 }
 
 public var kCMPersistentTrackID_Invalid: CMPersistentTrackID { 0 }
 
@@ -167,7 +210,7 @@ internal func cmNSError(code: Int) -> NSError {
 }
 
 internal final class CMUnfairLock: @unchecked Sendable {
-    private let lock = NSLock()
+    private let lock = NSRecursiveLock()
 
     func locked<T>(_ body: () throws -> T) rethrows -> T {
         lock.lock()

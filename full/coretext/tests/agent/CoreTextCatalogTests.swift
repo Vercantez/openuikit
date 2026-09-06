@@ -295,6 +295,22 @@ func testCatalogEnumAndOptionSetRawValues() {
     _ = CTUnderlineStyleModifiers.patternDashDotDot.rawValue
     _ = CTUnderlineStyleModifiers.patternSolid.rawValue
     precondition(CTUnderlineStyleModifiers.patternDot != CTUnderlineStyleModifiers.patternDash)
+    var traits: CTFontSymbolicTraits = []
+    let inserted = traits.insert(.boldTrait)
+    precondition(inserted.inserted)
+    precondition(traits.contains(.boldTrait))
+    _ = traits.update(with: .italicTrait)
+    _ = traits.remove(.boldTrait)
+    precondition(traits.union(.monoSpaceTrait).contains(.monoSpaceTrait))
+    precondition(traits.intersection(.italicTrait).contains(.italicTrait))
+    _ = traits.symmetricDifference(.colorGlyphsTrait)
+    var options: CTFontOptions = [.preventAutoActivation]
+    options.formUnion(.preferSystemFont)
+    precondition(!options.isDisjoint(with: .preferSystemFont))
+    precondition(CTFontOptions.preventAutoActivation.isSubset(of: [.preventAutoActivation, .preferSystemFont]))
+    precondition(CTFontCollectionCopyOptions.unique.union(.standardSort).contains(.standardSort))
+    precondition(CTLineBoundsOptions.excludeTypographicLeading.isSuperset(of: []))
+    precondition(CTRunStatus.rightToLeft.contains(.rightToLeft))
 }
 
 func testCatalogIntegerConstants() {
@@ -746,6 +762,20 @@ func testCatalogTypealiasesAndSFNT() {
     var entry = ALMXGlyphEntry()
     entry.GlyphIndexOffset = 1
     precondition(entry.GlyphIndexOffset == 1)
+    let _: CTFontCollection.Type = CTFontCollection.self
+    let _: CTFrame.Type = CTFrame.self
+    let _: CTFramesetter.Type = CTFramesetter.self
+    let _: CTGlyphInfo.Type = CTGlyphInfo.self
+    let _: CTLine.Type = CTLine.self
+    let _: CTMutableFontCollection.Type = CTMutableFontCollection.self
+    let _: CTParagraphStyle.Type = CTParagraphStyle.self
+    let _: CTRubyAnnotation.Type = CTRubyAnnotation.self
+    let _: CTRunDelegate.Type = CTRunDelegate.self
+    let _: CTTextTab.Type = CTTextTab.self
+    let _: CTTypesetter.Type = CTTypesetter.self
+    let _: CTRun.Type = CTRun.self
+    let _: CTFont.Type = CTFont.self
+    let _: CTFontDescriptor.Type = CTFontDescriptor.self
     _ = ALMXHeader()
     _ = BslnBaselineRecord.self
 }

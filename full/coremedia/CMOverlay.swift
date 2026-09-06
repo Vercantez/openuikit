@@ -30,8 +30,6 @@ extension CMFormatDescription {
         }
     }
 
-    public var timeCodeFlags: TimeCode.Flag { TimeCode.Flag(rawValue: 0) }
-
     public func equalTo(
         _ otherFormatDescription: CMFormatDescription,
         equalityMask: EqualityMask = .all

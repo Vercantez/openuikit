@@ -614,35 +614,79 @@ public func CMSyncConvertTime<From: CMSyncProtocol, To: CMSyncProtocol>(
     return time
 }
 
-public func CMSyncGetRelativeRate<A: CMSyncProtocol, B: CMSyncProtocol>(
-    _ ofClockOrTimebase: A,
-    relativeTo: B
+public func CMSyncGetRelativeRate(
+    _ ofClockOrTimebase: CMClockOrTimebase,
+    relativeTo relativeToClockOrTimebase: CMClockOrTimebase
 ) -> Float64 {
-    if ofClockOrTimebase === relativeTo { return 1 }
+    if ofClockOrTimebase === relativeToClockOrTimebase { return 1 }
     if let tb = ofClockOrTimebase as? CMTimebase {
         return CMTimebaseGetEffectiveRate(tb)
     }
     return 1
 }
 
+public func CMSyncGetRelativeRate<A: CMSyncProtocol, B: CMSyncProtocol>(
+    _ ofClockOrTimebase: A,
+    relativeTo: B
+) -> Float64 {
+    CMSyncGetRelativeRate(ofClockOrTimebase as CMClockOrTimebase, relativeTo: relativeTo as CMClockOrTimebase)
+}
+
+@discardableResult
+public func CMSyncGetRelativeRateAndAnchorTime(
+    _ ofClockOrTimebase: CMClockOrTimebase,
+    relativeTo relativeToClockOrTimebase: CMClockOrTimebase,
+    relativeRateOut outRelativeRate: UnsafeMutablePointer<Float64>?,
+    anchorTimeOut outOfClockOrTimebaseAnchorTime: UnsafeMutablePointer<CMTime>?,
+    relativeToAnchorTimeOut outRelativeToClockOrTimebaseAnchorTime: UnsafeMutablePointer<CMTime>?
+) -> OSStatus {
+    guard let selfSync = ofClockOrTimebase as? any CMSyncProtocol,
+          let relativeSync = relativeToClockOrTimebase as? any CMSyncProtocol
+    else {
+        return kCMSyncError_InvalidParameter
+    }
+    outRelativeRate?.pointee = CMSyncGetRelativeRate(
+        ofClockOrTimebase,
+        relativeTo: relativeToClockOrTimebase
+    )
+    outOfClockOrTimebaseAnchorTime?.pointee = selfSync.time
+    outRelativeToClockOrTimebaseAnchorTime?.pointee = relativeSync.time
+    return 0
+}
+
 public func CMSyncGetRelativeRateAndAnchorTime<A: CMSyncProtocol, B: CMSyncProtocol>(
     _ ofClockOrTimebase: A,
     relativeTo: B
 ) throws -> (rate: Float64, anchorTime: CMTime, relativeRate: Float64, relativeAnchorTime: CMTime) {
-    let rate = CMSyncGetRelativeRate(ofClockOrTimebase, relativeTo: relativeTo)
-    let anchor = ofClockOrTimebase.time
-    let relative = relativeTo.time
+    var rate: Float64 = 0
+    var anchor = CMTime.invalid
+    var relative = CMTime.invalid
+    let status = CMSyncGetRelativeRateAndAnchorTime(
+        ofClockOrTimebase as CMClockOrTimebase,
+        relativeTo: relativeTo as CMClockOrTimebase,
+        relativeRateOut: &rate,
+        anchorTimeOut: &anchor,
+        relativeToAnchorTimeOut: &relative
+    )
+    if status != 0 { throw CMSync.Error.invalidParameter }
     return (rate, anchor, 1, relative)
+}
+
+public func CMSyncMightDrift(
+    _ clockOrTimebase1: CMClockOrTimebase,
+    _ clockOrTimebase2: CMClockOrTimebase
+) -> Bool {
+    if let c1 = clockOrTimebase1 as? CMClock, let c2 = clockOrTimebase2 as? CMClock {
+        return CMClockMightDrift(c1, otherClock: c2)
+    }
+    return true
 }
 
 public func CMSyncMightDrift<A: CMSyncProtocol, B: CMSyncProtocol>(
     _ clockOrTimebase1: A,
     _ clockOrTimebase2: B
 ) -> Bool {
-    if let c1 = clockOrTimebase1 as? CMClock, let c2 = clockOrTimebase2 as? CMClock {
-        return CMClockMightDrift(c1, otherClock: c2)
-    }
-    return true
+    CMSyncMightDrift(clockOrTimebase1 as CMClockOrTimebase, clockOrTimebase2 as CMClockOrTimebase)
 }
 
 public func CMAudioClockCreate(
