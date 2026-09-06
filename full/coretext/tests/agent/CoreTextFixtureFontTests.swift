@@ -443,7 +443,7 @@ func testFontMatrixInitsScaleAdvancesAndBounds() {
     let named = CTFont(name, transform: scale)
     precondition(CTFontGetMatrix(named).a == 2)
     precondition(CTFontGetSize(named) == 12)
-    var namedGlyphs: [CGGlyph] = [3]
+    let namedGlyphs: [CGGlyph] = [3]
     var namedAdvances = [CGSize](repeating: .zero, count: 1)
     let namedTotal = namedGlyphs.withUnsafeBufferPointer { gbuf in
         namedAdvances.withUnsafeMutableBufferPointer { abuf in
