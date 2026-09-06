@@ -20,11 +20,13 @@ CoreGraphics, and CoreImage types used in signatures are host lookalikes behind
   `CMTime` identity while paused. No frames are decoded or displayed.
 - `AVURLAsset` / `AVAsset.load(.duration/.tracks/.isPlayable/.metadata)`: a
   local file URL is probed for ISO BMFF (`ftyp`/`moov`/`mvhd`/`trak`/`tkhd`/
-  `mdia`/`hdlr`/`stsd`/`stts`) plus WAV and AIFF/AIFC headers. That supplies
-  duration, tracks, media type, `naturalSize`, `preferredTransform`, and
-  `nominalFrameRate`. Missing files stay fail-closed (`duration` `.invalid`,
+  `mdia`/`hdlr`/`stsd`/`stts`/`stsz`) plus WAV and AIFF/AIFC headers. That supplies
+  duration, tracks, media type, `naturalSize`, `preferredTransform`,
+  `nominalFrameRate`, `languageCode`, `totalSampleDataLength`, `estimatedDataRate`,
+  `preferredRate`, and `preferredVolume`. Missing files stay fail-closed (`duration` `.invalid`,
   empty tracks). `isPlayable` remains false. An injected host SPI duration
-  still wins over the probe.
+  still wins over the probe. `AVMutableComposition.insertEmptyTimeRange` /
+  `removeTimeRange` / `scaleTimeRange` adjust stored track durations.
 - `AVPlayerLayer` subclasses `CALayer` (QuartzCore on Mac; host lookalike on
   Linux). Default `videoGravity` is `AVLayerVideoGravityResizeAspect`.
   `isReadyForDisplay` is false.
@@ -32,8 +34,14 @@ CoreGraphics, and CoreImage types used in signatures are host lookalikes behind
   in this lane.
 - `AVAssetExportSession.init(asset:presetName:)` is nil for an empty preset.
   `export(to:as:)` throws `AVFoundationPortableError.exportUnavailable` and
-  sets `status` to `.failed` without a host SPI handler. `cancelExport()` sets
-  `.cancelled`. Status raw values are 0...5.
+  sets `status` to `.failed` without a host SPI handler. `exportAsynchronously`
+  fail-closes with `AVError.exportFailed` and invokes the handler on the caller.
+  `allExportPresets()` / `exportPresets(compatibleWith:)` / `determineCompatibleFileTypes`
+  return empty. `cancelExport()` sets `.cancelled`. Status raw values are 0...5.
+  `AVAssetWriter.startWriting` / `finishWriting(completionHandler:)` record
+  `AVError.encoderNotFound`. `AVAssetReader.startReading` records
+  `AVError.decoderNotFound`. Writer inputs of `.video`/`.audio` can be added
+  while status is `.unknown`.
 - `AVAssetImageGenerator.generateCGImageAsynchronously` calls the completion
   handler with `frameGenerationUnavailable` when no host frame handler is
   installed. Delivery is synchronous on this host. `copyCGImage(at:actualTime:)`
@@ -45,9 +53,13 @@ CoreGraphics, and CoreImage types used in signatures are host lookalikes behind
   `AVFoundationErrorDomain` is the string `AVFoundationErrorDomain`.
 - `AVCaptureDevice.authorizationStatus(for:)` is `.denied`. `requestAccess`
   returns false. `devices()` is empty. `lockForConfiguration()` throws
-  `mediaServiceUnavailable`. `AVCaptureDeviceInput(device:)` throws
+  `AVError.applicationIsNotAuthorizedToUseDevice`. `AVCaptureDeviceInput(device:)` throws
   `AVError.applicationIsNotAuthorizedToUseDevice`. `AVCaptureSession.startRunning()`
-  leaves `isRunning` false.
+  leaves `isRunning` false. Session notification names use the documented
+  `AVCaptureSessionDidStartRunningNotification` C strings. `sessionPreset`
+  defaults to `.high` and is stored, but `canSetSessionPreset` stays false.
+  Capture-device zoom defaults to the documented `1.0`; torch-on throws
+  `AVError.torchLevelUnavailable`.
 - Portable `AVAudioSession` category/mode/options/active state is
   process-local. Linux has no audio hardware: `currentRoute` is empty and
   `outputVolume` is 0. Changing `category` posts
@@ -80,8 +92,9 @@ Deferred on this host:
 - Metal / simd / UIKit / Core Image filter graphs that the host cannot name
 - NSCoder / NSValue CoreMedia overlay helpers
 - Opaque `some AsyncSequence` returns
-- Completion-handler export / writer / FairPlay paths whose Apple queue and
-  status ordering are unobserved
+- FairPlay / content-key and AirPlay paths whose Apple queue and
+  status ordering are unobserved. Export/writer completion handlers exist as
+  synchronous fail-closed entries; Apple queue identity remains unobserved.
 
 String constants generated from the graph use the public identifier as a Linux
 payload unless a focused test records a corroborated value. That is a
@@ -98,17 +111,18 @@ table-driven raw-value test. Touching a property without asserting it is
 
 ## Depth pass 2026-09 (wave 8)
 
-Second SDK-depth pass on `cursor/port-avfoundation-to-linux-9929`. The first
-pass (277 implemented identity/behavior rows) is kept and stays green. This
-pass adds a local-container probe, fail-closed writer/reader/image/capture
-errors with documented `AVError` codes, mix/composition instruction models,
-and table-driven metadata/capture constant tests.
+Third SDK-depth pass on `cursor/port-avfoundation-to-linux-0d4e`. Pass 1 (277)
+and pass 2 (1188) are kept and stay green. This pass extends local-container
+probing (`stsz`, `preferredRate`/`preferredVolume`, dual-track ISO BMFF),
+composition empty/scale/remove, export/writer/reader completion-handler
+fail-closed paths, and the AVCaptureDevice/Session/Input/Output discovery
+model with documented `AVError` codes.
 
-| | before (pass 1) | after (pass 2) |
+| | before (pass 2) | after (pass 3) |
 |---|---|---|
-| `implemented` | 277 | 1188 |
-| `declared` | 5086 | 4175 |
-| `deferred` | 269 | 269 |
+| `implemented` | 1188 | 1784 |
+| `declared` | 4175 | 3582 |
+| `deferred` | 269 | 266 |
 | `unavailable` | 0 | 0 |
 | `not-applicable` | 0 | 0 |
 
@@ -120,18 +134,24 @@ metadata-constant tests may share a value test; no other single test exceeds
 |---|---|
 | 292 | `testAVMetadataIdentifierRawValues` (identifier constants) |
 | 279 | `testAVMetadataKeyRawValues` (key constants) |
+| 132 | `testAVCaptureDeviceFailClosedDiscoveryModel` (capture device fail-closed) |
 | 98 | `testAVCaptureEnumRawValues` (capture enum cases) |
 | 89 | `testAVErrorCodeMaciosRawValues` (AVError.Code raw values) |
-| 47 | `testAVCaptureDeviceTypeAndPresetRawValues` (DeviceType/Preset/AspectRatio) |
 
-Local ISO BMFF / WAV / AIFF probing, `AVMutableComposition.insertTimeRange`,
-`AVAssetWriter.startWriting` / `AVAssetReader.startReading` (`encoderNotFound` /
-`decoderNotFound`), `copyCGImage` (`noImageAtTime`), capture device-input
+Pass 2 snapshot (kept): implemented 1188, declared 4175, deferred 269.
+Pass 2 top-5: metadata identifiers 292, metadata keys 279, capture enums 98,
+AVError.Code 89, DeviceType/Preset 47.
+
+Local ISO BMFF / WAV / AIFF probing, `AVMutableComposition` duration edits,
+`AVAssetWriter.startWriting` / `finishWriting` (`encoderNotFound`),
+`AVAssetReader.startReading` (`decoderNotFound`), `exportAsynchronously`
+(`exportFailed`), `copyCGImage` (`noImageAtTime`), capture lock/torch
 unauthorized, `AVPlayerLooper`, and audio-mix / video-composition instruction
-models are covered by focused tests in `tests/agent/AVMediaProbeTests.swift`
-and `tests/agent/AVFailClosedTests.swift`. `AVSpeechSynthesizer` remains extra
-portable AVFAudio surface from pass 1; it is not in this module's public
-census. No SwiftUI cross-import overlay rows exist in this seed.
+models are covered by focused tests in `tests/agent/AVMediaProbeTests.swift`,
+`tests/agent/AVFailClosedTests.swift`, and `tests/agent/AVPlaybackTests.swift`.
+`AVSpeechSynthesizer` remains extra portable AVFAudio surface from pass 1; it
+is not in this module's public census. No SwiftUI cross-import overlay rows
+exist in this seed.
 
 Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`)
 ended:
@@ -148,7 +168,9 @@ FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a
 host-inventory token, not printed by the sealed framework gate.
 `.cursor/verify-cloud-environment.sh` currently stops on a missing
-`scratch/.cursor-built-products.json` in this snapshot; the framework tree
-itself has no stale `.build` / `build` / `scratch` products.
-`tests/test_avfoundation_host.sh` is a Darwin IceCubes/`xcrun` consumer and
-is not runnable on this Linux host.
+`scratch/ladder-corpus/focus-ios` corpus checkout in this snapshot (active
+Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not the
+seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The framework tree
+itself has no stale `.build` / `build` / `scratch` products. Swift 6.2.4
+typechecks Foundation. `tests/test_avfoundation_host.sh` is a Darwin
+IceCubes/`xcrun` consumer and is not runnable on this Linux host.
