@@ -92,6 +92,28 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         value.identifier = inDecodeString(coder, "identifier")
         return
     }
+    if let value = object as? INTask {
+        value.identifier = inDecodeString(coder, "identifier")
+        return
+    }
+    if let value = object as? INTaskList {
+        value.identifier = inDecodeString(coder, "identifier")
+        return
+    }
+    if let value = object as? INPaymentAccount {
+        value.accountNumber = inDecodeString(coder, "accountNumber")
+        return
+    }
+    if let value = object as? INRestaurantGuest {
+        value.phoneNumber = inDecodeString(coder, "phoneNumber")
+        value.emailAddress = inDecodeString(coder, "emailAddress")
+        return
+    }
+    if let value = object as? INRideDriver {
+        value.phoneNumber = inDecodeString(coder, "phoneNumber")
+        value.rating = inDecodeString(coder, "rating")
+        return
+    }
     if let value = object as? INPaymentMethod {
         value.name = inDecodeString(coder, "name")
         value.identificationHint = inDecodeString(coder, "identificationHint")
@@ -393,7 +415,7 @@ extension INParameter: NSSecureCoding {
 extension INPaymentAccount: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("accountNumber", accountNumber)])
     }
 }
 
@@ -592,14 +614,14 @@ extension INSticker: NSSecureCoding {
 extension INTask: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("identifier", identifier)])
     }
 }
 
 extension INTaskList: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("identifier", identifier)])
     }
 }
 
@@ -635,5 +657,19 @@ extension INUserContext: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
         coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+    }
+}
+
+extension INRideDriver: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+    public func encode(with coder: NSCoder) {
+        inLinuxEncodeStrings(coder, [("phoneNumber", phoneNumber), ("rating", rating)])
+    }
+}
+
+extension INRestaurantGuest: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+    public func encode(with coder: NSCoder) {
+        inLinuxEncodeStrings(coder, [("phoneNumber", phoneNumber), ("emailAddress", emailAddress)])
     }
 }

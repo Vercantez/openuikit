@@ -20,9 +20,11 @@ runtime and is packaged as `IntentsUI.swiftmodule` plus
 Wave-5 schema v2 coverage lives in `coverage.tsv`. Before this lane there was
 no coverage file (0 implemented / 0 declared / 0 deferred of 4160 public IDs).
 The first-pass census was 1507 implemented / 1873 declared / 780
-deferred. After the wave-8 depth pass plus coverage-ledger repair it is
-1800 implemented / 1583 declared / 777 deferred. The in-process donation,
-voice-shortcut, relevant-shortcut, resolution, person/image/media/call-record,
+deferred. After the wave-8 depth pass plus coverage-ledger repair it was
+1800 implemented / 1583 declared / 777 deferred. After the third behavioral
+pass it is **2252 implemented / 1141 declared / 767 deferred**. The
+in-process donation, voice-shortcut, relevant-shortcut, resolution,
+person/image/media/call-record, notebook/payment/photos/climate families,
 Siri-denied, and identifier-constant slice is `implemented` with
 `tests/agent/*Tests.swift`; the remaining compiling surface is `declared`;
 Apple Siri services, CoreLocation/Contacts/EventKit/CGColor/NSExtensionContext
@@ -144,6 +146,58 @@ way. The largest remaining non-table test is 28/486 (5.8%), under the
 40% bulk-relabel bound. No SwiftUI cross-import overlay rows exist in
 this census.
 
+### Third behavioral pass (wave 8 continue)
+
+Keeps the first- and second-pass sources and tests. Before this pass:
+**1800 implemented / 1583 declared / 777 deferred / 0 unavailable / 0
+not-applicable**. After: **2252 implemented / 1141 declared / 767
+deferred / 0 unavailable / 0 not-applicable**. Nondeferred (3393) stays
+above the medium-full floor of 2080. Implemented gain is +452, from
+property-retaining intent/response families, host dispatcher routing,
+resolution-result exact codes, and Swift climate overlays — not a
+relabel of `testEnumRawValues`.
+
+Top-5 implemented evidence distribution after this pass:
+
+| Citations | Evidence |
+| ---: | --- |
+| 1106 | `IntentsSurfaceTests.swift#testEnumRawValues` |
+| 80 | `IntentsSurfaceTests.swift#testOptionSetFamilies` |
+| 64 | `IntentsSurfaceTests.swift#testIntentErrorCodesCatalog` |
+| 50 | `IntentsWave9Tests.swift#testGuestDisplayPreferencesAndResolutionFamily` |
+| 47 | `IntentsWave9Tests.swift#testPaymentAccountBillDetailsAndRideValues` |
+
+Allowed shared table-driven tests remain enum/option-set/error-code/
+identifier catalogs. The largest remaining non-table test is 50/938
+(5.3%), under the 40% bulk-relabel bound. Seven climate Swift overlays
+moved from `deferred` to `implemented` with a real
+`init(enableFan:enableAirConditioner:…)` and stored Bool/Int/Double
+properties. No SwiftUI cross-import overlay rows exist in this census.
+
+This pass adds:
+
+- property-retaining construction and response `code`/`userActivity` for
+  add-tasks, pay-bill, transfer-money, notebook search, set-task,
+  search-call-history, book-restaurant, search-photos, start-photo-playback,
+  search-accounts, and search-bills
+- `INSetClimateSettingsInCarIntent` Swift overlays (`enableFan`,
+  `enableAirConditioner`, `enableClimateControl`, `enableAutoMode`,
+  `fanSpeedIndex`, `fanSpeedPercentage`) plus the documented convenience
+  init
+- `INPaymentAccount` now stores `accountNumber` from the `number:`
+  argument; `INTask`/`INTaskList`/`INRideDriver`/`INRestaurantGuest`
+  NSSecureCoding overlays round-trip identifiers and phone fields
+- `INHostIntentDispatcher` synchronous handle/confirm/resolve routing for
+  those families (defaults remain needsValue/failure; no Apple Siri success)
+- additional `INPerson` convenience inits, `INMessage` attachment/reaction/
+  sticker/link-metadata constructors, ride option/status remaining
+  properties, and car-power remaining Measurement fields
+- resolution-result success/disambiguation/confirmationRequired for
+  payment-account, bill-payee, task, task-list, message-attribute,
+  currency-amount, note, object, restaurant-guest, speakable-string, and
+  the `INBooleanResolutionResult.confirmationRequired(with: Bool?)`
+  overlay
+
 Linux keyed archives use the top-level `INCarHeadUnit` class (Apple's
 nested `INCar.HeadUnit` spelling is a typealias). Generic
 `INObjectCollection` / `INObjectSection` still only check construction
@@ -164,8 +218,9 @@ This pass keeps the first-pass sources and tests and adds:
   fresh process, and in-process relevant-shortcut storage
 
 Still fail-closed / deferred: CoreLocation placemark members, Apple
-archive byte compatibility, Siri daemon/account sync, INGetRideStatusIntent’s
-unavailable designated init, and the Swift `INShortcut` enum overlay.
+archive byte compatibility, Siri daemon/account sync, live car-power
+observer updates, INGetRideStatusIntent’s unavailable designated init,
+and the Swift `INShortcut` enum overlay.
 `INMediaDestination` NSCoding stays `declared` because the Mach-O guest
 uses the Swift enum overlay, not an NSObject coder. Generic
 `INObjectCollection` / `INObjectSection` NSCoding stays `declared` because
