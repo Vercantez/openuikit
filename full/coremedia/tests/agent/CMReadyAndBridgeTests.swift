@@ -58,7 +58,12 @@ func testCMTimebaseDispatchSourceTimersFailClosed() {
     precondition(
         CMTimebaseCreateWithSourceClock(allocator: nil, sourceClock: clock, timebaseOut: &timebase) == 0
     )
+    // Linux libdispatch traps if a timer source is released without resume+cancel.
     let source = DispatchSource.makeTimerSource()
+    source.setEventHandler {}
+    source.schedule(deadline: DispatchTime.distantFuture)
+    source.resume()
+    defer { source.cancel() }
     precondition(
         CMTimebaseAddTimerDispatchSource(timebase!, timerSource: source)
             == kCMTimebaseError_TimerIntervalTooShort
