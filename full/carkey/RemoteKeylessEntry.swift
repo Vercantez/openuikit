@@ -75,16 +75,15 @@ public struct RemoteKeylessEntryConfigurableEnduringAction: Sendable {
         self.recipientVehicleID = vehicleID
     }
 
-    /// ObjC-visible handle for a configurable enduring action.
+    /// Handle for a configurable enduring action.
     ///
-    /// The TBD exports an empty `init()`; Linux uses that constructor to make
-    /// a request that is not in progress. `eventStream` finishes immediately
-    /// with no events (no vehicle, no daemon).
-    @objc
-    public final class EnduringExecutionRequest: NSObject {
-        public override init() {
-            super.init()
-        }
+    /// Apple's type is `@objc` / `NSObject`. This Linux toolchain has no
+    /// Objective-C interop, so the class is a plain Swift `final` type. The
+    /// TBD still exports an empty `init()`; Linux uses that constructor to
+    /// make a request that is not in progress. `eventStream` finishes
+    /// immediately with no events (no vehicle, no daemon).
+    public final class EnduringExecutionRequest {
+        public init() {}
 
         public var eventStream: AsyncStream<
             RemoteKeylessEntryConfigurableEnduringAction.EnduringExecutionRequest.Event

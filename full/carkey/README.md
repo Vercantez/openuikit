@@ -71,7 +71,15 @@ identifier/status tests cover distinct `RawRepresentable` wrappers
 (inits, equality, hashing) and stay well under the 40% bulk-relabel bound
 on remaining implemented rows.
 
-The sealed host gate was run as `bash full/carkey/tests/acceptance/test_host.sh`.
+The sealed host gate was run as `bash full/carkey/tests/acceptance/test_host.sh`
+and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=CarKey lane=leaf-full symbols=114
+FRAMEWORK_FANOUT_REFERENCE_OK
+CARKEY_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=CarKey dylib=libCarKey.dylib
+```
 
 `swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` does not print
