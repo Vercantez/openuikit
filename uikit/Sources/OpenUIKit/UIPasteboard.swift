@@ -36,7 +36,10 @@ import CPortableIO
 #if canImport(Foundation)
 import Foundation
 #endif
-#if canImport(Dispatch)
+// The x86 guest sysroot answers canImport(Dispatch) yet cannot build the module from
+// its swiftinterface ("this SDK is not supported by the compiler", verify82/83); the
+// semaphore helpers below live under canImport(Foundation), so gate the import the same way.
+#if canImport(Foundation) && canImport(Dispatch)
 import Dispatch
 #endif
 
