@@ -6,6 +6,5 @@ func testLAPresentationContextIsUIWindow() {
     let window = UIWindow()
     let context: LAPresentationContext = window
     precondition(context === window)
-    precondition(context is UIWindow)
     precondition(type(of: context) == UIWindow.self)
 }
