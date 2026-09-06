@@ -252,6 +252,16 @@ host. Active Cursor Build on this VM was
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`).
 
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
+is a host-inventory token (Swift 6.2.4 / linux; the sealed gate refuses stale
+`.build` / `build` / `scratch` products). Exact sealed-gate output:
+
+```
+FRAMEWORK_FANOUT_REFERENCE_OK
+VISION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Vision dylib=libVision.dylib
+```
+
 | | implemented | declared | deferred | unavailable | not-applicable |
 |---|---:|---:|---:|---:|---:|
 | Before (prior wave-8 ledger) | 2148 | 1306 | 130 | 0 | 0 |
