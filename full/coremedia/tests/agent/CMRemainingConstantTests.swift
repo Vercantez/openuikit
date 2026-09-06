@@ -208,9 +208,9 @@ func testCMSyncRemainingErrorConstants() {
     precondition(kCMSyncError_MissingRequiredParameter == -12752)
     precondition(kCMSyncError_InvalidParameter == -12753)
     precondition(kCMSyncError_AllocationFailed == -12754)
-    precondition(CMClock.Error.missingRequiredParameter.code == Int(kCMSyncError_MissingRequiredParameter))
-    precondition(CMClock.Error.invalidParameter.code == Int(kCMSyncError_InvalidParameter))
-    precondition(CMClock.Error.allocationFailed.code == Int(kCMSyncError_AllocationFailed))
+    precondition(CMSync.Error.missingRequiredParameter.code == Int(kCMSyncError_MissingRequiredParameter))
+    precondition(CMSync.Error.invalidParameter.code == Int(kCMSyncError_InvalidParameter))
+    precondition(CMSync.Error.allocationFailed.code == Int(kCMSyncError_AllocationFailed))
 }
 
 func testCMHEVCTemporalLevelInfoKeyStrings() {
