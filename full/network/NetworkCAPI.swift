@@ -271,9 +271,24 @@ public func nw_browser_start(_ browser: nw_browser_t) {
 }
 
 public func nw_connection_access_establishment_report(_ connection: nw_connection_t, _ queue: dispatch_queue_t, _ access_block: @escaping nw_establishment_report_access_block_t) {
-    _ = connection
     _ = queue
-    access_block(nil)
+    let report = _NWLinux_nw_establishment_report()
+    if let endpoint = linuxConnection(connection)?.endpoint {
+        let resolution = _NWLinux_nw_resolution_report()
+        resolution.preferredEndpoint = endpoint
+        resolution.successfulEndpoint = endpoint
+        resolution.endpointCount = 1
+        resolution.milliseconds = 0
+        resolution.protocolValue = nw_report_resolution_protocol_unknown
+        resolution.source = nw_report_resolution_source_query
+        report.resolutionReports = [resolution]
+        report.resolutions = [
+            (nw_report_resolution_source_query, 0, 1, endpoint, endpoint)
+        ]
+        let definition = linuxNamedDefinition("tcp")
+        report.protocols = [(definition, 0, 0)]
+    }
+    access_block(report)
 }
 
 public func nw_connection_batch(_ connection: nw_connection_t, _ batch_block: () -> Void) {
@@ -794,49 +809,53 @@ public func nw_error_get_error_domain(_ error: nw_error_t) -> nw_error_domain_t 
     linuxError(error)?.domain ?? nw_error_domain_invalid
 }
 
+private func linuxEstablishment(_ report: nw_establishment_report_t) -> _NWLinux_nw_establishment_report? {
+    report as? _NWLinux_nw_establishment_report
+}
+
 public func nw_establishment_report_copy_proxy_endpoint(_ report: nw_establishment_report_t) -> nw_endpoint_t? {
-    _ = report
-    return nil
+    linuxEstablishment(report)?.proxyEndpoint
 }
 
 public func nw_establishment_report_enumerate_protocols(_ report: nw_establishment_report_t, _ enumerate_block: (nw_protocol_definition_t, UInt64, UInt64) -> Bool) {
-    _ = report
-    _ = enumerate_block
+    guard let stored = linuxEstablishment(report) else { return }
+    for item in stored.protocols {
+        if !enumerate_block(item.0, item.1, item.2) { return }
+    }
 }
 
 public func nw_establishment_report_enumerate_resolution_reports(_ report: nw_establishment_report_t, _ enumerate_block: (nw_resolution_report_t) -> Bool) {
-    _ = report
-    _ = enumerate_block
+    guard let stored = linuxEstablishment(report) else { return }
+    for item in stored.resolutionReports {
+        if !enumerate_block(item) { return }
+    }
 }
 
 public func nw_establishment_report_enumerate_resolutions(_ report: nw_establishment_report_t, _ enumerate_block: (nw_report_resolution_source_t, UInt64, UInt32, nw_endpoint_t, nw_endpoint_t) -> Bool) {
-    _ = report
-    _ = enumerate_block
+    guard let stored = linuxEstablishment(report) else { return }
+    for item in stored.resolutions {
+        if !enumerate_block(item.0, item.1, item.2, item.3, item.4) { return }
+    }
 }
 
 public func nw_establishment_report_get_attempt_started_after_milliseconds(_ report: nw_establishment_report_t) -> UInt64 {
-    _ = report
-    return 0
+    linuxEstablishment(report)?.attemptStartedAfterMilliseconds ?? 0
 }
 
 public func nw_establishment_report_get_duration_milliseconds(_ report: nw_establishment_report_t) -> UInt64 {
-    _ = report
-    return 0
+    linuxEstablishment(report)?.durationMilliseconds ?? 0
 }
 
 public func nw_establishment_report_get_previous_attempt_count(_ report: nw_establishment_report_t) -> UInt32 {
-    _ = report
-    return 0
+    linuxEstablishment(report)?.previousAttemptCount ?? 0
 }
 
 public func nw_establishment_report_get_proxy_configured(_ report: nw_establishment_report_t) -> Bool {
-    _ = report
-    return false
+    linuxEstablishment(report)?.proxyConfigured ?? false
 }
 
 public func nw_establishment_report_get_used_proxy(_ report: nw_establishment_report_t) -> Bool {
-    _ = report
-    return false
+    linuxEstablishment(report)?.usedProxy ?? false
 }
 
 public func nw_framer_async(_ framer: nw_framer_t, _ async_block: @escaping nw_framer_block_t) {
@@ -2226,9 +2245,14 @@ public func nw_ws_options_set_auto_reply_ping(_ options: nw_protocol_options_t, 
 }
 
 public func nw_ws_options_set_client_request_handler(_ options: nw_protocol_options_t, _ client_queue: dispatch_queue_t, _ handler: @escaping nw_ws_client_request_handler_t) {
-    _ = options
     _ = client_queue
-    _ = handler
+    // No HTTP upgrade handshake on Linux. Invoke the handler once with the
+    // locally stored subprotocols/headers so callers can enumerate a request
+    // they configured; Apple handshake timing is unobserved.
+    let request = _NWLinux_nw_ws_request()
+    request.headers = linuxOptions(options)?.wsHeaders ?? []
+    request.subprotocols = linuxOptions(options)?.wsSubprotocols ?? []
+    _ = handler(request)
 }
 
 public func nw_ws_options_set_maximum_message_size(_ options: nw_protocol_options_t, _ maximum_message_size: Int) {

@@ -730,6 +730,9 @@ open class UINavigationController: UIViewController {
         // Load the incoming view first (viewDidLoad precedes the appearance
         // callbacks, like UIKit), then the "will" pair in push order.
         vc.loadViewIfNeeded()
+        if animated {
+            installPushPopCoordinator(push: true, from: from, to: vc)
+        }
         from.beginAppearanceTransition(false, animated: animated)
         vc.beginAppearanceTransition(true, animated: animated)
 
@@ -761,6 +764,9 @@ open class UINavigationController: UIViewController {
         }
         view.layoutIfNeeded()
         to.loadViewIfNeeded()
+        if animated {
+            installPushPopCoordinator(push: false, from: from, to: to)
+        }
         from.beginAppearanceTransition(false, animated: animated)
         to.beginAppearanceTransition(true, animated: animated)
 
@@ -799,9 +805,39 @@ open class UINavigationController: UIViewController {
                                                     from: from, to: to)
         let ctx = _UINavigationTransitionContext(nav: self, push: push, from: from,
                                                  to: to, animated: true)
+        let coordinator = _transitionCoordinator as? _UITransitionCoordinator
+        ctx.coordinator = coordinator
+        let interactive = custom.flatMap {
+            delegate?.navigationController(self, interactionControllerFor: $0)
+        }
+        let wantsInteractive = interactive?.wantsInteractiveStart ?? false
+        if wantsInteractive {
+            ctx.isInteractive = true
+            coordinator?.isInteractive = true
+        }
         delegate?.navigationController(self, willShow: to, animated: true)
+        if let interactive, wantsInteractive {
+            if let percent = interactive as? UIPercentDrivenInteractiveTransition {
+                percent._animator = custom
+            }
+            if push {
+                installTopView(to)
+            } else {
+                let toView = to.view!
+                toView.frame = contentView.bounds
+                toView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                contentView.insertSubview(toView, at: 0)
+            }
+            updateBarState()
+            ctx.onComplete = { [weak self] _ in
+                self?._finishCustomTransition(push: push, from: from, to: to)
+            }
+            interactive.startInteractiveTransition(ctx)
+            return
+        }
         guard let custom else {
             _UINavigationSlideAnimator().animateTransition(using: ctx)
+            coordinator?.flushAlongsideIfNeeded(duration: UINavigationController.transitionDuration)
             return
         }
         // Custom animator: it owns the container, so only the incoming view
@@ -820,6 +856,24 @@ open class UINavigationController: UIViewController {
             self?._finishCustomTransition(push: push, from: from, to: to)
         }
         custom.animateTransition(using: ctx)
+        coordinator?.flushAlongsideIfNeeded(
+            duration: custom.transitionDuration(using: ctx))
+    }
+
+    /// MEASURED animprobe, iPhone SE 2x / iOS 26.1: push duration 0.35,
+    /// completionCurve rawValue 7, presentationStyle .none.
+    func installPushPopCoordinator(push: Bool, from: UIViewController, to: UIViewController) {
+        let coord = _UITransitionCoordinator(
+            animated: true,
+            presentationStyle: .none,
+            duration: UINavigationController.transitionDuration,
+            completionCurve: .navigationTransition,
+            containerView: isViewLoaded ? contentView : view,
+            from: from, to: to,
+            fromView: from.viewIfLoaded, toView: to.viewIfLoaded,
+            interactive: false,
+            interruptible: false)
+        coord.attach(self, from, to)
     }
 
     /// Teardown for a delegate-supplied animator: the same bookkeeping
@@ -843,6 +897,7 @@ open class UINavigationController: UIViewController {
             to.endAppearanceTransition()
             detachFromParent(from)
         }
+        (_transitionCoordinator as? _UITransitionCoordinator)?.complete(cancelled: false)
         delegate?.navigationController(self, didShow: to, animated: true)
     }
 
@@ -913,6 +968,7 @@ open class UINavigationController: UIViewController {
     }
 
     func completeTransition(_ t: Transition) {
+        let coordinator = _transitionCoordinator as? _UITransitionCoordinator
         activeTransition = nil
         t.scrim.removeFromSuperview()
 
@@ -943,6 +999,7 @@ open class UINavigationController: UIViewController {
             navigationBar.endTransition(cancelled: true)
             settleBarAfterTransition(on: t.frontVC)
             delegate?.navigationController(self, didShow: t.frontVC, animated: true)
+            coordinator?.complete(cancelled: true)
             return
         }
 
@@ -967,6 +1024,7 @@ open class UINavigationController: UIViewController {
             detachFromParent(t.frontVC)
             delegate?.navigationController(self, didShow: t.backVC, animated: true)
         }
+        coordinator?.complete(cancelled: false)
     }
 
     /// A finished transition hands the bar over to the controller that is now
@@ -1001,6 +1059,17 @@ open class UINavigationController: UIViewController {
             to.loadViewIfNeeded()
             from.beginAppearanceTransition(false, animated: true)
             to.beginAppearanceTransition(true, animated: true)
+            let coord = _UITransitionCoordinator(
+                animated: true,
+                presentationStyle: .none,
+                duration: UINavigationController.transitionDuration,
+                completionCurve: .navigationTransition,
+                containerView: contentView,
+                from: from, to: to,
+                fromView: from.viewIfLoaded, toView: to.viewIfLoaded,
+                interactive: true,
+                interruptible: false)
+            coord.attach(self, from, to)
             let toView = to.view!
             toView.frame = contentView.bounds
             toView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
@@ -1023,6 +1092,7 @@ open class UINavigationController: UIViewController {
             else { return }
             let p = clamp01(r.translation(in: view).x / t.width)
             scrub(progress: p)
+            (_transitionCoordinator as? _UITransitionCoordinator)?.percentComplete = p
         case .ended, .cancelled, .failed:
             guard let t = activeTransition, t.interactive, t.endTime == nil
             else { return }
@@ -1043,6 +1113,7 @@ open class UINavigationController: UIViewController {
                 completes = false
             }
             endInteractivePop(t, completes: completes)
+            (_transitionCoordinator as? _UITransitionCoordinator)?.setInteractive(false)
         default:
             break
         }
@@ -1069,6 +1140,8 @@ open class UINavigationController: UIViewController {
                        initialSpringVelocity: 0, options: [], animations: {
             self.applyTransition(t, coverage: completes ? 0 : 1)
             self.navigationBar.setTransitionProgress(completes ? 1 : 0)
+            (self._transitionCoordinator as? _UITransitionCoordinator)?
+                .performAlongsideAnimations()
         })
         UINavigationController.registerTransitioning(self)
     }

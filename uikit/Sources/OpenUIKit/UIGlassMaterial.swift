@@ -21,9 +21,10 @@
 //   white & black ⇒ α = 222/255, T = 220/α = 252.703/255
 //     equivalently k = 33/255, c = 220
 //   grad flatten  predicted k·0.68·76.5 = 6.76 vs measured 6.7
-//   red residual  predicted (253.0, 227.2, 227.8) vs (255, 201, 204)
-//     |res| G=26.2 B=23.8 — chroma is outside the two-unknown mix; reported,
-//     not fitted (a third saturation unknown would close it)
+//   red / yellow / green close with unclamped sat 5.651 (MEASURED
+//     /tmp/materials-probe tab-bar, SE 2x / iOS 26.1): red (255,56,60)→
+//     (255,201,204), yellow (242,179,64)→(255,240,156), green (52,199,89)
+//     →(162,255,189) at Δ≤1. Clamp-before-tint floors yellow B at 220.
 //
 // σ: glass_sigma_edge_se, white|black split through the first platter
 // centre (x 149.5). Glyph-free scan at platter-local y = 8, erf fit on
@@ -81,6 +82,14 @@ enum _UIGlassMaterial {
     static let mixAlpha: CGFloat = 222.0 / 255.0
     /// Gray tint T/255. MEASURED α·T = 220 ⇒ T = 220/222.
     static let tintGray: CGFloat = 220.0 / 222.0
+    /// Unclamped Rec.709 saturation. MEASURED /tmp/materials-probe tab-bar
+    /// platter, iPhone SE 2x / iOS 26.1: yellow (242,179,64) → (255,240,156)
+    /// with k=33/255, c=220 (B channel). Same s hits red (255,56,60)→
+    /// (255,201,204) and green (52,199,89)→(162,255,189) at Δ≤1. sat=1
+    /// left those at (253,227,228) / (251,243,228) / (227,246,232) — the
+    /// glass-material.md red residual. Clamping sat before the tint floors
+    /// yellow B at 220; `clampsSaturation: false` is required.
+    static let saturation: CGFloat = 5.651
     /// Inner highlight ring width in points. MEASURED 2 device px at 2x.
     static let ringWidth: CGFloat = 1
     /// Ring source-over alpha. MEASURED black dx=1 (233) over interior 220:
@@ -157,13 +166,16 @@ enum _UIGlassMaterial {
     }
 
     static func configuration(dark: Bool, bar: Bool = false) -> CanvasBackdropFilterConfiguration {
+        // Dark chroma is unmeasured (glass-material.md red residual). Keep
+        // sat=1 + clamp so gray interiors 19 / 57 / 84 stay exact.
         if dark && bar {
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
                 saturation: 1,
                 tintColor: CGColor(red: darkBarTintGray, green: darkBarTintGray,
                                    blue: darkBarTintGray, alpha: darkBarMixAlpha),
-                intensity: 1)
+                intensity: 1,
+                clampsSaturation: true)
         }
         if dark {
             return CanvasBackdropFilterConfiguration(
@@ -171,19 +183,23 @@ enum _UIGlassMaterial {
                 saturation: 1,
                 tintColor: CGColor(red: darkTintGray, green: darkTintGray,
                                    blue: darkTintGray, alpha: darkMixAlpha),
-                intensity: 1)
+                intensity: 1,
+                clampsSaturation: true)
         }
         return CanvasBackdropFilterConfiguration(
             blurRadius: blurSigma,
-            saturation: 1,
+            saturation: saturation,
             tintColor: CGColor(red: tintGray, green: tintGray,
                                blue: tintGray, alpha: mixAlpha),
-            intensity: 1)
+            intensity: 1,
+            clampsSaturation: false)
     }
 
     static func configuration(for view: UIView) -> CanvasBackdropFilterConfiguration {
         switch view._iosGlassKind {
         case .padActionSheetPopover:
+            // Pad mixes were fitted on gray interiors only
+            // (`/tmp/ipad-open-cap`). Do not apply the phone-tab sat.
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
                 saturation: 1,
@@ -191,7 +207,8 @@ enum _UIGlassMaterial {
                                    green: padActionSheetTintGray,
                                    blue: padActionSheetTintGray,
                                    alpha: padActionSheetMixAlpha),
-                intensity: 1)
+                intensity: 1,
+                clampsSaturation: true)
         case .padContentPopover:
             return CanvasBackdropFilterConfiguration(
                 blurRadius: blurSigma,
@@ -200,7 +217,8 @@ enum _UIGlassMaterial {
                                    green: padContentPopoverTintGray,
                                    blue: padContentPopoverTintGray,
                                    alpha: padContentPopoverMixAlpha),
-                intensity: 1)
+                intensity: 1,
+                clampsSaturation: true)
         case .platter:
             // Dark bar is a flag on `.platter`, not a kind: the same view
             // is light platter (253/220) and dark-bar (19/84). MEASURED

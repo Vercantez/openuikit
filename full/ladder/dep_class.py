@@ -17,10 +17,10 @@ Classes, assigned by rule, in this order (first match wins):
   networking-bound      references the URLSession family AND the family is
                         still unsupplied. Guest Foundation now declares
                         URLSession / URLRequest / URLResponse / HTTPURLResponse
-                        / URLSessionConfiguration (foundation_guest_sources.txt);
-                        URLSessionDataTask and URLComponents are still absent.
-                        A dep that only needs the guest-present names is no
-                        longer networking-bound.
+                        / URLSessionConfiguration / URLSessionTask /
+                        URLSessionDataTask / URLComponents (and the rest of
+                        GUEST_NET). A dep that only needs the guest-present
+                        names is no longer networking-bound.
   Foundation-heavy      >=1 model-layer reference per 2 files, no networking
   pure-Swift portable   none of the above
 
@@ -42,11 +42,17 @@ NET = {"URLSession", "URLSessionTask", "URLSessionDataTask", "URLSessionDownload
        "URLProtocol", "NSURLProtocol", "URLError"}
 
 # Guest Foundation (foundation_guest_sources.txt) supplies these networking
-# names as of the 2026-09-14 re-measure. A dep is networking-bound only on the
-# UNSUPPLIED remainder. URLSessionDataTask / URLComponents are still absent.
-GUEST_NET = {"URLSession", "URLSessionDelegate", "URLSessionTaskDelegate",
-             "URLSessionConfiguration", "URLRequest", "URLResponse",
-             "HTTPURLResponse", "URLCache", "URLProtocol", "URLError"}
+# names as of the 2026-09-06 URLSession family landing. A dep is
+# networking-bound only on the UNSUPPLIED remainder.
+GUEST_NET = {
+    "URLSession", "URLSessionDelegate", "URLSessionTaskDelegate",
+    "URLSessionDataDelegate", "URLSessionDownloadDelegate",
+    "URLSessionConfiguration", "URLSessionTask", "URLSessionDataTask",
+    "URLSessionDownloadTask", "URLSessionUploadTask", "URLSessionStreamTask",
+    "URLRequest", "URLResponse", "HTTPURLResponse", "URLCache", "URLProtocol",
+    "URLError", "URLComponents", "URLQueryItem", "NSURLComponents",
+    "URLCredential", "URLAuthenticationChallenge", "URLProtectionSpace",
+}
 
 
 def classify(d):

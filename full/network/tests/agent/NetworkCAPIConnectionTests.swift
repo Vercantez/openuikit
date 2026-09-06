@@ -29,7 +29,8 @@ func testCConnectionCopyAndBatch() {
     nw_connection_restart(connection)
     var sawReport = false
     nw_connection_access_establishment_report(connection, DispatchQueue(label: "c.est")) { report in
-        expect(report == nil, "no fabricated establishment report")
+        expect(report != nil, "establishment report object")
+        expect(nw_establishment_report_get_duration_milliseconds(report!) == 0, "duration zero")
         sawReport = true
     }
     expect(sawReport, "access_establishment_report")

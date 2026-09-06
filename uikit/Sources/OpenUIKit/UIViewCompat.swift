@@ -73,6 +73,22 @@ extension UIResponder {
         get { _accessibility.traits }
         set { _accessibility.traits = newValue }
     }
+    public var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
+        get { _accessibility.customActions }
+        set { _accessibility.customActions = newValue }
+    }
+    public var accessibilityCustomActionsBlock: (() -> [UIAccessibilityCustomAction]?)? {
+        get { _accessibility.customActionsBlock }
+        set { _accessibility.customActionsBlock = newValue }
+    }
+    public var accessibilityCustomRotors: [UIAccessibilityCustomRotor]? {
+        get { _accessibility.customRotors }
+        set { _accessibility.customRotors = newValue }
+    }
+    public var accessibilityCustomRotorsBlock: (() -> [UIAccessibilityCustomRotor]?)? {
+        get { _accessibility.customRotorsBlock }
+        set { _accessibility.customRotorsBlock = newValue }
+    }
 }
 
 struct AccessibilityState {
@@ -83,6 +99,10 @@ struct AccessibilityState {
     var hint: String?
     var identifier: String?
     var traits: UIAccessibilityTraits = .none
+    var customActions: [UIAccessibilityCustomAction]?
+    var customActionsBlock: (() -> [UIAccessibilityCustomAction]?)?
+    var customRotors: [UIAccessibilityCustomRotor]?
+    var customRotorsBlock: (() -> [UIAccessibilityCustomRotor]?)?
 }
 
 // MARK: - Fitting sizes

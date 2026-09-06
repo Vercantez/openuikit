@@ -45,7 +45,7 @@ private final class MLMultiArrayStorage {
     }
 }
 
-open class MLMultiArray: NSObject, NSSecureCoding {
+open class MLMultiArray: NSObject, NSSecureCoding, Foundation.NSCopying {
     public static var supportsSecureCoding: Bool { true }
 
     private let storage: MLMultiArrayStorage
@@ -206,6 +206,44 @@ open class MLMultiArray: NSObject, NSSecureCoding {
     }
 
     open func encode(with coder: NSCoder) {}
+
+    open func copy(with zone: NSZone?) -> Any {
+        _ = zone
+        let copied = try! MLMultiArray(shape: shape, dataType: dataType)
+        transfer(to: copied)
+        return copied
+    }
+
+    public convenience init(data: Data, shape: [NSNumber], dataType: MLMultiArrayDataType) throws {
+        try self.init(shape: shape, dataType: dataType)
+        let layout = try coreMLValidateMultiArrayLayout(
+            shape: shape.map(\.intValue),
+            strides: nil,
+            dataType: dataType
+        )
+        let byteCount = min(data.count, layout.byteCount)
+        data.withUnsafeBytes { buffer in
+            if let base = buffer.baseAddress {
+                storage.pointer.copyMemory(from: base, byteCount: byteCount)
+            }
+        }
+    }
+
+    public var data: Data {
+        withUnsafeBytes { Data($0.prefix(max(storage.byteCount, 0))) }
+    }
+
+    public func transposed() throws -> MLMultiArray {
+        guard shape.count >= 2 else { return copy() as! MLMultiArray }
+        let dims = shape.map(\.intValue)
+        let newShape = Array(dims.reversed())
+        let result = try MLMultiArray(shape: newShape.map { NSNumber(value: $0) }, dataType: dataType)
+        for linear in 0..<count {
+            let indices = coreMLUnravel(linear: linear, shape: dims)
+            result.setNumber(number(atLinear: linear), atIndices: Array(indices.reversed()))
+        }
+        return result
+    }
 
     public subscript(idx: Int) -> NSNumber {
         get {

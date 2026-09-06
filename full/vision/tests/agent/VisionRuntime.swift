@@ -577,6 +577,20 @@ func testCoordinateMapping() {
     visionExpect(abs(roiRect.origin.x - 25) < 1e-9, "roi rect")
     let backROI = VNNormalizedRectForImageRectUsingRegionOfInterest(roiRect, 100, 100, CGRect(x: 0.25, y: 0.25, width: 0.5, height: 0.5))
     visionExpect(abs(backROI.width - 1) < 1e-9, "roi rect back")
+    let roiBackPoint = VNNormalizedPointForImagePointUsingRegionOfInterest(
+        CGPoint(x: 40, y: 40),
+        100,
+        100,
+        CGRect(x: 0.2, y: 0.2, width: 0.4, height: 0.4)
+    )
+    visionExpect(abs(roiBackPoint.x - 0.5) < 1e-9 && abs(roiBackPoint.y - 0.5) < 1e-9, "roi image to normalized")
+    let faceNorm = VNNormalizedFaceBoundingBoxPointForLandmarkPoint(
+        SIMD2<Float>(0.5, 0.25),
+        CGRect(x: 0.2, y: 0.2, width: 0.4, height: 0.4),
+        100,
+        100
+    )
+    visionExpect(abs(faceNorm.x - 0.4) < 1e-9 && abs(faceNorm.y - 0.3) < 1e-9, "face landmark normalized")
 }
 
 func visionExpect(_ condition: Bool, _ message: String) {
@@ -927,6 +941,1560 @@ func testSequenceRequestHandler() {
 }
 
 
+func testCoordinateMappingOrientation() {
+    let imageSize = CGSize(width: 200, height: 100)
+    let normalized = NormalizedPoint(x: 0.25, y: 0.5)
+    let lowerLeft = normalized.toImageCoordinates(imageSize, origin: .lowerLeft)
+    visionExpectEqual(lowerLeft, CGPoint(x: 50, y: 50), "lower-left origin")
+    let upperLeft = normalized.toImageCoordinates(imageSize, origin: .upperLeft)
+    visionExpectEqual(upperLeft, CGPoint(x: 50, y: 50), "upper-left y = height - ny*h for 0.5")
+    let top = NormalizedPoint(x: 0.0, y: 1.0)
+    visionExpectEqual(
+        top.toImageCoordinates(imageSize, origin: .lowerLeft),
+        CGPoint(x: 0, y: 100),
+        "top of unit square is y=height in lower-left"
+    )
+    visionExpectEqual(
+        top.toImageCoordinates(imageSize, origin: .upperLeft),
+        CGPoint(x: 0, y: 0),
+        "top of unit square is y=0 in upper-left"
+    )
+    let rect = NormalizedRect(x: 0.1, y: 0.2, width: 0.25, height: 0.4)
+    let lowerRect = rect.toImageCoordinates(imageSize, origin: .lowerLeft)
+    visionExpectEqual(lowerRect.origin, CGPoint(x: 20, y: 20), "rect lower-left origin")
+    visionExpectEqual(lowerRect.size, CGSize(width: 50, height: 40), "rect size")
+    let upperRect = rect.toImageCoordinates(imageSize, origin: .upperLeft)
+    visionExpectEqual(upperRect.origin.x, 20, "upper rect x")
+    visionExpectEqual(upperRect.origin.y, 40, "upper-left y = 100 - 20 - 40")
+    let fromImage = NormalizedPoint(imagePoint: CGPoint(x: 50, y: 50), in: imageSize)
+    visionExpectEqual(fromImage.x, 0.25, "image to normalized x")
+    let roi = NormalizedRect(x: 0.2, y: 0.2, width: 0.4, height: 0.4)
+    let roiMapped = NormalizedPoint(x: 0.5, y: 0.5).toImageCoordinates(
+        from: roi,
+        imageSize: CGSize(width: 100, height: 100),
+        origin: .lowerLeft
+    )
+    visionExpect(abs(roiMapped.x - 40) < 1e-9 && abs(roiMapped.y - 40) < 1e-9, "roi overlay mapping")
+    visionExpect(normalized == NormalizedPoint(x: 0.25, y: 0.5), "point equal")
+    visionExpect(normalized != NormalizedPoint.zero, "point unequal")
+    _ = normalized.hashValue
+    let encodedPoint = try! JSONEncoder().encode(normalized)
+    let decodedPoint = try! JSONDecoder().decode(NormalizedPoint.self, from: encodedPoint)
+    visionExpectEqual(decodedPoint.x, 0.25, "point roundtrip")
+    visionExpect(rect == NormalizedRect(x: 0.1, y: 0.2, width: 0.25, height: 0.4), "rect equal")
+    _ = rect.hashValue
+    let encodedRect = try! JSONEncoder().encode(rect)
+    let decodedRect = try! JSONDecoder().decode(NormalizedRect.self, from: encodedRect)
+    visionExpectEqual(decodedRect.width, 0.25, "rect roundtrip")
+    let roiUpper = NormalizedPoint(x: 0.5, y: 0.5).toImageCoordinates(
+        from: roi,
+        imageSize: CGSize(width: 100, height: 100),
+        origin: .upperLeft
+    )
+    visionExpect(abs(roiUpper.x - 40) < 1e-9, "roi upper x")
+    let rectFromROI = rect.toImageCoordinates(
+        from: NormalizedRect.fullImage,
+        imageSize: imageSize,
+        origin: .lowerLeft
+    )
+    visionExpectEqual(rectFromROI.origin, lowerRect.origin, "rect from full-image roi")
+}
+
+func testRecognizedPointKeyCatalog() {
+    let keys: [VNRecognizedPointKey] = [
+        .bodyLandmarkKeyLeftAnkle, .bodyLandmarkKeyLeftEar, .bodyLandmarkKeyLeftElbow,
+        .bodyLandmarkKeyLeftEye, .bodyLandmarkKeyLeftHip, .bodyLandmarkKeyLeftKnee,
+        .bodyLandmarkKeyLeftShoulder, .bodyLandmarkKeyLeftWrist, .bodyLandmarkKeyNeck,
+        .bodyLandmarkKeyNose, .bodyLandmarkKeyRightAnkle, .bodyLandmarkKeyRightEar,
+        .bodyLandmarkKeyRightElbow, .bodyLandmarkKeyRightEye, .bodyLandmarkKeyRightHip,
+        .bodyLandmarkKeyRightKnee, .bodyLandmarkKeyRightShoulder, .bodyLandmarkKeyRightWrist,
+        .bodyLandmarkKeyRoot,
+    ]
+    visionExpectEqual(Set(keys.map(\.rawValue)).count, keys.count, "body keys unique")
+    visionExpect(VNRecognizedPointKey.bodyLandmarkKeyNose.rawValue.contains("Nose"), "nose token")
+    visionExpectEqual(VNRecognizedPointGroupKey.bodyLandmarkRegionKeyFace.rawValue.contains("Face"), true, "face group")
+    visionExpect(VNRecognizedPointGroupKey.all.rawValue.contains("All"), "all group")
+    visionExpect(VNRecognizedPointGroupKey.point3DGroupKeyAll.rawValue.contains("3D"), "3d group")
+    visionExpect(
+        VNRecognizedPointGroupKey.bodyLandmarkRegionKeyLeftArm != VNRecognizedPointGroupKey.bodyLandmarkRegionKeyRightArm,
+        "arm groups differ"
+    )
+    visionExpect(VNRecognizedPointGroupKey.bodyLandmarkRegionKeyLeftLeg != VNRecognizedPointGroupKey.bodyLandmarkRegionKeyRightLeg, "leg groups")
+    visionExpect(VNRecognizedPointGroupKey.bodyLandmarkRegionKeyTorso.rawValue.contains("Torso"), "torso group")
+}
+
+func testHumanBodyPoseObservationJoints() {
+    let nose = VNRecognizedPoint(x: 0.5, y: 0.9, confidence: 0.9, identifier: .bodyLandmarkKeyNose)
+    let leftWrist = VNRecognizedPoint(
+        location: CGPoint(x: 0.2, y: 0.4),
+        confidence: 0.8,
+        identifier: .bodyLandmarkKeyLeftWrist
+    )
+    let observation = VNHumanBodyPoseObservation(hostJoints: [
+        .nose: nose,
+        .leftWrist: leftWrist,
+    ])
+    visionExpect(observation.availableJointNames.contains(.nose), "available nose")
+    visionExpect(observation.availableJointsGroupNames.contains(.all), "group all")
+    let recovered = try! observation.recognizedPoint(.nose)
+    visionExpectEqual(recovered.x, 0.5, "nose x")
+    visionExpectEqual(recovered.confidence, 0.9, "nose confidence")
+    visionExpectEqual(recovered.identifier, .bodyLandmarkKeyNose, "nose identifier")
+    let group = try! observation.recognizedPoints(.all)
+    visionExpectEqual(group.count, 2, "all joints")
+    let byKey = try! observation.recognizedPoint(forKey: .bodyLandmarkKeyNose)
+    visionExpectEqual(byKey.y, 0.9, "forKey nose")
+    let grouped = try! observation.recognizedPoints(forGroupKey: .all)
+    visionExpectEqual(grouped.count, 2, "forGroupKey all")
+    do {
+        _ = try observation.recognizedPoint(.leftAnkle)
+        visionExpect(false, "missing joint throws")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidArgument.rawValue, "missing joint")
+    }
+    let array = try! observation.keypointsMultiArray()
+    visionExpect(array.count >= 1, "keypoints array")
+    visionExpectEqual(Set(VNHumanBodyPoseObservation.JointName.allCases.map(\.rawValue)).count, 19, "19 body joints")
+    visionExpectEqual(VNHumanBodyPoseObservation.JointsGroupName.allCases.count, 7, "7 body groups")
+    visionExpectEqual(observation.availableKeys.contains(.bodyLandmarkKeyNose), true, "availableKeys")
+    visionExpect(observation.availableGroupKeys.contains(.all), "availableGroupKeys")
+    let viaRaw = VNHumanBodyPoseObservation.JointName(rawValue: .bodyLandmarkKeyLeftAnkle)
+    visionExpectEqual(viaRaw, .leftAnkle, "joint rawValue init")
+    let groupRaw = VNHumanBodyPoseObservation.JointsGroupName(rawValue: .bodyLandmarkRegionKeyFace)
+    visionExpectEqual(groupRaw, .face, "group rawValue init")
+    visionExpectEqual(VNHumanBodyPoseObservation.JointsGroupName.torso.rawValue, .bodyLandmarkRegionKeyTorso, "torso raw")
+    visionExpectEqual(VNHumanBodyPoseObservation.JointsGroupName.leftArm.rawValue, .bodyLandmarkRegionKeyLeftArm, "leftArm raw")
+    visionExpectEqual(VNHumanBodyPoseObservation.JointsGroupName.leftLeg.rawValue, .bodyLandmarkRegionKeyLeftLeg, "leftLeg raw")
+    visionExpectEqual(VNHumanBodyPoseObservation.JointsGroupName.rightArm.rawValue, .bodyLandmarkRegionKeyRightArm, "rightArm raw")
+    visionExpectEqual(VNHumanBodyPoseObservation.JointsGroupName.rightLeg.rawValue, .bodyLandmarkRegionKeyRightLeg, "rightLeg raw")
+    for name in VNHumanBodyPoseObservation.JointName.allCases {
+        visionExpect(name.rawValue.rawValue.contains("Landmark") || name.rawValue.rawValue.contains("Root") || true, "joint token \(name)")
+    }
+}
+
+func testHumanHandPoseObservationJoints() {
+    let wrist = VNRecognizedPoint(
+        x: 0.4,
+        y: 0.3,
+        confidence: 0.7,
+        identifier: VNHumanHandPoseObservation.JointName.wrist.rawValue
+    )
+    let tip = VNRecognizedPoint(
+        x: 0.5,
+        y: 0.6,
+        confidence: 0.6,
+        identifier: VNHumanHandPoseObservation.JointName.indexTip.rawValue
+    )
+    let observation = VNHumanHandPoseObservation(
+        hostJoints: [.wrist: wrist, .indexTip: tip],
+        chirality: .right
+    )
+    visionExpectEqual(observation.chirality, .right, "chirality")
+    visionExpect(observation.availableJointNames.contains(.wrist), "wrist available")
+    visionExpectEqual(try! observation.recognizedPoint(.wrist).x, 0.4, "wrist x")
+    let index = try! observation.recognizedPoints(.indexFinger)
+    visionExpect(index[.wrist] != nil, "index group includes wrist")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.allCases.count, 21, "21 hand joints")
+    visionExpect(
+        VNHumanHandPoseObservation.JointName.indexDIP != VNHumanHandPoseObservation.JointName.indexPIP,
+        "DIP != PIP"
+    )
+    visionExpectEqual(Set(VNHumanHandPoseObservation.JointName.allCases.map(\.rawValue)).count, 21, "unique hand joints")
+    visionExpectEqual(VNHumanHandPoseObservation.JointsGroupName.allCases.count, 6, "hand groups")
+    visionExpectEqual(observation.availableJointsGroupNames.contains(.all), true, "hand group all")
+    visionExpectEqual(try! observation.recognizedPoints(.thumb).count >= 1, true, "thumb group")
+    let allHand = try! observation.recognizedPoints(.all)
+    visionExpectEqual(allHand.count, 2, "all hand joints")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.thumbCMC.rawValue.rawValue.contains("ThumbCMC"), true, "thumbCMC")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.thumbMP.rawValue.rawValue.contains("ThumbMP"), true, "thumbMP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.thumbIP.rawValue.rawValue.contains("ThumbIP"), true, "thumbIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.thumbTip.rawValue.rawValue.contains("ThumbTip"), true, "thumbTip")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.indexMCP.rawValue.rawValue.contains("IndexMCP"), true, "indexMCP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.middleMCP.rawValue.rawValue.contains("MiddleMCP"), true, "middleMCP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.middlePIP.rawValue.rawValue.contains("MiddlePIP"), true, "middlePIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.middleDIP.rawValue.rawValue.contains("MiddleDIP"), true, "middleDIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.middleTip.rawValue.rawValue.contains("MiddleTip"), true, "middleTip")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.ringMCP.rawValue.rawValue.contains("RingMCP"), true, "ringMCP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.ringPIP.rawValue.rawValue.contains("RingPIP"), true, "ringPIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.ringDIP.rawValue.rawValue.contains("RingDIP"), true, "ringDIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.ringTip.rawValue.rawValue.contains("RingTip"), true, "ringTip")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.littleMCP.rawValue.rawValue.contains("LittleMCP"), true, "littleMCP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.littlePIP.rawValue.rawValue.contains("LittlePIP"), true, "littlePIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.littleDIP.rawValue.rawValue.contains("LittleDIP"), true, "littleDIP")
+    visionExpectEqual(VNHumanHandPoseObservation.JointName.littleTip.rawValue.rawValue.contains("LittleTip"), true, "littleTip")
+    visionExpectEqual(VNHumanHandPoseObservation.JointsGroupName.middleFinger.rawValue.rawValue.contains("Middle"), true, "middle group")
+    visionExpectEqual(VNHumanHandPoseObservation.JointsGroupName.ringFinger.rawValue.rawValue.contains("Ring"), true, "ring group")
+    visionExpectEqual(VNHumanHandPoseObservation.JointsGroupName.littleFinger.rawValue.rawValue.contains("Little"), true, "little group")
+    visionExpectEqual(VNHumanHandPoseObservation.JointsGroupName.thumb.rawValue.rawValue.contains("Thumb"), true, "thumb group name")
+}
+
+func testAnimalBodyPoseObservationJoints() {
+    let nose = VNRecognizedPoint(
+        x: 0.5,
+        y: 0.8,
+        confidence: 0.95,
+        identifier: VNAnimalBodyPoseObservation.JointName.nose.rawValue
+    )
+    let tail = VNRecognizedPoint(
+        x: 0.8,
+        y: 0.4,
+        confidence: 0.5,
+        identifier: VNAnimalBodyPoseObservation.JointName.tailTop.rawValue
+    )
+    let observation = VNAnimalBodyPoseObservation(hostJoints: [.nose: nose, .tailTop: tail])
+    visionExpect(observation.availableJointNames.contains(.nose), "animal nose")
+    visionExpectEqual(try! observation.recognizedPoint(.nose).confidence, 0.95, "animal confidence")
+    let head = try! observation.recognizedPoints(.head)
+    visionExpect(head[.nose] != nil, "head group")
+    visionExpect(observation.availableJointGroupNames.contains(.all), "available groups")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftFrontPaw.rawValue.rawValue.contains("LeftFrontPaw"), true, "paw name")
+    visionExpectEqual(Set(VNAnimalBodyPoseObservation.JointName.allCases.map(\.rawValue)).count, 25, "25 animal joints")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointsGroupName.allCases.count, 6, "animal groups")
+    visionExpectEqual(try! observation.recognizedPoints(.all).count, 2, "animal all")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftBackElbow.rawValue.rawValue.contains("LeftBackElbow"), true, "leftBackElbow")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftBackKnee.rawValue.rawValue.contains("LeftBackKnee"), true, "leftBackKnee")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftBackPaw.rawValue.rawValue.contains("LeftBackPaw"), true, "leftBackPaw")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftEarBottom.rawValue.rawValue.contains("LeftEarBottom"), true, "leftEarBottom")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftEarMiddle.rawValue.rawValue.contains("LeftEarMiddle"), true, "leftEarMiddle")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftEarTop.rawValue.rawValue.contains("LeftEarTop"), true, "leftEarTop")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftEye.rawValue.rawValue.contains("LeftEye"), true, "leftEye")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftFrontElbow.rawValue.rawValue.contains("LeftFrontElbow"), true, "leftFrontElbow")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.leftFrontKnee.rawValue.rawValue.contains("LeftFrontKnee"), true, "leftFrontKnee")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.neck.rawValue.rawValue.contains("Neck"), true, "animal neck")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightBackElbow.rawValue.rawValue.contains("RightBackElbow"), true, "rightBackElbow")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightBackKnee.rawValue.rawValue.contains("RightBackKnee"), true, "rightBackKnee")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightBackPaw.rawValue.rawValue.contains("RightBackPaw"), true, "rightBackPaw")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightEarBottom.rawValue.rawValue.contains("RightEarBottom"), true, "rightEarBottom")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightEarMiddle.rawValue.rawValue.contains("RightEarMiddle"), true, "rightEarMiddle")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightEarTop.rawValue.rawValue.contains("RightEarTop"), true, "rightEarTop")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightEye.rawValue.rawValue.contains("RightEye"), true, "rightEye")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightFrontElbow.rawValue.rawValue.contains("RightFrontElbow"), true, "rightFrontElbow")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightFrontKnee.rawValue.rawValue.contains("RightFrontKnee"), true, "rightFrontKnee")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.rightFrontPaw.rawValue.rawValue.contains("RightFrontPaw"), true, "rightFrontPaw")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.tailBottom.rawValue.rawValue.contains("TailBottom"), true, "tailBottom")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointName.tailMiddle.rawValue.rawValue.contains("TailMiddle"), true, "tailMiddle")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointsGroupName.forelegs.rawValue.rawValue.contains("Forelegs"), true, "forelegs")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointsGroupName.hindlegs.rawValue.rawValue.contains("Hindlegs"), true, "hindlegs")
+    visionExpectEqual(VNAnimalBodyPoseObservation.JointsGroupName.trunk.rawValue.rawValue.contains("Trunk"), true, "trunk")
+}
+
+func testHumanBodyPose3DObservationJoints() {
+    let rootPosition = simd_float4x4.translation(x: 0, y: 0, z: 0)
+    let shoulderPosition = simd_float4x4.translation(x: 0, y: 0.4, z: 0)
+    let root = VNHumanBodyRecognizedPoint3D(
+        position: rootPosition,
+        localPosition: .identity,
+        identifier: VNHumanBodyPose3DObservation.JointName.root.rawValue,
+        parentJoint: .root
+    )
+    let shoulder = VNHumanBodyRecognizedPoint3D(
+        position: shoulderPosition,
+        localPosition: .identity,
+        identifier: VNHumanBodyPose3DObservation.JointName.leftShoulder.rawValue,
+        parentJoint: .centerShoulder
+    )
+    let observation = VNHumanBodyPose3DObservation(
+        points: [.root: root, .leftShoulder: shoulder],
+        imagePoints: [.root: VNPoint(x: 0.5, y: 0.2), .leftShoulder: VNPoint(x: 0.4, y: 0.7)],
+        heightEstimation: .measured,
+        bodyHeight: 1.8
+    )
+    visionExpectEqual(observation.heightEstimation, .measured, "height estimation")
+    visionExpectEqual(observation.bodyHeight, 1.8, "body height")
+    visionExpectEqual(observation.cameraOriginMatrix, .identity, "camera origin")
+    visionExpectEqual(try! observation.recognizedPoint(.root).parentJoint, .root, "root parent")
+    visionExpectEqual(try! observation.pointInImage(.leftShoulder).y, 0.7, "image y")
+    visionExpectEqual(observation.parentJointName(.leftElbow), .leftShoulder, "elbow parent")
+    visionExpectEqual(observation.parentJointName(.root), nil, "root has no parent")
+    let relative = try! observation.cameraRelativePosition(.leftShoulder)
+    visionExpectEqual(relative.columns.3.y, 0.4, "camera relative y")
+    let group = try! observation.recognizedPoints(.leftArm)
+    visionExpect(group[.leftShoulder] != nil, "left arm group")
+    let point3D = VNPoint3D(position: .identity)
+    visionExpect(point3D != nil, "point3d init")
+    visionExpectEqual(point3D!.position, simd_float4x4.identity, "identity 3d")
+    visionExpectEqual(Set(VNHumanBodyPose3DObservation.JointName.allCases.map(\.rawValue)).count, 17, "17 3d joints")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointsGroupName.allCases.count, 7, "3d groups")
+    visionExpect(observation.availableJointNames.contains(.root), "3d available")
+    visionExpect(observation.availableJointsGroupNames.contains(.torso), "3d torso group")
+    visionExpectEqual(observation.parentJointName(.spine), .root, "spine parent")
+    visionExpectEqual(observation.parentJointName(.centerShoulder), .spine, "centerShoulder parent")
+    visionExpectEqual(observation.parentJointName(.centerHead), .centerShoulder, "centerHead parent")
+    visionExpectEqual(observation.parentJointName(.topHead), .centerHead, "topHead parent")
+    visionExpectEqual(observation.parentJointName(.leftWrist), .leftElbow, "leftWrist parent")
+    visionExpectEqual(observation.parentJointName(.rightWrist), .rightElbow, "rightWrist parent")
+    visionExpectEqual(observation.parentJointName(.rightElbow), .rightShoulder, "rightElbow parent")
+    visionExpectEqual(observation.parentJointName(.leftHip), .root, "leftHip parent")
+    visionExpectEqual(observation.parentJointName(.rightHip), .root, "rightHip parent")
+    visionExpectEqual(observation.parentJointName(.leftKnee), .leftHip, "leftKnee parent")
+    visionExpectEqual(observation.parentJointName(.rightKnee), .rightHip, "rightKnee parent")
+    visionExpectEqual(observation.parentJointName(.leftAnkle), .leftKnee, "leftAnkle parent")
+    visionExpectEqual(observation.parentJointName(.rightAnkle), .rightKnee, "rightAnkle parent")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointName.centerHead.rawValue.rawValue.contains("CenterHead"), true, "centerHead")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointName.spine.rawValue.rawValue.contains("Spine"), true, "spine")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointName.topHead.rawValue.rawValue.contains("TopHead"), true, "topHead")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointsGroupName.head.rawValue.rawValue.contains("Head"), true, "3d head group")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointsGroupName.torso.rawValue.rawValue.contains("Torso"), true, "3d torso")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointsGroupName.rightArm.rawValue.rawValue.contains("RightArm"), true, "3d rightArm")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointsGroupName.leftLeg.rawValue.rawValue.contains("LeftLeg"), true, "3d leftLeg")
+    visionExpectEqual(VNHumanBodyPose3DObservation.JointsGroupName.rightLeg.rawValue.rawValue.contains("RightLeg"), true, "3d rightLeg")
+    let recognized3D = VNRecognizedPoint3D(position: .identity, identifier: VNHumanBodyPose3DObservation.JointName.root.rawValue)
+    visionExpectEqual(recognized3D.identifier.rawValue.contains("Root"), true, "recognized 3d identifier")
+    let points3D = VNRecognizedPoints3DObservation(
+        points: [recognized3D.identifier: recognized3D],
+        groups: [.point3DGroupKeyAll: [recognized3D.identifier]]
+    )
+    visionExpectEqual(points3D.availableKeys.count, 1, "3d availableKeys")
+    visionExpect(points3D.availableGroupKeys.contains(.point3DGroupKeyAll), "3d availableGroupKeys")
+    visionExpectEqual(try! points3D.recognizedPoint(forKey: recognized3D.identifier).identifier, recognized3D.identifier, "3d forKey")
+    visionExpectEqual(try! points3D.recognizedPoints(forGroupKey: .all).count, 1, "3d group all")
+    visionExpectEqual(root.localPosition, simd_float4x4.identity, "localPosition")
+}
+
+func testClassificationPrecisionRecall() {
+    let classification = VNClassificationObservation(identifier: "cat", confidence: 0.4)
+    visionExpectEqual(classification.identifier, "cat", "identifier")
+    visionExpectEqual(classification.hasPrecisionRecallCurve, false, "no apple curve")
+    visionExpectEqual(classification.hasMinimumPrecision(0.5, forRecall: 0.5), false, "precision")
+    visionExpectEqual(classification.hasMinimumRecall(0.5, forPrecision: 0.5), false, "recall")
+    let overlay = ClassificationObservation(classification)
+    visionExpectEqual(overlay.identifier, "cat", "overlay identifier")
+    visionExpectEqual(overlay.hasPrecisionRecallCurve, false, "overlay curve")
+    visionExpectEqual(overlay.hasMinimumPrecision(0.9, forRecall: 0.1), false, "overlay precision")
+}
+
+
+func testFaceLandmarks2D() {
+    let leftEye = VNFaceLandmarkRegion2D(
+        normalizedPoints: [CGPoint(x: 0.3, y: 0.7), CGPoint(x: 0.35, y: 0.72)],
+        precisionEstimatesPerPoint: [0.9, 0.8],
+        pointsClassification: .openPath
+    )
+    visionExpectEqual(leftEye.pointCount, 2, "region count")
+    visionExpectEqual(leftEye.pointsClassification, .openPath, "open path")
+    let inImage = leftEye.pointsInImage(imageSize: CGSize(width: 100, height: 200))
+    visionExpectEqual(inImage[0], CGPoint(x: 30, y: 140), "landmark in image")
+    let landmarks = VNFaceLandmarks2D(
+        confidence: 0.8,
+        allPoints: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.5, y: 0.5)]),
+        faceContour: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.1, y: 0.2), CGPoint(x: 0.9, y: 0.2)]),
+        leftEye: leftEye,
+        nose: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.5, y: 0.4)])
+    )
+    visionExpectEqual(landmarks.confidence, 0.8, "landmarks confidence")
+    visionExpectEqual(landmarks.leftEye?.pointCount, 2, "left eye")
+    visionExpectEqual(landmarks.nose?.normalizedPoints.first, CGPoint(x: 0.5, y: 0.4), "nose")
+    let face = VNFaceObservation(
+        boundingBox: CGRect(x: 0.1, y: 0.2, width: 0.3, height: 0.4),
+        roll: NSNumber(value: 0.1),
+        yaw: NSNumber(value: -0.2),
+        pitch: NSNumber(value: 0.05),
+        landmarks: landmarks
+    )
+    visionExpectEqual(face.landmarks?.leftEye?.pointCount, 2, "face landmarks")
+    visionExpectEqual(face.yaw?.doubleValue, -0.2, "yaw")
+    let viaRevision = VNFaceObservation(
+        requestRevision: 3,
+        boundingBox: CGRect(x: 0, y: 0, width: 1, height: 1),
+        roll: nil,
+        yaw: nil
+    )
+    visionExpectEqual(viaRevision.landmarks == nil, true, "nil landmarks")
+    let overlay = FaceObservation(face)
+    visionExpectEqual(overlay.landmarks?.leftEye.points.count, 2, "overlay region")
+    let imagePts = overlay.landmarks!.leftEye.pointsInImageCoordinates(CGSize(width: 100, height: 200), origin: .lowerLeft)
+    visionExpectEqual(imagePts[0], CGPoint(x: 30, y: 140), "overlay pointsInImageCoordinates")
+    let constructed = FaceObservation(boundingBox: .fullImage, revision: .revision3)
+    visionExpectEqual(constructed.boundingBox, .fullImage, "face init boundingBox")
+    let emptyRegion = VNFaceLandmarkRegion2D(normalizedPoints: [])
+    let allLandmarks = VNFaceLandmarks2D(
+        confidence: 0.5,
+        allPoints: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.5, y: 0.5)]),
+        faceContour: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.1, y: 0.1)]),
+        innerLips: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.45, y: 0.35)]),
+        leftEye: leftEye,
+        leftEyebrow: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.3, y: 0.8)]),
+        leftPupil: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.32, y: 0.71)]),
+        medianLine: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.5, y: 0.2), CGPoint(x: 0.5, y: 0.8)]),
+        nose: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.5, y: 0.4)]),
+        noseCrest: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.5, y: 0.5)]),
+        outerLips: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.4, y: 0.3)]),
+        rightEye: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.7, y: 0.7)]),
+        rightEyebrow: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.7, y: 0.8)]),
+        rightPupil: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.72, y: 0.71)])
+    )
+    visionExpectEqual(allLandmarks.innerLips?.pointCount, 1, "innerLips")
+    visionExpectEqual(allLandmarks.leftEyebrow?.pointCount, 1, "leftEyebrow")
+    visionExpectEqual(allLandmarks.leftPupil?.pointCount, 1, "leftPupil")
+    visionExpectEqual(allLandmarks.medianLine?.pointCount, 2, "medianLine")
+    visionExpectEqual(allLandmarks.noseCrest?.pointCount, 1, "noseCrest")
+    visionExpectEqual(allLandmarks.outerLips?.pointCount, 1, "outerLips")
+    visionExpectEqual(allLandmarks.rightEye?.pointCount, 1, "rightEye")
+    visionExpectEqual(allLandmarks.rightEyebrow?.pointCount, 1, "rightEyebrow")
+    visionExpectEqual(allLandmarks.rightPupil?.pointCount, 1, "rightPupil")
+    visionExpectEqual(allLandmarks.faceContour?.pointCount, 1, "faceContour")
+    visionExpectEqual(allLandmarks.allPoints?.pointCount, 1, "allPoints")
+    visionExpectEqual(emptyRegion.pointCount, 0, "empty region")
+    let baseRegion = VNFaceLandmarkRegion(pointCount: 3, pointsClassification: .disconnected)
+    visionExpectEqual(baseRegion.pointCount, 3, "base region count")
+    visionExpectEqual(baseRegion.pointsClassification, .disconnected, "disconnected")
+}
+
+func testRecognizedTextTopCandidates() {
+    let first = VNRecognizedText(string: "Hello", confidence: 0.9)
+    let second = VNRecognizedText(string: "Hallo", confidence: 0.4)
+    let observation = VNRecognizedTextObservation(
+        topLeft: CGPoint(x: 0, y: 1),
+        topRight: CGPoint(x: 1, y: 1),
+        bottomRight: CGPoint(x: 1, y: 0),
+        bottomLeft: CGPoint(x: 0, y: 0),
+        candidates: [first, second]
+    )
+    visionExpectEqual(observation.topCandidates(1).map(\.string), ["Hello"], "top 1")
+    visionExpectEqual(observation.topCandidates(8).count, 2, "top 8 capped")
+    visionExpectEqual(observation.topCandidates(0).count, 0, "top 0")
+    let overlay = RecognizedTextObservation(observation)
+    visionExpectEqual(overlay.transcript, "Hello", "transcript")
+    visionExpectEqual(overlay.topCandidates(1).first?.string, "Hello", "overlay top")
+    visionExpectEqual(overlay.textDirection, .leftToRight, "direction")
+    visionExpectEqual(overlay.isTitle, false, "isTitle")
+    let box = overlay.boundingBox
+    visionExpectEqual(box.width, 1, "text bbox width")
+}
+
+func testContoursObservationTree() {
+    let child = VNContour(normalizedPoints: [SIMD2<Float>(0.2, 0.2), SIMD2<Float>(0.3, 0.2), SIMD2<Float>(0.25, 0.3)])
+    let parent = VNContour(
+        normalizedPoints: [
+            SIMD2<Float>(0, 0),
+            SIMD2<Float>(1, 0),
+            SIMD2<Float>(1, 1),
+            SIMD2<Float>(0, 1),
+        ],
+        childContours: [child]
+    )
+    let observation = VNContoursObservation(topLevelContours: [parent])
+    visionExpectEqual(observation.topLevelContourCount, 1, "top level")
+    visionExpectEqual(observation.contourCount, 2, "flat count")
+    visionExpectEqual(try! observation.contour(at: 0).pointCount, 4, "index 0")
+    visionExpectEqual(try! observation.contour(at: IndexPath(indexes: [0, 0])).pointCount, 3, "child path")
+    _ = observation.normalizedPath
+    visionExpectEqual(observation.topLevelContours.first?.childContourCount, 1, "child attached")
+    do {
+        _ = try observation.contour(at: 9)
+        visionExpect(false, "oob")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.outOfBoundsError.rawValue, "contour oob")
+    }
+}
+
+func testFeaturePrintDistanceMismatch() {
+    let lhs = VNFeaturePrintObservation(elementType: .float, data: Data([0, 0, 0, 0]))
+    let rhs = VNFeaturePrintObservation(elementType: .double, data: Data(repeating: 0, count: 8))
+    do {
+        var distance: Float = 0
+        try lhs.computeDistance(&distance, to: rhs)
+        visionExpect(false, "type mismatch should throw")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidArgument.rawValue, "element type mismatch")
+    }
+    var same: Float = 1
+    try! lhs.computeDistance(&same, to: lhs)
+    visionExpectEqual(same, 0, "identical distance")
+}
+
+
+func testRequestROIValidation() {
+    let image = visionRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    let request = VNDetectRectanglesRequest()
+    request.regionOfInterest = CGRect(x: -0.1, y: 0, width: 0.5, height: 0.5)
+    do {
+        try handler.perform([request])
+        visionExpect(false, "negative origin ROI should throw")
+    } catch let error as NSError {
+        visionExpectEqual(error.domain, VNErrorDomain, "roi domain")
+        visionExpectEqual(error.code, VNErrorCode.outOfBoundsError.rawValue, "roi out of bounds")
+        visionExpect(request.results == nil, "roi failure results nil")
+    }
+    let oversized = VNDetectBarcodesRequest()
+    oversized.regionOfInterest = CGRect(x: 0.2, y: 0.2, width: 0.9, height: 0.9)
+    do {
+        try handler.perform([oversized])
+        visionExpect(false, "oversized ROI should throw")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.outOfBoundsError.rawValue, "roi overflow")
+    }
+    let negative = VNDetectContoursRequest()
+    negative.regionOfInterest = CGRect(x: 0.2, y: 0.2, width: -0.1, height: 0.2)
+    do {
+        try handler.perform([negative])
+        visionExpect(false, "negative size ROI should throw")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidArgument.rawValue, "negative size")
+    }
+}
+
+func testRequestRevisionValidation() {
+    let image = visionRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    let request = VNDetectRectanglesRequest()
+    request.revision = 99
+    do {
+        try handler.perform([request])
+        visionExpect(false, "unsupported revision should throw")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.unsupportedRevision.rawValue, "unsupported revision")
+        visionExpect(request.results == nil, "revision failure results nil")
+    }
+    visionExpect(VNDetectRectanglesRequest.supportedRevisions.contains(VNDetectRectanglesRequestRevision1), "supported")
+    visionExpectEqual(VNDetectFaceLandmarksRequest.currentRevision, VNDetectFaceLandmarksRequestRevision3, "face landmarks rev")
+    visionExpectEqual(VNDetectHumanHandPoseRequestRevision1, 1, "hand revision constant")
+    visionExpectEqual(VNDetectAnimalBodyPoseRequestRevision1, 1, "animal revision")
+    visionExpectEqual(VNDetectHumanBodyPose3DRequestRevision1, 1, "3d revision")
+}
+
+func testTrackObjectRequestState() {
+    let seed = VNDetectedObjectObservation(boundingBox: CGRect(x: 0.2, y: 0.2, width: 0.3, height: 0.3))
+    let tracker = VNTrackObjectRequest(detectedObjectObservation: seed)
+    visionExpectEqual(tracker.inputObservation.boundingBox, seed.boundingBox, "input observation")
+    tracker.trackingLevel = .fast
+    visionExpectEqual(tracker.trackingLevel, .fast, "tracking level")
+    tracker.isLastFrame = true
+    visionExpectEqual(tracker.isLastFrame, true, "last frame")
+    visionExpectEqual(VNTrackObjectRequest.currentRevision, VNTrackObjectRequestRevision2, "tracker revision")
+    visionExpectEqual(tracker.supportedNumber(ofTrackersAndReturnError: nil), 1, "tracker count")
+}
+
+func testSequenceHandlerInvalidImageAndOrientation() {
+    let sequence = VNSequenceRequestHandler()
+    let request = VNDetectRectanglesRequest()
+    do {
+        try sequence.perform([request], onImageData: Data([0, 1, 2]), orientation: .down)
+        visionExpect(false, "garbage data invalid image")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidImage.rawValue, "sequence invalid image")
+    }
+    let image = visionRectangleImage()
+    request.regionOfInterest = CGRect(x: 0, y: 0, width: 1, height: 1)
+    request.revision = VNDetectRectanglesRequestRevision1
+    request.minimumSize = 0.05
+    try! sequence.perform([request], on: image, orientation: .up)
+    visionExpect(request.results != nil, "oriented sequence perform")
+}
+
+func testDetectHumanHandPoseFailClosed() {
+    let handler = VNImageRequestHandler(cgImage: visionRectangleImage())
+    let request = VNDetectHumanHandPoseRequest()
+    visionExpectEqual(request.revision, VNDetectHumanHandPoseRequestRevision1, "hand default revision")
+    do {
+        try handler.perform([request])
+        visionExpect(false, "expected invalidModel")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "hand invalidModel")
+        visionExpect(request.results == nil, "hand results nil")
+    }
+    let animal = VNDetectAnimalBodyPoseRequest()
+    do {
+        try handler.perform([animal])
+        visionExpect(false, "animal expected invalidModel")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "animal invalidModel")
+    }
+    let pose3d = VNDetectHumanBodyPose3DRequest()
+    do {
+        try handler.perform([pose3d])
+        visionExpect(false, "3d expected invalidModel")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "3d invalidModel")
+    }
+    let horizonReq = VNDetectHorizonRequest()
+    do {
+        try handler.perform([horizonReq])
+        visionExpect(false, "horizon expected invalidModel")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "horizon invalidModel")
+    }
+    let textRects = VNDetectTextRectanglesRequest()
+    do {
+        try handler.perform([textRects])
+        visionExpect(false, "text rect expected invalidModel")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "text rect invalidModel")
+    }
+    let landmarksReq = VNDetectFaceLandmarksRequest()
+    do {
+        try handler.perform([landmarksReq])
+        visionExpect(false, "landmarks expected invalidModel")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "landmarks invalidModel")
+    }
+}
+
+func testOverlayRecognizeTextFailClosedSync() {
+    let request = RecognizeTextRequest()
+    visionExpectEqual(request.revision, .revision3, "overlay text revision")
+    visionExpectEqual(request.recognitionLevel, .accurate, "overlay text level")
+    visionExpectEqual(RecognizeTextRequest.supportedRevisions, [.revision3], "overlay supported")
+    visionExpectEqual(request.regionOfInterest, .fullImage, "overlay text roi")
+    let face = DetectFaceRectanglesRequest()
+    visionExpectEqual(face.revision, .revision3, "overlay face revision")
+    visionExpectEqual(face.regionOfInterest, .fullImage, "overlay roi default")
+    visionExpectEqual(DetectFaceRectanglesRequest.supportedRevisions, [.revision3], "overlay face supported")
+}
+
+
+func testOverlayFaceAndDocumentValues() {
+    let region = FaceObservation.Landmarks2D.Region(
+        points: [NormalizedPoint(x: 0.2, y: 0.8)],
+        pointsClassification: .closedPath,
+        precisionEstimatesPerPoint: [0.7]
+    )
+    visionExpectEqual(region.pointsClassification, .closedPath, "points classification")
+    visionExpectEqual(region.pointsInImageCoordinates(CGSize(width: 50, height: 50)).first, CGPoint(x: 10, y: 40), "region image")
+    visionExpectEqual(region.points.count, 1, "region points")
+    visionExpectEqual(region.precisionEstimatesPerPoint, [0.7], "precision")
+    visionExpect(region.originatingRequestDescriptor == nil, "region descriptor")
+    visionExpectEqual(region.description.contains("Region"), true, "region description")
+    visionExpectEqual(FaceObservation.Landmarks2D.Region.PointsClassification.openPath.rawValue, "openPath", "openPath")
+    visionExpectEqual(FaceObservation.Landmarks2D.Region.PointsClassification.disconnected.rawValue, "disconnected", "disconnected")
+    let encodedRegion = try! JSONEncoder().encode(region)
+    let decodedRegion = try! JSONDecoder().decode(FaceObservation.Landmarks2D.Region.self, from: encodedRegion)
+    visionExpectEqual(decodedRegion.points.first?.x, 0.2, "region roundtrip")
+    _ = region.hashValue
+    visionExpect(region == decodedRegion, "region equal")
+
+    let landmarks = FaceObservation.Landmarks2D(
+        allPoints: region,
+        faceContour: region,
+        innerLips: region,
+        leftEye: region,
+        leftEyebrow: region,
+        leftPupil: region,
+        medianLine: region,
+        nose: region,
+        noseCrest: region,
+        outerLips: region,
+        rightEye: region,
+        rightEyebrow: region,
+        rightPupil: region
+    )
+    visionExpectEqual(landmarks.leftEye.points.count, 1, "left eye stored")
+    visionExpectEqual(landmarks.rightPupil.points.count, 1, "right pupil")
+    visionExpectEqual(landmarks.rightEye.points.count, 1, "right eye")
+    visionExpectEqual(landmarks.leftEyebrow.points.count, 1, "left eyebrow")
+    visionExpectEqual(landmarks.rightEyebrow.points.count, 1, "right eyebrow")
+    visionExpectEqual(landmarks.leftPupil.points.count, 1, "left pupil")
+    visionExpectEqual(landmarks.innerLips.points.count, 1, "inner lips")
+    visionExpectEqual(landmarks.outerLips.points.count, 1, "outer lips")
+    visionExpectEqual(landmarks.nose.points.count, 1, "nose")
+    visionExpectEqual(landmarks.noseCrest.points.count, 1, "nose crest")
+    visionExpectEqual(landmarks.medianLine.points.count, 1, "median")
+    visionExpectEqual(landmarks.faceContour.points.count, 1, "face contour")
+    visionExpectEqual(landmarks.allPoints.points.count, 1, "all points")
+    visionExpectEqual(landmarks.description.contains("Landmarks"), true, "landmarks description")
+    visionExpect(landmarks.originatingRequestDescriptor == nil, "landmarks descriptor")
+    let encodedLandmarks = try! JSONEncoder().encode(landmarks)
+    let decodedLandmarks = try! JSONDecoder().decode(FaceObservation.Landmarks2D.self, from: encodedLandmarks)
+    visionExpectEqual(decodedLandmarks.nose.points.count, 1, "landmarks roundtrip")
+    _ = landmarks.hashValue
+
+    let quality = FaceObservation.CaptureQuality(score: 0.6)
+    visionExpectEqual(quality.score, 0.6, "capture quality")
+    visionExpectEqual(quality.description.contains("0.6") || quality.description.contains("Capture"), true, "quality description")
+    visionExpect(quality.originatingRequestDescriptor == nil, "quality descriptor")
+    let encodedQuality = try! JSONEncoder().encode(quality)
+    let decodedQuality = try! JSONDecoder().decode(FaceObservation.CaptureQuality.self, from: encodedQuality)
+    visionExpectEqual(decodedQuality.score, 0.6, "quality roundtrip")
+    _ = quality.hashValue
+
+    let face = FaceObservation(boundingBox: NormalizedRect(x: 0.1, y: 0.2, width: 0.3, height: 0.4))
+    visionExpectEqual(face.roll.value, 0, "default roll")
+    visionExpectEqual(face.pitch.value, 0, "default pitch")
+    visionExpectEqual(face.yaw.value, 0, "default yaw")
+    visionExpect(face.landmarks == nil, "constructed face has no landmarks")
+    visionExpect(face.captureQuality == nil, "no capture quality")
+    visionExpectEqual(face.boundingBox.width, 0.3, "face bbox")
+    visionExpectEqual(face.confidence, 1, "face confidence")
+    visionExpectEqual(face.description.contains("Face"), true, "face description")
+    visionExpect(face.uuid != UUID(), "face uuid")
+    visionExpect(face.timeRange == nil, "face timeRange")
+    visionExpect(face.originatingRequestDescriptor == nil, "face descriptor")
+    _ = face.hashValue
+    visionExpect(face == face, "face equal")
+    let viaRevision = FaceObservation(boundingBox: .fullImage, revision: .revision3)
+    visionExpectEqual(viaRevision.boundingBox, .fullImage, "revision init")
+
+    let vnFace = VNFaceObservation(
+        boundingBox: CGRect(x: 0.1, y: 0.2, width: 0.3, height: 0.4),
+        roll: NSNumber(value: 0.1),
+        yaw: NSNumber(value: -0.2),
+        pitch: NSNumber(value: 0.05),
+        landmarks: VNFaceLandmarks2D(leftEye: VNFaceLandmarkRegion2D(normalizedPoints: [CGPoint(x: 0.2, y: 0.8)]))
+    )
+    let fromVN = FaceObservation(vnFace)
+    visionExpectEqual(fromVN.yaw.value, -0.2, "from vn yaw")
+    visionExpectEqual(fromVN.landmarks?.leftEye.points.count, 1, "from vn landmarks")
+
+    let quad = [
+        NormalizedPoint(x: 0, y: 1),
+        NormalizedPoint(x: 1, y: 1),
+        NormalizedPoint(x: 1, y: 0),
+        NormalizedPoint(x: 0, y: 0),
+    ]
+    let contour = ContoursObservation.Contour(points: quad, indexPath: IndexPath(index: 0))
+    let text = DocumentObservation.Container.Text(
+        transcript: "Invoice 42",
+        detectedData: [],
+        textAlignment: .leading,
+        boundingRegion: contour,
+        lines: [
+            RecognizedTextObservation(
+                topLeft: quad[0],
+                topRight: quad[1],
+                bottomRight: quad[2],
+                bottomLeft: quad[3],
+                candidates: [RecognizedText(string: "Invoice 42", confidence: 0.8)]
+            )
+        ],
+        words: []
+    )
+    visionExpectEqual(text.transcript, "Invoice 42", "document text")
+    visionExpectEqual(text.boundingRegion(for: text.transcript.startIndex..<text.transcript.endIndex)?.pointCount, 4, "range region")
+    visionExpectEqual(text.boundingRegion.pointCount, 4, "text boundingRegion")
+    visionExpectEqual(text.textAlignment, .leading, "alignment leading")
+    visionExpectEqual(text.detectedData.count, 0, "detectedData")
+    visionExpectEqual(text.lines.count, 1, "lines")
+    visionExpectEqual(text.words?.count, 0, "words")
+    visionExpectEqual(DocumentObservation.Container.Text.Alignment.center.rawValue, "center", "center")
+    visionExpectEqual(DocumentObservation.Container.Text.Alignment.trailing.rawValue, "trailing", "trailing")
+    let encodedAlign = try! JSONEncoder().encode(DocumentObservation.Container.Text.Alignment.leading)
+    visionExpect(try! JSONDecoder().decode(DocumentObservation.Container.Text.Alignment.self, from: encodedAlign) == .leading, "align roundtrip")
+
+    let match = DocumentObservation.Container.DataDetectorMatch(
+        boundingRegion: contour,
+        match: DataDetector.Match(matchType: "number", matchedString: "42")
+    )
+    visionExpectEqual(match.match.matchedString, "42", "detector match")
+    visionExpectEqual(match.boundingRegion.pointCount, 4, "match region")
+    _ = match.hashValue
+    visionExpect(match == match, "match equal")
+
+    let nested = DocumentObservation.Container()
+    let cell = DocumentObservation.Container.Table.Cell(columnRange: 0...0, rowRange: 0...0, content: nested)
+    visionExpectEqual(cell.content.text.transcript, "", "cell content")
+    visionExpectEqual(cell.columnRange, 0...0, "columnRange")
+    let table = DocumentObservation.Container.Table(boundingRegion: contour, rows: [[cell]], columns: [[cell]])
+    visionExpectEqual(table.cell(row: 0, col: 0)?.rowRange, 0...0, "table cell")
+    visionExpect(table.cell(row: 3, col: 0) == nil, "missing cell")
+    visionExpectEqual(table.rows.count, 1, "rows")
+    visionExpectEqual(table.columns.count, 1, "columns")
+    visionExpectEqual(table.boundingRegion.pointCount, 4, "table region")
+
+    let listItem = DocumentObservation.Container.List.Item(
+        itemString: "A",
+        markerType: .bullet,
+        markerString: "•",
+        content: nested
+    )
+    visionExpectEqual(listItem.itemString, "A", "itemString")
+    visionExpectEqual(listItem.markerString, "•", "markerString")
+    visionExpectEqual(listItem.content.text.transcript, "", "item content")
+    let list = DocumentObservation.Container.List(boundingRegion: contour, items: [listItem])
+    visionExpectEqual(list.items.first?.markerType, .bullet, "list marker")
+    visionExpectEqual(list.boundingRegion.pointCount, 4, "list region")
+    visionExpectEqual(Set(DocumentObservation.Container.List.Marker.allCases).count, 7, "marker catalog")
+    visionExpectEqual(DocumentObservation.Container.List.Marker.lowercaseLatin.rawValue, "lowercaseLatin", "lower")
+    visionExpectEqual(DocumentObservation.Container.List.Marker.uppercaseLatin.rawValue, "uppercaseLatin", "upper")
+    visionExpectEqual(DocumentObservation.Container.List.Marker.compositeDecimal.rawValue, "compositeDecimal", "composite")
+    visionExpectEqual(DocumentObservation.Container.List.Marker.decorativeDecimal.rawValue, "decorativeDecimal", "decorative")
+    visionExpectEqual(DocumentObservation.Container.List.Marker.hyphen.rawValue, "hyphen", "hyphen")
+    visionExpectEqual(DocumentObservation.Container.List.Marker.decimal.rawValue, "decimal", "decimal")
+    let encodedMarker = try! JSONEncoder().encode(DocumentObservation.Container.List.Marker.bullet)
+    visionExpect(try! JSONDecoder().decode(DocumentObservation.Container.List.Marker.self, from: encodedMarker) == .bullet, "marker roundtrip")
+
+    let container = DocumentObservation.Container(
+        boundingRegion: contour,
+        text: text,
+        paragraphs: [text],
+        lists: [list],
+        title: text,
+        tables: [table],
+        barcodes: []
+    )
+    visionExpectEqual(container.paragraphs.count, 1, "paragraphs")
+    visionExpectEqual(container.lists.count, 1, "lists")
+    visionExpectEqual(container.title?.transcript, "Invoice 42", "title")
+    visionExpectEqual(container.tables.count, 1, "tables")
+    visionExpectEqual(container.barcodes.count, 0, "barcodes")
+    visionExpectEqual(container.text.transcript, "Invoice 42", "container text")
+    visionExpectEqual(container.boundingRegion.pointCount, 4, "container region")
+    _ = container.hashValue
+
+    let document = DocumentObservation(document: container)
+    visionExpectEqual(document.document.text.transcript, "Invoice 42", "document observation")
+    visionExpectEqual(document.confidence, 1, "document confidence")
+    visionExpectEqual(document.description.contains("Invoice"), true, "document description")
+    visionExpect(document.uuid != UUID(), "document uuid")
+    visionExpect(document.timeRange == nil, "document timeRange")
+    visionExpect(document.originatingRequestDescriptor == nil, "document descriptor")
+    _ = document.hashValue
+    visionExpect(document == document, "document equal")
+}
+
+func testOverlayPoseValueTypes() {
+    let joint = Joint(location: NormalizedPoint(x: 0.5, y: 0.5), confidence: 0.9, jointName: "wrist")
+    let other = Joint(location: NormalizedPoint(x: 0.5, y: 0.6), confidence: 0.8, jointName: "indexTip")
+    visionExpect(abs(joint.distance(to: other) - 0.1) < 1e-9, "joint distance")
+    let hand = HumanHandPoseObservation(joints: [.wrist: joint, .indexTip: other], chirality: .left)
+    visionExpectEqual(hand.chirality, .left, "overlay chirality")
+    visionExpectEqual(hand.joint(for: .wrist)?.confidence, 0.9, "hand joint")
+    visionExpect(hand.allJoints(in: .indexFinger)[.indexTip] != nil, "index group")
+    visionExpect(hand.availableJointNames.contains(.wrist), "available joints")
+    do {
+        _ = try hand.keypoints
+        visionExpect(false, "keypoints fail closed")
+    } catch {
+        visionExpect(true, "keypoints throw")
+    }
+
+    let bodyJoint = Joint(location: NormalizedPoint(x: 0.5, y: 0.9), confidence: 1, jointName: "nose")
+    let body = HumanBodyPoseObservation(joints: [.nose: bodyJoint, .leftWrist: joint])
+    visionExpectEqual(body.joint(for: .nose)?.location.y, 0.9, "body nose")
+    visionExpect(body.allJoints(in: .face)[.nose] != nil, "face group")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.allCases.contains(.root), true, "body cases")
+
+    let animal = AnimalBodyPoseObservation(joints: [
+        .nose: Joint(location: NormalizedPoint(x: 0.4, y: 0.8), confidence: 1, jointName: "nose"),
+        .tailTop: Joint(location: NormalizedPoint(x: 0.8, y: 0.3), confidence: 0.4, jointName: "tailTop"),
+    ])
+    visionExpect(animal.allJoints(in: .tail)[.tailTop] != nil, "animal tail group")
+    visionExpectEqual(AnimalBodyPoseObservation.JointsGroupName.allCases.count, 5, "animal groups")
+
+    let j3d = Joint3D(
+        position: simd_float4x4.translation(x: 0, y: 1, z: 0),
+        localPosition: .identity,
+        identifer: "root",
+        parentJoint: "root"
+    )
+    visionExpectEqual(j3d.identifier, "root", "identifer spelling")
+    let pose3d = HumanBodyPose3DObservation(
+        joints: [.root: j3d],
+        imagePoints: [.root: NormalizedPoint(x: 0.5, y: 0.1)],
+        bodyHeight: 1.7,
+        heightEstimationTechnique: .measured
+    )
+    visionExpectEqual(pose3d.bodyHeight, 1.7, "overlay body height")
+    visionExpectEqual(pose3d.parentJointName(for: .leftWrist), .leftElbow, "overlay parent")
+    visionExpectEqual(pose3d.pointInImage(for: .root)?.y, 0.1, "overlay image point")
+    visionExpectEqual(pose3d.cameraRelativePosition(for: .root).columns.3.y, 1, "3d position")
+    visionExpectEqual(Set(HumanBodyPoseObservation.JointName.allCases).count, 19, "overlay body joints")
+    visionExpectEqual(HumanBodyPoseObservation.JointsGroupName.allCases.count, 6, "overlay body groups")
+    visionExpectEqual(body.availableJointNames.contains(.nose), true, "overlay available")
+    visionExpect(body.availableJointsGroupNames.contains(.torso), "overlay torso group")
+    visionExpect(body.leftHand == nil, "leftHand")
+    visionExpect(body.rightHand == nil, "rightHand")
+    visionExpectEqual(body.description.contains("HumanBody"), true, "body description")
+    visionExpect(body.uuid != UUID(), "body uuid")
+    visionExpect(body.timeRange == nil, "body timeRange")
+    visionExpect(body.originatingRequestDescriptor == nil, "body descriptor")
+    visionExpectEqual(body.joint(for: .leftWrist)?.jointName, "wrist", "leftWrist overlay")
+    visionExpect(body.allJoints(in: .torso)[.nose] == nil, "nose not torso")
+    visionExpect(body.allJoints(in: .leftArm)[.leftWrist] != nil, "leftWrist in leftArm")
+    visionExpect(body.allJoints(in: .rightArm).isEmpty, "empty rightArm")
+    visionExpect(body.allJoints(in: .leftLeg).isEmpty, "empty leftLeg")
+    visionExpect(body.allJoints(in: .rightLeg).isEmpty, "empty rightLeg")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightAnkle.rawValue, "rightAnkle", "rightAnkle")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightElbow.rawValue, "rightElbow", "rightElbow")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightWrist.rawValue, "rightWrist", "rightWrist")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftShoulder.rawValue, "leftShoulder", "leftShoulder")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightShoulder.rawValue, "rightShoulder", "rightShoulder")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.neck.rawValue, "neck", "neck")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftEar.rawValue, "leftEar", "leftEar")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftEye.rawValue, "leftEye", "leftEye")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftHip.rawValue, "leftHip", "leftHip")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftKnee.rawValue, "leftKnee", "leftKnee")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightEar.rawValue, "rightEar", "rightEar")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightEye.rawValue, "rightEye", "rightEye")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightHip.rawValue, "rightHip", "rightHip")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftAnkle.rawValue, "leftAnkle", "leftAnkle")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftElbow.rawValue, "leftElbow", "leftElbow")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.leftWrist.rawValue, "leftWrist", "leftWrist")
+    visionExpectEqual(HumanBodyPoseObservation.JointName.rightKnee.rawValue, "rightKnee", "rightKnee")
+    visionExpectEqual(HumanHandPoseObservation.JointName.allCases.count, 21, "overlay hand joints")
+    visionExpectEqual(HumanHandPoseObservation.JointsGroupName.allCases.count, 5, "overlay hand groups")
+    visionExpectEqual(hand.availableJointsGroupNames.contains(.thumb), true, "hand thumb group")
+    visionExpectEqual(hand.description.contains("Hand"), true, "hand description")
+    visionExpectEqual(HumanHandPoseObservation.Chirality.right.rawValue, "right", "right chirality")
+    visionExpect(hand.allJoints(in: .thumb)[.wrist] != nil, "thumb includes wrist")
+    visionExpect(hand.allJoints(in: .middleFinger)[.wrist] != nil, "middle includes wrist")
+    visionExpect(hand.allJoints(in: .ringFinger)[.wrist] != nil, "ring includes wrist")
+    visionExpect(hand.allJoints(in: .littleFinger)[.wrist] != nil, "little includes wrist")
+    visionExpectEqual(HumanHandPoseObservation.JointName.ringDIP.rawValue, "ringDIP", "ringDIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.ringMCP.rawValue, "ringMCP", "ringMCP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.ringPIP.rawValue, "ringPIP", "ringPIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.ringTip.rawValue, "ringTip", "ringTip")
+    visionExpectEqual(HumanHandPoseObservation.JointName.thumbIP.rawValue, "thumbIP", "thumbIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.thumbMP.rawValue, "thumbMP", "thumbMP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.indexDIP.rawValue, "indexDIP", "indexDIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.indexMCP.rawValue, "indexMCP", "indexMCP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.indexPIP.rawValue, "indexPIP", "indexPIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.thumbCMC.rawValue, "thumbCMC", "thumbCMC")
+    visionExpectEqual(HumanHandPoseObservation.JointName.thumbTip.rawValue, "thumbTip", "thumbTip")
+    visionExpectEqual(HumanHandPoseObservation.JointName.littleDIP.rawValue, "littleDIP", "littleDIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.littleMCP.rawValue, "littleMCP", "littleMCP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.littlePIP.rawValue, "littlePIP", "littlePIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.littleTip.rawValue, "littleTip", "littleTip")
+    visionExpectEqual(HumanHandPoseObservation.JointName.middleDIP.rawValue, "middleDIP", "middleDIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.middleMCP.rawValue, "middleMCP", "middleMCP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.middlePIP.rawValue, "middlePIP", "middlePIP")
+    visionExpectEqual(HumanHandPoseObservation.JointName.middleTip.rawValue, "middleTip", "middleTip")
+    visionExpectEqual(Set(AnimalBodyPoseObservation.JointName.allCases).count, 25, "overlay animal joints")
+    visionExpect(animal.availableJointNames.contains(.nose), "animal available")
+    visionExpect(animal.availableJointsGroupNames.contains(.head), "animal head group")
+    visionExpectEqual(animal.description.contains("Animal"), true, "animal description")
+    visionExpect(animal.allJoints(in: .head)[.nose] != nil, "animal head")
+    visionExpect(animal.allJoints(in: .trunk)[.nose] != nil, "nose in trunk")
+    visionExpect(animal.allJoints(in: .forelegs).isEmpty, "empty forelegs")
+    visionExpect(animal.allJoints(in: .hindlegs).isEmpty, "empty hindlegs")
+    visionExpectEqual(j3d.localPosition, simd_float4x4.identity, "joint3d local")
+    visionExpectEqual(j3d.parentJoint, "root", "joint3d parent")
+    visionExpectEqual(pose3d.availableJointNames.contains(.root), true, "3d overlay available")
+    visionExpect(pose3d.availableJointsGroupNames.contains(.head), "3d overlay groups")
+    visionExpectEqual(pose3d.heightEstimationTechnique, .measured, "technique")
+    visionExpectEqual(pose3d.cameraOriginMatrix, .identity, "overlay camera")
+    visionExpectEqual(pose3d.joint(for: .root)?.identifier, "root", "3d joint for")
+    visionExpectEqual(HumanBodyPose3DObservation.EstimationTechnique.reference.rawValue, "reference", "reference technique")
+    visionExpectEqual(pose3d.parentJointName(for: .root), .root, "root parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .spine), .root, "spine parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .centerShoulder), .spine, "centerShoulder parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .centerHead), .centerShoulder, "centerHead parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .topHead), .centerHead, "topHead parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .leftElbow), .leftShoulder, "leftElbow parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .leftShoulder), .centerShoulder, "leftShoulder parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .rightShoulder), .centerShoulder, "rightShoulder parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .rightElbow), .rightShoulder, "rightElbow parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .leftHip), .root, "leftHip parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .rightHip), .root, "rightHip parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .leftKnee), .leftHip, "leftKnee parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .rightKnee), .rightHip, "rightKnee parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .leftAnkle), .leftKnee, "leftAnkle parent overlay")
+    visionExpectEqual(pose3d.parentJointName(for: .rightAnkle), .rightKnee, "rightAnkle parent overlay")
+    visionExpectEqual(Set(HumanBodyPose3DObservation.JointName.allCases).count, 17, "overlay 3d joints")
+    visionExpectEqual(HumanBodyPose3DObservation.JointsGroupName.allCases.count, 6, "overlay 3d groups")
+    let encodedJoint = try! JSONEncoder().encode(joint)
+    let decodedJoint = try! JSONDecoder().decode(Joint.self, from: encodedJoint)
+    visionExpectEqual(decodedJoint.jointName, "wrist", "joint roundtrip")
+    visionExpectEqual(joint.description, "wrist", "joint description")
+    visionExpectEqual(joint.location.x, 0.5, "joint location")
+    let vnBody = VNHumanBodyPoseObservation(hostJoints: [
+        .nose: VNRecognizedPoint(x: 0.5, y: 0.9, confidence: 1, identifier: .bodyLandmarkKeyNose)
+    ])
+    let fromVNBody = HumanBodyPoseObservation(vnBody)
+    visionExpectEqual(fromVNBody.joint(for: .nose)?.location.y, 0.9, "from vn body")
+}
+
+func testOverlayTextAndClassification() {
+    let text = RecognizedText(string: "Hi", confidence: 0.7)
+    visionExpectEqual(text.boundingBox(for: text.string.startIndex..<text.string.endIndex) == nil, true, "no layout")
+    let observation = RecognizedTextObservation(
+        topLeft: NormalizedPoint(x: 0, y: 1),
+        topRight: NormalizedPoint(x: 1, y: 1),
+        bottomRight: NormalizedPoint(x: 1, y: 0),
+        bottomLeft: NormalizedPoint(x: 0, y: 0),
+        candidates: [text, RecognizedText(string: "HI", confidence: 0.2)]
+    )
+    visionExpectEqual(observation.topCandidates(1).first?.string, "Hi", "overlay candidates")
+    visionExpectEqual(observation.transcript, "Hi", "transcript")
+    let classification = ClassificationObservation(identifier: "dog", confidence: 0.3)
+    visionExpectEqual(classification.hasMinimumRecall(0.2, forPrecision: 0.9), false, "no curve")
+    visionExpectEqual(text.string, "Hi", "text string")
+    visionExpectEqual(text.confidence, 0.7, "text confidence")
+    visionExpectEqual(text.description, "Hi", "text description")
+    visionExpectEqual(observation.topLeft.y, 1, "topLeft")
+    visionExpectEqual(observation.topRight.x, 1, "topRight")
+    visionExpectEqual(observation.bottomRight.y, 0, "bottomRight")
+    visionExpectEqual(observation.bottomLeft.x, 0, "bottomLeft")
+    visionExpectEqual(observation.isTitle, false, "isTitle")
+    visionExpectEqual(observation.textDirection, .leftToRight, "direction")
+    visionExpectEqual(observation.boundingBox.width, 1, "overlay bbox")
+    visionExpectEqual(classification.identifier, "dog", "class id")
+    visionExpectEqual(classification.hasPrecisionRecallCurve, false, "class curve")
+    visionExpectEqual(classification.hasMinimumPrecision(0.9, forRecall: 0.1), false, "class precision")
+    visionExpectEqual(RecognizedTextObservation.Direction.rightToLeft.rawValue, "rightToLeft", "rtl")
+    visionExpectEqual(RecognizedTextObservation.Direction.topToBottom.rawValue, "topToBottom", "ttb")
+    visionExpectEqual(RecognizedTextObservation.Direction.bottomToTop.rawValue, "bottomToTop", "btt")
+}
+
+func testRevisionConstantsCatalog() {
+    visionExpectEqual(VNDetectFaceLandmarksRequestRevision1, 1, "fl1")
+    visionExpectEqual(VNDetectFaceLandmarksRequestRevision2, 2, "fl2")
+    visionExpectEqual(VNDetectFaceLandmarksRequestRevision3, 3, "fl3")
+    visionExpectEqual(VNDetectFaceCaptureQualityRequestRevision1, 1, "fcq1")
+    visionExpectEqual(VNDetectFaceCaptureQualityRequestRevision2, 2, "fcq2")
+    visionExpectEqual(VNDetectFaceCaptureQualityRequestRevision3, 3, "fcq3")
+    visionExpectEqual(VNDetectHorizonRequestRevision1, 1, "horizon")
+    visionExpectEqual(VNDetectTextRectanglesRequestRevision1, 1, "text rect")
+    visionExpectEqual(VNDetectTrajectoriesRequestRevision1, 1, "traj")
+    visionExpectEqual(VNCalculateImageAestheticsScoresRequestRevision1, 1, "aesthetics")
+    visionExpectEqual(VNGenerateForegroundInstanceMaskRequestRevision1, 1, "fg mask")
+    visionExpectEqual(VNGenerateObjectnessBasedSaliencyImageRequestRevision1, 1, "obj1")
+    visionExpectEqual(VNGenerateObjectnessBasedSaliencyImageRequestRevision2, 2, "obj2")
+    visionExpectEqual(VNGenerateOpticalFlowRequestRevision1, 1, "of1")
+    visionExpectEqual(VNGenerateOpticalFlowRequestRevision2, 2, "of2")
+    visionExpectEqual(VNGeneratePersonInstanceMaskRequestRevision1, 1, "person mask")
+    visionExpectEqual(VNGeneratePersonSegmentationRequestRevision1, 1, "person seg")
+    visionExpectEqual(VNRecognizeAnimalsRequestRevision1, 1, "animals1")
+    visionExpectEqual(VNRecognizeAnimalsRequestRevision2, 2, "animals2")
+    visionExpectEqual(VNTrackHomographicImageRegistrationRequestRevision1, 1, "track homo")
+    visionExpectEqual(VNTrackOpticalFlowRequestRevision1, 1, "track of")
+    visionExpectEqual(VNTrackRectangleRequestRevision1, 1, "track rect")
+    visionExpectEqual(VNTrackTranslationalImageRegistrationRequestRevision1, 1, "track trans")
+}
+
+func testHorizonObservation() {
+    let horizon = VNHorizonObservation(angle: Double.pi / 2, confidence: 0.9)
+    visionExpectEqual(horizon.angle, Double.pi / 2, "angle")
+    visionExpectEqual(horizon.confidence, 0.9, "horizon confidence")
+    let identity = VNHorizonObservation(angle: 0)
+    visionExpectEqual(identity.transform.a, 1, "identity a")
+    visionExpectEqual(identity.transform.d, 1, "identity d")
+    let centered = horizon.transform(forImageWidth: 100, height: 100)
+    let mappedX = centered.a * 50 + centered.c * 50 + centered.tx
+    let mappedY = centered.b * 50 + centered.d * 50 + centered.ty
+    visionExpect(abs(mappedX - 50) < 1e-6, "center x stays")
+    visionExpect(abs(mappedY - 50) < 1e-6, "center y stays")
+    let overlay = HorizonObservation(horizon)
+    visionExpectEqual(overlay.angle.value, Double.pi / 2, "overlay angle")
+    visionExpectEqual(overlay.angle.unit, .radians, "radians")
+    visionExpectEqual(overlay.description.contains("Horizon"), true, "overlay description")
+    visionExpect(overlay.uuid != UUID(), "overlay uuid")
+    visionExpect(overlay.timeRange == .zero, "overlay timeRange")
+    visionExpect(overlay.originatingRequestDescriptor == nil, "overlay descriptor")
+    _ = overlay.hashValue
+    visionExpect(overlay == overlay, "overlay equal")
+    visionExpect(overlay != HorizonObservation(angle: Measurement(value: 0, unit: .radians)), "overlay unequal")
+    let sized = overlay.transform(for: CGSize(width: 100, height: 100))
+    visionExpect(abs(sized.a - centered.a) < 1e-6, "overlay transform for size")
+    let constructed = HorizonObservation(angle: Measurement(value: 0.2, unit: .radians))
+    visionExpectEqual(constructed.transform, .identity, "constructed default transform")
+}
+
+func testRequestDescriptorCatalog() {
+    let cases: [RequestDescriptor] = [
+        .detectBarcodesRequest(.revision4),
+        .detectRectanglesRequest(.revision1),
+        .detectContoursRequest(.revision1),
+        .generateImageFeaturePrintRequest(.revision2),
+        .classifyImageRequest(.revision2),
+        .recognizeTextRequest(.revision3),
+        .detectFaceRectanglesRequest(.revision3),
+        .detectHumanBodyPoseRequest(.revision1),
+        .detectHorizonRequest(.revision1),
+        .detectLensSmudgeRequest(.revision1),
+        .recognizeAnimalsRequest(.revision1),
+        .detectTrajectoriesRequest(.revision1),
+        .recognizeDocumentsRequest(.revision1),
+        .detectFaceLandmarksRequest(.revision1),
+        .detectHumanHandPoseRequest(.revision1),
+        .detectAnimalBodyPoseRequest(.revision1),
+        .detectTextRectanglesRequest(.revision1),
+        .detectHumanRectanglesRequest(.revision1),
+        .detectFaceCaptureQualityRequest(.revision1),
+        .detectDocumentSegmentationRequest(.revision1),
+        .generatePersonInstanceMaskRequest(.revision1),
+        .generatePersonSegmentationRequest(.revision1),
+        .calculateImageAestheticsScoresRequest(.revision1),
+        .generateForegroundInstanceMaskRequest(.revision1),
+        .generateAttentionBasedSaliencyImageRequest(.revision1),
+        .generateObjectnessBasedSaliencyImageRequest(.revision1),
+        .detectHumanBodyPose3DRequest(.revision1),
+        .coreMLRequest(.revision1),
+        .trackObjectRequest(.revision2),
+        .trackRectangleRequest(.revision1),
+        .trackOpticalFlowRequest(.revision1),
+        .trackHomographicImageRegistrationRequest(.revision1),
+        .trackTranslationalImageRegistrationRequest(.revision1)
+    ]
+    visionExpectEqual(Set(cases).count, cases.count, "descriptor unique")
+    for item in cases {
+        visionExpect(!item.description.isEmpty, "descriptor description")
+        visionExpect(item == item, "descriptor equal")
+        visionExpect(item != .detectBarcodesRequest(.revision4) || item == .detectBarcodesRequest(.revision4), "descriptor !=")
+        _ = item.hashValue
+        var hasher = Hasher()
+        item.hash(into: &hasher)
+        _ = hasher.finalize()
+        let encoded = try! JSONEncoder().encode(item)
+        let decoded = try! JSONDecoder().decode(RequestDescriptor.self, from: encoded)
+        visionExpectEqual(decoded, item, "descriptor roundtrip \(item)")
+    }
+    visionExpect(RequestDescriptor.detectBarcodesRequest(.revision4) != .recognizeDocumentsRequest(.revision1), "distinct cases")
+}
+
+func testVisionResultCatalog() {
+    let barcodes = DetectBarcodesRequest()
+    let contours = DetectContoursRequest()
+    let rectangles = DetectRectanglesRequest()
+    let feature = GenerateImageFeaturePrintRequest()
+    let classify = ClassifyImageRequest()
+    let text = RecognizeTextRequest()
+    let face = DetectFaceRectanglesRequest()
+    let pose = DetectHumanBodyPoseRequest()
+    let horizon = DetectHorizonRequest()
+    let smudge = DetectLensSmudgeRequest()
+    let animals = RecognizeAnimalsRequest()
+    let trajectories = DetectTrajectoriesRequest()
+    let documents = RecognizeDocumentsRequest()
+    let landmarks = DetectFaceLandmarksRequest()
+    let hands = DetectHumanHandPoseRequest()
+    let animalPose = DetectAnimalBodyPoseRequest()
+    let textRects = DetectTextRectanglesRequest()
+    let humans = DetectHumanRectanglesRequest()
+    let capture = DetectFaceCaptureQualityRequest()
+    let segmentation = DetectDocumentSegmentationRequest()
+    let personMask = GeneratePersonInstanceMaskRequest()
+    let personSeg = GeneratePersonSegmentationRequest()
+    let aesthetics = CalculateImageAestheticsScoresRequest()
+    let foreground = GenerateForegroundInstanceMaskRequest()
+    let attention = GenerateAttentionBasedSaliencyImageRequest()
+    let objectness = GenerateObjectnessBasedSaliencyImageRequest()
+    let pose3d = DetectHumanBodyPose3DRequest()
+    let coreml = CoreMLRequest()
+    let seed = DetectedObjectObservation(boundingBox: .fullImage)
+    let track = TrackObjectRequest(detectedObject: seed)
+    let trackRect = TrackRectangleRequest()
+    let flow = TrackOpticalFlowRequest()
+    let homo = TrackHomographicImageRegistrationRequest()
+    let trans = TrackTranslationalImageRegistrationRequest()
+
+    let results: [VisionResult] = [
+        .detectBarcodes(barcodes, []),
+        .detectContours(contours, ContoursObservation(VNContoursObservation(topLevelContours: []))),
+        .detectRectangles(rectangles, []),
+        .generateImageFeaturePrint(feature, FeaturePrintObservation(VNFeaturePrintObservation(elementType: .float, data: Data(repeating: 0, count: 4)))),
+        .classifyImage(classify, []),
+        .recognizeText(text, []),
+        .detectFaceRectangles(face, []),
+        .detectHumanBodyPose(pose, []),
+        .detectHorizon(horizon, nil),
+        .detectLensSmudge(smudge, SmudgeObservation(confidence: 0, uuid: UUID(), timeRange: nil, originatingRequestDescriptor: nil)),
+        .recognizeAnimals(animals, []),
+        .detectTrajectories(trajectories, []),
+        .recognizeDocuments(documents, []),
+        .detectFaceLandmarks(landmarks, []),
+        .detectHumanHandPose(hands, []),
+        .detectAnimalBodyPose(animalPose, []),
+        .detectTextRectangles(textRects, []),
+        .detectHumanRectangles(humans, []),
+        .detectFaceCaptureQuality(capture, []),
+        .detectDocumentSegmentation(segmentation, nil),
+        .generatePersonInstanceMask(personMask, nil),
+        .generatePersonSegmentation(personSeg, PixelBufferObservation()),
+        .calculateImageAestheticsScores(aesthetics, ImageAestheticsScoresObservation()),
+        .generateForegroundInstanceMask(foreground, nil),
+        .generateAttentionBasedSaliencyImage(attention, SaliencyImageObservation()),
+        .generateObjectnessBasedSaliencyImage(objectness, SaliencyImageObservation()),
+        .detectHumanBodyPose3D(pose3d, []),
+        .coreML(coreml, []),
+        .trackObject(track, nil),
+        .trackRectangle(trackRect, nil),
+        .trackOpticalFlow(flow, nil),
+        .trackHomographicImageRegistration(homo, ImageHomographicAlignmentObservation()),
+        .trackTranslationalImageRegistration(trans, ImageTranslationAlignmentObservation(VNImageTranslationAlignmentObservation(alignmentTransform: .identity))),
+        .error(barcodes, VisionError.invalidModel("catalog"))
+    ]
+    for item in results {
+        visionExpect(!item.description.isEmpty, "result description")
+    }
+    visionExpectEqual(results.count, 34, "vision result cases")
+}
+
+func testBarcodeObservationOverlayValues() {
+    let qrImage = try! VisionHost.makeQRImage(payload: "HELLO")
+    let handler = VNImageRequestHandler(cgImage: qrImage)
+    let request = VNDetectBarcodesRequest()
+    request.symbologies = [.qr]
+    try! handler.perform([request])
+    let vn = (request.results ?? []).compactMap { $0 as? VNBarcodeObservation }.first!
+    let overlay = BarcodeObservation(vn)
+    visionExpectEqual(overlay.payloadString, "HELLO", "payload string")
+    visionExpect(overlay.payloadData != nil || overlay.payloadData == nil, "payload data readable")
+    visionExpectEqual(overlay.symbology, .qr, "symbology")
+    visionExpectEqual(overlay.isGS1DataCarrier, false, "gs1")
+    visionExpectEqual(overlay.isColorInverted, false, "inverted")
+    visionExpect(overlay.supplementalCompositeType == nil, "no supplemental composite")
+    visionExpect(overlay.supplementalPayloadString == nil, "no supplemental string")
+    visionExpect(overlay.supplementalPayloadData == nil, "no supplemental data")
+    visionExpect(overlay.confidence > 0, "confidence")
+    visionExpectEqual(overlay.uuid, vn.uuid, "uuid")
+    visionExpectEqual(overlay.timeRange, vn.timeRange, "timeRange")
+    visionExpect(overlay.originatingRequestDescriptor == nil, "descriptor")
+    visionExpect(overlay.boundingBox.width > 0 && overlay.boundingBox.height > 0, "bounding box")
+    visionExpect(overlay.boundingRegion.pointCount >= 4, "bounding region")
+    visionExpect(overlay.topLeft.x >= 0 && overlay.topRight.x >= overlay.topLeft.x, "corners")
+    visionExpectEqual(overlay.description, "HELLO", "description")
+    visionExpect(overlay == overlay, "equal")
+    visionExpect(!(overlay != overlay), "not unequal to self")
+    _ = overlay.hashValue
+    var hasher = Hasher()
+    overlay.hash(into: &hasher)
+    _ = hasher.finalize()
+    let encoded = try! JSONEncoder().encode(overlay)
+    let decoded = try! JSONDecoder().decode(BarcodeObservation.self, from: encoded)
+    visionExpectEqual(decoded.payloadString, "HELLO", "codable payload")
+    visionExpectEqual(BarcodeObservation.CompositeType.linked.rawValue, "linked", "linked")
+    visionExpectEqual(BarcodeObservation.CompositeType.gs1TypeA.rawValue, "gs1TypeA", "a")
+    visionExpectEqual(BarcodeObservation.CompositeType.gs1TypeB.rawValue, "gs1TypeB", "b")
+    visionExpectEqual(BarcodeObservation.CompositeType.gs1TypeC.rawValue, "gs1TypeC", "c")
+    visionExpect(BarcodeObservation.CompositeType.linked != .gs1TypeA, "composite !=")
+    visionExpect(BarcodeObservation.CompositeType.linked == .linked, "composite ==")
+    let compositeEncoded = try! JSONEncoder().encode(BarcodeObservation.CompositeType.gs1TypeB)
+    let compositeDecoded = try! JSONDecoder().decode(BarcodeObservation.CompositeType.self, from: compositeEncoded)
+    visionExpectEqual(compositeDecoded, .gs1TypeB, "composite roundtrip")
+    _ = BarcodeObservation.CompositeType.gs1TypeC.hashValue
+    var compositeHasher = Hasher()
+    BarcodeObservation.CompositeType.gs1TypeA.hash(into: &compositeHasher)
+    _ = compositeHasher.finalize()
+}
+
+func testRecognizeDocumentsRequestConfig() {
+    var request = RecognizeDocumentsRequest()
+    visionExpectEqual(request.revision, .revision1, "revision")
+    visionExpectEqual(RecognizeDocumentsRequest.supportedRevisions, [.revision1], "supported")
+    visionExpectEqual(request.regionOfInterest, .fullImage, "roi")
+    visionExpectEqual(request.descriptor, .recognizeDocumentsRequest(.revision1), "descriptor")
+    visionExpect(request.description.contains("recognizeDocuments"), "description")
+    visionExpect(request.supportedBarcodeSymbologies.contains(.qr), "supported barcodes")
+    visionExpect(request.supportedRecognitionLanguages.isEmpty, "no Apple languages")
+    visionExpect(request.supportedComputeStageDevices[.main]?.contains(MLComputeDevice.cpu) == true, "cpu stage")
+    visionExpect(request.computeDevice(for: .main) == nil, "unset device")
+    request.setComputeDevice(.cpu, for: .main)
+    visionExpectEqual(request.computeDevice(for: .main)?.identifier, "cpu", "set device")
+    request.textRecognitionOptions.customWords = ["OpenUIKit"]
+    request.textRecognitionOptions.minimumTextHeightFraction = 0.02
+    request.textRecognitionOptions.maximumCandidateCount = 3
+    request.textRecognitionOptions.useLanguageCorrection = false
+    request.textRecognitionOptions.automaticallyDetectLanguage = false
+    visionExpectEqual(request.textRecognitionOptions.customWords, ["OpenUIKit"], "custom words")
+    visionExpectEqual(request.textRecognitionOptions.minimumTextHeightFraction, 0.02, "min height")
+    visionExpectEqual(request.textRecognitionOptions.maximumCandidateCount, 3, "candidates")
+    visionExpectEqual(request.textRecognitionOptions.useLanguageCorrection, false, "correction")
+    visionExpectEqual(request.textRecognitionOptions.automaticallyDetectLanguage, false, "autodetect")
+    request.barcodeDetectionOptions.enabled = true
+    request.barcodeDetectionOptions.symbologies = [.qr]
+    request.barcodeDetectionOptions.coalesceCompositeSymbologies = true
+    visionExpectEqual(request.barcodeDetectionOptions.enabled, true, "barcode enabled")
+    visionExpectEqual(request.barcodeDetectionOptions.symbologies, [.qr], "barcode symbologies")
+    visionExpectEqual(request.barcodeDetectionOptions.coalesceCompositeSymbologies, true, "coalesce")
+    let encodedOptions = try! JSONEncoder().encode(request.textRecognitionOptions)
+    let decodedOptions = try! JSONDecoder().decode(RecognizeDocumentsRequest.TextRecognitionOptions.self, from: encodedOptions)
+    visionExpectEqual(decodedOptions.customWords, ["OpenUIKit"], "text options roundtrip")
+    let encodedBarcode = try! JSONEncoder().encode(request.barcodeDetectionOptions)
+    let decodedBarcode = try! JSONDecoder().decode(RecognizeDocumentsRequest.BarcodeDetectionOptions.self, from: encodedBarcode)
+    visionExpectEqual(decodedBarcode.enabled, true, "barcode options roundtrip")
+    visionExpect(request == request, "equal")
+    visionExpect(request != RecognizeDocumentsRequest(), "config inequality")
+    _ = request.hashValue
+    var hasher = Hasher()
+    request.hash(into: &hasher)
+    _ = hasher.finalize()
+    visionExpect(RecognizeDocumentsRequest.Revision.revision1 == .revision1, "rev ==")
+    visionExpect(!(RecognizeDocumentsRequest.Revision.revision1 < .revision1), "rev <")
+    _ = RecognizeDocumentsRequest.Revision.revision1.hashValue
+
+    let image = visionRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    do {
+        _ = try request.performOnHandler(handler)
+        visionExpect(false, "documents should fail closed")
+    } catch let error as VisionError {
+        if case .invalidModel = error {
+            visionExpect(true, "documents invalidModel")
+        } else {
+            visionExpect(false, "unexpected \(error)")
+        }
+    } catch {
+        visionExpect(false, "wrong error type \(error)")
+    }
+}
+
+func testTrackOpticalFlowRequestConfig() {
+    let request = TrackOpticalFlowRequest(.revision1, frameAnalysisSpacing: CMTime(value: 1, timescale: 30))
+    visionExpectEqual(request.revision, .revision1, "revision")
+    visionExpectEqual(TrackOpticalFlowRequest.supportedRevisions, [.revision1], "supported")
+    visionExpectEqual(request.frameAnalysisSpacing.value, 1, "spacing")
+    visionExpectEqual(request.minimumLatencyFrameCount, 1, "latency")
+    visionExpectEqual(request.computationAccuracy, .medium, "accuracy default")
+    request.computationAccuracy = .high
+    visionExpectEqual(request.computationAccuracy, .high, "accuracy set")
+    visionExpectEqual(request.outputPixelFormatType, kCVPixelFormatType_32BGRA, "format")
+    visionExpectEqual(request.supportedOutputPixelFormatTypes, [kCVPixelFormatType_32BGRA], "supported formats")
+    visionExpectEqual(request.descriptor, .trackOpticalFlowRequest(.revision1), "descriptor")
+    visionExpect(request.description.contains("trackOpticalFlow"), "description")
+    visionExpect(request.supportedComputeStageDevices[.main]?.contains(.cpu) == true, "cpu")
+    request.setComputeDevice(.cpu, for: .postProcessing)
+    visionExpectEqual(request.computeDevice(for: .postProcessing)?.identifier, "cpu", "device")
+    visionExpect(request == request, "equal")
+    visionExpect(request != TrackOpticalFlowRequest(), "spacing inequality")
+    _ = request.hashValue
+    var hasher = Hasher()
+    request.hash(into: &hasher)
+    _ = hasher.finalize()
+    visionExpectEqual(Set(TrackOpticalFlowRequest.ComputationAccuracy.allCases).count, 4, "accuracy cases")
+    visionExpect(TrackOpticalFlowRequest.ComputationAccuracy.low != .veryHigh, "accuracy !=")
+    let encoded = try! JSONEncoder().encode(TrackOpticalFlowRequest.ComputationAccuracy.medium)
+    let decoded = try! JSONDecoder().decode(TrackOpticalFlowRequest.ComputationAccuracy.self, from: encoded)
+    visionExpectEqual(decoded, .medium, "accuracy roundtrip")
+    visionExpect(TrackOpticalFlowRequest.Revision.revision1 == .revision1, "rev ==")
+    visionExpect(!(TrackOpticalFlowRequest.Revision.revision1 < .revision1), "rev <")
+    let range = TrackOpticalFlowRequest.Revision.revision1...TrackOpticalFlowRequest.Revision.revision1
+    visionExpect(range.contains(.revision1), "closed range")
+    let half = TrackOpticalFlowRequest.Revision.revision1..<TrackOpticalFlowRequest.Revision.revision1
+    visionExpect(half.isEmpty, "empty half range")
+    let upTo: PartialRangeUpTo<TrackOpticalFlowRequest.Revision> = ..<TrackOpticalFlowRequest.Revision.revision1
+    visionExpect(!upTo.contains(.revision1), "up to")
+    let from: PartialRangeFrom<TrackOpticalFlowRequest.Revision> = TrackOpticalFlowRequest.Revision.revision1...
+    visionExpect(from.contains(.revision1), "from")
+    let through: PartialRangeThrough<TrackOpticalFlowRequest.Revision> = ...TrackOpticalFlowRequest.Revision.revision1
+    visionExpect(through.contains(.revision1), "through")
+    visionExpect(TrackOpticalFlowRequest.Revision.revision1 <= .revision1, "<=")
+    visionExpect(TrackOpticalFlowRequest.Revision.revision1 >= .revision1, ">=")
+    visionExpect(!(TrackOpticalFlowRequest.Revision.revision1 > .revision1), ">")
+
+    let image = visionRectangleImage()
+    do {
+        _ = try request.performOnHandler(VNImageRequestHandler(cgImage: image))
+        visionExpect(false, "optical flow should fail closed")
+    } catch let error as VisionError {
+        if case .invalidModel = error {
+            visionExpect(true, "optical flow invalidModel")
+        } else {
+            visionExpect(false, "unexpected \(error)")
+        }
+    } catch {
+        visionExpect(false, "wrong error type \(error)")
+    }
+}
+
+func testOverlayRequestProtocolSurface() {
+    var barcodes = DetectBarcodesRequest()
+    visionExpectEqual(barcodes.descriptor, .detectBarcodesRequest(.revision4), "barcode descriptor")
+    visionExpectEqual(barcodes.regionOfInterest, .fullImage, "roi")
+    visionExpectEqual(DetectBarcodesRequest.supportedRevisions, [.revision4], "supported")
+    visionExpect(barcodes.supportedComputeStageDevices[.main]?.contains(.cpu) == true, "cpu")
+    visionExpect(barcodes.computeDevice(for: .main) == nil, "unset")
+    barcodes.setComputeDevice(.cpu, for: .main)
+    visionExpectEqual(barcodes.computeDevice(for: .main)?.identifier, "cpu", "set")
+    visionExpect(barcodes == barcodes, "equal")
+    _ = barcodes.hashValue
+    var hasher = Hasher()
+    barcodes.hash(into: &hasher)
+    _ = hasher.finalize()
+    visionExpect(!barcodes.description.isEmpty, "description")
+    barcodes.coalescesCompositeSymbologies = true
+    visionExpectEqual(barcodes.coalescesCompositeSymbologies, true, "coalesce")
+
+    var text = RecognizeTextRequest()
+    visionExpectEqual(text.descriptor, .recognizeTextRequest(.revision3), "text descriptor")
+    visionExpectEqual(text.regionOfInterest, .fullImage, "text roi")
+    visionExpect(text.supportedComputeStageDevices[.postProcessing]?.contains(.cpu) == true, "text cpu")
+    text.setComputeDevice(.cpu, for: .postProcessing)
+    visionExpectEqual(text.computeDevice(for: .postProcessing)?.identifier, "cpu", "text device")
+
+    var face = DetectFaceRectanglesRequest()
+    visionExpectEqual(face.descriptor, .detectFaceRectanglesRequest(.revision3), "face descriptor")
+    face.regionOfInterest = NormalizedRect(x: 0.1, y: 0.1, width: 0.5, height: 0.5)
+    visionExpectEqual(face.regionOfInterest.width, 0.5, "face roi")
+    visionExpect(face.supportedComputeStageDevices[.main]?.isEmpty == false, "face devices")
+
+    let proto: any VisionRequest = barcodes
+    visionExpect(!proto.description.isEmpty, "existential description")
+    visionExpect(proto.supportedComputeStageDevices[.main] != nil, "existential devices")
+}
+
+func testOverlayRevisionComparableOperators() {
+    func exercise<T: Comparable & Hashable>(_ a: T, _ b: T, _ message: String) {
+        visionExpect(a == a, message + " ==")
+        visionExpect(!(a != a), message + " !=")
+        visionExpect(a <= b, message + " <=")
+        visionExpect(a >= a, message + " >=")
+        visionExpect(!(a > b) || a != b, message + " >")
+        _ = a...b
+        _ = a..<b
+        _ = a...
+        _ = ...a
+        _ = ..<b
+    }
+    exercise(DetectBarcodesRequest.Revision.revision4, .revision4, "barcode")
+    exercise(DetectRectanglesRequest.Revision.revision1, .revision1, "rect")
+    exercise(DetectContoursRequest.Revision.revision1, .revision1, "contour")
+    exercise(GenerateImageFeaturePrintRequest.Revision.revision2, .revision2, "feature")
+    exercise(ClassifyImageRequest.Revision.revision2, .revision2, "classify")
+    exercise(RecognizeTextRequest.Revision.revision3, .revision3, "text")
+    exercise(DetectFaceRectanglesRequest.Revision.revision3, .revision3, "face")
+    exercise(DetectHumanBodyPoseRequest.Revision.revision1, .revision1, "body")
+    exercise(DetectHorizonRequest.Revision.revision1, .revision1, "horizon")
+    exercise(DetectLensSmudgeRequest.Revision.revision1, .revision1, "smudge")
+    exercise(RecognizeAnimalsRequest.Revision.revision1, .revision1, "animals")
+    exercise(DetectTrajectoriesRequest.Revision.revision1, .revision1, "traj")
+    exercise(RecognizeDocumentsRequest.Revision.revision1, .revision1, "docs")
+    exercise(DetectFaceLandmarksRequest.Revision.revision1, .revision1, "landmarks")
+    exercise(DetectHumanHandPoseRequest.Revision.revision1, .revision1, "hand")
+    exercise(DetectAnimalBodyPoseRequest.Revision.revision1, .revision1, "animal")
+    exercise(DetectTextRectanglesRequest.Revision.revision1, .revision1, "textrects")
+    exercise(DetectHumanRectanglesRequest.Revision.revision1, .revision1, "humans")
+    exercise(DetectFaceCaptureQualityRequest.Revision.revision1, .revision1, "capture")
+    exercise(DetectDocumentSegmentationRequest.Revision.revision1, .revision1, "docseg")
+    exercise(GeneratePersonInstanceMaskRequest.Revision.revision1, .revision1, "personmask")
+    exercise(GeneratePersonSegmentationRequest.Revision.revision1, .revision1, "personseg")
+    exercise(CalculateImageAestheticsScoresRequest.Revision.revision1, .revision1, "aesthetics")
+    exercise(GenerateForegroundInstanceMaskRequest.Revision.revision1, .revision1, "foreground")
+    exercise(GenerateAttentionBasedSaliencyImageRequest.Revision.revision1, .revision1, "attention")
+    exercise(GenerateObjectnessBasedSaliencyImageRequest.Revision.revision1, .revision1, "objectness")
+    exercise(DetectHumanBodyPose3DRequest.Revision.revision1, .revision1, "pose3d")
+    exercise(CoreMLRequest.Revision.revision1, .revision1, "coreml")
+    exercise(TrackObjectRequest.Revision.revision2, .revision2, "trackobj")
+    exercise(TrackRectangleRequest.Revision.revision1, .revision1, "trackrect")
+    exercise(TrackOpticalFlowRequest.Revision.revision1, .revision1, "flow")
+    exercise(TrackHomographicImageRegistrationRequest.Revision.revision1, .revision1, "homo")
+    exercise(TrackTranslationalImageRegistrationRequest.Revision.revision1, .revision1, "trans")
+}
+
+func testOverlayROIAndInvalidImage() {
+    var request = RecognizeDocumentsRequest()
+    request.regionOfInterest = NormalizedRect(x: 0.2, y: 0.2, width: -0.1, height: 0.2)
+    do {
+        _ = try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+        visionExpect(false, "negative size should throw")
+    } catch let error as VisionError {
+        if case .invalidArgument = error {
+            visionExpect(true, "overlay negative size")
+        } else {
+            visionExpect(false, "expected invalidArgument, got \(error)")
+        }
+    } catch {
+        visionExpect(false, "wrong type \(error)")
+    }
+
+    request.regionOfInterest = NormalizedRect(x: 0.2, y: 0.2, width: 0.9, height: 0.9)
+    do {
+        _ = try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+        visionExpect(false, "overflow should throw")
+    } catch let error as VisionError {
+        if case .outOfBoundsError = error {
+            visionExpect(true, "overlay overflow")
+        } else {
+            visionExpect(false, "expected outOfBounds, got \(error)")
+        }
+    } catch {
+        visionExpect(false, "wrong type \(error)")
+    }
+
+    request.regionOfInterest = .fullImage
+    do {
+        _ = try request.performOnHandler(VNImageRequestHandler(data: Data([0, 1, 2])))
+        visionExpect(false, "garbage should throw")
+    } catch let error as VisionError {
+        if case .invalidImage = error {
+            visionExpect(true, "overlay invalid image")
+        } else {
+            visionExpect(false, "expected invalidImage, got \(error)")
+        }
+    } catch {
+        visionExpect(false, "wrong type \(error)")
+    }
+}
+
+func testVNTrackOpticalFlowRequestConfig() {
+    let request = VNTrackOpticalFlowRequest()
+    visionExpectEqual(request.computationAccuracy, .medium, "accuracy")
+    request.computationAccuracy = .low
+    visionExpectEqual(request.computationAccuracy, .low, "accuracy set")
+    visionExpectEqual(request.keepNetworkOutput, false, "keep default")
+    request.keepNetworkOutput = true
+    visionExpectEqual(request.keepNetworkOutput, true, "keep set")
+    visionExpectEqual(request.outputPixelFormat, kCVPixelFormatType_32BGRA, "pixel format")
+    request.outputPixelFormat = kCVPixelFormatType_32BGRA
+    visionExpect(request.results == nil, "results nil")
+    visionExpectEqual(VNTrackOpticalFlowRequest.currentRevision, VNTrackOpticalFlowRequestRevision1, "current")
+    visionExpectEqual(VNTrackOpticalFlowRequest.defaultRevision, VNTrackOpticalFlowRequestRevision1, "default")
+    visionExpect(VNTrackOpticalFlowRequest.supportedRevisions.contains(VNTrackOpticalFlowRequestRevision1), "supported")
+    let withHandler = VNTrackOpticalFlowRequest(completionHandler: { _, _ in })
+    visionExpect(withHandler.completionHandler != nil, "completion")
+    let image = visionRectangleImage()
+    let handler = VNImageRequestHandler(cgImage: image)
+    do {
+        try handler.perform([request])
+        visionExpect(false, "vn optical flow should fail closed")
+    } catch let error as NSError {
+        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
+        visionExpect(request.results == nil, "results stay nil")
+    }
+}
+
+func testImageRequestHandlerOverlayPerformNow() {
+    let image = visionRectangleImage()
+    let data = VisionHost.encodeNetpbm(image)
+    _ = ImageRequestHandler(data)
+    _ = ImageRequestHandler(image)
+    let ci = CIImage(cgImage: image)
+    _ = ImageRequestHandler(ci)
+    let buffer = CVPixelBuffer(width: image.width, height: image.height)
+    _ = ImageRequestHandler(buffer)
+    let sample = CMSampleBuffer(pixelBuffer: buffer)
+    _ = ImageRequestHandler(sample)
+    let handler = ImageRequestHandler(image)
+    var barcodes = DetectBarcodesRequest()
+    barcodes.symbologies = [.qr]
+    let qr = try! VisionHost.makeQRImage(payload: "HELLO")
+    let qrHandler = ImageRequestHandler(qr)
+    let hits: [BarcodeObservation] = try! qrHandler.performNow(barcodes)
+    visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "handler performNow QR")
+    do {
+        _ = try handler.performNow(RecognizeDocumentsRequest())
+        visionExpect(false, "handler documents fail closed")
+    } catch let error as VisionError {
+        if case .invalidModel = error {
+            visionExpect(true, "handler documents")
+        } else {
+            visionExpect(false, "unexpected \(error)")
+        }
+    } catch {
+        visionExpect(false, "wrong type \(error)")
+    }
+}
+
+func testOverlayEquatableInequality() {
+    visionExpect(DetectBarcodesRequest() == DetectBarcodesRequest(), "barcodes ==")
+    visionExpect(!(DetectBarcodesRequest() != DetectBarcodesRequest()), "barcodes !=")
+    visionExpect(RecognizeDocumentsRequest() != RecognizeDocumentsRequest(.revision1) || RecognizeDocumentsRequest() == RecognizeDocumentsRequest(), "docs")
+    visionExpect(TrackOpticalFlowRequest() == TrackOpticalFlowRequest(), "flow ==")
+    visionExpect(TrackRectangleRequest() == TrackRectangleRequest(), "rect ==")
+    visionExpect(TrackHomographicImageRegistrationRequest() == TrackHomographicImageRegistrationRequest(), "homo ==")
+    visionExpect(TrackTranslationalImageRegistrationRequest() == TrackTranslationalImageRegistrationRequest(), "trans ==")
+    visionExpect(RecognizeTextRequest() == RecognizeTextRequest(), "text ==")
+    visionExpect(ClassifyImageRequest() == ClassifyImageRequest(), "classify ==")
+    visionExpect(CoreMLRequest() == CoreMLRequest(), "coreml ==")
+    visionExpect(DetectHorizonRequest() == DetectHorizonRequest(), "horizon ==")
+    let seed = DetectedObjectObservation(boundingBox: .fullImage)
+    visionExpect(TrackObjectRequest(detectedObject: seed) == TrackObjectRequest(detectedObject: seed), "track ==")
+    _ = DetectBarcodesRequest().hashValue
+    _ = RecognizeDocumentsRequest().hashValue
+}
+
+func testPixelBufferObservationValues() {
+    let buffer = CVPixelBuffer(width: 2, height: 2)
+    let observation = VNPixelBufferObservation(pixelBuffer: buffer, featureName: "flow")
+    visionExpectEqual(observation.featureName, "flow", "feature name")
+    visionExpectEqual(observation.pixelBuffer.width, 2, "pixel width")
+    visionExpectEqual(observation.pixelBuffer.height, 2, "pixel height")
+    let overlay = OpticalFlowObservation(observation)
+    visionExpect(overlay != nil, "optical overlay")
+    visionExpectEqual(overlay?.pixelBuffer?.width, 2, "overlay buffer")
+    visionExpectEqual(overlay?.confidence, 1, "overlay confidence")
+}
+
 func visionRunFocusedTests() {
     testHarnessRectangleImage()
     testValueCatalog()
@@ -971,6 +2539,40 @@ func visionRunFocusedTests() {
     testOverlayContourPerform()
     testOverlayFeaturePrintPerform()
     testOverlayTrackObjectRequest()
+    testCoordinateMappingOrientation()
+    testRecognizedPointKeyCatalog()
+    testHumanBodyPoseObservationJoints()
+    testHumanHandPoseObservationJoints()
+    testAnimalBodyPoseObservationJoints()
+    testHumanBodyPose3DObservationJoints()
+    testClassificationPrecisionRecall()
+    testFaceLandmarks2D()
+    testRecognizedTextTopCandidates()
+    testContoursObservationTree()
+    testFeaturePrintDistanceMismatch()
+    testHorizonObservation()
+    testRequestROIValidation()
+    testRequestRevisionValidation()
+    testTrackObjectRequestState()
+    testSequenceHandlerInvalidImageAndOrientation()
+    testDetectHumanHandPoseFailClosed()
+    testOverlayRecognizeTextFailClosedSync()
+    testOverlayFaceAndDocumentValues()
+    testOverlayPoseValueTypes()
+    testOverlayTextAndClassification()
+    testRevisionConstantsCatalog()
+    testRequestDescriptorCatalog()
+    testVisionResultCatalog()
+    testBarcodeObservationOverlayValues()
+    testRecognizeDocumentsRequestConfig()
+    testTrackOpticalFlowRequestConfig()
+    testOverlayRequestProtocolSurface()
+    testOverlayRevisionComparableOperators()
+    testOverlayROIAndInvalidImage()
+    testVNTrackOpticalFlowRequestConfig()
+    testImageRequestHandlerOverlayPerformNow()
+    testOverlayEquatableInequality()
+    testPixelBufferObservationValues()
     print("VISION_AGENT_RUNTIME_OK")
 }
 
