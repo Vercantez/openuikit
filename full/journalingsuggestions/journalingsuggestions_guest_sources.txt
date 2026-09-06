@@ -1,0 +1,6 @@
+full/journalingsuggestions/JournalingSuggestion.swift
+full/journalingsuggestions/JournalingSuggestions.swift
+full/journalingsuggestions/JournalingSuggestionsConfiguration.swift
+full/journalingsuggestions/JournalingSuggestionsLookalikes.swift
+full/journalingsuggestions/JournalingSuggestionsPicker.swift
+full/journalingsuggestions/JournalingSuggestionsViewSurface.swift
