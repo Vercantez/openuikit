@@ -337,6 +337,186 @@ func testEnumOptionSetAndConstantValues() {
             _ = NSNotification.Name.NSPersistentStoreCoordinatorStoresDidChange
             _ = NSNotification.Name.NSPersistentStoreCoordinatorStoresWillChange
             _ = NSNotification.Name.NSPersistentStoreCoordinatorWillRemoveStore
+
+            func checkInequality<T: Equatable>(_ lhs: T, _ rhs: T, _ name: String) throws {
+                guard lhs != rhs, lhs == lhs else {
+                    throw ProbeFailure.message("\(name) Equatable/!= mismatch")
+                }
+            }
+            func checkHash<T: Hashable>(_ value: T, _ name: String) throws {
+                var hasher = Hasher()
+                value.hash(into: &hasher)
+                guard value.hashValue == value.hashValue else {
+                    throw ProbeFailure.message("\(name) hashValue mismatch")
+                }
+            }
+            try checkInequality(NSAttributeType.stringAttributeType, .booleanAttributeType, "NSAttributeType")
+            try checkHash(NSAttributeType.stringAttributeType, "NSAttributeType")
+            guard NSAttributeType(rawValue: 700) == .stringAttributeType else {
+                throw ProbeFailure.message("NSAttributeType.init(rawValue:) failed")
+            }
+            try checkInequality(NSDeleteRule.cascadeDeleteRule, .nullifyDeleteRule, "NSDeleteRule")
+            try checkHash(NSDeleteRule.cascadeDeleteRule, "NSDeleteRule")
+            guard NSDeleteRule(rawValue: 2) == .cascadeDeleteRule else {
+                throw ProbeFailure.message("NSDeleteRule.init(rawValue:) failed")
+            }
+            try checkInequality(NSEntityMappingType.addEntityMappingType, .copyEntityMappingType, "NSEntityMappingType")
+            try checkHash(NSEntityMappingType.addEntityMappingType, "NSEntityMappingType")
+            guard NSEntityMappingType(rawValue: 2) == .addEntityMappingType else {
+                throw ProbeFailure.message("NSEntityMappingType.init(rawValue:) failed")
+            }
+            try checkInequality(NSFetchIndexElementType.binary, .rTree, "NSFetchIndexElementType")
+            try checkHash(NSFetchIndexElementType.binary, "NSFetchIndexElementType")
+            guard NSFetchIndexElementType(rawValue: 0) == .binary else {
+                throw ProbeFailure.message("NSFetchIndexElementType.init(rawValue:) failed")
+            }
+            try checkInequality(NSFetchedResultsChangeType.insert, .delete, "NSFetchedResultsChangeType")
+            try checkHash(NSFetchedResultsChangeType.insert, "NSFetchedResultsChangeType")
+            guard NSFetchedResultsChangeType(rawValue: 1) == .insert else {
+                throw ProbeFailure.message("NSFetchedResultsChangeType.init(rawValue:) failed")
+            }
+            try checkInequality(NSMergePolicyType.errorMergePolicyType, .overwriteMergePolicyType, "NSMergePolicyType")
+            try checkHash(NSMergePolicyType.errorMergePolicyType, "NSMergePolicyType")
+            guard NSMergePolicyType(rawValue: 0) == .errorMergePolicyType else {
+                throw ProbeFailure.message("NSMergePolicyType.init(rawValue:) failed")
+            }
+            try checkInequality(NSPersistentHistoryChangeType.insert, .delete, "NSPersistentHistoryChangeType")
+            try checkHash(NSPersistentHistoryChangeType.insert, "NSPersistentHistoryChangeType")
+            guard NSPersistentHistoryChangeType(rawValue: 0) == .insert else {
+                throw ProbeFailure.message("NSPersistentHistoryChangeType.init(rawValue:) failed")
+            }
+            try checkInequality(NSPersistentHistoryResultType.statusOnly, .changesOnly, "NSPersistentHistoryResultType")
+            try checkHash(NSPersistentHistoryResultType.statusOnly, "NSPersistentHistoryResultType")
+            guard NSPersistentHistoryResultType(rawValue: 0) == .statusOnly else {
+                throw ProbeFailure.message("NSPersistentHistoryResultType.init(rawValue:) failed")
+            }
+            try checkInequality(NSPersistentStoreRequestType.fetchRequestType, .saveRequestType, "NSPersistentStoreRequestType")
+            try checkHash(NSPersistentStoreRequestType.fetchRequestType, "NSPersistentStoreRequestType")
+            guard NSPersistentStoreRequestType(rawValue: 1) == .fetchRequestType else {
+                throw ProbeFailure.message("NSPersistentStoreRequestType.init(rawValue:) failed")
+            }
+            try checkInequality(
+                NSPersistentStoreUbiquitousTransitionType.accountAdded,
+                .accountRemoved,
+                "NSPersistentStoreUbiquitousTransitionType"
+            )
+            try checkHash(NSPersistentStoreUbiquitousTransitionType.accountAdded, "NSPersistentStoreUbiquitousTransitionType")
+            guard NSPersistentStoreUbiquitousTransitionType(rawValue: 1) == .accountAdded else {
+                throw ProbeFailure.message("NSPersistentStoreUbiquitousTransitionType.init(rawValue:) failed")
+            }
+            try checkInequality(NSBatchDeleteRequestResultType.resultTypeStatusOnly, .resultTypeCount, "NSBatchDeleteRequestResultType")
+            try checkHash(NSBatchDeleteRequestResultType.resultTypeStatusOnly, "NSBatchDeleteRequestResultType")
+            guard NSBatchDeleteRequestResultType(rawValue: 0) == .resultTypeStatusOnly else {
+                throw ProbeFailure.message("NSBatchDeleteRequestResultType.init(rawValue:) failed")
+            }
+            try checkInequality(NSBatchInsertRequestResultType.statusOnly, .count, "NSBatchInsertRequestResultType")
+            try checkHash(NSBatchInsertRequestResultType.statusOnly, "NSBatchInsertRequestResultType")
+            guard NSBatchInsertRequestResultType(rawValue: 0) == .statusOnly else {
+                throw ProbeFailure.message("NSBatchInsertRequestResultType.init(rawValue:) failed")
+            }
+            try checkInequality(
+                NSBatchUpdateRequestResultType.statusOnlyResultType,
+                .updatedObjectsCountResultType,
+                "NSBatchUpdateRequestResultType"
+            )
+            try checkHash(NSBatchUpdateRequestResultType.statusOnlyResultType, "NSBatchUpdateRequestResultType")
+            guard NSBatchUpdateRequestResultType(rawValue: 0) == .statusOnlyResultType else {
+                throw ProbeFailure.message("NSBatchUpdateRequestResultType.init(rawValue:) failed")
+            }
+            try checkInequality(
+                NSPersistentCloudKitContainer.EventType.setup,
+                .export,
+                "NSPersistentCloudKitContainer.EventType"
+            )
+            try checkHash(NSPersistentCloudKitContainer.EventType.setup, "NSPersistentCloudKitContainer.EventType")
+            guard NSPersistentCloudKitContainer.EventType(rawValue: 0) == .setup else {
+                throw ProbeFailure.message("EventType.init(rawValue:) failed")
+            }
+            try checkInequality(
+                NSPersistentCloudKitContainerEventResult.ResultType.events,
+                .countEvents,
+                "NSPersistentCloudKitContainerEventResult.ResultType"
+            )
+            try checkHash(NSPersistentCloudKitContainerEventResult.ResultType.events, "NSPersistentCloudKitContainerEventResult.ResultType")
+            guard NSPersistentCloudKitContainerEventResult.ResultType(rawValue: 0) == .events else {
+                throw ProbeFailure.message("EventResult.ResultType.init(rawValue:) failed")
+            }
+            try checkInequality(
+                NSManagedObjectContext.ConcurrencyType.mainQueue,
+                .privateQueue,
+                "ConcurrencyType"
+            )
+            try checkHash(NSManagedObjectContext.ConcurrencyType.mainQueue, "ConcurrencyType")
+            try checkInequality(
+                NSManagedObjectContext.NotificationKey.insertedObjects,
+                .deletedObjects,
+                "NotificationKey"
+            )
+            try checkHash(NSManagedObjectContext.NotificationKey.insertedObjects, "NotificationKey")
+            try checkInequality(
+                NSManagedObjectContext.ScheduledTaskType.immediate,
+                .enqueued,
+                "ScheduledTaskType"
+            )
+            try checkHash(NSManagedObjectContext.ScheduledTaskType.immediate, "ScheduledTaskType")
+            try checkInequality(NSPersistentStore.StoreType.sqlite, .inMemory, "StoreType")
+            try checkHash(NSPersistentStore.StoreType.sqlite, "StoreType")
+            guard NSPersistentStore.StoreType(rawValue: NSSQLiteStoreType).rawValue == NSSQLiteStoreType else {
+                throw ProbeFailure.message("StoreType.init(rawValue:) failed")
+            }
+
+            func checkOptionSet<T: OptionSet>(_ value: T, _ other: T, _ name: String) throws where T.Element == T, T: Hashable {
+                var working = T()
+                try checkInequality(value, other, name)
+                try checkHash(value, name)
+                guard working.isEmpty else {
+                    throw ProbeFailure.message("\(name) empty isEmpty failed")
+                }
+                working = T([value])
+                _ = T([value, other])
+                let literal: T = [value, other]
+                guard literal.contains(value), literal.contains(other) else {
+                    throw ProbeFailure.message("\(name) OptionSet array-literal init failed")
+                }
+                guard working.contains(value),
+                      working.isSubset(of: value.union(other)),
+                      working.union(other).isSuperset(of: other),
+                      !working.isDisjoint(with: value),
+                      working.subtracting(value).isEmpty,
+                      working.intersection(value) == value,
+                      !working.isStrictSubset(of: working),
+                      working.union(other).isStrictSuperset(of: working) || working.union(other) == working else {
+                    throw ProbeFailure.message("\(name) OptionSet algebra failed")
+                }
+                var mutable = working
+                mutable.formUnion(other)
+                mutable.formIntersection(value)
+                mutable.formSymmetricDifference(other)
+                mutable.subtract(other)
+                _ = mutable.insert(value)
+                _ = mutable.remove(other)
+                _ = mutable.update(with: value)
+            }
+            try checkOptionSet(
+                NSFetchRequestResultType.dictionaryResultType,
+                NSFetchRequestResultType.countResultType,
+                "NSFetchRequestResultType"
+            )
+            try checkOptionSet(
+                NSSnapshotEventType.refresh,
+                NSSnapshotEventType.rollback,
+                "NSSnapshotEventType"
+            )
+            try checkOptionSet(
+                NSPersistentCloudKitContainerSchemaInitializationOptions.dryRun,
+                NSPersistentCloudKitContainerSchemaInitializationOptions.printSchema,
+                "NSPersistentCloudKitContainerSchemaInitializationOptions"
+            )
+            guard NSFetchRequestResultType(rawValue: 2) == .dictionaryResultType,
+                  NSSnapshotEventType(rawValue: 1 << 5) == .refresh,
+                  NSPersistentCloudKitContainerSchemaInitializationOptions(rawValue: 1 << 1) == .dryRun else {
+                throw ProbeFailure.message("OptionSet init(rawValue:) mismatch")
+            }
     } catch {
         fatalError("testEnumOptionSetAndConstantValues failed: \(error)")
     }
