@@ -1,0 +1,6 @@
+full/managedappdistribution/ManagedAppDistribution.swift
+full/managedappdistribution/ManagedAppDistributionError.swift
+full/managedappdistribution/ManagedAppDistributionLookalikes.swift
+full/managedappdistribution/ManagedAppDistributionSwiftUI.swift
+full/managedappdistribution/ManagedAppDistributionViewSurface.swift
+full/managedappdistribution/ManagedAppLibrary.swift
