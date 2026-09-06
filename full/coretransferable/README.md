@@ -55,6 +55,9 @@ Isolated host sources import Foundation only. `UTType` and Combine's
 `CoreTransferableLookalikes.swift`, compiled only when those modules
 are absent. The lookalike encoder protocol is also conformed by
 toolchain `PropertyListEncoder` / `PropertyListDecoder`.
+Linux `NSItemProvider` lives in `CoreTransferableItemProvider.swift`
+because swift-corelibs-foundation does not vend the Darwin class;
+register/load is in-process typed storage, not a pasteboard.
 `tests/agent/CoreTransferableDependencyIdentity.swift`
 imports the real `CoreTransferable` and `Foundation` modules for the
 later EC2 build and must not be used to justify public substitutes
@@ -72,9 +75,10 @@ for Foundation-owned types.
   `_HostNodeRepresentation` that forwards the same builder-captured
   node used for export/import. Apple's opaque `Body` identity is
   unobserved.
-- `NSItemProvider.register` / `loadTransferable` stay deferred:
-  Linux Foundation has no `NSItemProvider`, and a public
-  framework-local substitute for that Foundation type is forbidden.
+- `NSItemProvider.register` / `loadTransferable` run in-process on a
+  Linux host stand-in because swift-corelibs-foundation has no
+  `NSItemProvider`. Completions are inline; pasteboard/UTI re-encode
+  behavior is unobserved.
 - Visibility filtering, AttributedString UTI (RTF vs plain text),
   and URL file-url vs public.url behavior are portable host rules,
   not Apple-oracle results.
@@ -97,11 +101,10 @@ green on Darwin; the Linux deliverable gate is
 
 Coverage after this pass: **152 implemented / 3 declared / 2 deferred /
 148 unavailable** (155 nondeferred, floor 153). Every iOS-available
-census row is nondeferred except the two `NSItemProvider` overlays,
-which remain deferred because isolated Linux Foundation has no
-`NSItemProvider`. The 148 unavailable rows are Swift/Foundation
-witnesses synthesized onto `Data`/`URL`, not macOS/visionOS-only
-API; they stay unavailable so this module does not redeclare them.
+census row is nondeferred except four deferred Sequence/Combine witnesses
+that are not callable here (see Depth pass 2026-09 wave 8). The former
+148 unavailable rows were Swift/Foundation witnesses synthesized onto
+`Data`/`URL`; this pass exercises the callable ones and defers the rest.
 
 ### Implemented on this host
 
@@ -138,7 +141,8 @@ API; they stay unavailable so this module does not redeclare them.
 - No public `Image` transferable: not in the pinned 305-ID census.
 - No public `DefaultTransferRepresentation` type: not in the
   census or API digester.
-- `NSItemProvider` overlays stay deferred.
+- `NSItemProvider` overlays are an in-process Linux stand-in, not a
+  pasteboard.
 - `Never` instance methods that cannot be referenced without a
   `Never` value stay declared.
 - Visibility is a stored token plus `exportedContentTypes` filter; it
@@ -170,3 +174,53 @@ is not emitted here: `.cursor/verify-cloud-environment.sh` needs
 `scratch/ladder-corpus/focus-ios`, which is absent, and this pod
 booted from `bld-20260905-9aa65d65-...` rather than
 `bld-20260901-d3266600-...`.
+
+## Depth pass 2026-09 (wave 8)
+
+Coverage before this pass: **152 implemented / 3 declared / 2 deferred /
+148 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **297 implemented / 3 declared / 5 deferred /
+0 unavailable / 0 not-applicable** (300 nondeferred, floor 153).
+
+This pass keeps the wave-6 Transferable machinery and adds:
+
+- In-process `NSItemProvider.register` / `loadTransferable` on a Linux
+  host stand-in (swift-corelibs-foundation does not vend the Darwin
+  class). Completions run inline; missing types fail closed with
+  `TransferableError.importNotSupported`. Round-trip tests cover
+  `Data`, `String`, `URL`, `AttributedString`, `DataRepresentation`,
+  `FileRepresentation`, `ProxyRepresentation`, and
+  `CodableRepresentation` values.
+- Behavioral tests for the Swift/Foundation protocol witnesses the
+  census synthesizes onto `Data` and `URL` (`DataProtocol` ranges and
+  `copyBytes`, `MutableCollection` / `RangeReplaceableCollection`
+  edits, `Sequence` transforms, StringProcessing `trimPrefix` /
+  `ranges(of:)`, `FormatStyle.formatted`, `SortComparator` sort).
+  Those APIs remain owned by the standard library or Foundation; the
+  tests prove they are still callable on Transferable `Data`/`URL`.
+
+Still declared: the three `Never` instance methods that cannot form a
+typed function reference without a `Never` value.
+
+Still deferred (not hardware; callable constraints / missing modules):
+
+- `Data.publisher` (Combine overlay; Combine is not a dependency).
+- `Sequence.compare` where `Element: SortComparator` (`UInt8` does not
+  conform).
+- Deprecated `Collection.index(of:)` and optional `flatMap` (calling
+  them fails `-warnings-as-errors`).
+- `MutableCollection.subscript(Range) -> Slice` (stdlib marks it
+  unavailable; Data uses `SubSequence`).
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | share | test |
+| --- | --- | --- |
+| 16 | 5.4% | `testModifiersOnFileProxyCodableAndTuple` |
+| 14 | 4.7% | `testDataTransferableExportImport` |
+| 12 | 4.0% | `testNeverProtocolWitnessesExist` |
+| 11 | 3.7% | `testAttributedStringTransferable` |
+| 11 | 3.7% | `testURLTransferableExportImport` |
+
+No single test exceeds 40% of implemented rows.
