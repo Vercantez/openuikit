@@ -318,11 +318,11 @@ final class SystemPickerTests: XCTestCase {
             let items = probe.safariViewController(safari, activityItemsFor: url, title: nil)
             XCTAssertTrue(items.isEmpty)
             XCTAssertTrue(probe.safariViewController(safari, excludedActivityTypesFor: url, title: nil).isEmpty)
+            probe.safariViewController(safari, initialLoadDidRedirectTo: url)
+            probe.safariViewControllerWillOpenInBrowser(safari)
+            probe.safariViewControllerDidFinish(safari)
+            XCTAssertEqual(probe.finished, 1)
         }
-        probe.safariViewController(safari, initialLoadDidRedirectTo: url)
-        probe.safariViewControllerWillOpenInBrowser(safari)
-        probe.safariViewControllerDidFinish(safari)
-        XCTAssertEqual(probe.finished, 1)
     }
 
     // MARK: Activity
@@ -343,24 +343,27 @@ final class SystemPickerTests: XCTestCase {
                 self.results = results
             }
         }
-        var config = PHPickerConfiguration()
-        config.filter = .images
-        config.selectionLimit = 0
-        let picker = PHPickerViewController(configuration: config)
-        let probe = Probe()
-        picker.delegate = probe
-        picker._present()
-        XCTAssertEqual(probe.results?.count, 0)
+        // Main-actor hop for the Linux test bundle (see the Safari test above).
+        MainActor.assumeIsolated {
+            var config = PHPickerConfiguration()
+            config.filter = .images
+            config.selectionLimit = 0
+            let picker = PHPickerViewController(configuration: config)
+            let probe = Probe()
+            picker.delegate = probe
+            picker._present()
+            XCTAssertEqual(probe.results?.count, 0)
 
-        let picker2 = PHPickerViewController(configuration: PHPickerConfiguration())
-        let probe2 = Probe()
-        picker2.delegate = probe2
-        let queued = PHPickerResult._hostResult(
-            assetIdentifier: "asset-1", typeIdentifier: "public.jpeg", payload: Data([1, 2, 3]))
-        picker2._enqueueResults([queued])
-        picker2._present()
-        XCTAssertEqual(probe2.results?.count, 1)
-        XCTAssertEqual(probe2.results?.first?.assetIdentifier, "asset-1")
+            let picker2 = PHPickerViewController(configuration: PHPickerConfiguration())
+            let probe2 = Probe()
+            picker2.delegate = probe2
+            let queued = PHPickerResult._hostResult(
+                assetIdentifier: "asset-1", typeIdentifier: "public.jpeg", payload: Data([1, 2, 3]))
+            picker2._enqueueResults([queued])
+            picker2._present()
+            XCTAssertEqual(probe2.results?.count, 1)
+            XCTAssertEqual(probe2.results?.first?.assetIdentifier, "asset-1")
+        }
         XCTAssertEqual(PHPickerFilter.any(of: [.images, .videos]),
                        PHPickerFilter.any(of: [.images, .videos]))
     }
