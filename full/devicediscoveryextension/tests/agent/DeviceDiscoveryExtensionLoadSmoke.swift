@@ -1,0 +1,3 @@
+import DeviceDiscoveryExtension
+
+let frameworkLoadSmokeMarker = "DEVICEDISCOVERYEXTENSION_AGENT_RUNTIME_OK"
