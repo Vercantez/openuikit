@@ -29,10 +29,14 @@ is a separate central review step.
 - Host `float32` GEMM / GEMV with alpha/beta/transposes and exact row strides,
   plus `MPSMatrixSoftMax`, `MPSMatrixFindTopK`, and `MPSMatrixSum`.
 - CNN / NN-graph / RNN descriptors (`MPSCNNConvolutionDescriptor`,
-  `MPSNNNeuronDescriptor`, `MPSRNNDescriptor`, `MPSNNGraph`, pooling kernels)
-  are constructable validated data. Encode stays fail-closed.
+  `MPSNNNeuronDescriptor`, `MPSRNNDescriptor`, `MPSNNGraph`, pooling kernels,
+  `MPSCNNBinaryKernel` / `MPSCNNMultiaryKernel`, YOLO/loss descriptors,
+  LSTM/GRU descriptors, batch-norm data sources) are constructable validated
+  data. Encode stays fail-closed except host Adam/SGD/RMSProp on vectors and
+  matrices.
+- Host float32 Adam, SGD, and RMSProp on `MPSVector` / `MPSMatrix`.
 - `MPSRayIntersector` is constructable; every `encodeIntersection` is
-  fail-closed.
+  fail-closed. `MPSSVGF` stores filter parameters and refuses every encode.
 - `MPSSupportsMTLDevice` is always `false` and `MPSGetPreferredDevice` is
   always `nil`. Linux has no Metal GPU in this environment.
 
@@ -47,7 +51,9 @@ GPU `encode` methods that have no CPU implementation record
 In-place texture encodes return `false`. Command-buffer heap hints
 (`MPSHintTemporaryMemoryHighWaterMark`, `MPSSetHeapCacheDuration`) are inert.
 `NSCoder` kernel initializers return `nil`. `MPSCNNKernel` / `MPSNNGraph`
-encode and `MPSRayIntersector.encodeIntersection` record
+encode, `MPSCNNBinaryKernel` / `MPSCNNMultiaryKernel`, `MPSSVGF`,
+`MPSCNNBatchNormalization` encode, NDArray kernel encode, RNN sequence encode,
+and `MPSRayIntersector.encodeIntersection` record
 `MPSHostBoundary.lastRefusedAPI` and do not invent GPU results. CNN
 convolution encode is fail-closed; descriptors and weight state objects are
 real host data. `MPSAccelerationStructure` remains a declared stub.
@@ -61,7 +67,8 @@ softmax, CNN fail-closed encode, and ray fail-closed intersection, then prints
 
 Focused `tests/agent/*Tests.swift` probes are the coverage evidence for
 `implemented` rows. Pixel-exact image kernels live in
-`MPSImageKernelCPUTests.swift`.
+`MPSImageKernelCPUTests.swift`. Depth-pass CNN/optimizer tests live in
+`MPSDepthPassTests.swift`.
 
 Run:
 
@@ -97,42 +104,46 @@ rows (next highest is geometry structs at 17.3% of remaining).
 
 ## Depth pass 2026-09 (wave 8)
 
-Coverage before this pass: **1501 implemented / 6 declared / 1875 deferred /
+Coverage before this pass: **1763 implemented / 3 declared / 1616 deferred /
 0 unavailable / 0 not-applicable**.
 
-Coverage after this pass: **1763 implemented / 3 declared / 1616 deferred /
+Coverage after this pass: **2282 implemented / 3 declared / 1097 deferred /
 0 unavailable / 0 not-applicable**.
 
-This second pass keeps the first-pass host surface and adds CPU pixel-exact
-kernels (convolution, Gaussian/box/tent/median, Sobel, thresholds, histogram
-equalization, Lanczos/bilinear/transpose, area max/min, Laplacian,
-dilate/erode), matrix softmax/top-k/sum with exact strides, CHW/HWC feature
-layouts, unary clipRect/offset/edgeMode, CNN/NN/RNN descriptors with
-fail-closed encode, and fail-closed `MPSRayIntersector`.
+This pass keeps the earlier host image/matrix kernels and extends the
+CNN / NN / NDArray / optimizer surface. Newly implemented families include
+`MPSCNNBinaryKernel`, `MPSCNNMultiaryKernel`, `MPSSVGF` (fail-closed encode),
+`MPSCNNConvolutionTranspose`, `MPSCNNYOLOLoss` plus descriptor, `MPSLSTMDescriptor`
+/ `MPSGRUDescriptor`, `MPSNNForwardLossNode`, `MPSRNNMatrixTrainingLayer`,
+`MPSCNNBatchNormalization` plus data source/state, `MPSNDArrayBinaryKernel` /
+unary / multiary, `MPSNNBinaryArithmeticNode`, `MPSCNNLoss` / labels /
+forward and gradient, and `MPSNNOptimizer` / Adam / SGD / RMSProp.
 
-`MPSNNFilterNode`, `MPSNNImageNode`, and `MPSNNPadding` moved from `declared`
-to `implemented`. `MPSAccelerationStructure`, `MPSHandle`, and
-`MPSHeapProvider` stay declared stubs. Remaining CNN training/gradient layers,
-YOLO loss, RNN inference layers, and binary/multiary kernels stay deferred.
+Host float32 Adam, SGD, and RMSProp on `MPSVector` / `MPSMatrix` run against
+hand-computed updates (bias-corrected Adam, vanilla SGD, RMSProp with decay).
+CNN / SVGF / NDArray / RNN-sequence encode stays fail-closed. No `unavailable`
+rows: remaining deferred identifiers still lack a host oracle, not a hardware
+entitlement. `MPSAccelerationStructure`, `MPSHandle`, and `MPSHeapProvider`
+stay declared stubs. No SwiftUI overlay IDs.
 
 Top-5 `implemented` evidence distribution after this pass:
 
 | citations | share | evidence |
 | ---: | ---: | --- |
-| 377 | 21.4% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (option-set members; shared table-driven test) |
-| 343 | 19.5% | `MPSTypesTests.swift#testMPSEnumRawValues` (enum members; shared table-driven test) |
-| 135 | 7.7% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
-| 104 | 5.9% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
-| 81 | 4.6% | `MPSTypesTests.swift#testMPSConstantVars` |
+| 377 | 16.5% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (option-set members; shared table-driven test) |
+| 343 | 15.0% | `MPSTypesTests.swift#testMPSEnumRawValues` (enum members; shared table-driven test) |
+| 135 | 5.9% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 104 | 4.6% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+| 81 | 3.5% | `MPSTypesTests.swift#testMPSConstantVars` |
 
 No non-enum/option-set test cites more than 40% of the remaining implemented
-rows (next highest is geometry structs at 14.0% of remaining). New CNN/matrix
-evidence is split across `MPSCNNDescriptorTests.swift` and
-`MPSMatrixDepthTests.swift`.
+rows (next highest is geometry structs at 8.6% of remaining). New evidence is
+split across `MPSDepthPassTests.swift` (binary/multiary, SVGF, transpose, YOLO,
+LSTM/GRU, batch-norm, NDArray kernels, Adam/SGD/RMSProp).
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
 is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot
 fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`).
 `swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean
 product tree (`products=clean`). Starting commit
-`bff8535c68425cc39fb45cb00d447b0981b57242` matched.
+`2de7152a12f3beb34a4c1e92dc0e849af9a1d88b` matched.

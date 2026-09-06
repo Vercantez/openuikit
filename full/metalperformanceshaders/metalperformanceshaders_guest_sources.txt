@@ -1,3 +1,4 @@
+full/metalperformanceshaders/MPSDepthKernels.swift
 full/metalperformanceshaders/MPSGeometry.swift
 full/metalperformanceshaders/MPSImage.swift
 full/metalperformanceshaders/MPSImageFilters.swift
@@ -5,6 +6,8 @@ full/metalperformanceshaders/MPSKernel.swift
 full/metalperformanceshaders/MPSMatrix.swift
 full/metalperformanceshaders/MPSMatrixKernels.swift
 full/metalperformanceshaders/MPSNDArray.swift
+full/metalperformanceshaders/MPSNNLayers.swift
+full/metalperformanceshaders/MPSNNOptimizers.swift
 full/metalperformanceshaders/MPSNeuralNetwork.swift
 full/metalperformanceshaders/MPSPacked.swift
 full/metalperformanceshaders/MPSRayIntersector.swift
