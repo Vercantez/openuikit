@@ -53,6 +53,7 @@ func testNodePausedAndHiddenPropagation() {
     sk_advance(scene, seconds: 1)
     precondition(abs(child.position.x) < 0.001)
     parent.isPaused = false
+    child.removeAllActions()
     parent.isHidden = true
     child.run(SKAction.moveBy(x: 10, y: 0, duration: 0))
     scene.update(2)
@@ -289,7 +290,7 @@ func testTextureAtlasFromPlistAndFolder() {
         73, 69, 78, 68, 174, 66, 96, 130,
     ]
     let pngPath = (folder as NSString).appendingPathComponent("hero.png")
-    FileManager.default.createFile(atPath: pngPath, contents: Data(png))
+    precondition(FileManager.default.createFile(atPath: pngPath, contents: Data(png)))
     let folderAtlas = SKTextureAtlas(named: folder)
     precondition(folderAtlas.textureNames.contains("hero"))
     precondition(abs(folderAtlas.textureNamed("hero").size().width - 2) < 0.001)
@@ -299,7 +300,8 @@ func testTextureAtlasFromPlistAndFolder() {
             "coin": ["width": 8, "height": 4],
         ],
     ]
-    (plist as NSDictionary).write(toFile: plistPath, atomically: true)
+    let plistData = try! PropertyListSerialization.data(fromPropertyList: plist, format: .xml, options: 0)
+    precondition(FileManager.default.createFile(atPath: plistPath, contents: plistData))
     let plistAtlas = SKTextureAtlas(named: plistPath)
     precondition(plistAtlas.textureNames.contains("coin"))
     precondition(abs(plistAtlas.textureNamed("coin").size().width - 8) < 0.001)

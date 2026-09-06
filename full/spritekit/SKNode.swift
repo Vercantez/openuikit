@@ -244,7 +244,8 @@ open class SKNode: NSObject, NSSecureCoding, NSCopying {
 
     public func nodes(at p: CGPoint) -> [SKNode] {
         var hits: [SKNode] = []
-        if contains(p) { hits.append(self) }
+        if !isHidden, contains(p) { hits.append(self) }
+        if isHidden { return hits }
         for child in _children where !child.isHidden {
             let local = child.convert(p, from: self)
             hits.append(contentsOf: child.nodes(at: local))

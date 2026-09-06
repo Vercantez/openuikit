@@ -176,7 +176,10 @@ open class SKTextureAtlas: NSObject, NSSecureCoding {
             self.init(dictionary: map)
             return
         }
-        if name.hasSuffix(".plist"), let plist = NSDictionary(contentsOfFile: name) as? [String: Any] {
+        if name.hasSuffix(".plist"),
+           let data = FileManager.default.contents(atPath: name),
+           let plist = (try? PropertyListSerialization.propertyList(from: data, options: [], format: nil)) as? [String: Any]
+        {
             self.init(dictionary: sk_flattenAtlasPlist(plist))
             return
         }
