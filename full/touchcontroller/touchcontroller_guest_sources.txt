@@ -1,0 +1,8 @@
+full/touchcontroller/TCContents.swift
+full/touchcontroller/TCControlLabel.swift
+full/touchcontroller/TCControls.swift
+full/touchcontroller/TCDescriptors.swift
+full/touchcontroller/TCEnums.swift
+full/touchcontroller/TCLayout.swift
+full/touchcontroller/TCTouchController.swift
+full/touchcontroller/TouchController.swift
