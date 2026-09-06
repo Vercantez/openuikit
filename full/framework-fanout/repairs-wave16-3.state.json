@@ -1,0 +1,46 @@
+{
+  "attemptTimestamps": [],
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave16-repair-3",
+    "maxActive": 24,
+    "maxRuns": 2
+  },
+  "model": {
+    "effort": "high",
+    "fast": false,
+    "id": "grok-4.6"
+  },
+  "repairs": {
+    "coreml": {
+      "agentId": "bc-4b5449c0-3d51-5c55-aeea-9ce21a33292c",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T09:47:21Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/290",
+      "expectedPriorHead": "f38a68e0c07c81727f23b8ad7220a305dbf8a3ab",
+      "idempotencyKey": "d9956e38-47bd-5969-a1cd-4673c49e304f",
+      "launchStatus": "SENT",
+      "module": "CoreML",
+      "promptBytes": 1368,
+      "promptSha256": "dfdcbd4cf2ad7c8d8a4f5a4284cad1ce1c0072f42f24cbb71ca76e8f4285cfa2",
+      "runId": "run-50b2b0ca-9a7e-464c-a0ad-bbf5aab4b04d",
+      "runStatus": "running",
+      "slug": "coreml"
+    },
+    "storekit": {
+      "agentId": "bc-4731d98d-2982-5580-b3d4-50419c41c0a8",
+      "agentStatus": "ACTIVE",
+      "attemptedAt": "2026-09-06T09:47:14Z",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/279",
+      "expectedPriorHead": "5b834b482ab51c51bbe1623786f5cf7d23656a09",
+      "idempotencyKey": "bc55d4d5-ec03-5b1d-9d60-e63be1fc9f56",
+      "launchStatus": "SENT",
+      "module": "StoreKit",
+      "promptBytes": 1399,
+      "promptSha256": "927eaec98918865a06064dfd46f12f19f908250b3e45ad61a0c07517dda23901",
+      "runId": "run-41cc5381-b838-4343-8aca-5f62667c8879",
+      "runStatus": "running",
+      "slug": "storekit"
+    }
+  },
+  "schema": "openuikit.cursor-framework-repair-state.v1"
+}
