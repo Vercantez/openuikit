@@ -1,0 +1,4 @@
+full/dockkit/DockAccessory.swift
+full/dockkit/DockAccessoryManager.swift
+full/dockkit/DockKit.swift
+full/dockkit/DockKitLookalikes.swift
