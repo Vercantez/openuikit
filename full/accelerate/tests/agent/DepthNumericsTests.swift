@@ -210,27 +210,29 @@ func testCBLASDotGemvKnown() {
     var n: Int32 = 2
     var sx: [Float] = [1, 2]
     var sy: [Float] = [3, 4]
-    var inc: Int32 = 1
-    precondition(abs(dsdot_(&n, &sx, &inc, &sy, &inc) - 11) < 0.0001)
+    var incx: Int32 = 1
+    var incy: Int32 = 1
+    precondition(abs(dsdot_(&n, &sx, &incx, &sy, &incy) - 11) < 0.0001)
     var sb: Float = 5
-    precondition(abs(sdsdot_(&n, &sb, &sx, &inc, &sy, &inc) - 16) < 0.0001)
+    precondition(abs(sdsdot_(&n, &sb, &sx, &incx, &sy, &incy) - 16) < 0.0001)
 }
 
 func testBLASRotSymvTrsvSyrk() {
     var n: Int32 = 2
     var x: [Float] = [1, 0]
     var y: [Float] = [0, 1]
-    var inc: Int32 = 1
+    var incx: Int32 = 1
+    var incy: Int32 = 1
     var c: Float = 0
     var s: Float = 1
-    _ = srot_(&n, &x, &inc, &y, &inc, &c, &s)
+    _ = srot_(&n, &x, &incx, &y, &incy, &c, &s)
     precondition(abs(x[0] - 0) < 0.0001)
     precondition(abs(y[0] - -1) < 0.0001)
     var dx: [Double] = [1, 0]
     var dy: [Double] = [0, 1]
     var dc: Double = 1
     var ds: Double = 0
-    _ = drot_(&n, &dx, &inc, &dy, &inc, &dc, &ds)
+    _ = drot_(&n, &dx, &incx, &dy, &incy, &dc, &ds)
     precondition(abs(dx[0] - 1) < 1e-12)
     var uplo = CChar(76)
     var trans = CChar(78)
@@ -238,19 +240,19 @@ func testBLASRotSymvTrsvSyrk() {
     var lda: Int32 = 2
     var a: [Float] = [2, 1, 0, 2]
     var rhs: [Float] = [2, 3]
-    _ = strsv_(&uplo, &trans, &diag, &n, &a, &lda, &rhs, &inc)
+    _ = strsv_(&uplo, &trans, &diag, &n, &a, &lda, &rhs, &incx)
     precondition(abs(rhs[0] - 1) < 0.0001)
     precondition(abs(rhs[1] - 1) < 0.0001)
     var da: [Double] = [2, 1, 0, 2]
     var drhs: [Double] = [2, 3]
-    _ = dtrsv_(&uplo, &trans, &diag, &n, &da, &lda, &drhs, &inc)
+    _ = dtrsv_(&uplo, &trans, &diag, &n, &da, &lda, &drhs, &incx)
     precondition(abs(drhs[0] - 1) < 1e-12)
     var alpha: Float = 1
     var beta: Float = 0
     var symA: [Float] = [2, 1, 1, 2]
     var sx: [Float] = [1, 1]
     var sy = [Float](repeating: 0, count: 2)
-    _ = ssymv_(&uplo, &n, &alpha, &symA, &lda, &sx, &inc, &beta, &sy, &inc)
+    _ = ssymv_(&uplo, &n, &alpha, &symA, &lda, &sx, &incx, &beta, &sy, &incy)
     precondition(abs(sy[0] - 3) < 0.0001)
     precondition(abs(sy[1] - 3) < 0.0001)
     var k: Int32 = 2
@@ -264,7 +266,7 @@ func testBLASRotSymvTrsvSyrk() {
     var dsymA: [Double] = [2, 1, 1, 2]
     var dsx: [Double] = [1, 1]
     var dsy = [Double](repeating: 0, count: 2)
-    _ = dsymv_(&uplo, &n, &dalpha, &dsymA, &lda, &dsx, &inc, &dbeta, &dsy, &inc)
+    _ = dsymv_(&uplo, &n, &dalpha, &dsymA, &lda, &dsx, &incx, &dbeta, &dsy, &incy)
     precondition(abs(dsy[0] - 3) < 1e-12)
     var da2: [Double] = [1, 0, 0, 1]
     var dcOut = [Double](repeating: 0, count: 4)
