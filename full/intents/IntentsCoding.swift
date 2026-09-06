@@ -88,6 +88,10 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         value.reactionDescription = inDecodeString(coder, "reactionDescription")
         return
     }
+    if let value = object as? INNote {
+        value.identifier = inDecodeString(coder, "identifier")
+        return
+    }
     if let value = object as? INPaymentMethod {
         value.name = inDecodeString(coder, "name")
         value.identificationHint = inDecodeString(coder, "identificationHint")
@@ -368,7 +372,7 @@ extension INMessageReaction: NSSecureCoding {
 extension INNote: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("identifier", identifier)])
     }
 }
 
