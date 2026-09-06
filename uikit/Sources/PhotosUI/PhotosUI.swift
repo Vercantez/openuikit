@@ -160,7 +160,7 @@ public struct PHPickerResult: Hashable, @unchecked Sendable {
     }
 }
 
-@MainActor
+@preconcurrency @MainActor
 public protocol PHPickerViewControllerDelegate: AnyObject {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult])
 }

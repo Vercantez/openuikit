@@ -314,8 +314,14 @@ public typealias OperationQueue = OpenUIKit.OperationQueue
 public typealias NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>
     = OpenUIKit.NSDiffableDataSourceSnapshot<SectionIdentifierType, ItemIdentifierType>
     where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable
+public typealias NSDiffableDataSourceSectionSnapshot<ItemIdentifierType>
+    = OpenUIKit.NSDiffableDataSourceSectionSnapshot<ItemIdentifierType>
+    where ItemIdentifierType: Hashable
 public typealias UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
     = OpenUIKit.UITableViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
+    where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable
+public typealias UICollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
+    = OpenUIKit.UICollectionViewDiffableDataSource<SectionIdentifierType, ItemIdentifierType>
     where SectionIdentifierType: Hashable, ItemIdentifierType: Hashable
 
 // TextKit-1 types live in OpenUIKit and shadow Foundation's names. UIKit

@@ -70,6 +70,10 @@ public enum TableEditorApp {
             // No public UIKit API reveals leading/trailing swipe actions
             // without a pan. Skipped; see the file header.
             break
+        case "open-list":
+            root.openListScreen()
+        case "select-list-0":
+            root.selectListFirst()
         case "done":
             root.setTableEditing(false)
         default:
