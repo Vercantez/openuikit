@@ -1,0 +1,8 @@
+full/accessorysetupkit/ASAccessory.swift
+full/accessorysetupkit/ASAccessorySession.swift
+full/accessorysetupkit/ASAccessorySettings.swift
+full/accessorysetupkit/ASDiscoveryDescriptor.swift
+full/accessorysetupkit/ASError.swift
+full/accessorysetupkit/ASPickerDisplayItem.swift
+full/accessorysetupkit/ASPickerDisplaySettings.swift
+full/accessorysetupkit/AccessorySetupKit.swift
