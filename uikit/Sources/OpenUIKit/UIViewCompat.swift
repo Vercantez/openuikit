@@ -57,10 +57,6 @@ extension UIResponder {
         get { _accessibility.label }
         set { _accessibility.label = newValue }
     }
-    public var accessibilityValue: String? {
-        get { _accessibility.value }
-        set { _accessibility.value = newValue }
-    }
     public var accessibilityHint: String? {
         get { _accessibility.hint }
         set { _accessibility.hint = newValue }

@@ -83,23 +83,16 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// view load at registration time.
     var _traitRegistrations: [UITraitChangeRegistration] = []
 
-    /// UIKit's plain initializer is the nil/nil nib initializer. Keep it as a
-    /// designated initializer in the portable core so existing programmatic
-    /// subclasses can continue to call `super.init()` without coder churn.
-    public override init() {
-        _nibName = nil
-        _nibBundle = .main
-        _hasExplicitNibRequest = false
-        super.init()
-    }
-
-    /// Designated initializer for UIKit source compatibility. OpenUIKit has
-    /// no Interface Builder archive loader: nil/nil is the ordinary
-    /// programmatic path, while an explicit nib request remains lazy and is
-    /// rejected only if this class's default `loadView()` is ultimately used.
-    /// A subclass that overrides `loadView()` can therefore use this exact
-    /// initializer spelling without claiming that OpenUIKit loaded a nib.
-    public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    /// Designated initializer for UIKit source compatibility. Defaulted
+    /// arguments keep `UIViewController()` and `super.init()` working
+    /// (MEASURED Focus AutocompleteSettingViewController.swift:19 —
+    /// a separate parameterless `init()` made that file's `convenience
+    /// init()` an override that the unmodified source does not mark).
+    /// OpenUIKit has no Interface Builder archive loader: nil/nil is the
+    /// ordinary programmatic path, while an explicit nib request remains
+    /// lazy and is rejected only if this class's default `loadView()` is
+    /// ultimately used.
+    public init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil) {
         _nibName = nibNameOrNil
         _nibBundle = nibBundleOrNil ?? .main
         _hasExplicitNibRequest = nibNameOrNil != nil || nibBundleOrNil != nil

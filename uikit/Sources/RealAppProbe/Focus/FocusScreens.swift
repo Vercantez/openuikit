@@ -5,8 +5,21 @@
 import OpenUIKit
 import Foundation
 import Onboarding
+#if canImport(Blockzilla)
+import Blockzilla
+#endif
 
 extension RealAppScreen {
+    /// Copy SearchPlugins / disconnect-*.json / WebView JS next to the
+    /// executable before any variant touches Bundle.main. MEASURED try3:
+    /// a copy after the first Bundle.main resource access was invisible
+    /// to path(forResource:ofType:).
+    public static func installFocusBundleResourcesIfNeeded() {
+        #if canImport(Blockzilla)
+        FocusBrowserLaunch.installBundleResources()
+        #endif
+    }
+
     static let focusScreenTable: [Screen] = [
         // Firefox Focus Settings. Captured on the iPhone 16 @3x
         // (scripts/realapp_probe_sim.sh); the Pocket Casts rows stay.
@@ -58,5 +71,43 @@ extension RealAppScreen {
         home.onboardingEventsHandler = HarnessOnboardingEventsHandler()
         home.view.backgroundColor = .systemBackground
         return home
+    }
+
+    /// Last so a guest 2x miss / Linux corelibs omit cannot drop the 14.
+    /// Route (b) Darwin SwiftPM compiles the Blockzilla module; Linux
+    /// corelibs cannot (#selector). MEASURED focus-e2e.md: 147 #selector
+    /// diagnostics on native ELF.
+    static let focusBrowserTable: [Screen] = {
+        #if canImport(Blockzilla)
+        // Guest / linux_realapp_verify stay 14 (SCALE=2 harvested masks).
+        // The 3x iOS-cut path and an explicit ONLY= emit the 15th so a
+        // 2x ink miss on BrowserViewController cannot drop the board.
+        // MEASURED linux_realapp_verify: expects 14 PNGs; default
+        // realAppScale is 2.
+        let env = ProcessInfo.processInfo.environment
+        let only = env["OPENUIKIT_REALAPP_ONLY"]
+        let scale = env["OPENUIKIT_REALAPP_SCALE"]
+        if only == "realapp_focus_browser_light" || scale == "3" {
+            return [
+                Screen(name: "realapp_focus_browser_light", variant: .focusBrowser,
+                       theme: .light, style: .light, contentSizeCategory: .large,
+                       presentsSheet: false),
+            ]
+        }
+        return []
+        #else
+        return []
+        #endif
+    }()
+
+    public static func makeFocusBrowserScreen() -> UIViewController {
+        #if canImport(Blockzilla)
+        if OpenUIKitRuntime.imageSearchPaths.isEmpty {
+            configureAssets(directory: defaultAssetsDirectory)
+        }
+        return FocusBrowserLaunch.makeRoot()
+        #else
+        return makeFocusHomeScreen()
+        #endif
     }
 }

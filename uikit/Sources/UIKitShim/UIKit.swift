@@ -306,6 +306,9 @@ public typealias NSNotification = OpenUIKit.NSNotification
 #endif
 public typealias NotificationCenter = OpenUIKit.NotificationCenter
 public typealias OperationQueue = OpenUIKit.OperationQueue
+public typealias Timer = OpenUIKit.Timer
+public typealias NSAttributedString = OpenUIKit.NSAttributedString
+public typealias NSMutableAttributedString = OpenUIKit.NSMutableAttributedString
 
 // Foundation/AppKit also ships an NSDiffableDataSourceSnapshot declaration.
 // UIKit applications must resolve the snapshot paired with this shim's
