@@ -86,8 +86,10 @@ No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling.
 
 Second depth pass for campaign `ios26.1-fwdepth-r15`, lane `medium-full`, 6856 exact IDs. The first-pass Linux sources and tests stay in tree; this pass adds real quadrature, sparse CSC multiply, extra BLAS/LAPACK, biquad DF2T, interleaved double DFT, and pixel-exact vImage affine/rotate/tent/permute.
 
+A follow-up ledger repair split the combined depth-pass runtime probes into focused `func test*()` functions per family. Every remaining `implemented` row cites `test:full/accelerate/tests/agent/<File>Tests.swift#testName` for a top-level synchronous no-argument test that calls that identifier. QAG interval constants and `Quadrature.Error` members share table-driven value tests; other families each have their own function.
+
 - Implemented before: **2534**
-- Implemented after: **2605**
+- Implemented after: **2605** (unchanged by the ledger split)
 - Declared: 2837 (was 2901)
 - Deferred: 1414 (was 1421)
 - Unavailable: 0
@@ -95,13 +97,13 @@ Second depth pass for campaign `ios26.1-fwdepth-r15`, lane `medium-full`, 6856 e
 
 Top-5 evidence distribution (share of remaining implemented rows = 2605 − 2534 = 71):
 
-1. `testQuadratureOverlaySurface` — 19 (26.8%) — QAG points, adaptive integrators, Error `==`/`hash`/`localizedDescription`
-2. `testSparseMultiplyDoubleAndMatrix` — 18 (25.4%) — CSC convert/multiply/add for Double plus Float/Double dense matrix
-3. `testSparseMultiplyKnownMatrix` — 8 (11.3%) — Float CSC vector multiply/add/cleanup and `DenseVector_Float` init
-4. `testBLASRotSymvTrsvSyrk` — 8 (11.3%) — `srot_`/`drot_`/`strsv_`/`dtrsv_`/`ssymv_`/`dsymv_`/`ssyrk_`/`dsyrk_`
-5. `testBLASRotgSyrTrmv` — 6 (8.5%) — `srotg_`/`drotg_`/`ssyr_`/`dsyr_`/`strmv_`/`dtrmv_`
+1. `testSparseMultiplyFloatVector` / `testSparseMultiplyDoubleVector` — 8 each (11.3%) — CSC convert/multiply/add plus vector init/cleanup
+2. `testQAGPointsPerIntervalValues` — 7 (9.9%) — table-driven QAG interval constants
+3. `testQuadratureErrorHashable` — 7 (9.9%) — table-driven `Quadrature.Error` `==`/`!=`/`hash`/`localizedDescription`
+4. `testSparseMultiplyFloatMatrix` / `testSparseMultiplyDoubleMatrix` — 5 each (7.0%) — CSC matrix multiply/add plus dense-matrix init
+5. `testQuadratureIntegratePolynomial` — 4 (5.6%) — overlay init, `.nonAdaptive`, and both `integrate` overloads
 
-No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling. BNNS create stays fail-closed (`nil`). Complex sparse multiply, sparse subfactor/solve, and placeholder `QUADRATURE_*` C enumerator values stay declared or deferred.
+No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (largest is 8/71 = 11.3%). BNNS create stays fail-closed (`nil`). Complex sparse multiply, sparse subfactor/solve, and placeholder `QUADRATURE_*` C enumerator values stay declared or deferred.
 
 Sealed gate (`bash full/accelerate/tests/acceptance/test_host.sh`) ended:
 
