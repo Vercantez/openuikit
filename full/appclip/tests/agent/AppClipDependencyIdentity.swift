@@ -37,10 +37,9 @@ func appClipDependencyIdentityProbe() {
     precondition(!String(reflecting: type(of: bridged)).hasPrefix("AppClip."))
     precondition(type(of: bridged) == NSError.self)
 
-    let activity = NSUserActivity(activityType: "openuikit.appclip.identity")
-    precondition(activity.appClipActivationPayload == nil)
-    precondition(!String(reflecting: type(of: activity)).hasPrefix("AppClip."))
-    precondition(type(of: activity) == NSUserActivity.self)
+    let payload = APActivationPayload()
+    precondition(payload.url == nil)
+    precondition(type(of: payload) == APActivationPayload.self)
 
     print("APPCLIP_DEPENDENCY_IDENTITY_OK")
 }

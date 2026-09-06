@@ -5,7 +5,7 @@ Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift surface
 from the sealed symbol graph. It is not wired into the shared guest package;
 that integration is a separate central review step.
 
-Coverage: **29 implemented / 0 declared / 0 deferred / 1 unavailable / 30 total**
+Coverage: **28 implemented / 0 declared / 0 deferred / 2 unavailable / 30 total**
 (above the leaf-full floor of 24 nondeferred).
 
 Isolated host compilation produces `libAppClip.dylib` with Foundation only.
@@ -23,7 +23,6 @@ Isolated host compilation produces `libAppClip.dylib` with Foundation only.
   hashing, `NSError` bridging, and `~=` matching are exercised.
 - `APActivationPayload` is an open `NSObject` subclass. `url` is always
   `nil`. `init(coder:)` fails closed. `copy()` yields another empty payload.
-- `NSUserActivity.appClipActivationPayload` is always `nil`.
 
 ## Fail-closed boundaries
 
@@ -33,8 +32,10 @@ daemon, or App Clip entitlement.
 - `confirmAcquired(in:)` is **unavailable**. `CLRegion` is owned by
   CoreLocation, which is not a declared dependency. A module-local lookalike
   is forbidden.
+- `NSUserActivity.appClipActivationPayload` is **unavailable**. Toolchain
+  Foundation on Linux has no `NSUserActivity`; a module-local lookalike is
+  forbidden.
 - `APActivationPayload.url` never fabricates an invocation URL.
-- `NSUserActivity.appClipActivationPayload` never fabricates a payload.
 - `init(coder:)` never decodes an Apple archive; the keyed layout is
   unobserved.
 - `localizedDescription` is Foundation's NSError wording, not an Apple copy
@@ -47,7 +48,7 @@ factory.
 ## Depth pass 2026-09
 
 Fresh seed: no prior implemented/declared split. After this pass:
-**29 implemented / 0 declared / 0 deferred / 1 unavailable**.
+**28 implemented / 0 declared / 0 deferred / 2 unavailable**.
 
 Top-5 implemented evidence distribution:
 

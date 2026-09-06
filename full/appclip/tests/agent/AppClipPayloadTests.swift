@@ -18,11 +18,6 @@ func testPayloadURLIsNil() {
     precondition(copied.url == nil)
 }
 
-func testUserActivityPayloadIsNil() {
-    let activity = NSUserActivity(activityType: "openuikit.appclip.host")
-    precondition(activity.appClipActivationPayload == nil)
-}
-
 func testPayloadInitCoderFailClosed() {
     do {
         let data = try NSKeyedArchiver.archivedData(

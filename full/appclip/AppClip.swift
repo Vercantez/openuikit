@@ -93,11 +93,3 @@ open class APActivationPayload: NSObject, NSSecureCoding, NSCopying {
         return APActivationPayload()
     }
 }
-
-extension NSUserActivity {
-    /// The App Clip payload attached to this user activity.
-    ///
-    /// Always `nil` on Linux: `NSUserActivity` never launches an App Clip
-    /// here, and fabricating a payload would claim Apple invocation success.
-    public var appClipActivationPayload: APActivationPayload? { nil }
-}
