@@ -86,6 +86,103 @@ overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
 
+### Local continuation: agent/fw-webkit-c
+
+This continuation adds **111 implemented identifiers**, preserving all earlier
+implementation and tests. Only `full/webkit/` changes.
+
+| Status | Before | After |
+| --- | ---: | ---: |
+| implemented | 1133 | 1244 |
+| declared | 261 | 150 |
+| deferred | 26 | 26 |
+| unavailable | 0 | 0 |
+| not-applicable | 813 | 813 |
+| Total | 2233 | 2233 |
+
+The new behavior is `WebPage` value semantics: navigation preferences and
+configuration copy isolation, dialog results with exact string/file-selection
+payloads, sensor-permission discriminants, CSS media values, navigation event
+and fullscreen cases, and navigation errors with preserved underlying errors.
+`defaultNavigationPreferences` now uses the SDK's value type rather than the
+previous shared `WKWebpagePreferences` object. `mediaType` now uses
+`CSSMediaType?`; `title` has the SDK's nonoptional `String` shape. The user-agent
+setter implements the measured nil reset. Sensor permissions are values only:
+no camera, microphone, motion, entitlement, renderer, or daemon is enabled.
+
+Declaration facts were reconciled against exact `public-surface.tsv` IDs and
+matching declaration USRs in `api-digester.json`, including nested nominal types,
+case payloads, property types and Hashable/Sendable conformances. Synthesized
+stdlib witnesses are exercised via equality, inequality and hashing. Foundation
+owns URL and NSError; this pass introduces no dependency substitutes. Native
+compilation uses the pinned 26.1 SDK, not the newer surface in online docs.
+
+Measurements: Xcode 26.1 (17B55), iPhoneSimulator SDK 26.1 (23B77), private
+`OpenUIKit-fw-webkit-c` iPhone 17 Pro simulator running iOS 26.1 (23B86).
+`WebKitPageValueTests.swift` contains **15 top-level synchronous tests**, run
+unchanged against both Apple WebKit and the Linux module. The tests check
+payload preservation, selection order/duplicates, copy mutation, defaults,
+setters/resetters, dictionary lookup, and NSError bridging; they perform no
+network requests, sensor operations, main-queue waits or run-loop pumping.
+
+| Measurement | Before port | iOS 26.1 and after port |
+| --- | --- | --- |
+| Original JavaScript preference after changing a configuration copy | false (shared reference) | true (value copy) |
+| Initial custom user agent | nil | Optional("") |
+| User agent after setting a string then nil | nil | Optional("") |
+| Navigation preference defaults | shared WKWebpagePreferences object | recommended / true / keepAsRequested / false |
+| NavigationError NSError codes | type absent | failedProvisionalNavigation=0; pageClosed=1; webContentProcessTerminated=2; invalidURL=3 |
+| NavigationError NSError domain | type absent | WebKit.WebPage.NavigationError |
+| Prompt/file result payloads | types absent | exact strings; file order and duplicates preserved |
+| CSS media raw values | all / print / screen | unchanged; custom values round-trip case-sensitively |
+
+The before values were measured by compiling the original `WebKitPage.swift`
+from baseline `3e9bada0` with the original source set in an isolated Linux temporary directory.
+All 15 new shared tests pass on both authorities. The Linux sealed gate was
+also green before the changes and remains green after them.
+
+Top-5 implemented evidence distribution after this continuation (1244 rows):
+
+| Test | Rows | Share |
+| --- | ---: | ---: |
+| testOptionSetRawValues | 155 | 12.46% |
+| testContextPermissionGrantDenyAndURLAccess | 98 | 7.88% |
+| testControllerTabAndWindowRegistry | 89 | 7.15% |
+| testActionCommandDataRecordAndMessagePort | 76 | 6.11% |
+| testHTMLStringLoadCommitsAndParsesTitle | 67 | 5.39% |
+
+The same five counts were 155/98/89/76/67 before this continuation, out of 1133
+implemented rows. New evidence spans 15 tests; the largest new test covers 14
+rows (12.61% of the 111 additions). No existing evidence was bulk relabeled;
+no deferred or overlay rows were reclassified.
+
+Validation:
+
+- `python3 -B full/framework-fanout/validate_seed.py --framework full/webkit --phase deliverable`:
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK module=WebKit lane=medium-full symbols=2233`.
+- Operator container, `/work-fw-webkit-c`, Swift 6.2.4:
+  `tests/acceptance/test_host.sh` ends
+  `FRAMEWORK_FANOUT_HOST_OK module=WebKit dylib=libWebKit.dylib`.
+- First-pass Linux `tests/test_webkit_host.sh` remains green:
+  `WEBKIT_HOST_GATE_OK`, 13 product sources, 3487 exported WK symbols.
+- First-pass `tests/test_webkit_native_26_1.sh` passes on the private simulator:
+  `WEBKIT_NATIVE_26_1_OK sdk-build=23B77`.
+- New `tests/test_webkit_page_values_native_26_1.sh` runs the exact shared tests:
+  `WEBKIT_PAGE_VALUE_NATIVE_OK tests=15`. Set `WEBKIT_ORACLE_DEVICE` to a private
+  booted simulator and `SIM_DEVICE_SUFFIX` to its name suffix. It does not create,
+  boot, or access any other device.
+
+WebPage navigation streams/history, async dialogs and sensor authorization
+remain outside the implemented gain. Exploratory native local-document probes
+showed no history item after an HTML-string load, but one after a simulated
+request. History snapshots also showed equality differences that require a
+separate isolated identity probe. These observations are recorded in
+`oracle-questions.tsv`; the placeholder history model is not promoted.
+The original Foundation/UI dependency deferrals and fail-closed engine paths
+remain as documented above.
+
+### Prior wave-8 implementation and repair
+
 Second SDK-depth pass on the first-pass Linux module already in this tree.
 The first pass kept its navigation state machine, content-rule validator,
 cookie store, and fail-closed evaluator; this pass extends them and splits

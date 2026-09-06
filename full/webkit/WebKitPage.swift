@@ -18,6 +18,11 @@ public final class WebPage {
     }
 
     public struct DeviceSensorAuthorization: Hashable, Sendable {
+        public enum Permission: Hashable, Sendable {
+            case deviceOrientationAndMotion
+            case mediaCapture(WKMediaCaptureType)
+        }
+
         public enum PermissionPolicy: Int, Hashable, Sendable {
             case prompt = 0
             case grant = 1
@@ -29,11 +34,12 @@ public final class WebPage {
         }
     }
 
-    public enum NavigationEvent: Sendable {
-        case started
-        case redirected
+    // Exact case names and Hashable conformance: Xcode 26.1 graph and digester.
+    public enum NavigationEvent: Hashable, Sendable {
+        case startedProvisionalNavigation
+        case receivedServerRedirect
+        case committed
         case finished
-        case failed
     }
 
     public struct BackForwardList {
@@ -63,7 +69,7 @@ public final class WebPage {
         public var ignoresViewportScaleLimits = false
         public var supportsAdaptiveImageGlyph = false
         public var applicationNameForUserAgent: String?
-        public var defaultNavigationPreferences = WKWebpagePreferences()
+        public var defaultNavigationPreferences = NavigationPreferences()
         public var allowsAirPlayForMediaPlayback = true
         public var suppressesIncrementalRendering = false
         public var showsSystemScreenTimeBlockingView = true
@@ -74,10 +80,16 @@ public final class WebPage {
 
     public var configuration: Configuration
     public var isInspectable = false
-    public var customUserAgent: String?
-    public var mediaType: String?
+    private var storedCustomUserAgent = ""
+    // Private iPhone 17 Pro / iOS 26.1 value probe: initial and nil-reset
+    // both read Optional(""); explicit nonempty strings round-trip unchanged.
+    public var customUserAgent: String? {
+        get { storedCustomUserAgent }
+        set { storedCustomUserAgent = newValue ?? "" }
+    }
+    public var mediaType: CSSMediaType?
     public private(set) var isLoading = false
-    public private(set) var title: String?
+    public private(set) var title: String = ""
     public private(set) var url: URL?
     public private(set) var estimatedProgress: Double = 0
     public private(set) var hasOnlySecureContent = false
