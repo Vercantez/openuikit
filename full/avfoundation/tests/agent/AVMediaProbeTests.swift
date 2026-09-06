@@ -86,7 +86,7 @@ private func avMakeFtypMoov(
     mdhd.append(avU32(0))
     mdhd.append(avU32(timescale))
     mdhd.append(avU32(duration))
-    mdhd.append(avU16(0x55C4))
+    mdhd.append(avU16(0x15C7))
     mdhd.append(avU16(0))
 
     var hdlr = Data()
@@ -124,7 +124,8 @@ private func avMakeFtypMoov(
         avU32(0) + avU32(1) + avBox(codec, sample)
     )
     let stts = avBox("stts", avU32(0) + avU32(1) + avU32(90) + avU32(sampleDelta))
-    let stbl = avBox("stbl", stsd + stts)
+    let stsz = avBox("stsz", avU32(0) + avU32(1000) + avU32(90))
+    let stbl = avBox("stbl", stsd + stts + stsz)
     let minf = avBox("minf", stbl)
     let mdia = avBox("mdia", avBox("mdhd", mdhd) + avBox("hdlr", hdlr) + minf)
     let trak = avBox("trak", avBox("tkhd", tkhd) + mdia)
@@ -173,6 +174,42 @@ func testISOBMFFLocalAssetProbe() {
     let range = AVCMTimeRangeValue.range(from: ranges[0])
     precondition(range.start.seconds == 0)
     precondition(abs(range.duration.seconds - 3) < 0.01)
+    precondition(track.languageCode == "eng")
+    precondition(track.extendedLanguageTag == "eng")
+    precondition(track.totalSampleDataLength == 90_000)
+    precondition(abs(Double(track.estimatedDataRate) - 240_000) < 1)
+    precondition(abs(track.minFrameDuration.seconds - (1.0 / 30.0)) < 0.001)
+    precondition(track.timeRange.start == .zero)
+    precondition(abs(track.timeRange.duration.seconds - 3) < 0.01)
+    precondition(track.preferredVolume == 0)
+    precondition(!track.isPlayable)
+    precondition(!track.isDecodable)
+    precondition(track.isSelfContained)
+    precondition(track.asset === asset)
+    precondition(track.commonMetadata.isEmpty)
+    precondition(track.metadata.isEmpty)
+    precondition(track.availableMetadataFormats.isEmpty)
+    precondition(!track.hasAudioSampleDependencies)
+    precondition(!track.requiresFrameReordering)
+    precondition(track.segments.isEmpty)
+    precondition(track.samplePresentationTime(forTrackTime: CMTime(seconds: 1, preferredTimescale: 600)).seconds == 1)
+    precondition(track.makeSampleCursor(presentationTimeStamp: .zero) == nil)
+    precondition(asset.preferredRate == 1)
+    precondition(asset.preferredVolume == 0)
+    precondition(!asset.isExportable)
+    precondition(!asset.isReadable)
+    precondition(!asset.isComposable)
+    precondition(!asset.hasProtectedContent)
+    precondition(!asset.containsFragments)
+    precondition(!asset.canContainFragments)
+    precondition(asset.lyrics == nil)
+    precondition(asset.commonMetadata.isEmpty)
+    precondition(asset.availableMetadataFormats.isEmpty)
+    precondition(asset.metadata(forFormat: .quickTimeMetadata).isEmpty)
+    precondition(item.isPlaybackLikelyToKeepUp)
+    precondition(!item.isPlaybackBufferEmpty)
+    precondition(!item.isPlaybackBufferFull)
+    precondition(item.seekableTimeRanges.count == 1)
 }
 
 func testM4ALocalAssetProbe() {
@@ -194,6 +231,8 @@ func testM4ALocalAssetProbe() {
     precondition(asset.tracks.count == 1)
     precondition(asset.tracks[0].mediaType == .audio)
     precondition(asset.tracks[0].hasMediaCharacteristic(.audible))
+    precondition(abs(Double(asset.tracks[0].preferredVolume) - 1) < 0.01)
+    precondition(asset.preferredVolume == 1)
 }
 
 func testWAVLocalAssetProbe() {
@@ -219,6 +258,8 @@ func testWAVLocalAssetProbe() {
     precondition(asset.tracks.count == 1)
     precondition(asset.tracks[0].mediaType == .audio)
     precondition(asset.tracks[0].naturalTimeScale == 8000)
+    precondition(asset.tracks[0].totalSampleDataLength == 16000)
+    precondition(abs(Double(asset.tracks[0].estimatedDataRate) - 128000) < 1)
 }
 
 func testAIFFLocalAssetProbe() {
@@ -262,6 +303,19 @@ func testAVMutableCompositionInsertsLocalTracks() {
     precondition(composition.tracks.count == 2)
     composition.removeTrack(added!)
     precondition(composition.tracks.count == 1)
+    composition.insertEmptyTimeRange(
+        CMTimeRange(start: composition.duration, duration: CMTime(seconds: 1, preferredTimescale: 1))
+    )
+    precondition(abs(composition.duration.seconds - 4) < 0.01)
+    composition.scaleTimeRange(
+        CMTimeRange(start: .zero, duration: composition.duration),
+        toDuration: CMTime(seconds: 2, preferredTimescale: 1)
+    )
+    precondition(abs(composition.duration.seconds - 2) < 0.02)
+    composition.removeTimeRange(
+        CMTimeRange(start: .zero, duration: CMTime(seconds: 0.5, preferredTimescale: 1))
+    )
+    precondition(abs(composition.duration.seconds - 1.5) < 0.05)
 }
 
 func testMissingLocalAssetStaysFailClosed() {
@@ -270,4 +324,134 @@ func testMissingLocalAssetStaysFailClosed() {
     precondition(!asset.duration.isValid)
     precondition(asset.tracks.isEmpty)
     precondition(!asset.isPlayable)
+}
+
+func testISOBMFFAudioAndVideoTracks() {
+    let url = avWrite(avMakeDualTrackMovie(), suffix: "mp4")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let asset = AVURLAsset(url: url)
+    precondition(asset.tracks.count == 2)
+    precondition(asset.tracks(withMediaType: .video).count == 1)
+    precondition(asset.tracks(withMediaType: .audio).count == 1)
+    precondition(asset.tracks(withMediaCharacteristic: .visual).count == 1)
+    precondition(asset.tracks(withMediaCharacteristic: .audible).count == 1)
+    precondition(asset.unusedTrackID() == 3)
+    precondition(asset.track(withTrackID: 2)?.mediaType == .audio)
+}
+
+private func avReadBoxes(_ data: Data) -> [(String, Data)] {
+    var result: [(String, Data)] = []
+    var offset = 0
+    while offset + 8 <= data.count {
+        let size = data[offset..<(offset + 4)].reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+        let type = String(bytes: data[(offset + 4)..<(offset + 8)], encoding: .ascii) ?? ""
+        let total = Int(size)
+        if total < 8 || offset + total > data.count { break }
+        result.append((type, data[(offset + 8)..<(offset + total)]))
+        offset += total
+    }
+    return result
+}
+
+private func avMakeDualTrackMovie() -> Data {
+    let video = avMakeFtypMoov()
+    let audio = avMakeFtypMoov(
+        timescale: 44100,
+        duration: 132300,
+        width: 0,
+        height: 0,
+        handler: "soun",
+        codec: "mp4a",
+        sampleDelta: 1024
+    )
+    func trak(from data: Data) -> Data {
+        guard let moov = avReadBoxes(data).first(where: { $0.0 == "moov" }) else { return Data() }
+        guard let trak = avReadBoxes(moov.1).first(where: { $0.0 == "trak" }) else { return Data() }
+        return avBox("trak", trak.1)
+    }
+    let ftyp = avBox("ftyp", avU32(0x69736f6d) + avU32(0) + avU32(0x69736f6d))
+    var mvhd = Data()
+    mvhd.append(avU32(0))
+    mvhd.append(avU32(0))
+    mvhd.append(avU32(0))
+    mvhd.append(avU32(600))
+    mvhd.append(avU32(1800))
+    mvhd.append(avU32(0x00010000))
+    mvhd.append(avU16(0x0100))
+    mvhd.append(avU16(0))
+    mvhd.append(Data(count: 8))
+    mvhd.append(avIdentityMatrix())
+    mvhd.append(Data(count: 24))
+    mvhd.append(avU32(3))
+    var audioTrak = trak(from: audio)
+    // version-0 tkhd track_id is 12 bytes into the tkhd payload; the trak box
+    // contains tkhd as the first child (size 4 + type 4 + payload).
+    let audioBoxes = avReadBoxes(audioTrak)
+    if let tkhd = audioBoxes.first(where: { $0.0 == "tkhd" }), tkhd.1.count >= 16 {
+        var payload = tkhd.1
+        payload.replaceSubrange(12..<16, with: avU32(2))
+        var rebuilt = Data()
+        for (type, body) in audioBoxes {
+            rebuilt.append(avBox(type, type == "tkhd" ? payload : body))
+        }
+        audioTrak = avBox("trak", rebuilt)
+    }
+    let moov = avBox("moov", avBox("mvhd", mvhd) + trak(from: video) + audioTrak)
+    return ftyp + moov
+}
+
+func testLocalAssetLoadAccessors() {
+    let url = avWrite(avMakeFtypMoov(), suffix: "mp4")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let asset = AVURLAsset(url: url)
+    let loaded = avfAwait { try await asset.load(.duration, .tracks, .isPlayable) }
+    switch loaded {
+    case .success(let triple):
+        precondition(abs(triple.0.seconds - 3) < 0.01)
+        precondition(triple.1.count == 1)
+        precondition(triple.2 == false)
+    default:
+        preconditionFailure("local load must complete")
+    }
+    switch asset.status(of: .duration) {
+    case .loaded(let time):
+        precondition(abs(time.seconds - 3) < 0.01)
+    default:
+        preconditionFailure("duration should be loaded")
+    }
+    let track = avfAwait { try await asset.loadTrack(withTrackID: 1) }
+    switch track {
+    case .success(let loadedTrack):
+        precondition(loadedTrack?.trackID == 1)
+    default:
+        preconditionFailure("loadTrack must complete")
+    }
+    let seen = AVFLocked(false)
+    asset.loadTrack(withTrackID: 1) { loadedTrack, error in
+        seen.store(true)
+        precondition(error == nil)
+        precondition(loadedTrack?.trackID == 1)
+    }
+    precondition(seen.load())
+}
+
+func testURLAssetAudiovisualTypes() {
+    let types = AVURLAsset.audiovisualTypes()
+    precondition(types.contains(.mp4))
+    precondition(types.contains(.m4a))
+    precondition(types.contains(.mov))
+    let mime = AVURLAsset.audiovisualMIMETypes()
+    precondition(mime.contains("video/mp4"))
+    precondition(mime.contains("audio/wav"))
+    precondition(!AVURLAsset.isPlayableExtendedMIMEType("video/mp4"))
+    let url = URL(fileURLWithPath: "/tmp/openav-types.mp4")
+    let asset = AVURLAsset(url: url, options: [AVURLAssetPreferPreciseDurationAndTimingKey: true])
+    precondition(!asset.mayRequireContentKeysForMediaDataProcessing)
+    precondition(asset.variants.isEmpty)
+    precondition(asset.assetCache == nil)
+    _ = asset.httpSessionIdentifier
+    _ = asset.resourceLoader
+    let composition = AVMutableComposition()
+    precondition(asset.compatibleTrack(for: AVCompositionTrack()) == nil)
+    _ = composition
 }
