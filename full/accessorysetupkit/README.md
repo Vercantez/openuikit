@@ -58,14 +58,35 @@ Tests construct records through `@_spi(OpenUIKitHost)`.
 Fresh seed: no prior sources, coverage, or agent tests. After this pass:
 **277 implemented / 0 declared / 0 deferred**.
 
-Top-5 implemented evidence distribution is recorded after the sealed host
-gate run in this same section once counts are confirmed.
+Top-5 implemented evidence distribution:
 
-The campaign inventory stamp
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
-is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this
-snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`;
-Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
-linux and the sealed gate compiles with a clean product tree. The sealed gate
-was not weakened.
+| Citations | Evidence |
+| ---: | --- |
+| 21 | `ASOptionSetTests.swift#testASAccessoryRenameOptionsAlgebra` |
+| 21 | `ASOptionSetTests.swift#testASAccessorySupportOptionsAlgebra` |
+| 21 | `ASOptionSetTests.swift#testASPickerDisplayItemSetupOptionsAlgebra` |
+| 21 | `ASOptionSetTests.swift#testASPickerDisplaySettingsOptionsAlgebra` |
+| 19 | `ASEnumTests.swift#testASAccessoryEventTypeRawValues` |
+
+The four 21-citation tests are OptionSet/SetAlgebra witnesses for one type
+each. `testASAccessoryEventTypeRawValues` is a table-driven enum/member value
+test. Remaining implemented rows stay well under the 40% bulk-relabel bound.
+
+The sealed host gate was run as
+`bash full/accessorysetupkit/tests/acceptance/test_host.sh` and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AccessorySetupKit lane=medium-full symbols=277
+FRAMEWORK_FANOUT_REFERENCE_OK
+ACCESSORYSETUPKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AccessorySetupKit dylib=libAccessorySetupKit.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
+snapshot (`scratch/ladder-corpus/focus-ios` is missing; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). That campaign token is
+the host-inventory stamp; the sealed framework gate prints the four lines
+above. The sealed gate was not weakened.
