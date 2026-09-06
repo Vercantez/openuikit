@@ -40,6 +40,21 @@ func visionRectangleImage() -> CGImage {
     return raster.makeCGImage()
 }
 
+func visionExpectOverlayInvalidModel<T>(_ work: () throws -> T, _ message: String) {
+    do {
+        _ = try work()
+        visionExpect(false, message + " should fail closed")
+    } catch let error as VisionError {
+        if case .invalidModel = error {
+            visionExpect(true, message)
+        } else {
+            visionExpect(false, "\(message) unexpected \(error)")
+        }
+    } catch {
+        visionExpect(false, "\(message) wrong type \(error)")
+    }
+}
+
 func testHarnessRectangleImage() {
     let image = visionRectangleImage()
     visionExpect(image.width == 80 && image.height == 80, "harness raster")
