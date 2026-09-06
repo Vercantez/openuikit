@@ -26,7 +26,23 @@ enum MusicResourceDecoder {
         case stationProviderName, episodeNumber, curatorName, shortDescription
         case standardDescription, isChart, kind, hostName, isAppleDigitalMaster
         case audioVariants, previewAssets, artistUrl, lastPlayedDate, libraryAddedDate
-        case playCount, parent, tagline
+        case playCount, parent, tagline, reason, nextRefreshDate
+    }
+
+    enum DisplayKey: String, CodingKey { case stringForDisplay }
+
+    static func decodeDisplay(
+        _ attributes: KeyedDecodingContainer<AttrKey>?,
+        key: AttrKey
+    ) -> String? {
+        guard let attributes else { return nil }
+        if let value = try? attributes.decodeIfPresent(String.self, forKey: key) {
+            return value
+        }
+        guard let nested = try? attributes.nestedContainer(keyedBy: DisplayKey.self, forKey: key) else {
+            return nil
+        }
+        return try? nested.decodeIfPresent(String.self, forKey: .stringForDisplay)
     }
 }
 

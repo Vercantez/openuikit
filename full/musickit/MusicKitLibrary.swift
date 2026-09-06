@@ -200,135 +200,161 @@ public struct MusicLibrarySectionedRequest<SectionType, MusicItemType: MusicLibr
     public var includeOnlyDownloadedContent = false
     public var limit: Int = 0
     public var offset: Int = 0
-    var textFilter: String?
+    var itemTextFilter: String?
     var sectionTextFilter: String?
+    var itemEqualFilters: [(String, String)] = []
+    var sectionEqualFilters: [(String, String)] = []
+    var itemSortAscending = true
+    var sectionSortAscending = true
+    var itemSortDescription: String?
+    var sectionSortDescription: String?
 
     public init() {}
 
+    public var _openuikit_itemFilterText: String? { itemTextFilter }
+    public var _openuikit_sectionFilterText: String? { sectionTextFilter }
+    public var _openuikit_itemSortAscending: Bool { itemSortAscending }
+    public var _openuikit_sectionSortAscending: Bool { sectionSortAscending }
+
     public mutating func filterItems(text: String) {
-        textFilter = text
+        itemTextFilter = text
     }
 
     public mutating func filterItems<Value: MusicLibraryRequestFilterValueEquatable>(
-        matching keyPath: KeyPath<MusicItemType, Value>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, Value>,
         equalTo value: Value
     ) {
-        _ = (keyPath, value)
-        textFilter = String(describing: value)
+        itemEqualFilters.append((String(describing: keyPath), String(describing: value)))
+        itemTextFilter = String(describing: value)
     }
 
     public mutating func filterItems<Value: MusicLibraryRequestFilterValueEquatable>(
-        matching keyPath: KeyPath<MusicItemType, Value?>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, Value?>,
         equalTo value: Value?
     ) {
-        _ = (keyPath, value)
-        textFilter = String(describing: value)
+        itemEqualFilters.append((String(describing: keyPath), String(describing: value)))
+        itemTextFilter = String(describing: value)
     }
 
     public mutating func filterItems<RelatedMusicItemType: MusicItem>(
-        matching keyPath: KeyPath<MusicItemType, MusicItemCollection<RelatedMusicItemType>?>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, MusicItemCollection<RelatedMusicItemType>?>,
         contains relatedItem: RelatedMusicItemType
     ) {
         _ = keyPath
-        textFilter = relatedItem.id.rawValue
+        itemEqualFilters.append(("contains", relatedItem.id.rawValue))
+        itemTextFilter = relatedItem.id.rawValue
     }
 
     public mutating func filterItems(
-        matching keyPath: KeyPath<MusicItemType, String>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, String>,
         contains text: String
     ) {
         _ = keyPath
-        textFilter = text
+        itemEqualFilters.append(("contains", text))
+        itemTextFilter = text
     }
 
     public mutating func filterItems(
-        matching keyPath: KeyPath<MusicItemType, String?>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, String?>,
         contains text: String
     ) {
         _ = keyPath
-        textFilter = text
+        itemEqualFilters.append(("contains", text))
+        itemTextFilter = text
     }
 
     public mutating func filterItems<Value: MusicLibraryRequestFilterValueMembershipComparable>(
-        matching keyPath: KeyPath<MusicItemType, Value>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, Value>,
         memberOf values: [Value]
     ) {
         _ = keyPath
-        textFilter = values.map { String(describing: $0) }.joined(separator: ",")
+        let joined = values.map { String(describing: $0) }.joined(separator: ",")
+        itemEqualFilters.append(("memberOf", joined))
+        itemTextFilter = joined
     }
 
     public mutating func filterItems<Value: MusicLibraryRequestFilterValueMembershipComparable>(
-        matching keyPath: KeyPath<MusicItemType, Value?>,
+        matching keyPath: KeyPath<MusicItemType.LibraryFilter, Value?>,
         memberOf values: [Value?]
     ) {
         _ = keyPath
-        textFilter = values.map { String(describing: $0) }.joined(separator: ",")
+        let joined = values.map { String(describing: $0) }.joined(separator: ",")
+        itemEqualFilters.append(("memberOf", joined))
+        itemTextFilter = joined
     }
 
     public mutating func sortItems<Value>(
-        by keyPath: KeyPath<MusicItemType, Value>,
+        by keyPath: KeyPath<MusicItemType.LibrarySortProperties, Value>,
         ascending: Bool
     ) {
-        _ = (keyPath, ascending)
+        itemSortAscending = ascending
+        itemSortDescription = String(describing: keyPath)
     }
 
-    public mutating func filterSections(text: String) {
+    public mutating func filterSections(text: String) where SectionType: MusicLibraryRequestable {
         sectionTextFilter = text
     }
 
     public mutating func filterSections<Value: MusicLibraryRequestFilterValueEquatable>(
-        matching keyPath: KeyPath<SectionType, Value>,
+        matching keyPath: KeyPath<SectionType.LibraryFilter, Value>,
         equalTo value: Value
-    ) {
-        _ = (keyPath, value)
+    ) where SectionType: MusicLibraryRequestable {
+        sectionEqualFilters.append((String(describing: keyPath), String(describing: value)))
         sectionTextFilter = String(describing: value)
     }
 
     public mutating func filterSections<Value: MusicLibraryRequestFilterValueEquatable>(
-        matching keyPath: KeyPath<SectionType, Value?>,
+        matching keyPath: KeyPath<SectionType.LibraryFilter, Value?>,
         equalTo value: Value?
-    ) {
-        _ = (keyPath, value)
+    ) where SectionType: MusicLibraryRequestable {
+        sectionEqualFilters.append((String(describing: keyPath), String(describing: value)))
         sectionTextFilter = String(describing: value)
     }
 
     public mutating func filterSections(
-        matching keyPath: KeyPath<SectionType, String>,
+        matching keyPath: KeyPath<SectionType.LibraryFilter, String>,
         contains text: String
-    ) {
+    ) where SectionType: MusicLibraryRequestable {
         _ = keyPath
+        sectionEqualFilters.append(("contains", text))
         sectionTextFilter = text
     }
 
     public mutating func filterSections(
-        matching keyPath: KeyPath<SectionType, String?>,
+        matching keyPath: KeyPath<SectionType.LibraryFilter, String?>,
         contains text: String
-    ) {
+    ) where SectionType: MusicLibraryRequestable {
         _ = keyPath
+        sectionEqualFilters.append(("contains", text))
         sectionTextFilter = text
     }
 
     public mutating func filterSections<Value: MusicLibraryRequestFilterValueMembershipComparable>(
-        matching keyPath: KeyPath<SectionType, Value>,
+        matching keyPath: KeyPath<SectionType.LibraryFilter, Value>,
         memberOf values: [Value]
-    ) {
+    ) where SectionType: MusicLibraryRequestable {
         _ = keyPath
-        sectionTextFilter = values.map { String(describing: $0) }.joined(separator: ",")
+        let joined = values.map { String(describing: $0) }.joined(separator: ",")
+        sectionEqualFilters.append(("memberOf", joined))
+        sectionTextFilter = joined
     }
 
     public mutating func filterSections<Value: MusicLibraryRequestFilterValueMembershipComparable>(
-        matching keyPath: KeyPath<SectionType, Value?>,
+        matching keyPath: KeyPath<SectionType.LibraryFilter, Value?>,
         memberOf values: [Value?]
-    ) {
+    ) where SectionType: MusicLibraryRequestable {
         _ = keyPath
-        sectionTextFilter = values.map { String(describing: $0) }.joined(separator: ",")
+        let joined = values.map { String(describing: $0) }.joined(separator: ",")
+        sectionEqualFilters.append(("memberOf", joined))
+        sectionTextFilter = joined
     }
 
     public mutating func sortSections<Value>(
-        by keyPath: KeyPath<SectionType, Value>,
+        by keyPath: KeyPath<SectionType.LibrarySortProperties, Value>,
         ascending: Bool
-    ) {
-        _ = (keyPath, ascending)
+    ) where SectionType: MusicLibraryRequestable {
+        sectionSortAscending = ascending
+        sectionSortDescription = String(describing: keyPath)
     }
 
     public func response() async throws -> MusicLibrarySectionedResponse<SectionType, MusicItemType> {
@@ -374,7 +400,7 @@ public struct MusicLibrarySearchRequest: Hashable {
     }
 }
 
-public struct MusicLibrarySearchResponse: Hashable, Sendable, CustomStringConvertible,
+public struct MusicLibrarySearchResponse: Hashable, Sendable, Codable, CustomStringConvertible,
     CustomDebugStringConvertible
 {
     public enum TopResult: MusicItem, Hashable, Sendable, Codable, CustomStringConvertible,
@@ -466,6 +492,30 @@ public struct MusicLibrarySearchResponse: Hashable, Sendable, CustomStringConver
 
     public var description: String { "MusicLibrarySearchResponse(songs: \(songs.count))" }
     public var debugDescription: String { description }
+
+    public init(from decoder: any Decoder) throws {
+        let results = try MusicKitJSON.resultsContainer(from: decoder)
+        songs = MusicKitJSON.decodeCollection(results, keys: "songs")
+        albums = MusicKitJSON.decodeCollection(results, keys: "albums")
+        artists = MusicKitJSON.decodeCollection(results, keys: "artists")
+        playlists = MusicKitJSON.decodeCollection(results, keys: "playlists")
+        musicVideos = MusicKitJSON.decodeCollection(results, keys: "music-videos", "musicVideos")
+        topResults = MusicKitJSON.decodeCollection(results, keys: "top", "topResults")
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var root = encoder.container(keyedBy: MusicKitJSON.FlexibleKey.self)
+        var results = root.nestedContainer(
+            keyedBy: MusicKitJSON.FlexibleKey.self,
+            forKey: MusicKitJSON.FlexibleKey("results")
+        )
+        try MusicKitJSON.encodeCollection(songs, into: &results, key: "songs")
+        try MusicKitJSON.encodeCollection(albums, into: &results, key: "albums")
+        try MusicKitJSON.encodeCollection(artists, into: &results, key: "artists")
+        try MusicKitJSON.encodeCollection(playlists, into: &results, key: "playlists")
+        try MusicKitJSON.encodeCollection(musicVideos, into: &results, key: "music-videos")
+        try MusicKitJSON.encodeCollection(topResults, into: &results, key: "top")
+    }
 }
 
 extension Genre: MusicLibrarySectionRequestable {}
