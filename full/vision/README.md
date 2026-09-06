@@ -138,3 +138,50 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 VISION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=Vision dylib=libVision.dylib
 ```
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r15`, lane `large-partitioned`, framework `Vision`
+(3584 IDs). Starting commit `bff8535c68425cc39fb45cb00d447b0981b57242`.
+Branch `cursor/port-vision-to-linux-8b8f`. Second pass on top of the wave-1
+ledger (729 implemented / 2560 declared / 295 deferred).
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before (wave-1 ledger) | 729 | 2560 | 295 | 0 | 0 |
+| After wave 8 | **1514** | **1940** | **130** | **0** | **0** |
+
+Nondeferred 3454. Gain **+785 implemented**. Every `implemented` row cites
+`test:full/vision/tests/agent/<File>Tests.swift#testName`. SwiftUI overlay
+re-exports were not present in this surface (none marked `not-applicable`).
+
+Top-5 implemented evidence distribution (1514 rows):
+
+1. `VisionEnumTests.swift#testValueCatalog` — 270 (17.8%) — table-driven enums, revisions, and error codes
+2. `VisionOverlayValueTests.swift#testOverlayPoseValueTypes` — 233 (15.4%) — overlay pose joints/groups and fail-closed keypoints
+3. `VisionOverlayValueTests.swift#testOverlayFaceAndDocumentValues` — 172 (11.4%) — face landmarks and document container values
+4. `VisionPoseTests.swift#testHumanBodyPose3DObservationJoints` — 59 (3.9%)
+5. `VisionPoseTests.swift#testHumanBodyPoseObservationJoints` — 49 (3.2%)
+
+No non-enum test exceeds 40% of implemented rows.
+
+Added Linux behaviour this pass:
+
+- Observation value types: `VNFaceLandmarks2D` regions + `pointsInImage`,
+  `VNRecognizedPoint` / pose catalogs (`availableJointNames`,
+  `recognizedPoint(_:)`, `recognizedPoints(_:)`, `recognizedPoints(forGroupKey:)`),
+  `VNHumanBodyPose3DObservation` parent/camera mapping, `VNHorizonObservation`
+  rotation from a supplied angle, `VNRecognizedTextObservation.topCandidates`.
+- Overlay structs: `FaceObservation.Landmarks2D`, `DocumentObservation.Container`
+  (text/list/table/data-detector values from supplied data), pose `Joint` /
+  `Joint3D` catalogs. `keypoints` stays fail-closed (`invalidModel`).
+- Request `perform` validates ROI (negative size → `invalidArgument`, outside
+  unit square → `outOfBoundsError`) and revision (`unsupportedRevision`). ML
+  detectors including hand/animal/3D pose, horizon, text rectangles, and face
+  landmarks throw `invalidModel` with `results == nil`.
+- Coordinate helpers remain lower-left; overlay `CoordinateOrigin.upperLeft`
+  flips Y. ROI-relative C helpers round-trip with hand-computed fixtures.
+
+Still fail-closed / not invented: Apple ML models, homography, learned feature
+prints, on-device OCR/document parsing (document types only wrap caller-supplied
+strings and geometry).

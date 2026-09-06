@@ -41,3 +41,33 @@ func vnMakeError(_ code: VNErrorCode, description: String? = nil) -> NSError {
 func vnThrow(_ code: VNErrorCode, description: String) throws -> Never {
     throw vnMakeError(code, description: description)
 }
+
+func visionValidateNormalizedROI(_ roi: CGRect) throws {
+    if roi.size.width < 0 || roi.size.height < 0 {
+        throw vnMakeError(.invalidArgument, description: "regionOfInterest has negative size")
+    }
+    let eps: CGFloat = 1e-6
+    if roi.origin.x < -eps || roi.origin.y < -eps
+        || roi.origin.x + roi.size.width > 1 + eps
+        || roi.origin.y + roi.size.height > 1 + eps
+    {
+        throw vnMakeError(.outOfBoundsError, description: "regionOfInterest is outside the unit square")
+    }
+}
+
+func visionValidateRequestConfiguration(_ request: VNRequest) throws {
+    let supported = type(of: request).supportedRevisions
+    if !supported.contains(request.revision) {
+        let unspecifiedOnly = supported == IndexSet(integer: VNRequestRevisionUnspecified)
+        let matchesDefault = request.revision == type(of: request).defaultRevision
+        if !(unspecifiedOnly && matchesDefault) {
+            throw vnMakeError(
+                .unsupportedRevision,
+                description: "revision \(request.revision) is not in supportedRevisions"
+            )
+        }
+    }
+    if let imageRequest = request as? VNImageBasedRequest {
+        try visionValidateNormalizedROI(imageRequest.regionOfInterest)
+    }
+}
