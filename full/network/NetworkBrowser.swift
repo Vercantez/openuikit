@@ -22,10 +22,23 @@ public final class NWBrowser: @unchecked Sendable, CustomDebugStringConvertible 
         public let interfaces: [NWInterface]
         public let metadata: Metadata
 
+        public init(endpoint: NWEndpoint, interfaces: [NWInterface], metadata: Metadata) {
+            self.endpoint = endpoint
+            self.interfaces = interfaces
+            self.metadata = metadata
+        }
+
         public enum Metadata: Hashable, Sendable, CustomDebugStringConvertible {
             case none
             case bonjour(NWTXTRecord)
-            public var debugDescription: String { "\(self)" }
+            public var debugDescription: String {
+                switch self {
+                case .none:
+                    return "none"
+                case .bonjour(let record):
+                    return "bonjour(\(record.debugDescription))"
+                }
+            }
         }
 
         public enum Change: Hashable, Sendable {
@@ -133,5 +146,35 @@ public final class NWConnectionGroup: @unchecked Sendable {
     public func cancel() {
         state = .cancelled
         stateUpdateHandler?(.cancelled)
+    }
+
+    public var debugDescription: String { "NWConnectionGroup(\(state))" }
+
+    public func send(
+        content: Data?,
+        to endpoint: NWEndpoint? = nil,
+        message: Message = .default,
+        completion: @escaping (NWError?) -> Void
+    ) {
+        _ = content
+        _ = endpoint
+        _ = message
+        completion(.unsupported)
+    }
+
+    public func metadata(definition: NWProtocolDefinition) -> NWProtocolMetadata? {
+        _ = definition
+        return nil
+    }
+}
+
+extension NWConnectionGroup.Message {
+    public static let `default` = NWConnectionGroup.Message(group: nil)
+    public var localEndpoint: NWEndpoint? { nil }
+    public var remoteEndpoint: NWEndpoint? { nil }
+    public var path: NWPath? { nil }
+    public func metadata(definition: NWProtocolDefinition) -> NWProtocolMetadata? {
+        _ = definition
+        return nil
     }
 }
