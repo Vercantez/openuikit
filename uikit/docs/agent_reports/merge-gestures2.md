@@ -74,8 +74,15 @@ From the disposable monorepo root `/tmp/merge-gestures2-operator`:
 CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/merge-gestures2
 ```
 
-**Exit 0: `checks passed (CHECK_ONLY)`.** The script is byte-for-byte the
-repository's script; no skipped checks, ALLOW_DROP, or widened scope.
+**All gates passed: `checks passed (CHECK_ONLY)`.** The script is
+byte-for-byte the repository's script; no skipped checks, ALLOW_DROP,
+or widened scope. The shell subsequently exited **128 in cleanup**:
+the script aborts its temporary merge before printing success, then its
+EXIT trap calls `git merge --abort` a second time under `set -e`. Replaying
+that exact cleanup command reproduced `fatal: There is no merge to abort
+(MERGE_HEAD missing)` and exit 128. This is after every build and fidelity
+check has passed; no gate was skipped or failed. The merge task leaves the
+operator script unchanged.
 
 The operator's local main was `009fa373`, behind the supplied baseline by
 an already-landed Photos commit. The disposable clone set its local main
