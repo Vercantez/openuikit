@@ -111,6 +111,7 @@ VARIANTS = {
     "realapp_hackers_feed_light": "UIScrollView",
     # Ledger first screen: inset-grouped UITableView under a nav bar.
     "realapp_ledger_light": "UITableView",
+    "realapp_focus_browser_light": "URLBar",
 }
 
 

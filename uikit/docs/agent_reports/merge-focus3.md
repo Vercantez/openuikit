@@ -1,44 +1,41 @@
-# Merge `origin/agent/focus-merged3` onto main (Ledger 13th, Focus home 14th)
+# Merge `origin/agent/merge-focus2` onto main (split Package.swift)
 
-MERGE TASK, no new rules. Main (`5f6bed0e`) already carries
-`agent/guesttrial2-merged`: Ledger's first screen is the 13th real-app
-row (`realapp_ledger_light`, `GUEST_REALAPP_SCREENS=13`).
-`origin/agent/focus-merged3` (`6d72b933`) is the Focus exam re-expressed
-on the split manifest (report `merge-focus2.md`): one Combine/`os`
-product, the six harness-stub products, Focus home as a real-app screen,
-ingest emission. It still treated home as the 13th screen because it
-forked before Ledger landed.
+MERGE TASK, no new rules. Main (`29bdb649`) already carries materials40c,
+textkit41c, pickers41c, values39e, transitions39 — typed
+`coreProducts`/`frameworkProducts` and
+`coreTargets`/`frameworkTargets`/`conformanceTargets`/`testTargets`, plus
+PhotosUI. `origin/agent/merge-focus2` (`8bc7b509`) is Blockzilla vendored
+as a library under `Sources/Blockzilla` + BlockzillaPackage, SnapKit at
+Focus's pin with its test target, the WebKit guest stub with the SDK's
+IUO delegate shapes, Sentry/Glean/Fuzi/libkern/os guest modules,
+FocusLaunchCompat, and the RealAppProbe launch harness (report
+`merge-focus2.md`). It was written on main `3e58c4f4`; the operator's
+checked merge refused it: `UNEXPECTED CONFLICT (manifest):
+uikit/Package.swift`.
 
-This merge keeps **main's plumbing exact** (Ledger 13th, guest-trial2
-rows, `scoreboard/latest.*`, pin files, presentable / StoreKit / ImageIO
-/ CoreImage products) **and** adds Focus home as the **14th** screen
-(`realapp_focus_home_light`), rendered last as `focus-e2e.md` requires
-so a guest 2x ink miss on home cannot drop the screens before it.
-Never keep-both on Swift code.
+Never keep-both on the manifest or on Swift. This merge keeps **every
+main target, product, dependency, exclude list, swiftSettings and
+platform condition** (including PhotosUI) and **adds the branch's
+products/targets on the split arrays**. Darwin
+`blockzillaProducts`/`blockzillaTargets` stay `#if !os(Linux)`.
 
 ## File resolutions
 
 | file | how it was resolved |
 |---|---|
-| `uikit/Sources/RealAppProbe/RealAppScreen.swift` | The only Swift conflict. Variant `.focusHome` + `.ledger` both kept. `screens` is `focusScreenTable + hackersScreenTable + ledgerScreenTable + focusHomeTable`. Comment: fourteen screens, Ledger 13th, home last. `makeRoot` already auto-merged both cases. |
-| `uikit/Package.swift` | Auto-merged. Main's split arrays unchanged since merge-base; incoming added Glean / Intents / IntentsUI / Onboarding / Licenses / DesignSystem to `frameworkProducts` and `Focus/script.json` to RealAppProbe `exclude`. Combine/`os` stay in `coreProducts`. 26 products, 0 duplicates. |
-| `uikit/docs/REAL_APP_TEST.md` | Both sides' rows. This merge newest; then merge-focus2 / focus-e2e; then main's guest-trial2 / present-axes / silent-merged / … |
-| `scoreboard/latest.*` / `open.txt` / pin files | From main (unconflicted). Main's Present-t1200 OPEN row kept. |
-| `Sources/Combine/Combine.swift` | Auto-merged: main's combine-product body plus focus-e2e's Darwin `enum _OpenUIKitCombineProduct {}`. |
-| `Tools/ingest/xcodeproj_to_package.py` | Auto-merged: `PORTED_PRODUCTS` is Combine + `os` **and** the six stubs; emit lists linux-conditioned `.product` for all eight. |
-| `Tools/compare/compare_realapp.py` | Auto-merged: `realapp_focus_home_light` **and** `realapp_ledger_light`. |
-| `Tools/ingest/test_xcodeproj_to_package.py` | Auto-merged: combine/`os` tests plus emit assert for Glean. |
+| `uikit/Package.swift` | Not keep-both. Took main's split arrays. PhotosUI stays on `frameworkProducts`/`frameworkTargets`. Incoming SnapKit / Sentry / Fuzi / libkern / FocusAppServices / LocalAuthentication / PassKit / Network appended there. `osTarget` (Linux `publicHeadersPath`) replaces `.target(name: "os")`. Darwin `blockzillaProducts`/`blockzillaTargets` (Blockzilla, WebKit, UIHelpers, UIComponents, AppShortcuts, Widget) stay the `#if !os(Linux)` arrays. |
+| `uikit/docs/REAL_APP_TEST.md` | Union, newest-first: this merge; then pickers / textkit / materials / values; then merge-focus2 / focus-deps / focus-launch; then main's transitions row. |
+| `Sources/OpenUIKit/FocusLaunchCompat.swift` | Dropped duplicate `UIPrintFormatter` / `UIPrintPageRenderer` / `UIPrintInfo` / `UIActivityItemProvider` (pickers already define them). Focus names moved onto those types. |
+| `Sources/OpenUIKit/UIPrintInteractionController.swift` | Added `UIPrintInfo(dictionary:)`, `addPrintFormatter`, `viewPrintFormatter` (OpenUtils.swift:19, :25; WebViewController.swift:87). |
+| `Sources/OpenUIKit/UIActivityViewController.swift` | `open func activityViewController(_:subjectForActivityType:)` so TitleActivityItemProvider.swift:30 can `override`. |
+| `Sources/OpenUIKit/UIViewController.swift` | Auto-merged: launch's defaulted nib init (AutocompleteSettingViewController.swift:19 `convenience init()` is not an override). Pickers' `override init()` became `init()` / `convenience init()` (`UIColorPickerViewController`, `UIFontPickerViewController`, `UISearchController`). |
+| `Sources/UIKitShim/UIKit.swift` | One `NSAttributedString` alias (textkit block). Kept focus2 `Timer` + `OpenUIKitObjectiveC` re-export. |
+| `Tests/OpenUIKitTests/SystemPickerTests.swift` | Linux 6.2.4 `ActorIsolatedCall` on Safari/PHPicker Probe types (inferred MainActor from `@_exported import UIKit`). Those two tests stay Darwin-only; Linux XCTest cannot invoke `@MainActor` anyway (linux-trial). |
+| `Tests/OpenUIKitTests/ValueTypeTailTests.swift` / `TextKitTests.swift` | Linux `NotificationCenter.default` is Foundation + OpenUIKit. Private typealias to OpenUIKit (same pattern as TextKit's `NSAttributedString`). |
 
-Incoming focus-e2e sources that auto-merged (no conflict):
-`FocusScreens` / `FocusShims` / vendored `HomeViewController`,
-wordmark assets, `docs/agent_reports/focus-e2e.md`,
-`focus_home.t200.png`, `scripts/realapp_probe_sim.sh`,
-`openhost --app focus`. Reports `merge-focus.md` and
-`merge-focus2.md` are added as-is.
+Auto-merged without conflict: UILayoutGuide NSObject + SnapKit `topLayoutGuide`, UIResponder `accessibilityValue` (AutocompleteTextField override), SafariServices `@_exported import UIKit`, ingest PORTED_PRODUCTS, compare_realapp 15th screen.
 
-`swift package describe --type json`: same targets / products as main,
-plus the six stub products. RealAppProbe `sources` grow by the three
-HomeViewController files.
+`swift package describe --type json` vs main: **no removed products or targets**. Shared product records match. Added products: SnapKit, Sentry, Fuzi, OpenUIKitLibkern, FocusAppServices, LocalAuthentication, PassKit, Network, Blockzilla, AppShortcuts, WebKit, UIHelpers, UIComponents. Added targets: those plus Widget, SnapKitOpenUIKitTests, GleanTests, SentryTests, LibkernTests, FuziTests.
 
 No files outside `uikit/`. No pin files. No `Package.resolved`.
 
@@ -46,65 +43,30 @@ No files outside `uikit/`. No pin files. No `Package.resolved`.
 
 Mac (`SIM_DEVICE_SUFFIX=-merge-focus3`):
 
-- `time swift package describe > /dev/null`: **0.97 s** (bar <20 s)
-- `swift build --build-tests`: Build complete (32.06 s)
-- `swift test --filter 'Ingest|Combine|Focus|Ledger'`: **29 tests, 0 failures**
-- `python3 -m pytest Tools/ingest -q` with
-  `LADDER_CORPUS=/Users/miguelsalinas/openuikit/scratch/ladder-corpus`:
-  **34 passed**. Without the corpus: 14 passed, 20 skipped.
-- `openrender realapp` emits **14** screens in order, Ledger 13th, Focus
-  home last: history, settings light/dark, storage, xs/xxxl/ax1,
-  settings ipad, history ipad, storage ipad, focus settings, hackers,
-  **ledger**, **focus_home**.
-- Twelve committed floors vs `/tmp/golden_realapp_ios` do not drop:
-  **99.137 / 98.535 / 98.548 / 99.469 / 98.639 / 98.133 / 97.516 /
-  99.511 / 82.170 / 99.760 / 99.689 / 85.393**. The 13 main screens
-  (12 floors + Ledger) are **byte-identical** to `/tmp/app-gt2-s3`
-  (main's post-harvest render). Ledger sha256
-  `aeee639f7efdce37ce1a2cb30fcff23554073aaf9c1bebce433094b8a19683fa`.
-- `OPENUIKIT_FORCE_IOS=1 openhost --app focus --scale 2 --script
-  Sources/RealAppProbe/Focus/script.json` `focus_app.t200.png` is
-  **byte-identical** to
-  `docs/agent_reports/focus-e2e/focus_home.t200.png`
-  (`sha256:64771e0041bffbac3e8251db157aaa3e9e4f9d52a37ae884cb87698096e0b2fd`,
-  786×1704).
+- `time swift package describe --type json > /dev/null`: **0.628 s** (bar <20 s)
+- `swift build --target Blockzilla`: **0 errors**
+- `swift build --build-tests`: Build complete (16.67 s)
+- SnapKit **31/31**; Glean/Sentry/Libkern/Fuzi/OSTests 18; SystemPickerTests Darwin 14; ingest `test_xcodeproj_to_package.py` **17 passed, 20 skipped**
 - Catalyst **124/124** (`/tmp/gate-merge-focus3`)
+- iOS suite **112/113** (`corner_radius` 99.411) `SKIP_CAPTURE=1` `/tmp/suite-merge-focus3`
+- Real-app 3x floors **99.137 / 98.535 / 98.548 / 99.469 / 98.639 / 98.133 / 97.516 / 99.65 / 82.17 / 99.86 / 99.734 / 85.393**
+- `OPENUIKIT_REALAPP_SCALE=3` `openrender realapp`: **15** PNGs. `FocusBrowserLaunch.makeRoot()` `URLBar [0, 59, 393, 56]`, wordmark `UIImageView [44, 364.667, 305, 65.333]`. `WKWebView` present. Browser golden **N/A**.
 
-`docker run --rm -v "$PWD":/src:ro swift:6.2-noble` (tree tarred to
-`/work`, exclude `.build` / `Package.resolved`):
+`docker exec -w /work-merge-focus3 uikit-linux`:
 
-- `time swift package describe >/dev/null`: **0.819 s**
-- `swift build -c release --product openrender`: **Build of product
-  'openrender' complete! (188.13s)**
+- `swift package describe`: **0.582 s**
+- Glean / Sentry / libkern / Fuzi / os / SnapKit / PhotosUI: green
+- `swift build -c release --product openrender`: **201.57 s**
+
+`docker run --rm … swift:6.2-noble` (tree tarred to `/work`, exclude `.build` / `Package.resolved`):
+
+- `swift package describe`: **0.998 s**
+- `swift build -c release --product openrender`: **228.77 s**
+- Glean / Sentry / libkern / Fuzi / os / SnapKit / PhotosUI: green (`libxml2-dev`)
+
+`scripts/linux_realapp_verify.sh /tmp/linux-realapp-merge-focus3`:
+headless **14/14**; live **10/10**; `REAL-APP SCREEN VERIFIED ON LINUX`.
 
 No new rendering rules. Catalyst paths stay behind the existing iOS cut.
-The focus-e2e measurements (Blockzilla ingest no_port 21→14, home wordmark
-`[44, 394, 305, 65.333]`) and the guest-trial2 Ledger screen are unchanged.
-
-## Arm64 authority
-
-`queue_box.sh arm64 verify` on **`f75875cc`** (instance `i-00da4d9ca172eb1ff`,
-command `b51daaee-8767-4c3c-bd55-0e4ef9aeb219`):
-
-| line | value |
-|---|---|
-| `BUILD_OK` / `TBD_CHECK_OK` / `difftest rc=0` | yes |
-| **`build_full rc=0`** | **yes** |
-| **`GATE_B_PASS`** | **yes** |
-| `GUEST_REALAPP_RC` | 133 |
-| **`GUEST_REALAPP_SCREENS`** | **13** |
-
-Home is last, so the guest 2x miss cannot drop Ledger or Hackers.
-MEASURED miss on the 14th screen:
-
-```
-OPENUIKIT_IOS_INK_MISS: I|system-regular|12|light|F0.25|107
-```
-
-Scalar 107 is `'k'`. Guest scale-2 has no SFNS; `glyph_ink_ios.json` has
-12 pt regular light at other phases/scalars but not this F0.25 `k`.
-Mac `openrender realapp` is 3x (`glyph_ink_ios_3x.json`) and emitted all
-14. Same class as focus-e2e.md §6 (then `I|system-semibold|18|light|F0.0|83`
-on home-as-13th; guest-trial2 harvested that 18 pt key, so this merge's
-miss is a new 12 pt cell). Harvesting the 2x `system-regular|12` mask is a
-follow-up, not a merge rule.
+The focus-launch measurements (URLBar / wordmark) and pickers PhotosUI
+product are unchanged.

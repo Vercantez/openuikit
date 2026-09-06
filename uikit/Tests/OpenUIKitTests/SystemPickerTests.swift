@@ -301,7 +301,12 @@ final class SystemPickerTests: XCTestCase {
     }
 
     // MARK: SafariServices delegate extras
+    // Darwin-only: Linux 6.2.4 infers MainActor on a nested Probe that
+    // conforms to SFSafariViewControllerDelegate (`@_exported import UIKit`
+    // from focus-launch) and errors from this nonisolated Linux XCTestCase
+    // (linux-trial: Linux XCTest cannot invoke `@MainActor` tests anyway).
 
+#if !os(Linux)
     func testSafariDelegateOptionalMethodsHaveDefaults() {
         final class Probe: NSObject, SFSafariViewControllerDelegate {
             var finished = 0
@@ -324,6 +329,7 @@ final class SystemPickerTests: XCTestCase {
             XCTAssertEqual(probe.finished, 1)
         }
     }
+#endif
 
     // MARK: Activity
 
@@ -335,7 +341,9 @@ final class SystemPickerTests: XCTestCase {
     }
 
     // MARK: PhotosUI
+    // Darwin-only: same Linux MainActor inference on PHPickerViewControllerDelegate.
 
+#if !os(Linux)
     func testPHPickerFailClosedEmptyAndHostEnqueue() {
         final class Probe: PHPickerViewControllerDelegate {
             var results: [PHPickerResult]?
@@ -367,5 +375,6 @@ final class SystemPickerTests: XCTestCase {
         XCTAssertEqual(PHPickerFilter.any(of: [.images, .videos]),
                        PHPickerFilter.any(of: [.images, .videos]))
     }
+#endif
 }
 

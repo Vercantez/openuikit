@@ -122,14 +122,17 @@ SWIFT_SIM=(swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend M
   -enable-upcoming-feature IsolatedDefaultValues
   -target arm64-apple-ios26.0-simulator -sdk "$SDK")
 compile_stub() {
-  local name=$1 src=$2
+  local name=$1; shift
   "${SWIFT_SIM[@]}" -parse-as-library -emit-module \
     -emit-module-path "$MODDIR/$name.swiftmodule" \
     -emit-object -o "$TMPSRC/$name.o" \
-    -module-name "$name" -I "$MODDIR" "$src"
+    -module-name "$name" -I "$MODDIR" "$@"
 }
 compile_stub Glean Sources/RealAppProbe/FocusModules/Glean/Glean.swift
-compile_stub Onboarding Sources/RealAppProbe/FocusModules/Onboarding/Onboarding.swift
+# Onboarding.swift was split into handler files + CombineImport
+# (focus-launch). Guest/probe still compile this directory as module
+# Onboarding; the iOS SDK supplies Combine.
+compile_stub Onboarding Sources/RealAppProbe/FocusModules/Onboarding/*.swift
 compile_stub Licenses Sources/RealAppProbe/FocusModules/Licenses/Licenses.swift
 # Domain is Sendable value types (Post, Comment). Default MainActor isolation
 # makes Identifiable conformances actor-isolated and they cannot satisfy

@@ -1,0 +1,23 @@
+{
+  "schema": "openuikit.cursor-framework-repair-manifest.v1",
+  "campaign": {
+    "id": "ios26.1-fwdepth-wave17-repair-5",
+    "maxActive": 24,
+    "maxRuns": 1
+  },
+  "model": {
+    "id": "grok-4.6",
+    "effort": "high",
+    "fast": false
+  },
+  "repairs": [
+    {
+      "module": "Matter",
+      "slug": "matter",
+      "agentId": "bc-eeacfda0-067f-5b33-bc42-ad6702ad1ac5",
+      "expectedPrUrl": "https://github.com/Vercantez/openuikit-linux-platform/pull/295",
+      "expectedPriorHead": "cb67a759569fcbf397166945b75e19bdbe0f8f45",
+      "prompt": "Continue repairing Matter in the existing Cursor agent, branch, and PR (do not open a new one). The operator's checked merge REFUSED the branch at cb67a759569f:\nFW_MERGE GATE RED (see /tmp/fw_merge_gate-matter.log):\nFW_MERGE GATE HUNG: the sealed gate's test runner (guest-runtime) never returned after 'Matter test failed: expected-value cache round-trip' \u2014 a cited test blocks (a DispatchQueue.main/semaphore/RunLoop wait with no run loop, or network/I/O); every cited test must be synchronous and self-contained\n\nFix the coverage ledger, not just the code: every `implemented` row in full/matter/coverage.tsv must cite evidence of the exact form `test:full/matter/tests/agent/<File>Tests.swift#testName` naming a real top-level synchronous no-argument `func testName()` that exercises THAT identifier (a file path or a description is not evidence). Split the runtime test file into focused test functions per family, each cited only by the rows it exercises; reclassify any row without a real test to `declared` with `source:full/matter/<file>.swift#Symbol`. Enum/option-set members and C k\u2026/err\u2026 constants may share one table-driven value test; any other single test cited by more than 40% of the remaining implemented rows is refused as a bulk relabel. Then run `bash full/matter/tests/acceptance/test_host.sh` in this Linux environment until it ends FRAMEWORK_FANOUT_HOST_OK, update the README 'Depth pass 2026-09' section with the honest before/after counts and the top-5 evidence distribution, and push to the same branch."
+    }
+  ]
+}

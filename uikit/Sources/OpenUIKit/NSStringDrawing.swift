@@ -2,11 +2,17 @@
 // Foundation umbrella is present. Native Linux and Foundation-hidden Mach-O
 // framework builds both need OpenUIKit's implementation; the latter is still
 // an Apple target, so an `os(Linux)` test alone is insufficient.
-
-#if os(Linux) || !canImport(Foundation)
-#if canImport(Foundation)
-import Foundation
-#endif
+//
+// The types are UIKit names, not Foundation exports: Darwin SwiftPM OpenUIKit
+// (canImport(Foundation), not Linux) must declare them too. MEASURED
+// scripts/guest_route_check.sh on origin/agent/merge-focus4 (Darwin target,
+// Foundation hidden): FocusLaunchCompat.swift:202/211 `invalid redeclaration`
+// of NSStringDrawingOptions / NSStringDrawingContext and `ambiguous use of
+// 'init(rawValue:)'` — that file's `#if !os(Linux)` copies compiled next to
+// this file's `#if os(Linux) || !canImport(Foundation)` copies. One set lives
+// here. NSAttributedString.boundingRect is Focus AutocompleteTextField.swift:250
+// (Blockzilla a2832521); String.boundingRect stays Linux/guest-only so Darwin
+// host keeps the SDK String overlay (TooltipView.swift:112 already compiles).
 
 public struct NSStringDrawingOptions: OptionSet, Hashable, Sendable {
     public let rawValue: UInt
@@ -25,6 +31,7 @@ public final class NSStringDrawingContext: @unchecked Sendable {
     public init() {}
 }
 
+#if os(Linux) || !canImport(Foundation)
 extension String {
     public func boundingRect(
         with size: CGSize,
@@ -64,3 +71,23 @@ extension String {
     }
 }
 #endif
+
+extension NSAttributedString {
+    /// AutocompleteTextField.swift:250. Width of the typed prefix.
+    public func boundingRect(
+        with size: CGSize,
+        options: NSStringDrawingOptions,
+        context: NSStringDrawingContext?
+    ) -> CGRect {
+        _ = (options, context)
+        let font: UIFont
+        if length > 0, let value = attributes(at: 0, effectiveRange: nil)[.font] as? UIFont {
+            font = value
+        } else {
+            font = .systemFont(ofSize: 17)
+        }
+        let w = FontEngine.measure(string, font: font)
+        let h = FontEngine.labelLineHeight(for: font)
+        return CGRect(x: 0, y: 0, width: min(size.width, w), height: min(size.height, h))
+    }
+}
