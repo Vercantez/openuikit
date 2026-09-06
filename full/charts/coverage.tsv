@@ -32,28 +32,28 @@ s:6Charts10ChartProxyV8position4forX14CoreFoundation7CGFloatVSgx_tAA9PlottableRz
 s:6Charts10ChartProxyV8position4forY14CoreFoundation7CGFloatVSgx_tAA9PlottableRzlF	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testChartProxyResolvedMapping	-
 s:6Charts10ChartProxyV9lineStyle3for7SwiftUI06StrokeE0VSgx_tAA9PlottableRzlF	implemented	test:full/charts/tests/agent/ChartsTests.swift#testChartProxyLookupsFailClosed	-
 s:6Charts10ChartProxyV9plotFrame7SwiftUI6AnchorVySo6CGRectVGSgvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testChartProxyFailClosed	-
-s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts10NumberBinsV10startIndexSivp	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts10NumberBinsV10thresholdsACyxGSayxG_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts10NumberBinsV10thresholdsSayxGvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts10NumberBinsV11SubSequencea	declared	source:full/charts/ChartsSurface.swift#NumberBins	-
-s:6Charts10NumberBinsV2eeoiySbACyxG_AEtFZ	declared	source:full/charts/ChartsSurface.swift#NumberBins	-
-s:6Charts10NumberBinsV4data12desiredCount13minimumStrideACyxGSayxG_SiSgxtcSBRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV4data12desiredCount13minimumStrideACyxGSayxG_SiSgxtcSzRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV4size5rangeACyxGx_SNyxGtcSBRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV4size5rangeACyxGx_SNyxGtcSzRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV5Indexa	declared	source:full/charts/ChartsSurface.swift#NumberBins	-
-s:6Charts10NumberBinsV5index3forSix_tF	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts10NumberBinsV5index5afterS2i_tF	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts10NumberBinsV5range12desiredCount13minimumStrideACyxGSNyxG_SixtcSBRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV5range12desiredCount13minimumStrideACyxGSNyxG_SixtcSzRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV5range5countACyxGSNyxG_SitcSBRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV5range5countACyxGSNyxG_SitcSzRzrlufc	declared	source:full/charts/Charts.swift#init	-
-s:6Charts10NumberBinsV7Elementa	declared	source:full/charts/Charts.swift#Element	-
-s:6Charts10NumberBinsV7Indicesa	declared	source:full/charts/ChartsSurface.swift#NumberBins	-
-s:6Charts10NumberBinsV8Iteratora	declared	source:full/charts/ChartsSurface.swift#NumberBins	-
-s:6Charts10NumberBinsV8endIndexSivp	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts10NumberBinsVyAA13ChartBinRangeVyxGSicip	declared	source:full/charts/Charts.swift#subscript	-
+s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV10startIndexSivp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV10thresholdsACyxGSayxG_tcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV10thresholdsSayxGvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV11SubSequencea	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV2eeoiySbACyxG_AEtFZ	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV4data12desiredCount13minimumStrideACyxGSayxG_SiSgxtcSBRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsDataInference	-
+s:6Charts10NumberBinsV4data12desiredCount13minimumStrideACyxGSayxG_SiSgxtcSzRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsDataInference	-
+s:6Charts10NumberBinsV4size5rangeACyxGx_SNyxGtcSBRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsSizeRangeFloating	-
+s:6Charts10NumberBinsV4size5rangeACyxGx_SNyxGtcSzRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsSizeRangeInteger	-
+s:6Charts10NumberBinsV5Indexa	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV5index3forSix_tF	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsIndexFor	-
+s:6Charts10NumberBinsV5index5afterS2i_tF	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV5range12desiredCount13minimumStrideACyxGSNyxG_SixtcSBRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsDesiredCountNiceDomain	-
+s:6Charts10NumberBinsV5range12desiredCount13minimumStrideACyxGSNyxG_SixtcSzRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsDesiredCountNiceDomain	-
+s:6Charts10NumberBinsV5range5countACyxGSNyxG_SitcSBRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsRangeCountFloating	-
+s:6Charts10NumberBinsV5range5countACyxGSNyxG_SitcSzRzrlufc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsRangeCountInteger	-
+s:6Charts10NumberBinsV7Elementa	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV7Indicesa	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV8Iteratora	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsV8endIndexSivp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:6Charts10NumberBinsVyAA13ChartBinRangeVyxGSicip	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
 s:6Charts10ScaleRangeP	declared	source:full/charts/ChartsSurface.swift#ScaleRange	-
 s:6Charts10ScaleRangeP11VisualValueQa	declared	source:full/charts/Charts.swift#VisualValue	-
 s:6Charts10SectorMarkV	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testSectorMarkAnglePlotRecord	-
@@ -1323,11 +1323,11 @@ s:6Charts12ChartContentPAAE9lineStyleyQr7SwiftUI06StrokeE0VF::SYNTHESIZED::s:6Ch
 s:6Charts12ChartContentPAAE9lineStyleyQr7SwiftUI06StrokeE0VF::SYNTHESIZED::s:7SwiftUI7ForEachV	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testForEachChartContentModifiers	-
 s:6Charts12ChartContentPAAE9lineStyleyQr7SwiftUI06StrokeE0VF::SYNTHESIZED::s:Sq	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testOptionalChartContentModifiers	-
 s:6Charts12ChartContentPAAE9lineStyleyQr7SwiftUI06StrokeE0VF::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#lineStyle	-
-s:6Charts13ChartBinRangeV	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts13ChartBinRangeV10lowerBoundxvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts13ChartBinRangeV10upperBoundxvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts13ChartBinRangeV8containsySbxF	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts13ChartBinRangeV8relative2toSnyxGqd___t5IndexQyd__RszSlRd__lF	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
+s:6Charts13ChartBinRangeV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testChartBinRangeContainsRelativeAndPattern	-
+s:6Charts13ChartBinRangeV10lowerBoundxvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testChartBinRangeContainsRelativeAndPattern	-
+s:6Charts13ChartBinRangeV10upperBoundxvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testChartBinRangeContainsRelativeAndPattern	-
+s:6Charts13ChartBinRangeV8containsySbxF	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testChartBinRangeContainsRelativeAndPattern	-
+s:6Charts13ChartBinRangeV8relative2toSnyxGqd___t5IndexQyd__RszSlRd__lF	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testChartBinRangeContainsRelativeAndPattern	-
 s:6Charts13MarkDimensionV	declared	source:full/charts/ChartsSurface.swift#MarkDimension	-
 s:6Charts13MarkDimensionV11descriptionSSvp	declared	source:full/charts/Charts.swift#description	-
 s:6Charts13MarkDimensionV12floatLiteralACSd_tcfc	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testMarkDimensionFixedAndRatio	-
@@ -2017,41 +2017,41 @@ s:6Charts25VectorizedLinePlotContentV4bodyQrvp	declared	source:full/charts/Chart
 s:6Charts25VectorizedRulePlotContentV	implemented	test:full/charts/tests/agent/ChartsWave8Tests.swift#testVectorizedBarPlotContentEmpty	-
 s:6Charts25VectorizedRulePlotContentV11DataElementa	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts25VectorizedRulePlotContentV4Bodya	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts26PrimitivePlottableProtocolP	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:10Foundation4DateV	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:SS	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Sd	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Sf	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Si	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Su	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s4Int8V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int16V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int32V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int64V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5UInt8V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt16V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt32V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt64V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s7Float16V	declared	source:full/charts/Charts.swift#init	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:10Foundation4DateV	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:SS	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Sd	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Sf	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Si	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Su	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s4Int8V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int16V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int32V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int64V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5UInt8V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt16V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt32V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt64V	declared	source:full/charts/Charts.swift#primitivePlottable	-
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s7Float16V	declared	source:full/charts/Charts.swift#primitivePlottable	-
+s:6Charts26PrimitivePlottableProtocolP	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:10Foundation4DateV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolStringDateWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:SS	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolStringDateWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Sd	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Sf	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Si	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:Su	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s4Int8V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int64V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#init	Never is uninhabited; the PrimitivePlottableProtocol witness compiles but no value can be constructed to exercise it.
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt64V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s7Float16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:10Foundation4DateV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolStringDateWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:SS	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolStringDateWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Sd	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Sf	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Si	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:Su	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s4Int8V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int64V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#primitivePlottable	Never is uninhabited; the PrimitivePlottableProtocol witness compiles but no value can be constructed to exercise it.
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5UInt8V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt64V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s7Float16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	-
 s:6Charts26VectorizedPointPlotContentV	implemented	test:full/charts/tests/agent/ChartsWave8Tests.swift#testVectorizedBarPlotContentEmpty	-
 s:6Charts26VectorizedPointPlotContentV11DataElementa	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts26VectorizedPointPlotContentV4Bodya	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
@@ -2201,24 +2201,24 @@ s:6Charts8AxisTickV6LengthV5labelAEvpZ	implemented	test:full/charts/tests/agent/
 s:6Charts8AxisTickV6LengthV9automaticAEvpZ	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAxisTickLengthCatalog	-
 s:6Charts8AxisTickV8centered6length6strokeACSbSg_14CoreFoundation7CGFloatV7SwiftUI11StrokeStyleVSgtcfc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAxisTickLengthCatalog	-
 s:6Charts8AxisTickV8centered6length6strokeACSbSg_AC6LengthV7SwiftUI11StrokeStyleVSgtcfc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAxisTickLengthCatalog	-
-s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV10startIndexSivp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV10thresholdsACSay10Foundation0B0VG_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV10thresholdsSay10Foundation0B0VGvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV11SubSequencea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV12timeInterval5rangeACSd_SNy10Foundation0B0VGtcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV2eeoiySbAC_ACtFZ	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV4data12desiredCount8calendarACSay10Foundation0B0VG_SiSgAG8CalendarVtcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV4unit2by5range8calendarAC10Foundation8CalendarV9ComponentO_SiSNyAH0B0VGAJtcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV5Indexa	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV5index3forSi10Foundation0B0V_tF	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV5index5afterS2i_tF	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV5range12desiredCount8calendarACSNy10Foundation0B0VG_SiAG8CalendarVtcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV7Elementa	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV7Indicesa	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV8Iteratora	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsV8endIndexSivp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
-s:6Charts8DateBinsVyAA13ChartBinRangeVy10Foundation0B0VGSicip	implemented	test:full/charts/tests/agent/ChartsTests.swift#testBinsAndRanges	-
+s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV10startIndexSivp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV10thresholdsACSay10Foundation0B0VG_tcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV10thresholdsSay10Foundation0B0VGvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV11SubSequencea	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV12timeInterval5rangeACSd_SNy10Foundation0B0VGtcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsTimeInterval	-
+s:6Charts8DateBinsV2eeoiySbAC_ACtFZ	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV4data12desiredCount8calendarACSay10Foundation0B0VG_SiSgAG8CalendarVtcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsDataInference	-
+s:6Charts8DateBinsV4unit2by5range8calendarAC10Foundation8CalendarV9ComponentO_SiSNyAH0B0VGAJtcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsUnitStride	-
+s:6Charts8DateBinsV5Indexa	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV5index3forSi10Foundation0B0V_tF	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsIndexFor	-
+s:6Charts8DateBinsV5index5afterS2i_tF	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV5range12desiredCount8calendarACSNy10Foundation0B0VG_SiAG8CalendarVtcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsDesiredCount	-
+s:6Charts8DateBinsV7Elementa	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV7Indicesa	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV8Iteratora	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsV8endIndexSivp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:6Charts8DateBinsVyAA13ChartBinRangeVy10Foundation0B0VGSicip	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
 s:6Charts8LineMarkV	implemented	test:full/charts/tests/agent/ChartsTests.swift#testLineMarkScalars	-
 s:6Charts8LineMarkV1x1y6seriesAcA14PlottableValueVyxG_AHyq_GAHyq0_GtcAA0E0RzAaLR_AaLR0_r1_lufc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testLineMarkSeriesPlotRecord	-
 s:6Charts8LineMarkV1x1yAcA14PlottableValueVyxG_AGyq_GtcAA0D0RzAaJR_r0_lufc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testLineMarkScalars	-
@@ -2277,8 +2277,8 @@ s:6Charts9PlottableP	implemented	test:full/charts/tests/agent/ChartsTests.swift#
 s:6Charts9PlottableP09PrimitiveB0Qa	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:6Charts9PlottableP09primitiveB009PrimitiveB0Qzvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:6Charts9PlottableP09primitiveB0xSg09PrimitiveB0Qz_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:6Charts9PlottablePAASYRzSS8RawValueSYRtzrlE09primitiveB0SSvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:6Charts9PlottablePAASYRzSS8RawValueSYRtzrlE09primitiveB0xSgSS_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
+s:6Charts9PlottablePAASYRzSS8RawValueSYRtzrlE09primitiveB0SSvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPlottableStringRawValueEnum	-
+s:6Charts9PlottablePAASYRzSS8RawValueSYRtzrlE09primitiveB0xSgSS_tcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPlottableStringRawValueEnum	-
 s:6Charts9PointMarkV	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testPointMarkPlotRecord	-
 s:6Charts9PointMarkV1x1y1zAcA14PlottableValueVyxG_AHyq_GAHyq0_GtcAA0D0RzAaLR_AaLR0_r1_lufc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testPointMarkPlotRecord	-
 s:6Charts9PointMarkV1x1yAC14CoreFoundation7CGFloatVSg_AA14PlottableValueVyxGtcAA0G0Rzlufc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testPointMarkPlotRecord	-
@@ -8569,74 +8569,74 @@ s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:s6UInt32V	deferred		S
 s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib Comparable/Equatable/Integer operator synthesized onto Plottable-conforming types; Charts does not redeclare the operator.
 s:SN6ChartsSBRzrlE11VisualValuea	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Foundation4DateV	deferred		Stdlib Comparable/Equatable/Integer operator synthesized onto Plottable-conforming types; Charts does not redeclare the operator.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/ChartsSurface.swift#NumberBins	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts11Chart3DPoseV	declared	source:full/charts/ChartsSurface.swift#Chart3DPose	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts18AnnotationPositionV	declared	source:full/charts/Charts.swift#AnnotationPosition	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts18MarkStackingMethodV	declared	source:full/charts/ChartsSurface.swift#MarkStackingMethod	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts23Chart3DCameraProjectionV	declared	source:full/charts/ChartsSurface.swift#Chart3DCameraProjection	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts24BasicChart3DSurfaceStyleV	declared	source:full/charts/ChartsSurface.swift#BasicChart3DSurfaceStyle	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/ChartsSurface.swift#DateBins	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7SwiftUI11AnyGradientV	deferred		Operator has no identifier anchor in product sources.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7SwiftUI8GradientV	deferred		Operator has no identifier anchor in product sources.
 s:SS6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/Charts.swift#enumerated	-
-s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/Charts.swift#enumerated	-
-s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/Charts.swift#max	-
-s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/Charts.swift#max	-
-s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/Charts.swift#min	-
-s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/Charts.swift#min	-
-s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/ChartsSurface.swift#count	-
-s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/ChartsSurface.swift#count	-
-s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/Charts.swift#first	-
-s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/Charts.swift#first	-
-s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tAA14SortComparatorRd__8ComparedQyd__AERSlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE6sorted5usingSay7ElementQzGqd___tSTRd__AA14SortComparatorRd_0_ADQyd__Rsd_0_8ComparedQyd_0_AERSr0_lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE7compareySo18NSComparisonResultV8ComparedQyd___AFtAA14SortComparatorRd__7ElementQzRsd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST10FoundationE9formattedy12FormatOutputQyd__qd__0C5InputQyd__RszAA0C5StyleRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		Foundation SortComparator/FormatStyle overlays on NumberBins/DateBins are not Charts-owned and were not exercised.
+s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		Combine Publishers.Sequence is unavailable on the isolated Linux Charts host; no Combine module.
+s:ST7CombineE9publisherAA10PublishersO8SequenceVy_xs5NeverOGvp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		Combine Publishers.Sequence is unavailable on the isolated Linux Charts host; no Combine module.
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE10allSatisfyyS2b7ElementQzKXEKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE10compactMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE10enumerateds18EnumeratedSequenceVyxGyF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE13elementsEqual_2bySbqd___Sb7ElementQz_ACQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE25lexicographicallyPrecedes_2bySbqd___Sb7ElementQz_ADtKXEtKSTRd__ACQyd__ADRSlF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE32withContiguousStorageIfAvailableyqd__Sgqd__SRy7ElementQzGKXEKlF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE3max2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE3min2by7ElementQzSgSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE4lazys12LazySequenceVyxGvp::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE5count5whereSiSb7ElementQzqd__YKXE_tqd__YKs5ErrorRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE5first5where7ElementQzSgSbADKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE6filterySay7ElementQzGSbACKXEKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE6reduce4into_qd__qd__n_yqd__z_7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE6reduceyqd__qd___qd__qd___7ElementQztKXEtKlF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE6sorted2bySay7ElementQzGSbAD_ADtKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE6starts4with2bySbqd___Sb7ElementQz_ADQyd__tKXEtKSTRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE7flatMapySay7ElementQyd__Gqd__ABQzKXEKSTRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		Deprecated Sequence.flatMap returning Optional; tests call compactMap and the Sequence-returning flatMap.
+s:STsE7flatMapySayqd__Gqd__Sg7ElementQzKXEKlF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		Deprecated Sequence.flatMap returning Optional; tests call compactMap and the Sequence-returning flatMap.
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE7forEachyyy7ElementQzKXEKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE8contains5whereS2b7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE8reversedSay7ElementQzGyF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE8shuffled5usingSay7ElementQzGqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:STsE8shuffledSay7ElementQzGyF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
 s:SUsE8isSignedSbvpZ::SYNTHESIZED::s:Su	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:SUsE8isSignedSbvpZ::SYNTHESIZED::s:s5UInt8V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:SUsE8isSignedSbvpZ::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
@@ -8667,7 +8667,7 @@ s:SUss17FixedWidthIntegerRzrlEyxqd__cSzRd__lufc::SYNTHESIZED::s:s5UInt8V	deferre
 s:SUss17FixedWidthIntegerRzrlEyxqd__cSzRd__lufc::SYNTHESIZED::s:s6UInt16V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:SUss17FixedWidthIntegerRzrlEyxqd__cSzRd__lufc::SYNTHESIZED::s:s6UInt32V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:SUss17FixedWidthIntegerRzrlEyxqd__cSzRd__lufc::SYNTHESIZED::s:s6UInt64V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
-s:SXsE2teoiySbx_5BoundQztFZ::SYNTHESIZED::s:6Charts13ChartBinRangeV	declared	source:full/charts/ChartsSurface.swift#ChartBinRange	-
+s:SXsE2teoiySbx_5BoundQztFZ::SYNTHESIZED::s:6Charts13ChartBinRangeV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testChartBinRangeContainsRelativeAndPattern	-
 s:SZsE8isSignedSbvpZ::SYNTHESIZED::s:Si	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:SZsE8isSignedSbvpZ::SYNTHESIZED::s:s4Int8V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:SZsE8isSignedSbvpZ::SYNTHESIZED::s:s5Int16V	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
@@ -8704,67 +8704,67 @@ s:Sf6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/Chart
 s:Si6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:Si6ChartsE18primitivePlottableSiSgSi_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:Si6ChartsE18primitivePlottableSivp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE5countSivp::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/ChartsSurface.swift#count	-
-s:SlsE5countSivp::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/ChartsSurface.swift#count	-
-s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:6Charts10NumberBinsV	declared	source:full/charts/Charts.swift#first	-
-s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:6Charts8DateBinsV	declared	source:full/charts/Charts.swift#first	-
-s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE7isEmptySbvp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE7isEmptySbvp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:6Charts8DateBinsV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:So9NSDecimala6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:So9NSDecimala6ChartsE18primitivePlottableABSgSd_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:So9NSDecimala6ChartsE18primitivePlottableSdvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
+s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:Sl17_StringProcessingE14trimmingPrefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE10firstIndex5where0B0QzSgSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE13randomElement0B0QzSgyF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE13randomElement5using0B0QzSgqd__z_tSGRd__lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE17removingSubrangesys18DiscontiguousSliceVyxGs8RangeSetVy5IndexQzGF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE19underestimatedCountSivp::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionAlgorithms	-
+s:SlsE3mapySayqd__Gqd__7ElementQzqd_0_YKXEqd_0_YKs5ErrorRd_0_r0_lF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionAlgorithms	-
+s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE4drop5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE5countSivp::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:SlsE5countSivp::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE5first7ElementQzSgvp::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE5index_8offsetBy07limitedC05IndexQzSgAE_SiAEtF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE5index_8offsetBy5IndexQzAD_SitF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE5split9maxSplits25omittingEmptySubsequences14whereSeparatorSay11SubSequenceQzGSi_S2b7ElementQzKXEtKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE6prefix4upTo11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE6prefix5while11SubSequenceQzSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE6prefix7through11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE6prefixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE6suffix4from11SubSequenceQz5IndexQz_tF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE6suffixy11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE7indices5wheres8RangeSetVy5IndexQzGSb7ElementQzKXE_tKF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE7isEmptySbvp::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE7isEmptySbvp::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE8distance4from2toSi5IndexQz_AEtF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE8dropLasty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE9dropFirsty11SubSequenceQzSiF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE9formIndex5aftery0B0Qzz_tF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE9formIndex_8offsetBy07limitedD0Sb0B0Qzz_SiAEtF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsCollectionSlicing	-
+s:SlsE9formIndex_8offsetByy0B0Qzz_SitF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsCollectionSlicing	-
+s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:6Charts10NumberBinsV	deferred		RandomAccessCollection.indices where Indices == Self does not apply; public surface Indices is DefaultIndices.
+s:SlsSIyxG7IndicesRtzrlE7indicesAAvp::SYNTHESIZED::s:6Charts8DateBinsV	deferred		RandomAccessCollection.indices where Indices == Self does not apply; public surface Indices is DefaultIndices.
+s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	-
+s:Slss16IndexingIteratorVyxG0B0RtzrlE04makeB0ACyF::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	-
+s:So9NSDecimala6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDecimalPlottableRoundTrip	-
+s:So9NSDecimala6ChartsE18primitivePlottableABSgSd_tcfc	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDecimalPlottableRoundTrip	-
+s:So9NSDecimala6ChartsE18primitivePlottableSdvp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDecimalPlottableRoundTrip	-
 s:Sq6ChartsAA12ChartContentRzlE4Bodya	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:Sq6ChartsAA12ChartContentRzlE4bodys5NeverOvp	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
 s:Sq6ChartsAA14Chart3DContentRzlE4Bodya	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
@@ -9462,7 +9462,7 @@ s:s5Int32V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent
 s:s5Int64V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:s5Int64V6ChartsE18primitivePlottableABSgAB_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:s5Int64V6ChartsE18primitivePlottableABvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:s5NeverO6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
+s:s5NeverO6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNeverPrimitivePlottableTypealias	-
 s:s5NeverO6ChartsE18primitivePlottableABSgAB_tcfc	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:s5NeverO6ChartsE18primitivePlottableABvp	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:s5NeverO6ChartsE4bodyABvp	deferred		Stdlib overlay member; Charts only adds Plottable and does not redeclare inherited numeric protocol requirements.
@@ -9472,4 +9472,4 @@ s:s5UInt8V6ChartsE18primitivePlottableABvp	implemented	test:full/charts/tests/ag
 s:s6UInt16V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:s6UInt32V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
 s:s6UInt64V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
-s:s7Float16V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsTests.swift#testPrimitivePlottable	-
+s:s7Float16V6ChartsE18PrimitivePlottablea	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testFloat16PlottableEncoding	-

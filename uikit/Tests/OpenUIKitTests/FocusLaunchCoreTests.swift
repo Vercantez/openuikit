@@ -251,7 +251,7 @@ final class FocusLaunchCoreTests: XCTestCase {
         XCTAssertEqual(velocity, 4)
         XCTAssertNil(completion)
         window.tick(timestamp: 0.4)
-        XCTAssertEqual(animator.state, .stopped)
+        XCTAssertEqual(animator.state, .inactive)
         XCTAssertEqual(completion, .end)
     }
 

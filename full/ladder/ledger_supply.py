@@ -45,6 +45,7 @@ GUEST_ORACLE_FAMILIES = {
     "DateFormatter", "NumberFormatter", "ISO8601DateFormatter",
     "DateComponentsFormatter", "JSONSerialization", "NSRegularExpression",
     "URLSession", "ByteCountFormatter", "UserDefaults", "HTTPCookie",
+    "URLComponents",
 }
 
 

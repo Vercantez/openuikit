@@ -20,26 +20,55 @@ public enum ChartsPortable {
     public static let interactionCapability = InteractionCapability.unavailable
 }
 
-public protocol Plottable {}
-extension Int: Plottable {}
-extension Int8: Plottable {}
-extension Int16: Plottable {}
-extension Int32: Plottable {}
-extension Int64: Plottable {}
-extension UInt: Plottable {}
-extension UInt8: Plottable {}
-extension UInt16: Plottable {}
-extension UInt32: Plottable {}
-extension UInt64: Plottable {}
-extension Float: Plottable {}
-extension Double: Plottable {}
-extension String: Plottable {}
-extension Date: Plottable {}
+/// A value that Charts can encode into a scale domain.
+///
+/// Primitive numeric/string/date types conform to
+/// `PrimitivePlottableProtocol`, which supplies identity `primitivePlottable`
+/// witnesses. `Decimal` plots through `Double`. String raw-value enumerations
+/// plot through their `rawValue`.
+public protocol Plottable {
+    associatedtype PrimitivePlottable: PrimitivePlottableProtocol
+    var primitivePlottable: PrimitivePlottable { get }
+    init?(primitivePlottable: PrimitivePlottable)
+}
 
-public extension Plottable {
-    typealias PrimitivePlottable = Self
+public protocol PrimitivePlottableProtocol: Plottable where Self == PrimitivePlottable {}
+
+public extension PrimitivePlottableProtocol {
     var primitivePlottable: Self { self }
     init?(primitivePlottable: Self) { self = primitivePlottable }
+}
+
+public extension Plottable where Self: RawRepresentable, RawValue == String, PrimitivePlottable == String {
+    var primitivePlottable: String { rawValue }
+    init?(primitivePlottable: String) { self.init(rawValue: primitivePlottable) }
+}
+
+extension Int: Plottable, PrimitivePlottableProtocol {}
+extension Int8: Plottable, PrimitivePlottableProtocol {}
+extension Int16: Plottable, PrimitivePlottableProtocol {}
+extension Int32: Plottable, PrimitivePlottableProtocol {}
+extension Int64: Plottable, PrimitivePlottableProtocol {}
+extension UInt: Plottable, PrimitivePlottableProtocol {}
+extension UInt8: Plottable, PrimitivePlottableProtocol {}
+extension UInt16: Plottable, PrimitivePlottableProtocol {}
+extension UInt32: Plottable, PrimitivePlottableProtocol {}
+extension UInt64: Plottable, PrimitivePlottableProtocol {}
+extension Float: Plottable, PrimitivePlottableProtocol {}
+extension Float16: Plottable, PrimitivePlottableProtocol {}
+extension Double: Plottable, PrimitivePlottableProtocol {}
+extension String: Plottable, PrimitivePlottableProtocol {}
+extension Date: Plottable, PrimitivePlottableProtocol {}
+extension Never: Plottable, PrimitivePlottableProtocol {}
+
+extension Decimal: Plottable {
+    public typealias PrimitivePlottable = Double
+    public var primitivePlottable: Double {
+        NSDecimalNumber(decimal: self).doubleValue
+    }
+    public init?(primitivePlottable: Double) {
+        self = Decimal(primitivePlottable)
+    }
 }
 
 public struct PlottableValue<Value: Plottable>: Sendable

@@ -1,5 +1,56 @@
 import Foundation
 
+final class _BiquadSetupBox {
+    let sections: Int
+    let coeffs: [Double]
+    init?(coefficients: [Double], sectionCount: Int) {
+        guard sectionCount > 0, coefficients.count >= sectionCount * 5 else { return nil }
+        self.sections = sectionCount
+        self.coeffs = Array(coefficients.prefix(sectionCount * 5))
+    }
+}
+
+func _biquadRetain(_ box: _BiquadSetupBox) -> OpaquePointer {
+    OpaquePointer(Unmanaged.passRetained(box).toOpaque())
+}
+
+func _biquadBox(_ setup: OpaquePointer?) -> _BiquadSetupBox? {
+    guard let setup else { return nil }
+    return Unmanaged<_BiquadSetupBox>.fromOpaque(UnsafeRawPointer(setup)).takeUnretainedValue()
+}
+
+func _biquadRelease(_ setup: OpaquePointer?) {
+    guard let setup else { return }
+    Unmanaged<_BiquadSetupBox>.fromOpaque(UnsafeRawPointer(setup)).release()
+}
+
+func _biquadApply<T: BinaryFloatingPoint>(
+    source: UnsafePointer<T>,
+    destination: UnsafeMutablePointer<T>,
+    delays: UnsafeMutablePointer<T>,
+    box: _BiquadSetupBox,
+    count: Int
+) {
+    let sections = box.sections
+    for i in 0..<count {
+        var sample = Double(source[i])
+        for s in 0..<sections {
+            let b0 = box.coeffs[s * 5]
+            let b1 = box.coeffs[s * 5 + 1]
+            let b2 = box.coeffs[s * 5 + 2]
+            let a1 = box.coeffs[s * 5 + 3]
+            let a2 = box.coeffs[s * 5 + 4]
+            let w1 = Double(delays[s * 2])
+            let w2 = Double(delays[s * 2 + 1])
+            let w0 = sample - a1 * w1 - a2 * w2
+            sample = b0 * w0 + b1 * w1 + b2 * w2
+            delays[s * 2] = T(w0)
+            delays[s * 2 + 1] = T(w1)
+        }
+        destination[i] = T(sample)
+    }
+}
+
 final class _FFTSetupBox {
     let log2n: Int
     let n: Int
