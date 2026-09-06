@@ -73,6 +73,21 @@ No non-enum test is cited by more than 2 implemented rows.
 clean EC2 run that builds guest Foundation first.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
-products out of the tree.
+products out of the tree. This run ended:
 
-The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean product tree (`products=clean`). Starting commit `cbb368eeea236bbc0479fefa599190972ac8cfca` matched.
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=ContactProvider lane=leaf-full symbols=99
+FRAMEWORK_FANOUT_REFERENCE_OK
+CONTACTPROVIDER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=ContactProvider dylib=libContactProvider.dylib
+```
+
+`swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
+`.cursor/verify-cloud-environment.sh` does not print
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
+snapshot (`scratch/ladder-corpus/focus-ios` is missing; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). That campaign token is
+the host-inventory stamp; the sealed framework gate compiles with a clean
+product tree (`products=clean`). Starting commit
+`cbb368eeea236bbc0479fefa599190972ac8cfca` matched.
