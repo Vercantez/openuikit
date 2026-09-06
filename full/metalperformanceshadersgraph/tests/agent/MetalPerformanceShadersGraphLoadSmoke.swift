@@ -1,0 +1,3 @@
+import MetalPerformanceShadersGraph
+
+let frameworkLoadSmokeMarker = "METALPERFORMANCESHADERSGRAPH_AGENT_RUNTIME_OK"

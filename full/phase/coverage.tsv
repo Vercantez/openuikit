@@ -1,0 +1,640 @@
+precise	status	evidence	notes
+c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetError@PHASEAssetErrorAlreadyExists	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetError@PHASEAssetErrorBadParameters	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetError@PHASEAssetErrorFailedToLoad	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetError@PHASEAssetErrorGeneralError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetError@PHASEAssetErrorInvalidEngineInstance	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetError@PHASEAssetErrorMemoryAllocation	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEAssetType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+c:@E@PHASEAssetType@PHASEAssetTypeResident	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+c:@E@PHASEAssetType@PHASEAssetTypeStreamed	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingFlagValues	option-set / category values
+c:@E@PHASEAutomaticHeadTrackingFlags@PHASEAutomaticHeadTrackingFlagOrientation	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingFlagValues	option-set / category values
+c:@E@PHASEAutomaticHeadTrackingFlags@PHASEAutomaticHeadTrackingFlagPosition	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingFlagValues	option-set / category values
+c:@E@PHASECalibrationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+c:@E@PHASECalibrationMode@PHASECalibrationModeAbsoluteSpl	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+c:@E@PHASECalibrationMode@PHASECalibrationModeNone	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+c:@E@PHASECalibrationMode@PHASECalibrationModeRelativeSpl	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+c:@E@PHASECullOption	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+c:@E@PHASECullOption@PHASECullOptionDoNotCull	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+c:@E@PHASECullOption@PHASECullOptionSleepWakeAtRandomOffset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+c:@E@PHASECullOption@PHASECullOptionSleepWakeAtRealtimeOffset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+c:@E@PHASECullOption@PHASECullOptionSleepWakeAtZero	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+c:@E@PHASECullOption@PHASECullOptionTerminate	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+c:@E@PHASECurveType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeCubed	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeHoldStartValue	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeInverseCubed	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeInverseSigmoid	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeInverseSine	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeInverseSquared	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeJumpToEndValue	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeLinear	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeSigmoid	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeSine	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASECurveType@PHASECurveTypeSquared	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEError@PHASEErrorInitializeFailed	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEError@PHASEErrorInvalidObject	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetBrick	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetCardboard	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetConcrete	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetDrywall	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetGlass	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMaterialPreset@PHASEMaterialPresetWood	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+c:@E@PHASEMediumPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMediumPresetRawValues	table-driven enum raw values
+c:@E@PHASEMediumPreset@PHASEMediumPresetAir	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMediumPresetRawValues	table-driven enum raw values
+c:@E@PHASENormalizationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+c:@E@PHASENormalizationMode@PHASENormalizationModeDynamic	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+c:@E@PHASENormalizationMode@PHASENormalizationModeNone	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+c:@E@PHASEPlaybackMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+c:@E@PHASEPlaybackMode@PHASEPlaybackModeLooping	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+c:@E@PHASEPlaybackMode@PHASEPlaybackModeOneShot	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferDefault	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferInterrupts	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferInterruptsAtLoop	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+c:@E@PHASEPushStreamBufferOptions@PHASEPushStreamBufferLoops	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+c:@E@PHASEPushStreamCompletionCallbackCondition	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPushStreamCompletionRawValues	table-driven enum raw values
+c:@E@PHASEPushStreamCompletionCallbackCondition@PHASEPushStreamCompletionDataRendered	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPushStreamCompletionRawValues	table-driven enum raw values
+c:@E@PHASERenderingState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+c:@E@PHASERenderingState@PHASERenderingStatePaused	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+c:@E@PHASERenderingState@PHASERenderingStateStarted	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+c:@E@PHASERenderingState@PHASERenderingStateStopped	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetCathedral	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeChamber	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeHall	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeHall2	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeRoom	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetLargeRoom2	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumChamber	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumHall	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumHall2	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumHall3	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetMediumRoom	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetNone	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASEReverbPreset@PHASEReverbPresetSmallRoom	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError@PHASESoundEventErrorAPIMisuse	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError@PHASESoundEventErrorBadData	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError@PHASESoundEventErrorInvalidInstance	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError@PHASESoundEventErrorNotFound	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError@PHASESoundEventErrorOutOfMemory	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventError@PHASESoundEventErrorSystemNotInitialized	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareHandlerReason@PHASESoundEventPrepareHandlerReasonFailure	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareHandlerReason@PHASESoundEventPrepareHandlerReasonPrepared	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareHandlerReason@PHASESoundEventPrepareHandlerReasonTerminated	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareState@PHASESoundEventPrepareStatePrepareInProgress	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareState@PHASESoundEventPrepareStatePrepareNotStarted	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+c:@E@PHASESoundEventPrepareState@PHASESoundEventPrepareStatePrepared	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+c:@E@PHASESoundEventSeekHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventSeekHandlerReason@PHASESoundEventSeekHandlerReasonFailure	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventSeekHandlerReason@PHASESoundEventSeekHandlerReasonFailureSeekAlreadyInProgress	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventSeekHandlerReason@PHASESoundEventSeekHandlerReasonSeekSuccessful	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventStartHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventStartHandlerReason@PHASESoundEventStartHandlerReasonFailure	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventStartHandlerReason@PHASESoundEventStartHandlerReasonFinishedPlaying	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESoundEventStartHandlerReason@PHASESoundEventStartHandlerReasonTerminated	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+c:@E@PHASESpatialPipelineFlags@PHASESpatialPipelineFlagDirectPathTransmission	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagValues	option-set / category values
+c:@E@PHASESpatialPipelineFlags@PHASESpatialPipelineFlagEarlyReflections	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagValues	option-set / category values
+c:@E@PHASESpatialPipelineFlags@PHASESpatialPipelineFlagLateReverb	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagValues	option-set / category values
+c:@E@PHASESpatializationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+c:@E@PHASESpatializationMode@PHASESpatializationModeAlwaysUseBinaural	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+c:@E@PHASESpatializationMode@PHASESpatializationModeAlwaysUseChannelBased	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+c:@E@PHASESpatializationMode@PHASESpatializationModeAutomatic	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+c:@E@PHASEUpdateMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+c:@E@PHASEUpdateMode@PHASEUpdateModeAutomatic	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+c:@E@PHASEUpdateMode@PHASEUpdateModeManual	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+c:@PHASEAssetErrorDomain	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorDomain	domain constant
+c:@PHASEErrorDomain	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorDomain	domain constant
+c:@PHASESoundEventErrorDomain	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorDomain	domain constant
+c:@PHASESpatialCategoryDirectPathTransmission	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+c:@PHASESpatialCategoryEarlyReflections	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+c:@PHASESpatialCategoryLateReverb	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+c:@T@PHASEPullStreamRenderBlock	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:@T@PHASESpatialCategory	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+c:objc(cs)PHASEAmbientMixerDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testAmbientChannelHostMixers	linux behaviour
+c:objc(cs)PHASEAmbientMixerDefinition(im)initWithChannelLayout:orientation:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEAmbientMixerDefinition(im)initWithChannelLayout:orientation:identifier:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEAmbientMixerDefinition(py)inputChannelLayout	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEAmbientMixerDefinition(py)orientation	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testAmbientChannelHostMixers	linux behaviour
+c:objc(cs)PHASEAsset	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEAsset(py)identifier	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEAssetRegistry	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEAssetRegistry(im)assetForIdentifier:	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEAssetRegistry(im)registerGlobalMetaParameter:error:	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEAssetRegistry(im)registerSoundAssetAtURL:identifier:assetType:channelLayout:normalizationMode:error:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEAssetRegistry(im)registerSoundAssetWithData:identifier:format:normalizationMode:error:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEAssetRegistry(im)registerSoundEventAssetWithRootNode:identifier:error:	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistrySoundEventAsset	linux behaviour
+c:objc(cs)PHASEAssetRegistry(im)unregisterAssetWithIdentifier:completion:	declared	source:full/phase/PHASEAssets.swift#PHASEAssetRegistry	Async-only API; isolated host tests cannot await (no run loop).
+c:objc(cs)PHASEAssetRegistry(py)globalMetaParameters	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesAbove:fullGainAtValue:fadeCurveType:subtree:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesBelow:fullGainAtValue:fadeCurveType:subtree:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeForInputValuesBetween:highValue:fullGainAtLowValue:fullGainAtHighValue:lowFadeCurveType:highFadeCurveType:subtree:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)addRangeWithEnvelope:subtree:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:::SYNTHESIZED::c:objc(cs)PHASEBlendNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:identifier:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)initDistanceBlendWithSpatialMixerDefinition:identifier:::SYNTHESIZED::c:objc(cs)PHASEBlendNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)initWithBlendMetaParameterDefinition:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(im)initWithBlendMetaParameterDefinition:identifier:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(py)blendParameterDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendRanges	linux behaviour
+c:objc(cs)PHASEBlendNodeDefinition(py)spatialMixerDefinitionForDistance	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testBlendDistanceInit	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelParameters(im)initWithSubbandParameters:	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelParameters(py)subbandParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(im)init	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(py)frequency	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(py)pattern	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASECardioidDirectivityModelSubbandParameters(py)sharpness	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASEChannelMixerDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testAmbientChannelHostMixers	linux behaviour
+c:objc(cs)PHASEChannelMixerDefinition(im)initWithChannelLayout:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEChannelMixerDefinition(im)initWithChannelLayout:identifier:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEChannelMixerDefinition(py)inputChannelLayout	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEConeDirectivityModelParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelParameters(im)initWithSubbandParameters:	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelParameters(py)subbandParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(im)init	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(im)setInnerAngle:outerAngle:	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)frequency	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)innerAngle	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)outerAngle	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEConeDirectivityModelSubbandParameters(py)outerGain	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testConeAngles	linux behaviour
+c:objc(cs)PHASEContainerNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASEContainerNodeDefinition(cm)new	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASEContainerNodeDefinition(im)addSubtree:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASEContainerNodeDefinition(im)init	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASEContainerNodeDefinition(im)initWithIdentifier:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASEDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASEDefinition(py)identifier	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASEDirectivityModelParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testCardioidSubband	linux behaviour
+c:objc(cs)PHASEDistanceModelFadeOutParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEDistanceModelFadeOutParameters(im)initWithCullDistance:	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEDistanceModelFadeOutParameters(py)cullDistance	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEDistanceModelParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEDistanceModelParameters(py)fadeOutParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEDucker	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(im)activate	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(im)deactivate	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(im)initWithEngine:sourceGroups:targetGroups:gain:attackTime:releaseTime:attackCurve:releaseCurve:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)active	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)attackCurve	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)attackTime	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)gain	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)identifier	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)releaseCurve	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)releaseTime	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)sourceGroups	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEDucker(py)targetGroups	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testDuckerActivate	linux behaviour
+c:objc(cs)PHASEEngine	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(im)initWithUpdateMode:	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(im)pause	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEnginePauseStopUpdate	linux behaviour
+c:objc(cs)PHASEEngine(im)startAndReturnError:	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineStartFailsClosed	linux behaviour
+c:objc(cs)PHASEEngine(im)stop	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEnginePauseStopUpdate	linux behaviour
+c:objc(cs)PHASEEngine(im)update	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEnginePauseStopUpdate	linux behaviour
+c:objc(cs)PHASEEngine(py)activeGroupPreset	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)assetRegistry	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineAssetRegistryIdentity	linux behaviour
+c:objc(cs)PHASEEngine(py)defaultMedium	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineRootAndMedium	linux behaviour
+c:objc(cs)PHASEEngine(py)defaultReverbPreset	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)duckers	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)groups	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)lastRenderTime	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEEngine(py)outputSpatializationMode	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)renderingState	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)rootObject	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineRootAndMedium	linux behaviour
+c:objc(cs)PHASEEngine(py)soundEvents	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)unitsPerMeter	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEngine(py)unitsPerSecond	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineInitManual	linux behaviour
+c:objc(cs)PHASEEnvelope	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeLinearEvaluate	linux behaviour
+c:objc(cs)PHASEEnvelope(im)evaluateForValue:	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeLinearEvaluate	linux behaviour
+c:objc(cs)PHASEEnvelope(im)initWithStartPoint:segments:	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeLinearEvaluate	linux behaviour
+c:objc(cs)PHASEEnvelope(py)domain	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeDomainRange	linux behaviour
+c:objc(cs)PHASEEnvelope(py)range	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeDomainRange	linux behaviour
+c:objc(cs)PHASEEnvelope(py)segments	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeLinearEvaluate	linux behaviour
+c:objc(cs)PHASEEnvelope(py)startPoint	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeLinearEvaluate	linux behaviour
+c:objc(cs)PHASEEnvelopeDistanceModelParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEEnvelopeDistanceModelParameters(im)initWithEnvelope:	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEEnvelopeDistanceModelParameters(py)envelope	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEEnvelopeSegment	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeSegmentStorage	linux behaviour
+c:objc(cs)PHASEEnvelopeSegment(im)initWithEndPoint:curveType:	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeSegmentStorage	linux behaviour
+c:objc(cs)PHASEEnvelopeSegment(py)curveType	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeSegmentStorage	linux behaviour
+c:objc(cs)PHASEEnvelopeSegment(py)endPoint	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testEnvelopeSegmentStorage	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(im)setCalibrationMode:level:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)calibrationMode	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)gainMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)group	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)level	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)mixerDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)rate	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeneratorNodeDefinition(py)rateMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEGeometricSpreadingDistanceModelParameters	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEGeometricSpreadingDistanceModelParameters(im)init	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEGeometricSpreadingDistanceModelParameters(py)rolloffFactor	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testDistanceModels	linux behaviour
+c:objc(cs)PHASEGlobalMetaParameterAsset	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistryMetaParameter	linux behaviour
+c:objc(cs)PHASEGroup	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(im)fadeGain:duration:curveType:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupFadeSnaps	linux behaviour
+c:objc(cs)PHASEGroup(im)fadeRate:duration:curveType:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupFadeSnaps	linux behaviour
+c:objc(cs)PHASEGroup(im)initWithIdentifier:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(im)mute	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(im)registerWithEngine:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupRegister	linux behaviour
+c:objc(cs)PHASEGroup(im)solo	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(im)unmute	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(im)unregisterFromEngine	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupRegister	linux behaviour
+c:objc(cs)PHASEGroup(im)unsolo	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(py)gain	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(py)identifier	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(py)muted	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(py)rate	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroup(py)soloed	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupMuteSolo	linux behaviour
+c:objc(cs)PHASEGroupPreset	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPreset(im)activate	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPreset(im)activateWithTimeToTargetOverride:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetOverrides	linux behaviour
+c:objc(cs)PHASEGroupPreset(im)deactivate	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPreset(im)deactivateWithTimeToResetOverride:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetOverrides	linux behaviour
+c:objc(cs)PHASEGroupPreset(im)initWithEngine:settings:timeToTarget:timeToReset:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPreset(py)settings	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPreset(py)timeToReset	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPreset(py)timeToTarget	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetActivate	linux behaviour
+c:objc(cs)PHASEGroupPresetSetting	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetSetting	linux behaviour
+c:objc(cs)PHASEGroupPresetSetting(im)initWithGain:rate:gainCurveType:rateCurveType:	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetSetting	linux behaviour
+c:objc(cs)PHASEGroupPresetSetting(py)gain	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetSetting	linux behaviour
+c:objc(cs)PHASEGroupPresetSetting(py)gainCurveType	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetSetting	linux behaviour
+c:objc(cs)PHASEGroupPresetSetting(py)rate	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetSetting	linux behaviour
+c:objc(cs)PHASEGroupPresetSetting(py)rateCurveType	implemented	test:full/phase/tests/agent/PHASEGroupTests.swift#testGroupPresetSetting	linux behaviour
+c:objc(cs)PHASEListener	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testListenerGainAndFlags	linux behaviour
+c:objc(cs)PHASEListener(im)initWithEngine:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testListenerGainAndFlags	linux behaviour
+c:objc(cs)PHASEListener(py)automaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testListenerGainAndFlags	linux behaviour
+c:objc(cs)PHASEListener(py)gain	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testListenerGainAndFlags	linux behaviour
+c:objc(cs)PHASEMappedMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMappedMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEMappedMetaParameterDefinition(im)initWithInputMetaParameterDefinition:envelope:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMappedMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEMappedMetaParameterDefinition(im)initWithInputMetaParameterDefinition:envelope:identifier:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMappedMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEMappedMetaParameterDefinition(py)envelope	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMappedMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEMappedMetaParameterDefinition(py)inputMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMappedMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEMaterial	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testMaterialPresetInit	linux behaviour
+c:objc(cs)PHASEMaterial(im)initWithEngine:preset:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testMaterialPresetInit	linux behaviour
+c:objc(cs)PHASEMedium	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineRootAndMedium	linux behaviour
+c:objc(cs)PHASEMedium(im)initWithEngine:preset:	implemented	test:full/phase/tests/agent/PHASEEngineTests.swift#testEngineRootAndMedium	linux behaviour
+c:objc(cs)PHASEMetaParameter	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testStringGlobalMetaParameter	linux behaviour
+c:objc(cs)PHASEMetaParameter(py)identifier	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testStringGlobalMetaParameter	linux behaviour
+c:objc(cs)PHASEMetaParameter(py)value	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testStringGlobalMetaParameter	linux behaviour
+c:objc(cs)PHASEMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASEMetaParameterDefinition(py)value	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASEMixer	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEMixer(py)gain	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEMixer(py)gainMetaParameter	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEMixer(py)identifier	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEMixerDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASEMixerDefinition(py)gain	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASEMixerDefinition(py)gainMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASEMixerParameters	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerParametersBindings	linux behaviour
+c:objc(cs)PHASEMixerParameters(im)addAmbientMixerParametersWithIdentifier:listener:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerParametersBindings	linux behaviour
+c:objc(cs)PHASEMixerParameters(im)addSpatialMixerParametersWithIdentifier:source:listener:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerParametersBindings	linux behaviour
+c:objc(cs)PHASENumberMetaParameter	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterFade	linux behaviour
+c:objc(cs)PHASENumberMetaParameter(im)fadeToValue:duration:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterFade	linux behaviour
+c:objc(cs)PHASENumberMetaParameter(py)maximum	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterFade	linux behaviour
+c:objc(cs)PHASENumberMetaParameter(py)minimum	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterFade	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:identifier:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:minimum:maximum:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition(im)initWithValue:minimum:maximum:identifier:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition(py)maximum	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumberMetaParameterDefinition(py)minimum	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testNumberMetaParameterDefinitionClamp	linux behaviour
+c:objc(cs)PHASENumericPair	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testNumericPairStorage	linux behaviour
+c:objc(cs)PHASENumericPair(im)initWithFirstValue:secondValue:	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testNumericPairStorage	linux behaviour
+c:objc(cs)PHASENumericPair(py)first	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testNumericPairStorage	linux behaviour
+c:objc(cs)PHASENumericPair(py)second	implemented	test:full/phase/tests/agent/PHASEEnvelopeTests.swift#testNumericPairStorage	linux behaviour
+c:objc(cs)PHASEObject	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectChildGraph	linux behaviour
+c:objc(cs)PHASEObject(cpy)forward	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectAxes	linux behaviour
+c:objc(cs)PHASEObject(cpy)right	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectAxes	linux behaviour
+c:objc(cs)PHASEObject(cpy)up	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectAxes	linux behaviour
+c:objc(cs)PHASEObject(im)addChild:error:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectChildGraph	linux behaviour
+c:objc(cs)PHASEObject(im)initWithEngine:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectChildGraph	linux behaviour
+c:objc(cs)PHASEObject(im)removeChild:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectChildGraph	linux behaviour
+c:objc(cs)PHASEObject(im)removeChildren	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectRemoveChildren	linux behaviour
+c:objc(cs)PHASEObject(py)children	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectChildGraph	linux behaviour
+c:objc(cs)PHASEObject(py)parent	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectChildGraph	linux behaviour
+c:objc(cs)PHASEObject(py)transform	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectTransformIdentity	linux behaviour
+c:objc(cs)PHASEObject(py)worldTransform	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testObjectWorldTransformParented	linux behaviour
+c:objc(cs)PHASEOccluder	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testOccluderShapes	linux behaviour
+c:objc(cs)PHASEOccluder(im)initWithEngine:shapes:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testOccluderShapes	linux behaviour
+c:objc(cs)PHASEOccluder(py)shapes	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testOccluderShapes	linux behaviour
+c:objc(cs)PHASEPullStreamNode	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEPullStreamNode(py)renderBlock	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPullStreamNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullDefinitionsHost	linux behaviour
+c:objc(cs)PHASEPullStreamNodeDefinition(im)initWithMixerDefinition:format:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPullStreamNodeDefinition(im)initWithMixerDefinition:format:identifier:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPullStreamNodeDefinition(py)format	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPullStreamNodeDefinition(py)normalize	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullDefinitionsHost	linux behaviour
+c:objc(cs)PHASEPushStreamNode	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:atTime:options:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:atTime:options:completionCallbackType:completionHandler:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNode(im)scheduleBuffer:completionCallbackType:completionHandler:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNode(py)format	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNode(py)gainMetaParameter	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEPushStreamNode(py)mixer	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEPushStreamNode(py)rateMetaParameter	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEPushStreamNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullDefinitionsHost	linux behaviour
+c:objc(cs)PHASEPushStreamNodeDefinition(im)initWithMixerDefinition:format:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNodeDefinition(im)initWithMixerDefinition:format:identifier:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNodeDefinition(py)format	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEPushStreamNodeDefinition(py)normalize	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullDefinitionsHost	linux behaviour
+c:objc(cs)PHASERandomNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testRandomNodeWeights	linux behaviour
+c:objc(cs)PHASERandomNodeDefinition(im)addSubtree:weight:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testRandomNodeWeights	linux behaviour
+c:objc(cs)PHASERandomNodeDefinition(im)init	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testRandomNodeWeights	linux behaviour
+c:objc(cs)PHASERandomNodeDefinition(im)initWithIdentifier:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testRandomNodeWeights	linux behaviour
+c:objc(cs)PHASERandomNodeDefinition(py)uniqueSelectionQueueLength	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testRandomNodeWeights	linux behaviour
+c:objc(cs)PHASESamplerNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASESamplerNodeDefinition(im)initWithSoundAssetIdentifier:mixerDefinition:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASESamplerNodeDefinition(im)initWithSoundAssetIdentifier:mixerDefinition:identifier:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASESamplerNodeDefinition(py)assetIdentifier	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASESamplerNodeDefinition(py)cullOption	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASESamplerNodeDefinition(py)playbackMode	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSamplerNodeDefaults	linux behaviour
+c:objc(cs)PHASEShape	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testShapeHostElements	linux behaviour
+c:objc(cs)PHASEShape(im)initWithEngine:mesh:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEShape(im)initWithEngine:mesh:materials:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEShape(py)elements	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testShapeHostElements	linux behaviour
+c:objc(cs)PHASEShapeElement	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testShapeHostElements	linux behaviour
+c:objc(cs)PHASEShapeElement(py)material	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testShapeHostElements	linux behaviour
+c:objc(cs)PHASESoundAsset	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testSoundAssetTypeOnHost	linux behaviour
+c:objc(cs)PHASESoundAsset(py)data	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testSoundAssetTypeOnHost	linux behaviour
+c:objc(cs)PHASESoundAsset(py)type	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testSoundAssetTypeOnHost	linux behaviour
+c:objc(cs)PHASESoundAsset(py)url	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testSoundAssetTypeOnHost	linux behaviour
+c:objc(cs)PHASESoundEvent	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventMissingAsset	linux behaviour
+c:objc(cs)PHASESoundEvent(im)initWithEngine:assetIdentifier:error:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventMissingAsset	linux behaviour
+c:objc(cs)PHASESoundEvent(im)initWithEngine:assetIdentifier:mixerParameters:error:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventMixerParametersInit	linux behaviour
+c:objc(cs)PHASESoundEvent(im)pause	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPauseResumeStop	linux behaviour
+c:objc(cs)PHASESoundEvent(im)prepareWithCompletion:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(im)resume	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPauseResumeStop	linux behaviour
+c:objc(cs)PHASESoundEvent(im)resumeAtTime:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASESoundEvent(im)seekToTime:completion:	declared	source:full/phase/PHASESoundEvent.swift#PHASESoundEvent	Async-only API; isolated host tests cannot await (no run loop).
+c:objc(cs)PHASESoundEvent(im)seekToTime:resumeAtEngineTime:completion:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASESoundEvent(im)startAtTime:completion:	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASESoundEvent(im)startWithCompletion:	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(im)stopAndInvalidate	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPauseResumeStop	linux behaviour
+c:objc(cs)PHASESoundEvent(py)indefinite	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventIndefiniteLoop	linux behaviour
+c:objc(cs)PHASESoundEvent(py)metaParameters	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(py)mixers	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(py)prepareState	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(py)pullStreamNodes	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(py)pushStreamNodes	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEvent(py)renderingState	implemented	test:full/phase/tests/agent/PHASESoundEventTests.swift#testSoundEventPrepareStartFailClosed	linux behaviour
+c:objc(cs)PHASESoundEventNodeAsset	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testAssetRegistrySoundEventAsset	linux behaviour
+c:objc(cs)PHASESoundEventNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASESoundEventNodeDefinition(py)children	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testContainerSubtree	linux behaviour
+c:objc(cs)PHASESource	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testSourceShapesAndGain	linux behaviour
+c:objc(cs)PHASESource(im)initWithEngine:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testSourceShapesAndGain	linux behaviour
+c:objc(cs)PHASESource(im)initWithEngine:shapes:	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testSourceShapesAndGain	linux behaviour
+c:objc(cs)PHASESource(py)gain	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testSourceShapesAndGain	linux behaviour
+c:objc(cs)PHASESource(py)shapes	implemented	test:full/phase/tests/agent/PHASEObjectTests.swift#testSourceShapesAndGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition(im)initWithSpatialPipeline:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition(im)initWithSpatialPipeline:identifier:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition(py)distanceModelParameters	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition(py)listenerDirectivityModelParameters	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition(py)sourceDirectivityModelParameters	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialMixerDefinition(py)spatialPipeline	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testMixerDefinitionGain	linux behaviour
+c:objc(cs)PHASESpatialPipeline	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntries	linux behaviour
+c:objc(cs)PHASESpatialPipeline(im)initWithFlags:	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntries	linux behaviour
+c:objc(cs)PHASESpatialPipeline(py)entries	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntries	linux behaviour
+c:objc(cs)PHASESpatialPipeline(py)flags	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntries	linux behaviour
+c:objc(cs)PHASESpatialPipelineEntry	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntryDefaults	linux behaviour
+c:objc(cs)PHASESpatialPipelineEntry(py)sendLevel	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntryDefaults	linux behaviour
+c:objc(cs)PHASESpatialPipelineEntry(py)sendLevelMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASESpatialTests.swift#testSpatialPipelineEntryDefaults	linux behaviour
+c:objc(cs)PHASEStreamNode	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEStreamNode(py)format	deferred		Requires AVFAudio/ModelIO/CoreAudio types that are not declared dependencies; no lookalike types.
+c:objc(cs)PHASEStreamNode(py)gainMetaParameter	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEStreamNode(py)mixer	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEStreamNode(py)rateMetaParameter	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testPushPullHostNodes	linux behaviour
+c:objc(cs)PHASEStringMetaParameter	implemented	test:full/phase/tests/agent/PHASEAssetRegistryTests.swift#testStringGlobalMetaParameter	linux behaviour
+c:objc(cs)PHASEStringMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testStringMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEStringMetaParameterDefinition(im)initWithValue:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testStringMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASEStringMetaParameterDefinition(im)initWithValue:identifier:	implemented	test:full/phase/tests/agent/PHASEMetaParameterTests.swift#testStringMetaParameterDefinition	linux behaviour
+c:objc(cs)PHASESwitchNodeDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSwitchNode	linux behaviour
+c:objc(cs)PHASESwitchNodeDefinition(im)addSubtree:switchValue:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSwitchNode	linux behaviour
+c:objc(cs)PHASESwitchNodeDefinition(im)initWithSwitchMetaParameterDefinition:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSwitchNode	linux behaviour
+c:objc(cs)PHASESwitchNodeDefinition(im)initWithSwitchMetaParameterDefinition:identifier:	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSwitchNode	linux behaviour
+c:objc(cs)PHASESwitchNodeDefinition(py)switchMetaParameterDefinition	implemented	test:full/phase/tests/agent/PHASENodeTests.swift#testSwitchNode	linux behaviour
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorDomain	errorDomain
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorDomain	errorDomain
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorDomain	errorDomain
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorPatternMatch	pattern match
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorPatternMatch	pattern match
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorPatternMatch	pattern match
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorHashable	hashable/equatable
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorHashable	hashable/equatable
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorHashable	hashable/equatable
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorUserInfo	userInfo/code
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	userInfo/code
+s:SC10PHASEErrorLeV	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorHashable	hashable/equatable
+s:SC10PHASEErrorLeV11errorDomainSSvpZ	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorDomain	errorDomain
+s:SC10PHASEErrorLeV13invalidObjectSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	static code alias
+s:SC10PHASEErrorLeV16initializeFailedSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	static code alias
+s:SC15PHASEAssetErrorLeV	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorHashable	hashable/equatable
+s:SC15PHASEAssetErrorLeV07generalB0SoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	static code alias
+s:SC15PHASEAssetErrorLeV11errorDomainSSvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorDomain	errorDomain
+s:SC15PHASEAssetErrorLeV12failedToLoadSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	static code alias
+s:SC15PHASEAssetErrorLeV13alreadyExistsSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	static code alias
+s:SC15PHASEAssetErrorLeV13badParametersSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	static code alias
+s:SC15PHASEAssetErrorLeV16memoryAllocationSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	static code alias
+s:SC15PHASEAssetErrorLeV21invalidEngineInstanceSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	static code alias
+s:SC20PHASESoundEventErrorLeV	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorHashable	hashable/equatable
+s:SC20PHASESoundEventErrorLeV11errorDomainSSvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorDomain	errorDomain
+s:SC20PHASESoundEventErrorLeV11outOfMemorySoAAVvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	static code alias
+s:SC20PHASESoundEventErrorLeV15invalidInstanceSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	static code alias
+s:SC20PHASESoundEventErrorLeV20systemNotInitializedSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	static code alias
+s:SC20PHASESoundEventErrorLeV7badDataSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	static code alias
+s:SC20PHASESoundEventErrorLeV8notFoundSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	static code alias
+s:SC20PHASESoundEventErrorLeV9apiMisuseSoAAVvpZ	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	static code alias
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAssetType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingFlagValues	option-set / category values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASECalibrationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASECullOption	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASECurveType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEMaterialPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEMediumPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMediumPresetRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASENormalizationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEPlaybackMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEPushStreamCompletionCallbackCondition	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPushStreamCompletionRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASERenderingState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEReverbPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventPrepareHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventPrepareState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventSeekHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESoundEventStartHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagValues	option-set / category values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASESpatializationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@PHASEUpdateMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@PHASESpatialCategory	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEAssetType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASECalibrationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASECullOption	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASECurveType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEMaterialPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEMediumPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMediumPresetRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASENormalizationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEPlaybackMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEPushStreamCompletionCallbackCondition	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPushStreamCompletionRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASERenderingState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEReverbPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventPrepareHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventPrepareState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventSeekHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESoundEventStartHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASESpatializationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@PHASEUpdateMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEAssetType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASECalibrationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASECullOption	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASECurveType	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEMaterialPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEMediumPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMediumPresetRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASENormalizationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEPlaybackMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEPushStreamCompletionCallbackCondition	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPushStreamCompletionRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASERenderingState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEReverbPreset	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventPrepareHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventPrepareState	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventSeekHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESoundEventStartHandlerReason	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASESpatializationMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@PHASEUpdateMode	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+s:So10PHASEErrorV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorCodeRawValues	table-driven enum raw values
+s:So14PHASEAssetTypeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testAssetTypeRawValues	table-driven enum raw values
+s:So14PHASECurveTypeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCurveTypeRawValues	table-driven enum raw values
+s:So15PHASEAssetErrorV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorCodeRawValues	table-driven enum raw values
+s:So15PHASECullOptionV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCullOptionRawValues	table-driven enum raw values
+s:So15PHASEUpdateModeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testUpdateModeRawValues	table-driven enum raw values
+s:So17PHASEMediumPresetV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMediumPresetRawValues	table-driven enum raw values
+s:So17PHASEPlaybackModeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPlaybackModeRawValues	table-driven enum raw values
+s:So17PHASEReverbPresetV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testReverbPresetRawValues	table-driven enum raw values
+s:So19PHASEMaterialPresetV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testMaterialPresetRawValues	table-driven enum raw values
+s:So19PHASERenderingStateV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testRenderingStateRawValues	table-driven enum raw values
+s:So20PHASECalibrationModeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testCalibrationModeRawValues	table-driven enum raw values
+s:So20PHASESoundEventErrorV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorCodeRawValues	table-driven enum raw values
+s:So20PHASESpatialCategorya8rawValueABSS_tcfc	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+s:So22PHASENormalizationModeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testNormalizationModeRawValues	table-driven enum raw values
+s:So23PHASESpatializationModeV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSpatializationModeRawValues	table-driven enum raw values
+s:So25PHASESpatialPipelineFlagsV8rawValueABSu_tcfc	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagValues	option-set / category values
+s:So27PHASESoundEventPrepareStateV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareStateRawValues	table-driven enum raw values
+s:So28PHASEPushStreamBufferOptionsV8rawValueABSu_tcfc	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferOptionValues	option-set / category values
+s:So31PHASEAutomaticHeadTrackingFlagsV8rawValueABSu_tcfc	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingFlagValues	option-set / category values
+s:So32PHASESoundEventSeekHandlerReasonV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testSeekHandlerReasonRawValues	table-driven enum raw values
+s:So33PHASESoundEventStartHandlerReasonV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testStartHandlerReasonRawValues	table-driven enum raw values
+s:So35PHASESoundEventPrepareHandlerReasonV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPrepareHandlerReasonRawValues	table-driven enum raw values
+s:So42PHASEPushStreamCompletionCallbackConditionV8rawValueABSgSi_tcfc	implemented	test:full/phase/tests/agent/PHASEEnumTests.swift#testPushStreamCompletionRawValues	table-driven enum raw values
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE10isDisjoint4withSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE10isSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE11subtractingyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE14isStrictSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE16isStrictSuperset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE7isEmptySbvp::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE8isSubset2ofSbx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsE8subtractyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s10SetAlgebraPsEyxqd__ncSTRd__7ElementQyd__ACRtzlufc::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@PHASESpatialCategory	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@PHASESpatialCategory	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialCategoryValues	option-set / category values
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHASEAssetError	implemented	test:full/phase/tests/agent/PHASEAssetErrorTests.swift#testPHASEAssetErrorUserInfo	localizedDescription
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHASEError	implemented	test:full/phase/tests/agent/PHASEErrorTests.swift#testPHASEErrorFallbackDescription	localizedDescription
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@PHASESoundEventError	implemented	test:full/phase/tests/agent/PHASESoundEventErrorTests.swift#testPHASESoundEventErrorUserInfo	localizedDescription
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6removeyxSgxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE6update4withxSgx_tF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPs7ElementQzRszrlE8containsySbxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPsE12intersectionyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPsE19symmetricDifferenceyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPsE5unionyxxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE16formIntersectionyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE23formSymmetricDifferenceyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlE9formUnionyyxF::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHASEAutomaticHeadTrackingFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testAutomaticHeadTrackingAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHASEPushStreamBufferOptions	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testPushStreamBufferAlgebra	option-set / category values
+s:s9OptionSetPss17FixedWidthInteger8RawValueRpzrlExycfc::SYNTHESIZED::c:@E@PHASESpatialPipelineFlags	implemented	test:full/phase/tests/agent/PHASEOptionSetTests.swift#testSpatialPipelineFlagAlgebra	option-set / category values

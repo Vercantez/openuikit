@@ -1,0 +1,28 @@
+import OpenAL
+
+func testALScalarTypes() {
+    oaRequire(MemoryLayout<ALCboolean>.size == MemoryLayout<CChar>.size, "ALCboolean")
+    oaRequire(MemoryLayout<ALCbyte>.size == MemoryLayout<CChar>.size, "ALCbyte")
+    oaRequire(MemoryLayout<ALCchar>.size == MemoryLayout<CChar>.size, "ALCchar")
+    oaRequire(MemoryLayout<ALCdouble>.size == MemoryLayout<Double>.size, "ALCdouble")
+    oaRequire(MemoryLayout<ALCenum>.size == MemoryLayout<Int32>.size, "ALCenum")
+    oaRequire(MemoryLayout<ALCfloat>.size == MemoryLayout<Float>.size, "ALCfloat")
+    oaRequire(MemoryLayout<ALCint>.size == MemoryLayout<Int32>.size, "ALCint")
+    oaRequire(MemoryLayout<ALCshort>.size == MemoryLayout<Int16>.size, "ALCshort")
+    oaRequire(MemoryLayout<ALCsizei>.size == MemoryLayout<Int32>.size, "ALCsizei")
+    oaRequire(MemoryLayout<ALCubyte>.size == MemoryLayout<UInt8>.size, "ALCubyte")
+    oaRequire(MemoryLayout<ALCuint>.size == MemoryLayout<UInt32>.size, "ALCuint")
+    oaRequire(MemoryLayout<ALCushort>.size == MemoryLayout<UInt16>.size, "ALCushort")
+    oaRequire(MemoryLayout<ALboolean>.size == MemoryLayout<CChar>.size, "ALboolean")
+    oaRequire(MemoryLayout<ALbyte>.size == MemoryLayout<CChar>.size, "ALbyte")
+    oaRequire(MemoryLayout<ALchar>.size == MemoryLayout<CChar>.size, "ALchar")
+    oaRequire(MemoryLayout<ALdouble>.size == MemoryLayout<Double>.size, "ALdouble")
+    oaRequire(MemoryLayout<ALenum>.size == MemoryLayout<Int32>.size, "ALenum")
+    oaRequire(MemoryLayout<ALfloat>.size == MemoryLayout<Float>.size, "ALfloat")
+    oaRequire(MemoryLayout<ALint>.size == MemoryLayout<Int32>.size, "ALint")
+    oaRequire(MemoryLayout<ALshort>.size == MemoryLayout<Int16>.size, "ALshort")
+    oaRequire(MemoryLayout<ALsizei>.size == MemoryLayout<Int32>.size, "ALsizei")
+    oaRequire(MemoryLayout<ALubyte>.size == MemoryLayout<UInt8>.size, "ALubyte")
+    oaRequire(MemoryLayout<ALuint>.size == MemoryLayout<UInt32>.size, "ALuint")
+    oaRequire(MemoryLayout<ALushort>.size == MemoryLayout<UInt16>.size, "ALushort")
+}
