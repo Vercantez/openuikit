@@ -389,3 +389,89 @@ func testSwiftFontInitializers() {
     let uiLang = CTFont(.label, size: 0, language: ctCFString("en"))
     precondition(CTFontGetSize(uiLang) == 10)
 }
+
+func testFontMatrixInitsScaleAdvancesAndBounds() {
+    let url = ctRegisterFixtureFont()
+    defer { _ = ctUnregister(url) }
+
+    var scale = CGAffineTransform(a: 2, b: 0, c: 0, d: 2, tx: 0, ty: 0)
+    let name = ctCFString("OpenUIKitFixture-Regular")
+    let sized = CTFontCreateWithName(name, 10, &scale)
+    let matrix = CTFontGetMatrix(sized)
+    precondition(matrix.a == 2)
+    precondition(matrix.d == 2)
+    precondition(CTFontGetSize(sized) == 10)
+
+    let hello: [UniChar] = Array("H".utf16)
+    var glyphs = [CGGlyph](repeating: 0, count: 1)
+    let mapped = hello.withUnsafeBufferPointer { cbuf in
+        glyphs.withUnsafeMutableBufferPointer { gbuf in
+            CTFontGetGlyphsForCharacters(sized, cbuf.baseAddress!, gbuf.baseAddress!, 1)
+        }
+    }
+    precondition(mapped)
+    precondition(glyphs[0] == 3)
+
+    var advances = [CGSize](repeating: .zero, count: 1)
+    let total = glyphs.withUnsafeBufferPointer { gbuf in
+        advances.withUnsafeMutableBufferPointer { abuf in
+            CTFontGetAdvancesForGlyphs(sized, .horizontal, gbuf.baseAddress!, abuf.baseAddress, 1)
+        }
+    }
+    // Identity 10 pt H advance is 7; matrix.a = 2 → 14
+    precondition(abs(total - 14) < 1e-9)
+    precondition(abs(advances[0].width - 14) < 1e-9)
+
+    var rects = [CGRect](repeating: .zero, count: 1)
+    _ = glyphs.withUnsafeBufferPointer { gbuf in
+        rects.withUnsafeMutableBufferPointer { rbuf in
+            CTFontGetBoundingRectsForGlyphs(sized, .horizontal, gbuf.baseAddress!, rbuf.baseAddress, 1)
+        }
+    }
+    // Identity H glyf (0.4, 0, 6.2, 7); doubled by matrix a/d
+    precondition(abs(rects[0].origin.x - 0.8) < 1e-9)
+    precondition(abs(rects[0].size.width - 12.4) < 1e-9)
+    precondition(abs(rects[0].size.height - 14) < 1e-9)
+
+    let attributed = NSAttributedString(
+        string: "H",
+        attributes: [NSAttributedString.Key(ctString(kCTFontAttributeName)): sized]
+    )
+    let line = CTLineCreateWithAttributedString(attributed)
+    precondition(abs(CTLineGetTypographicBounds(line, nil, nil, nil) - 14) < 1e-9)
+
+    let named = CTFont(name, transform: scale)
+    precondition(CTFontGetMatrix(named).a == 2)
+    precondition(CTFontGetSize(named) == 12)
+    var namedGlyphs: [CGGlyph] = [3]
+    var namedAdvances = [CGSize](repeating: .zero, count: 1)
+    let namedTotal = namedGlyphs.withUnsafeBufferPointer { gbuf in
+        namedAdvances.withUnsafeMutableBufferPointer { abuf in
+            CTFontGetAdvancesForGlyphs(named, .horizontal, gbuf.baseAddress!, abuf.baseAddress, 1)
+        }
+    }
+    // size 12, H hmtx 700 → 8.4 * matrix.a 2 = 16.8
+    precondition(abs(namedTotal - 16.8) < 1e-9)
+
+    let descriptor = CTFontDescriptorCreateWithNameAndSize(name, 10)
+    let fromDescriptor = CTFont(descriptor, transform: scale)
+    precondition(CTFontGetMatrix(fromDescriptor).a == 2)
+    precondition(CTFontGetSize(fromDescriptor) == 10)
+    var descAdvances = [CGSize](repeating: .zero, count: 1)
+    let descTotal = namedGlyphs.withUnsafeBufferPointer { gbuf in
+        descAdvances.withUnsafeMutableBufferPointer { abuf in
+            CTFontGetAdvancesForGlyphs(fromDescriptor, .horizontal, gbuf.baseAddress!, abuf.baseAddress, 1)
+        }
+    }
+    precondition(abs(descTotal - 14) < 1e-9)
+
+    let identity = CTFontCreateWithName(name, 10, nil)
+    precondition(CTFontGetMatrix(identity).a == 1)
+    var identityAdvances = [CGSize](repeating: .zero, count: 1)
+    let identityTotal = namedGlyphs.withUnsafeBufferPointer { gbuf in
+        identityAdvances.withUnsafeMutableBufferPointer { abuf in
+            CTFontGetAdvancesForGlyphs(identity, .horizontal, gbuf.baseAddress!, abuf.baseAddress, 1)
+        }
+    }
+    precondition(abs(identityTotal - 7) < 1e-9)
+}
