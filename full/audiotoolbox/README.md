@@ -234,7 +234,16 @@ No non-table test exceeds 40% of implemented rows.
 ### Tests and gate
 
 - Agent tests: `AudioToolboxCoreTests.swift`, `AudioToolboxDepthTests.swift`, `AudioToolboxWave2Tests.swift`, `AudioToolboxWave3Tests.swift`, `AudioToolboxWave4Tests.swift`, `AudioToolboxWave5Tests.swift`.
-- Sealed host gate: `bash full/audiotoolbox/tests/acceptance/test_host.sh`. Marker output is recorded after the green run.
+- Only host script under `tests/`: `bash full/audiotoolbox/tests/acceptance/test_host.sh` (exit 0). Exact sealed-gate stdout:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AudioToolbox lane=large-partitioned symbols=3234
+FRAMEWORK_FANOUT_REFERENCE_OK
+AUDIOTOOLBOX_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AudioToolbox dylib=libAudioToolbox.dylib
+```
+
+- `swift --version` is `Swift 6.2.4` targeting `x86_64-unknown-linux-gnu`. `.cursor/verify-cloud-environment.sh` still fails (`scratch/ladder-corpus/focus-ios` missing) and therefore does not print `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`. The sealed gate is the authority for this pass.
 
 ### Unresolved behavioral questions
 
