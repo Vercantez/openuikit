@@ -9,11 +9,12 @@ THE SUPPLY SIDE IS DERIVED, NOT ASSERTED. Every name below is placed by one of
     guest-app-path.md / foundation-oracles.md as carrying a Darwin golden
     (DateFormatter, NumberFormatter, ISO8601DateFormatter,
     DateComponentsFormatter, JSONSerialization, NSRegularExpression,
-    URLSession, ByteCountFormatter, UserDefaults, HTTPCookie).
+    URLSession, ByteCountFormatter, UserDefaults, HTTPCookie,
+    URLComponents).
   * GUEST-FOUNDATION — any other type declared `open`/`public` in those
     guest source files. Identifier-level: URLSession is here because
     `open class URLSession` is in URLSession.swift; URLSessionDataTask is
-    not, because it is not declared.
+    GUEST-FOUNDATION once declared there.
   * LEDGER-IMPLEMENTED — the type name is the top-level title of a
     `coverage.tsv` row whose status is exactly `implemented`. `declared` /
     `deferred` / `unavailable` / `not-applicable` are not supply.

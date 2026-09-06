@@ -16,9 +16,10 @@ run_family() {
     local define=$2
     local module=$3
     local sources=$4
-    local golden=$TESTS/foundation-$5-apple-2026-09-05.txt
     local oracle=$TESTS/Foundation${name}Oracle.swift
     local extra_src_defines=${6:-}
+    local golden_date=${7:-2026-09-05}
+    local golden=$TESTS/foundation-$5-apple-$golden_date.txt
 
     echo "== $name"
     xcrun swiftc "$oracle" -o "$WORK/apple-$name"
@@ -65,6 +66,8 @@ run_family DateComponentsFormatter DATECOMPONENTSFORMATTER_PORT DateComponentsFo
     "$SRC/DateComponentsFormatter.swift" date-components-formatter
 run_family HTTPCookie HTTPCOOKIE_PORT HTTPCookiePort \
     "$SRC/URLSession.swift" httpcookie "-D HTTPCOOKIE_PORT"
+run_family URLComponents URLCOMPONENTS_PORT URLComponentsPort \
+    "$SRC/URLLoading.swift" urlcomponents "-D URLCOMPONENTS_PORT" 2026-09-06
 
 if [ "$fail" -ne 0 ]; then
     echo "FOUNDATION_ORACLES_HOST failed" >&2
