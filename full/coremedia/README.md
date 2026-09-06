@@ -189,6 +189,10 @@ COREMEDIA_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreMedia dylib=libCoreMedia.dylib
 ```
 
+This pass re-ran that sealed gate in the Linux environment until
+`FRAMEWORK_FANOUT_HOST_OK`. Guest stdout is marker-only; `CMTimeShow` /
+`CMTimeRangeShow` / `CMTimeMappingShow` write debug lines to stderr.
+
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
 is a host-inventory token, not printed by the sealed framework gate.
 `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
