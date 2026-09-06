@@ -154,7 +154,8 @@ absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Starting commit
 `6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
 
-**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`):
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`, exit 0,
+~1897s):
 
 ```
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
