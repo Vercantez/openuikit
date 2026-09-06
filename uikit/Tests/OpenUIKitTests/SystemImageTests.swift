@@ -201,6 +201,15 @@ final class SystemImageTests: XCTestCase {
         XCTAssertEqual(plus.bitmap.width, 46)
         XCTAssertEqual(plus.bitmap.height, 44)
 
+        // MEASURED Notes t200, iPhone SE 2x / iOS 26.1: `.trash` bar
+        // button UIImageView is 24×28 (48×56 px). Harvested
+        // 17|medium|large F0 crop corr 0.999999 at px (650, 34).
+        let trash = try XCTUnwrap(UIImage(systemName: "trash",
+                                           withConfiguration: bar))
+        XCTAssertEqual(trash.size, CGSize(width: 24, height: 28))
+        XCTAssertEqual(trash.bitmap.width, 48)
+        XCTAssertEqual(trash.bitmap.height, 56)
+
         OpenUIKitRuntime.imageScreenScale = 3
         let house3 = try XCTUnwrap(UIImage(systemName: "house"))
         XCTAssertEqual(house3.bitmap.width, 72)

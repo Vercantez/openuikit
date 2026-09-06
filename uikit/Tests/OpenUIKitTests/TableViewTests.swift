@@ -1632,6 +1632,82 @@ final class TableViewIOSRowAnimationTests: XCTestCase {
         XCTAssertEqual(manage.detailTextLabel!.frame.width, 0, accuracy: 0.5)
         XCTAssertEqual(manage.detailTextLabel!.frame.maxX, 299, accuracy: 1.5)
     }
+
+    /// MEASURED Ledger t200.ax1 / t200.xxxl, iPhone SE 2x / iOS 26.1:
+    /// disclosure accessory **20×28.5** at ax1 (contentView 307 in a 343
+    /// cell) and **14×19.5** at xxxl (contentView 313). `.large` stays 10.5×14.
+    func testDisclosureSizeGrowsWithDynamicType() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UITraitCollection.current = savedTraits
+        }
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .large)
+        XCTAssertEqual(UITableViewCell.disclosureSize.width, 10.5, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.disclosureSize.height, 14, accuracy: 1e-9)
+
+        let ax = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .accessibilityLarge)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: ax).width,
+                       20, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: ax).height,
+                       28.5, accuracy: 1e-9)
+
+        let xxxl = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            preferredContentSizeCategory: .extraExtraExtraLarge)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: xxxl).width,
+                       14, accuracy: 1e-9)
+        XCTAssertEqual(UITableViewCell.disclosureSize(compatibleWith: xxxl).height,
+                       19.5, accuracy: 1e-9)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+        window.traitOverrides.preferredContentSizeCategory = .accessibilityLarge
+        let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
+        cell.accessoryType = .disclosureIndicator
+        window.addSubview(cell)
+        cell.frame = CGRect(x: 0, y: 0, width: 343, height: 92)
+        cell.layoutIfNeeded()
+        XCTAssertEqual(cell._accessoryGlyphView.frame.width, 20, accuracy: 0.01)
+        XCTAssertEqual(cell._accessoryGlyphView.frame.height, 28.5, accuracy: 0.01)
+        XCTAssertEqual(cell.contentView.frame.width, 307, accuracy: 0.01)
+    }
+
+    /// MEASURED Ledger t200.landscape, iPhone SE 2x / iOS 26.1:
+    /// inset-grouped header label abs.x **40** = card 20 + iOSMargin 20
+    /// (window 667 ≥ 390). Portrait 375 stays 32; 393 portrait keeps
+    /// inner 16 so realapp_focus_settings does not move.
+    func testInsetGroupedHeaderUsesSystemMarginInner() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedTraits = UITraitCollection.current
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            verticalSizeClass: .compact, userInterfaceIdiom: .phone)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UITraitCollection.current = savedTraits
+        }
+        let wide = UITableView(frame: CGRect(x: 0, y: 0, width: 667, height: 375),
+                               style: .insetGrouped)
+        XCTAssertEqual(wide.insetGroupedSideInset, 20)
+        XCTAssertEqual(wide.groupedHeaderLabelX, 40, accuracy: 1e-9)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            userInterfaceIdiom: .phone)
+        let narrow = UITableView(frame: CGRect(x: 0, y: 0, width: 375, height: 667),
+                                 style: .insetGrouped)
+        XCTAssertEqual(narrow.groupedHeaderLabelX, 32, accuracy: 1e-9)
+        let phone393 = UITableView(frame: CGRect(x: 0, y: 0, width: 393, height: 852),
+                                  style: .insetGrouped)
+        XCTAssertEqual(phone393.insetGroupedSideInset, 20)
+        XCTAssertEqual(phone393.groupedHeaderLabelX, 36, accuracy: 1e-9)
+    }
 }
 
 #if !os(Linux)
