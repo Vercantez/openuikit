@@ -313,7 +313,7 @@ func testAVMutableCompositionInsertsLocalTracks() {
     )
     precondition(abs(composition.duration.seconds - 2) < 0.02)
     composition.removeTimeRange(
-        CMTimeRange(start: .zero, duration: CMTime(seconds: 0.5, preferredTimescale: 1))
+        CMTimeRange(start: .zero, duration: CMTime(seconds: 0.5, preferredTimescale: 600))
     )
     precondition(abs(composition.duration.seconds - 1.5) < 0.05)
 }
