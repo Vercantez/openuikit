@@ -1,19 +1,12 @@
 import Foundation
 
-#if canImport(UIKit)
-import UIKit
-#endif
-
 /// People picker. Darwin subclasses `UINavigationController` and presents
-/// the system contact list. Linux stores configuration, including
-/// predicates, and delivers delegate callbacks through host hooks. It never
-/// lists or invents address-book people.
+/// the system contact list. Isolated Linux subclasses `NSObject` because
+/// UIKit is not on the host-gate link line. The controller stores
+/// configuration, including predicates, and delivers delegate callbacks
+/// through host hooks. It never lists or invents address-book people.
 @preconcurrency @MainActor
-#if canImport(UIKit)
-open class ABPeoplePickerNavigationController: UINavigationController {
-#else
 open class ABPeoplePickerNavigationController: NSObject {
-#endif
     public override init() {
         super.init()
     }

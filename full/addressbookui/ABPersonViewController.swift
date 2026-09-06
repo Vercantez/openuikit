@@ -1,18 +1,12 @@
 import Foundation
 
-#if canImport(UIKit)
-import UIKit
-#endif
-
 /// Person inspector. Darwin subclasses `UIViewController` and presents
-/// the system contact card. Linux stores configuration and the highlighted
-/// item. Default actions (call, message, mail) are never performed.
+/// the system contact card. Isolated Linux subclasses `NSObject`
+/// because UIKit is not on the host-gate link line. The controller stores
+/// configuration and the highlighted item. Default actions (call,
+/// message, mail) are never performed.
 @preconcurrency @MainActor
-#if canImport(UIKit)
-open class ABPersonViewController: UIViewController {
-#else
 open class ABPersonViewController: NSObject {
-#endif
     public private(set) var highlightedProperty: ABPropertyID?
     public private(set) var highlightedIdentifier: ABMultiValueIdentifier?
 

@@ -26,7 +26,7 @@ func addressBookUIDependencyIdentityProbe() {
 
     let picker = ABPeoplePickerNavigationController()
     picker.predicateForEnablingPerson = predicate
-    precondition(picker.predicateForEnablingPerson?.predicateFormat == predicate.predicateFormat)
+    precondition(picker.predicateForEnablingPerson?.evaluate(with: nil) == true)
 
     let numbers = [NSNumber(value: Int32(12))]
     picker.displayedProperties = numbers

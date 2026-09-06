@@ -3,9 +3,6 @@
 #if canImport(AddressBook)
 @_exported import AddressBook
 #endif
-#if canImport(UIKit)
-import UIKit
-#endif
 
 // Portable AddressBookUI starting point for Linux.
 //

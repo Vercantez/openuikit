@@ -1,19 +1,12 @@
 import Foundation
 
-#if canImport(UIKit)
-import UIKit
-#endif
-
 /// New-contact editor. Darwin subclasses `UIViewController` and presents
-/// the system create-person sheet. Linux stores configuration and delivers
-/// the required delegate completion through a host hook. It never writes
-/// an `ABRecord` into an address book.
+/// the system create-person sheet. Isolated Linux subclasses `NSObject`
+/// because UIKit is not on the host-gate link line. The controller stores
+/// configuration and delivers the required delegate completion through a
+/// host hook. It never writes an `ABRecord` into an address book.
 @preconcurrency @MainActor
-#if canImport(UIKit)
-open class ABNewPersonViewController: UIViewController {
-#else
 open class ABNewPersonViewController: NSObject {
-#endif
     public override init() {
         super.init()
     }

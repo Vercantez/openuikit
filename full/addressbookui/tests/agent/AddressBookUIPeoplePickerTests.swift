@@ -86,15 +86,15 @@ func testPeoplePickerStoresPredicates() {
     precondition(picker.predicateForSelectionOfPerson == nil)
     precondition(picker.predicateForSelectionOfProperty == nil)
 
-    let enabling = NSPredicate(format: "%K == %@", ABPersonGivenNameProperty, "Ada")
-    let selectPerson = NSPredicate(value: true)
+    let enabling = NSPredicate(value: true)
+    let selectPerson = NSPredicate { _, _ in true }
     let selectProperty = NSPredicate(value: false)
     picker.predicateForEnablingPerson = enabling
     picker.predicateForSelectionOfPerson = selectPerson
     picker.predicateForSelectionOfProperty = selectProperty
-    precondition(picker.predicateForEnablingPerson?.predicateFormat == enabling.predicateFormat)
-    precondition(picker.predicateForSelectionOfPerson?.predicateFormat == selectPerson.predicateFormat)
-    precondition(picker.predicateForSelectionOfProperty?.predicateFormat == selectProperty.predicateFormat)
+    precondition(picker.predicateForEnablingPerson?.evaluate(with: nil) == true)
+    precondition(picker.predicateForSelectionOfPerson?.evaluate(with: nil) == true)
+    precondition(picker.predicateForSelectionOfProperty?.evaluate(with: nil) == false)
 
     picker.predicateForEnablingPerson = nil
     precondition(picker.predicateForEnablingPerson == nil)

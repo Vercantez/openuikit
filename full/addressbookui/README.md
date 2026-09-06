@@ -6,12 +6,12 @@ from the sealed symbol graph (66 exact IDs). It is not wired into the shared
 guest package; that integration is a separate central review step.
 
 Isolated host compilation produces `libAddressBookUI.dylib` with Foundation
-only. `UIViewController` / `UINavigationController` are UIKit-owned and are
-the superclasses only when UIKit can be imported. The isolated host subclasses
-`NSObject`. AddressBook's Clang overlay typealiases (`ABAddressBook` =
-`CFTypeRef`, `ABRecord` = `CFTypeRef`, `ABPropertyID` / `ABMultiValueIdentifier`
-= `Int32`) are used when AddressBook is not on the link line; they compile out
-when the real module is imported. They are not invented record classes.
+only. Darwin's `UIViewController` / `UINavigationController` superclasses are
+UIKit-owned; this starting point subclasses `NSObject`. AddressBook's Clang
+overlay typealiases (`ABAddressBook` = `CFTypeRef`, `ABRecord` = `CFTypeRef`,
+`ABPropertyID` / `ABMultiValueIdentifier` = `Int32`) are used when AddressBook
+is not on the link line; they compile out when the real module is imported.
+They are not invented record classes.
 
 ## Depth pass 2026-09
 

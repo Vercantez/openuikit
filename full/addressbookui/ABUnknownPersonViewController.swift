@@ -1,18 +1,12 @@
 import Foundation
 
-#if canImport(UIKit)
-import UIKit
-#endif
-
-/// Unknown-person card. Darwin subclasses `UIViewController` and can create
-/// or match an address-book person. Linux stores configuration. It never
-/// adds a person to an address book and never invents a resolved record.
+/// Unknown-person card. Darwin subclasses `UIViewController` and can
+/// create or match an address-book person. Isolated Linux subclasses
+/// `NSObject` because UIKit is not on the host-gate link line. The
+/// controller stores configuration. It never adds a person to an address
+/// book and never invents a resolved record.
 @preconcurrency @MainActor
-#if canImport(UIKit)
-open class ABUnknownPersonViewController: UIViewController {
-#else
 open class ABUnknownPersonViewController: NSObject {
-#endif
     public override init() {
         super.init()
     }
