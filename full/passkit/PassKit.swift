@@ -425,7 +425,7 @@ public struct PKMerchantCapability: OptionSet, Hashable, Sendable {
     public static var capabilityDebit: PKMerchantCapability { .debit }
 }
 
-public enum PKPaymentSummaryItemType: Int, Sendable {
+public enum PKPaymentSummaryItemType: Int, Hashable, Sendable {
     case final = 0
     case pending = 1
 }

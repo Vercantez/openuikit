@@ -41,9 +41,19 @@ open class PKAddIdentityDocumentConfiguration: PKAddSecureElementPassConfigurati
 open class PKAddIdentityDocumentMetadata: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, sharingInstanceIdentifier: String, cardTemplateIdentifier templateIdentifier: String, issuingCountryCode: String, documentType: PKAddIdentityDocumentType, preview: PKAddPassMetadataPreview) {
-        _ = (credentialIdentifier, templateIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.cardTemplateIdentifier = templateIdentifier
+        self.issuingCountryCode = issuingCountryCode
+        self.documentType = documentType
+        self.preview = preview
     }
+    public var credentialIdentifier: String = ""
+    public var sharingInstanceIdentifier: String = ""
+    public var cardTemplateIdentifier: String = ""
+    public var issuingCountryCode: String = ""
+    public var documentType: PKAddIdentityDocumentType = .idCard
     public var preview: PKAddPassMetadataPreview = PKAddPassMetadataPreview()
 }
 
@@ -60,8 +70,9 @@ open class PKAddIdentityDocumentMetadata: NSObject, @unchecked Sendable {
 open class PKAddPassMetadataPreview: NSObject, @unchecked Sendable {
     public override init() { super.init() }
     public init(passThumbnail: CGImage, localizedDescription description: String) {
-        _ = (description)
         super.init()
+        self.passThumbnailImage = passThumbnail
+        self.localizedDescription = description
     }
     public var localizedDescription: String? = nil
     public var passThumbnailImage: CGImage? = nil
@@ -430,8 +441,11 @@ open class PKIssuerProvisioningExtensionPassEntry: NSObject, @unchecked Sendable
 open class PKIssuerProvisioningExtensionPaymentPassEntry: PKIssuerProvisioningExtensionPassEntry, @unchecked Sendable {
     public override init() { super.init() }
     public init(identifier: String, title: String, art: CGImage, addRequestConfiguration configuration: PKAddPaymentPassRequestConfiguration) {
-        _ = (configuration)
         super.init()
+        self.identifier = identifier
+        self.title = title
+        self.art = art
+        self.addRequestConfiguration = configuration
     }
     public var addRequestConfiguration: PKAddPaymentPassRequestConfiguration = PKAddPaymentPassRequestConfiguration()
 }
@@ -446,12 +460,18 @@ open class PKIssuerProvisioningExtensionStatus: NSObject, @unchecked Sendable {
 open class PKJapanIndividualNumberCardMetadata: PKIdentityDocumentMetadata, @unchecked Sendable {
     public override init() { super.init() }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, sharingInstanceIdentifier: String, cardConfigurationIdentifier: String, preview: PKAddPassMetadataPreview) {
-        _ = (credentialIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.cardConfigurationIdentifier = cardConfigurationIdentifier
+        self.preview = preview
     }
     public init(provisioningCredentialIdentifier credentialIdentifier: String, sharingInstanceIdentifier: String, cardTemplateIdentifier templateIdentifier: String, preview: PKAddPassMetadataPreview) {
-        _ = (credentialIdentifier, templateIdentifier)
         super.init()
+        self.credentialIdentifier = credentialIdentifier
+        self.sharingInstanceIdentifier = sharingInstanceIdentifier
+        self.cardTemplateIdentifier = templateIdentifier
+        self.preview = preview
     }
     public var authenticationPassword: String? = nil
     public var preview: PKAddPassMetadataPreview = PKAddPassMetadataPreview()
@@ -849,6 +869,7 @@ public extension PKIdentityDocumentDescriptor {
 }
 
 public protocol PKIssuerProvisioningExtensionAuthorizationProviding: AnyObject {
+    var completionHandler: ((PKIssuerProvisioningExtensionAuthorizationResult) -> Void)? { get set }
 }
 
 public extension PKIssuerProvisioningExtensionAuthorizationProviding {
