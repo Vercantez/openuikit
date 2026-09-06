@@ -38,7 +38,7 @@ public struct AUDependentParameter: Equatable, Hashable, Sendable {
 }
 
 @frozen
-public struct AudioUnitParameter: Equatable, Hashable, Sendable {
+public struct AudioUnitParameter: Equatable, Hashable, @unchecked Sendable {
     public var mAudioUnit: AudioUnit?
     public var mParameterID: AudioUnitParameterID
     public var mScope: AudioUnitScope
@@ -65,7 +65,7 @@ public struct AudioUnitParameter: Equatable, Hashable, Sendable {
 }
 
 @frozen
-public struct AUPreset: Equatable, Hashable, Sendable {
+public struct AUPreset: Equatable, Hashable, @unchecked Sendable {
     public var presetNumber: Int32
     public var presetName: OpaquePointer?
 
@@ -240,7 +240,7 @@ public struct AudioFile_SMPTE_Time: Equatable, Hashable, Sendable {
 }
 
 @frozen
-public struct AudioFileMarker: Equatable, Hashable, Sendable {
+public struct AudioFileMarker: Equatable, Hashable, @unchecked Sendable {
     public var mFramePosition: Float64
     public var mName: OpaquePointer?
     public var mMarkerID: Int32
@@ -298,7 +298,7 @@ public struct AudioFileMarkerList: Equatable, Hashable, Sendable {
 }
 
 @frozen
-public struct AUSamplerInstrumentData: Equatable, Hashable, Sendable {
+public struct AUSamplerInstrumentData: Equatable, Hashable, @unchecked Sendable {
     public var fileURL: OpaquePointer?
     public var instrumentType: UInt8
     public var bankMSB: UInt8
@@ -329,7 +329,7 @@ public struct AUSamplerInstrumentData: Equatable, Hashable, Sendable {
 }
 
 @frozen
-public struct AUSamplerBankPresetData: Equatable, Hashable, Sendable {
+public struct AUSamplerBankPresetData: Equatable, Hashable, @unchecked Sendable {
     public var bankURL: OpaquePointer?
     public var bankMSB: UInt8
     public var bankLSB: UInt8

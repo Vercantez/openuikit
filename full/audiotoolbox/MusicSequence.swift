@@ -20,7 +20,7 @@ public struct MusicSequenceLoadFlags: OptionSet, Sendable, Hashable {
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     public static let channelsToTracks = MusicSequenceLoadFlags(rawValue: 1 << 0)
     public static let smf_ChannelsToTracks = channelsToTracks
-    public static let smf_PreserveTracks = MusicSequenceLoadFlags(rawValue: 0)
+    public static let smf_PreserveTracks: MusicSequenceLoadFlags = []
 }
 
 public struct MusicSequenceFileFlags: OptionSet, Sendable, Hashable {
