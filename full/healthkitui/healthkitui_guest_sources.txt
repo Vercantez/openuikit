@@ -1,0 +1,4 @@
+full/healthkitui/HKActivityRingView.swift
+full/healthkitui/HealthKitUI.swift
+full/healthkitui/HealthKitUIAccess.swift
+full/healthkitui/HealthKitUILookalikes.swift
