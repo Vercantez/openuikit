@@ -117,7 +117,6 @@ No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (la
 Sealed gate (`bash full/accelerate/tests/acceptance/test_host.sh`) ended:
 
 ```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Accelerate lane=medium-full symbols=6856
 FRAMEWORK_FANOUT_REFERENCE_OK
 ACCELERATE_AGENT_RUNTIME_OK
