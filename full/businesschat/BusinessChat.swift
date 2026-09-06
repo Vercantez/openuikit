@@ -14,12 +14,6 @@ import Foundation
 import UIKit
 #endif
 
-#if canImport(UIKit)
-internal typealias BCChatButtonBase = UIControl
-#else
-internal typealias BCChatButtonBase = NSObject
-#endif
-
 // MARK: - Fail-closed host error
 
 /// Fail-closed error for Messages.app, Business Chat daemon, entitlement,
@@ -172,7 +166,11 @@ extension BCChatAction {
 /// unless UIKit is on the link line. The sealed runner has no run loop, so
 /// `@MainActor` is omitted (see `oracle-questions.tsv`). Linux stores `style`
 /// and never presents Messages chrome.
-open class BCChatButton: BCChatButtonBase {
+#if canImport(UIKit)
+open class BCChatButton: UIControl {
+#else
+open class BCChatButton: NSObject {
+#endif
     /// Bridged `NS_ENUM(NSInteger, BCChatButtonStyle)`.
     ///
     /// Raw values follow the pinned `dotnet/macios` `[Native]` case order
