@@ -532,8 +532,11 @@ func testTXTRecordDictionaryRoundTrip() {
     }
     nwExpect(record.setEntry(.data(Data([1])), for: "bin"), "data entry")
     nwExpect(Array(record).count == 5, "collection count")
+    nwExpect(record.count == 5, "count")
     nwExpect(record.startIndex.rawValue == 0, "start")
     nwExpect(record.index(after: record.startIndex).rawValue == 1, "after")
+    nwExpect(record.startIndex < record.endIndex, "index ordered")
+    _ = record.debugDescription
     _ = record.debugDescription
     let fromData = NWTXTRecord(Data([0, 1, 2]))
     nwExpect(fromData.endIndex.rawValue >= 0, "data init")
@@ -769,13 +772,31 @@ func testConnectionContentContextAndReports() {
     connection.requestEstablishmentReport(queue: DispatchQueue(label: "est")) { report in
         nwExpect(report == nil, "no fabricated establishment")
     }
-    let pending = connection.startDataTransferReport()
+    let pending: NWConnection.PendingDataTransferReport = connection.startDataTransferReport()
     let collected = DispatchSemaphore(value: 0)
     pending.collect(queue: DispatchQueue(label: "report")) { report in
         nwExpect(report.pathReports.isEmpty == false, "path report")
-        _ = report.duration
-        _ = report.aggregatePathReport
-        _ = report.debugDescription
+        let transfer: NWConnection.DataTransferReport = report
+        _ = transfer.duration
+        _ = transfer.aggregatePathReport
+        _ = transfer.debugDescription
+        let pathReports: [NWConnection.DataTransferReport.PathReport] = transfer.pathReports
+        if let pathReport = pathReports.first {
+            _ = pathReport.sentIPPacketCount
+            _ = pathReport.receivedIPPacketCount
+            _ = pathReport.sentTransportByteCount
+            _ = pathReport.receivedTransportByteCount
+            _ = pathReport.sentApplicationByteCount
+            _ = pathReport.receivedApplicationByteCount
+            _ = pathReport.retransmittedTransportByteCount
+            _ = pathReport.receivedTransportDuplicateByteCount
+            _ = pathReport.receivedTransportOutOfOrderByteCount
+            _ = pathReport.transportMinimumRTT
+            _ = pathReport.transportRTTVariance
+            _ = pathReport.transportSmoothedRTT
+            _ = pathReport.interface
+            _ = pathReport.radioType
+        }
         collected.signal()
     }
     nwWait(collected, "report collect")
@@ -800,21 +821,7 @@ func testListenerServiceInits() {
 }
 
 func testCAPITypealiasesAndSmoke() {
-    let endpoint = "127.0.0.1".withCString { host in
-        "80".withCString { port in
-            nw_endpoint_create_host(host, port)
-        }
-    }
-    let parameters = nw_parameters_create()
-    let connection = nw_connection_create(endpoint, parameters)
-    nw_connection_start(connection)
-    nw_connection_cancel(connection)
-    let pathMonitor = nw_path_monitor_create()
-    nw_path_monitor_set_queue(pathMonitor, DispatchQueue(label: "c.path"))
-    nw_path_monitor_start(pathMonitor)
-    nw_path_monitor_cancel(pathMonitor)
-    _ = nw_parameters_create_application_service()
-    _ = nw_path_monitor_create_with_type(nw_interface_type_loopback)
+    testCAPIHostAndPathMonitorFunctions()
 }
 
 func testPathMonitorDeliversUnsatisfiedSnapshot() {

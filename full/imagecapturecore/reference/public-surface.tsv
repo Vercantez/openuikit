@@ -1,0 +1,656 @@
+precise	kind	title	path	declaration
+c:@E@ICDeviceLocationType	swift.enum	ICDeviceLocationType	ICDeviceLocationType	enum ICDeviceLocationType
+c:@E@ICDeviceLocationType@ICDeviceLocationTypeBluetooth	swift.enum.case	ICDeviceLocationType.bluetooth	ICDeviceLocationType.bluetooth	case bluetooth
+c:@E@ICDeviceLocationType@ICDeviceLocationTypeBonjour	swift.enum.case	ICDeviceLocationType.bonjour	ICDeviceLocationType.bonjour	case bonjour
+c:@E@ICDeviceLocationType@ICDeviceLocationTypeLocal	swift.enum.case	ICDeviceLocationType.local	ICDeviceLocationType.local	case local
+c:@E@ICDeviceLocationType@ICDeviceLocationTypeShared	swift.enum.case	ICDeviceLocationType.shared	ICDeviceLocationType.shared	case shared
+c:@E@ICDeviceLocationTypeMask	swift.enum	ICDeviceLocationTypeMask	ICDeviceLocationTypeMask	enum ICDeviceLocationTypeMask
+c:@E@ICDeviceLocationTypeMask@ICDeviceLocationTypeMaskBluetooth	swift.enum.case	ICDeviceLocationTypeMask.bluetooth	ICDeviceLocationTypeMask.bluetooth	case bluetooth
+c:@E@ICDeviceLocationTypeMask@ICDeviceLocationTypeMaskBonjour	swift.enum.case	ICDeviceLocationTypeMask.bonjour	ICDeviceLocationTypeMask.bonjour	case bonjour
+c:@E@ICDeviceLocationTypeMask@ICDeviceLocationTypeMaskLocal	swift.enum.case	ICDeviceLocationTypeMask.local	ICDeviceLocationTypeMask.local	case local
+c:@E@ICDeviceLocationTypeMask@ICDeviceLocationTypeMaskRemote	swift.enum.case	ICDeviceLocationTypeMask.remote	ICDeviceLocationTypeMask.remote	case remote
+c:@E@ICDeviceLocationTypeMask@ICDeviceLocationTypeMaskShared	swift.enum.case	ICDeviceLocationTypeMask.shared	ICDeviceLocationTypeMask.shared	case shared
+c:@E@ICDeviceType	swift.enum	ICDeviceType	ICDeviceType	enum ICDeviceType
+c:@E@ICDeviceType@ICDeviceTypeCamera	swift.enum.case	ICDeviceType.camera	ICDeviceType.camera	case camera
+c:@E@ICDeviceType@ICDeviceTypeScanner	swift.enum.case	ICDeviceType.scanner	ICDeviceType.scanner	case scanner
+c:@E@ICDeviceTypeMask	swift.enum	ICDeviceTypeMask	ICDeviceTypeMask	enum ICDeviceTypeMask
+c:@E@ICDeviceTypeMask@ICDeviceTypeMaskCamera	swift.enum.case	ICDeviceTypeMask.camera	ICDeviceTypeMask.camera	case camera
+c:@E@ICDeviceTypeMask@ICDeviceTypeMaskScanner	swift.enum.case	ICDeviceTypeMask.scanner	ICDeviceTypeMask.scanner	case scanner
+c:@E@ICEXIFOrientationType	swift.enum	ICEXIFOrientationType	ICEXIFOrientationType	enum ICEXIFOrientationType
+c:@E@ICEXIFOrientationType@ICEXIFOrientation1	swift.enum.case	ICEXIFOrientationType.orientation1	ICEXIFOrientationType.orientation1	case orientation1
+c:@E@ICEXIFOrientationType@ICEXIFOrientation2	swift.enum.case	ICEXIFOrientationType.orientation2	ICEXIFOrientationType.orientation2	case orientation2
+c:@E@ICEXIFOrientationType@ICEXIFOrientation3	swift.enum.case	ICEXIFOrientationType.orientation3	ICEXIFOrientationType.orientation3	case orientation3
+c:@E@ICEXIFOrientationType@ICEXIFOrientation4	swift.enum.case	ICEXIFOrientationType.orientation4	ICEXIFOrientationType.orientation4	case orientation4
+c:@E@ICEXIFOrientationType@ICEXIFOrientation5	swift.enum.case	ICEXIFOrientationType.orientation5	ICEXIFOrientationType.orientation5	case orientation5
+c:@E@ICEXIFOrientationType@ICEXIFOrientation6	swift.enum.case	ICEXIFOrientationType.orientation6	ICEXIFOrientationType.orientation6	case orientation6
+c:@E@ICEXIFOrientationType@ICEXIFOrientation7	swift.enum.case	ICEXIFOrientationType.orientation7	ICEXIFOrientationType.orientation7	case orientation7
+c:@E@ICEXIFOrientationType@ICEXIFOrientation8	swift.enum.case	ICEXIFOrientationType.orientation8	ICEXIFOrientationType.orientation8	case orientation8
+c:@E@ICLegacyReturnCode	swift.enum	ICLegacyReturn.Code	ICLegacyReturn.Code	enum Code
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeCannotYieldDevice	swift.enum.case	ICLegacyReturn.Code.cannotYieldDevice	ICLegacyReturn.Code.cannotYieldDevice	case cannotYieldDevice
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeCommunicationErr	swift.enum.case	ICLegacyReturn.Code.communicationErr	ICLegacyReturn.Code.communicationErr	case communicationErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDataTypeNotFoundErr	swift.enum.case	ICLegacyReturn.Code.dataTypeNotFoundErr	ICLegacyReturn.Code.dataTypeNotFoundErr	case dataTypeNotFoundErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceAlreadyOpenErr	swift.enum.case	ICLegacyReturn.Code.deviceAlreadyOpenErr	ICLegacyReturn.Code.deviceAlreadyOpenErr	case deviceAlreadyOpenErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceGUIDNotFoundErr	swift.enum.case	ICLegacyReturn.Code.deviceGUIDNotFoundErr	ICLegacyReturn.Code.deviceGUIDNotFoundErr	case deviceGUIDNotFoundErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceIOServicePathNotFoundErr	swift.enum.case	ICLegacyReturn.Code.deviceIOServicePathNotFoundErr	ICLegacyReturn.Code.deviceIOServicePathNotFoundErr	case deviceIOServicePathNotFoundErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceInternalErr	swift.enum.case	ICLegacyReturn.Code.deviceInternalErr	ICLegacyReturn.Code.deviceInternalErr	case deviceInternalErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceInvalidParamErr	swift.enum.case	ICLegacyReturn.Code.deviceInvalidParamErr	ICLegacyReturn.Code.deviceInvalidParamErr	case deviceInvalidParamErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceLocationIDNotFoundErr	swift.enum.case	ICLegacyReturn.Code.deviceLocationIDNotFoundErr	ICLegacyReturn.Code.deviceLocationIDNotFoundErr	case deviceLocationIDNotFoundErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceMemoryAllocationErr	swift.enum.case	ICLegacyReturn.Code.deviceMemoryAllocationErr	ICLegacyReturn.Code.deviceMemoryAllocationErr	case deviceMemoryAllocationErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceNotFoundErr	swift.enum.case	ICLegacyReturn.Code.deviceNotFoundErr	ICLegacyReturn.Code.deviceNotFoundErr	case deviceNotFoundErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceNotOpenErr	swift.enum.case	ICLegacyReturn.Code.deviceNotOpenErr	ICLegacyReturn.Code.deviceNotOpenErr	case deviceNotOpenErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeDeviceUnsupportedErr	swift.enum.case	ICLegacyReturn.Code.deviceUnsupportedErr	ICLegacyReturn.Code.deviceUnsupportedErr	case deviceUnsupportedErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeExtensionInternalErr	swift.enum.case	ICLegacyReturn.Code.extensionInternalErr	ICLegacyReturn.Code.extensionInternalErr	case extensionInternalErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeFileCorruptedErr	swift.enum.case	ICLegacyReturn.Code.fileCorruptedErr	ICLegacyReturn.Code.fileCorruptedErr	case fileCorruptedErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeFrameworkInternalErr	swift.enum.case	ICLegacyReturn.Code.frameworkInternalErr	ICLegacyReturn.Code.frameworkInternalErr	case frameworkInternalErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeIOPendingErr	swift.enum.case	ICLegacyReturn.Code.ioPendingErr	ICLegacyReturn.Code.ioPendingErr	case ioPendingErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeIndexOutOfRangeErr	swift.enum.case	ICLegacyReturn.Code.indexOutOfRangeErr	ICLegacyReturn.Code.indexOutOfRangeErr	case indexOutOfRangeErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeInvalidObjectErr	swift.enum.case	ICLegacyReturn.Code.invalidObjectErr	ICLegacyReturn.Code.invalidObjectErr	case invalidObjectErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeInvalidPropertyErr	swift.enum.case	ICLegacyReturn.Code.invalidPropertyErr	ICLegacyReturn.Code.invalidPropertyErr	case invalidPropertyErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodeInvalidSessionErr	swift.enum.case	ICLegacyReturn.Code.invalidSessionErr	ICLegacyReturn.Code.invalidSessionErr	case invalidSessionErr
+c:@E@ICLegacyReturnCode@ICLegacyReturnCodePropertyTypeNotFoundErr	swift.enum.case	ICLegacyReturn.Code.propertyTypeNotFoundErr	ICLegacyReturn.Code.propertyTypeNotFoundErr	case propertyTypeNotFoundErr
+c:@E@ICMediaPresentation	swift.enum	ICMediaPresentation	ICMediaPresentation	enum ICMediaPresentation
+c:@E@ICMediaPresentation@ICMediaPresentationConvertedAssets	swift.enum.case	ICMediaPresentation.convertedAssets	ICMediaPresentation.convertedAssets	case convertedAssets
+c:@E@ICMediaPresentation@ICMediaPresentationOriginalAssets	swift.enum.case	ICMediaPresentation.originalAssets	ICMediaPresentation.originalAssets	case originalAssets
+c:@E@ICReturnCode	swift.enum	ICReturn.Code	ICReturn.Code	enum Code
+c:@E@ICReturnCode@ICReturnCommunicationTimedOut	swift.enum.case	ICReturn.Code.communicationTimedOut	ICReturn.Code.communicationTimedOut	case communicationTimedOut
+c:@E@ICReturnCode@ICReturnDeleteFilesCanceled	swift.enum.case	ICReturn.Code.deleteFilesCanceled	ICReturn.Code.deleteFilesCanceled	case deleteFilesCanceled
+c:@E@ICReturnCode@ICReturnDeleteFilesFailed	swift.enum.case	ICReturn.Code.deleteFilesFailed	ICReturn.Code.deleteFilesFailed	case deleteFilesFailed
+c:@E@ICReturnCode@ICReturnDeviceCommandGeneralFailure	swift.enum.case	ICReturn.Code.deviceCommandGeneralFailure	ICReturn.Code.deviceCommandGeneralFailure	case deviceCommandGeneralFailure
+c:@E@ICReturnCode@ICReturnDeviceCouldNotPair	swift.enum.case	ICReturn.Code.deviceCouldNotPair	ICReturn.Code.deviceCouldNotPair	case deviceCouldNotPair
+c:@E@ICReturnCode@ICReturnDeviceCouldNotUnpair	swift.enum.case	ICReturn.Code.deviceCouldNotUnpair	ICReturn.Code.deviceCouldNotUnpair	case deviceCouldNotUnpair
+c:@E@ICReturnCode@ICReturnDeviceFailedToCloseSession	swift.enum.case	ICReturn.Code.deviceFailedToCloseSession	ICReturn.Code.deviceFailedToCloseSession	case deviceFailedToCloseSession
+c:@E@ICReturnCode@ICReturnDeviceFailedToCompleteTransfer	swift.enum.case	ICReturn.Code.deviceFailedToCompleteTransfer	ICReturn.Code.deviceFailedToCompleteTransfer	case deviceFailedToCompleteTransfer
+c:@E@ICReturnCode@ICReturnDeviceFailedToOpenSession	swift.enum.case	ICReturn.Code.deviceFailedToOpenSession	ICReturn.Code.deviceFailedToOpenSession	case deviceFailedToOpenSession
+c:@E@ICReturnCode@ICReturnDeviceFailedToSendData	swift.enum.case	ICReturn.Code.deviceFailedToSendData	ICReturn.Code.deviceFailedToSendData	case deviceFailedToSendData
+c:@E@ICReturnCode@ICReturnDeviceFailedToTakePicture	swift.enum.case	ICReturn.Code.deviceFailedToTakePicture	ICReturn.Code.deviceFailedToTakePicture	case deviceFailedToTakePicture
+c:@E@ICReturnCode@ICReturnDeviceIsBusyEnumerating	swift.enum.case	ICReturn.Code.deviceIsBusyEnumerating	ICReturn.Code.deviceIsBusyEnumerating	case deviceIsBusyEnumerating
+c:@E@ICReturnCode@ICReturnDeviceIsPasscodeLocked	swift.enum.case	ICReturn.Code.deviceIsPasscodeLocked	ICReturn.Code.deviceIsPasscodeLocked	case deviceIsPasscodeLocked
+c:@E@ICReturnCode@ICReturnDeviceNeedsCredentials	swift.enum.case	ICReturn.Code.deviceNeedsCredentials	ICReturn.Code.deviceNeedsCredentials	case deviceNeedsCredentials
+c:@E@ICReturnCode@ICReturnDeviceSoftwareInstallationCanceled	swift.enum.case	ICReturn.Code.deviceSoftwareInstallationCanceled	ICReturn.Code.deviceSoftwareInstallationCanceled	case deviceSoftwareInstallationCanceled
+c:@E@ICReturnCode@ICReturnDeviceSoftwareInstallationCompleted	swift.enum.case	ICReturn.Code.deviceSoftwareInstallationCompleted	ICReturn.Code.deviceSoftwareInstallationCompleted	case deviceSoftwareInstallationCompleted
+c:@E@ICReturnCode@ICReturnDeviceSoftwareInstallationFailed	swift.enum.case	ICReturn.Code.deviceSoftwareInstallationFailed	ICReturn.Code.deviceSoftwareInstallationFailed	case deviceSoftwareInstallationFailed
+c:@E@ICReturnCode@ICReturnDeviceSoftwareIsBeingInstalled	swift.enum.case	ICReturn.Code.deviceSoftwareIsBeingInstalled	ICReturn.Code.deviceSoftwareIsBeingInstalled	case deviceSoftwareIsBeingInstalled
+c:@E@ICReturnCode@ICReturnDeviceSoftwareNotAvailable	swift.enum.case	ICReturn.Code.deviceSoftwareNotAvailable	ICReturn.Code.deviceSoftwareNotAvailable	case deviceSoftwareNotAvailable
+c:@E@ICReturnCode@ICReturnDeviceSoftwareNotInstalled	swift.enum.case	ICReturn.Code.deviceSoftwareNotInstalled	ICReturn.Code.deviceSoftwareNotInstalled	case deviceSoftwareNotInstalled
+c:@E@ICReturnCode@ICReturnDownloadCanceled	swift.enum.case	ICReturn.Code.downloadCanceled	ICReturn.Code.downloadCanceled	case downloadCanceled
+c:@E@ICReturnCode@ICReturnDownloadFailed	swift.enum.case	ICReturn.Code.downloadFailed	ICReturn.Code.downloadFailed	case downloadFailed
+c:@E@ICReturnCode@ICReturnExFATVolumeInvalid	swift.enum.case	ICReturn.Code.exFATVolumeInvalid	ICReturn.Code.exFATVolumeInvalid	case exFATVolumeInvalid
+c:@E@ICReturnCode@ICReturnFailedToCompletePassThroughCommand	swift.enum.case	ICReturn.Code.failedToCompletePassThroughCommand	ICReturn.Code.failedToCompletePassThroughCommand	case failedToCompletePassThroughCommand
+c:@E@ICReturnCode@ICReturnFailedToCompleteSendMessageRequest	swift.enum.case	ICReturn.Code.failedToCompleteSendMessageRequest	ICReturn.Code.failedToCompleteSendMessageRequest	case failedToCompleteSendMessageRequest
+c:@E@ICReturnCode@ICReturnFailedToDisabeTethering	swift.enum.case	ICReturn.Code.failedToDisabeTethering	ICReturn.Code.failedToDisabeTethering	case failedToDisabeTethering
+c:@E@ICReturnCode@ICReturnFailedToEnabeTethering	swift.enum.case	ICReturn.Code.failedToEnabeTethering	ICReturn.Code.failedToEnabeTethering	case failedToEnabeTethering
+c:@E@ICReturnCode@ICReturnInvalidParam	swift.enum.case	ICReturn.Code.invalidParam	ICReturn.Code.invalidParam	case invalidParam
+c:@E@ICReturnCode@ICReturnMultiErrorDictionary	swift.enum.case	ICReturn.Code.multiErrorDictionary	ICReturn.Code.multiErrorDictionary	case multiErrorDictionary
+c:@E@ICReturnCode@ICReturnReceivedUnsolicitedScannerErrorInfo	swift.enum.case	ICReturn.Code.receivedUnsolicitedScannerErrorInfo	ICReturn.Code.receivedUnsolicitedScannerErrorInfo	case receivedUnsolicitedScannerErrorInfo
+c:@E@ICReturnCode@ICReturnReceivedUnsolicitedScannerStatusInfo	swift.enum.case	ICReturn.Code.receivedUnsolicitedScannerStatusInfo	ICReturn.Code.receivedUnsolicitedScannerStatusInfo	case receivedUnsolicitedScannerStatusInfo
+c:@E@ICReturnCode@ICReturnScanOperationCanceled	swift.enum.case	ICReturn.Code.scanOperationCanceled	ICReturn.Code.scanOperationCanceled	case scanOperationCanceled
+c:@E@ICReturnCode@ICReturnScannerFailedToCompleteOverviewScan	swift.enum.case	ICReturn.Code.scannerFailedToCompleteOverviewScan	ICReturn.Code.scannerFailedToCompleteOverviewScan	case scannerFailedToCompleteOverviewScan
+c:@E@ICReturnCode@ICReturnScannerFailedToCompleteScan	swift.enum.case	ICReturn.Code.scannerFailedToCompleteScan	ICReturn.Code.scannerFailedToCompleteScan	case scannerFailedToCompleteScan
+c:@E@ICReturnCode@ICReturnScannerFailedToSelectFunctionalUnit	swift.enum.case	ICReturn.Code.scannerFailedToSelectFunctionalUnit	ICReturn.Code.scannerFailedToSelectFunctionalUnit	case scannerFailedToSelectFunctionalUnit
+c:@E@ICReturnCode@ICReturnScannerInUseByLocalUser	swift.enum.case	ICReturn.Code.scannerInUseByLocalUser	ICReturn.Code.scannerInUseByLocalUser	case scannerInUseByLocalUser
+c:@E@ICReturnCode@ICReturnScannerInUseByRemoteUser	swift.enum.case	ICReturn.Code.scannerInUseByRemoteUser	ICReturn.Code.scannerInUseByRemoteUser	case scannerInUseByRemoteUser
+c:@E@ICReturnCode@ICReturnSessionNotOpened	swift.enum.case	ICReturn.Code.sessionNotOpened	ICReturn.Code.sessionNotOpened	case sessionNotOpened
+c:@E@ICReturnCode@ICReturnSuccess	swift.enum.case	ICReturn.Code.success	ICReturn.Code.success	case success
+c:@E@ICReturnCode@ICReturnUploadFailed	swift.enum.case	ICReturn.Code.uploadFailed	ICReturn.Code.uploadFailed	case uploadFailed
+c:@E@ICReturnConnectionErrorCode	swift.enum	ICReturnConnectionError.Code	ICReturnConnectionError.Code	enum Code
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionClosedSessionSuddenly	swift.enum.case	ICReturnConnectionError.Code.closedSessionSuddenly	ICReturnConnectionError.Code.closedSessionSuddenly	case closedSessionSuddenly
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionDriverExited	swift.enum.case	ICReturnConnectionError.Code.driverExited	ICReturnConnectionError.Code.driverExited	case driverExited
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionEjectFailed	swift.enum.case	ICReturnConnectionError.Code.ejectFailed	ICReturnConnectionError.Code.ejectFailed	case ejectFailed
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionEjectedSuddenly	swift.enum.case	ICReturnConnectionError.Code.ejectedSuddenly	ICReturnConnectionError.Code.ejectedSuddenly	case ejectedSuddenly
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionFailedToOpen	swift.enum.case	ICReturnConnectionError.Code.failedToOpen	ICReturnConnectionError.Code.failedToOpen	case failedToOpen
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionFailedToOpenDevice	swift.enum.case	ICReturnConnectionError.Code.failedToOpenDevice	ICReturnConnectionError.Code.failedToOpenDevice	case failedToOpenDevice
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionNotAuthorizedToOpenDevice	swift.enum.case	ICReturnConnectionError.Code.notAuthorizedToOpenDevice	ICReturnConnectionError.Code.notAuthorizedToOpenDevice	case notAuthorizedToOpenDevice
+c:@E@ICReturnConnectionErrorCode@ICReturnConnectionSessionAlreadyOpen	swift.enum.case	ICReturnConnectionError.Code.sessionAlreadyOpen	ICReturnConnectionError.Code.sessionAlreadyOpen	case sessionAlreadyOpen
+c:@E@ICReturnDownloadErrorCode	swift.enum	ICReturnDownloadError.Code	ICReturnDownloadError.Code	enum Code
+c:@E@ICReturnDownloadErrorCode@ICReturnDownloadFileWritable	swift.enum.case	ICReturnDownloadError.Code.fileWritable	ICReturnDownloadError.Code.fileWritable	case fileWritable
+c:@E@ICReturnDownloadErrorCode@ICReturnDownloadPathInvalid	swift.enum.case	ICReturnDownloadError.Code.pathInvalid	ICReturnDownloadError.Code.pathInvalid	case pathInvalid
+c:@E@ICReturnMetadataErrorCode	swift.enum	ICReturnMetadataError.Code	ICReturnMetadataError.Code	enum Code
+c:@E@ICReturnMetadataErrorCode@ICReturnMetadataAlreadyFetching	swift.enum.case	ICReturnMetadataError.Code.alreadyFetching	ICReturnMetadataError.Code.alreadyFetching	case alreadyFetching
+c:@E@ICReturnMetadataErrorCode@ICReturnMetadataCanceled	swift.enum.case	ICReturnMetadataError.Code.canceled	ICReturnMetadataError.Code.canceled	case canceled
+c:@E@ICReturnMetadataErrorCode@ICReturnMetadataInvalid	swift.enum.case	ICReturnMetadataError.Code.invalid	ICReturnMetadataError.Code.invalid	case invalid
+c:@E@ICReturnMetadataErrorCode@ICReturnMetadataNotAvailable	swift.enum.case	ICReturnMetadataError.Code.notAvailable	ICReturnMetadataError.Code.notAvailable	case notAvailable
+c:@E@ICReturnObjectErrorCode	swift.enum	ICReturnObjectError.Code	ICReturnObjectError.Code	enum Code
+c:@E@ICReturnObjectErrorCode@ICReturnCodeObjectCouldNotBeRead	swift.enum.case	ICReturnObjectError.Code.codeObjectCouldNotBeRead	ICReturnObjectError.Code.codeObjectCouldNotBeRead	case codeObjectCouldNotBeRead
+c:@E@ICReturnObjectErrorCode@ICReturnCodeObjectDataEmpty	swift.enum.case	ICReturnObjectError.Code.codeObjectDataEmpty	ICReturnObjectError.Code.codeObjectDataEmpty	case codeObjectDataEmpty
+c:@E@ICReturnObjectErrorCode@ICReturnCodeObjectDataOffsetInvalid	swift.enum.case	ICReturnObjectError.Code.codeObjectDataOffsetInvalid	ICReturnObjectError.Code.codeObjectDataOffsetInvalid	case codeObjectDataOffsetInvalid
+c:@E@ICReturnObjectErrorCode@ICReturnCodeObjectDataRequestTooLarge	swift.enum.case	ICReturnObjectError.Code.codeObjectDataRequestTooLarge	ICReturnObjectError.Code.codeObjectDataRequestTooLarge	case codeObjectDataRequestTooLarge
+c:@E@ICReturnObjectErrorCode@ICReturnCodeObjectDoesNotExist	swift.enum.case	ICReturnObjectError.Code.codeObjectDoesNotExist	ICReturnObjectError.Code.codeObjectDoesNotExist	case codeObjectDoesNotExist
+c:@E@ICReturnPTPDeviceErrorCode	swift.enum	ICReturnPTPDeviceError.Code	ICReturnPTPDeviceError.Code	enum Code
+c:@E@ICReturnPTPDeviceErrorCode@ICReturnPTPFailedToSendCommand	swift.enum.case	ICReturnPTPDeviceError.Code.failedToSendCommand	ICReturnPTPDeviceError.Code.failedToSendCommand	case failedToSendCommand
+c:@E@ICReturnPTPDeviceErrorCode@ICReturnPTPNotAuthorizedToSendCommand	swift.enum.case	ICReturnPTPDeviceError.Code.notAuthorizedToSendCommand	ICReturnPTPDeviceError.Code.notAuthorizedToSendCommand	case notAuthorizedToSendCommand
+c:@E@ICReturnThumbnailErrorCode	swift.enum	ICReturnThumbnailError.Code	ICReturnThumbnailError.Code	enum Code
+c:@E@ICReturnThumbnailErrorCode@ICReturnThumbnailAlreadyFetching	swift.enum.case	ICReturnThumbnailError.Code.alreadyFetching	ICReturnThumbnailError.Code.alreadyFetching	case alreadyFetching
+c:@E@ICReturnThumbnailErrorCode@ICReturnThumbnailCanceled	swift.enum.case	ICReturnThumbnailError.Code.canceled	ICReturnThumbnailError.Code.canceled	case canceled
+c:@E@ICReturnThumbnailErrorCode@ICReturnThumbnailInvalid	swift.enum.case	ICReturnThumbnailError.Code.invalid	ICReturnThumbnailError.Code.invalid	case invalid
+c:@E@ICReturnThumbnailErrorCode@ICReturnThumbnailNotAvailable	swift.enum.case	ICReturnThumbnailError.Code.notAvailable	ICReturnThumbnailError.Code.notAvailable	case notAvailable
+c:@EA@ICReturnCodeOffset	swift.enum	ICReturnCodeOffset	ICReturnCodeOffset	enum ICReturnCodeOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeDeleteOffset	swift.enum.case	ICReturnCodeOffset.deleteOffset	ICReturnCodeOffset.deleteOffset	case deleteOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeDeviceConnection	swift.enum.case	ICReturnCodeOffset.deviceConnection	ICReturnCodeOffset.deviceConnection	case deviceConnection
+c:@EA@ICReturnCodeOffset@ICReturnCodeDeviceOffset	swift.enum.case	ICReturnCodeOffset.deviceOffset	ICReturnCodeOffset.deviceOffset	case deviceOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeDownloadOffset	swift.enum.case	ICReturnCodeOffset.downloadOffset	ICReturnCodeOffset.downloadOffset	case downloadOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeExFATOffset	swift.enum.case	ICReturnCodeOffset.exFATOffset	ICReturnCodeOffset.exFATOffset	case exFATOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeMetadataOffset	swift.enum.case	ICReturnCodeOffset.metadataOffset	ICReturnCodeOffset.metadataOffset	case metadataOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeObjectOffset	swift.enum.case	ICReturnCodeOffset.objectOffset	ICReturnCodeOffset.objectOffset	case objectOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodePTPOffset	swift.enum.case	ICReturnCodeOffset.ptpOffset	ICReturnCodeOffset.ptpOffset	case ptpOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeSystemOffset	swift.enum.case	ICReturnCodeOffset.systemOffset	ICReturnCodeOffset.systemOffset	case systemOffset
+c:@EA@ICReturnCodeOffset@ICReturnCodeThumbnailOffset	swift.enum.case	ICReturnCodeOffset.thumbnailOffset	ICReturnCodeOffset.thumbnailOffset	case thumbnailOffset
+c:@ICAuthorizationStatusAuthorized	swift.type.property	authorized	ICAuthorizationStatus.authorized	static let authorized: ICAuthorizationStatus
+c:@ICAuthorizationStatusDenied	swift.type.property	denied	ICAuthorizationStatus.denied	static let denied: ICAuthorizationStatus
+c:@ICAuthorizationStatusNotDetermined	swift.type.property	notDetermined	ICAuthorizationStatus.notDetermined	static let notDetermined: ICAuthorizationStatus
+c:@ICAuthorizationStatusRestricted	swift.type.property	restricted	ICAuthorizationStatus.restricted	static let restricted: ICAuthorizationStatus
+c:@ICCameraDeviceCanAcceptPTPCommands	swift.type.property	cameraDeviceCanAcceptPTPCommands	ICDeviceCapability.cameraDeviceCanAcceptPTPCommands	static let cameraDeviceCanAcceptPTPCommands: ICDeviceCapability
+c:@ICCameraDeviceCanDeleteAllFiles	swift.type.property	cameraDeviceCanDeleteAllFiles	ICDeviceCapability.cameraDeviceCanDeleteAllFiles	static let cameraDeviceCanDeleteAllFiles: ICDeviceCapability
+c:@ICCameraDeviceCanDeleteOneFile	swift.type.property	cameraDeviceCanDeleteOneFile	ICDeviceCapability.cameraDeviceCanDeleteOneFile	static let cameraDeviceCanDeleteOneFile: ICDeviceCapability
+c:@ICCameraDeviceCanReceiveFile	swift.type.property	cameraDeviceCanReceiveFile	ICDeviceCapability.cameraDeviceCanReceiveFile	static let cameraDeviceCanReceiveFile: ICDeviceCapability
+c:@ICCameraDeviceCanSyncClock	swift.type.property	cameraDeviceCanSyncClock	ICDeviceCapability.cameraDeviceCanSyncClock	static let cameraDeviceCanSyncClock: ICDeviceCapability
+c:@ICCameraDeviceCanTakePicture	swift.type.property	cameraDeviceCanTakePicture	ICDeviceCapability.cameraDeviceCanTakePicture	static let cameraDeviceCanTakePicture: ICDeviceCapability
+c:@ICCameraDeviceCanTakePictureUsingShutterReleaseOnCamera	swift.type.property	cameraDeviceCanTakePictureUsingShutterReleaseOnCamera	ICDeviceCapability.cameraDeviceCanTakePictureUsingShutterReleaseOnCamera	static let cameraDeviceCanTakePictureUsingShutterReleaseOnCamera: ICDeviceCapability
+c:@ICCameraDeviceSupportsHEIF	swift.type.property	cameraDeviceSupportsHEIF	ICDeviceCapability.cameraDeviceSupportsHEIF	static let cameraDeviceSupportsHEIF: ICDeviceCapability
+c:@ICDeleteAfterSuccessfulDownload	swift.type.property	deleteAfterSuccessfulDownload	ICDownloadOption.deleteAfterSuccessfulDownload	static let deleteAfterSuccessfulDownload: ICDownloadOption
+c:@ICDeleteCanceled	swift.type.property	canceled	ICDeleteResult.canceled	static let canceled: ICDeleteResult
+c:@ICDeleteErrorCanceled	swift.type.property	canceled	ICDeleteError.canceled	static let canceled: ICDeleteError
+c:@ICDeleteErrorDeviceMissing	swift.type.property	deviceMissing	ICDeleteError.deviceMissing	static let deviceMissing: ICDeleteError
+c:@ICDeleteErrorFileMissing	swift.type.property	fileMissing	ICDeleteError.fileMissing	static let fileMissing: ICDeleteError
+c:@ICDeleteErrorReadOnly	swift.type.property	readOnly	ICDeleteError.readOnly	static let readOnly: ICDeleteError
+c:@ICDeleteFailed	swift.type.property	failed	ICDeleteResult.failed	static let failed: ICDeleteResult
+c:@ICDeleteSuccessful	swift.type.property	successful	ICDeleteResult.successful	static let successful: ICDeleteResult
+c:@ICDeviceCanEjectOrDisconnect	swift.type.property	canEjectOrDisconnect	ICDeviceCapability.canEjectOrDisconnect	static let canEjectOrDisconnect: ICDeviceCapability
+c:@ICDeviceLocationDescriptionBluetooth	swift.type.property	descriptionBluetooth	ICDeviceLocationOptions.descriptionBluetooth	static let descriptionBluetooth: ICDeviceLocationOptions
+c:@ICDeviceLocationDescriptionFireWire	swift.type.property	descriptionFireWire	ICDeviceLocationOptions.descriptionFireWire	static let descriptionFireWire: ICDeviceLocationOptions
+c:@ICDeviceLocationDescriptionMassStorage	swift.type.property	descriptionMassStorage	ICDeviceLocationOptions.descriptionMassStorage	static let descriptionMassStorage: ICDeviceLocationOptions
+c:@ICDeviceLocationDescriptionUSB	swift.type.property	descriptionUSB	ICDeviceLocationOptions.descriptionUSB	static let descriptionUSB: ICDeviceLocationOptions
+c:@ICDownloadSidecarFiles	swift.type.property	sidecarFiles	ICDownloadOption.sidecarFiles	static let sidecarFiles: ICDownloadOption
+c:@ICDownloadsDirectoryURL	swift.type.property	downloadsDirectoryURL	ICDownloadOption.downloadsDirectoryURL	static let downloadsDirectoryURL: ICDownloadOption
+c:@ICEnumerationChronologicalOrder	swift.type.property	enumerationChronologicalOrder	ICSessionOptions.enumerationChronologicalOrder	static let enumerationChronologicalOrder: ICSessionOptions
+c:@ICErrorDomain	swift.var	ICErrorDomain	ICErrorDomain	let ICErrorDomain: String
+c:@ICImageSourceShouldCache	swift.type.property	imageSourceShouldCache	ICCameraItemThumbnailOption.imageSourceShouldCache	static let imageSourceShouldCache: ICCameraItemThumbnailOption
+c:@ICImageSourceThumbnailMaxPixelSize	swift.type.property	imageSourceThumbnailMaxPixelSize	ICCameraItemThumbnailOption.imageSourceThumbnailMaxPixelSize	static let imageSourceThumbnailMaxPixelSize: ICCameraItemThumbnailOption
+c:@ICOverwrite	swift.type.property	overwrite	ICDownloadOption.overwrite	static let overwrite: ICDownloadOption
+c:@ICSaveAsFilename	swift.type.property	saveAsFilename	ICDownloadOption.saveAsFilename	static let saveAsFilename: ICDownloadOption
+c:@ICSavedAncillaryFiles	swift.type.property	savedAncillaryFiles	ICDownloadOption.savedAncillaryFiles	static let savedAncillaryFiles: ICDownloadOption
+c:@ICSavedFilename	swift.type.property	savedFilename	ICDownloadOption.savedFilename	static let savedFilename: ICDownloadOption
+c:@ICStatusNotificationKey	swift.type.property	statusNotificationKey	ICDeviceStatus.statusNotificationKey	static let statusNotificationKey: ICDeviceStatus
+c:@ICTransportTypeExFAT	swift.type.property	transportTypeExFAT	ICDeviceTransport.transportTypeExFAT	static let transportTypeExFAT: ICDeviceTransport
+c:@ICTransportTypeMassStorage	swift.type.property	transportTypeMassStorage	ICDeviceTransport.transportTypeMassStorage	static let transportTypeMassStorage: ICDeviceTransport
+c:@ICTransportTypeProximity	swift.type.property	transportTypeProximity	ICDeviceTransport.transportTypeProximity	static let transportTypeProximity: ICDeviceTransport
+c:@ICTransportTypeTCPIP	swift.type.property	transportTypeTCPIP	ICDeviceTransport.transportTypeTCPIP	static let transportTypeTCPIP: ICDeviceTransport
+c:@ICTransportTypeUSB	swift.type.property	transportTypeUSB	ICDeviceTransport.transportTypeUSB	static let transportTypeUSB: ICDeviceTransport
+c:@ICTruncateAfterSuccessfulDownload	swift.type.property	truncateAfterSuccessfulDownload	ICDownloadOption.truncateAfterSuccessfulDownload	static let truncateAfterSuccessfulDownload: ICDownloadOption
+c:@T@ICAuthorizationStatus	swift.struct	ICAuthorizationStatus	ICAuthorizationStatus	struct ICAuthorizationStatus
+c:@T@ICCameraItemMetadataOption	swift.struct	ICCameraItemMetadataOption	ICCameraItemMetadataOption	struct ICCameraItemMetadataOption
+c:@T@ICCameraItemThumbnailOption	swift.struct	ICCameraItemThumbnailOption	ICCameraItemThumbnailOption	struct ICCameraItemThumbnailOption
+c:@T@ICDeleteError	swift.struct	ICDeleteError	ICDeleteError	struct ICDeleteError
+c:@T@ICDeleteResult	swift.struct	ICDeleteResult	ICDeleteResult	struct ICDeleteResult
+c:@T@ICDeviceCapability	swift.struct	ICDeviceCapability	ICDeviceCapability	struct ICDeviceCapability
+c:@T@ICDeviceLocationOptions	swift.struct	ICDeviceLocationOptions	ICDeviceLocationOptions	struct ICDeviceLocationOptions
+c:@T@ICDeviceStatus	swift.struct	ICDeviceStatus	ICDeviceStatus	struct ICDeviceStatus
+c:@T@ICDeviceTransport	swift.struct	ICDeviceTransport	ICDeviceTransport	struct ICDeviceTransport
+c:@T@ICDownloadOption	swift.struct	ICDownloadOption	ICDownloadOption	struct ICDownloadOption
+c:@T@ICSessionOptions	swift.struct	ICSessionOptions	ICSessionOptions	struct ICSessionOptions
+c:@T@ICUploadOption	swift.struct	ICUploadOption	ICUploadOption	struct ICUploadOption
+c:objc(cs)ICCameraDevice	swift.class	ICCameraDevice	ICCameraDevice	class ICCameraDevice
+c:objc(cs)ICCameraDevice(im)filesOfType:	swift.method	files(ofType:)	ICCameraDevice.files(ofType:)	func files(ofType fileUTType: String) -> [String]?
+c:objc(cs)ICCameraDevice(im)requestDeleteFiles:	swift.method	requestDeleteFiles(_:)	ICCameraDevice.requestDeleteFiles(_:)	func requestDeleteFiles(_ files: [ICCameraItem])
+c:objc(cs)ICCameraDevice(im)requestDeleteFiles:deleteFailed:completion:	swift.method	requestDeleteFiles(_:deleteFailed:completion:)	ICCameraDevice.requestDeleteFiles(_:deleteFailed:completion:)	func requestDeleteFiles(_ files: [ICCameraItem], deleteFailed: @escaping ([ICDeleteError : ICCameraItem]) -> Void, completion: @escaping ([ICDeleteResult : [ICCameraItem]], (any Error)?) -> Void) -> Progress?
+c:objc(cs)ICCameraDevice(im)requestDownloadFile:options:downloadDelegate:didDownloadSelector:contextInfo:	swift.method	requestDownloadFile(_:options:downloadDelegate:didDownloadSelector:contextInfo:)	ICCameraDevice.requestDownloadFile(_:options:downloadDelegate:didDownloadSelector:contextInfo:)	func requestDownloadFile(_ file: ICCameraFile, options: [ICDownloadOption : Any] = [:], downloadDelegate: any ICCameraDeviceDownloadDelegate, didDownloadSelector selector: Selector, contextInfo: UnsafeMutableRawPointer?)
+c:objc(cs)ICCameraDevice(im)requestReadDataFromFile:atOffset:length:readDelegate:didReadDataSelector:contextInfo:	swift.method	requestReadData(from:atOffset:length:readDelegate:didReadDataSelector:contextInfo:)	ICCameraDevice.requestReadData(from:atOffset:length:readDelegate:didReadDataSelector:contextInfo:)	func requestReadData(from file: ICCameraFile, atOffset offset: off_t, length: off_t, readDelegate: Any, didReadDataSelector selector: Selector, contextInfo: UnsafeMutableRawPointer?)
+c:objc(cs)ICCameraDevice(im)requestSendPTPCommand:outData:completion:	swift.method	requestSendPTPCommand(_:outData:)	ICCameraDevice.requestSendPTPCommand(_:outData:)	func requestSendPTPCommand(_ ptpCommand: Data, outData ptpData: Data?) async throws -> (Data, Data)
+c:objc(cs)ICCameraDevice(im)requestSendPTPCommand:outData:sendCommandDelegate:didSendCommandSelector:contextInfo:	swift.method	requestSendPTPCommand(_:outData:sendCommandDelegate:didSendCommand:contextInfo:)	ICCameraDevice.requestSendPTPCommand(_:outData:sendCommandDelegate:didSendCommand:contextInfo:)	func requestSendPTPCommand(_ command: Data, outData data: Data?, sendCommandDelegate: Any, didSendCommand selector: Selector, contextInfo: UnsafeMutableRawPointer?)
+c:objc(cs)ICCameraDevice(py)accessRestrictedAppleDevice	swift.property	isAccessRestrictedAppleDevice	ICCameraDevice.isAccessRestrictedAppleDevice	var isAccessRestrictedAppleDevice: Bool { get }
+c:objc(cs)ICCameraDevice(py)batteryLevel	swift.property	batteryLevel	ICCameraDevice.batteryLevel	var batteryLevel: UInt { get }
+c:objc(cs)ICCameraDevice(py)batteryLevelAvailable	swift.property	batteryLevelAvailable	ICCameraDevice.batteryLevelAvailable	var batteryLevelAvailable: Bool { get }
+c:objc(cs)ICCameraDevice(py)contentCatalogPercentCompleted	swift.property	contentCatalogPercentCompleted	ICCameraDevice.contentCatalogPercentCompleted	var contentCatalogPercentCompleted: UInt { get }
+c:objc(cs)ICCameraDevice(py)contents	swift.property	contents	ICCameraDevice.contents	var contents: [ICCameraItem]? { get }
+c:objc(cs)ICCameraDevice(py)ejectable	swift.property	isEjectable	ICCameraDevice.isEjectable	var isEjectable: Bool { get }
+c:objc(cs)ICCameraDevice(py)iCloudPhotosEnabled	swift.property	iCloudPhotosEnabled	ICCameraDevice.iCloudPhotosEnabled	var iCloudPhotosEnabled: Bool { get }
+c:objc(cs)ICCameraDevice(py)locked	swift.property	isLocked	ICCameraDevice.isLocked	var isLocked: Bool { get }
+c:objc(cs)ICCameraDevice(py)mediaFiles	swift.property	mediaFiles	ICCameraDevice.mediaFiles	var mediaFiles: [ICCameraItem]? { get }
+c:objc(cs)ICCameraDevice(py)mediaPresentation	swift.property	mediaPresentation	ICCameraDevice.mediaPresentation	var mediaPresentation: ICMediaPresentation { get set }
+c:objc(cs)ICCameraDevice(py)ptpEventHandler	swift.property	ptpEventHandler	ICCameraDevice.ptpEventHandler	var ptpEventHandler: (Data) -> Void { get set }
+c:objc(cs)ICCameraDevice(py)tetheredCaptureEnabled	swift.property	tetheredCaptureEnabled	ICCameraDevice.tetheredCaptureEnabled	var tetheredCaptureEnabled: Bool { get }
+c:objc(cs)ICCameraDevice(py)timeOffset	swift.property	timeOffset	ICCameraDevice.timeOffset	var timeOffset: TimeInterval { get }
+c:objc(cs)ICCameraFile	swift.class	ICCameraFile	ICCameraFile	class ICCameraFile
+c:objc(cs)ICCameraFile(cm)fingerprintForFileAtURL:	swift.type.method	fingerprintForFile(at:)	ICCameraFile.fingerprintForFile(at:)	class func fingerprintForFile(at url: URL) -> String?
+c:objc(cs)ICCameraFile(im)requestDownloadWithOptions:completion:	swift.method	requestDownload(options:completion:)	ICCameraFile.requestDownload(options:completion:)	func requestDownload(options: [ICDownloadOption : Any]? = nil, completion: @escaping (String?, (any Error)?) -> Void) -> Progress?
+c:objc(cs)ICCameraFile(im)requestFingerprintWithCompletion:	swift.method	requestFingerprint(completion:)	ICCameraFile.requestFingerprint(completion:)	func requestFingerprint(completion: @escaping (String?, (any Error)?) -> Void)
+c:objc(cs)ICCameraFile(im)requestMetadataDictionaryWithOptions:completion:	swift.method	requestMetadataDictionary(options:)	ICCameraFile.requestMetadataDictionary(options:)	func requestMetadataDictionary(options: [ICCameraItemMetadataOption : Any]? = nil) async throws -> [AnyHashable : Any]
+c:objc(cs)ICCameraFile(im)requestReadDataAtOffset:length:completion:	swift.method	requestReadData(atOffset:length:)	ICCameraFile.requestReadData(atOffset:length:)	func requestReadData(atOffset offset: off_t, length: off_t) async throws -> Data
+c:objc(cs)ICCameraFile(im)requestSecurityScopedURLWithCompletion:	swift.method	requestSecurityScopedURL(completion:)	ICCameraFile.requestSecurityScopedURL(completion:)	func requestSecurityScopedURL(completion: @escaping (URL?, (any Error)?) -> Void)
+c:objc(cs)ICCameraFile(im)requestThumbnailDataWithOptions:completion:	swift.method	requestThumbnailData(options:)	ICCameraFile.requestThumbnailData(options:)	func requestThumbnailData(options: [ICCameraItemThumbnailOption : Any]? = nil) async throws -> Data
+c:objc(cs)ICCameraFile(py)burstFavorite	swift.property	burstFavorite	ICCameraFile.burstFavorite	var burstFavorite: Bool { get }
+c:objc(cs)ICCameraFile(py)burstPicked	swift.property	burstPicked	ICCameraFile.burstPicked	var burstPicked: Bool { get }
+c:objc(cs)ICCameraFile(py)burstUUID	swift.property	burstUUID	ICCameraFile.burstUUID	var burstUUID: String? { get }
+c:objc(cs)ICCameraFile(py)createdFilename	swift.property	createdFilename	ICCameraFile.createdFilename	var createdFilename: String? { get }
+c:objc(cs)ICCameraFile(py)duration	swift.property	duration	ICCameraFile.duration	var duration: Double { get }
+c:objc(cs)ICCameraFile(py)exifCreationDate	swift.property	exifCreationDate	ICCameraFile.exifCreationDate	var exifCreationDate: Date? { get }
+c:objc(cs)ICCameraFile(py)exifModificationDate	swift.property	exifModificationDate	ICCameraFile.exifModificationDate	var exifModificationDate: Date? { get }
+c:objc(cs)ICCameraFile(py)fileCreationDate	swift.property	fileCreationDate	ICCameraFile.fileCreationDate	var fileCreationDate: Date? { get }
+c:objc(cs)ICCameraFile(py)fileModificationDate	swift.property	fileModificationDate	ICCameraFile.fileModificationDate	var fileModificationDate: Date? { get }
+c:objc(cs)ICCameraFile(py)fileSize	swift.property	fileSize	ICCameraFile.fileSize	var fileSize: off_t { get }
+c:objc(cs)ICCameraFile(py)fingerprint	swift.property	fingerprint	ICCameraFile.fingerprint	var fingerprint: String? { get }
+c:objc(cs)ICCameraFile(py)firstPicked	swift.property	firstPicked	ICCameraFile.firstPicked	var firstPicked: Bool { get }
+c:objc(cs)ICCameraFile(py)gpsString	swift.property	gpsString	ICCameraFile.gpsString	var gpsString: String? { get }
+c:objc(cs)ICCameraFile(py)groupUUID	swift.property	groupUUID	ICCameraFile.groupUUID	var groupUUID: String? { get }
+c:objc(cs)ICCameraFile(py)height	swift.property	height	ICCameraFile.height	var height: Int { get }
+c:objc(cs)ICCameraFile(py)highFramerate	swift.property	highFramerate	ICCameraFile.highFramerate	var highFramerate: Bool { get }
+c:objc(cs)ICCameraFile(py)orientation	swift.property	orientation	ICCameraFile.orientation	var orientation: ICEXIFOrientationType { get set }
+c:objc(cs)ICCameraFile(py)originalFilename	swift.property	originalFilename	ICCameraFile.originalFilename	var originalFilename: String? { get }
+c:objc(cs)ICCameraFile(py)originatingAssetID	swift.property	originatingAssetID	ICCameraFile.originatingAssetID	var originatingAssetID: String? { get }
+c:objc(cs)ICCameraFile(py)pairedRawImage	swift.property	pairedRawImage	ICCameraFile.pairedRawImage	var pairedRawImage: ICCameraFile? { get }
+c:objc(cs)ICCameraFile(py)relatedUUID	swift.property	relatedUUID	ICCameraFile.relatedUUID	var relatedUUID: String? { get }
+c:objc(cs)ICCameraFile(py)sidecarFiles	swift.property	sidecarFiles	ICCameraFile.sidecarFiles	var sidecarFiles: [ICCameraItem]? { get }
+c:objc(cs)ICCameraFile(py)timeLapse	swift.property	timeLapse	ICCameraFile.timeLapse	var timeLapse: Bool { get }
+c:objc(cs)ICCameraFile(py)width	swift.property	width	ICCameraFile.width	var width: Int { get }
+c:objc(cs)ICCameraFolder	swift.class	ICCameraFolder	ICCameraFolder	class ICCameraFolder
+c:objc(cs)ICCameraFolder(py)contents	swift.property	contents	ICCameraFolder.contents	var contents: [ICCameraItem]? { get }
+c:objc(cs)ICCameraItem	swift.class	ICCameraItem	ICCameraItem	class ICCameraItem
+c:objc(cs)ICCameraItem(im)flushMetadataCache	swift.method	flushMetadataCache()	ICCameraItem.flushMetadataCache()	func flushMetadataCache()
+c:objc(cs)ICCameraItem(im)flushThumbnailCache	swift.method	flushThumbnailCache()	ICCameraItem.flushThumbnailCache()	func flushThumbnailCache()
+c:objc(cs)ICCameraItem(im)requestMetadata	swift.method	requestMetadata()	ICCameraItem.requestMetadata()	func requestMetadata()
+c:objc(cs)ICCameraItem(im)requestThumbnail	swift.method	requestThumbnail()	ICCameraItem.requestThumbnail()	func requestThumbnail()
+c:objc(cs)ICCameraItem(py)UTI	swift.property	uti	ICCameraItem.uti	var uti: String? { get }
+c:objc(cs)ICCameraItem(py)addedAfterContentCatalogCompleted	swift.property	wasAddedAfterContentCatalogCompleted	ICCameraItem.wasAddedAfterContentCatalogCompleted	var wasAddedAfterContentCatalogCompleted: Bool { get }
+c:objc(cs)ICCameraItem(py)creationDate	swift.property	creationDate	ICCameraItem.creationDate	var creationDate: Date? { get }
+c:objc(cs)ICCameraItem(py)device	swift.property	device	ICCameraItem.device	var device: ICCameraDevice? { get }
+c:objc(cs)ICCameraItem(py)inTemporaryStore	swift.property	isInTemporaryStore	ICCameraItem.isInTemporaryStore	var isInTemporaryStore: Bool { get }
+c:objc(cs)ICCameraItem(py)largeThumbnailIfAvailable	swift.property	largeThumbnailIfAvailable	ICCameraItem.largeThumbnailIfAvailable	var largeThumbnailIfAvailable: CGImage? { get }
+c:objc(cs)ICCameraItem(py)locked	swift.property	isLocked	ICCameraItem.isLocked	var isLocked: Bool { get }
+c:objc(cs)ICCameraItem(py)metadata	swift.property	metadata	ICCameraItem.metadata	var metadata: [AnyHashable : Any]? { get }
+c:objc(cs)ICCameraItem(py)metadataIfAvailable	swift.property	metadataIfAvailable	ICCameraItem.metadataIfAvailable	var metadataIfAvailable: [String : Any]? { get }
+c:objc(cs)ICCameraItem(py)modificationDate	swift.property	modificationDate	ICCameraItem.modificationDate	var modificationDate: Date? { get }
+c:objc(cs)ICCameraItem(py)name	swift.property	name	ICCameraItem.name	var name: String? { get }
+c:objc(cs)ICCameraItem(py)parentFolder	swift.property	parentFolder	ICCameraItem.parentFolder	var parentFolder: ICCameraFolder? { get }
+c:objc(cs)ICCameraItem(py)ptpObjectHandle	swift.property	ptpObjectHandle	ICCameraItem.ptpObjectHandle	var ptpObjectHandle: UInt32 { get }
+c:objc(cs)ICCameraItem(py)raw	swift.property	isRaw	ICCameraItem.isRaw	var isRaw: Bool { get }
+c:objc(cs)ICCameraItem(py)thumbnail	swift.property	thumbnail	ICCameraItem.thumbnail	var thumbnail: CGImage? { get }
+c:objc(cs)ICCameraItem(py)thumbnailIfAvailable	swift.property	thumbnailIfAvailable	ICCameraItem.thumbnailIfAvailable	var thumbnailIfAvailable: CGImage? { get }
+c:objc(cs)ICCameraItem(py)userData	swift.property	userData	ICCameraItem.userData	var userData: NSMutableDictionary? { get }
+c:objc(cs)ICDevice	swift.class	ICDevice	ICDevice	class ICDevice
+c:objc(cs)ICDevice(im)requestCloseSession	swift.method	requestCloseSession()	ICDevice.requestCloseSession()	func requestCloseSession()
+c:objc(cs)ICDevice(im)requestCloseSessionWithOptions:completion:	swift.method	requestCloseSession(options:)	ICDevice.requestCloseSession(options:)	func requestCloseSession(options: [ICSessionOptions : Any]? = nil) async throws
+c:objc(cs)ICDevice(im)requestEject	swift.method	requestEject()	ICDevice.requestEject()	func requestEject()
+c:objc(cs)ICDevice(im)requestEjectWithCompletion:	swift.method	requestEject(completion:)	ICDevice.requestEject(completion:)	func requestEject(completion: @escaping ((any Error)?) -> Void)
+c:objc(cs)ICDevice(im)requestOpenSession	swift.method	requestOpenSession()	ICDevice.requestOpenSession()	func requestOpenSession()
+c:objc(cs)ICDevice(im)requestOpenSessionWithOptions:completion:	swift.method	requestOpenSession(options:)	ICDevice.requestOpenSession(options:)	func requestOpenSession(options: [ICSessionOptions : Any]? = nil) async throws
+c:objc(cs)ICDevice(py)UUIDString	swift.property	uuidString	ICDevice.uuidString	var uuidString: String? { get }
+c:objc(cs)ICDevice(py)capabilities	swift.property	capabilities	ICDevice.capabilities	var capabilities: [String] { get }
+c:objc(cs)ICDevice(py)delegate	swift.property	delegate	ICDevice.delegate	unowned(unsafe) var delegate: (any ICDeviceDelegate)? { get set }
+c:objc(cs)ICDevice(py)hasOpenSession	swift.property	hasOpenSession	ICDevice.hasOpenSession	var hasOpenSession: Bool { get }
+c:objc(cs)ICDevice(py)icon	swift.property	icon	ICDevice.icon	var icon: CGImage? { get }
+c:objc(cs)ICDevice(py)name	swift.property	name	ICDevice.name	var name: String? { get }
+c:objc(cs)ICDevice(py)productKind	swift.property	productKind	ICDevice.productKind	var productKind: String? { get }
+c:objc(cs)ICDevice(py)systemSymbolName	swift.property	systemSymbolName	ICDevice.systemSymbolName	var systemSymbolName: String? { get }
+c:objc(cs)ICDevice(py)transportType	swift.property	transportType	ICDevice.transportType	var transportType: String? { get }
+c:objc(cs)ICDevice(py)type	swift.property	type	ICDevice.type	var type: ICDeviceType { get }
+c:objc(cs)ICDevice(py)usbLocationID	swift.property	usbLocationID	ICDevice.usbLocationID	var usbLocationID: Int32 { get }
+c:objc(cs)ICDevice(py)usbProductID	swift.property	usbProductID	ICDevice.usbProductID	var usbProductID: Int32 { get }
+c:objc(cs)ICDevice(py)usbVendorID	swift.property	usbVendorID	ICDevice.usbVendorID	var usbVendorID: Int32 { get }
+c:objc(cs)ICDevice(py)userData	swift.property	userData	ICDevice.userData	var userData: NSMutableDictionary? { get }
+c:objc(cs)ICDeviceBrowser	swift.class	ICDeviceBrowser	ICDeviceBrowser	class ICDeviceBrowser
+c:objc(cs)ICDeviceBrowser(im)init	swift.init	init()	ICDeviceBrowser.init()	init()
+c:objc(cs)ICDeviceBrowser(im)requestContentsAuthorizationWithCompletion:	swift.method	requestContentsAuthorization(completion:)	ICDeviceBrowser.requestContentsAuthorization(completion:)	func requestContentsAuthorization(completion: @escaping (ICAuthorizationStatus) -> Void)
+c:objc(cs)ICDeviceBrowser(im)requestControlAuthorizationWithCompletion:	swift.method	requestControlAuthorization(completion:)	ICDeviceBrowser.requestControlAuthorization(completion:)	func requestControlAuthorization(completion: @escaping (ICAuthorizationStatus) -> Void)
+c:objc(cs)ICDeviceBrowser(im)resetContentsAuthorizationWithCompletion:	swift.method	resetContentsAuthorization(completion:)	ICDeviceBrowser.resetContentsAuthorization(completion:)	func resetContentsAuthorization(completion: @escaping (ICAuthorizationStatus) -> Void)
+c:objc(cs)ICDeviceBrowser(im)resetControlAuthorizationWithCompletion:	swift.method	resetControlAuthorization(completion:)	ICDeviceBrowser.resetControlAuthorization(completion:)	func resetControlAuthorization(completion: @escaping (ICAuthorizationStatus) -> Void)
+c:objc(cs)ICDeviceBrowser(im)start	swift.method	start()	ICDeviceBrowser.start()	func start()
+c:objc(cs)ICDeviceBrowser(im)stop	swift.method	stop()	ICDeviceBrowser.stop()	func stop()
+c:objc(cs)ICDeviceBrowser(py)browsedDeviceTypeMask	swift.property	browsedDeviceTypeMask	ICDeviceBrowser.browsedDeviceTypeMask	var browsedDeviceTypeMask: ICDeviceTypeMask { get set }
+c:objc(cs)ICDeviceBrowser(py)browsing	swift.property	isBrowsing	ICDeviceBrowser.isBrowsing	var isBrowsing: Bool { get }
+c:objc(cs)ICDeviceBrowser(py)contentsAuthorizationStatus	swift.property	contentsAuthorizationStatus	ICDeviceBrowser.contentsAuthorizationStatus	var contentsAuthorizationStatus: ICAuthorizationStatus { get }
+c:objc(cs)ICDeviceBrowser(py)controlAuthorizationStatus	swift.property	controlAuthorizationStatus	ICDeviceBrowser.controlAuthorizationStatus	var controlAuthorizationStatus: ICAuthorizationStatus { get }
+c:objc(cs)ICDeviceBrowser(py)delegate	swift.property	delegate	ICDeviceBrowser.delegate	unowned(unsafe) var delegate: (any ICDeviceBrowserDelegate)? { get set }
+c:objc(cs)ICDeviceBrowser(py)devices	swift.property	devices	ICDeviceBrowser.devices	var devices: [ICDevice]? { get }
+c:objc(cs)ICDeviceBrowser(py)suspended	swift.property	isSuspended	ICDeviceBrowser.isSuspended	var isSuspended: Bool { get }
+c:objc(pl)ICCameraDeviceDelegate	swift.protocol	ICCameraDeviceDelegate	ICCameraDeviceDelegate	protocol ICCameraDeviceDelegate : ICDeviceDelegate
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didAddItem:	swift.method	cameraDevice(_:didAdd:)	ICCameraDeviceDelegate.cameraDevice(_:didAdd:)	optional func cameraDevice(_ camera: ICCameraDevice, didAdd item: ICCameraItem)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didAddItems:	swift.method	cameraDevice(_:didAdd:)	ICCameraDeviceDelegate.cameraDevice(_:didAdd:)	func cameraDevice(_ camera: ICCameraDevice, didAdd items: [ICCameraItem])
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didCompleteDeleteFilesWithError:	swift.method	cameraDevice(_:didCompleteDeleteFilesWithError:)	ICCameraDeviceDelegate.cameraDevice(_:didCompleteDeleteFilesWithError:)	optional func cameraDevice(_ camera: ICCameraDevice, didCompleteDeleteFilesWithError error: (any Error)?)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didReceiveMetadata:forItem:error:	swift.method	cameraDevice(_:didReceiveMetadata:for:error:)	ICCameraDeviceDelegate.cameraDevice(_:didReceiveMetadata:for:error:)	func cameraDevice(_ camera: ICCameraDevice, didReceiveMetadata metadata: [AnyHashable : Any]?, for item: ICCameraItem, error: (any Error)?)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didReceiveMetadataForItem:	swift.method	cameraDevice(_:didReceiveMetadataFor:)	ICCameraDeviceDelegate.cameraDevice(_:didReceiveMetadataFor:)	optional func cameraDevice(_ camera: ICCameraDevice, didReceiveMetadataFor item: ICCameraItem)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didReceivePTPEvent:	swift.method	cameraDevice(_:didReceivePTPEvent:)	ICCameraDeviceDelegate.cameraDevice(_:didReceivePTPEvent:)	func cameraDevice(_ camera: ICCameraDevice, didReceivePTPEvent eventData: Data)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didReceiveThumbnail:forItem:error:	swift.method	cameraDevice(_:didReceiveThumbnail:for:error:)	ICCameraDeviceDelegate.cameraDevice(_:didReceiveThumbnail:for:error:)	func cameraDevice(_ camera: ICCameraDevice, didReceiveThumbnail thumbnail: CGImage?, for item: ICCameraItem, error: (any Error)?)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didReceiveThumbnailForItem:	swift.method	cameraDevice(_:didReceiveThumbnailFor:)	ICCameraDeviceDelegate.cameraDevice(_:didReceiveThumbnailFor:)	optional func cameraDevice(_ camera: ICCameraDevice, didReceiveThumbnailFor item: ICCameraItem)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didRemoveItem:	swift.method	cameraDevice(_:didRemove:)	ICCameraDeviceDelegate.cameraDevice(_:didRemove:)	optional func cameraDevice(_ camera: ICCameraDevice, didRemove item: ICCameraItem)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didRemoveItems:	swift.method	cameraDevice(_:didRemove:)	ICCameraDeviceDelegate.cameraDevice(_:didRemove:)	func cameraDevice(_ camera: ICCameraDevice, didRemove items: [ICCameraItem])
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:didRenameItems:	swift.method	cameraDevice(_:didRenameItems:)	ICCameraDeviceDelegate.cameraDevice(_:didRenameItems:)	func cameraDevice(_ camera: ICCameraDevice, didRenameItems items: [ICCameraItem])
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:shouldGetMetadataOfItem:	swift.method	cameraDevice(_:shouldGetMetadataOf:)	ICCameraDeviceDelegate.cameraDevice(_:shouldGetMetadataOf:)	optional func cameraDevice(_ cameraDevice: ICCameraDevice, shouldGetMetadataOf item: ICCameraItem) -> Bool
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDevice:shouldGetThumbnailOfItem:	swift.method	cameraDevice(_:shouldGetThumbnailOf:)	ICCameraDeviceDelegate.cameraDevice(_:shouldGetThumbnailOf:)	optional func cameraDevice(_ cameraDevice: ICCameraDevice, shouldGetThumbnailOf item: ICCameraItem) -> Bool
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDeviceDidChangeCapability:	swift.method	cameraDeviceDidChangeCapability(_:)	ICCameraDeviceDelegate.cameraDeviceDidChangeCapability(_:)	func cameraDeviceDidChangeCapability(_ camera: ICCameraDevice)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDeviceDidEnableAccessRestriction:	swift.method	cameraDeviceDidEnableAccessRestriction(_:)	ICCameraDeviceDelegate.cameraDeviceDidEnableAccessRestriction(_:)	func cameraDeviceDidEnableAccessRestriction(_ device: ICDevice)
+c:objc(pl)ICCameraDeviceDelegate(im)cameraDeviceDidRemoveAccessRestriction:	swift.method	cameraDeviceDidRemoveAccessRestriction(_:)	ICCameraDeviceDelegate.cameraDeviceDidRemoveAccessRestriction(_:)	func cameraDeviceDidRemoveAccessRestriction(_ device: ICDevice)
+c:objc(pl)ICCameraDeviceDelegate(im)deviceDidBecomeReadyWithCompleteContentCatalog:	swift.method	deviceDidBecomeReady(withCompleteContentCatalog:)	ICCameraDeviceDelegate.deviceDidBecomeReady(withCompleteContentCatalog:)	func deviceDidBecomeReady(withCompleteContentCatalog device: ICCameraDevice)
+c:objc(pl)ICCameraDeviceDownloadDelegate	swift.protocol	ICCameraDeviceDownloadDelegate	ICCameraDeviceDownloadDelegate	protocol ICCameraDeviceDownloadDelegate : NSObjectProtocol
+c:objc(pl)ICCameraDeviceDownloadDelegate(im)didDownloadFile:error:options:contextInfo:	swift.method	didDownloadFile(_:error:options:contextInfo:)	ICCameraDeviceDownloadDelegate.didDownloadFile(_:error:options:contextInfo:)	optional func didDownloadFile(_ file: ICCameraFile, error: (any Error)?, options: [String : Any] = [:], contextInfo: UnsafeMutableRawPointer?)
+c:objc(pl)ICCameraDeviceDownloadDelegate(im)didReceiveDownloadProgressForFile:downloadedBytes:maxBytes:	swift.method	didReceiveDownloadProgress(for:downloadedBytes:maxBytes:)	ICCameraDeviceDownloadDelegate.didReceiveDownloadProgress(for:downloadedBytes:maxBytes:)	optional func didReceiveDownloadProgress(for file: ICCameraFile, downloadedBytes: off_t, maxBytes: off_t)
+c:objc(pl)ICDeviceBrowserDelegate	swift.protocol	ICDeviceBrowserDelegate	ICDeviceBrowserDelegate	protocol ICDeviceBrowserDelegate : NSObjectProtocol
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowser:deviceDidChangeName:	swift.method	deviceBrowser(_:deviceDidChangeName:)	ICDeviceBrowserDelegate.deviceBrowser(_:deviceDidChangeName:)	optional func deviceBrowser(_ browser: ICDeviceBrowser, deviceDidChangeName device: ICDevice)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowser:deviceDidChangeSharingState:	swift.method	deviceBrowser(_:deviceDidChangeSharingState:)	ICDeviceBrowserDelegate.deviceBrowser(_:deviceDidChangeSharingState:)	optional func deviceBrowser(_ browser: ICDeviceBrowser, deviceDidChangeSharingState device: ICDevice)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowser:didAddDevice:moreComing:	swift.method	deviceBrowser(_:didAdd:moreComing:)	ICDeviceBrowserDelegate.deviceBrowser(_:didAdd:moreComing:)	func deviceBrowser(_ browser: ICDeviceBrowser, didAdd device: ICDevice, moreComing: Bool)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowser:didRemoveDevice:moreGoing:	swift.method	deviceBrowser(_:didRemove:moreGoing:)	ICDeviceBrowserDelegate.deviceBrowser(_:didRemove:moreGoing:)	func deviceBrowser(_ browser: ICDeviceBrowser, didRemove device: ICDevice, moreGoing: Bool)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowserDidCancelSuspendOperations:	swift.method	deviceBrowserDidCancelSuspendOperations(_:)	ICDeviceBrowserDelegate.deviceBrowserDidCancelSuspendOperations(_:)	optional func deviceBrowserDidCancelSuspendOperations(_ browser: ICDeviceBrowser)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowserDidResumeOperations:	swift.method	deviceBrowserDidResumeOperations(_:)	ICDeviceBrowserDelegate.deviceBrowserDidResumeOperations(_:)	optional func deviceBrowserDidResumeOperations(_ browser: ICDeviceBrowser)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowserDidSuspendOperations:	swift.method	deviceBrowserDidSuspendOperations(_:)	ICDeviceBrowserDelegate.deviceBrowserDidSuspendOperations(_:)	optional func deviceBrowserDidSuspendOperations(_ browser: ICDeviceBrowser)
+c:objc(pl)ICDeviceBrowserDelegate(im)deviceBrowserWillSuspendOperations:	swift.method	deviceBrowserWillSuspendOperations(_:)	ICDeviceBrowserDelegate.deviceBrowserWillSuspendOperations(_:)	optional func deviceBrowserWillSuspendOperations(_ browser: ICDeviceBrowser)
+c:objc(pl)ICDeviceDelegate	swift.protocol	ICDeviceDelegate	ICDeviceDelegate	protocol ICDeviceDelegate : NSObjectProtocol
+c:objc(pl)ICDeviceDelegate(im)device:didCloseSessionWithError:	swift.method	device(_:didCloseSessionWithError:)	ICDeviceDelegate.device(_:didCloseSessionWithError:)	func device(_ device: ICDevice, didCloseSessionWithError error: (any Error)?)
+c:objc(pl)ICDeviceDelegate(im)device:didEjectWithError:	swift.method	device(_:didEjectWithError:)	ICDeviceDelegate.device(_:didEjectWithError:)	optional func device(_ device: ICDevice, didEjectWithError error: (any Error)?)
+c:objc(pl)ICDeviceDelegate(im)device:didEncounterError:	swift.method	device(_:didEncounterError:)	ICDeviceDelegate.device(_:didEncounterError:)	optional func device(_ device: ICDevice, didEncounterError error: (any Error)?)
+c:objc(pl)ICDeviceDelegate(im)device:didOpenSessionWithError:	swift.method	device(_:didOpenSessionWithError:)	ICDeviceDelegate.device(_:didOpenSessionWithError:)	func device(_ device: ICDevice, didOpenSessionWithError error: (any Error)?)
+c:objc(pl)ICDeviceDelegate(im)device:didReceiveStatusInformation:	swift.method	device(_:didReceiveStatusInformation:)	ICDeviceDelegate.device(_:didReceiveStatusInformation:)	optional func device(_ device: ICDevice, didReceiveStatusInformation status: [ICDeviceStatus : Any])
+c:objc(pl)ICDeviceDelegate(im)deviceDidBecomeReady:	swift.method	deviceDidBecomeReady(_:)	ICDeviceDelegate.deviceDidBecomeReady(_:)	optional func deviceDidBecomeReady(_ device: ICDevice)
+c:objc(pl)ICDeviceDelegate(im)didRemoveDevice:	swift.method	didRemove(_:)	ICDeviceDelegate.didRemove(_:)	func didRemove(_ device: ICDevice)
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.type.property	errorDomain	ICLegacyReturn.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnCode	swift.type.property	errorDomain	ICReturn.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.type.property	errorDomain	ICReturnConnectionError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.type.property	errorDomain	ICReturnDownloadError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.type.property	errorDomain	ICReturnMetadataError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.type.property	errorDomain	ICReturnObjectError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.type.property	errorDomain	ICReturnPTPDeviceError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.type.property	errorDomain	ICReturnThumbnailError.errorDomain	static var errorDomain: String { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	errorUserInfo	ICLegacyReturn.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	errorUserInfo	ICReturn.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	errorUserInfo	ICReturnConnectionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	errorUserInfo	ICReturnDownloadError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	errorUserInfo	ICReturnMetadataError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	errorUserInfo	ICReturnObjectError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	errorUserInfo	ICReturnPTPDeviceError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	errorUserInfo	ICReturnThumbnailError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	errorCode	ICLegacyReturn.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	errorCode	ICReturn.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	errorCode	ICReturnConnectionError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	errorCode	ICReturnDownloadError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	errorCode	ICReturnMetadataError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	errorCode	ICReturnObjectError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	errorCode	ICReturnPTPDeviceError.errorCode	var errorCode: Int { get }
+s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	errorCode	ICReturnThumbnailError.errorCode	var errorCode: Int { get }
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.func.op	~=(_:_:)	ICLegacyReturn.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnCode	swift.func.op	~=(_:_:)	ICReturn.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.func.op	~=(_:_:)	ICReturnConnectionError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.func.op	~=(_:_:)	ICReturnDownloadError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.func.op	~=(_:_:)	ICReturnMetadataError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.func.op	~=(_:_:)	ICReturnObjectError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.func.op	~=(_:_:)	ICReturnPTPDeviceError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.func.op	~=(_:_:)	ICReturnThumbnailError.Code.~=(_:_:)	static func ~= (match: Self, error: any Error) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	errorUserInfo	ICLegacyReturn.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	errorUserInfo	ICReturn.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	errorUserInfo	ICReturnConnectionError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	errorUserInfo	ICReturnDownloadError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	errorUserInfo	ICReturnMetadataError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	errorUserInfo	ICReturnObjectError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	errorUserInfo	ICReturnPTPDeviceError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	errorUserInfo	ICReturnThumbnailError.errorUserInfo	var errorUserInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.func.op	==(_:_:)	ICLegacyReturn.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnCode	swift.func.op	==(_:_:)	ICReturn.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.func.op	==(_:_:)	ICReturnConnectionError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.func.op	==(_:_:)	ICReturnDownloadError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.func.op	==(_:_:)	ICReturnMetadataError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.func.op	==(_:_:)	ICReturnObjectError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.func.op	==(_:_:)	ICReturnPTPDeviceError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.func.op	==(_:_:)	ICReturnThumbnailError.==(_:_:)	static func == (lhs: Self, rhs: Self) -> Bool
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	code	ICLegacyReturn.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	code	ICReturn.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	code	ICReturnConnectionError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	code	ICReturnDownloadError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	code	ICReturnMetadataError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	code	ICReturnObjectError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	code	ICReturnPTPDeviceError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	code	ICReturnThumbnailError.code	var code: Self.Code { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.method	hash(into:)	ICLegacyReturn.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnCode	swift.method	hash(into:)	ICReturn.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.method	hash(into:)	ICReturnConnectionError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.method	hash(into:)	ICReturnDownloadError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.method	hash(into:)	ICReturnMetadataError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.method	hash(into:)	ICReturnObjectError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.method	hash(into:)	ICReturnPTPDeviceError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.method	hash(into:)	ICReturnThumbnailError.hash(into:)	func hash(into hasher: inout Hasher)
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	userInfo	ICLegacyReturn.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	userInfo	ICReturn.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	userInfo	ICReturnConnectionError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	userInfo	ICReturnDownloadError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	userInfo	ICReturnMetadataError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	userInfo	ICReturnObjectError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	userInfo	ICReturnPTPDeviceError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE8userInfoSDySSypGvp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	userInfo	ICReturnThumbnailError.userInfo	var userInfo: [String : Any] { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	errorCode	ICLegacyReturn.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	errorCode	ICReturn.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	errorCode	ICReturnConnectionError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	errorCode	ICReturnDownloadError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	errorCode	ICReturnMetadataError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	errorCode	ICReturnObjectError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	errorCode	ICReturnPTPDeviceError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	errorCode	ICReturnThumbnailError.errorCode	var errorCode: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	hashValue	ICLegacyReturn.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	hashValue	ICReturn.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	hashValue	ICReturnConnectionError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	hashValue	ICReturnDownloadError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	hashValue	ICReturnMetadataError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	hashValue	ICReturnObjectError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	hashValue	ICReturnPTPDeviceError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	hashValue	ICReturnThumbnailError.hashValue	var hashValue: Int { get }
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.init	init(_:userInfo:)	ICLegacyReturn.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnCode	swift.init	init(_:userInfo:)	ICReturn.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.init	init(_:userInfo:)	ICReturnConnectionError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.init	init(_:userInfo:)	ICReturnDownloadError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.init	init(_:userInfo:)	ICReturnMetadataError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.init	init(_:userInfo:)	ICReturnObjectError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.init	init(_:userInfo:)	ICReturnPTPDeviceError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.init	init(_:userInfo:)	ICReturnThumbnailError.init(_:userInfo:)	init(_ code: Self.Code, userInfo: [String : Any] = [:])
+s:SC12ICReturnCodeLeV	swift.struct	ICReturn	ICReturn	struct ICReturn
+s:SC12ICReturnCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturn.errorDomain	static var errorDomain: String { get }
+s:SC12ICReturnCodeLeV12invalidParamSoAAVvpZ	swift.type.property	invalidParam	ICReturn.invalidParam	static var invalidParam: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV12uploadFailedSoAAVvpZ	swift.type.property	uploadFailed	ICReturn.uploadFailed	static var uploadFailed: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV14downloadFailedSoAAVvpZ	swift.type.property	downloadFailed	ICReturn.downloadFailed	static var downloadFailed: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV16downloadCanceledSoAAVvpZ	swift.type.property	downloadCanceled	ICReturn.downloadCanceled	static var downloadCanceled: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV16sessionNotOpenedSoAAVvpZ	swift.type.property	sessionNotOpened	ICReturn.sessionNotOpened	static var sessionNotOpened: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV17deleteFilesFailedSoAAVvpZ	swift.type.property	deleteFilesFailed	ICReturn.deleteFilesFailed	static var deleteFilesFailed: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV18deviceCouldNotPairSoAAVvpZ	swift.type.property	deviceCouldNotPair	ICReturn.deviceCouldNotPair	static var deviceCouldNotPair: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV18exFATVolumeInvalidSoAAVvpZ	swift.type.property	exFATVolumeInvalid	ICReturn.exFATVolumeInvalid	static var exFATVolumeInvalid: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV19deleteFilesCanceledSoAAVvpZ	swift.type.property	deleteFilesCanceled	ICReturn.deleteFilesCanceled	static var deleteFilesCanceled: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV20deviceCouldNotUnpairSoAAVvpZ	swift.type.property	deviceCouldNotUnpair	ICReturn.deviceCouldNotUnpair	static var deviceCouldNotUnpair: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV20multiErrorDictionarySoAAVvpZ	swift.type.property	multiErrorDictionary	ICReturn.multiErrorDictionary	static var multiErrorDictionary: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV21communicationTimedOutSoAAVvpZ	swift.type.property	communicationTimedOut	ICReturn.communicationTimedOut	static var communicationTimedOut: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV21scanOperationCanceledSoAAVvpZ	swift.type.property	scanOperationCanceled	ICReturn.scanOperationCanceled	static var scanOperationCanceled: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV22deviceFailedToSendDataSoAAVvpZ	swift.type.property	deviceFailedToSendData	ICReturn.deviceFailedToSendData	static var deviceFailedToSendData: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV22deviceIsPasscodeLockedSoAAVvpZ	swift.type.property	deviceIsPasscodeLocked	ICReturn.deviceIsPasscodeLocked	static var deviceIsPasscodeLocked: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV22deviceNeedsCredentialsSoAAVvpZ	swift.type.property	deviceNeedsCredentials	ICReturn.deviceNeedsCredentials	static var deviceNeedsCredentials: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV22failedToEnabeTetheringSoAAVvpZ	swift.type.property	failedToEnabeTethering	ICReturn.failedToEnabeTethering	static var failedToEnabeTethering: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV23deviceIsBusyEnumeratingSoAAVvpZ	swift.type.property	deviceIsBusyEnumerating	ICReturn.deviceIsBusyEnumerating	static var deviceIsBusyEnumerating: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV23failedToDisabeTetheringSoAAVvpZ	swift.type.property	failedToDisabeTethering	ICReturn.failedToDisabeTethering	static var failedToDisabeTethering: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV23scannerInUseByLocalUserSoAAVvpZ	swift.type.property	scannerInUseByLocalUser	ICReturn.scannerInUseByLocalUser	static var scannerInUseByLocalUser: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV24scannerInUseByRemoteUserSoAAVvpZ	swift.type.property	scannerInUseByRemoteUser	ICReturn.scannerInUseByRemoteUser	static var scannerInUseByRemoteUser: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV25deviceFailedToOpenSessionSoAAVvpZ	swift.type.property	deviceFailedToOpenSession	ICReturn.deviceFailedToOpenSession	static var deviceFailedToOpenSession: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV25deviceFailedToTakePictureSoAAVvpZ	swift.type.property	deviceFailedToTakePicture	ICReturn.deviceFailedToTakePicture	static var deviceFailedToTakePicture: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV26deviceFailedToCloseSessionSoAAVvpZ	swift.type.property	deviceFailedToCloseSession	ICReturn.deviceFailedToCloseSession	static var deviceFailedToCloseSession: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV26deviceSoftwareNotAvailableSoAAVvpZ	swift.type.property	deviceSoftwareNotAvailable	ICReturn.deviceSoftwareNotAvailable	static var deviceSoftwareNotAvailable: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV26deviceSoftwareNotInstalledSoAAVvpZ	swift.type.property	deviceSoftwareNotInstalled	ICReturn.deviceSoftwareNotInstalled	static var deviceSoftwareNotInstalled: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV27deviceCommandGeneralFailureSoAAVvpZ	swift.type.property	deviceCommandGeneralFailure	ICReturn.deviceCommandGeneralFailure	static var deviceCommandGeneralFailure: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV27scannerFailedToCompleteScanSoAAVvpZ	swift.type.property	scannerFailedToCompleteScan	ICReturn.scannerFailedToCompleteScan	static var scannerFailedToCompleteScan: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV30deviceFailedToCompleteTransferSoAAVvpZ	swift.type.property	deviceFailedToCompleteTransfer	ICReturn.deviceFailedToCompleteTransfer	static var deviceFailedToCompleteTransfer: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV30deviceSoftwareIsBeingInstalledSoAAVvpZ	swift.type.property	deviceSoftwareIsBeingInstalled	ICReturn.deviceSoftwareIsBeingInstalled	static var deviceSoftwareIsBeingInstalled: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV32deviceSoftwareInstallationFailedSoAAVvpZ	swift.type.property	deviceSoftwareInstallationFailed	ICReturn.deviceSoftwareInstallationFailed	static var deviceSoftwareInstallationFailed: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV34deviceSoftwareInstallationCanceledSoAAVvpZ	swift.type.property	deviceSoftwareInstallationCanceled	ICReturn.deviceSoftwareInstallationCanceled	static var deviceSoftwareInstallationCanceled: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV34failedToCompletePassThroughCommandSoAAVvpZ	swift.type.property	failedToCompletePassThroughCommand	ICReturn.failedToCompletePassThroughCommand	static var failedToCompletePassThroughCommand: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV34failedToCompleteSendMessageRequestSoAAVvpZ	swift.type.property	failedToCompleteSendMessageRequest	ICReturn.failedToCompleteSendMessageRequest	static var failedToCompleteSendMessageRequest: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV35deviceSoftwareInstallationCompletedSoAAVvpZ	swift.type.property	deviceSoftwareInstallationCompleted	ICReturn.deviceSoftwareInstallationCompleted	static var deviceSoftwareInstallationCompleted: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV35receivedUnsolicitedScannerErrorInfoSoAAVvpZ	swift.type.property	receivedUnsolicitedScannerErrorInfo	ICReturn.receivedUnsolicitedScannerErrorInfo	static var receivedUnsolicitedScannerErrorInfo: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV35scannerFailedToCompleteOverviewScanSoAAVvpZ	swift.type.property	scannerFailedToCompleteOverviewScan	ICReturn.scannerFailedToCompleteOverviewScan	static var scannerFailedToCompleteOverviewScan: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV35scannerFailedToSelectFunctionalUnitSoAAVvpZ	swift.type.property	scannerFailedToSelectFunctionalUnit	ICReturn.scannerFailedToSelectFunctionalUnit	static var scannerFailedToSelectFunctionalUnit: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV36receivedUnsolicitedScannerStatusInfoSoAAVvpZ	swift.type.property	receivedUnsolicitedScannerStatusInfo	ICReturn.receivedUnsolicitedScannerStatusInfo	static var receivedUnsolicitedScannerStatusInfo: ICReturn.Code { get }
+s:SC12ICReturnCodeLeV7successSoAAVvpZ	swift.type.property	success	ICReturn.success	static var success: ICReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV	swift.struct	ICLegacyReturn	ICLegacyReturn	struct ICLegacyReturn
+s:SC18ICLegacyReturnCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICLegacyReturn.errorDomain	static var errorDomain: String { get }
+s:SC18ICLegacyReturnCodeLeV12ioPendingErrSoAAVvpZ	swift.type.property	ioPendingErr	ICLegacyReturn.ioPendingErr	static var ioPendingErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV16communicationErrSoAAVvpZ	swift.type.property	communicationErr	ICLegacyReturn.communicationErr	static var communicationErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV16deviceNotOpenErrSoAAVvpZ	swift.type.property	deviceNotOpenErr	ICLegacyReturn.deviceNotOpenErr	static var deviceNotOpenErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV16fileCorruptedErrSoAAVvpZ	swift.type.property	fileCorruptedErr	ICLegacyReturn.fileCorruptedErr	static var fileCorruptedErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV16invalidObjectErrSoAAVvpZ	swift.type.property	invalidObjectErr	ICLegacyReturn.invalidObjectErr	static var invalidObjectErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV17cannotYieldDeviceSoAAVvpZ	swift.type.property	cannotYieldDevice	ICLegacyReturn.cannotYieldDevice	static var cannotYieldDevice: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV17deviceInternalErrSoAAVvpZ	swift.type.property	deviceInternalErr	ICLegacyReturn.deviceInternalErr	static var deviceInternalErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV17deviceNotFoundErrSoAAVvpZ	swift.type.property	deviceNotFoundErr	ICLegacyReturn.deviceNotFoundErr	static var deviceNotFoundErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV17invalidSessionErrSoAAVvpZ	swift.type.property	invalidSessionErr	ICLegacyReturn.invalidSessionErr	static var invalidSessionErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV18indexOutOfRangeErrSoAAVvpZ	swift.type.property	indexOutOfRangeErr	ICLegacyReturn.indexOutOfRangeErr	static var indexOutOfRangeErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV18invalidPropertyErrSoAAVvpZ	swift.type.property	invalidPropertyErr	ICLegacyReturn.invalidPropertyErr	static var invalidPropertyErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV19dataTypeNotFoundErrSoAAVvpZ	swift.type.property	dataTypeNotFoundErr	ICLegacyReturn.dataTypeNotFoundErr	static var dataTypeNotFoundErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV20deviceAlreadyOpenErrSoAAVvpZ	swift.type.property	deviceAlreadyOpenErr	ICLegacyReturn.deviceAlreadyOpenErr	static var deviceAlreadyOpenErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV20deviceUnsupportedErrSoAAVvpZ	swift.type.property	deviceUnsupportedErr	ICLegacyReturn.deviceUnsupportedErr	static var deviceUnsupportedErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV20extensionInternalErrSoAAVvpZ	swift.type.property	extensionInternalErr	ICLegacyReturn.extensionInternalErr	static var extensionInternalErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV20frameworkInternalErrSoAAVvpZ	swift.type.property	frameworkInternalErr	ICLegacyReturn.frameworkInternalErr	static var frameworkInternalErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV21deviceGUIDNotFoundErrSoAAVvpZ	swift.type.property	deviceGUIDNotFoundErr	ICLegacyReturn.deviceGUIDNotFoundErr	static var deviceGUIDNotFoundErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV21deviceInvalidParamErrSoAAVvpZ	swift.type.property	deviceInvalidParamErr	ICLegacyReturn.deviceInvalidParamErr	static var deviceInvalidParamErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV23propertyTypeNotFoundErrSoAAVvpZ	swift.type.property	propertyTypeNotFoundErr	ICLegacyReturn.propertyTypeNotFoundErr	static var propertyTypeNotFoundErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV25deviceMemoryAllocationErrSoAAVvpZ	swift.type.property	deviceMemoryAllocationErr	ICLegacyReturn.deviceMemoryAllocationErr	static var deviceMemoryAllocationErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV27deviceLocationIDNotFoundErrSoAAVvpZ	swift.type.property	deviceLocationIDNotFoundErr	ICLegacyReturn.deviceLocationIDNotFoundErr	static var deviceLocationIDNotFoundErr: ICLegacyReturn.Code { get }
+s:SC18ICLegacyReturnCodeLeV30deviceIOServicePathNotFoundErrSoAAVvpZ	swift.type.property	deviceIOServicePathNotFoundErr	ICLegacyReturn.deviceIOServicePathNotFoundErr	static var deviceIOServicePathNotFoundErr: ICLegacyReturn.Code { get }
+s:SC23ICReturnObjectErrorCodeLeV	swift.struct	ICReturnObjectError	ICReturnObjectError	struct ICReturnObjectError
+s:SC23ICReturnObjectErrorCodeLeV04codeB12DoesNotExistSoAAVvpZ	swift.type.property	codeObjectDoesNotExist	ICReturnObjectError.codeObjectDoesNotExist	static var codeObjectDoesNotExist: ICReturnObjectError.Code { get }
+s:SC23ICReturnObjectErrorCodeLeV04codeB14CouldNotBeReadSoAAVvpZ	swift.type.property	codeObjectCouldNotBeRead	ICReturnObjectError.codeObjectCouldNotBeRead	static var codeObjectCouldNotBeRead: ICReturnObjectError.Code { get }
+s:SC23ICReturnObjectErrorCodeLeV04codeB17DataOffsetInvalidSoAAVvpZ	swift.type.property	codeObjectDataOffsetInvalid	ICReturnObjectError.codeObjectDataOffsetInvalid	static var codeObjectDataOffsetInvalid: ICReturnObjectError.Code { get }
+s:SC23ICReturnObjectErrorCodeLeV04codeB19DataRequestTooLargeSoAAVvpZ	swift.type.property	codeObjectDataRequestTooLarge	ICReturnObjectError.codeObjectDataRequestTooLarge	static var codeObjectDataRequestTooLarge: ICReturnObjectError.Code { get }
+s:SC23ICReturnObjectErrorCodeLeV04codeB9DataEmptySoAAVvpZ	swift.type.property	codeObjectDataEmpty	ICReturnObjectError.codeObjectDataEmpty	static var codeObjectDataEmpty: ICReturnObjectError.Code { get }
+s:SC23ICReturnObjectErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturnObjectError.errorDomain	static var errorDomain: String { get }
+s:SC25ICReturnDownloadErrorCodeLeV	swift.struct	ICReturnDownloadError	ICReturnDownloadError	struct ICReturnDownloadError
+s:SC25ICReturnDownloadErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturnDownloadError.errorDomain	static var errorDomain: String { get }
+s:SC25ICReturnDownloadErrorCodeLeV11pathInvalidSoAAVvpZ	swift.type.property	pathInvalid	ICReturnDownloadError.pathInvalid	static var pathInvalid: ICReturnDownloadError.Code { get }
+s:SC25ICReturnDownloadErrorCodeLeV12fileWritableSoAAVvpZ	swift.type.property	fileWritable	ICReturnDownloadError.fileWritable	static var fileWritable: ICReturnDownloadError.Code { get }
+s:SC25ICReturnMetadataErrorCodeLeV	swift.struct	ICReturnMetadataError	ICReturnMetadataError	struct ICReturnMetadataError
+s:SC25ICReturnMetadataErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturnMetadataError.errorDomain	static var errorDomain: String { get }
+s:SC25ICReturnMetadataErrorCodeLeV12notAvailableSoAAVvpZ	swift.type.property	notAvailable	ICReturnMetadataError.notAvailable	static var notAvailable: ICReturnMetadataError.Code { get }
+s:SC25ICReturnMetadataErrorCodeLeV15alreadyFetchingSoAAVvpZ	swift.type.property	alreadyFetching	ICReturnMetadataError.alreadyFetching	static var alreadyFetching: ICReturnMetadataError.Code { get }
+s:SC25ICReturnMetadataErrorCodeLeV7invalidSoAAVvpZ	swift.type.property	invalid	ICReturnMetadataError.invalid	static var invalid: ICReturnMetadataError.Code { get }
+s:SC25ICReturnMetadataErrorCodeLeV8canceledSoAAVvpZ	swift.type.property	canceled	ICReturnMetadataError.canceled	static var canceled: ICReturnMetadataError.Code { get }
+s:SC26ICReturnPTPDeviceErrorCodeLeV	swift.struct	ICReturnPTPDeviceError	ICReturnPTPDeviceError	struct ICReturnPTPDeviceError
+s:SC26ICReturnPTPDeviceErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturnPTPDeviceError.errorDomain	static var errorDomain: String { get }
+s:SC26ICReturnPTPDeviceErrorCodeLeV19failedToSendCommandSoAAVvpZ	swift.type.property	failedToSendCommand	ICReturnPTPDeviceError.failedToSendCommand	static var failedToSendCommand: ICReturnPTPDeviceError.Code { get }
+s:SC26ICReturnPTPDeviceErrorCodeLeV26notAuthorizedToSendCommandSoAAVvpZ	swift.type.property	notAuthorizedToSendCommand	ICReturnPTPDeviceError.notAuthorizedToSendCommand	static var notAuthorizedToSendCommand: ICReturnPTPDeviceError.Code { get }
+s:SC26ICReturnThumbnailErrorCodeLeV	swift.struct	ICReturnThumbnailError	ICReturnThumbnailError	struct ICReturnThumbnailError
+s:SC26ICReturnThumbnailErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturnThumbnailError.errorDomain	static var errorDomain: String { get }
+s:SC26ICReturnThumbnailErrorCodeLeV12notAvailableSoAAVvpZ	swift.type.property	notAvailable	ICReturnThumbnailError.notAvailable	static var notAvailable: ICReturnThumbnailError.Code { get }
+s:SC26ICReturnThumbnailErrorCodeLeV15alreadyFetchingSoAAVvpZ	swift.type.property	alreadyFetching	ICReturnThumbnailError.alreadyFetching	static var alreadyFetching: ICReturnThumbnailError.Code { get }
+s:SC26ICReturnThumbnailErrorCodeLeV7invalidSoAAVvpZ	swift.type.property	invalid	ICReturnThumbnailError.invalid	static var invalid: ICReturnThumbnailError.Code { get }
+s:SC26ICReturnThumbnailErrorCodeLeV8canceledSoAAVvpZ	swift.type.property	canceled	ICReturnThumbnailError.canceled	static var canceled: ICReturnThumbnailError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV	swift.struct	ICReturnConnectionError	ICReturnConnectionError	struct ICReturnConnectionError
+s:SC27ICReturnConnectionErrorCodeLeV11ejectFailedSoAAVvpZ	swift.type.property	ejectFailed	ICReturnConnectionError.ejectFailed	static var ejectFailed: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV11errorDomainSSvpZ	swift.type.property	errorDomain	ICReturnConnectionError.errorDomain	static var errorDomain: String { get }
+s:SC27ICReturnConnectionErrorCodeLeV12driverExitedSoAAVvpZ	swift.type.property	driverExited	ICReturnConnectionError.driverExited	static var driverExited: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV12failedToOpenSoAAVvpZ	swift.type.property	failedToOpen	ICReturnConnectionError.failedToOpen	static var failedToOpen: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV15ejectedSuddenlySoAAVvpZ	swift.type.property	ejectedSuddenly	ICReturnConnectionError.ejectedSuddenly	static var ejectedSuddenly: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV18failedToOpenDeviceSoAAVvpZ	swift.type.property	failedToOpenDevice	ICReturnConnectionError.failedToOpenDevice	static var failedToOpenDevice: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV18sessionAlreadyOpenSoAAVvpZ	swift.type.property	sessionAlreadyOpen	ICReturnConnectionError.sessionAlreadyOpen	static var sessionAlreadyOpen: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV21closedSessionSuddenlySoAAVvpZ	swift.type.property	closedSessionSuddenly	ICReturnConnectionError.closedSessionSuddenly	static var closedSessionSuddenly: ICReturnConnectionError.Code { get }
+s:SC27ICReturnConnectionErrorCodeLeV25notAuthorizedToOpenDeviceSoAAVvpZ	swift.type.property	notAuthorizedToOpenDevice	ICReturnConnectionError.notAuthorizedToOpenDevice	static var notAuthorizedToOpenDevice: ICReturnConnectionError.Code { get }
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICDeviceLocationType	swift.func.op	!=(_:_:)	ICDeviceLocationType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICDeviceLocationTypeMask	swift.func.op	!=(_:_:)	ICDeviceLocationTypeMask.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICDeviceType	swift.func.op	!=(_:_:)	ICDeviceType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICDeviceTypeMask	swift.func.op	!=(_:_:)	ICDeviceTypeMask.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICEXIFOrientationType	swift.func.op	!=(_:_:)	ICEXIFOrientationType.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.func.op	!=(_:_:)	ICLegacyReturn.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICMediaPresentation	swift.func.op	!=(_:_:)	ICMediaPresentation.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnCode	swift.func.op	!=(_:_:)	ICReturn.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.func.op	!=(_:_:)	ICReturnConnectionError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.func.op	!=(_:_:)	ICReturnDownloadError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.func.op	!=(_:_:)	ICReturnMetadataError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.func.op	!=(_:_:)	ICReturnObjectError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.func.op	!=(_:_:)	ICReturnPTPDeviceError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.func.op	!=(_:_:)	ICReturnThumbnailError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@EA@ICReturnCodeOffset	swift.func.op	!=(_:_:)	ICReturnCodeOffset.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICAuthorizationStatus	swift.func.op	!=(_:_:)	ICAuthorizationStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICCameraItemMetadataOption	swift.func.op	!=(_:_:)	ICCameraItemMetadataOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICCameraItemThumbnailOption	swift.func.op	!=(_:_:)	ICCameraItemThumbnailOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDeleteError	swift.func.op	!=(_:_:)	ICDeleteError.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDeleteResult	swift.func.op	!=(_:_:)	ICDeleteResult.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDeviceCapability	swift.func.op	!=(_:_:)	ICDeviceCapability.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDeviceLocationOptions	swift.func.op	!=(_:_:)	ICDeviceLocationOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDeviceStatus	swift.func.op	!=(_:_:)	ICDeviceStatus.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDeviceTransport	swift.func.op	!=(_:_:)	ICDeviceTransport.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICDownloadOption	swift.func.op	!=(_:_:)	ICDownloadOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICSessionOptions	swift.func.op	!=(_:_:)	ICSessionOptions.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@ICUploadOption	swift.func.op	!=(_:_:)	ICUploadOption.!=(_:_:)	static func != (lhs: Self, rhs: Self) -> Bool
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICDeviceLocationType	swift.property	hashValue	ICDeviceLocationType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICDeviceLocationTypeMask	swift.property	hashValue	ICDeviceLocationTypeMask.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICDeviceType	swift.property	hashValue	ICDeviceType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICDeviceTypeMask	swift.property	hashValue	ICDeviceTypeMask.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICEXIFOrientationType	swift.property	hashValue	ICEXIFOrientationType.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	hashValue	ICLegacyReturn.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICMediaPresentation	swift.property	hashValue	ICMediaPresentation.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	hashValue	ICReturn.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	hashValue	ICReturnConnectionError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	hashValue	ICReturnDownloadError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	hashValue	ICReturnMetadataError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	hashValue	ICReturnObjectError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	hashValue	ICReturnPTPDeviceError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	hashValue	ICReturnThumbnailError.Code.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@EA@ICReturnCodeOffset	swift.property	hashValue	ICReturnCodeOffset.hashValue	var hashValue: Int { get }
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICDeviceLocationType	swift.method	hash(into:)	ICDeviceLocationType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICDeviceLocationTypeMask	swift.method	hash(into:)	ICDeviceLocationTypeMask.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICDeviceType	swift.method	hash(into:)	ICDeviceType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICDeviceTypeMask	swift.method	hash(into:)	ICDeviceTypeMask.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICEXIFOrientationType	swift.method	hash(into:)	ICEXIFOrientationType.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.method	hash(into:)	ICLegacyReturn.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICMediaPresentation	swift.method	hash(into:)	ICMediaPresentation.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnCode	swift.method	hash(into:)	ICReturn.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.method	hash(into:)	ICReturnConnectionError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.method	hash(into:)	ICReturnDownloadError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.method	hash(into:)	ICReturnMetadataError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.method	hash(into:)	ICReturnObjectError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.method	hash(into:)	ICReturnPTPDeviceError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.method	hash(into:)	ICReturnThumbnailError.Code.hash(into:)	func hash(into hasher: inout Hasher)
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@EA@ICReturnCodeOffset	swift.method	hash(into:)	ICReturnCodeOffset.hash(into:)	func hash(into hasher: inout Hasher)
+s:So12ICDeviceTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ICDeviceType.init(rawValue:)	init?(rawValue: UInt)
+s:So12ICReturnCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturn.Code.init(rawValue:)	init?(rawValue: Int)
+s:So13ICDeleteErrora8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDeleteError.init(rawValue:)	init(rawValue: String)
+s:So14ICDeleteResulta8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDeleteResult.init(rawValue:)	init(rawValue: String)
+s:So14ICDeviceStatusa8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDeviceStatus.init(rawValue:)	init(rawValue: String)
+s:So14ICUploadOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICUploadOption.init(rawValue:)	init(rawValue: String)
+s:So16ICDeviceTypeMaskV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ICDeviceTypeMask.init(rawValue:)	init?(rawValue: UInt)
+s:So16ICDownloadOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDownloadOption.init(rawValue:)	init(rawValue: String)
+s:So16ICSessionOptionsa8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICSessionOptions.init(rawValue:)	init(rawValue: String)
+s:So17ICDeviceTransporta8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDeviceTransport.init(rawValue:)	init(rawValue: String)
+s:So18ICDeviceCapabilitya8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDeviceCapability.init(rawValue:)	init(rawValue: String)
+s:So18ICLegacyReturnCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICLegacyReturn.Code.init(rawValue:)	init?(rawValue: Int)
+s:So18ICReturnCodeOffseta8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnCodeOffset.init(rawValue:)	init?(rawValue: Int)
+s:So19ICMediaPresentationV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ICMediaPresentation.init(rawValue:)	init?(rawValue: UInt)
+s:So20ICDeviceLocationTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ICDeviceLocationType.init(rawValue:)	init?(rawValue: UInt)
+s:So21ICAuthorizationStatusa8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICAuthorizationStatus.init(rawValue:)	init(rawValue: String)
+s:So21ICEXIFOrientationTypeV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ICEXIFOrientationType.init(rawValue:)	init?(rawValue: UInt)
+s:So23ICDeviceLocationOptionsa8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICDeviceLocationOptions.init(rawValue:)	init(rawValue: String)
+s:So23ICReturnObjectErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnObjectError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So24ICDeviceLocationTypeMaskV8rawValueABSgSu_tcfc	swift.init	init(rawValue:)	ICDeviceLocationTypeMask.init(rawValue:)	init?(rawValue: UInt)
+s:So25ICReturnDownloadErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnDownloadError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So25ICReturnMetadataErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnMetadataError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So26ICCameraItemMetadataOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICCameraItemMetadataOption.init(rawValue:)	init(rawValue: String)
+s:So26ICReturnPTPDeviceErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnPTPDeviceError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So26ICReturnThumbnailErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnThumbnailError.Code.init(rawValue:)	init?(rawValue: Int)
+s:So27ICCameraItemThumbnailOptiona8rawValueABSS_tcfc	swift.init	init(rawValue:)	ICCameraItemThumbnailOption.init(rawValue:)	init(rawValue: String)
+s:So27ICReturnConnectionErrorCodeV8rawValueABSgSi_tcfc	swift.init	init(rawValue:)	ICReturnConnectionError.Code.init(rawValue:)	init?(rawValue: Int)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICAuthorizationStatus	swift.property	hashValue	ICAuthorizationStatus.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICCameraItemMetadataOption	swift.property	hashValue	ICCameraItemMetadataOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICCameraItemThumbnailOption	swift.property	hashValue	ICCameraItemThumbnailOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDeleteError	swift.property	hashValue	ICDeleteError.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDeleteResult	swift.property	hashValue	ICDeleteResult.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDeviceCapability	swift.property	hashValue	ICDeviceCapability.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDeviceLocationOptions	swift.property	hashValue	ICDeviceLocationOptions.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDeviceStatus	swift.property	hashValue	ICDeviceStatus.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDeviceTransport	swift.property	hashValue	ICDeviceTransport.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICDownloadOption	swift.property	hashValue	ICDownloadOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICSessionOptions	swift.property	hashValue	ICSessionOptions.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE04hashE0Sivp::SYNTHESIZED::c:@T@ICUploadOption	swift.property	hashValue	ICUploadOption.hashValue	var hashValue: Int { get }
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICAuthorizationStatus	swift.method	hash(into:)	ICAuthorizationStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICCameraItemMetadataOption	swift.method	hash(into:)	ICCameraItemMetadataOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICCameraItemThumbnailOption	swift.method	hash(into:)	ICCameraItemThumbnailOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDeleteError	swift.method	hash(into:)	ICDeleteError.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDeleteResult	swift.method	hash(into:)	ICDeleteResult.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDeviceCapability	swift.method	hash(into:)	ICDeviceCapability.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDeviceLocationOptions	swift.method	hash(into:)	ICDeviceLocationOptions.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDeviceStatus	swift.method	hash(into:)	ICDeviceStatus.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDeviceTransport	swift.method	hash(into:)	ICDeviceTransport.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICDownloadOption	swift.method	hash(into:)	ICDownloadOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICSessionOptions	swift.method	hash(into:)	ICSessionOptions.hash(into:)	func hash(into hasher: inout Hasher)
+s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@ICUploadOption	swift.method	hash(into:)	ICUploadOption.hash(into:)	func hash(into hasher: inout Hasher)
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICLegacyReturnCode	swift.property	localizedDescription	ICLegacyReturn.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnCode	swift.property	localizedDescription	ICReturn.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnConnectionErrorCode	swift.property	localizedDescription	ICReturnConnectionError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnDownloadErrorCode	swift.property	localizedDescription	ICReturnDownloadError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnMetadataErrorCode	swift.property	localizedDescription	ICReturnMetadataError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnObjectErrorCode	swift.property	localizedDescription	ICReturnObjectError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnPTPDeviceErrorCode	swift.property	localizedDescription	ICReturnPTPDeviceError.localizedDescription	var localizedDescription: String { get }
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@ICReturnThumbnailErrorCode	swift.property	localizedDescription	ICReturnThumbnailError.localizedDescription	var localizedDescription: String { get }

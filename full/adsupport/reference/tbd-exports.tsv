@@ -1,0 +1,4 @@
+symbol	sourceSDKRelativePath
+/System/Library/Frameworks/AdSupport.framework/AdSupport (for architecture arm64):	System/Library/Frameworks/AdSupport.framework/AdSupport.tbd
+_OBJC_CLASS_$_ASIdentifierManager	System/Library/Frameworks/AdSupport.framework/AdSupport.tbd
+_OBJC_METACLASS_$_ASIdentifierManager	System/Library/Frameworks/AdSupport.framework/AdSupport.tbd

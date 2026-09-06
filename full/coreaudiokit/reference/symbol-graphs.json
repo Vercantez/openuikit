@@ -1,0 +1,30 @@
+{
+  "canonicalSurfacePolicy": "primary-module-graph_then-module-owned_then-utf8-path_then-canonical-payload-v2",
+  "conflictLedger": "reference/symbol-conflicts.tsv",
+  "conflictingDuplicateIdentifierCount": 1,
+  "duplicateOccurrenceCount": 1,
+  "duplicateRelationshipOccurrenceCount": 2,
+  "files": [
+    {
+      "path": "reference/symbol-graphs/CoreAudioKit.symbols.json",
+      "relationshipCount": 222,
+      "sha256": "a11bfe42dac45da697d53d8b655decb4ec31bdd6e1bc3488abb4c3afb89a4280",
+      "symbolCount": 43
+    },
+    {
+      "path": "reference/symbol-graphs/CoreAudioKit@AudioToolbox.symbols.json",
+      "relationshipCount": 4,
+      "sha256": "8e20f1eca010d075dc3969b2992e68ce7707af902e59a0c229cf81fd962a47f6",
+      "symbolCount": 4
+    }
+  ],
+  "minimumAccessLevel": "public",
+  "module": "CoreAudioKit",
+  "relationshipCount": 226,
+  "relationshipMultisetSHA256": "76457d38abdd94358754dcae01b247298d4f2217149e31a6224009600c2410cf",
+  "schema": 2,
+  "semanticHashPolicy": "sorted-canonical-json-u64be-length-prefixed-sha256-v1",
+  "symbolCount": 46,
+  "symbolMultisetSHA256": "1ecfa641c473ef84643a7f5e8b09c7ee6054433cf32fc5207f472e9465ea3033",
+  "target": "arm64-apple-ios26.0"
+}

@@ -1,0 +1,1912 @@
+{
+  "ABIRoot": {
+    "children": [
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExposureNotification",
+        "name": "ExposureNotification.ENCommon",
+        "printedName": "ExposureNotification.ENCommon"
+      },
+      {
+        "declAttributes": [
+          "Exported"
+        ],
+        "declKind": "Import",
+        "kind": "Import",
+        "moduleName": "ExposureNotification",
+        "name": "ExposureNotification.ENManager",
+        "printedName": "ExposureNotification.ENManager"
+      },
+      {
+        "children": [
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "NSError",
+                    "printedName": "Foundation.NSError",
+                    "usr": "c:objc(cs)NSError"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV8_nsErrorSo7NSErrorCvg",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "usr": "s:SC11ENErrorCodeLeV8_nsErrorSo7NSErrorCvg"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declKind": "Var",
+            "hasStorage": true,
+            "implicit": true,
+            "isLet": true,
+            "kind": "Var",
+            "mangledName": "$sSC11ENErrorCodeLeV8_nsErrorSo7NSErrorCvp",
+            "moduleName": "ExposureNotification",
+            "name": "_nsError",
+            "printedName": "_nsError",
+            "usr": "s:SC11ENErrorCodeLeV8_nsErrorSo7NSErrorCvp"
+          },
+          {
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "ENError",
+                "printedName": "ExposureNotification.ENError",
+                "usr": "c:@E@ENErrorCode"
+              },
+              {
+                "kind": "TypeNominal",
+                "name": "NSError",
+                "printedName": "Foundation.NSError",
+                "usr": "c:objc(cs)NSError"
+              }
+            ],
+            "declAttributes": [
+              "Transparent"
+            ],
+            "declKind": "Constructor",
+            "init_kind": "Designated",
+            "kind": "Constructor",
+            "mangledName": "$sSC11ENErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc",
+            "moduleName": "ExposureNotification",
+            "name": "init",
+            "printedName": "init(_nsError:)",
+            "usr": "s:SC11ENErrorCodeLeV8_nsErrorABSo7NSErrorC_tcfc"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "String",
+                    "printedName": "Swift.String",
+                    "usr": "s:SS"
+                  }
+                ],
+                "declKind": "Accessor",
+                "implicit": true,
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV11errorDomainSSvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV11errorDomainSSvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "String",
+                "printedName": "Swift.String",
+                "usr": "s:SS"
+              }
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "mangledName": "$sSC11ENErrorCodeLeV11errorDomainSSvpZ",
+            "moduleName": "ExposureNotification",
+            "name": "errorDomain",
+            "printedName": "errorDomain",
+            "static": true,
+            "usr": "s:SC11ENErrorCodeLeV11errorDomainSSvpZ"
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      }
+                    ],
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "ExposureNotification.ENError.Code?",
+                    "usr": "s:Sq"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Constructor",
+                "implicit": true,
+                "init_kind": "Designated",
+                "kind": "Constructor",
+                "mangledName": "$sSo11ENErrorCodeV8rawValueABSgSi_tcfc",
+                "moduleName": "ExposureNotification",
+                "name": "init",
+                "printedName": "init(rawValue:)",
+                "usr": "s:So11ENErrorCodeV8rawValueABSgSi_tcfc"
+              },
+              {
+                "accessors": [
+                  {
+                    "accessorKind": "get",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Int",
+                        "printedName": "Swift.Int",
+                        "usr": "s:Si"
+                      }
+                    ],
+                    "declKind": "Accessor",
+                    "implicit": true,
+                    "kind": "Accessor",
+                    "mangledName": "$sSo11ENErrorCodeV8rawValueSivg",
+                    "moduleName": "ExposureNotification",
+                    "name": "Get",
+                    "printedName": "Get()",
+                    "usr": "s:So11ENErrorCodeV8rawValueSivg"
+                  }
+                ],
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "Var",
+                "implicit": true,
+                "kind": "Var",
+                "mangledName": "$sSo11ENErrorCodeV8rawValueSivp",
+                "moduleName": "ExposureNotification",
+                "name": "rawValue",
+                "printedName": "rawValue",
+                "usr": "s:So11ENErrorCodeV8rawValueSivp"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int",
+                    "printedName": "Swift.Int",
+                    "usr": "s:Si"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "implicit": true,
+                "kind": "TypeAlias",
+                "mangledName": "$sSo11ENErrorCodeV8RawValuea",
+                "moduleName": "ExposureNotification",
+                "name": "RawValue",
+                "printedName": "RawValue",
+                "usr": "s:So11ENErrorCodeV8RawValuea"
+              },
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "ENError",
+                    "printedName": "ExposureNotification.ENError",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declKind": "TypeAlias",
+                "kind": "TypeAlias",
+                "moduleName": "ExposureNotification",
+                "name": "_ErrorType",
+                "printedName": "_ErrorType",
+                "usr": "c:@E@ENErrorCode"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "unknown",
+                "printedName": "unknown",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeUnknown"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "badParameter",
+                "printedName": "badParameter",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeBadParameter"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "notEntitled",
+                "printedName": "notEntitled",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeNotEntitled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "notAuthorized",
+                "printedName": "notAuthorized",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeNotAuthorized"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "unsupported",
+                "printedName": "unsupported",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeUnsupported"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "invalidated",
+                "printedName": "invalidated",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeInvalidated"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "bluetoothOff",
+                "printedName": "bluetoothOff",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeBluetoothOff"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "insufficientStorage",
+                "printedName": "insufficientStorage",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeInsufficientStorage"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "notEnabled",
+                "printedName": "notEnabled",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeNotEnabled"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "apiMisuse",
+                "printedName": "apiMisuse",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeAPIMisuse"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "internal",
+                "printedName": "internal",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeInternal"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "insufficientMemory",
+                "printedName": "insufficientMemory",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeInsufficientMemory"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "rateLimited",
+                "printedName": "rateLimited",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeRateLimited"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "restricted",
+                "printedName": "restricted",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeRestricted"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "badFormat",
+                "printedName": "badFormat",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeBadFormat"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "dataInaccessible",
+                "printedName": "dataInaccessible",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeDataInaccessible"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Code",
+                        "printedName": "ExposureNotification.ENError.Code",
+                        "usr": "c:@E@ENErrorCode"
+                      },
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Code",
+                            "printedName": "ExposureNotification.ENError.Code",
+                            "usr": "c:@E@ENErrorCode"
+                          }
+                        ],
+                        "kind": "TypeNominal",
+                        "name": "Metatype",
+                        "printedName": "ExposureNotification.ENError.Code.Type"
+                      }
+                    ],
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(ExposureNotification.ENError.Code.Type) -> ExposureNotification.ENError.Code"
+                  }
+                ],
+                "declAttributes": [
+                  "ObjC"
+                ],
+                "declKind": "EnumElement",
+                "kind": "Var",
+                "moduleName": "ExposureNotification",
+                "name": "travelStatusNotAvailable",
+                "printedName": "travelStatusNotAvailable",
+                "usr": "c:@E@ENErrorCode@ENErrorCodeTravelStatusNotAvailable"
+              }
+            ],
+            "conformances": [
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8CopyableP",
+                "name": "Copyable",
+                "printedName": "Copyable",
+                "usr": "s:s8CopyableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss9EscapableP",
+                "name": "Escapable",
+                "printedName": "Escapable",
+                "usr": "s:s9EscapableP"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Int",
+                            "printedName": "Swift.Int",
+                            "usr": "s:Si"
+                          }
+                        ],
+                        "kind": "TypeNameAlias",
+                        "name": "RawValue",
+                        "printedName": "ExposureNotification.ENError.Code.RawValue"
+                      }
+                    ],
+                    "kind": "TypeWitness",
+                    "name": "RawValue",
+                    "printedName": "RawValue"
+                  }
+                ],
+                "kind": "Conformance",
+                "mangledName": "$sSY",
+                "name": "RawRepresentable",
+                "printedName": "RawRepresentable",
+                "usr": "s:SY"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss8SendableP",
+                "name": "Sendable",
+                "printedName": "Sendable",
+                "usr": "s:s8SendableP"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSQ",
+                "name": "Equatable",
+                "printedName": "Equatable",
+                "usr": "s:SQ"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$sSH",
+                "name": "Hashable",
+                "printedName": "Hashable",
+                "usr": "s:SH"
+              },
+              {
+                "kind": "Conformance",
+                "mangledName": "$ss16SendableMetatypeP",
+                "name": "SendableMetatype",
+                "printedName": "SendableMetatype",
+                "usr": "s:s16SendableMetatypeP"
+              }
+            ],
+            "declAttributes": [
+              "Available",
+              "SynthesizedProtocol",
+              "SynthesizedProtocol",
+              "ObjC",
+              "SynthesizedProtocol",
+              "Sendable",
+              "Dynamic"
+            ],
+            "declKind": "Enum",
+            "enumRawTypeName": "Int",
+            "intro_iOS": "12.5",
+            "kind": "TypeDecl",
+            "moduleName": "ExposureNotification",
+            "name": "Code",
+            "objc_name": "ENErrorCode",
+            "printedName": "Code",
+            "usr": "c:@E@ENErrorCode"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV7unknownSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV7unknownSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "unknown",
+            "printedName": "unknown",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeUnknown"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV12badParameterSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV12badParameterSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "badParameter",
+            "printedName": "badParameter",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeBadParameter"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV11notEntitledSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV11notEntitledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "notEntitled",
+            "printedName": "notEntitled",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeNotEntitled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV13notAuthorizedSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV13notAuthorizedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "notAuthorized",
+            "printedName": "notAuthorized",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeNotAuthorized"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV11unsupportedSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV11unsupportedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "unsupported",
+            "printedName": "unsupported",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeUnsupported"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV11invalidatedSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV11invalidatedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "invalidated",
+            "printedName": "invalidated",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeInvalidated"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV12bluetoothOffSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV12bluetoothOffSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "bluetoothOff",
+            "printedName": "bluetoothOff",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeBluetoothOff"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV19insufficientStorageSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV19insufficientStorageSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "insufficientStorage",
+            "printedName": "insufficientStorage",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeInsufficientStorage"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV10notEnabledSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV10notEnabledSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "notEnabled",
+            "printedName": "notEnabled",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeNotEnabled"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV9apiMisuseSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV9apiMisuseSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "apiMisuse",
+            "printedName": "apiMisuse",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeAPIMisuse"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV8internalSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV8internalSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "internal",
+            "printedName": "internal",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeInternal"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV18insufficientMemorySoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV18insufficientMemorySoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "insufficientMemory",
+            "printedName": "insufficientMemory",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeInsufficientMemory"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV11rateLimitedSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV11rateLimitedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "rateLimited",
+            "printedName": "rateLimited",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeRateLimited"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV10restrictedSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV10restrictedSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "restricted",
+            "printedName": "restricted",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeRestricted"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV9badFormatSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV9badFormatSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "badFormat",
+            "printedName": "badFormat",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeBadFormat"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV16dataInaccessibleSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV16dataInaccessibleSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "dataInaccessible",
+            "printedName": "dataInaccessible",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeDataInaccessible"
+          },
+          {
+            "accessors": [
+              {
+                "accessorKind": "get",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Code",
+                    "printedName": "ExposureNotification.ENError.Code",
+                    "usr": "c:@E@ENErrorCode"
+                  }
+                ],
+                "declAttributes": [
+                  "Transparent"
+                ],
+                "declKind": "Accessor",
+                "kind": "Accessor",
+                "mangledName": "$sSC11ENErrorCodeLeV24travelStatusNotAvailableSoAAVvgZ",
+                "moduleName": "ExposureNotification",
+                "name": "Get",
+                "printedName": "Get()",
+                "static": true,
+                "usr": "s:SC11ENErrorCodeLeV24travelStatusNotAvailableSoAAVvgZ"
+              }
+            ],
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Code",
+                "printedName": "ExposureNotification.ENError.Code",
+                "usr": "c:@E@ENErrorCode"
+              }
+            ],
+            "declAttributes": [
+              "Nonisolated"
+            ],
+            "declKind": "Var",
+            "kind": "Var",
+            "moduleName": "ExposureNotification",
+            "name": "travelStatusNotAvailable",
+            "printedName": "travelStatusNotAvailable",
+            "static": true,
+            "usr": "c:@E@ENErrorCode@ENErrorCodeTravelStatusNotAvailable"
+          }
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8CopyableP",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss9EscapableP",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$s10Foundation13CustomNSErrorP",
+            "name": "CustomNSError",
+            "printedName": "CustomNSError",
+            "usr": "s:10Foundation13CustomNSErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSH",
+            "name": "Hashable",
+            "printedName": "Hashable",
+            "usr": "s:SH"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss5ErrorP",
+            "name": "Error",
+            "printedName": "Error",
+            "usr": "s:s5ErrorP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$sSQ",
+            "name": "Equatable",
+            "printedName": "Equatable",
+            "usr": "s:SQ"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss8SendableP",
+            "name": "Sendable",
+            "printedName": "Sendable",
+            "usr": "s:s8SendableP"
+          },
+          {
+            "kind": "Conformance",
+            "mangledName": "$ss16SendableMetatypeP",
+            "name": "SendableMetatype",
+            "printedName": "SendableMetatype",
+            "usr": "s:s16SendableMetatypeP"
+          }
+        ],
+        "declAttributes": [
+          "Available",
+          "SynthesizedProtocol",
+          "ClangImporterSynthesizedType",
+          "Frozen"
+        ],
+        "declKind": "Struct",
+        "intro_iOS": "12.5",
+        "kind": "TypeDecl",
+        "moduleName": "ExposureNotification",
+        "name": "ENError",
+        "printedName": "ENError",
+        "usr": "c:@E@ENErrorCode"
+      },
+      {
+        "children": [
+          {
+            "kind": "TypeNominal",
+            "name": "__NSConstantString_tag",
+            "printedName": "__ObjC.__NSConstantString_tag",
+            "usr": "c:@S@__NSConstantString_tag"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__NSConstantString",
+        "printedName": "__NSConstantString",
+        "usr": "c:@T@__NSConstantString"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_ms_va_list",
+        "printedName": "__builtin_ms_va_list",
+        "usr": "c:@T@__builtin_ms_va_list"
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Int8",
+                    "printedName": "Swift.Int8",
+                    "usr": "s:s4Int8V"
+                  }
+                ],
+                "kind": "TypeNameAlias",
+                "name": "CChar",
+                "printedName": "Swift.CChar"
+              }
+            ],
+            "kind": "TypeNominal",
+            "name": "UnsafeMutablePointer",
+            "printedName": "Swift.UnsafeMutablePointer<Swift.CChar>",
+            "usr": "s:Sp"
+          }
+        ],
+        "declAttributes": [
+          "Unsafe"
+        ],
+        "declKind": "TypeAlias",
+        "kind": "TypeAlias",
+        "moduleName": "__ObjC",
+        "name": "__builtin_va_list",
+        "printedName": "__builtin_va_list",
+        "usr": "c:@T@__builtin_va_list"
+      }
+    ],
+    "json_format_version": 8,
+    "kind": "Root",
+    "name": "ExposureNotification",
+    "printedName": "ExposureNotification"
+  }
+}

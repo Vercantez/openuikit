@@ -1,0 +1,81 @@
+{
+  "apiCrosswalk": "reference/api-crosswalk.tsv",
+  "apiDigester": "reference/api-digester.json",
+  "corpusSummary": "reference/corpus-summary.json",
+  "coveragePolicy": {
+    "allowedStatuses": [
+      "implemented",
+      "declared",
+      "deferred",
+      "unavailable",
+      "not-applicable"
+    ],
+    "minimumNondeferredCount": 188,
+    "nondeferredStatuses": [
+      "implemented",
+      "declared"
+    ],
+    "rule": "ceil(50% of exact public symbols)"
+  },
+  "dependencies": [
+    "Foundation"
+  ],
+  "externalEvidence": "reference/external-evidence.json",
+  "guestManifest": "cryptotokenkit_guest_sources.txt",
+  "lane": "medium-full",
+  "module": "CryptoTokenKit",
+  "moduleLocation": {
+    "kind": "framework-clang-module",
+    "reason": "public iPhoneOS framework bundle is present at System/Library/Frameworks/CryptoTokenKit.framework but has no Swift module; using Clang module map at System/Library/Frameworks/CryptoTokenKit.framework/Modules/module.modulemap",
+    "sdkRelativePath": "System/Library/Frameworks/CryptoTokenKit.framework"
+  },
+  "provenance": {
+    "apiCrosswalkAmbiguousCount": 0,
+    "apiCrosswalkExactUSRCount": 16,
+    "apiCrosswalkImportNameCount": 9,
+    "apiCrosswalkUnmatchedCount": 350,
+    "apiDeclarationNodeCount": 75,
+    "apiDigesterFormatVersion": 8,
+    "apiDigesterNodeCount": 219,
+    "apiDigesterPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-api-digester",
+    "apiDigesterSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "apiDigesterVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "apiOwnedDeclarationNodeCount": 72,
+    "arm64TBDExportCount": 155,
+    "externalEvidenceLockPath": "full/framework-fanout/external-evidence-sources.json",
+    "externalEvidenceLockSHA256": "a0b7ebf22affede443bc79ae75fb8ac7b9f450a407f666147efa3ba93878b752",
+    "frameworkSDKRelativePath": "System/Library/Frameworks/CryptoTokenKit.framework",
+    "generatorPath": "scripts/framework-fanout/generate_seed_v2.py",
+    "generatorSHA256": "e56ee6e70b5464f6e1d76679652d670222bf6200daf198d2f4c6aea67d7421e6",
+    "rawSDKInputCount": 16,
+    "roadmapPath": "full/framework-roadmap/framework-roadmap.json",
+    "roadmapSHA256": "241ea6d5792df24212e335d059c7d130085fc5373ba3659b9dbaf84f631e220a",
+    "sdkName": "iphoneos",
+    "sdkVersion": "26.1",
+    "symbolGraphExtractorPath": "Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-symbolgraph-extract",
+    "symbolGraphExtractorSHA256": "cc4e8eed165381318a8461b924c7882cf47917c5482199cb2133de6fd16f7d33",
+    "symbolGraphExtractorVersion": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+    "symbolGraphRelationshipMultisetSHA256": "298254fb11d7dfbf992a9bac2c4617beb9d9154aae0d3d64c4e288a17c2d55ef",
+    "symbolGraphSymbolMultisetSHA256": "f17af97fa66c62dbc3f3fe597804ce17e890f4bb0dac8fa0f3dda7980060fe57",
+    "target": "arm64-apple-ios26.0",
+    "tbdInputCount": 1,
+    "xcodeBuild": "17B55",
+    "xcodeVersion": "26.1"
+  },
+  "publicSurface": "reference/public-surface.tsv",
+  "relationshipCount": 666,
+  "risks": [
+    "security",
+    "hardware",
+    "fail-closed"
+  ],
+  "roadmap": "none (operator override)",
+  "runtimeMarker": "CRYPTOTOKENKIT_AGENT_RUNTIME_OK",
+  "schema": 2,
+  "sdkInputs": "reference/sdk-inputs.tsv",
+  "slug": "cryptotokenkit",
+  "symbolConflicts": "reference/symbol-conflicts.tsv",
+  "symbolCount": 375,
+  "symbolGraph": "reference/symbol-graphs.json",
+  "tbdExports": "reference/tbd-exports.tsv"
+}
