@@ -6,3 +6,4 @@ full/charts/ChartsPlotEngine.swift
 full/charts/ChartsSurface.swift
 full/charts/ChartsViewSurface.swift
 full/charts/ChartsWave8.swift
+full/charts/ChartsFunctionPlots.swift
