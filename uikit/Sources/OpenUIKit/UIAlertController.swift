@@ -69,12 +69,52 @@ public enum UIAlertMetrics {
     public static let textInsetX: CGFloat = 30
     /// Card top edge to the first label's top.
     public static let topPadding: CGFloat = 22
+    /// MEASURED Ledger t6000.xxxl / Modal t5200.xxxl, iPhone SE 2x /
+    /// iOS 26.1: title y **38** (Export / "Save changes?" `[30, 38, 260, 27.5]`).
+    /// MEASURED Ledger t6000.ax1 / Modal t5200.ax1: title y **73**
+    /// (`[30, 73, 260, 39.5]`). Headerless cards keep 22 (t7200.ax1 304).
+    static func topPadding(compatibleWith traits: UITraitCollection,
+                            bothLabels: Bool) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS, bothLabels else {
+            return topPadding
+        }
+        let cat = traits.preferredContentSizeCategory
+        if cat.isAccessibilityCategory { return 73 }
+        if cat == .extraExtraExtraLarge { return 38 }
+        return topPadding
+    }
     /// Title label bottom to message label top.
     public static let titleMessageGap: CGFloat = 7.0 + 2.0 / 3.0
+    /// MEASURED Ledger t6000.xxxl / Modal t5200.xxxl: message y **82.5**
+    /// after title 27.5 at y 38 → gap **17**. MEASURED Ledger t6000.ax1 /
+    /// Modal t5200.ax1: message y **154.5** / **155** after title 39.5 at
+    /// y 73 → gap **42**.
+    static func titleMessageGap(compatibleWith traits: UITraitCollection) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else {
+            return titleMessageGap
+        }
+        let cat = traits.preferredContentSizeCategory
+        if cat.isAccessibilityCategory { return 42 }
+        if cat == .extraExtraExtraLarge { return 17 }
+        return titleMessageGap
+    }
     /// Last label's bottom to the end of the header zone — 4.333 when both a
     /// title and a message are present, 4 when only one label is.
     public static let headerBottomPadding: CGFloat = 4.0 + 1.0 / 3.0
     public static let headerBottomPaddingSingle: CGFloat = 4
+    /// MEASURED Ledger t6000.xxxl header 113 − (82.5+25.5) = **5**.
+    /// MEASURED Ledger t6000.ax1 header 233.5 − (154.5+72) = **7**
+    /// (Modal t5200.ax1 header 234 − (155+72) = 7).
+    static func headerBottomPadding(compatibleWith traits: UITraitCollection,
+                                   bothLabels: Bool) -> CGFloat {
+        guard OpenUIKitRuntime.systemFontCut == .iOS, bothLabels else {
+            return bothLabels ? headerBottomPadding : headerBottomPaddingSingle
+        }
+        let cat = traits.preferredContentSizeCategory
+        if cat.isAccessibilityCategory { return 7 }
+        if cat == .extraExtraExtraLarge { return 5 }
+        return headerBottomPadding
+    }
 
     /// Label box heights, MEASURED off the alert's own labels rather than
     /// taken from `UIFont.labelLineHeight`: the alert lays its labels out on
@@ -544,7 +584,7 @@ open class UIAlertController: UIViewController {
         let solo = hasTitle != hasMessage
 
         if hasTitle || hasMessage {
-            y += UIAlertMetrics.topPadding
+            y += UIAlertMetrics.topPadding(compatibleWith: traits, bothLabels: !solo)
             if solo {
                 // MEASURED: a lone title (or a lone message) renders 17 pt
                 // REGULAR and centred.
@@ -569,7 +609,7 @@ open class UIAlertController: UIViewController {
                                            alignment: .left,
                                            frame: CGRect(x: inset, y: y,
                                                           width: textWidth, height: th)))
-                y += th + UIAlertMetrics.titleMessageGap
+                y += th + UIAlertMetrics.titleMessageGap(compatibleWith: traits)
                 let mf = UIAlertMetrics.messageFont(compatibleWith: traits)
                 let mh = UIAlertMetrics.labelBoxHeight(
                     for: mf, lines: _lineCount(message!, font: mf, cardWidth: width),
@@ -606,8 +646,8 @@ open class UIAlertController: UIViewController {
             y -= UIAlertMetrics.actionSpacing
             y += UIAlertMetrics.textFieldBottomPadding
         } else if hasTitle || hasMessage {
-            y += solo ? UIAlertMetrics.headerBottomPaddingSingle
-                      : UIAlertMetrics.headerBottomPadding
+            y += UIAlertMetrics.headerBottomPadding(compatibleWith: traits,
+                                                   bothLabels: !solo)
         }
 
         let ordered = _layoutOrderedActions
@@ -749,13 +789,36 @@ final class _UIAlertPresentationController: UIPresentationController {
         guard let c = containerView, let alert else { return .zero }
         let w = isPadActionSheetPopover
             ? UIAlertMetrics.iOSPadActionSheetPopoverWidth : UIAlertMetrics.cardWidth
-        let h = alert._layoutCard(width: w)
+        let naturalH = alert._layoutCard(width: w)
+        var h = naturalH
         let f: CGRect
         if isPadActionSheetPopover {
             f = Self.padActionSheetFrame(alert: alert, in: c,
                                          size: CGSize(width: w, height: h))
         } else {
             let (top, bottom) = Self.verticalSafeBand(in: c)
+            // MEASURED Modal t5200.ax1, iPhone SE 2x / iOS 26.1: a
+            // title+message + 3×63.5-pill card's natural height is
+            // 234+238.5 = 472.5, but PhoneTVMacView is **426** at y
+            // **120.5** = 73+39.5+8 (title y + title box + 8) from both
+            // edges of the 667 window. Ledger t6000.ax1 one-pill card
+            // **329** < 426 so it stays unclipped. Headerless t7200.ax1
+            // 304 is under the cap. `.large` / `.xxxl` cards sit well
+            // inside (152 / 193 / 305).
+            if OpenUIKitRuntime.systemFontCut == .iOS,
+               let titleH = alert.view.subviews.compactMap({ $0 as? UILabel }).first?.frame.height {
+                let traits = alert.presentingViewController?.viewIfLoaded?.traitCollection
+                    ?? alert.view.traitCollection
+                let both = !(alert.title ?? "").isEmpty && !(alert.message ?? "").isEmpty
+                let minMargin = UIAlertMetrics.topPadding(compatibleWith: traits,
+                                                       bothLabels: both)
+                    + titleH + 8
+                let maxH = (bottom - top) - 2 * minMargin
+                if maxH > 0, h > maxH {
+                    h = maxH
+                    alert.view.clipsToBounds = true
+                }
+            }
             f = CGRect(x: ((c.bounds.width - w) / 2),
                        y: (top + bottom) / 2 - h / 2, width: w, height: h)
         }

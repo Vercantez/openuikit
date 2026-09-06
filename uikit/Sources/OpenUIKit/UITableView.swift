@@ -361,11 +361,13 @@ open class UITableView: UIScrollView {
         // MEASURED Forms t200, iPhone SE 2x, iOS 26.1: a `.grouped` table
         // (no card — cells are full-bleed 375) puts the section header
         // label at x = 16, the window's system margin. `insetGroupedSideInset
-        // + 16` is the insetGrouped reading (card at 16, header at 32) and
-        // stays the rule for `.insetGrouped` / Catalyst, except pad
+        // + inner` is the insetGrouped reading (card at 16, header at 32)
+        // and stays the rule for `.insetGrouped` / Catalyst, except pad
         // inset-grouped which adds 20 (table_inset_nav header abs 40 =
         // card 20 + 20). Compact-height phone inset-grouped adds `iOSMargin`
-        // (NavFlow t200.landscape "General" abs 40 = card 20 + 20).
+        // (NavFlow t200.landscape "General" abs 40; Ledger t200.landscape
+        // header abs.x **40** = card 20 + 20, not 36). Portrait 393 keeps
+        // inner 16 so realapp_focus_settings_light "General" stays 36.
         if style == .grouped, UITableView.isIOSChrome { return iOSMargin }
         let inner: CGFloat
         if style == .insetGrouped, UITableView.isPadChrome {

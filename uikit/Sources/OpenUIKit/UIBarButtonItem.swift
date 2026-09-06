@@ -215,11 +215,13 @@ public enum _UIBarMetrics {
     /// Leading / trailing margin from the bar's edge. Portrait / Catalyst:
     /// 16. Compact-height iOS uses ``itemSideMargin`` (38).
     public static let sideMargin: CGFloat = 16
-    /// MEASURED NavFlow t200.landscape, iPhone SE 2x / iOS 26.1: Filter
-    /// `PlatterView [557.5, 0, 71.5, 44]` in a 667-wide bar → trailing
-    /// **38** (= 667 − 557.5 − 71.5). Portrait t200 stays 16
-    /// (375 − 279.5 − 79.5). TableEditor-landscape Edit abs.x **582.24**
-    /// vs 16-pt packing 604.5 is the same 22 pt (= 38 − 16).
+    /// MEASURED NavFlow t200.landscape Filter `PlatterView [557.5, 0, 71.5, 44]`
+    /// → trailing **38** (= 667 − 557.5 − 71.5). Same 38 on Ledger t200.landscape
+    /// Export `[545.5, 0, 83.5]` (label abs.x **561.153**) and Notes
+    /// t200.landscape trash `[585, 0, 44, 44]`. TableEditor-landscape Edit
+    /// abs.x **582.24** vs 16-pt packing 604.5 is the same 22 pt (= 38 − 16).
+    /// Portrait t200 stays 16 (375 − 279.5 − 79.5; Ledger `[275.5, 0, 83.5]`).
+    /// Toolbar packing is unmeasured at compact height and keeps ``sideMargin``.
     public static let compactHeightSideMargin: CGFloat = 38
     /// Nav-bar item packing. Toolbar keeps ``sideMargin`` 16.
     public static var itemSideMargin: CGFloat {
