@@ -182,6 +182,12 @@ open class UINavigationController: UIViewController {
     }
     /// Clipped area below the bar that hosts child VC views.
     let contentView = UIView()
+    /// Phone bottom-docked search (Ledger). Nil until first layout of a
+    /// `usesBottomSearch` bar.
+    var floatingSearchContainer: UIView?
+    var floatingSearchPlatter: UIView?
+    var floatingSearchDismissPlatter: UIView?
+    var floatingSearchDismissButton: UIButton?
     public private(set) var interactivePopGestureRecognizer: UIGestureRecognizer?
     /// iOS 26's content-pop recognizer. OpenUIKit's measured edge recognizer
     /// drives the same interactive transition, so both public routes expose
@@ -285,9 +291,21 @@ open class UINavigationController: UIViewController {
             // 59 pt notch set y to that inset (additionalSafeAreaInsets 20/59
             // on a zero-SA window match the real status-bar / notch samples).
             let pad = iOSBarTop
-            let barH = navigationBar.displaysLargeTitles
-                ? navigationBar.largeTitleOverlayHeight
-                : UINavigationBar.iOSBarContentHeight + navigationBar.searchOverlayHeight
+            let hideBarForBottomSearch = navigationBar.usesBottomSearch
+                && navigationBar.topItem?.searchController?.isActive == true
+                && (navigationBar.topItem?.searchController?.hidesNavigationBarDuringPresentation
+                    ?? true)
+            let barH: CGFloat
+            if hideBarForBottomSearch {
+                // MEASURED Ledger t3000: UINavigationBar `[0, 10, 375, 0]`;
+                // table SA.top 10. Compact: `[0, 24, 667, 0]`, SA.top 24.
+                barH = 0
+            } else if navigationBar.displaysLargeTitles {
+                barH = navigationBar.largeTitleOverlayHeight
+            } else {
+                barH = UINavigationBar.iOSBarContentHeight
+                    + navigationBar.searchOverlayHeight
+            }
             navigationBar.frame = CGRect(x: 0, y: pad, width: w, height: barH)
             if navigationBar.isTranslucent {
                 contentView.frame = CGRect(x: 0, y: 0, width: w, height: h)
@@ -317,6 +335,7 @@ open class UINavigationController: UIViewController {
         toolbar.frame = CGRect(x: 0, y: h - toolbarHeight,
                                width: w, height: UIToolbar.defaultHeight)
         updateContentSafeArea()
+        layoutFloatingSearch()
     }
 
     /// iOS 26.1 bar origin: `max(safeArea.top, 10)` portrait, `max(safeArea.top, 24)`
@@ -352,17 +371,167 @@ open class UINavigationController: UIViewController {
                 left: inherited.left,
                 bottom: inherited.bottom,
                 right: inherited.right))
+            _ = contentView._propagateSafeArea()
             return
         }
         let barBottom = isNavigationBarHidden
             ? 0 : navigationBar.frame.maxY - contentView.frame.minY
         let barTop = v.bounds.maxY - toolbarHeight
         let toolbarOverlap = contentView.frame.maxY - barTop
+        // MEASURED Ledger t200: table SA.bottom **86** (slot height), not
+        // 0. t1200 (pushed VC, no searchController on topItem) has no
+        // floating field and SA.bottom 0. Compact t200.landscape is **82**.
+        let searchBottom = navigationBar.usesBottomSearch
+            ? UISearchBar.BottomDock.slotHeight : 0
         contentView._setSafeAreaInsets(UIEdgeInsets(
             top: max(inherited.top, max(0, barBottom)),
             left: inherited.left,
-            bottom: max(inherited.bottom, max(0, toolbarOverlap)),
+            bottom: max(inherited.bottom, max(0, toolbarOverlap), searchBottom),
             right: inherited.right))
+        // Stamp descendants in this pass: layoutIfNeeded propagates SA
+        // *before* layoutSubviews, so the table would otherwise keep 0
+        // until a second layout (MEASURED unit test + Ledger t200 aci).
+        _ = contentView._propagateSafeArea()
+    }
+
+    /// Place the phone bottom-docked search. MEASURED Ledger t200 / t3000 /
+    /// t200.landscape, iPhone SE 2x / iOS 26.1. Hidden when `topItem` has
+    /// no searchController (t1200 pushed detail).
+    func layoutFloatingSearch() {
+        guard isViewLoaded else { return }
+        let v = view!
+        guard navigationBar.usesBottomSearch,
+              let bar = navigationBar.hostedSearchBar else {
+            floatingSearchContainer?.isHidden = true
+            if let bar = navigationBar.hostedSearchBar, bar._bottomFloating {
+                bar._bottomFloating = false
+            }
+            return
+        }
+
+        let dock = UISearchBar.BottomDock.self
+        let slotH = dock.slotHeight
+        let platterH = dock.platterHeight
+        let side = dock.sideInset
+        let fieldInset = dock.fieldInset
+        let fieldH = dock.fieldHeight
+        let w = v.bounds.width
+        let h = v.bounds.height
+        let active = navigationBar.topItem?.searchController?.isActive == true
+
+        let container: UIView
+        if let existing = floatingSearchContainer {
+            container = existing
+        } else {
+            let c = UIView()
+            c.isOpaque = false
+            c.backgroundColor = nil
+            v.addSubview(c)
+            floatingSearchContainer = c
+            container = c
+        }
+        container.isHidden = false
+        container.frame = CGRect(x: 0, y: h - slotH, width: w, height: slotH)
+
+        let platter: UIView
+        if let existing = floatingSearchPlatter {
+            platter = existing
+        } else {
+            let p = UIView()
+            p.isOpaque = false
+            styleBottomSearchPlatter(p)
+            container.addSubview(p)
+            floatingSearchPlatter = p
+            platter = p
+        }
+
+        let dismissPlatter: UIView
+        if let existing = floatingSearchDismissPlatter {
+            dismissPlatter = existing
+        } else {
+            let p = UIView()
+            p.isOpaque = false
+            styleBottomSearchPlatter(p)
+            container.addSubview(p)
+            floatingSearchDismissPlatter = p
+            dismissPlatter = p
+        }
+
+        let dismiss: UIButton
+        if let existing = floatingSearchDismissButton {
+            dismiss = existing
+        } else {
+            let b = UIButton(type: .system)
+            b.setImage(UIImage(systemName: "multiply"), for: .normal)
+            b.tintColor = .label
+            b.backgroundColor = nil
+            b.addTarget(for: .touchUpInside) { [weak self] _, _ in
+                self?.navigationBar.hostedSearchBar?._cancel()
+            }
+            dismissPlatter.addSubview(b)
+            floatingSearchDismissButton = b
+            dismiss = b
+        }
+
+        let available = max(0, w - side * 2)
+        let restPlatterW = available
+        let dismissW = active ? platterH : 0
+        let fieldPlatterW = active
+            ? max(0, restPlatterW - dismissW - dock.dismissGap)
+            : restPlatterW
+        platter.frame = CGRect(x: side, y: dock.platterTopInSlot,
+                               width: fieldPlatterW, height: platterH)
+        platter.layer.cornerRadius = platterH / 2
+        styleBottomSearchPlatter(platter)
+
+        if active {
+            dismissPlatter.isHidden = false
+            dismiss.isHidden = false
+            let dx = side + fieldPlatterW + dock.dismissGap
+            dismissPlatter.frame = CGRect(x: dx, y: dock.platterTopInSlot,
+                                          width: platterH, height: platterH)
+            dismissPlatter.layer.cornerRadius = platterH / 2
+            styleBottomSearchPlatter(dismissPlatter)
+            dismiss.frame = CGRect(x: fieldInset, y: fieldInset,
+                                   width: fieldH, height: fieldH)
+        } else {
+            dismissPlatter.isHidden = true
+            dismiss.isHidden = true
+        }
+
+        bar._bottomFloating = true
+        bar._navInlineActive = false
+        bar._padTrailingChrome = false
+        bar.setShowsCancelButton(false, animated: false)
+        if bar.superview !== platter { platter.addSubview(bar) }
+        bar.frame = CGRect(x: fieldInset, y: fieldInset,
+                           width: max(0, fieldPlatterW - fieldInset * 2),
+                           height: fieldH)
+        bar.isHidden = false
+        bar.setNeedsLayout()
+        v.bringSubviewToFront(container)
+    }
+
+    func styleBottomSearchPlatter(_ platter: UIView) {
+        platter._usesIOSGlass = OpenUIKitRuntime.systemFontCut == .iOS
+        platter._usesIOSDarkBarGlass = platter._usesIOSGlass
+        platter.backgroundColor = platter._usesIOSGlass ? nil : _UIBarMetrics.platterFill
+        // Capsule fill is the glass clip path; `clipsToBounds` would
+        // swallow the drop shadow. MEASURED Ledger t200, iPhone SE 2x /
+        // iOS 26.1: just below the 48 pt platter (y 639) the golden is
+        // (231,231,234) over a white cell and (232,232,237) over grouped
+        // (t4000). Same UIPlatformGlassInteractionView 48 pt class as the
+        // toolbar; reuse the tab/toolbar platter shadow (opacity 0.10,
+        // radius 7, offset 2.5).
+        platter.clipsToBounds = false
+        if platter._usesIOSGlass {
+            platter.layer.shadowColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
+            platter.layer.shadowOpacity = UITabBar.shadowOpacity
+            platter.layer.shadowRadius = UITabBar.shadowRadius
+            platter.layer.shadowOffset = UITabBar.shadowOffset
+        } else {
+            platter.layer.shadowOpacity = 0
+        }
     }
 
     /// Height the toolbar takes out of the content area (0 when hidden).
@@ -474,6 +643,11 @@ open class UINavigationController: UIViewController {
                                backTitle: backTitle(forTopIndex: viewControllers.count - 1))
         navigationBar.setItems(viewControllers.map { $0.navigationItem })
         updateToolbar()
+        // setItems installs the search bar. Re-run container layout so
+        // `usesBottomSearch` (needs topItem) stamps SA.bottom 86/82 and
+        // the floating slot (Ledger t200). loadView's first layout ran
+        // before the item stack existed.
+        updateContainerLayout()
     }
 
     func _titleDidChange(_ vc: UIViewController) {

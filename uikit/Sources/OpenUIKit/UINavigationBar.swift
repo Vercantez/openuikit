@@ -825,22 +825,56 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Host the item's search bar as a subview. The slot height is
     /// `searchSlotHeight` when the bar is visible and inactive.
+    /// Phone + no tab bar: the nav controller hosts it at the bottom
+    /// (Ledger t200); this bar keeps only a reference.
     func installSearchBar(from item: UINavigationItem) {
         if let old = hostedSearchBar, old !== item.searchController?.searchBar {
             old.removeFromSuperview()
             hostedSearchBar = nil
         }
-        guard let bar = item.searchController?.searchBar else { return }
-        if bar.superview !== self { addSubview(bar) }
+        guard let bar = item.searchController?.searchBar else {
+            _controller?.layoutFloatingSearch()
+            return
+        }
         hostedSearchBar = bar
+        if usesBottomSearch {
+            if bar.superview === self { bar.removeFromSuperview() }
+            _controller?.layoutFloatingSearch()
+            return
+        }
+        bar._bottomFloating = false
+        if bar.superview !== self { addSubview(bar) }
+    }
+
+    /// Phone, iOS cut, no tab bar, and this bar is attached to a
+    /// UINavigationController. Detached bars (Tabs unit tests) keep the
+    /// overlay. Pad keeps trailing chrome.
+    ///
+    /// MEASURED Ledger t200 vs Tabs t200 vs Ledger-ipad t200, iPhone SE 2x
+    /// / iPad (A16) / iOS 26.1.
+    var usesBottomSearch: Bool {
+        guard OpenUIKitRuntime.systemFontCut == .iOS else { return false }
+        guard !UINavigationBar.isPad else { return false }
+        guard _controller != nil, _controller?.tabBarController == nil else { return false }
+        return topItem?.searchController != nil
     }
 
     /// `isActive` flipped on the hosted search controller: cancel appears
-    /// and the search field moves into the 54 pt content bar.
+    /// and the search field moves into the 54 pt content bar. Bottom-docked
+    /// search (Ledger) instead collapses the bar to height 0 and keeps the
+    /// field at the bottom — settle the table's rest offset to the new
+    /// `adjustedContentInset.top` (t3000: −64 → −10).
     func _searchPresentationChanged() {
         updateSearchFromScroll()
         setNeedsLayout()
+        let scroll = trackedScrollView
+        let wasAtRest = scroll.map {
+            abs($0.contentOffset.y + $0.adjustedContentInset.top) < 0.5
+        } ?? false
         _controller?.updateContainerLayout()
+        if wasAtRest, let scroll, usesBottomSearch {
+            scroll.contentOffset.y = -scroll.adjustedContentInset.top
+        }
         // Pad: the floating tab bar hides to y = −SA.top while search is
         // active (Tabs-ipad t4000). Phone keeps the bottom bar.
         if UITabBar.isPad {
@@ -888,6 +922,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     func hideOnScrollContentBump(requestedY: CGFloat) -> CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS,
               !UINavigationBar.isPad,
+              !usesBottomSearch,
               let item = topItem, item.hidesSearchBarWhenScrolling,
               let sc = item.searchController, !sc.isActive,
               requestedY > 8 else { return 0 }
@@ -905,6 +940,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     var searchOverlayHeight: CGFloat {
         guard OpenUIKitRuntime.systemFontCut == .iOS else { return 0 }
         if UINavigationBar.isPad { return 0 }
+        if usesBottomSearch { return 0 }
         guard let sc = topItem?.searchController, sc.isActive else { return 0 }
         // MEASURED Tabs t4000: extra 6 → bar 60 = 8+44+8. Tabs t4000.ax1 /
         // Notes t4000.ax1, SE 2x / iOS 26.1: field 80
@@ -974,6 +1010,34 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         if let b = backButton { place(back: b, alpha: 1) }
         if displaysLargeTitles { updateFromScroll() }
         layoutSearchBar()
+        applyCollapsedBarChrome()
+    }
+
+    /// MEASURED Ledger t3000, iPhone SE 2x / iOS 26.1: active bottom search
+    /// collapses the bar to height 0 at y = iOSBarTop; title "Ledger" /
+    /// "Export" dump as 0. Must run after layoutSearchBar, which would
+    /// otherwise unhide the title.
+    func applyCollapsedBarChrome() {
+        let collapsed = bounds.height < 1
+        if collapsed {
+            titleLabel.isHidden = true
+            titleLabel.alpha = 0
+            for v in leftItemViews + rightItemViews {
+                v.isHidden = true
+                v.alpha = 0
+            }
+            backButton?.isHidden = true
+            largeTitleLabel?.isHidden = true
+            promptLabel?.isHidden = true
+        } else {
+            titleLabel.isHidden = titleViewHost != nil
+            for v in leftItemViews + rightItemViews {
+                v.isHidden = false
+                v.alpha = 1
+            }
+            backButton?.isHidden = false
+            largeTitleLabel?.isHidden = !displaysLargeTitles
+        }
     }
 
     /// Place the hosted search bar. MEASURED Tabs t200 / t4000, iPhone SE
@@ -984,6 +1048,11 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     func layoutSearchBar() {
         guard let bar = hostedSearchBar else {
             titleLabel.isHidden = false
+            return
+        }
+        if usesBottomSearch {
+            titleLabel.isHidden = false
+            titleLabel.alpha = 1
             return
         }
         let active = topItem?.searchController?.isActive == true
