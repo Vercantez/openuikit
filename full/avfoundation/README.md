@@ -214,3 +214,13 @@ delegate synchronously with `AVError.applicationIsNotAuthorizedToUseDevice`.
 `AVMutableMovie.insertTimeRange(..., copySampleData: true)` throws
 `AVError.decoderNotFound`.
 
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`)
+ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```
+

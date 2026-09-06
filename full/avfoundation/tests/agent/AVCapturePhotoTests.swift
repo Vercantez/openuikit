@@ -132,7 +132,7 @@ func testAVCapturePhotoOutputFailClosedModel() {
     precondition(delegate.finishError?.code == .applicationIsNotAuthorizedToUseDevice)
     precondition(delegate.resolvedID == settings.uniqueID)
     let coordinator = AVCapturePhotoOutputReadinessCoordinator(photoOutput: output)
-    precondition(coordinator.captureReadiness == .sessionNotRunning)
+    precondition(coordinator.captureReadiness == AVCapturePhotoOutput.CaptureReadiness.sessionNotRunning)
     let readiness = AVCaptureReadinessProbe()
     coordinator.delegate = readiness
     coordinator.startTrackingCaptureRequest(using: settings)

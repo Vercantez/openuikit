@@ -1166,7 +1166,7 @@ open class AVMutableCaptionRegion: AVCaptionRegion, @unchecked Sendable {
 
 open class AVMutableComposition: AVComposition, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(urlAssetInitializationOptions URLAssetInitializationOptions: [String : Any]? = nil) {
+  public convenience init(urlAssetInitializationOptions URLAssetInitializationOptions: [String : Any]? = nil) {
     self.init()
     portableURLAssetInitializationOptions = URLAssetInitializationOptions ?? [:]
   }
@@ -1318,7 +1318,9 @@ open class AVMutableMovie: AVMovie, @unchecked Sendable {
     guard URL.isFileURL, FileManager.default.fileExists(atPath: URL.path) else {
       throw AVError(.failedToLoadMediaData)
     }
-    self.init(url: URL, options: options)
+    self.init()
+    portableURL = URL
+    _ = options
     attachMovieProbeIfNeeded(mutable: true)
     if portableProbe() == nil {
       throw AVError(.fileFormatNotRecognized)
@@ -1326,7 +1328,9 @@ open class AVMutableMovie: AVMovie, @unchecked Sendable {
   }
 
   public convenience init(data: Data, options: [String : Any]? = nil, error: ()) throws {
-    self.init(data: data, options: options)
+    self.init()
+    portableData = data
+    _ = options
     attachMovieProbeIfNeeded(mutable: true)
     if portableProbe() == nil {
       throw AVError(.fileFormatNotRecognized)
@@ -1335,9 +1339,10 @@ open class AVMutableMovie: AVMovie, @unchecked Sendable {
 
   public convenience init(settingsFrom movie: AVMovie?, options: [String : Any]? = nil) throws {
     self.init()
-    portableTimescale = movie?.timescale ?? 600
+    portableTimescale = movie?.portableTimescale ?? 600
     portableURL = movie?.url
     portableDefaultStorage = movie?.defaultMediaDataStorage
+    _ = options
   }
 
   public var timescale: CMTimeScale {

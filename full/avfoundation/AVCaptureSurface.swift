@@ -1226,7 +1226,7 @@ open class AVCapturePhotoOutputReadinessCoordinator: NSObject, @unchecked Sendab
   var portableTracked: Set<Int64> = []
 
   public override init() { super.init() }
-  convenience init(photoOutput: AVCapturePhotoOutput) {
+  public convenience init(photoOutput: AVCapturePhotoOutput) {
     self.init()
     portableReadiness = photoOutput.captureReadiness
   }
