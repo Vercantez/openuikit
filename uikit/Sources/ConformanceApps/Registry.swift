@@ -15,6 +15,7 @@ extension ConformanceApps {
         "Feed",
         "Forms",
         "Ledger",
+        "Materials",
         "Modal",
         "NavFlow",
         "Notes",
@@ -32,6 +33,7 @@ extension ConformanceApps {
         _ = _registerFeed
         _ = _registerForms
         _ = _registerLedger
+        _ = _registerMaterials
         _ = _registerModal
         _ = _registerNavFlow
         _ = _registerNotes
