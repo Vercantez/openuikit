@@ -41,6 +41,61 @@ bulk-relabel cap). Rows without a real focused assertion were reclassified to
 
 The first two are the allowed table-driven enum / C-constant tests.
 
+## Depth pass 2026-09 (wave 8)
+
+Second depth pass over the repaired wave-3 ledger. Public-surface IDs: 2645.
+
+- **Before:** 1663 implemented / 943 declared / 0 deferred / 39 unavailable / 0 not-applicable
+- **After:** 1876 implemented / 730 declared / 0 deferred / 39 unavailable / 0 not-applicable
+- **Gain:** +213 implemented (local query-descriptor behaviour, value types, builders, workout inits)
+
+Every new `implemented` row cites a top-level synchronous `func testName()` in
+`tests/agent/HealthKitDepthWave8Tests.swift` or the existing table-driven
+`testQuantitySeriesOptionsAlgebra`. Async `result(for:)` / `Sci12_Concurrency`
+AsyncSequence combinators stay **declared**. Quantity-series `finishSeries`
+and heartbeat `addHeartbeat` / `addMetadata` async entry points stay **declared**.
+
+**Top-5 implemented evidence distribution**
+
+| rows | evidence |
+| ---: | --- |
+| 520 | `test:full/healthkit/tests/agent/HealthKitEnumTests.swift#testEnumRawValues` |
+| 407 | `test:full/healthkit/tests/agent/HealthKitConstantTests.swift#testCStringAndIdentifierConstants` |
+| 109 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable1` |
+| 85 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable2` |
+| 72 | `test:full/healthkit/tests/agent/HealthKitEquatableTests.swift#testEnumEquatableAndHashable3` |
+
+Largest non-table test remains under the 40% bulk-relabel cap
+(`testUnitFactories` at 10.4% of remaining implemented rows). Largest wave-8
+test is `testVerifiableClinicalRecordValueTypes` (28 rows).
+
+### Wave 8 behaviour added
+
+- `HKSamplePredicate` factories (category, correlation, workout/route, clinical,
+  scored assessments, heartbeat, ECG, vision, audiogram) plus equality on
+  nil vs non-nil `nsPredicate`.
+- `HKQuantitySeriesSampleBuilder` sync `insert(_:at:)` / `insert(_:for:)` with
+  unit and discarded-state errors; `discard()`.
+- `HKQuantitySeriesSampleQueryDescriptor.results(for:)` over the local series
+  table, including `.includeSample` and `.orderByQuantitySampleStartDate`.
+- `HKHeartbeatSeriesQueryDescriptor` / `HKHeartbeatSeriesBuilder.finishSeries(completion:)`
+  / `maximumCount == 100` and synchronous `HKHeartbeatSeriesQuery` delivery.
+- `HKElectrocardiogramQueryDescriptor`, voltage `quantity(for:)`,
+  `numberOfVoltageMeasurements`, and both Result and ObjC-style ECG query handlers.
+- Anchored / statistics-collection / activity-summary / workout-route
+  `results(for:)` snapshots against the local store (`HKWorkoutRouteQueryDescriptor.init(_:)`).
+- `HKWorkoutEffortRelationshipQueryDescriptor` and `HKWorkoutEffortRelationshipQuery`
+  (`.default` vs `.mostRelevant`) over local effort relations; `.samples` is the
+  related sample wrapped as an array.
+- `HKVerifiableClinicalRecord` / `Subject` value types and local (not
+  Apple-verified) query matching of stored JWS payloads.
+- `HKQueryAnchor` / `HKQueryDescriptor` NSSecureCoding, `objectType` /
+  `sampleType`, and ECG association predicates.
+- `HKVisionPrism` polar ↔ rectangular arithmetic and NSCoding.
+- Extra `HKWorkout` convenience factories (device, flights, strokes) plus
+  `statistics(for:)` / `allStatistics`; `HKWorkoutActivity` duration, events,
+  and empty statistics.
+
 ### Public surface implemented
 
 - **HKHealthStore (local store).** `isHealthDataAvailable()` is `true`.
@@ -92,9 +147,12 @@ The first two are the allowed table-driven enum / C-constant tests.
 - No Apple Health database, Health app UI, entitlements, or TCC.
 - `enableBackgroundDelivery` / `disableBackgroundDelivery` /
   `disableAllBackgroundDelivery` → `errorHealthDataUnavailable`.
-- Watch pairing, `HKWorkoutSession` hardware, clinical records / FHIR,
-  medication dose, vision prescriptions, electrocardiogram voltage streams,
-  `splitTotalEnergy` → `errorHealthDataUnavailable`.
+- Watch pairing, `HKWorkoutSession` hardware, Apple clinical-record / FHIR
+  network verification, medication dose logging, live vision-prescription
+  capture, Watch ECG hardware, and `splitTotalEnergy` stay fail-closed
+  (`errorHealthDataUnavailable` or empty hardware streams). Local ECG
+  voltage tables and locally stored JWS clinical records are queryable; they
+  are not Apple-verified credentials.
 - Attachment APIs that take `UTType` stay **unavailable** (isolated gate cannot
   import UniformTypeIdentifiers).
 - APIs whose signatures require `NSComparisonPredicate.Operator` stay
@@ -124,7 +182,7 @@ Focused coverage tests (cited by `coverage.tsv`): `HealthKitEnumTests.swift`,
 `HealthKitStoreTests.swift`, `HealthKitQueryTests.swift`,
 `HealthKitStatisticsTests.swift`, `HealthKitSampleTests.swift`,
 `HealthKitWorkoutTests.swift`, `HealthKitDescriptorTests.swift`,
-`HealthKitSurfaceTests.swift`.
+`HealthKitSurfaceTests.swift`, `HealthKitDepthWave8Tests.swift`.
 
 ### Unresolved behavioral questions
 
@@ -159,7 +217,7 @@ when no store directory is writable.
 ## Fail-closed / not invented
 
 - No Apple Health database, no Health app UI, no entitlement grant, no Watch
-  workout session, no clinical records / FHIR.
+  workout session, no Apple-verified clinical credentials / FHIR network.
 - Attachment `UTType` and `NSComparisonPredicate.Operator` signatures remain
   unavailable on this isolated Linux gate.
 - `HKUnit.unit(_:)` parses the documented SI/compound strings used in tests;
@@ -167,6 +225,7 @@ when no store directory is writable.
 
 ## Coverage
 
-See `coverage.tsv`. Implemented 1663, declared 943, unavailable 39, deferred 0.
+See `coverage.tsv`. Implemented 1876, declared 730, unavailable 39, deferred 0.
 Unavailable rows are `NSComparisonPredicate.Operator` and `UTType` APIs only.
-Declared rows compile but lack a focused `*Tests.swift` assertion.
+Declared rows compile but lack a focused `*Tests.swift` assertion. Wave-8
+async `result(for:)` / `Sci12_Concurrency` combinators remain declared.

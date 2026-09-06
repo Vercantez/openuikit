@@ -27,12 +27,12 @@ final class ValueTypeTailTests: XCTestCase {
     func testPasteboardPostsNilThenTypedChangedNotifications() {
         let pasteboard = UIPasteboard.withUniqueName()
         var posts: [(object: AnyObject?, info: [AnyHashable: Any]?)] = []
-        let token = NotificationCenter.default.addObserver(
+        let token = OpenUIKit.NotificationCenter.default.addObserver(
             forName: UIPasteboard.changedNotification, object: pasteboard, queue: nil
         ) { note in
             posts.append((note.object as AnyObject?, note.userInfo))
         }
-        defer { NotificationCenter.default.removeObserver(token) }
+        defer { OpenUIKit.NotificationCenter.default.removeObserver(token) }
 
         pasteboard.string = "hello"
         XCTAssertEqual(posts.count, 2)
@@ -61,18 +61,18 @@ final class ValueTypeTailTests: XCTestCase {
         var changed = 0
         var removed = 0
         var removedObject: AnyObject?
-        let changedToken = NotificationCenter.default.addObserver(
+        let changedToken = OpenUIKit.NotificationCenter.default.addObserver(
             forName: UIPasteboard.changedNotification, object: nil, queue: nil
         ) { _ in changed += 1 }
-        let removedToken = NotificationCenter.default.addObserver(
+        let removedToken = OpenUIKit.NotificationCenter.default.addObserver(
             forName: UIPasteboard.removedNotification, object: nil, queue: nil
         ) { note in
             removed += 1
             removedObject = note.object as AnyObject?
         }
         defer {
-            NotificationCenter.default.removeObserver(changedToken)
-            NotificationCenter.default.removeObserver(removedToken)
+            OpenUIKit.NotificationCenter.default.removeObserver(changedToken)
+            OpenUIKit.NotificationCenter.default.removeObserver(removedToken)
         }
         let beforeChanged = changed
         UIPasteboard.remove(withName: name)
@@ -84,7 +84,7 @@ final class ValueTypeTailTests: XCTestCase {
     func testPasteboardChangedNotificationOnBackgroundThread() {
         let pasteboard = UIPasteboard.withUniqueName()
         let sawBackground = expectation(description: "changed on background")
-        let token = NotificationCenter.default.addObserver(
+        let token = OpenUIKit.NotificationCenter.default.addObserver(
             forName: UIPasteboard.changedNotification, object: pasteboard, queue: nil
         ) { _ in
             if !Thread.isMainThread { sawBackground.fulfill() }
@@ -93,7 +93,7 @@ final class ValueTypeTailTests: XCTestCase {
             pasteboard.string = "bg"
         }
         wait(for: [sawBackground], timeout: 2)
-        NotificationCenter.default.removeObserver(token)
+        OpenUIKit.NotificationCenter.default.removeObserver(token)
     }
 
     func testPasteboardItemProvidersPopulateStringSynchronously() {

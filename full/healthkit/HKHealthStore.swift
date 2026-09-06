@@ -234,8 +234,7 @@ open class HKHealthStore: NSObject, @unchecked Sendable {
         with workout: HKWorkout,
         activity: HKWorkoutActivity?
     ) async throws -> Bool {
-        _ = activity
-        HKHealthStorePortable.associate(sampleIDs: [sample.uuid], with: workout.uuid)
+        HKHealthStorePortable._relateEffort(sample: sample, workout: workout, activity: activity)
         return true
     }
 
@@ -296,6 +295,7 @@ open class HKHealthStore: NSObject, @unchecked Sendable {
                     state.nextAnchor += 1
                     state.samples.removeAll { $0.uuid == stored.uuid }
                     state.samples.append(stored)
+                    HKHealthStorePortable.remember(sample)
                 }
             }
         }
@@ -506,6 +506,9 @@ func hkStore(_ sample: HKSample, anchor: Int) -> HKStoredSample {
 
 func hkMaterialize(_ stored: HKStoredSample) -> HKSample? {
     guard let uuid = UUID(uuidString: stored.uuid) else { return nil }
+    if let live = HKHealthStorePortable.liveSample(uuid: uuid) {
+        return live
+    }
     let start = Date(timeIntervalSince1970: stored.start)
     let end = Date(timeIntervalSince1970: stored.end)
     let source = HKSource(name: stored.sourceName, bundleIdentifier: stored.sourceBundle)

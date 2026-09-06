@@ -358,9 +358,18 @@ private func resolveScale(
     horizontal: Bool,
     plotArea: CGRect
 ) -> ChartScale {
-    let range: ClosedRange<Double> = horizontal
-        ? plotArea.minX...plotArea.maxX
-        : plotArea.minY...plotArea.maxY
+    /// Linux rule: `plotDimension(startPadding:endPadding:)` insets the
+    /// plot-area pixel range by `startPadding` at the minimum pixel edge and
+    /// `endPadding` at the maximum pixel edge *before* inversion. Domain
+    /// mapping then uses that inset range. A 100-wide plot with padding 10,10
+    /// maps domain 0...10 to pixels 10...90.
+    let startPad = Double(storage?.range?.startPadding ?? 0)
+    let endPad = Double(storage?.range?.endPadding ?? 0)
+    let rawLow = horizontal ? plotArea.minX : plotArea.minY
+    let rawHigh = horizontal ? plotArea.maxX : plotArea.maxY
+    let insetLow = rawLow + startPad
+    let insetHigh = rawHigh - endPad
+    let range: ClosedRange<Double> = min(insetLow, insetHigh)...max(insetLow, insetHigh)
     let type = storage?.type ?? (horizontal ? inferXType(records) : .linear)
     if type == .category {
         let names = storage?.categories.isEmpty == false
@@ -369,11 +378,18 @@ private func resolveScale(
         return .category(names, range: range)
     }
     let values = numericValues(records, horizontal: horizontal)
-    let minValue = storage?.domainMin ?? values.min() ?? 0
-    let maxValue = storage?.domainMax ?? values.max() ?? 1
+    var minValue = storage?.domainMin ?? values.min() ?? 0
+    var maxValue = storage?.domainMax ?? values.max() ?? 1
+    if storage?.includesZero == true {
+        if minValue > 0 { minValue = 0 }
+        if maxValue < 0 { maxValue = 0 }
+    }
     let domain = min(minValue, maxValue)...max(minValue, maxValue == minValue ? minValue + 1 : maxValue)
     let inferred = storage?.domainMin == nil && storage?.domainMax == nil
-    let inverted = !horizontal
+    var inverted = !horizontal
+    if storage?.reversed == true {
+        inverted.toggle()
+    }
     if type == .log {
         var scale = ChartScale.log(domain: domain, range: range, inverted: inverted)
         if inferred {
@@ -762,16 +778,8 @@ public struct InterpolationMethod: Hashable, Sendable, CustomStringConvertible {
 
 public struct BasicChartSymbolShape: Hashable, Sendable, View {
     private let name: String
-    private init(_ name: String) { self.name = name }
+    init(_ name: String) { self.name = name }
 
-    public static let circle = BasicChartSymbolShape("circle")
-    public static let square = BasicChartSymbolShape("square")
-    public static let plus = BasicChartSymbolShape("plus")
-    public static let cross = BasicChartSymbolShape("cross")
-    public static let diamond = BasicChartSymbolShape("diamond")
-    public static let asterisk = BasicChartSymbolShape("asterisk")
-    public static let pentagon = BasicChartSymbolShape("pentagon")
-    public static let triangle = BasicChartSymbolShape("triangle")
     public static let role = ShapeRole.fill
 
     public var description: String { name }
@@ -863,29 +871,9 @@ public struct PlotDimensionScaleRange: Hashable, Sendable {
     public let startPadding: CGFloat
     public let endPadding: CGFloat
 
-    private init(startPadding: CGFloat, endPadding: CGFloat) {
+    public init(startPadding: CGFloat, endPadding: CGFloat) {
         self.startPadding = startPadding
         self.endPadding = endPadding
-    }
-
-    public static var plotDimension: PlotDimensionScaleRange {
-        PlotDimensionScaleRange(startPadding: 0, endPadding: 0)
-    }
-
-    public static func plotDimension(
-        padding: CGFloat
-    ) -> PlotDimensionScaleRange {
-        PlotDimensionScaleRange(startPadding: padding, endPadding: padding)
-    }
-
-    public static func plotDimension(
-        startPadding: CGFloat = 0,
-        endPadding: CGFloat = 0
-    ) -> PlotDimensionScaleRange {
-        PlotDimensionScaleRange(
-            startPadding: startPadding,
-            endPadding: endPadding
-        )
     }
 }
 
@@ -1314,12 +1302,15 @@ public struct _ChartAnnotationContent<Content: ChartContent, Label: View>: Chart
     let position: AnnotationPosition
     let alignment: Alignment
     let spacing: CGFloat?
+    let overflowResolution: AnnotationOverflowResolution
 
     public var chartPlotRecords: [ChartPlotRecord] {
         var records = content.chartPlotRecords
         for index in records.indices {
             records[index].annotationPosition = position.description
             records[index].annotationAlignment = "\(alignment)"
+            records[index].layout.overflowX = overflowResolution.x.name
+            records[index].layout.overflowY = overflowResolution.y.name
         }
         return records
     }
@@ -1335,13 +1326,30 @@ public extension ChartContent {
         overflowResolution: AnnotationOverflowResolution = AnnotationOverflowResolution(),
         @ViewBuilder content: () -> C
     ) -> _ChartAnnotationContent<Self, C> {
-        _ = overflowResolution
         _ = content
         return _ChartAnnotationContent(
             content: self,
             position: position,
             alignment: alignment,
-            spacing: spacing
+            spacing: spacing,
+            overflowResolution: overflowResolution
+        )
+    }
+
+    func annotation<C: View>(
+        position: AnnotationPosition = .automatic,
+        alignment: Alignment = .center,
+        spacing: CGFloat? = nil,
+        overflowResolution: AnnotationOverflowResolution,
+        @ViewBuilder content: @escaping (AnnotationContext) -> C
+    ) -> _ChartAnnotationContent<Self, C> {
+        _ = content(AnnotationContext())
+        return _ChartAnnotationContent(
+            content: self,
+            position: position,
+            alignment: alignment,
+            spacing: spacing,
+            overflowResolution: overflowResolution
         )
     }
 
@@ -1356,7 +1364,24 @@ public extension ChartContent {
             content: self,
             position: position,
             alignment: alignment,
-            spacing: spacing
+            spacing: spacing,
+            overflowResolution: .automatic
+        )
+    }
+
+    func annotation<C: View>(
+        position: AnnotationPosition = .automatic,
+        alignment: Alignment = .center,
+        spacing: CGFloat? = nil,
+        @ViewBuilder content: @escaping (AnnotationContext) -> C
+    ) -> _ChartAnnotationContent<Self, C> {
+        _ = content(AnnotationContext())
+        return _ChartAnnotationContent(
+            content: self,
+            position: position,
+            alignment: alignment,
+            spacing: spacing,
+            overflowResolution: .automatic
         )
     }
 
@@ -1482,6 +1507,19 @@ public extension Chart {
         return copy
     }
 
+    func chartXScale(
+        range: PlotDimensionScaleRange,
+        type: ScaleType? = nil
+    ) -> Chart {
+        var copy = self
+        copy.xScaleStorage = ChartScaleStorage(
+            axis: "x",
+            type: type,
+            range: range
+        )
+        return copy
+    }
+
     func chartXScale<Range: PositionScaleRange>(
         range: Range,
         type: ScaleType? = nil
@@ -1489,6 +1527,32 @@ public extension Chart {
         var copy = self
         copy.xScaleStorage = ChartScaleStorage(
             axis: "x",
+            type: type,
+            range: range as? PlotDimensionScaleRange
+        )
+        return copy
+    }
+
+    func chartYScale(
+        range: PlotDimensionScaleRange,
+        type: ScaleType? = nil
+    ) -> Chart {
+        var copy = self
+        copy.yScaleStorage = ChartScaleStorage(
+            axis: "y",
+            type: type,
+            range: range
+        )
+        return copy
+    }
+
+    func chartYScale<Range: PositionScaleRange>(
+        range: Range,
+        type: ScaleType? = nil
+    ) -> Chart {
+        var copy = self
+        copy.yScaleStorage = ChartScaleStorage(
+            axis: "y",
             type: type,
             range: range as? PlotDimensionScaleRange
         )
@@ -1695,6 +1759,22 @@ private func storage<Domain: ScaleDomain>(
     }
     if let names = domain as? [String] {
         return ChartScaleStorage(axis: axis, type: type ?? .category, categories: names)
+    }
+    if let automatic = domain as? AutomaticScaleDomain {
+        var stored = ChartScaleStorage(
+            axis: axis,
+            type: type,
+            includesZero: automatic.includesZero,
+            reversed: automatic.reversed
+        )
+        if automatic.modifiedDomain.count >= 2 {
+            stored.domainMin = automatic.modifiedDomain.min()
+            stored.domainMax = automatic.modifiedDomain.max()
+        } else if let only = automatic.modifiedDomain.first {
+            stored.domainMin = only
+            stored.domainMax = only
+        }
+        return stored
     }
     return ChartScaleStorage(axis: axis, type: type)
 }

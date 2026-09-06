@@ -130,7 +130,7 @@ public final class SFAuthenticationSession: NSObject {
 
 // MARK: - Safari view controller
 
-@MainActor
+@preconcurrency @MainActor
 public protocol SFSafariViewControllerDelegate: NSObjectProtocol {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController)
     func safariViewController(

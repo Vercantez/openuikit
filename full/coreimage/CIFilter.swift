@@ -169,8 +169,31 @@ public class CIFilter: NSObject, NSSecureCoding, CIFilterProtocol, @unchecked Se
     }
 
     public class func serializedXMP(from filters: [CIFilter], inputImageExtent extent: CGRect) -> Data? {
-        _ = (filters, extent)
-        return nil
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        xml += "<x:xmpmeta xmlns:x=\"adobe:ns:meta/\">"
+        xml += "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">"
+        xml += "<rdf:Description xmlns:ci=\"https://openuikit.dev/coreimage/xmp\">"
+        xml += "<ci:extent>\(extent.origin.x) \(extent.origin.y) \(extent.width) \(extent.height)</ci:extent>"
+        for filter in filters {
+            xml += "<ci:filter name=\"\(ciXMLEscape(filter.name))\""
+            for key in filter.inputKeys where key != kCIInputImageKey {
+                guard let value = filter.value(forKey: key) else { continue }
+                if let number = value as? NSNumber {
+                    xml += " \(ciXMLEscape(key))=\"\(number)\""
+                } else if let number = value as? Float {
+                    xml += " \(ciXMLEscape(key))=\"\(number)\""
+                } else if let number = value as? Double {
+                    xml += " \(ciXMLEscape(key))=\"\(number)\""
+                } else if let number = value as? Int {
+                    xml += " \(ciXMLEscape(key))=\"\(number)\""
+                } else if let string = value as? String {
+                    xml += " \(ciXMLEscape(key))=\"\(ciXMLEscape(string))\""
+                }
+            }
+            xml += "/>"
+        }
+        xml += "</rdf:Description></rdf:RDF></x:xmpmeta>"
+        return xml.data(using: .utf8)
     }
 
     public class func filterArray(
@@ -178,9 +201,45 @@ public class CIFilter: NSObject, NSSecureCoding, CIFilterProtocol, @unchecked Se
         inputImageExtent extent: CGRect,
         error outError: NSErrorPointer
     ) -> [CIFilter] {
-        _ = (xmpData, extent)
-        outError?.pointee = NSError(domain: "CIFilter", code: 1)
-        return []
+        _ = extent
+        guard let xml = String(data: xmpData, encoding: .utf8), xml.contains("<ci:filter") else {
+            outError?.pointee = NSError(
+                domain: "CIFilter",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "invalid Core Image XMP"]
+            )
+            return []
+        }
+        var filters: [CIFilter] = []
+        var remainder = xml
+        while let start = remainder.range(of: "<ci:filter ") {
+            remainder = String(remainder[start.lowerBound...])
+            guard let end = remainder.range(of: "/>") else { break }
+            let tag = String(remainder[..<end.upperBound])
+            remainder = String(remainder[end.upperBound...])
+            guard let name = ciXMLAttribute(tag, "name"),
+                  let filter = CIFilter(name: name) else {
+                continue
+            }
+            for key in filter.inputKeys where key != kCIInputImageKey {
+                if let raw = ciXMLAttribute(tag, key) {
+                    if let double = Double(raw) {
+                        filter.setValue(Float(double), forKey: key)
+                    } else {
+                        filter.setValue(raw, forKey: key)
+                    }
+                }
+            }
+            filters.append(filter)
+        }
+        if filters.isEmpty {
+            outError?.pointee = NSError(
+                domain: "CIFilter",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "no filters in Core Image XMP"]
+            )
+        }
+        return filters
     }
 
     public class func supportedRawCameraModels() -> [String]! {
@@ -400,5 +459,25 @@ func ciPoint(_ value: Any?, fallback: CGPoint) -> CGPoint {
     if let vector = value as? CIVector { return vector.cgPointValue }
     if let point = value as? CGPoint { return point }
     return fallback
+}
+
+func ciXMLEscape(_ string: String) -> String {
+    string
+        .replacingOccurrences(of: "&", with: "&amp;")
+        .replacingOccurrences(of: "\"", with: "&quot;")
+        .replacingOccurrences(of: "<", with: "&lt;")
+        .replacingOccurrences(of: ">", with: "&gt;")
+}
+
+func ciXMLAttribute(_ tag: String, _ name: String) -> String? {
+    let needle = "\(name)=\""
+    guard let start = tag.range(of: needle) else { return nil }
+    let rest = tag[start.upperBound...]
+    guard let end = rest.range(of: "\"") else { return nil }
+    return String(rest[..<end.lowerBound])
+        .replacingOccurrences(of: "&quot;", with: "\"")
+        .replacingOccurrences(of: "&lt;", with: "<")
+        .replacingOccurrences(of: "&gt;", with: ">")
+        .replacingOccurrences(of: "&amp;", with: "&")
 }
 

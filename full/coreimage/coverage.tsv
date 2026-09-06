@@ -370,20 +370,20 @@ c:objc(cs)CIColorKernel	implemented	test:full/coreimage/tests/agent/CIKernelDete
 c:objc(cs)CIColorKernel(cm)kernelWithString:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
 c:objc(cs)CIColorKernel(im)applyWithExtent:arguments:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
 c:objc(cs)CIContext	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCILinearGradientRender	focused Linux runtime assertion
-c:objc(cs)CIContext(cm)contextWithCGContext:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithCGContext:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithEAGLContext:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithEAGLContext:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithEAGLContext:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithEAGLContext:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLDevice:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLDevice:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLDevice:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(cm)contextWithMTLDevice:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIContext(cm)contextWithCGContext:options:	unavailable		requires CoreGraphics.CGContext Quartz window-server drawing context; CoreGraphics is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithCGContext:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires CoreGraphics.CGContext Quartz window-server drawing context; CoreGraphics is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithEAGLContext:	unavailable		requires EAGLContext / OpenGL ES GPU daemon; GLES is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithEAGLContext:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires EAGLContext / OpenGL ES GPU daemon; GLES is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithEAGLContext:options:	unavailable		requires EAGLContext / OpenGL ES GPU daemon; GLES is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithEAGLContext:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires EAGLContext / OpenGL ES GPU daemon; GLES is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLCommandQueue:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLDevice:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLDevice:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLDevice:options:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIContext(cm)contextWithMTLDevice:options:::SYNTHESIZED::c:objc(cs)CIContext	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
 c:objc(cs)CIContext(im)HEIF10RepresentationOfImage:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
 c:objc(cs)CIContext(im)HEIFRepresentationOfImage:format:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
 c:objc(cs)CIContext(im)JPEGRepresentationOfImage:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
@@ -391,8 +391,8 @@ c:objc(cs)CIContext(im)OpenEXRRepresentationOfImage:options:error:	implemented	t
 c:objc(cs)CIContext(im)PNGRepresentationOfImage:format:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
 c:objc(cs)CIContext(im)TIFFRepresentationOfImage:format:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
 c:objc(cs)CIContext(im)calculateHDRStatsForCGImage:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextFailClosedDepthAndTasks	focused Linux runtime assertion
-c:objc(cs)CIContext(im)calculateHDRStatsForCVPixelBuffer:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(im)calculateHDRStatsForIOSurface:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIContext(im)calculateHDRStatsForCVPixelBuffer:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIContext(im)calculateHDRStatsForIOSurface:	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
 c:objc(cs)CIContext(im)calculateHDRStatsForImage:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextFailClosedDepthAndTasks	focused Linux runtime assertion
 c:objc(cs)CIContext(im)clearCaches	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextWorkingSpaceCreateCGImage	focused Linux runtime assertion
 c:objc(cs)CIContext(im)createCGImage:fromRect:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextWorkingSpaceCreateCGImage	focused Linux runtime assertion
@@ -411,19 +411,19 @@ c:objc(cs)CIContext(im)inputImageMaximumSize	implemented	test:full/coreimage/tes
 c:objc(cs)CIContext(im)outputImageMaximumSize	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextWorkingSpaceCreateCGImage	focused Linux runtime assertion
 c:objc(cs)CIContext(im)prepareRender:fromRect:toDestination:atPoint:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextFailClosedDepthAndTasks	focused Linux runtime assertion
 c:objc(cs)CIContext(im)render:toBitmap:rowBytes:bounds:format:colorSpace:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIContextRenderToBitmap	focused Linux runtime assertion
-c:objc(cs)CIContext(im)render:toCVPixelBuffer:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(im)render:toCVPixelBuffer:bounds:colorSpace:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(im)render:toIOSurface:bounds:colorSpace:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIContext(im)render:toMTLTexture:commandBuffer:bounds:colorSpace:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIContext(im)render:toCVPixelBuffer:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIContext(im)render:toCVPixelBuffer:bounds:colorSpace:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIContext(im)render:toIOSurface:bounds:colorSpace:	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIContext(im)render:toMTLTexture:commandBuffer:bounds:colorSpace:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
 c:objc(cs)CIContext(im)startTaskToClear:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextFailClosedDepthAndTasks	focused Linux runtime assertion
 c:objc(cs)CIContext(im)startTaskToRender:fromRect:toDestination:atPoint:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextFailClosedDepthAndTasks	focused Linux runtime assertion
 c:objc(cs)CIContext(im)startTaskToRender:toDestination:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextFailClosedDepthAndTasks	focused Linux runtime assertion
-c:objc(cs)CIContext(im)writeHEIF10RepresentationOfImage:toURL:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeHEIF10Representation	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIContext(im)writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeHEIFRepresentation	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIContext(im)writeHEIF10RepresentationOfImage:toURL:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIContextWriteFailClosedAppleCodecs	focused Linux runtime assertion
+c:objc(cs)CIContext(im)writeHEIFRepresentationOfImage:toURL:format:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIContextWriteFailClosedAppleCodecs	focused Linux runtime assertion
 c:objc(cs)CIContext(im)writeJPEGRepresentationOfImage:toURL:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
-c:objc(cs)CIContext(im)writeOpenEXRRepresentationOfImage:toURL:options:error:	declared	source:full/coreimage/CIContext.swift#writeOpenEXRRepresentation	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIContext(im)writeOpenEXRRepresentationOfImage:toURL:options:error:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIContextWriteFailClosedAppleCodecs	focused Linux runtime assertion
 c:objc(cs)CIContext(im)writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
-c:objc(cs)CIContext(im)writeTIFFRepresentationOfImage:toURL:format:colorSpace:options:error:	declared	source:full/coreimage/CIContext.swift#writeTIFFRepresentation	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIContext(im)writeTIFFRepresentationOfImage:toURL:format:colorSpace:options:error:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIContextWriteFailClosedAppleCodecs	focused Linux runtime assertion
 c:objc(cs)CIContext(py)workingColorSpace	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextWorkingSpaceCreateCGImage	focused Linux runtime assertion
 c:objc(cs)CIContext(py)workingFormat	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextWorkingSpaceCreateCGImage	focused Linux runtime assertion
 c:objc(cs)CIDataMatrixCodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
@@ -437,32 +437,32 @@ c:objc(cs)CIDetector(cm)detectorOfType:context:options:	implemented	test:full/co
 c:objc(cs)CIDetector(im)featuresInImage:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIDetectorFailClosedNoML	focused Linux runtime assertion
 c:objc(cs)CIDetector(im)featuresInImage:options:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIDetectorFailClosedNoML	focused Linux runtime assertion
 c:objc(cs)CIFaceFeature	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
-c:objc(cs)CIFaceFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)faceAngle	declared	source:full/coreimage/CIDetector.swift#faceAngle	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)hasFaceAngle	declared	source:full/coreimage/CIDetector.swift#hasFaceAngle	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFaceFeature(py)bounds	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)faceAngle	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)hasFaceAngle	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
 c:objc(cs)CIFaceFeature(py)hasLeftEyePosition	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIDetectorFailClosedNoML	focused Linux runtime assertion
-c:objc(cs)CIFaceFeature(py)hasMouthPosition	declared	source:full/coreimage/CIDetector.swift#hasMouthPosition	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)hasRightEyePosition	declared	source:full/coreimage/CIDetector.swift#hasRightEyePosition	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFaceFeature(py)hasMouthPosition	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)hasRightEyePosition	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
 c:objc(cs)CIFaceFeature(py)hasSmile	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIDetectorFailClosedNoML	focused Linux runtime assertion
-c:objc(cs)CIFaceFeature(py)hasTrackingFrameCount	declared	source:full/coreimage/CIDetector.swift#hasTrackingFrameCount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)hasTrackingID	declared	source:full/coreimage/CIDetector.swift#hasTrackingID	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)leftEyeClosed	declared	source:full/coreimage/CIDetector.swift#leftEyeClosed	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFaceFeature(py)hasTrackingFrameCount	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)hasTrackingID	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)leftEyeClosed	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
 c:objc(cs)CIFaceFeature(py)leftEyePosition	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIDetectorFailClosedNoML	focused Linux runtime assertion
-c:objc(cs)CIFaceFeature(py)mouthPosition	declared	source:full/coreimage/CIDetector.swift#mouthPosition	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)rightEyeClosed	declared	source:full/coreimage/CIDetector.swift#rightEyeClosed	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)rightEyePosition	declared	source:full/coreimage/CIDetector.swift#rightEyePosition	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)trackingFrameCount	declared	source:full/coreimage/CIDetector.swift#trackingFrameCount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFaceFeature(py)trackingID	declared	source:full/coreimage/CIDetector.swift#trackingID	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFaceFeature(py)mouthPosition	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)rightEyeClosed	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)rightEyePosition	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)trackingFrameCount	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
+c:objc(cs)CIFaceFeature(py)trackingID	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIFaceFeatureStoredGeometry	focused Linux runtime assertion
 c:objc(cs)CIFeature	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
 c:objc(cs)CIFeature(py)bounds	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
 c:objc(cs)CIFeature(py)type	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCGAffineTransformLookalike	focused Linux runtime assertion
 c:objc(cs)CIFilter	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
-c:objc(cs)CIFilter(cm)filterArrayFromSerializedXMP:inputImageExtent:error:	declared	source:full/coreimage/CIFilter.swift#filterArray	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFilter(cm)filterArrayFromSerializedXMP:inputImageExtent:error:	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterXMPRoundTrip	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)filterNamesInCategories:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterNameKeysAndAttributes	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)filterNamesInCategory:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterNameKeysAndAttributes	focused Linux runtime assertion
-c:objc(cs)CIFilter(cm)filterWithCVPixelBuffer:properties:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIFilter(cm)filterWithImageData:options:	declared	source:full/coreimage/CIFilter.swift#init	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIFilter(cm)filterWithImageURL:options:	declared	source:full/coreimage/CIFilter.swift#init	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFilter(cm)filterWithCVPixelBuffer:properties:options:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIFilter(cm)filterWithImageData:options:	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterRAWInitializersFailClosed	focused Linux runtime assertion
+c:objc(cs)CIFilter(cm)filterWithImageURL:options:	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterRAWInitializersFailClosed	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)filterWithName:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterNameKeysAndAttributes	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)filterWithName:withInputParameters:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIColorMatrixAndExposurePixelFormula	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)localizedDescriptionForFilterName:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIPhotoEffectCubes	focused Linux runtime assertion
@@ -470,7 +470,7 @@ c:objc(cs)CIFilter(cm)localizedNameForCategory:	implemented	test:full/coreimage/
 c:objc(cs)CIFilter(cm)localizedNameForFilterName:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterNameKeysAndAttributes	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)localizedReferenceDocumentationForFilterName:	implemented	test:full/coreimage/tests/agent/CIBarcodeTests.swift#testCICode128BarcodeGenerator	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)registerFilterName:constructor:classAttributes:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterRegisterName	focused Linux runtime assertion
-c:objc(cs)CIFilter(cm)serializedXMPFromFilters:inputImageExtent:	declared	source:full/coreimage/CIFilter.swift#serializedXMP	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIFilter(cm)serializedXMPFromFilters:inputImageExtent:	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterXMPRoundTrip	focused Linux runtime assertion
 c:objc(cs)CIFilter(cm)supportedRawCameraModels	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIFilterRegistry	focused Linux runtime assertion
 c:objc(cs)CIFilter(im)setDefaults	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterNameKeysAndAttributes	focused Linux runtime assertion
 c:objc(cs)CIFilter(py)attributes	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterNameKeysAndAttributes	focused Linux runtime assertion
@@ -491,16 +491,16 @@ c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swi
 c:objc(cs)CIImage(cm)emptyImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(cm)imageWithCGImage:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(cm)imageWithCGImage:options:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
-c:objc(cs)CIImage(cm)imageWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(cm)imageWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(cm)imageWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIImage(cm)imageWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires ImageIO.CGImageSource decoder daemon; ImageIO is not a declared dependency
+c:objc(cs)CIImage(cm)imageWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(cm)imageWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(cm)imageWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
 c:objc(cs)CIImage(cm)imageWithContentsOfURL:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
-c:objc(cs)CIImage(cm)imageWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(cm)imageWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(cm)imageWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(cm)imageWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIImage(cm)imageWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
+c:objc(cs)CIImage(cm)imageWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIImage(cm)imageWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIImage(cm)imageWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
 c:objc(cs)CIImage(cpy)blackImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(cpy)blueImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
 c:objc(cs)CIImage(cpy)clearImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
@@ -511,88 +511,88 @@ c:objc(cs)CIImage(cpy)magentaImage	implemented	test:full/coreimage/tests/agent/C
 c:objc(cs)CIImage(cpy)redImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
 c:objc(cs)CIImage(cpy)whiteImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(cpy)yellowImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
-c:objc(cs)CIImage(im)autoAdjustmentFilters	declared	source:full/coreimage/CIImage.swift#autoAdjustmentFilters	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)autoAdjustmentFiltersWithOptions:	declared	source:full/coreimage/CIImage.swift#autoAdjustmentFilters	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)autoAdjustmentFilters	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
+c:objc(cs)CIImage(im)autoAdjustmentFiltersWithOptions:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingCGOrientation:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageCroppedTransformedComposited	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingFilter:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIHueVibrancePixelFormula	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingFilter:withInputParameters:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIGaussianBlurExtentAndConstantRaster	focused Linux runtime assertion
-c:objc(cs)CIImage(im)imageByApplyingGainMap:	declared	source:full/coreimage/CIImage.swift#applyingGainMap	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)imageByApplyingGainMap:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageInsertIntermediateGainMapAndTransformQuality	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingGainMap:headroom:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageApplyingFilter	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingGaussianBlurWithSigma:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIGaussianBlurExtentAndConstantRaster	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingOrientation:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageCroppedTransformedComposited	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByApplyingTransform:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageCroppedTransformedComposited	focused Linux runtime assertion
-c:objc(cs)CIImage(im)imageByApplyingTransform:highQualityDownsample:	declared	source:full/coreimage/CIImage.swift#transformed	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)imageByApplyingTransform:highQualityDownsample:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageInsertIntermediateGainMapAndTransformQuality	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByClampingToExtent	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageCroppedTransformedComposited	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByClampingToRect:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageCroppedTransformedComposited	focused Linux runtime assertion
-c:objc(cs)CIImage(im)imageByColorMatchingColorSpaceToWorkingSpace:	declared	source:full/coreimage/CIImage.swift#matchedToWorkingSpace	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageByColorMatchingWorkingSpaceToColorSpace:	declared	source:full/coreimage/CIImage.swift#matchedFromWorkingSpace	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)imageByColorMatchingColorSpaceToWorkingSpace:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageLabRoundTripAndColorMatch	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByColorMatchingWorkingSpaceToColorSpace:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageLabRoundTripAndColorMatch	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByCompositingOverImage:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCICropAffineAndSourceOverFilters	focused Linux runtime assertion
-c:objc(cs)CIImage(im)imageByConvertingLabToWorkingSpace	declared	source:full/coreimage/CIImage.swift#convertingLabToWorkingSpace	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageByConvertingWorkingSpaceToLab	declared	source:full/coreimage/CIImage.swift#convertingWorkingSpaceToLab	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)imageByConvertingLabToWorkingSpace	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageLabRoundTripAndColorMatch	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByConvertingWorkingSpaceToLab	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageLabRoundTripAndColorMatch	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageByCroppingToRect:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
-c:objc(cs)CIImage(im)imageByInsertingIntermediate	declared	source:full/coreimage/CIImage.swift#insertingIntermediate	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageByInsertingIntermediate:	declared	source:full/coreimage/CIImage.swift#insertingIntermediate	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageByInsertingTiledIntermediate	declared	source:full/coreimage/CIImage.swift#insertingTiledIntermediate	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageByPremultiplyingAlpha	declared	source:full/coreimage/CIImage.swift#premultiplyingAlpha	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageBySamplingLinear	declared	source:full/coreimage/CIImage.swift#samplingLinear	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageBySamplingNearest	declared	source:full/coreimage/CIImage.swift#samplingNearest	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageBySettingAlphaOneInExtent:	declared	source:full/coreimage/CIImage.swift#settingAlphaOne	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageBySettingContentAverageLightLevel:	declared	source:full/coreimage/CIImage.swift#settingContentAverageLightLevel	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)imageByInsertingIntermediate	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageInsertIntermediateGainMapAndTransformQuality	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByInsertingIntermediate:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageInsertIntermediateGainMapAndTransformQuality	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByInsertingTiledIntermediate	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageInsertIntermediateGainMapAndTransformQuality	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageByPremultiplyingAlpha	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImagePremultiplyUnpremultiplyAlpha	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageBySamplingLinear	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageSamplingNearestVersusLinear	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageBySamplingNearest	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageSamplingNearestVersusLinear	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageBySettingAlphaOneInExtent:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageSettingAlphaOneAndOpaque	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageBySettingContentAverageLightLevel:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageBySettingContentHeadroom:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
 c:objc(cs)CIImage(im)imageBySettingProperties:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
-c:objc(cs)CIImage(im)imageByUnpremultiplyingAlpha	declared	source:full/coreimage/CIImage.swift#unpremultiplyingAlpha	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageTransformForCGOrientation:	declared	source:full/coreimage/CIImage.swift#orientationTransform	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)imageTransformForOrientation:	declared	source:full/coreimage/CIImage.swift#orientationTransform	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)imageByUnpremultiplyingAlpha	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImagePremultiplyUnpremultiplyAlpha	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageTransformForCGOrientation:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageOrientationTransforms	focused Linux runtime assertion
+c:objc(cs)CIImage(im)imageTransformForOrientation:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageOrientationTransforms	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithBitmapData:bytesPerRow:size:format:colorSpace:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithCGImage:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithCGImage:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithCGImage:options:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithCGImage:options:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
-c:objc(cs)CIImage(im)initWithCGImageSource:index:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVImageBuffer:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVImageBuffer:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVPixelBuffer:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIImage(im)initWithCGImageSource:index:options:	unavailable		requires ImageIO.CGImageSource decoder daemon; ImageIO is not a declared dependency
+c:objc(cs)CIImage(im)initWithCGImageSource:index:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires ImageIO.CGImageSource decoder daemon; ImageIO is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVImageBuffer:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVImageBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVImageBuffer:options:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVImageBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(im)initWithCVPixelBuffer:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
 c:objc(cs)CIImage(im)initWithColor:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithContentsOfURL:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithContentsOfURL:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithContentsOfURL:options:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
-c:objc(cs)CIImage(im)initWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	declared	source:full/coreimage/CIImage.swift#init	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)initWithContentsOfURL:options:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithData:	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
 c:objc(cs)CIImage(im)initWithData:options:	implemented	test:full/coreimage/tests/agent/CIContextBehaviorTests.swift#testCIContextPNGAndJPEGRepresentation	focused Linux runtime assertion
-c:objc(cs)CIImage(im)initWithDepthData:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithDepthData:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithIOSurface:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithIOSurface:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithImageProvider:size::format:colorSpace:options:	declared	source:full/coreimage/CIImage.swift#init	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)initWithMTLTexture:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:options:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(im)initWithTexture:size:flipped:colorSpace:	declared	source:full/coreimage/CIImage.swift#init	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(im)regionOfInterestForImage:inRect:	declared	source:full/coreimage/CIImage.swift#regionOfInterest	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(im)initWithDepthData:	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(im)initWithDepthData:options:	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(im)initWithIOSurface:	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIImage(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIImage(im)initWithIOSurface:options:	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIImage(im)initWithIOSurface:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIImage(im)initWithImageProvider:size::format:colorSpace:options:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
+c:objc(cs)CIImage(im)initWithMTLTexture:options:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIImage(im)initWithMTLTexture:options:::SYNTHESIZED::c:objc(cs)CIImage	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(im)initWithPortaitEffectsMatte:options:	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(im)initWithSemanticSegmentationMatte:options:	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(im)initWithTexture:size:flipped:colorSpace:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
+c:objc(cs)CIImage(im)regionOfInterestForImage:inRect:	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
 c:objc(cs)CIImage(py)CGImage	implemented	test:full/coreimage/tests/agent/CIBarcodeTests.swift#testCIQRCodeISO18004Codewords	focused Linux runtime assertion
 c:objc(cs)CIImage(py)colorSpace	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
-c:objc(cs)CIImage(py)contentAverageLightLevel	declared	source:full/coreimage/CIImage.swift#contentAverageLightLevel	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(py)contentAverageLightLevel	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
 c:objc(cs)CIImage(py)contentHeadroom	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageColorExtentCrop	focused Linux runtime assertion
-c:objc(cs)CIImage(py)depthData	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIImage(py)depthData	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
 c:objc(cs)CIImage(py)extent	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
-c:objc(cs)CIImage(py)metalTexture	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(py)opaque	declared	source:full/coreimage/CIImage.swift#isOpaque	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(py)pixelBuffer	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(py)portraitEffectsMatte	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(py)properties	declared	source:full/coreimage/CIImage.swift#properties	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImage(py)semanticSegmentationMatte	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImage(py)url	declared	source:full/coreimage/CIImage.swift#url	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImage(py)metalTexture	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIImage(py)opaque	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageSettingAlphaOneAndOpaque	focused Linux runtime assertion
+c:objc(cs)CIImage(py)pixelBuffer	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIImage(py)portraitEffectsMatte	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(py)properties	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
+c:objc(cs)CIImage(py)semanticSegmentationMatte	unavailable		requires AVFoundation camera depth/matte hardware and entitlements; AVFoundation is not a declared dependency
+c:objc(cs)CIImage(py)url	implemented	test:full/coreimage/tests/agent/CIImageDepthTests.swift#testCIImageAutoAdjustProviderTextureURLAndROI	focused Linux runtime assertion
 c:objc(cs)CIImageAccumulator	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
 c:objc(cs)CIImageAccumulator(im)clear	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
 c:objc(cs)CIImageAccumulator(im)image	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
@@ -602,15 +602,15 @@ c:objc(cs)CIImageAccumulator(im)setImage:	implemented	test:full/coreimage/tests/
 c:objc(cs)CIImageAccumulator(im)setImage:dirtyRect:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
 c:objc(cs)CIImageAccumulator(py)extent	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
 c:objc(cs)CIImageAccumulator(py)format	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIImageAccumulator	focused Linux runtime assertion
-c:objc(cs)CIImageProcessorKernel	declared	source:full/coreimage/CIKernel.swift#CIImageProcessorKernel	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImageProcessorKernel	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIImageProcessorKernelROIAndFormat	focused Linux runtime assertion
 c:objc(cs)CIImageProcessorKernel(cm)applyWithExtent:inputs:arguments:error:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
-c:objc(cs)CIImageProcessorKernel(cm)applyWithExtents:inputs:arguments:error:	declared	source:full/coreimage/CIKernel.swift#apply	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImageProcessorKernel(cm)formatForInputAtIndex:	declared	source:full/coreimage/CIKernel.swift#formatForInput	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImageProcessorKernel(cm)outputFormatAtIndex:arguments:	declared	source:full/coreimage/CIKernel.swift#outputFormat	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:output:error:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:outputs:error:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIImageProcessorKernel(cm)roiForInput:arguments:outputRect:	declared	source:full/coreimage/CIKernel.swift#roi	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIImageProcessorKernel(cm)roiTileArrayForInput:arguments:outputRect:	declared	source:full/coreimage/CIKernel.swift#roiTileArray	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIImageProcessorKernel(cm)applyWithExtents:inputs:arguments:error:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIImageProcessorKernelROIAndFormat	focused Linux runtime assertion
+c:objc(cs)CIImageProcessorKernel(cm)formatForInputAtIndex:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIImageProcessorKernelROIAndFormat	focused Linux runtime assertion
+c:objc(cs)CIImageProcessorKernel(cm)outputFormatAtIndex:arguments:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIImageProcessorKernelROIAndFormat	focused Linux runtime assertion
+c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:output:error:	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(cs)CIImageProcessorKernel(cm)processWithInputs:arguments:outputs:error:	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(cs)CIImageProcessorKernel(cm)roiForInput:arguments:outputRect:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIImageProcessorKernelROIAndFormat	focused Linux runtime assertion
+c:objc(cs)CIImageProcessorKernel(cm)roiTileArrayForInput:arguments:outputRect:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIImageProcessorKernelROIAndFormat	focused Linux runtime assertion
 c:objc(cs)CIImageProcessorKernel(cpy)outputFormat	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
 c:objc(cs)CIImageProcessorKernel(cpy)outputIsOpaque	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
 c:objc(cs)CIImageProcessorKernel(cpy)synchronizeInputs	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
@@ -623,8 +623,8 @@ c:objc(cs)CIKernel(cm)kernelWithString:::SYNTHESIZED::c:objc(cs)CIKernel	impleme
 c:objc(cs)CIKernel(cm)kernelsWithMetalString:error:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
 c:objc(cs)CIKernel(cm)kernelsWithString:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
 c:objc(cs)CIKernel(im)applyWithExtent:roiCallback:arguments:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
-c:objc(cs)CIKernel(im)setROISelector:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIKernel(py)name	declared	source:full/coreimage/CIKernel.swift#name	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIKernel(im)setROISelector:	unavailable		requires Objective-C selector dispatch into a Metal/CIKL kernel compiler, which isolated Linux does not ship
+c:objc(cs)CIKernel(py)name	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIKernelNameAndProvideImageData	focused Linux runtime assertion
 c:objc(cs)CIPDF417CodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
 c:objc(cs)CIPDF417CodeDescriptor(im)initWithPayload:isCompact:rowCount:columnCount:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
 c:objc(cs)CIPDF417CodeDescriptor(py)columnCount	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
@@ -637,109 +637,109 @@ c:objc(cs)CIQRCodeDescriptor(py)errorCorrectedPayload	implemented	test:full/core
 c:objc(cs)CIQRCodeDescriptor(py)errorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
 c:objc(cs)CIQRCodeDescriptor(py)maskPattern	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
 c:objc(cs)CIQRCodeDescriptor(py)symbolVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
-c:objc(cs)CIQRCodeFeature	declared	source:full/coreimage/CIDetector.swift#CIQRCodeFeature	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)bottomLeft	declared	source:full/coreimage/CIDetector.swift#bottomLeft	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)bottomRight	declared	source:full/coreimage/CIDetector.swift#bottomRight	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)messageString	declared	source:full/coreimage/CIDetector.swift#messageString	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)symbolDescriptor	declared	source:full/coreimage/CIDetector.swift#symbolDescriptor	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)topLeft	declared	source:full/coreimage/CIDetector.swift#topLeft	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIQRCodeFeature(py)topRight	declared	source:full/coreimage/CIDetector.swift#topRight	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIQRCodeFeature	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)bottomLeft	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)bottomRight	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)bounds	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)messageString	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)symbolDescriptor	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)topLeft	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
+c:objc(cs)CIQRCodeFeature(py)topRight	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
 c:objc(cs)CIRAWFilter	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
-c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:::SYNTHESIZED::c:objc(cs)CIRAWFilter	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIRAWFilter(cm)filterWithCVPixelBuffer:properties:::SYNTHESIZED::c:objc(cs)CIRAWFilter	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
 c:objc(cs)CIRAWFilter(cm)filterWithImageData:identifierHint:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
 c:objc(cs)CIRAWFilter(cm)filterWithImageURL:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
 c:objc(cs)CIRAWFilter(cpy)supportedCameraModels	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIRAWFilterFailClosed	focused Linux runtime assertion
-c:objc(cs)CIRAWFilter(py)baselineExposure	declared	source:full/coreimage/CISupport.swift#baselineExposure	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)boostAmount	declared	source:full/coreimage/CISupport.swift#boostAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)boostShadowAmount	declared	source:full/coreimage/CISupport.swift#boostShadowAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)colorNoiseReductionAmount	declared	source:full/coreimage/CISupport.swift#colorNoiseReductionAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)colorNoiseReductionSupported	declared	source:full/coreimage/CISupport.swift#isColorNoiseReductionSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)contrastAmount	declared	source:full/coreimage/CISupport.swift#contrastAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)contrastSupported	declared	source:full/coreimage/CISupport.swift#isContrastSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)decoderVersion	declared	source:full/coreimage/CISupport.swift#decoderVersion	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)detailAmount	declared	source:full/coreimage/CISupport.swift#detailAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)detailSupported	declared	source:full/coreimage/CISupport.swift#isDetailSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)draftModeEnabled	declared	source:full/coreimage/CISupport.swift#isDraftModeEnabled	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)exposure	declared	source:full/coreimage/CISupport.swift#exposure	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)extendedDynamicRangeAmount	declared	source:full/coreimage/CISupport.swift#extendedDynamicRangeAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)gamutMappingEnabled	declared	source:full/coreimage/CISupport.swift#isGamutMappingEnabled	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)highlightRecoveryEnabled	declared	source:full/coreimage/CISupport.swift#isHighlightRecoveryEnabled	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)highlightRecoverySupported	declared	source:full/coreimage/CISupport.swift#isHighlightRecoverySupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)lensCorrectionEnabled	declared	source:full/coreimage/CISupport.swift#isLensCorrectionEnabled	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)lensCorrectionSupported	declared	source:full/coreimage/CISupport.swift#isLensCorrectionSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)linearSpaceFilter	declared	source:full/coreimage/CISupport.swift#linearSpaceFilter	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)localToneMapAmount	declared	source:full/coreimage/CISupport.swift#localToneMapAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)localToneMapSupported	declared	source:full/coreimage/CISupport.swift#isLocalToneMapSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionAmount	declared	source:full/coreimage/CISupport.swift#luminanceNoiseReductionAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionSupported	declared	source:full/coreimage/CISupport.swift#isLuminanceNoiseReductionSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)moireReductionAmount	declared	source:full/coreimage/CISupport.swift#moireReductionAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)moireReductionSupported	declared	source:full/coreimage/CISupport.swift#isMoireReductionSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)nativeSize	declared	source:full/coreimage/CISupport.swift#nativeSize	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)neutralChromaticity	declared	source:full/coreimage/CISupport.swift#neutralChromaticity	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)neutralLocation	declared	source:full/coreimage/CISupport.swift#neutralLocation	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)neutralTemperature	declared	source:full/coreimage/CISupport.swift#neutralTemperature	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)neutralTint	declared	source:full/coreimage/CISupport.swift#neutralTint	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)orientation	declared	source:full/coreimage/CISupport.swift#orientation	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)portraitEffectsMatte	declared	source:full/coreimage/CISupport.swift#portraitEffectsMatte	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)previewImage	declared	source:full/coreimage/CISupport.swift#previewImage	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)properties	declared	source:full/coreimage/CISupport.swift#properties	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)scaleFactor	declared	source:full/coreimage/CISupport.swift#scaleFactor	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)semanticSegmentationGlassesMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationGlassesMatte	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)semanticSegmentationHairMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationHairMatte	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)semanticSegmentationSkinMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationSkinMatte	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)semanticSegmentationSkyMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationSkyMatte	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)semanticSegmentationTeethMatte	declared	source:full/coreimage/CISupport.swift#semanticSegmentationTeethMatte	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)shadowBias	declared	source:full/coreimage/CISupport.swift#shadowBias	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)sharpnessAmount	declared	source:full/coreimage/CISupport.swift#sharpnessAmount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)sharpnessSupported	declared	source:full/coreimage/CISupport.swift#isSharpnessSupported	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRAWFilter(py)supportedDecoderVersions	declared	source:full/coreimage/CISupport.swift#supportedDecoderVersions	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRectangleFeature	declared	source:full/coreimage/CIDetector.swift#CIRectangleFeature	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRectangleFeature(py)bottomLeft	declared	source:full/coreimage/CIDetector.swift#bottomLeft	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRectangleFeature(py)bottomRight	declared	source:full/coreimage/CIDetector.swift#bottomRight	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRectangleFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRectangleFeature(py)topLeft	declared	source:full/coreimage/CIDetector.swift#topLeft	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRectangleFeature(py)topRight	declared	source:full/coreimage/CIDetector.swift#topRight	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIRAWFilter(py)baselineExposure	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)boostAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)boostShadowAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)colorNoiseReductionAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)colorNoiseReductionSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)contrastAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)contrastSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)decoderVersion	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)detailAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)detailSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)draftModeEnabled	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)exposure	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)extendedDynamicRangeAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)gamutMappingEnabled	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)highlightRecoveryEnabled	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)highlightRecoverySupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)lensCorrectionEnabled	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)lensCorrectionSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)linearSpaceFilter	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)localToneMapAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)localToneMapSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)luminanceNoiseReductionSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)moireReductionAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)moireReductionSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)nativeSize	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)neutralChromaticity	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)neutralLocation	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)neutralTemperature	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)neutralTint	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)orientation	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)portraitEffectsMatte	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)previewImage	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)properties	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)scaleFactor	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)semanticSegmentationGlassesMatte	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)semanticSegmentationHairMatte	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)semanticSegmentationSkinMatte	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)semanticSegmentationSkyMatte	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)semanticSegmentationTeethMatte	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)shadowBias	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)sharpnessAmount	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)sharpnessSupported	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRAWFilter(py)supportedDecoderVersions	implemented	test:full/coreimage/tests/agent/CIRAWFilterDepthTests.swift#testCIRAWFilterPropertyStateMachine	focused Linux runtime assertion
+c:objc(cs)CIRectangleFeature	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIRectangleFeatureCornersFromBounds	focused Linux runtime assertion
+c:objc(cs)CIRectangleFeature(py)bottomLeft	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIRectangleFeatureCornersFromBounds	focused Linux runtime assertion
+c:objc(cs)CIRectangleFeature(py)bottomRight	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIRectangleFeatureCornersFromBounds	focused Linux runtime assertion
+c:objc(cs)CIRectangleFeature(py)bounds	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIRectangleFeatureCornersFromBounds	focused Linux runtime assertion
+c:objc(cs)CIRectangleFeature(py)topLeft	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIRectangleFeatureCornersFromBounds	focused Linux runtime assertion
+c:objc(cs)CIRectangleFeature(py)topRight	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIRectangleFeatureCornersFromBounds	focused Linux runtime assertion
 c:objc(cs)CIRenderDestination	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
 c:objc(cs)CIRenderDestination(im)initWithBitmapData:width:height:bytesPerRow:format:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
-c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:	declared	source:full/coreimage/CISupport.swift#init	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:::SYNTHESIZED::c:objc(cs)CIRenderDestination	declared	source:full/coreimage/CISupport.swift#init	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(im)initWithIOSurface:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIRenderDestination(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIRenderDestination	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:::SYNTHESIZED::c:objc(cs)CIRenderDestination	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIRenderDestination(im)initWithPixelBuffer:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)CIRenderDestination(im)initWithWidth:height:pixelFormat:commandBuffer:mtlTextureProvider:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(im)initWithGLTexture:target:width:height:::SYNTHESIZED::c:objc(cs)CIRenderDestination	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(im)initWithIOSurface:	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIRenderDestination(im)initWithIOSurface:::SYNTHESIZED::c:objc(cs)CIRenderDestination	unavailable		requires IOSurface kernel shared-memory object; IOSurface is not a declared dependency
+c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIRenderDestination(im)initWithMTLTexture:commandBuffer:::SYNTHESIZED::c:objc(cs)CIRenderDestination	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)CIRenderDestination(im)initWithPixelBuffer:	unavailable		requires CoreVideo.CVPixelBuffer hardware buffer; CoreVideo is not a declared dependency
+c:objc(cs)CIRenderDestination(im)initWithWidth:height:pixelFormat:commandBuffer:mtlTextureProvider:	unavailable		requires Metal command buffer / texture hardware; Metal is not a declared dependency
 c:objc(cs)CIRenderDestination(py)alphaMode	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
-c:objc(cs)CIRenderDestination(py)blendKernel	declared	source:full/coreimage/CISupport.swift#blendKernel	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(py)blendsInDestinationColorSpace	declared	source:full/coreimage/CISupport.swift#blendsInDestinationColorSpace	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(py)captureTraceURL	declared	source:full/coreimage/CISupport.swift#captureTraceURL	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(py)clamped	declared	source:full/coreimage/CISupport.swift#isClamped	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(py)colorSpace	declared	source:full/coreimage/CISupport.swift#colorSpace	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(py)dithered	declared	source:full/coreimage/CISupport.swift#isDithered	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderDestination(py)flipped	declared	source:full/coreimage/CISupport.swift#isFlipped	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIRenderDestination(py)blendKernel	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)blendsInDestinationColorSpace	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)captureTraceURL	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)clamped	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)colorSpace	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)dithered	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
+c:objc(cs)CIRenderDestination(py)flipped	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderDestinationPropertyState	focused Linux runtime assertion
 c:objc(cs)CIRenderDestination(py)height	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
 c:objc(cs)CIRenderDestination(py)width	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
-c:objc(cs)CIRenderInfo	declared	source:full/coreimage/CISupport.swift#CIRenderInfo	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderInfo(py)kernelCompileTime	declared	source:full/coreimage/CISupport.swift#kernelCompileTime	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderInfo(py)kernelExecutionTime	declared	source:full/coreimage/CISupport.swift#kernelExecutionTime	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderInfo(py)passCount	declared	source:full/coreimage/CISupport.swift#passCount	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderInfo(py)pixelsProcessed	declared	source:full/coreimage/CISupport.swift#pixelsProcessed	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderTask	declared	source:full/coreimage/CISupport.swift#CIRenderTask	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CIRenderTask(im)waitUntilCompletedAndReturnError:	declared	source:full/coreimage/CISupport.swift#waitUntilCompleted	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIRenderInfo	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
+c:objc(cs)CIRenderInfo(py)kernelCompileTime	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
+c:objc(cs)CIRenderInfo(py)kernelExecutionTime	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
+c:objc(cs)CIRenderInfo(py)passCount	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
+c:objc(cs)CIRenderInfo(py)pixelsProcessed	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
+c:objc(cs)CIRenderTask	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
+c:objc(cs)CIRenderTask(im)waitUntilCompletedAndReturnError:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIRenderInfoAndTaskWait	focused Linux runtime assertion
 c:objc(cs)CISampler	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
 c:objc(cs)CISampler(im)initWithImage:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
 c:objc(cs)CISampler(im)initWithImage:options:	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
 c:objc(cs)CISampler(py)definition	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
 c:objc(cs)CISampler(py)extent	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCISamplerAndRenderDestination	focused Linux runtime assertion
-c:objc(cs)CITextFeature	declared	source:full/coreimage/CIDetector.swift#CITextFeature	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CITextFeature(py)bottomLeft	declared	source:full/coreimage/CIDetector.swift#bottomLeft	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CITextFeature(py)bottomRight	declared	source:full/coreimage/CIDetector.swift#bottomRight	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CITextFeature(py)bounds	declared	source:full/coreimage/CIDetector.swift#bounds	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CITextFeature(py)subFeatures	declared	source:full/coreimage/CIDetector.swift#subFeatures	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CITextFeature(py)topLeft	declared	source:full/coreimage/CIDetector.swift#topLeft	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)CITextFeature(py)topRight	declared	source:full/coreimage/CIDetector.swift#topRight	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CITextFeature	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
+c:objc(cs)CITextFeature(py)bottomLeft	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
+c:objc(cs)CITextFeature(py)bottomRight	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
+c:objc(cs)CITextFeature(py)bounds	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
+c:objc(cs)CITextFeature(py)subFeatures	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
+c:objc(cs)CITextFeature(py)topLeft	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
+c:objc(cs)CITextFeature(py)topRight	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCITextFeatureCornersAndSubfeatures	focused Linux runtime assertion
 c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
 c:objc(cs)CIVector(cm)vectorWithCGAffineTransform:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
 c:objc(cs)CIVector(cm)vectorWithCGPoint:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
@@ -772,43 +772,43 @@ c:objc(cs)CIVector(py)Y	implemented	test:full/coreimage/tests/agent/CoreImageTes
 c:objc(cs)CIVector(py)Z	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
 c:objc(cs)CIVector(py)count	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
 c:objc(cs)CIVector(py)stringRepresentation	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIColorAndVectorValueSemantics	focused Linux runtime assertion
-c:objc(cs)CIWarpKernel	declared	source:full/coreimage/CIKernel.swift#CIWarpKernel	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIWarpKernel	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIWarpKernelInvokesROICallback	focused Linux runtime assertion
 c:objc(cs)CIWarpKernel(cm)kernelWithString:	implemented	test:full/coreimage/tests/agent/CIKernelDetectorTests.swift#testCIKernelFailClosedNoMetal	focused Linux runtime assertion
-c:objc(cs)CIWarpKernel(im)applyWithExtent:roiCallback:inputImage:arguments:	declared	source:full/coreimage/CIKernel.swift#apply	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)NSObject(im)provideImageData:bytesPerRow:origin::size::userInfo:	declared	source:full/coreimage/CISupport.swift#provideImageData	declaration compiles; no dedicated behavioural test in this pass
-c:objc(cs)NSObject(im)provideImageToMTLTexture:commandBuffer:originx:originy:width:height:userInfo:	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(cs)NSUserActivity(py)detectedBarcodeDescriptor	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIFilter	declared	source:full/coreimage/CIFilter.swift#CIFilterProtocol	declaration compiles; no dedicated behavioural test in this pass
+c:objc(cs)CIWarpKernel(im)applyWithExtent:roiCallback:inputImage:arguments:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIWarpKernelInvokesROICallback	focused Linux runtime assertion
+c:objc(cs)NSObject(im)provideImageData:bytesPerRow:origin::size::userInfo:	implemented	test:full/coreimage/tests/agent/CIRenderDepthTests.swift#testCIKernelNameAndProvideImageData	focused Linux runtime assertion
+c:objc(cs)NSObject(im)provideImageToMTLTexture:commandBuffer:originx:originy:width:height:userInfo:	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(cs)NSUserActivity(py)detectedBarcodeDescriptor	unavailable		requires Continuity/Handoff barcode-detection daemon on NSUserActivity; not available on isolated Linux
+c:objc(pl)CIFilter	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterConstructorAndProtocol	focused Linux runtime assertion
 c:objc(pl)CIFilter(cm)customAttributes	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterRegisterName	focused Linux runtime assertion
 c:objc(pl)CIFilter(py)outputImage	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCISepiaTonePixelFormula	focused Linux runtime assertion
-c:objc(pl)CIFilterConstructor	declared	source:full/coreimage/CIFilter.swift#CIFilterConstructor	declaration compiles; no dedicated behavioural test in this pass
+c:objc(pl)CIFilterConstructor	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterConstructorAndProtocol	focused Linux runtime assertion
 c:objc(pl)CIFilterConstructor(im)filterWithName:	implemented	test:full/coreimage/tests/agent/CIFilterMathTests.swift#testCIFilterRegisterName	focused Linux runtime assertion
-c:objc(pl)CIImageProcessorInput	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)baseAddress	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)bytesPerRow	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)digest	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)format	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)metalTexture	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)pixelBuffer	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)region	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)roiTileCount	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)roiTileIndex	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorInput(py)surface	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)baseAddress	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)bytesPerRow	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)digest	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)format	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)metalCommandBuffer	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)metalTexture	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)pixelBuffer	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)region	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
-c:objc(pl)CIImageProcessorOutput(py)surface	unavailable		Metal.MTLDevice / EAGLContext / IOSurface / CoreVideo.CVPixelBuffer / AVFoundation depth-matte types / CGImageSource / CIImageProcessorInput and Output are not declared dependencies; a module-local lookalike is forbidden.
+c:objc(pl)CIImageProcessorInput	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)baseAddress	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)bytesPerRow	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)digest	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)format	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)metalTexture	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(pl)CIImageProcessorInput(py)pixelBuffer	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)region	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)roiTileCount	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)roiTileIndex	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorInput(py)surface	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)baseAddress	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)bytesPerRow	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)digest	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)format	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)metalCommandBuffer	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(pl)CIImageProcessorOutput(py)metalTexture	unavailable		requires Metal.MTLDevice / MTLTexture / MTLCommandQueue GPU hardware; Metal is not a declared dependency
+c:objc(pl)CIImageProcessorOutput(py)pixelBuffer	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)region	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
+c:objc(pl)CIImageProcessorOutput(py)surface	unavailable		requires CIImageProcessorInput/Output Metal, IOSurface, or CVPixelBuffer backing; those types are not declared dependencies
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIBarcodeDescriptor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIBarcodeDescriptors	focused Linux runtime assertion
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIColor	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIColorStringRoundTrip	focused Linux runtime assertion
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIFilter	declared	source:full/coreimage/CIFilter.swift#init	declaration compiles; no dedicated behavioural test in this pass
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIFilter	implemented	test:full/coreimage/tests/agent/CIFilterXMPTests.swift#testCIFilterRAWInitializersFailClosed	focused Linux runtime assertion
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIImage	implemented	test:full/coreimage/tests/agent/CIImageBehaviorTests.swift#testCIImageInitVariantsAndExtentArithmetic	focused Linux runtime assertion
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIQRCodeFeature	declared	source:full/coreimage/CIDetector.swift#init	declaration compiles; no dedicated behavioural test in this pass
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIQRCodeFeature	implemented	test:full/coreimage/tests/agent/CIFeatureDepthTests.swift#testCIQRCodeFeatureMessageCornersAndCoder	focused Linux runtime assertion
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)CIVector	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIVectorComponents	focused Linux runtime assertion
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIDataMatrixCodeECCVersion	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CIQRCodeErrorCorrectionLevel	implemented	test:full/coreimage/tests/agent/CoreImageTests.swift#testCIEnums	focused Linux runtime assertion

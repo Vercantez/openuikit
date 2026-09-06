@@ -146,8 +146,17 @@ final class SimSceneRenderer {
         // SimScene process differs by 4656 px (maxd 148) — UIActivityIndicator
         // phase tracks process uptime. speed = 0 / timeOffset = 0 is the
         // oracle2 freeze; isolated and suite captures then agree.
-        wrapper.layer.speed = 0
-        wrapper.layer.timeOffset = 0
+        //
+        // MEASURED collection_list_plain, iPhone SE 2x / iOS 26.1: freezing
+        // before the first layout pins UICollectionViewListCell's
+        // self-size animation at estimated 52 while the model dump is
+        // already 70.5 (headerTopPadding 18.5). List scenes skip the
+        // freeze so the PNG is the rest state.
+        let freezeClock = !sceneJSONHasListAppearance(spec.rootJSON)
+        if freezeClock {
+            wrapper.layer.speed = 0
+            wrapper.layer.timeOffset = 0
+        }
         wrapper.addSubview(container)
         host.addSubview(wrapper)
         // Chrome scenes (spec v5.3): keep the scene OUT of the device's top

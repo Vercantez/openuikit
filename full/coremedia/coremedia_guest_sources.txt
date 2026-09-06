@@ -11,8 +11,10 @@ full/coremedia/CMMemoryPool.swift
 full/coremedia/CMMetadata.swift
 full/coremedia/CMOverlay.swift
 full/coremedia/CMQueue.swift
+full/coremedia/CMReadySampleBuffer.swift
 full/coremedia/CMSampleBuffer.swift
 full/coremedia/CMSampleBufferOverlay.swift
+full/coremedia/CMTag.swift
 full/coremedia/CMTime.swift
 full/coremedia/CMTimeRange.swift
 full/coremedia/CoreMedia.swift

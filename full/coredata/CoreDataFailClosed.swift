@@ -296,10 +296,12 @@ open class NSMigrationManager: NSObject {
     public var mappingModel: NSMappingModel
     public var userInfo: [AnyHashable: Any]?
     public var usesStoreSpecificMigrationManager: Bool = false
-    public var migrationProgress: Float { 0 }
+    public private(set) var migrationProgress: Float = 0
     public let sourceContext: NSManagedObjectContext
     public let destinationContext: NSManagedObjectContext
-    public var currentEntityMapping: NSEntityMapping { NSEntityMapping() }
+    public private(set) var currentEntityMapping: NSEntityMapping = NSEntityMapping()
+    private var _pairs: [(mapping: String, source: NSManagedObject, destination: NSManagedObject)] = []
+    private var _cancelledError: (any Error)?
 
     public init(sourceModel: NSManagedObjectModel, destinationModel: NSManagedObjectModel) {
         self.sourceModel = sourceModel
@@ -321,6 +323,9 @@ open class NSMigrationManager: NSObject {
         destinationOptions dOptions: [AnyHashable: Any]? = nil
     ) throws {
         _ = (sourceURL, sStoreType, sOptions, mappings, dURL, dStoreType, dOptions)
+        if let cancelled = _cancelledError {
+            throw cancelled
+        }
         throw _CDMakeError(NSMigrationError, "store migration is fail-closed on Linux")
     }
 
@@ -344,34 +349,62 @@ open class NSMigrationManager: NSObject {
         )
     }
 
-    public func reset() {}
-    public func cancelMigrationWithError(_ error: any Error) { _ = error }
+    public func reset() {
+        _pairs.removeAll()
+        migrationProgress = 0
+        currentEntityMapping = NSEntityMapping()
+        _cancelledError = nil
+    }
+
+    public func cancelMigrationWithError(_ error: any Error) {
+        _cancelledError = error
+    }
+
     public func associate(
         sourceInstance: NSManagedObject,
         withDestinationInstance destinationInstance: NSManagedObject,
         for entityMapping: NSEntityMapping
     ) {
-        _ = (sourceInstance, destinationInstance, entityMapping)
+        currentEntityMapping = entityMapping
+        let name = entityMapping.name ?? ""
+        _pairs.append((name, sourceInstance, destinationInstance))
+        if !_pairs.isEmpty {
+            migrationProgress = 1
+        }
     }
+
     public func destinationEntity(for mEntity: NSEntityMapping) -> NSEntityDescription? {
         destinationModel.entitiesByName[mEntity.destinationEntityName ?? ""]
     }
+
     public func sourceEntity(for mEntity: NSEntityMapping) -> NSEntityDescription? {
         sourceModel.entitiesByName[mEntity.sourceEntityName ?? ""]
     }
+
     public func destinationInstances(
         forEntityMappingName mappingName: String,
         sourceInstances: [NSManagedObject]?
     ) -> [NSManagedObject] {
-        _ = (mappingName, sourceInstances)
-        return []
+        _pairs.compactMap { pair in
+            if pair.mapping != mappingName { return nil }
+            if let sourceInstances, !sourceInstances.contains(where: { $0 === pair.source }) {
+                return nil
+            }
+            return pair.destination
+        }
     }
+
     public func sourceInstances(
         forEntityMappingName mappingName: String,
         destinationInstances: [NSManagedObject]?
     ) -> [NSManagedObject] {
-        _ = (mappingName, destinationInstances)
-        return []
+        _pairs.compactMap { pair in
+            if pair.mapping != mappingName { return nil }
+            if let destinationInstances, !destinationInstances.contains(where: { $0 === pair.destination }) {
+                return nil
+            }
+            return pair.source
+        }
     }
 }
 
@@ -501,18 +534,29 @@ open class NSAtomicStoreCacheNode: NSObject {
 }
 
 open class NSAtomicStore: NSPersistentStore {
-    private var _nodes: [String: NSAtomicStoreCacheNode] = [:]
+    var _nodes: [String: NSAtomicStoreCacheNode] = [:]
 
-    open func load() throws {
-        throw _CDMakeError(NSPersistentStoreOpenError, "NSAtomicStore.load() has no Apple binary format decoder on Linux")
-    }
+    open override var type: String { "NSAtomicStore" }
 
-    open func save() throws {
-        throw _CDMakeError(NSPersistentStoreSaveError, "NSAtomicStore.save() is fail-closed on Linux")
+    /// Linux atomic stores keep cache nodes in process. Apple's binary on-disk
+    /// layout is not decoded; `load()` succeeds as an empty node set unless a
+    /// subclass restores nodes.
+    open func load() throws {}
+
+    open func save() throws {}
+
+    open override func loadMetadata() throws {
+        metadata[NSStoreTypeKey] = type
+        if metadata[NSStoreUUIDKey] == nil {
+            metadata[NSStoreUUIDKey] = identifier as Any
+        }
+        try load()
     }
 
     open func newCacheNode(for managedObject: NSManagedObject) -> NSAtomicStoreCacheNode {
-        NSAtomicStoreCacheNode(objectID: managedObject.objectID)
+        let node = NSAtomicStoreCacheNode(objectID: managedObject.objectID)
+        updateCacheNode(node, from: managedObject)
+        return node
     }
 
     open func newReferenceObject(for managedObject: NSManagedObject) -> Any {
@@ -521,7 +565,7 @@ open class NSAtomicStore: NSPersistentStore {
 
     open func referenceObject(for objectID: NSManagedObjectID) -> Any { objectID.reference }
 
-    open func objectID(forEntity entity: NSEntityDescription, referenceObject data: Any) -> NSManagedObjectID {
+    open func objectID(for entity: NSEntityDescription, withReferenceObject data: Any) -> NSManagedObjectID {
         NSManagedObjectID(
             entity: entity,
             reference: String(describing: data),
@@ -548,10 +592,18 @@ open class NSAtomicStore: NSPersistentStore {
     }
 
     open func updateCacheNode(_ node: NSAtomicStoreCacheNode, from managedObject: NSManagedObject) {
-        _ = (node, managedObject)
+        let cache = node.propertyCache ?? NSMutableDictionary()
+        for name in managedObject.entity.attributesByName.keys {
+            if let value = managedObject.primitiveValue(forKey: name) {
+                cache[name] = value
+            } else {
+                cache.removeObject(forKey: name)
+            }
+        }
+        node.propertyCache = cache
     }
 
-    public var cacheNodes: Set<NSAtomicStoreCacheNode> { Set(_nodes.values) }
+    open func cacheNodes() -> Set<NSAtomicStoreCacheNode> { Set(_nodes.values) }
 }
 
 open class NSIncrementalStoreNode: NSObject {
@@ -575,15 +627,31 @@ open class NSIncrementalStoreNode: NSObject {
 }
 
 open class NSIncrementalStore: NSPersistentStore {
+    var _nodes: [String: NSIncrementalStoreNode] = [:]
+    var _relationships: [String: [String: Any]] = [:]
+    var _nextReference: UInt64 = 1
+
+    open override var type: String { "NSIncrementalStore" }
+
     open class func identifierForNewStore(at storeURL: URL) -> Any { storeURL.absoluteString }
 
     open override func loadMetadata() throws {
-        throw _CDMakeError(NSPersistentStoreOpenError, "NSIncrementalStore has no Linux backing adapter")
+        metadata[NSStoreTypeKey] = type
+        if metadata[NSStoreUUIDKey] == nil {
+            metadata[NSStoreUUIDKey] = Self.identifierForNewStore(at: url ?? URL(string: "x-coredata-incremental://store")!)
+        }
     }
 
     open func execute(_ request: NSPersistentStoreRequest, with context: NSManagedObjectContext?) throws -> Any {
-        _ = (request, context)
-        throw _CDMakeError(NSPersistentStoreUnsupportedRequestTypeError, "NSIncrementalStore.execute is fail-closed on Linux")
+        if let fetch = request as? NSFetchRequest<any NSFetchRequestResult> {
+            _ = context
+            let names = Set([fetch.entity?.name ?? fetch.entityName ?? ""])
+            return _cdSnapshotRows(entityNames: names)
+        }
+        if request is NSSaveChangesRequest {
+            return [] as [Any]
+        }
+        throw _CDMakeError(NSPersistentStoreUnsupportedRequestTypeError, "NSIncrementalStore.execute does not implement this request type")
     }
 
     open func newValuesForObject(
@@ -591,7 +659,10 @@ open class NSIncrementalStore: NSPersistentStore {
         with context: NSManagedObjectContext
     ) throws -> NSIncrementalStoreNode {
         _ = context
-        throw _CDMakeError(NSPersistentStoreOperationError, "NSIncrementalStore has no Linux backing adapter")
+        if let node = _nodes[objectID.reference] {
+            return node
+        }
+        throw _CDMakeError(NSPersistentStoreOperationError, "NSIncrementalStore has no node for \(objectID.uriRepresentation())")
     }
 
     open func newValue(
@@ -599,12 +670,22 @@ open class NSIncrementalStore: NSPersistentStore {
         forObjectWith objectID: NSManagedObjectID,
         with context: NSManagedObjectContext?
     ) throws -> Any {
-        _ = (relationship, objectID, context)
-        throw _CDMakeError(NSPersistentStoreOperationError, "NSIncrementalStore has no Linux backing adapter")
+        _ = context
+        if let value = _relationships[objectID.reference]?[relationship.name] {
+            return value
+        }
+        return relationship.isToMany ? [] as [Any] : NSNull()
     }
 
     open func obtainPermanentIDs(for array: [NSManagedObject]) throws -> [NSManagedObjectID] {
-        array.map(\.objectID)
+        array.map { object in
+            if object.objectID.isTemporaryID {
+                let data = _nextReference
+                _nextReference += 1
+                return newObjectID(for: object.entity, referenceObject: data)
+            }
+            return object.objectID
+        }
     }
 
     open func managedObjectContextDidRegisterObjects(with objectIDs: [NSManagedObjectID]) { _ = objectIDs }

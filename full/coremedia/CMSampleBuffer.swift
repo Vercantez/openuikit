@@ -131,6 +131,18 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
     public var outputDuration: CMTime { duration }
     public var outputDecodeTimeStamp: CMTime { decodeTimeStamp }
 
+    internal func replaceTimingField(_ keyPath: WritableKeyPath<CMSampleTimingInfo, CMTime>, with time: CMTime) {
+        lock.locked {
+            if timings.isEmpty {
+                var info = CMSampleTimingInfo.invalid
+                info[keyPath: keyPath] = time
+                timings = [info]
+            } else {
+                timings[0][keyPath: keyPath] = time
+            }
+        }
+    }
+
     private var outputPTS: CMTime?
 
     public init(referencing object: CMSampleBuffer) throws {
@@ -627,7 +639,10 @@ public func CMCopyDictionaryOfAttachments(
 }
 
 private func cmTotalDuration(_ timings: [CMSampleTimingInfo], count: Int) -> CMTime {
-    guard count > 0, let first = timings.first else { return .invalid }
+    guard let first = timings.first else { return .invalid }
+    if count <= 0 {
+        return first.duration
+    }
     if timings.count == 1 {
         return CMTimeMultiply(first.duration, multiplier: Int32(count))
     }

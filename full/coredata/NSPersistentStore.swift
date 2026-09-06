@@ -456,8 +456,26 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         options: [AnyHashable: Any]? = nil,
         withType storeType: String
     ) throws -> NSPersistentStore {
-        _ = (store, URL, options)
-        throw _CDUnsupportedStoreError(storeType)
+        let rows = _fetchRows(
+            entityName: "",
+            stores: [store],
+            includesSubentities: true
+        )
+        let allRows: [_CDStoredRow]
+        if rows.isEmpty {
+            allRows = _fetchAllRows(from: store)
+        } else {
+            allRows = rows
+        }
+        let destination = try addPersistentStore(
+            ofType: storeType,
+            configurationName: store.configurationName,
+            at: URL,
+            options: options
+        )
+        try _apply(rows: allRows, to: destination)
+        try remove(store)
+        return destination
     }
 
     public func migratePersistentStore(
@@ -476,7 +494,28 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
         sourceOptions: [AnyHashable: Any]? = nil,
         ofType storeType: String
     ) throws {
-        _ = (destinationURL, destinationOptions, sourceURL, sourceOptions)
+        _ = (destinationOptions, sourceOptions)
+        if storeType == NSSQLiteStoreType {
+            let fm = FileManager.default
+            if fm.fileExists(atPath: destinationURL.path) {
+                try fm.removeItem(at: destinationURL)
+            }
+            if fm.fileExists(atPath: sourceURL.path) {
+                try fm.copyItem(at: sourceURL, to: destinationURL)
+                return
+            }
+            throw _CDMakeError(NSPersistentStoreOperationError, "replacePersistentStore source SQLite file is missing")
+        }
+        if storeType == NSInMemoryStoreType {
+            if let source = persistentStore(for: sourceURL) {
+                let rows = _fetchAllRows(from: source)
+                if let destination = persistentStore(for: destinationURL) {
+                    try _apply(rows: rows, to: destination)
+                    return
+                }
+            }
+            throw _CDMakeError(NSPersistentStoreOperationError, "in-memory replacePersistentStore requires attached stores")
+        }
         throw _CDUnsupportedStoreError(storeType)
     }
 
@@ -503,17 +542,41 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
     ) -> [_CDStoredRow] {
         let targetStores = stores ?? persistentStores
         var rows: [_CDStoredRow] = []
-        let names = _entityNames(matching: entityName, includesSubentities: includesSubentities)
+        let names: Set<String>
+        if entityName.isEmpty {
+            names = Set(managedObjectModel.entities.compactMap(\.name))
+        } else {
+            names = _entityNames(matching: entityName, includesSubentities: includesSubentities)
+        }
         for store in targetStores {
-            guard let rowStore = store as? _CDRowStore else { continue }
-            rows.append(contentsOf: rowStore._cdAllRows(entityNames: names))
+            if let rowStore = store as? _CDRowStore {
+                rows.append(contentsOf: rowStore._cdAllRows(entityNames: names))
+            } else if let atomic = store as? NSAtomicStore {
+                rows.append(contentsOf: atomic._cdSnapshotRows(entityNames: names))
+            } else if let incremental = store as? NSIncrementalStore {
+                rows.append(contentsOf: incremental._cdSnapshotRows(entityNames: names))
+            }
         }
         return rows
+    }
+
+    func _fetchAllRows(from store: NSPersistentStore) -> [_CDStoredRow] {
+        _fetchRows(entityName: "", stores: [store], includesSubentities: true)
+    }
+
+    func _apply(rows: [_CDStoredRow], to store: NSPersistentStore) throws {
+        try _cdApplySaveOnStore(store, inserted: rows, updated: [], deleted: [])
     }
 
     func _row(for objectID: NSManagedObjectID) -> _CDStoredRow? {
         for store in persistentStores {
             if let rowStore = store as? _CDRowStore, let row = rowStore._cdRow(for: objectID.reference) {
+                return row
+            }
+            if let atomic = store as? NSAtomicStore, let row = atomic._cdSnapshotRow(for: objectID.reference) {
+                return row
+            }
+            if let incremental = store as? NSIncrementalStore, let row = incremental._cdSnapshotRow(for: objectID.reference) {
                 return row
             }
         }
@@ -564,11 +627,34 @@ open class NSPersistentStoreCoordinator: NSObject, NSLocking {
             buckets[id] = entry
         }
         for entry in buckets.values {
-            guard let rowStore = entry.store as? _CDRowStore else {
-                throw _CDMakeError(NSPersistentStoreSaveError, "store type \(entry.store.type) cannot save rows")
-            }
-            try rowStore._cdApplySave(inserted: entry.inserted, updated: entry.updated, deleted: entry.deleted)
+            try _cdApplySaveOnStore(
+                entry.store,
+                inserted: entry.inserted,
+                updated: entry.updated,
+                deleted: entry.deleted
+            )
         }
+    }
+
+    private func _cdApplySaveOnStore(
+        _ store: NSPersistentStore,
+        inserted: [_CDStoredRow],
+        updated: [_CDStoredRow],
+        deleted: [String]
+    ) throws {
+        if let rowStore = store as? _CDRowStore {
+            try rowStore._cdApplySave(inserted: inserted, updated: updated, deleted: deleted)
+            return
+        }
+        if let atomic = store as? NSAtomicStore {
+            try atomic._cdCommitRows(inserted: inserted, updated: updated, deleted: deleted)
+            return
+        }
+        if let incremental = store as? NSIncrementalStore {
+            try incremental._cdCommitRows(inserted: inserted, updated: updated, deleted: deleted)
+            return
+        }
+        throw _CDMakeError(NSPersistentStoreSaveError, "store type \(store.type) cannot save rows")
     }
 
     private func _entityNames(matching name: String, includesSubentities: Bool) -> Set<String> {
@@ -647,6 +733,137 @@ open class NSPersistentContainer: NSObject {
         let context = newBackgroundContext()
         return try await context.perform(schedule: .enqueued) {
             try block(context)
+        }
+    }
+}
+
+extension NSAtomicStore {
+    func _cdSnapshotRows(entityNames: Set<String>) -> [_CDStoredRow] {
+        _nodes.values.compactMap { node in
+            let entityName = node.objectID.entity.name ?? ""
+            guard entityNames.contains(entityName) else { return nil }
+            var values: [String: Any] = [:]
+            if let cache = node.propertyCache {
+                for (key, value) in cache {
+                    if let name = key as? String {
+                        values[name] = value
+                    }
+                }
+            }
+            return _CDStoredRow(entityName: entityName, reference: node.objectID.reference, values: values)
+        }
+    }
+
+    func _cdSnapshotRow(for reference: String) -> _CDStoredRow? {
+        guard let node = _nodes[reference] else { return nil }
+        var values: [String: Any] = [:]
+        if let cache = node.propertyCache {
+            for (key, value) in cache {
+                if let name = key as? String {
+                    values[name] = value
+                }
+            }
+        }
+        return _CDStoredRow(
+            entityName: node.objectID.entity.name ?? "",
+            reference: reference,
+            values: values
+        )
+    }
+
+    func _cdCommitRows(inserted: [_CDStoredRow], updated: [_CDStoredRow], deleted: [String]) throws {
+        let removing = cacheNodes().filter { deleted.contains($0.objectID.reference) }
+        if !removing.isEmpty {
+            willRemoveCacheNodes(removing)
+        }
+        var incoming: Set<NSAtomicStoreCacheNode> = []
+        for row in inserted + updated {
+            let entity = persistentStoreCoordinator?.managedObjectModel.entitiesByName[row.entityName]
+                ?? NSEntityDescription()
+            let objectID = objectID(for: entity, withReferenceObject: row.reference)
+            let node = cacheNode(for: objectID) ?? NSAtomicStoreCacheNode(objectID: objectID)
+            let cache = node.propertyCache ?? NSMutableDictionary()
+            for (key, value) in row.values {
+                cache[key] = value
+            }
+            node.propertyCache = cache
+            incoming.insert(node)
+        }
+        if !incoming.isEmpty {
+            addCacheNodes(incoming)
+        }
+        try save()
+    }
+}
+
+extension NSIncrementalStore {
+    func _cdSnapshotRows(entityNames: Set<String>) -> [_CDStoredRow] {
+        _nodes.values.compactMap { node in
+            let entityName = node.objectID.entity.name ?? ""
+            guard entityNames.contains(entityName) else { return nil }
+            var values: [String: Any] = [:]
+            for property in node.objectID.entity.properties {
+                if let value = node.value(for: property) {
+                    values[property.name] = value
+                }
+            }
+            if let related = _relationships[node.objectID.reference] {
+                for (key, value) in related {
+                    values[key] = value
+                }
+            }
+            return _CDStoredRow(entityName: entityName, reference: node.objectID.reference, values: values)
+        }
+    }
+
+    func _cdSnapshotRow(for reference: String) -> _CDStoredRow? {
+        guard let node = _nodes[reference] else { return nil }
+        var values: [String: Any] = [:]
+        for property in node.objectID.entity.properties {
+            if let value = node.value(for: property) {
+                values[property.name] = value
+            }
+        }
+        if let related = _relationships[reference] {
+            for (key, value) in related {
+                values[key] = value
+            }
+        }
+        return _CDStoredRow(
+            entityName: node.objectID.entity.name ?? "",
+            reference: reference,
+            values: values
+        )
+    }
+
+    func _cdCommitRows(inserted: [_CDStoredRow], updated: [_CDStoredRow], deleted: [String]) throws {
+        for reference in deleted {
+            _nodes.removeValue(forKey: reference)
+            _relationships.removeValue(forKey: reference)
+        }
+        for row in inserted + updated {
+            let entity = persistentStoreCoordinator?.managedObjectModel.entitiesByName[row.entityName]
+                ?? NSEntityDescription()
+            let objectID = newObjectID(for: entity, referenceObject: row.reference)
+            var attributeValues: [String: Any] = [:]
+            var related: [String: Any] = [:]
+            for (key, value) in row.values {
+                if entity.relationshipsByName[key] != nil {
+                    related[key] = value
+                } else {
+                    attributeValues[key] = value
+                }
+            }
+            if let existing = _nodes[row.reference] {
+                existing.update(withValues: attributeValues, version: existing.version + 1)
+            } else {
+                _nodes[row.reference] = NSIncrementalStoreNode(
+                    objectID: objectID,
+                    withValues: attributeValues,
+                    version: 1
+                )
+            }
+            _relationships[row.reference] = related
         }
     }
 }

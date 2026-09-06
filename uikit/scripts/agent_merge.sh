@@ -272,8 +272,12 @@ echo "==> Linux build"
 docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender 2>&1 | grep -E "error|Build of" | tail -3' | tail -3
 # openrender AND the ConformanceApps target (openhost needs SDL2, absent in the
 # plain image): the Ledger app's DateComponentsFormatter (unavailable in corelibs)
-# passed the openrender-only step and broke the Docker verify (#468).
-docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1 && swift build -c release --target ConformanceApps >/dev/null 2>&1' || { echo "LINUX BUILD RED"; exit 7; }
+# passed the openrender-only step and broke the Docker verify (#468). AND the test
+# bundle: TextKitTests' bare `NotificationCenter` was ambiguous only on corelibs and
+# reached main because only the Docker verify builds tests (verify83). Only the
+# OpenUIKitTests target: --build-tests would also build openhost, whose CSDL2
+# needs SDL2 (absent in the plain image).
+docker run --rm -v "$WT/uikit":/src:ro swift:6.2-noble bash -c 'cp -r /src /work && cd /work && rm -f Package.resolved && swift build -c release --product openrender >/dev/null 2>&1 && swift build -c release --target ConformanceApps >/dev/null 2>&1 && swift build --target OpenUIKitTests 2>&1 | grep -E "error:" | head -5; test ${PIPESTATUS[0]} -eq 0' || { echo "LINUX BUILD RED"; exit 7; }
 cd "$WT" && git merge --abort 2>/dev/null || true
 cd "$ROOT"
 [[ -n "${CHECK_ONLY:-}" ]] && { echo "checks passed (CHECK_ONLY)"; exit 0; }

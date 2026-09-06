@@ -84,6 +84,14 @@ open class UICollectionReusableView: UIView, ReusableView {
         alpha = layoutAttributes.alpha
         isHidden = layoutAttributes.isHidden
     }
+
+    /// Self-sizing hook. UICollectionViewListCell returns a height fitted
+    /// to its content configuration; the base class keeps the layout's size.
+    open func preferredLayoutAttributesFitting(
+        _ layoutAttributes: UICollectionViewLayoutAttributes
+    ) -> UICollectionViewLayoutAttributes {
+        layoutAttributes
+    }
 }
 
 // MARK: - UICollectionViewCell
@@ -119,10 +127,20 @@ open class UICollectionViewCell: UICollectionReusableView {
     }
 
     open var isSelected = false {
-        didSet { if isSelected != oldValue { updateSelectionOverlay() } }
+        didSet {
+            if isSelected != oldValue {
+                updateSelectionOverlay()
+                (self as? UICollectionViewListCell)?.setNeedsUpdateConfiguration()
+            }
+        }
     }
     open var isHighlighted = false {
-        didSet { if isHighlighted != oldValue { updateSelectionOverlay() } }
+        didSet {
+            if isHighlighted != oldValue {
+                updateSelectionOverlay()
+                (self as? UICollectionViewListCell)?.setNeedsUpdateConfiguration()
+            }
+        }
     }
 
     /// The collection view currently displaying this cell (set while bound).

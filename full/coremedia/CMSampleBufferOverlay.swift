@@ -423,6 +423,13 @@ extension CMSampleBuffer {
     }
 }
 
+extension CMSampleBuffer {
+    public protocol Content {}
+    public protocol ContentWithFormatDescription: Content {}
+}
+
+extension CMReadOnlyDataBlockBuffer: CMSampleBuffer.Content {}
+
 internal func cmSampleKeyName(_ key: CFString) -> String {
     unsafeBitCast(key, to: NSString.self) as String
 }
