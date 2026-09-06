@@ -34,13 +34,14 @@ private final class ProbeAnchorProvider:
 func testIdentityDocumentPresentmentControllingProtocol() {
     let controller = IdentityDocumentWebPresentmentController()
     let asProtocol: any IdentityDocumentPresentmentControlling = controller
-    precondition(asProtocol is IdentityDocumentWebPresentmentController)
+    _ = asProtocol
 }
 
 func testIdentityDocumentWebPresentmentControllerClass() {
     let controller = IdentityDocumentWebPresentmentController()
     precondition(type(of: controller) == IdentityDocumentWebPresentmentController.self)
-    precondition(controller is IdentityDocumentPresentmentControlling)
+    let asProtocol: any IdentityDocumentPresentmentControlling = controller
+    _ = asProtocol
     precondition(controller.delegate == nil)
     precondition(controller.presentationContextProvider == nil)
     precondition(controller.hostPhase == .idle)

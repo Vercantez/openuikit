@@ -51,6 +51,8 @@ public struct IdentityDocumentOptionalRequestScene<Scene: IdentityDocumentReques
 /// Composition is process-local and never registers ExtensionKit scenes.
 @resultBuilder
 public struct IdentityDocumentRequestSceneBuilder: Sendable {
+    public init() {}
+
     public static func buildBlock<Scene: IdentityDocumentRequestScene>(
         _ scene: Scene
     ) -> Scene {

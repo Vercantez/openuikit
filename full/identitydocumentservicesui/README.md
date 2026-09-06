@@ -41,6 +41,15 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `origin/agent/fw-identitydocumentservicesui` did not exist; this pass
 publishes that branch from the Cursor-created work branch.
 
+`bash full/identitydocumentservicesui/tests/acceptance/test_host.sh` ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=IdentityDocumentServicesUI lane=leaf-full symbols=31
+FRAMEWORK_FANOUT_REFERENCE_OK
+IDENTITYDOCUMENTSERVICESUI_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=IdentityDocumentServicesUI dylib=libIdentityDocumentServicesUI.dylib
+```
+
 ### What is real
 
 - `ISO18013MobileDocumentRequestContext.requestingWebsiteOrigin` defaults to
