@@ -700,8 +700,8 @@ c:@F@BNNSTileBackward	declared	source:full/accelerate/AccelerateCFunctions.swift
 c:@F@BNNSTranspose	declared	source:full/accelerate/AccelerateCFunctions.swift#BNNSTranspose	
 c:@F@SparseCleanup#$@SA@SparseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
 c:@F@SparseCleanup#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
-c:@F@SparseCleanup#$@SA@SparseMatrix_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
-c:@F@SparseCleanup#$@SA@SparseMatrix_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
+c:@F@SparseCleanup#$@SA@SparseMatrix_Double#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseCleanup#$@SA@SparseMatrix_Float#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
 c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
 c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
 c:@F@SparseCleanup#$@SA@SparseOpaqueFactorization_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseCleanup	
@@ -721,10 +721,10 @@ c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributesComplex_t#*1I#S1_#
 c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributesComplex_t#*1I#S1_#*1<d#*v#S4_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
 c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributesComplex_t#*1I#S1_#*1<f#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
 c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributesComplex_t#*1I#S1_#*1<f#*v#S4_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
-c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1d#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
-c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1d#*v#S3_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
-c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1f#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
-c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1f#*v#S3_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromCoordinate	
+c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1d#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1d#*v#S3_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1f#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
+c:@F@SparseConvertFromCoordinate#I#I#L#c#$@SA@SparseAttributes_t#*1I#S1_#*1f#*v#S3_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
 c:@F@SparseConvertFromOpaque#*$@S@sparse_m_double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromOpaque	
 c:@F@SparseConvertFromOpaque#*$@S@sparse_m_double_complex#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromOpaque	
 c:@F@SparseConvertFromOpaque#*$@S@sparse_m_float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseConvertFromOpaque	
@@ -803,10 +803,10 @@ c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Double#$@SA@DenseMatrix_Complex_Do
 c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
 c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
 c:@F@SparseMultiply#$@SA@SparseMatrix_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
+c:@F@SparseMultiply#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiply#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiply#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiply#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
@@ -839,22 +839,22 @@ c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#	dec
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
 c:@F@SparseMultiply#$@SA@SparseOpaqueSubfactor_Float#$@SA@DenseVector_Float#S1_#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#d#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#d#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#f#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
-c:@F@SparseMultiply#f#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiply	
+c:@F@SparseMultiply#d#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiply#d#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiply#f#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiply#f#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Double#$@SA@DenseMatrix_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Double#$@SA@DenseVector_Complex_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Float#$@SA@DenseMatrix_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
 c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Complex_Float#$@SA@DenseVector_Complex_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#d#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#d#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#f#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
-c:@F@SparseMultiplyAdd#f#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseMultiplyAdd	
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiplyAdd#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
+c:@F@SparseMultiplyAdd#d#$@SA@SparseMatrix_Double#$@SA@DenseMatrix_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiplyAdd#d#$@SA@SparseMatrix_Double#$@SA@DenseVector_Double#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiplyAdd#f#$@SA@SparseMatrix_Float#$@SA@DenseMatrix_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+c:@F@SparseMultiplyAdd#f#$@SA@SparseMatrix_Float#$@SA@DenseVector_Float#S1_#	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@SparseNumericFactorOptions#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
 c:@F@SparseRefactor#$@SA@SparseMatrix_Complex_Double#*$@SA@SparseOpaqueFactorization_Complex_Double#$@SA@SparseNumericFactorOptions#*v#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseRefactor	
@@ -1032,31 +1032,31 @@ c:@F@dgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLA
 c:@F@dgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@dger_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@dnrm2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@drot_	declared	source:full/accelerate/AccelerateCFunctions.swift#drot_	
-c:@F@drotg_	declared	source:full/accelerate/AccelerateCFunctions.swift#drotg_	
+c:@F@drot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
+c:@F@drotg_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotgSyrTrmv	
 c:@F@drotm_	declared	source:full/accelerate/AccelerateCFunctions.swift#drotm_	
 c:@F@drotmg_	declared	source:full/accelerate/AccelerateCFunctions.swift#drotmg_	
 c:@F@dsbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsbmv_	
 c:@F@dscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@dsdot_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsdot_	
+c:@F@dsdot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testCBLASDotGemvKnown	
 c:@F@dspmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dspmv_	
 c:@F@dspr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#dspr2_	
 c:@F@dspr_	declared	source:full/accelerate/AccelerateCFunctions.swift#dspr_	
 c:@F@dswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@dsymm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsymm_	
-c:@F@dsymv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsymv_	
+c:@F@dsymv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
 c:@F@dsyr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsyr2_	
 c:@F@dsyr2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsyr2k_	
-c:@F@dsyr_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsyr_	
-c:@F@dsyrk_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsyrk_	
+c:@F@dsyr_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotgSyrTrmv	
+c:@F@dsyrk_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
 c:@F@dtbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtbmv_	
 c:@F@dtbsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtbsv_	
 c:@F@dtpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtpmv_	
 c:@F@dtpsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtpsv_	
 c:@F@dtrmm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrmm_	
-c:@F@dtrmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrmv_	
+c:@F@dtrmv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotgSyrTrmv	
 c:@F@dtrsm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrsm_	
-c:@F@dtrsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrsv_	
+c:@F@dtrsv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
 c:@F@dzasum_	declared	source:full/accelerate/AccelerateCFunctions.swift#dzasum_	
 c:@F@dznrm2_	declared	source:full/accelerate/AccelerateCFunctions.swift#dznrm2_	
 c:@F@icamax_	declared	source:full/accelerate/AccelerateCFunctions.swift#icamax_	
@@ -1111,7 +1111,7 @@ c:@F@scasum_	declared	source:full/accelerate/AccelerateCFunctions.swift#scasum_
 c:@F@scnrm2_	declared	source:full/accelerate/AccelerateCFunctions.swift#scnrm2_	
 c:@F@scopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@sdot_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@sdsdot_	declared	source:full/accelerate/AccelerateCFunctions.swift#sdsdot_	
+c:@F@sdsdot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testCBLASDotGemvKnown	
 c:@F@sgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#sgbmv_	
 c:@F@sgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@sgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
@@ -1222,8 +1222,8 @@ c:@F@sparse_vector_norm_float	declared	source:full/accelerate/AccelerateCFunctio
 c:@F@sparse_vector_norm_float_complex	declared	source:full/accelerate/AccelerateCFunctions.swift#sparse_vector_norm_float_complex	
 c:@F@sparse_vector_triangular_solve_dense_double	declared	source:full/accelerate/AccelerateCFunctions.swift#sparse_vector_triangular_solve_dense_double	
 c:@F@sparse_vector_triangular_solve_dense_float	declared	source:full/accelerate/AccelerateCFunctions.swift#sparse_vector_triangular_solve_dense_float	
-c:@F@srot_	declared	source:full/accelerate/AccelerateCFunctions.swift#srot_	
-c:@F@srotg_	declared	source:full/accelerate/AccelerateCFunctions.swift#srotg_	
+c:@F@srot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
+c:@F@srotg_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotgSyrTrmv	
 c:@F@srotm_	declared	source:full/accelerate/AccelerateCFunctions.swift#srotm_	
 c:@F@srotmg_	declared	source:full/accelerate/AccelerateCFunctions.swift#srotmg_	
 c:@F@ssbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssbmv_	
@@ -1233,25 +1233,25 @@ c:@F@sspr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#sspr2_
 c:@F@sspr_	declared	source:full/accelerate/AccelerateCFunctions.swift#sspr_	
 c:@F@sswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@ssymm_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssymm_	
-c:@F@ssymv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssymv_	
+c:@F@ssymv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
 c:@F@ssyr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssyr2_	
 c:@F@ssyr2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssyr2k_	
-c:@F@ssyr_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssyr_	
-c:@F@ssyrk_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssyrk_	
+c:@F@ssyr_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotgSyrTrmv	
+c:@F@ssyrk_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
 c:@F@stbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stbmv_	
 c:@F@stbsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stbsv_	
 c:@F@stpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stpmv_	
 c:@F@stpsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stpsv_	
 c:@F@strmm_	declared	source:full/accelerate/AccelerateCFunctions.swift#strmm_	
-c:@F@strmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#strmv_	
+c:@F@strmv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotgSyrTrmv	
 c:@F@strsm_	declared	source:full/accelerate/AccelerateCFunctions.swift#strsm_	
-c:@F@strsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#strsv_	
+c:@F@strsv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotSymvTrsvSyrk	
 c:@F@vDSP_DFT_Interleaved_CreateSetup	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
-c:@F@vDSP_DFT_Interleaved_CreateSetupD	declared	source:full/accelerate/AccelerateCFunctions.swift#vDSP_DFT_Interleaved_CreateSetupD	
+c:@F@vDSP_DFT_Interleaved_CreateSetupD	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPDFTInterleavedDouble	
 c:@F@vDSP_DFT_Interleaved_DestroySetup	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
-c:@F@vDSP_DFT_Interleaved_DestroySetupD	declared	source:full/accelerate/AccelerateCFunctions.swift#vDSP_DFT_Interleaved_DestroySetupD	
+c:@F@vDSP_DFT_Interleaved_DestroySetupD	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPDFTInterleavedDouble	
 c:@F@vDSP_DFT_Interleaved_Execute	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
-c:@F@vDSP_DFT_Interleaved_ExecuteD	declared	source:full/accelerate/AccelerateCFunctions.swift#vDSP_DFT_Interleaved_ExecuteD	
+c:@F@vDSP_DFT_Interleaved_ExecuteD	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPDFTInterleavedDouble	
 c:@F@vImageAffineWarpCG_ARGB16S	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
 c:@F@vImageAffineWarpCG_ARGB16U	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
 c:@F@vImageAffineWarpCG_ARGB8888	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
@@ -1261,20 +1261,20 @@ c:@F@vImageAffineWarpCG_PlanarF	deferred		Requires CoreGraphics/CoreVideo/CoreFo
 c:@F@vImageAffineWarpD_ARGB16F	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining0	
 c:@F@vImageAffineWarpD_ARGB16S	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarpD_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
-c:@F@vImageAffineWarpD_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
+c:@F@vImageAffineWarpD_ARGB8888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageAffineWarpDIdentity	
 c:@F@vImageAffineWarpD_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarpD_CbCr16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarpD_Planar16F	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining0	
-c:@F@vImageAffineWarpD_Planar8	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
+c:@F@vImageAffineWarpD_Planar8	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageAffineWarpDIdentity	
 c:@F@vImageAffineWarpD_PlanarF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarp_ARGB16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarp_ARGB16S	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarp_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
-c:@F@vImageAffineWarp_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
+c:@F@vImageAffineWarp_ARGB8888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageAffineARGB8888Identity	
 c:@F@vImageAffineWarp_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarp_CbCr16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAffineWarp_Planar16F	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining0	
-c:@F@vImageAffineWarp_Planar8	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
+c:@F@vImageAffineWarp_Planar8	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageAffineIdentityAndScale	
 c:@F@vImageAffineWarp_PlanarF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
 c:@F@vImageAlphaBlend_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testVImageCHistogramAlphaConvert	
 c:@F@vImageAlphaBlend_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed0	
@@ -1688,9 +1688,9 @@ c:@F@vImagePermuteChannelsWithMaskedInsert_ARGB8888	implemented	test:full/accele
 c:@F@vImagePermuteChannelsWithMaskedInsert_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining2	
 c:@F@vImagePermuteChannels_ARGB16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed5	
 c:@F@vImagePermuteChannels_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
-c:@F@vImagePermuteChannels_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
+c:@F@vImagePermuteChannels_ARGB8888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImagePermuteARGBToRGBA	
 c:@F@vImagePermuteChannels_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
-c:@F@vImagePermuteChannels_RGB888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
+c:@F@vImagePermuteChannels_RGB888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImagePermuteRGB888	
 c:@F@vImagePerspectiveWarp_ARGB16F	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining2	
 c:@F@vImagePerspectiveWarp_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining2	
 c:@F@vImagePerspectiveWarp_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining2	
@@ -1752,16 +1752,16 @@ c:@F@vImageRotate90_PlanarF	implemented	test:full/accelerate/tests/agent/VImageC
 c:@F@vImageRotate_ARGB16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
 c:@F@vImageRotate_ARGB16S	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
 c:@F@vImageRotate_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
-c:@F@vImageRotate_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
+c:@F@vImageRotate_ARGB8888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageRotateARGB8888Zero	
 c:@F@vImageRotate_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
 c:@F@vImageRotate_CbCr16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
 c:@F@vImageRotate_Planar16F	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining3	
-c:@F@vImageRotate_Planar8	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
+c:@F@vImageRotate_Planar8	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageRotateZeroAnd180	
 c:@F@vImageRotate_PlanarF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
 c:@F@vImageScale_ARGB16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed6	
 c:@F@vImageScale_ARGB16S	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageScale_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
-c:@F@vImageScale_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testVImageCGeometry	
+c:@F@vImageScale_ARGB8888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageScaleARGB8888Nearest	
 c:@F@vImageScale_ARGBFFFF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageScale_CbCr16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageScale_CbCr16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
@@ -1769,7 +1769,7 @@ c:@F@vImageScale_CbCr8	implemented	test:full/accelerate/tests/agent/VImageCFailC
 c:@F@vImageScale_Planar16F	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageScale_Planar16S	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageScale_Planar16U	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
-c:@F@vImageScale_Planar8	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testVImageCGeometry	
+c:@F@vImageScale_Planar8	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageAffineIdentityAndScale	
 c:@F@vImageScale_PlanarF	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageScale_XRGB2101010W	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageSelectChannels_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining3	
@@ -1785,8 +1785,8 @@ c:@F@vImageSymmetricPiecewiseGamma_PlanarF	implemented	test:full/accelerate/test
 c:@F@vImageSymmetricPiecewisePolynomial_PlanarF	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining3	
 c:@F@vImageTableLookUp_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
 c:@F@vImageTableLookUp_Planar8	implemented	test:full/accelerate/tests/agent/VImageCRemainingTests.swift#testVImageCRemaining3	
-c:@F@vImageTentConvolve_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
-c:@F@vImageTentConvolve_Planar8	implemented	test:full/accelerate/tests/agent/VImageCFailClosedTests.swift#testVImageCFailClosed7	
+c:@F@vImageTentConvolve_ARGB8888	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageTentConvolveConstant	
+c:@F@vImageTentConvolve_Planar8	implemented	test:full/accelerate/tests/agent/GeometryPixelTests.swift#testVImageTentConvolveConstant	
 c:@F@vImageUnpremultiplyData_ARGB16Q12	implemented	test:full/accelerate/tests/agent/VImageCBufferFlagsTests.swift#testVImageCBufferFlags1	
 c:@F@vImageUnpremultiplyData_ARGB16U	implemented	test:full/accelerate/tests/agent/VImageCBufferFlagsTests.swift#testVImageCBufferFlags1	
 c:@F@vImageUnpremultiplyData_ARGB8888	implemented	test:full/accelerate/tests/agent/VImageCBufferFlagsTests.swift#testVImageCBufferFlags1	
@@ -2917,36 +2917,36 @@ s:10Accelerate10BNNSScalarP	declared	source:full/accelerate/Accelerate.swift#BNN
 s:10Accelerate10BNNSScalarP12bnnsDataTypeSo08BNNSDataE0avpZ	declared	source:full/accelerate/Accelerate.swift#bnnsDataType	
 s:10Accelerate10QuadratureV	declared	source:full/accelerate/AccelerateOverlay.swift#Quadrature	
 s:10Accelerate10QuadratureV10IntegratorO	declared	source:full/accelerate/AccelerateOverlay.swift#Integrator	
-s:10Accelerate10QuadratureV10IntegratorO11nonAdaptiveAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#nonAdaptive	
-s:10Accelerate10QuadratureV10IntegratorO25adaptiveWithSingularities12maxIntervalsAESi_tFZ	deferred		Overlay or imported method is not declared on Linux; Apple runtime behavior is unobserved.
+s:10Accelerate10QuadratureV10IntegratorO11nonAdaptiveAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV10IntegratorO25adaptiveWithSingularities12maxIntervalsAESi_tFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:10Accelerate10QuadratureV10IntegratorO3qagyAeC20QAGPointsPerIntervalV_SitcAEmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
 s:10Accelerate10QuadratureV10IntegratorO3qngyA2EmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
 s:10Accelerate10QuadratureV10IntegratorO4qagsyAESi_tcAEmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
-s:10Accelerate10QuadratureV10IntegratorO8adaptive17pointsPerInterval12maxIntervalsAeC09QAGPointsfG0V_SitFZ	deferred		Overlay or imported method is not declared on Linux; Apple runtime behavior is unobserved.
-s:10Accelerate10QuadratureV10integrator17absoluteTolerance08relativeE0A2C10IntegratorO_S2dtcfc	declared	source:full/accelerate/Accelerate.swift#init	
-s:10Accelerate10QuadratureV17absoluteToleranceSdvp	declared	source:full/accelerate/AccelerateOverlay.swift#absoluteTolerance	
-s:10Accelerate10QuadratureV17relativeToleranceSdvp	declared	source:full/accelerate/AccelerateOverlay.swift#relativeTolerance	
+s:10Accelerate10QuadratureV10IntegratorO8adaptive17pointsPerInterval12maxIntervalsAeC09QAGPointsfG0V_SitFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV10integrator17absoluteTolerance08relativeE0A2C10IntegratorO_S2dtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureIntegratePolynomial	
+s:10Accelerate10QuadratureV17absoluteToleranceSdvp	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV17relativeToleranceSdvp	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:10Accelerate10QuadratureV20QAGPointsPerIntervalV	declared	source:full/accelerate/AccelerateOverlay.swift#QAGPointsPerInterval	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV6pointsSivp	declared	source:full/accelerate/AccelerateOverlay.swift#points	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV7fifteenAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#fifteen	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV8fiftyOneAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#fiftyOne	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV8fortyOneAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#fortyOne	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV8sixtyOneAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#sixtyOne	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV9thirtyOneAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#thirtyOne	
-s:10Accelerate10QuadratureV20QAGPointsPerIntervalV9twentyOneAEvpZ	declared	source:full/accelerate/AccelerateOverlay.swift#twentyOne	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV6pointsSivp	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV7fifteenAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV8fiftyOneAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV8fortyOneAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV8sixtyOneAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV9thirtyOneAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV20QAGPointsPerIntervalV9twentyOneAEvpZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:10Accelerate10QuadratureV5ErrorO	declared	source:full/accelerate/AccelerateOverlay.swift#Error	
 s:10Accelerate10QuadratureV5ErrorO15invalidArgumentyA2EmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
-s:10Accelerate10QuadratureV5ErrorO16errorDescriptionSSvp	declared	source:full/accelerate/AccelerateOverlay.swift#errorDescription	
+s:10Accelerate10QuadratureV5ErrorO16errorDescriptionSSvp	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:10Accelerate10QuadratureV5ErrorO16integrateMaxEvalyA2EmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
-s:10Accelerate10QuadratureV5ErrorO16quadratureStatusAESo0D7_statusa_tcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:10Accelerate10QuadratureV5ErrorO16quadratureStatusAESo0D7_statusa_tcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:10Accelerate10QuadratureV5ErrorO21badIntegrandBehaviouryA2EmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
-s:10Accelerate10QuadratureV5ErrorO2eeoiySbAE_AEtFZ	deferred		No source-compatible Linux declaration yet; static graphs do not establish runtime behavior.
-s:10Accelerate10QuadratureV5ErrorO4hash4intoys6HasherVz_tF	deferred		Overlay or imported method is not declared on Linux; Apple runtime behavior is unobserved.
+s:10Accelerate10QuadratureV5ErrorO2eeoiySbAE_AEtFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV5ErrorO4hash4intoys6HasherVz_tF	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:10Accelerate10QuadratureV5ErrorO7genericyA2EmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
 s:10Accelerate10QuadratureV5ErrorO8internalyA2EmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	
-s:10Accelerate10QuadratureV5ErrorO9hashValueSivp	deferred		No source-compatible Linux declaration yet; static graphs do not establish runtime behavior.
-s:10Accelerate10QuadratureV9integrate4over9integrands6ResultOySd08integralF0_Sd22estimatedAbsoluteErrortAC0J0OGSNySdG_S2dXEtF	declared	source:full/accelerate/AccelerateVDSPOps.swift#integrate	
-s:10Accelerate10QuadratureV9integrate4over9integrands6ResultOySd08integralF0_Sd22estimatedAbsoluteErrortAC0J0OGSNySdG_ySRySdG_SrySdGtXEtF	declared	source:full/accelerate/AccelerateVDSPOps.swift#integrate	
+s:10Accelerate10QuadratureV5ErrorO9hashValueSivp	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
+s:10Accelerate10QuadratureV9integrate4over9integrands6ResultOySd08integralF0_Sd22estimatedAbsoluteErrortAC0J0OGSNySdG_S2dXEtF	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureIntegratePolynomial	
+s:10Accelerate10QuadratureV9integrate4over9integrands6ResultOySd08integralF0_Sd22estimatedAbsoluteErrortAC0J0OGSNySdG_ySRySdG_SrySdGtXEtF	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureIntegratePolynomial	
 s:10Accelerate11PixelFormatP	declared	source:full/accelerate/Accelerate.swift#PixelFormat	
 s:10Accelerate11PixelFormatP13ComponentTypeQa	declared	source:full/accelerate/Accelerate.swift#ComponentType	
 s:10Accelerate13BNNSOptimizerP	declared	source:full/accelerate/Accelerate.swift#BNNSOptimizer	
@@ -3725,8 +3725,8 @@ s:10Accelerate4vDSPO16slidingWindowSum_05usingD6LengthSaySfGx_SitAA0A6BufferRzSf
 s:10Accelerate4vDSPO16squareMagnitudes_6resultySo15DSPSplitComplexV_xztAA0A13MutableBufferRzSf7ElementRtzlFZ	implemented	test:full/accelerate/tests/agent/VDSPExtraTests.swift#testVDSPSplitComplexOps	
 s:10Accelerate4vDSPO16squareMagnitudes_6resultySo21DSPDoubleSplitComplexV_xztAA0A13MutableBufferRzSd7ElementRtzlFZ	implemented	test:full/accelerate/tests/agent/VDSPExtraTests.swift#testVDSPSplitComplexOps	
 s:10Accelerate4vDSPO17VectorizableFloatV	declared	source:full/accelerate/AccelerateOverlay.swift#VectorizableFloat	
-s:10Accelerate4vDSPO17VectorizableFloatV10applyMulti5setup7pInputs8pOutputs5countys13OpaquePointerV_SpySPySfGGSpySpySfGGSutFZ	declared	source:full/accelerate/AccelerateVectorizable.swift#applyMulti	
-s:10Accelerate4vDSPO17VectorizableFloatV11applySingle6source11destination6delays5setup12sectionCount5countyx_q_zSpySfGs13OpaquePointerVS2utAA0A6BufferRzAA0a7MutableP0R_Sf7ElementRtzSfARRt_r0_lFZ	declared	source:full/accelerate/AccelerateVectorizable.swift#applySingle	
+s:10Accelerate4vDSPO17VectorizableFloatV10applyMulti5setup7pInputs8pOutputs5countys13OpaquePointerV_SpySPySfGGSpySpySfGGSutFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPBiquadPassThrough	
+s:10Accelerate4vDSPO17VectorizableFloatV11applySingle6source11destination6delays5setup12sectionCount5countyx_q_zSpySfGs13OpaquePointerVS2utAA0A6BufferRzAA0a7MutableP0R_Sf7ElementRtzSfARRt_r0_lFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPBiquadPassThrough	
 s:10Accelerate4vDSPO17VectorizableFloatV12destroySetup12channelCount06biquadF0ySu_s13OpaquePointerVtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO17VectorizableFloatV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO17VectorizableFloatV12makeDFTSetup8previous5count9direction13transformTypes13OpaquePointerVSgAC3DFTCy_xGSg_SiAC25FourierTransformDirectionOAC012DFTTransformK0OtAA01vb22_FloatingPointDiscreteO13TransformableRzlFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
@@ -3752,8 +3752,8 @@ s:10Accelerate4vDSPO17linearInterpolate__5usingSaySfGx_q_SftAA0A6BufferRzAaGR_Sf
 s:10Accelerate4vDSPO17standardDeviationySdxAA0A13MutableBufferRzSd7ElementRtzlFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPStats	
 s:10Accelerate4vDSPO17standardDeviationySfxAA0A13MutableBufferRzSf7ElementRtzlFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPStats	
 s:10Accelerate4vDSPO18VectorizableDoubleV	declared	source:full/accelerate/AccelerateOverlay.swift#VectorizableDouble	
-s:10Accelerate4vDSPO18VectorizableDoubleV10applyMulti5setup7pInputs8pOutputs5countys13OpaquePointerV_SpySPySdGGSpySpySdGGSutFZ	declared	source:full/accelerate/AccelerateVectorizable.swift#applyMulti	
-s:10Accelerate4vDSPO18VectorizableDoubleV11applySingle6source11destination6delays5setup12sectionCount5countyx_q_zSpySdGs13OpaquePointerVS2utAA0A6BufferRzAA0a7MutableP0R_Sd7ElementRtzSdARRt_r0_lFZ	declared	source:full/accelerate/AccelerateVectorizable.swift#applySingle	
+s:10Accelerate4vDSPO18VectorizableDoubleV10applyMulti5setup7pInputs8pOutputs5countys13OpaquePointerV_SpySPySdGGSpySpySdGGSutFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPBiquadPassThrough	
+s:10Accelerate4vDSPO18VectorizableDoubleV11applySingle6source11destination6delays5setup12sectionCount5countyx_q_zSpySdGs13OpaquePointerVS2utAA0A6BufferRzAA0a7MutableP0R_Sd7ElementRtzSdARRt_r0_lFZ	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPBiquadPassThrough	
 s:10Accelerate4vDSPO18VectorizableDoubleV12destroySetup12channelCount06biquadF0ySu_s13OpaquePointerVtFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO18VectorizableDoubleV12destroySetupyys13OpaquePointerVFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 s:10Accelerate4vDSPO18VectorizableDoubleV12makeDFTSetup8previous5count9direction13transformTypes13OpaquePointerVSgAC3DFTCy_xGSg_SiAC25FourierTransformDirectionOAC012DFTTransformK0OtAA01vb22_FloatingPointDiscreteO13TransformableRzlFZ	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
@@ -5331,7 +5331,7 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@vImageCVImageFormatRef	declared	source:f
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@vImageConstCVImageFormatRef	declared	source:full/accelerate/AccelerateCTypes.swift#Equatable	
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@T@vImageConverterRef	declared	source:full/accelerate/AccelerateCTypes.swift#Equatable	
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Accelerate0A11MatrixOrderO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Accelerate10QuadratureV5ErrorO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Accelerate10QuadratureV5ErrorO	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Accelerate4BLASV14ThreadingModelV	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Accelerate4BNNSO10DataLayoutO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Accelerate4BNNSO11ShuffleTypeO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
@@ -5739,8 +5739,8 @@ s:So16vImageWhitePointVABycfc	declared	source:full/accelerate/AccelerateCTypes.s
 s:So16vImageYpCbCrTypea8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImageYpCbCrType	
 s:So16vImageYpCbCrTypea8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#vImageYpCbCrType	
 s:So16vImageYpCbCrTypeayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImageYpCbCrType	
-s:So17DenseMatrix_Floata8rowCount06columnE00F6Stride10attributes4dataABs5Int32V_A2ISo18SparseAttributes_taSpySfGtcfc	declared	source:full/accelerate/Accelerate.swift#init	
-s:So17DenseVector_Floata5count4dataABs5Int32V_SpySfGtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So17DenseMatrix_Floata8rowCount06columnE00F6Stride10attributes4dataABs5Int32V_A2ISo18SparseAttributes_taSpySfGtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+s:So17DenseVector_Floata5count4dataABs5Int32V_SpySfGtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyKnownMatrix	
 s:So17SparseLSMROptionsa11reportError6lambda4nvec15convergenceTest4atol4rtol4btol14conditionLimit13maxIterations0C6StatusABySPys4Int8VGXCSg_Sds5Int32VSo0a15LSMRConvergenceH2_taS4dArPtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So17SparseLSMROptionsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLSMROptions	
 s:So17SparseSubfactor_ta8rawValueABs5UInt8V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactor_t	
@@ -5758,8 +5758,8 @@ s:So18BNNSEmbeddingFlagsayABs6UInt32Vcfc	declared	source:full/accelerate/Acceler
 s:So18BNNSReduceFunctiona8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunction	
 s:So18BNNSReduceFunctiona8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunction	
 s:So18BNNSReduceFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunction	
-s:So18DenseMatrix_Doublea8rowCount06columnE00F6Stride10attributes4dataABs5Int32V_A2ISo18SparseAttributes_taSpySdGtcfc	declared	source:full/accelerate/Accelerate.swift#init	
-s:So18DenseVector_Doublea5count4dataABs5Int32V_SpySdGtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So18DenseMatrix_Doublea8rowCount06columnE00F6Stride10attributes4dataABs5Int32V_A2ISo18SparseAttributes_taSpySdGtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
+s:So18DenseVector_Doublea5count4dataABs5Int32V_SpySdGtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDoubleAndMatrix	
 s:So18SparseAttributes_taABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseAttributes_t	
 s:So18SparseGMRESOptionsa11reportError7variant4nvec13maxIterations4atol4rtol0C6StatusABySPys4Int8VGXCSg_So0A14GMRESVariant_tas5Int32VAQS2dAMtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So18SparseGMRESOptionsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseGMRESOptions	
@@ -6818,7 +6818,7 @@ s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNT
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s6UInt32V	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s27ExpressibleByIntegerLiteralPss01_ab7BuiltincD0RzrlE07integerD0xx_tcfc::SYNTHESIZED::s:s6UInt64V	declared	source:full/accelerate/Accelerate.swift#init	
 s:s4Int8V10AccelerateE12bnnsDataTypeSo08BNNSDataE0avpZ	declared	source:full/accelerate/Accelerate.swift#bnnsDataType	
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10Accelerate10QuadratureV5ErrorO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10Accelerate10QuadratureV5ErrorO	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testQuadratureOverlaySurface	
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10Accelerate4BNNSO5ErrorO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10Accelerate4vDSPO8DFTErrorO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::s:10Accelerate6vImageO5ErrorO	deferred		Protocol witness is synthesized on Apple for a requirement this Linux module does not yet declare or implement.

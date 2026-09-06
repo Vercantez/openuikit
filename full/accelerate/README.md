@@ -46,6 +46,7 @@ constructors return `nil`, and Linear Algebra objects are inert
   annotation, or standard CBLAS) use sequential placeholders and stay
   `declared`, never `implemented`.
 - Affine warp without a usable transform returns `kvImageInvalidParameter`.
+- Planar8/ARGB8888 affine identity, nearest/bilinear scale, centre rotate, channel permute, and tent convolve (edge-extend) are implemented on small rasters; remaining packed formats stay fail-closed.
 
 ## Deferred
 
@@ -80,3 +81,24 @@ Top-5 evidence distribution (share of remaining implemented rows = 2534 − 26):
 5. `testCStructFields5` — 70 (2.8%) — C struct field reads
 
 No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling.
+
+## Depth pass 2026-09 (wave 8)
+
+Second depth pass for campaign `ios26.1-fwdepth-r15`, lane `medium-full`, 6856 exact IDs. The first-pass Linux sources and tests stay in tree; this pass adds real quadrature, sparse CSC multiply, extra BLAS/LAPACK, biquad DF2T, interleaved double DFT, and pixel-exact vImage affine/rotate/tent/permute.
+
+- Implemented before: **2534**
+- Implemented after: **2605**
+- Declared: 2837 (was 2901)
+- Deferred: 1414 (was 1421)
+- Unavailable: 0
+- Not-applicable: 0
+
+Top-5 evidence distribution (share of remaining implemented rows = 2605 − 2534 = 71):
+
+1. `testQuadratureOverlaySurface` — 19 (26.8%) — QAG points, adaptive integrators, Error `==`/`hash`/`localizedDescription`
+2. `testSparseMultiplyDoubleAndMatrix` — 18 (25.4%) — CSC convert/multiply/add for Double plus Float/Double dense matrix
+3. `testSparseMultiplyKnownMatrix` — 8 (11.3%) — Float CSC vector multiply/add/cleanup and `DenseVector_Float` init
+4. `testBLASRotSymvTrsvSyrk` — 8 (11.3%) — `srot_`/`drot_`/`strsv_`/`dtrsv_`/`ssymv_`/`dsymv_`/`ssyrk_`/`dsyrk_`
+5. `testBLASRotgSyrTrmv` — 6 (8.5%) — `srotg_`/`drotg_`/`ssyr_`/`dsyr_`/`strmv_`/`dtrmv_`
+
+No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling. BNNS create stays fail-closed (`nil`). Complex sparse multiply, sparse subfactor/solve, and placeholder `QUADRATURE_*` C enumerator values stay declared or deferred.
