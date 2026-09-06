@@ -1,5 +1,6 @@
-@_spi(OpenUIKitHost) import LockedCameraCapture
+import LockedCameraCapture
 import Foundation
+@_spi(OpenUIKitHost) import LockedCameraCapture
 
 // Future clean EC2 dependency-identity client. Isolated host-gate success
 // against toolchain Foundation is not integrated guest success. This file is
