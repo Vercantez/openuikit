@@ -314,7 +314,8 @@ func testEnumURLRepresentationInterpolationAndCaseMap() {
     interpolation.appendLiteral("/")
     interpolation.appendInterpolation(VideoCategory.movies)
     let interpolated = EnumURLRepresentation<VideoCategory>(stringInterpolation: interpolation)
-    precondition(interpolated.expanded(for: .movies) == "open/${rawValue}/movies")
+    precondition(interpolated.template == "open/${rawValue}/movies")
+    precondition(interpolated.expanded(for: .movies) == "open/movies/movies")
     let single: EnumURLRepresentation<VideoCategory>.EnumSingleURLRepresentation = "case/${rawValue}"
     let mapped = EnumURLRepresentation<VideoCategory>([
         .tv: "tv/${rawValue}",
