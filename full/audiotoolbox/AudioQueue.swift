@@ -664,6 +664,37 @@ public func AudioQueueGetCurrentTime(
     return 0
 }
 
+public func AudioQueueDeviceGetCurrentTime(
+    _ inAQ: AudioQueueRef?,
+    _ outTimeStamp: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inAQ
+    _ = outTimeStamp
+    return kAudioQueueErr_InvalidDevice
+}
+
+public func AudioQueueDeviceTranslateTime(
+    _ inAQ: AudioQueueRef?,
+    _ inTime: UnsafeRawPointer?,
+    _ outTime: UnsafeMutableRawPointer?
+) -> Int32 {
+    _ = inAQ
+    _ = inTime
+    _ = outTime
+    return kAudioQueueErr_InvalidDevice
+}
+
+public func AudioQueueDeviceGetNearestStartTime(
+    _ inAQ: AudioQueueRef?,
+    _ ioRequestedStartTime: UnsafeMutableRawPointer?,
+    _ inFlags: UInt32
+) -> Int32 {
+    _ = inAQ
+    _ = ioRequestedStartTime
+    _ = inFlags
+    return kAudioQueueErr_InvalidDevice
+}
+
 public func AudioQueueProcessingTapNew(
     _ inAQ: AudioQueueRef?,
     _ inCallback: UnsafeRawPointer?,
