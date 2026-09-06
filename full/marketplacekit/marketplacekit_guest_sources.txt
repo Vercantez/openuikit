@@ -1,0 +1,7 @@
+full/marketplacekit/MarketplaceKit.swift
+full/marketplacekit/MarketplaceKitAppLibrary.swift
+full/marketplacekit/MarketplaceKitError.swift
+full/marketplacekit/MarketplaceKitExtensions.swift
+full/marketplacekit/MarketplaceKitLookalikes.swift
+full/marketplacekit/MarketplaceKitUI.swift
+full/marketplacekit/MarketplaceKitValues.swift
