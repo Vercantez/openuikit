@@ -1,0 +1,2 @@
+precise	status	evidence	notes
+s:7SwiftUI4ViewP25AutomatedDeviceEnrollmentE09automatedeF8Addition11isPresentedQrAA7BindingVySbG_tF	implemented	test:full/automateddeviceenrollment/tests/agent/AutomatedDeviceEnrollmentTests.swift#testAutomatedDeviceEnrollmentAddition	fail-closed identity modifier; never presents ADE
