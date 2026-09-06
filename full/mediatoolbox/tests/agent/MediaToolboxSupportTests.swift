@@ -1,4 +1,5 @@
 import Foundation
+import CoreFoundation
 import MediaToolbox
 
 func mtExpect(_ condition: Bool, _ message: String) {

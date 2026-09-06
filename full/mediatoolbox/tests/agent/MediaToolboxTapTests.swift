@@ -3,8 +3,9 @@ import MediaToolbox
 
 func testTapCreateInitStorageAndIdentity() {
     var stored: UnsafeMutableRawPointer? = nil
-    var token: UInt = 0x4D545450
-    let client = UnsafeMutableRawPointer(&token)
+    let client = UnsafeMutableRawPointer.allocate(byteCount: MemoryLayout<UInt>.stride, alignment: MemoryLayout<UInt>.alignment)
+    defer { client.deallocate() }
+    client.storeBytes(of: UInt(0x4D545450), as: UInt.self)
 
     let callbacks = MTAudioProcessingTapCallbacks(
         version: kMTAudioProcessingTapCallbacksVersion_0,

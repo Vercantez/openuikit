@@ -9,8 +9,9 @@ func testCallbacksStructFields() {
     var processCalled = false
     var capturedClient: UnsafeMutableRawPointer? = nil
 
-    var token: Int = 42
-    let client = UnsafeMutableRawPointer(&token)
+    let client = UnsafeMutableRawPointer.allocate(byteCount: MemoryLayout<Int>.stride, alignment: MemoryLayout<Int>.alignment)
+    defer { client.deallocate() }
+    client.storeBytes(of: 42, as: Int.self)
 
     let callbacks = MTAudioProcessingTapCallbacks(
         version: kMTAudioProcessingTapCallbacksVersion_0,

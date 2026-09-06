@@ -1,5 +1,5 @@
-import CoreFoundation
 import Foundation
+@_exported import CoreFoundation
 
 #if canImport(CoreMedia)
 @_exported import CoreMedia
@@ -182,7 +182,7 @@ public struct MTAudioProcessingTapCallbacks {
         finalize: MTAudioProcessingTapFinalizeCallback?,
         prepare: MTAudioProcessingTapPrepareCallback?,
         unprepare: MTAudioProcessingTapUnprepareCallback?,
-        process: MTAudioProcessingTapProcessCallback
+        process: @escaping MTAudioProcessingTapProcessCallback
     ) {
         self.version = version
         self.clientInfo = clientInfo

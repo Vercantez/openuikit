@@ -35,6 +35,10 @@ public final class MTAudioProcessingTap: Hashable, @unchecked Sendable {
         }
     }
 
+    func storage() -> UnsafeMutableRawPointer {
+        storagePointer
+    }
+
     func installStorage(_ provided: UnsafeMutableRawPointer?) {
         guard let provided else { return }
         if ownsDummyStorage {
@@ -70,7 +74,7 @@ public func MTAudioProcessingTapGetTypeID() -> CFTypeID {
 }
 
 public func MTAudioProcessingTapGetStorage(_ tap: MTAudioProcessingTap) -> UnsafeMutableRawPointer {
-    tap.storagePointer
+    tap.storage()
 }
 
 public func MTAudioProcessingTapCreate(
