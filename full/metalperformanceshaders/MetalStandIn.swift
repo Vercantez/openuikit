@@ -27,6 +27,11 @@ public protocol MTLCommandBuffer: AnyObject {
     var label: String? { get set }
 }
 
+public protocol MTLComputeCommandEncoder: AnyObject {
+    var device: any MTLDevice { get }
+    var label: String? { get set }
+}
+
 public protocol MTLTexture: MTLResource {
     var device: any MTLDevice { get }
     var width: Int { get }
