@@ -216,7 +216,7 @@ func testOptionSetAlgebra() {
     precondition(flags.isSuperset(of: .allowFP16Intermediates))
     precondition(flags.isSubset(of: .allowFP16Intermediates))
     precondition(!flags.isStrictSubset(of: .allowFP16Intermediates))
-    precondition(!flags.isStrictSuperset(of: .none))
+    precondition(flags.isStrictSuperset(of: .none))
     precondition(flags.isDisjoint(with: .none) || flags.contains(.allowFP16Intermediates))
     let unioned = MPSGraphReducedPrecisionFastMath.none.union(.allowFP16Intermediates)
     precondition(unioned.contains(.allowFP16Intermediates))
