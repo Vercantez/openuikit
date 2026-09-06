@@ -102,3 +102,14 @@ Top-5 evidence distribution (share of remaining implemented rows = 2605 − 2534
 5. `testBLASRotgSyrTrmv` — 6 (8.5%) — `srotg_`/`drotg_`/`ssyr_`/`dsyr_`/`strmv_`/`dtrmv_`
 
 No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling. BNNS create stays fail-closed (`nil`). Complex sparse multiply, sparse subfactor/solve, and placeholder `QUADRATURE_*` C enumerator values stay declared or deferred.
+
+Sealed gate (`bash full/accelerate/tests/acceptance/test_host.sh`) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Accelerate lane=medium-full symbols=6856
+FRAMEWORK_FANOUT_REFERENCE_OK
+ACCELERATE_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree. Starting commit `bff8535c68425cc39fb45cb00d447b0981b57242` matched.
