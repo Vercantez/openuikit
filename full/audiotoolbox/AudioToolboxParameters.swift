@@ -31,6 +31,14 @@ public let k3DMixerParam_ReverbBlend: AudioUnitParameterID = 8
 public let k3DMixerParam_GlobalReverbGain: AudioUnitParameterID = 9
 public let k3DMixerParam_OcclusionAttenuation: AudioUnitParameterID = 10
 public let k3DMixerParam_ObstructionAttenuation: AudioUnitParameterID = 11
+/// 10.8+ header aliases of the Enable / gain / reverb / occlusion IDs above.
+public let k3DMixerParam_BusEnable: AudioUnitParameterID = k3DMixerParam_Enable
+public let k3DMixerParam_MinGainInDecibels: AudioUnitParameterID = k3DMixerParam_MinGain
+public let k3DMixerParam_MaxGainInDecibels: AudioUnitParameterID = k3DMixerParam_MaxGain
+public let k3DMixerParam_DryWetReverbBlend: AudioUnitParameterID = k3DMixerParam_ReverbBlend
+public let k3DMixerParam_GlobalReverbGainInDecibels: AudioUnitParameterID = k3DMixerParam_GlobalReverbGain
+public let k3DMixerParam_OcclusionAttenuationInDecibels: AudioUnitParameterID = k3DMixerParam_OcclusionAttenuation
+public let k3DMixerParam_ObstructionAttenuationInDecibels: AudioUnitParameterID = k3DMixerParam_ObstructionAttenuation
 public let k3DMixerParam_PreAveragePower: AudioUnitParameterID = 1000
 public let k3DMixerParam_PrePeakHoldLevel: AudioUnitParameterID = 2000
 public let k3DMixerParam_PostAveragePower: AudioUnitParameterID = 3000
@@ -45,7 +53,10 @@ public let kTimePitchParam_EffectBlend: AudioUnitParameterID = 2
 public let kNewTimePitchParam_Rate: AudioUnitParameterID = 0
 public let kNewTimePitchParam_Pitch: AudioUnitParameterID = 1
 public let kNewTimePitchParam_Overlap: AudioUnitParameterID = 4
+public let kNewTimePitchParam_Smoothness: AudioUnitParameterID = kNewTimePitchParam_Overlap
 public let kNewTimePitchParam_EnablePeakLocking: AudioUnitParameterID = 6
+public let kNewTimePitchParam_EnableSpectralCoherence: AudioUnitParameterID = kNewTimePitchParam_EnablePeakLocking
+public let kNewTimePitchParam_EnableTransientPreservation: AudioUnitParameterID = 7
 
 public let kVarispeedParam_PlaybackRate: AudioUnitParameterID = 0
 public let kVarispeedParam_PlaybackCents: AudioUnitParameterID = 1
@@ -314,3 +325,23 @@ public let kAudioEncoderComponentType: UInt32 = atFourCC("aenc")
 public let kMusicTimeStamp_EndOfTrack: MusicTimeStamp = Double.greatestFiniteMagnitude
 
 public let kSampleDelayParam_DelayFrames: AudioUnitParameterID = 0
+
+public let kDynamicRangeCompressionProfile_None: UInt32 = 0
+public let kDynamicRangeCompressionProfile_LateNight: UInt32 = 1
+public let kDynamicRangeCompressionProfile_NoisyEnvironment: UInt32 = 2
+public let kDynamicRangeCompressionProfile_LimitedPlaybackRange: UInt32 = 3
+public let kDynamicRangeCompressionProfile_GeneralCompression: UInt32 = 6
+
+public let kDynamicRangeControlMode_None: UInt32 = 0
+public let kDynamicRangeControlMode_Light: UInt32 = 1
+public let kDynamicRangeControlMode_Heavy: UInt32 = 2
+
+public let kProgramTargetLevel_None: UInt32 = 0
+public let kProgramTargetLevel_Minus31dB: UInt32 = 1
+public let kProgramTargetLevel_Minus23dB: UInt32 = 2
+public let kProgramTargetLevel_Minus20dB: UInt32 = 3
+
+public let kAUSoundIsolationParam_WetDryMixPercent: AudioUnitParameterID = 0
+public let kAUSoundIsolationParam_SoundToIsolate: AudioUnitParameterID = 1
+public let kAUSoundIsolationSoundType_HighQualityVoice: Int = 0
+public let kAUSoundIsolationSoundType_Voice: Int = 1

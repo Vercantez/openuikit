@@ -170,6 +170,21 @@ private let builtinComponents: [ATAudioComponentRecord] = {
     }
 }()
 
+internal func atBuiltinComponentName(_ description: AudioComponentDescription) -> String {
+    switch description.componentSubType {
+    case kAudioUnitSubType_GenericOutput:
+        return "GenericOutput"
+    case kAudioUnitSubType_MultiChannelMixer:
+        return "MultiChannelMixer"
+    case kAudioUnitSubType_ScheduledSoundPlayer:
+        return "ScheduledSoundPlayer"
+    case kAudioUnitSubType_RemoteIO:
+        return "RemoteIO"
+    default:
+        return "SoftwareAudioUnit"
+    }
+}
+
 private func atComponentMatches(_ value: AudioComponentDescription, _ query: AudioComponentDescription) -> Bool {
     if query.componentType != 0 && query.componentType != value.componentType { return false }
     if query.componentSubType != 0 && query.componentSubType != value.componentSubType { return false }
@@ -315,10 +330,18 @@ public func AudioComponentCopyName(
     _ outName: UnsafeMutablePointer<Unmanaged<CFString>?>?
 ) -> Int32 {
     outName?.pointee = nil
-    guard ATRegistry.shared.lookup(inComponent, as: ATAudioComponentRecord.self) != nil else {
+    guard let record = ATRegistry.shared.lookup(inComponent, as: ATAudioComponentRecord.self) else {
         return kAudioComponentErr_InstanceInvalidated
     }
-    return kAudioComponentErr_UnsupportedType
+    let name = atBuiltinComponentName(record.description)
+    let encoding: CFStringEncoding = 0x0800_0100
+    return name.withCString { cstr in
+        guard let cfName = CFStringCreateWithCString(kCFAllocatorDefault, cstr, encoding) else {
+            return kAudioComponentErr_UnsupportedType
+        }
+        outName?.pointee = Unmanaged.passRetained(cfName)
+        return 0
+    }
 }
 
 public func AudioComponentRegister(
@@ -397,5 +420,12 @@ public struct AudioComponentPlugInInterface {
         self.Close = Close
         self.Lookup = Lookup
         self.reserved = reserved
+    }
+
+    public init() {
+        Open = nil
+        Close = nil
+        Lookup = nil
+        reserved = nil
     }
 }
