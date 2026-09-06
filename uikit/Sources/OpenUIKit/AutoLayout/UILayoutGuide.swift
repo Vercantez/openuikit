@@ -64,11 +64,6 @@
 //     untransformed layout rect. No fixture transforms a safe-area child.
 //   * RTL. `leading`/`trailing` alias `left`/`right` everywhere in this
 //     module, exactly as they already do in the rest of Auto Layout (M9).
-//   * `topLayoutGuide` / `bottomLayoutGuide` — the pre-iOS-11 spelling.
-//     Deprecated in UIKit; not declared here. The `UILayoutSupport` PROTOCOL
-//     they vend is declared (bottom of this file) because a library types
-//     against it, but nothing conforms to it, so the deprecated behaviour
-//     stays unbuilt rather than invented.
 //   * An UNREFERENCED user guide keeps `layoutFrame == .zero`, as in UIKit.
 //     A SYSTEM guide, by contrast, always reports its frame here even if no
 //     constraint mentions it (real UIKit leaves it zero until the guide
@@ -90,6 +85,14 @@ import struct CoreGraphics.CGRect
 import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
+#endif
+// UIKit's UILayoutGuide is an NSObject. SnapKit 5.7.0 LayoutConstraintItem
+// attaches the constraint set with objc_setAssociatedObject (LayoutConstraintItem.swift:82).
+// A pure-Swift class is not a valid associated-object host on Darwin.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 
@@ -123,7 +126,7 @@ public struct NSDirectionalEdgeInsets: Equatable, Sendable {
 /// that a guide has no frame to write back to, so the solution lands in
 /// ``layoutFrame`` instead.
 @preconcurrency @MainActor
-public final class UILayoutGuide {
+public final class UILayoutGuide: NSObject {
     /// The view whose coordinate space ``layoutFrame`` is expressed in. Set
     /// by `UIView.addLayoutGuide(_:)`.
     public internal(set) weak var owningView: UIView? {
@@ -164,9 +167,13 @@ public final class UILayoutGuide {
     }
     let kind: Kind
 
-    public init() { kind = .custom }
+    public override init() {
+        kind = .custom
+        super.init()
+    }
     init(kind: Kind, owningView: UIView) {
         self.kind = kind
+        super.init()
         self.owningView = owningView
         switch kind {
         case .custom: identifier = ""
@@ -416,25 +423,34 @@ extension UIView {
 
 }
 
-// MARK: - UILayoutSupport (declared, unconformed)
+// MARK: - UILayoutSupport
 //
 // UIKit's pre-iOS-11 top/bottom layout guides are vended as this protocol.
-// The guides themselves are deprecated and are NOT implemented here (file
-// header, "WHAT IS NOT MODELLED"), but the protocol is a TYPE that portable
-// library source names: SnapKit spells `typealias ConstraintLayoutSupport =
-// UILayoutSupport` unconditionally under `canImport(UIKit)`, so the name has
-// to resolve for the library to compile at all.
-//
-// Nothing in OpenUIKit conforms to it and nothing vends one, so no app can
-// obtain an instance and no behaviour is fabricated — a missing conformance
-// is a compile error at the point of misuse, which is the loud failure this
-// deserves. It retains the historical `AnyObject` constraint rather than
-// retroactively requiring NSObject from every external conformer; that is the
-// class-only property SnapKit's `target: AnyObject?` needs.
+// SnapKit spells `typealias ConstraintLayoutSupport = UILayoutSupport`
+// under `canImport(UIKit)`, so the name has to resolve for the library
+// to compile at all.
+// Nothing else in OpenUIKit conforms to UILayoutSupport; the deprecated
+// `UIViewController.topLayoutGuide` / `bottomLayoutGuide` vend
+// `_UILegacyLayoutSupportView`. The protocol keeps the historical
+// `AnyObject` constraint rather than retroactively requiring NSObject from
+// every external conformer; that is the class-only property SnapKit's
+// `target: AnyObject?` needs.
 @preconcurrency @MainActor
 public protocol UILayoutSupport: AnyObject {
     var length: CGFloat { get }
     var topAnchor: NSLayoutYAxisAnchor { get }
     var bottomAnchor: NSLayoutYAxisAnchor { get }
     var heightAnchor: NSLayoutDimension { get }
+}
+
+/// Concrete `UILayoutSupport` for the deprecated `topLayoutGuide` /
+/// `bottomLayoutGuide`. iOS 11 maps those onto the safe-area band
+/// (`UIViewController.h` deprecation: use `safeAreaLayoutGuide`).
+/// SnapKit 5.7.0 Tests.swift:722 `vc.topLayoutGuide.snp.bottom` needs a
+/// view-backed target so `NSLayoutConstraint.hostView` can install the
+/// constraint (MEASURED SnapKitUpstreamTests compilation). A UIView
+/// subclass is Apple's `_UILayoutGuide` shape. Unattached VC: insets 0.
+@MainActor
+final class _UILegacyLayoutSupportView: UIView, UILayoutSupport {
+    var length: CGFloat { bounds.height }
 }

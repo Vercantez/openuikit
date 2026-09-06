@@ -81,6 +81,18 @@ let swiftUICombineDependencies: [Target.Dependency] = [
 #if os(Linux)
 let linuxXCTestSupportTargets: [Target] = [
     .target(name: "CLinuxXCTestSupport", publicHeadersPath: "include"),
+    // SnapKit 5.7.0 LayoutConstraintItem.swift:82 associated objects.
+    // Darwin UIKit @_exported-imports SDK ObjectiveC; native ELF has none.
+    // Named OpenUIKitObjectiveC so `canImport(ObjectiveC)` stays false in
+    // OpenUIKit (a target named ObjectiveC made @objc branches compile
+    // with ObjC interop disabled — MEASURED swift:6.2-noble openrender).
+    .target(name: "OpenUIKitObjectiveC", path: "Sources/ObjectiveC"),
+    .systemLibrary(
+        name: "CLibXML2",
+        path: "Sources/CLibXML2",
+        pkgConfig: "libxml-2.0",
+        providers: [.apt(["libxml2-dev"]), .brew(["libxml2"])]
+    ),
 ]
 let openUIKitTestDeps: [Target.Dependency] = [
     "OpenUIKit", "UIKit", "ConformanceApps",
@@ -149,10 +161,26 @@ let swiftUITestTarget: Target = .testTarget(
 let imageIOModule = "ImageIO"
 let coreImageModule = "CoreImage"
 let storeKitModule = "StoreKit"
+let libkernModule = "libkern"
+let uiKitLinuxDependencies: [Target.Dependency] = ["OpenUIKitObjectiveC"]
+let fuziLinuxDependencies: [Target.Dependency] = ["CLibXML2"]
+// Clang submodules `os.log` / `os.signpost` so `import os.log` resolves
+// (focus-e2e: a SwiftPM target named "os.log" compiles as os_log). Darwin
+// keeps the SDK os module; publicHeadersPath here would shadow it.
+let osTarget: Target = .target(name: "os", publicHeadersPath: "include")
+// SnapKit 5.7.0 Debugging.swift:153 `type(of: object).description()` —
+// Darwin AnyObject is NSObject (`+description`); Linux AnyObject.Type has
+// no such member (MEASURED swift:6.2-noble). Sources stay unmodified.
+let snapKitExclude = ["LICENSE", "VENDOR.txt", "Debugging.swift"]
 #else
 let imageIOModule = "OpenUIKitImageIO"
 let coreImageModule = "OpenUIKitCoreImage"
 let storeKitModule = "OpenUIKitStoreKit"
+let libkernModule = "OpenUIKitLibkern"
+let uiKitLinuxDependencies: [Target.Dependency] = []
+let fuziLinuxDependencies: [Target.Dependency] = []
+let osTarget: Target = .target(name: "os")
+let snapKitExclude = ["LICENSE", "VENDOR.txt"]
 #endif
 
 // Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
@@ -239,6 +267,14 @@ let frameworkProducts: [Product] = [
     .library(name: "Onboarding", targets: ["Onboarding"]),
     .library(name: "Licenses", targets: ["Licenses"]),
     .library(name: "DesignSystem", targets: ["DesignSystem"]),
+    // Focus a2832521 SPM pins: SnapKit 5.7.0 e74fe2a, sentry-cocoa 8.20.0
+    // b847a202, Fuzi 3.1.3 f08c832, libkern atomics for vendored Deferred.
+    // Darwin dependents keep the real SnapKit/Sentry/Fuzi packages via
+    // linux-conditioned `.product` (same pattern as Combine / os).
+    .library(name: "SnapKit", targets: ["SnapKit"]),
+    .library(name: "Sentry", targets: ["Sentry"]),
+    .library(name: "Fuzi", targets: ["Fuzi"]),
+    .library(name: libkernModule, targets: [libkernModule]),
 ]
 
 let coreTargets: [Target] = [
@@ -341,7 +377,7 @@ let coreTargets: [Target] = [
             "OpenUIKit",
             "DeveloperToolsSupport",
             "OpenUIKitPreviewMacros",
-        ],
+        ] + uiKitLinuxDependencies,
         path: "Sources/UIKitShim"
     ),
     // M14 real-app harness: UNMODIFIED source files lifted out of a
@@ -451,7 +487,26 @@ let frameworkTargets: [Target] = [
         name: "LinkPresentation",
         dependencies: ["OpenUIKit", "UIKit"]
     ),
-    .target(name: "os"),
+    osTarget,
+    // Unmodified SnapKit 5.7.0 (e74fe2a). `import UIKit` is OpenUIKit's
+    // UIKit product so `canImport(UIKit)` is true on macOS too (upstream
+    // SnapKit's own Package.swift uses AppKit on macOS).
+    .target(
+        name: "SnapKit",
+        dependencies: ["UIKit", "OpenUIKit"],
+        exclude: snapKitExclude
+    ),
+    .target(name: "Sentry"),
+    .target(
+        name: "Fuzi",
+        dependencies: fuziLinuxDependencies,
+        exclude: ["LICENSE", "VENDOR.txt"],
+        linkerSettings: [.linkedLibrary("xml2", .when(platforms: [.linux]))]
+    ),
+    .target(
+        name: libkernModule,
+        path: "Sources/libkern"
+    ),
 ]
 
 let conformanceTargets: [Target] = [
@@ -592,6 +647,65 @@ let testTargets: [Target] = [
     .testTarget(
         name: "OSTests",
         dependencies: ["os"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "SnapKitOpenUIKitTests",
+        dependencies: ["SnapKit", "UIKit", "OpenUIKit"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-default-isolation", "MainActor",
+            ], .when(platforms: [.macOS])),
+        ]
+    ),
+    .testTarget(
+        name: "GleanTests",
+        dependencies: ["Glean"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "SentryTests",
+        dependencies: ["Sentry"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "LibkernTests",
+        dependencies: [.target(name: libkernModule)],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "FuziTests",
+        dependencies: ["Fuzi"],
         swiftSettings: [
             .unsafeFlags([
                 "-swift-version", "5",

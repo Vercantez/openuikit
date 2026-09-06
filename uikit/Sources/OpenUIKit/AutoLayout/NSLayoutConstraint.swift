@@ -21,6 +21,19 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+// UIKit's NSLayoutConstraint is an NSObject (NSLayoutConstraint.h). SnapKit
+// 5.7.0 e74fe2a LayoutConstraint subclasses it and Debugging.swift overrides
+// `description` from an extension through NSObject/@objc dispatch (full/focus-ios
+// snapkit-exclusions.json). MEASURED /tmp/snapkit-ouik swift build --target
+// SnapKit against OpenUIKit UIKit: 0 errors in 36 DSL files; the only miss was
+// `non-'@objc' property 'description' declared in 'NSLayoutConstraint' cannot
+// be overridden from extension`. Inheriting NSObject is the iOS 26.1 identity,
+// not a comparison-score parameter.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 
 
 public struct UILayoutPriority: RawRepresentable, Hashable, Comparable, Sendable {
@@ -43,7 +56,7 @@ public struct UILayoutPriority: RawRepresentable, Hashable, Comparable, Sendable
 // inherited, and every member access inside it then reports as an isolation
 // violation, so ONE keyword produced 74 unrelated-looking errors.
 @preconcurrency @MainActor
-open class NSLayoutConstraint {
+open class NSLayoutConstraint: NSObject {
     /// Raw values are Darwin's `NSLayoutAttribute` (NSLayoutConstraint.h):
     /// left = 1 through centerYWithinMargins = 20, notAnAttribute = 0.
     /// `baseline` is `NS_SWIFT_UNAVAILABLE` on iOS, so it is not spelled here.
@@ -108,6 +121,7 @@ open class NSLayoutConstraint {
         self.secondAttribute = attr2
         self.multiplier = multiplier
         self.constant = constant
+        super.init()
     }
 
     public var isActive: Bool {
@@ -159,10 +173,9 @@ open class NSLayoutConstraint {
     }
 
     /// Real UIKit's constraint inherits `description` from `NSObject` and
-    /// subclasses override it (SnapKit's `LayoutConstraint` does). OpenUIKit
-    /// has no NSObject, so the overridable member is declared here; the
-    /// default text is not UIKit's and nothing may depend on its wording.
-    open var description: String {
+    /// subclasses / extensions override it (SnapKit 5.7.0 Debugging.swift).
+    /// The default text is not UIKit's and nothing may depend on its wording.
+    open override var description: String {
         let name = identifier.map { " '\($0)'" } ?? ""
         return "<NSLayoutConstraint\(name) \(firstAttribute) \(relation) "
             + "\(secondAttribute) * \(multiplier) + \(constant)>"

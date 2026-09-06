@@ -34,6 +34,8 @@
 #endif
 #if canImport(ObjectiveC)
 @_exported import ObjectiveC
+#elseif canImport(OpenUIKitObjectiveC)
+@_exported import OpenUIKitObjectiveC
 #endif
 @_exported import OpenUIKit
 
