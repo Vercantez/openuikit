@@ -1,8 +1,8 @@
 full/accelerate/Accelerate.swift
-full/accelerate/AccelerateBNNSTensorOps.swift
 full/accelerate/AccelerateBLASLevel23.swift
 full/accelerate/AccelerateBLASMore.swift
 full/accelerate/AccelerateBLASOps.swift
+full/accelerate/AccelerateBNNSTensorOps.swift
 full/accelerate/AccelerateCFunctions.swift
 full/accelerate/AccelerateCTypes.swift
 full/accelerate/AccelerateDepthGeometry.swift
