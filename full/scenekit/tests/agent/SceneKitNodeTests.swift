@@ -135,3 +135,37 @@ func testNodeAudioAndParticlesAttach() {
     node.removeParticleSystem(parts)
     node.removeAllParticleSystems()
 }
+
+func testNodeMorpherAndPhysicsField() {
+    let node = SCNNode()
+    let morph = SCNMorpher()
+    morph.targets = [SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)]
+    morph.weights = [0.25]
+    morph.unifiesNormals = true
+    node.morpher = morph
+    precondition(node.morpher === morph)
+    precondition(morph.unifiesNormals)
+    precondition(morph.targets.count == 1)
+    let field = SCNPhysicsField.spring()
+    field.strength = 2
+    node.physicsField = field
+    precondition(node.physicsField === field)
+    final class RenderProbe: NSObject, SCNNodeRendererDelegate {
+        var rendered = false
+        func renderNode(_ node: SCNNode, renderer: SCNRenderer, arguments: [String: Any]) {
+            rendered = true
+            _ = node
+            _ = renderer
+            _ = arguments
+        }
+    }
+    let probe = RenderProbe()
+    node.rendererDelegate = probe
+    probe.renderNode(node, renderer: SCNRenderer(), arguments: [:])
+    precondition(probe.rendered)
+    let geom = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+    geom.shaderModifiers = [.geometry: "// linux"]
+    geom.minimumLanguageVersion = 2
+    geom.handleUnbinding(ofSymbol: "u", handler: { _, _, _, _ in })
+    precondition(geom.shaderModifiers?[.geometry] == "// linux")
+}
