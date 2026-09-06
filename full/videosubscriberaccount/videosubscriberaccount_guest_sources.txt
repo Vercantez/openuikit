@@ -1,0 +1,6 @@
+full/videosubscriberaccount/VSAccountManager.swift
+full/videosubscriberaccount/VSAccountTypes.swift
+full/videosubscriberaccount/VSError.swift
+full/videosubscriberaccount/VSSubscription.swift
+full/videosubscriberaccount/VSUserAccount.swift
+full/videosubscriberaccount/VideoSubscriberAccount.swift
