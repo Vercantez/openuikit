@@ -5,7 +5,9 @@ full/metalperformanceshaders/MPSKernel.swift
 full/metalperformanceshaders/MPSMatrix.swift
 full/metalperformanceshaders/MPSMatrixKernels.swift
 full/metalperformanceshaders/MPSNDArray.swift
+full/metalperformanceshaders/MPSNeuralNetwork.swift
 full/metalperformanceshaders/MPSPacked.swift
+full/metalperformanceshaders/MPSRayIntersector.swift
 full/metalperformanceshaders/MPSTypes.swift
 full/metalperformanceshaders/MetalPerformanceShaders.swift
 full/metalperformanceshaders/MetalStandIn.swift

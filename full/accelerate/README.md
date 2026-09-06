@@ -46,6 +46,7 @@ constructors return `nil`, and Linear Algebra objects are inert
   annotation, or standard CBLAS) use sequential placeholders and stay
   `declared`, never `implemented`.
 - Affine warp without a usable transform returns `kvImageInvalidParameter`.
+- Planar8/ARGB8888 affine identity, nearest/bilinear scale, centre rotate, channel permute, and tent convolve (edge-extend) are implemented on small rasters; remaining packed formats stay fail-closed.
 
 ## Deferred
 
@@ -80,3 +81,37 @@ Top-5 evidence distribution (share of remaining implemented rows = 2534 − 26):
 5. `testCStructFields5` — 70 (2.8%) — C struct field reads
 
 No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling.
+
+## Depth pass 2026-09 (wave 8)
+
+Second depth pass for campaign `ios26.1-fwdepth-r15`, lane `medium-full`, 6856 exact IDs. The first-pass Linux sources and tests stay in tree; this pass adds real quadrature, sparse CSC multiply, extra BLAS/LAPACK, biquad DF2T, interleaved double DFT, and pixel-exact vImage affine/rotate/tent/permute.
+
+A follow-up ledger repair split the combined depth-pass runtime probes into focused `func test*()` functions per family. Every remaining `implemented` row cites `test:full/accelerate/tests/agent/<File>Tests.swift#testName` for a top-level synchronous no-argument test that calls that identifier. QAG interval constants and `Quadrature.Error` members share table-driven value tests; other families each have their own function.
+
+- Implemented before: **2534**
+- Implemented after: **2605** (unchanged by the ledger split)
+- Declared: 2837 (was 2901)
+- Deferred: 1414 (was 1421)
+- Unavailable: 0
+- Not-applicable: 0
+
+Top-5 evidence distribution (share of remaining implemented rows = 2605 − 2534 = 71):
+
+1. `testSparseMultiplyFloatVector` / `testSparseMultiplyDoubleVector` — 8 each (11.3%) — CSC convert/multiply/add plus vector init/cleanup
+2. `testQAGPointsPerIntervalValues` — 7 (9.9%) — table-driven QAG interval constants
+3. `testQuadratureErrorHashable` — 7 (9.9%) — table-driven `Quadrature.Error` `==`/`!=`/`hash`/`localizedDescription`
+4. `testSparseMultiplyFloatMatrix` / `testSparseMultiplyDoubleMatrix` — 5 each (7.0%) — CSC matrix multiply/add plus dense-matrix init
+5. `testQuadratureIntegratePolynomial` — 4 (5.6%) — overlay init, `.nonAdaptive`, and both `integrate` overloads
+
+No non-enum/constant test exceeds the 40% remaining-row bulk-relabel ceiling (largest is 8/71 = 11.3%). BNNS create stays fail-closed (`nil`). Complex sparse multiply, sparse subfactor/solve, and placeholder `QUADRATURE_*` C enumerator values stay declared or deferred.
+
+Sealed gate (`bash full/accelerate/tests/acceptance/test_host.sh`) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Accelerate lane=medium-full symbols=6856
+FRAMEWORK_FANOUT_REFERENCE_OK
+ACCELERATE_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
+```
+
+The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token. `.cursor/verify-cloud-environment.sh` on this snapshot fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 / linux and the sealed gate compiled with a clean product tree. Starting commit `bff8535c68425cc39fb45cb00d447b0981b57242` matched.

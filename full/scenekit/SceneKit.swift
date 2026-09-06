@@ -423,6 +423,14 @@ public protocol SCNAnimatable: NSObjectProtocol {
     func pauseAnimation(forKey key: String)
     func resumeAnimation(forKey key: String)
     func setAnimationSpeed(_ speed: CGFloat, forKey key: String)
+    func animation(forKey key: String) -> CAAnimation?
+}
+
+public extension SCNAnimatable {
+    func animation(forKey key: String) -> CAAnimation? {
+        guard let player = animationPlayer(forKey: key) else { return nil }
+        return CAAnimation(SCNAnimation: player.animation)
+    }
 }
 
 public protocol SCNAnimationProtocol: NSObjectProtocol {}

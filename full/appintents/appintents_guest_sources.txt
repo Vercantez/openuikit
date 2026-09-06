@@ -1,5 +1,6 @@
 full/appintents/AppIntents.swift
 full/appintents/AppIntentsAssistant.swift
+full/appintents/AppIntentsAssistantFamilies.swift
 full/appintents/AppIntentsClasses.swift
 full/appintents/AppIntentsDepth.swift
 full/appintents/AppIntentsEnums.swift

@@ -77,11 +77,43 @@ public struct AppShortcutParameterPresentationSummaryString<Intent, Value, Param
 
 public struct IntentItem<Value: _IntentValue>: @unchecked Sendable {
     public var value: Value
-    public init(_ value: Value) { self.value = value }
+    public var description: DisplayRepresentation
+
+    public init(_ value: Value) {
+        self.value = value
+        self.description = DisplayRepresentation(title: String(describing: value))
+    }
+
+    public init(
+        _ value: Value,
+        title: LocalizedStringResource,
+        subtitle: LocalizedStringResource? = nil,
+        image: DisplayRepresentation.Image? = nil
+    ) {
+        self.value = value
+        self.description = DisplayRepresentation(
+            title: title,
+            subtitle: subtitle,
+            image: image
+        )
+    }
+
     public enum Builder: Hashable, Sendable {
         case _appIntentsPlaceholder
         public static func buildBlock(_ items: IntentItem<Value>...) -> [IntentItem<Value>] {
             items
+        }
+        public static func buildBlock() -> [Value] { [] }
+        public static func buildArray(_ components: [[IntentItem<Value>]]) -> [IntentItem<Value>] {
+            components.flatMap { $0 }
+        }
+        public static func buildExpression(_ expression: Value) -> IntentItem<Value> {
+            IntentItem(expression)
+        }
+        public static func buildExpression<ExpressionValue: _IntentValue>(
+            _ expression: IntentItem<ExpressionValue>
+        ) -> IntentItem<ExpressionValue> {
+            expression
         }
     }
 }
@@ -202,12 +234,48 @@ public struct DoubleResolver: @unchecked Sendable {
     public init() {}
 }
 
+#if !canImport(RelevanceKit)
+public struct RelevantContext: Sendable, Hashable {
+    public var score: Double
+    public init(score: Double = 0) { self.score = score }
+}
+#endif
+
 public struct RelevantIntent: @unchecked Sendable {
-    public init() {}
+    public let widgetKind: String
+    public let relevanceScore: Double
+    public var debugDescription: String { "\(widgetKind):\(relevanceScore)" }
+
+    public init() {
+        self.widgetKind = ""
+        self.relevanceScore = 0
+    }
+
+    public init<IntentType: WidgetConfigurationIntent>(
+        _ intent: IntentType,
+        widgetKind: String,
+        relevance: RelevantContext
+    ) {
+        _ = intent
+        self.widgetKind = widgetKind
+        self.relevanceScore = relevance.score
+    }
 }
 
 public struct EntityQuerySort<Entity>: @unchecked Sendable {
-    public init() {}
+    public let by: PartialKeyPath<Entity>?
+    public let order: Ordering
+
+    public init() {
+        self.by = nil
+        self.order = .ascending
+    }
+
+    public init(by: PartialKeyPath<Entity>, order: Ordering = .ascending) {
+        self.by = by
+        self.order = order
+    }
+
     public enum Ordering: Hashable, Sendable {
         case descending
         case ascending
@@ -289,8 +357,37 @@ public struct IntentItemSection<Result: _IntentValue>: @unchecked Sendable {
     }
 }
 
-public struct IntentPaymentMethod: @unchecked Sendable {
-    public init() {}
+public struct IntentPaymentMethod: @unchecked Sendable, Hashable, _IntentValue {
+    public var paymentType: PaymentType
+    public var name: String?
+    public var identificationHint: String?
+    public var icon: DisplayRepresentation.Image?
+
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Payment Method" }
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: name ?? paymentType.rawToken, image: icon)
+    }
+
+    public init() {
+        self.paymentType = .unknown
+        self.name = nil
+        self.identificationHint = nil
+        self.icon = nil
+    }
+
+    public init(
+        type: PaymentType,
+        name: LocalizedStringResource? = nil,
+        identificationHint: String? = nil,
+        icon: DisplayRepresentation.Image? = nil
+    ) {
+        self.paymentType = type
+        self.name = name.map { appIntentsString($0) }
+        self.identificationHint = identificationHint
+        self.icon = icon
+    }
+
     public enum PaymentType: Hashable, Sendable {
         case debit
         case store
@@ -301,15 +398,71 @@ public struct IntentPaymentMethod: @unchecked Sendable {
         case applePay
         case checking
         case brokerage
+
+        public var rawToken: String {
+            switch self {
+            case .debit: return "debit"
+            case .store: return "store"
+            case .credit: return "credit"
+            case .prepaid: return "prepaid"
+            case .savings: return "savings"
+            case .unknown: return "unknown"
+            case .applePay: return "applePay"
+            case .checking: return "checking"
+            case .brokerage: return "brokerage"
+            }
+        }
     }
 }
 
-public struct IntentCollectionSize: @unchecked Sendable {
-    public init() {}
+public struct IntentCollectionSize: @unchecked Sendable, Hashable, ExpressibleByIntegerLiteral {
+    public let min: Int
+    public let max: Int
+
+    public init() {
+        self.min = 0
+        self.max = 0
+    }
+
+    public init(integerLiteral value: Int) {
+        self.min = value
+        self.max = value
+    }
+
+    public init(min: Int, max: Int) {
+        self.min = min
+        self.max = max
+    }
+
+    public init(exactly value: Int) {
+        self.min = value
+        self.max = value
+    }
 }
 
-public struct IntentCurrencyAmount: @unchecked Sendable {
-    public init() {}
+public struct IntentCurrencyAmount: @unchecked Sendable, Hashable, _IntentValue {
+    public let amount: Decimal
+    public let currencyCode: String
+
+    public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Currency Amount" }
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(title: "\(amount) \(currencyCode)")
+    }
+
+    public var localizedStringResource: LocalizedStringResource {
+        LocalizedStringResource("\(amount) \(currencyCode)")
+    }
+
+    public init() {
+        self.amount = 0
+        self.currencyCode = "USD"
+    }
+
+    public init(amount: Decimal, currencyCode: String) {
+        self.amount = amount
+        self.currencyCode = currencyCode
+    }
 }
 
 public struct IntentItemCollection<Result: _IntentValue>: @unchecked Sendable {

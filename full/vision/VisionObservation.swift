@@ -318,6 +318,40 @@ open class VNFaceObservation: VNDetectedObjectObservation {
     public let yaw: NSNumber?
     public let pitch: NSNumber?
     public let faceCaptureQuality: NSNumber?
+    public let landmarks: VNFaceLandmarks2D?
+
+    public convenience init(
+        requestRevision: Int,
+        boundingBox: CGRect,
+        roll: NSNumber?,
+        yaw: NSNumber?
+    ) {
+        self.init(
+            requestRevision: requestRevision,
+            boundingBox: boundingBox,
+            roll: roll,
+            yaw: yaw,
+            pitch: nil
+        )
+    }
+
+    public convenience init(
+        requestRevision: Int,
+        boundingBox: CGRect,
+        roll: NSNumber?,
+        yaw: NSNumber?,
+        pitch: NSNumber?
+    ) {
+        self.init(
+            requestRevision: requestRevision,
+            boundingBox: boundingBox,
+            roll: roll,
+            yaw: yaw,
+            pitch: pitch,
+            faceCaptureQuality: nil,
+            landmarks: nil
+        )
+    }
 
     public init(
         requestRevision: Int = VNRequestRevisionUnspecified,
@@ -326,6 +360,7 @@ open class VNFaceObservation: VNDetectedObjectObservation {
         yaw: NSNumber? = nil,
         pitch: NSNumber? = nil,
         faceCaptureQuality: NSNumber? = nil,
+        landmarks: VNFaceLandmarks2D? = nil,
         confidence: VNConfidence = 1,
         uuid: UUID = UUID()
     ) {
@@ -333,6 +368,7 @@ open class VNFaceObservation: VNDetectedObjectObservation {
         self.yaw = yaw
         self.pitch = pitch
         self.faceCaptureQuality = faceCaptureQuality
+        self.landmarks = landmarks
         super.init(
             requestRevision: requestRevision,
             boundingBox: boundingBox,
@@ -346,14 +382,8 @@ open class VNFaceObservation: VNDetectedObjectObservation {
         yaw = nil
         pitch = nil
         faceCaptureQuality = nil
+        landmarks = nil
         super.init(coder: coder)
-    }
-}
-
-open class VNHumanBodyPose3DObservation: VNObservation {
-    public enum HeightEstimation: Int, CaseIterable, Sendable {
-        case reference = 0
-        case measured = 1
     }
 }
 
@@ -506,6 +536,7 @@ open class VNPixelBufferObservation: VNObservation {
 
 open class VNClassificationObservation: VNObservation {
     public let identifier: String
+    public var hasPrecisionRecallCurve: Bool { false }
 
     public init(identifier: String, confidence: VNConfidence, uuid: UUID = UUID()) {
         self.identifier = identifier
@@ -516,10 +547,55 @@ open class VNClassificationObservation: VNObservation {
         identifier = ""
         super.init(coder: coder)
     }
+
+    public func hasMinimumPrecision(_ minimumPrecision: Float, forRecall recall: Float) -> Bool {
+        _ = minimumPrecision
+        _ = recall
+        return false
+    }
+
+    public func hasMinimumRecall(_ minimumRecall: Float, forPrecision precision: Float) -> Bool {
+        _ = minimumRecall
+        _ = precision
+        return false
+    }
 }
 
 open class VNHorizonObservation: VNObservation {
-    public var angle: Double = 0
+    public var angle: Double
+
+    public var transform: CGAffineTransform {
+        CGAffineTransform(rotationAngle: -CGFloat(angle))
+    }
+
+    public init(angle: Double, confidence: VNConfidence = 1, uuid: UUID = UUID()) {
+        self.angle = angle
+        super.init(uuid: uuid, confidence: confidence)
+    }
+
+    public required init?(coder: NSCoder) {
+        angle = 0
+        super.init(coder: coder)
+    }
+
+    public func transform(forImageWidth width: Int, height: Int) -> CGAffineTransform {
+        visionHorizonCenteredTransform(angle: angle, width: width, height: height)
+    }
+}
+
+func visionHorizonCenteredTransform(angle: Double, width: Int, height: Int) -> CGAffineTransform {
+    let cosine = Foundation.cos(-angle)
+    let sine = Foundation.sin(-angle)
+    let cx = CGFloat(width) / 2
+    let cy = CGFloat(height) / 2
+    return CGAffineTransform(
+        a: cosine,
+        b: sine,
+        c: -sine,
+        d: cosine,
+        tx: cx - cosine * cx + sine * cy,
+        ty: cy - sine * cx - cosine * cy
+    )
 }
 
 open class VNHumanObservation: VNDetectedObjectObservation {

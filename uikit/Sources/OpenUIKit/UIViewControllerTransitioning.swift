@@ -1,5 +1,6 @@
 // Custom transitions: UIViewControllerAnimatedTransitioning + context +
-// transitioning delegate. Owner: viewcontroller module (M12 alerts cluster).
+// transitioning delegate + the public transition coordinator and
+// percent-driven interactive controller (M12 + corpus tail #1).
 //
 // WHY: the census (docs/APP_COMPAT.md) counts 64 uses of this cluster in the
 // corpus — apps supply their own present/dismiss and push/pop animations
@@ -16,11 +17,10 @@
 // and app keeps its measured behaviour.
 //
 // Deliberate limits, all documented in docs/KNOWN_GAPS.md:
-//   - No UIViewControllerInteractiveTransitioning. The interactive back
-//     swipe and the interactive sheet drag are SCRUBBED against the host
-//     clock by the controllers themselves (measured physics), and routing
-//     them through a percent-driven interactive protocol would change the
-//     feel. A custom animator therefore runs non-interactively.
+//   - Built-in interactive back-swipe and sheet drag stay on their measured
+//     host-clock scrub paths; a custom animator can still return a
+//     `UIPercentDrivenInteractiveTransition` from the transitioning /
+//     navigation delegate.
 //   - `animateTransition(using:)` must finish through
 //     `context.completeTransition(_:)` — usually from a UIView.animate
 //     completion, which the host clock fires exactly like the built-ins.
@@ -66,10 +66,16 @@ public protocol UIViewControllerAnimatedTransitioning: AnyObject {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning)
     func animationEnded(_ transitionCompleted: Bool)
+    func interruptibleAnimator(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) -> UIViewImplicitlyAnimating?
 }
 
 extension UIViewControllerAnimatedTransitioning {
     public func animationEnded(_ transitionCompleted: Bool) {}
+    public func interruptibleAnimator(
+        using transitionContext: UIViewControllerContextTransitioning
+    ) -> UIViewImplicitlyAnimating? { nil }
 }
 
 /// An app's hook for a modal presentation: custom animators and/or a custom
@@ -84,6 +90,12 @@ public protocol UIViewControllerTransitioningDelegate: AnyObject {
     func presentationController(forPresented presented: UIViewController,
                                 presenting: UIViewController?,
                                 source: UIViewController) -> UIPresentationController?
+    func interactionControllerForPresentation(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning?
+    func interactionControllerForDismissal(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning?
 }
 
 extension UIViewControllerTransitioningDelegate {
@@ -95,6 +107,12 @@ extension UIViewControllerTransitioningDelegate {
     public func presentationController(forPresented presented: UIViewController,
                                        presenting: UIViewController?,
                                        source: UIViewController) -> UIPresentationController? { nil }
+    public func interactionControllerForPresentation(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning? { nil }
+    public func interactionControllerForDismissal(
+        using animator: UIViewControllerAnimatedTransitioning
+    ) -> UIViewControllerInteractiveTransitioning? { nil }
 }
 
 // MARK: - Concrete context for modal presentations
@@ -116,6 +134,9 @@ final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
     private let endFrame: CGRect
     /// Called exactly once, from `completeTransition`.
     var onComplete: ((Bool) -> Void)?
+    var coordinator: _UITransitionCoordinator?
+    var isInteractive = false
+    var transitionWasCancelled = false
     private var completed = false
 
     init(containerView: UIView, animated: Bool, presenting: Bool,
@@ -132,9 +153,6 @@ final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
         self.startFrame = startFrame
         self.endFrame = endFrame
     }
-
-    var isInteractive: Bool { false }
-    var transitionWasCancelled: Bool { false }
 
     func viewController(forKey key: UITransitionContextViewControllerKey) -> UIViewController? {
         key == .from ? fromVC : toVC
@@ -155,15 +173,25 @@ final class _UIModalTransitionContext: UIViewControllerContextTransitioning {
         completed = true
         onComplete?(didComplete)
     }
-    func updateInteractiveTransition(_ percentComplete: CGFloat) {}
-    func finishInteractiveTransition() {}
-    func cancelInteractiveTransition() {}
+    func updateInteractiveTransition(_ percentComplete: CGFloat) {
+        coordinator?.percentComplete = percentComplete
+    }
+    func finishInteractiveTransition() {
+        isInteractive = false
+        coordinator?.setInteractive(false)
+    }
+    func cancelInteractiveTransition() {
+        transitionWasCancelled = true
+        isInteractive = false
+        coordinator?.isCancelled = true
+        coordinator?.setInteractive(false)
+    }
 }
 
 // MARK: - Navigation transitions
 
-/// An app's hook for push/pop animations. UIKit's protocol, minus the
-/// interactive-controller member — see the file header for why.
+/// An app's hook for push/pop animations, including an optional
+/// percent-driven interactive controller.
 @preconcurrency @MainActor
 public protocol UINavigationControllerDelegate: AnyObject {
     func navigationController(_ navigationController: UINavigationController,
@@ -174,6 +202,9 @@ public protocol UINavigationControllerDelegate: AnyObject {
                               animationControllerFor operation: UINavigationController.Operation,
                               from fromVC: UIViewController,
                               to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning?
+    func navigationController(_ navigationController: UINavigationController,
+                              interactionControllerFor animationController: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning?
 }
 
 extension UINavigationControllerDelegate {
@@ -185,6 +216,9 @@ extension UINavigationControllerDelegate {
                                      animationControllerFor operation: UINavigationController.Operation,
                                      from fromVC: UIViewController,
                                      to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? { nil }
+    public func navigationController(_ navigationController: UINavigationController,
+                                     interactionControllerFor animationController: UIViewControllerAnimatedTransitioning)
+        -> UIViewControllerInteractiveTransitioning? { nil }
 }
 
 /// The context for one push or pop. `containerView` is the navigation
@@ -198,6 +232,9 @@ final class _UINavigationTransitionContext: UIViewControllerContextTransitioning
     let toVC: UIViewController
     let isAnimated: Bool
     var onComplete: ((Bool) -> Void)?
+    var coordinator: _UITransitionCoordinator?
+    var isInteractive = false
+    var transitionWasCancelled = false
     private var completed = false
 
     init(nav: UINavigationController, push: Bool,
@@ -210,8 +247,6 @@ final class _UINavigationTransitionContext: UIViewControllerContextTransitioning
     }
 
     var containerView: UIView { nav.contentView }
-    var isInteractive: Bool { false }
-    var transitionWasCancelled: Bool { false }
 
     func viewController(forKey key: UITransitionContextViewControllerKey) -> UIViewController? {
         key == .from ? fromVC : toVC
@@ -236,9 +271,19 @@ final class _UINavigationTransitionContext: UIViewControllerContextTransitioning
         completed = true
         onComplete?(didComplete)
     }
-    func updateInteractiveTransition(_ percentComplete: CGFloat) {}
-    func finishInteractiveTransition() {}
-    func cancelInteractiveTransition() {}
+    func updateInteractiveTransition(_ percentComplete: CGFloat) {
+        coordinator?.percentComplete = percentComplete
+    }
+    func finishInteractiveTransition() {
+        isInteractive = false
+        coordinator?.setInteractive(false)
+    }
+    func cancelInteractiveTransition() {
+        transitionWasCancelled = true
+        isInteractive = false
+        coordinator?.isCancelled = true
+        coordinator?.setInteractive(false)
+    }
 }
 
 /// The built-in push/pop: the incoming view slides over the outgoing one,
@@ -302,27 +347,20 @@ final class _UINavigationSlideAnimator: UIViewControllerAnimatedTransitioning {
                        animations: {
             nav.applyTransition(t, coverage: c.push ? 1 : 0)
             nav.navigationBar.setTransitionProgress(1)
+            c.coordinator?.performAlongsideAnimations()
         })
         nav.navigationBar.accelerateOutgoingBackFade(duration: duration)
         UINavigationController.registerTransitioning(nav)
     }
 }
 
-// MARK: - Transition coordinator (declared, unconformed — app-compat 2026-08-28)
+// MARK: - Transition coordinator
 //
-// Every UIKit app that handles rotation overrides
-// `viewWillTransition(to:with:)`, so the coordinator TYPE has to exist for
-// that override to declare. focus-ios overrides it in four controllers.
-//
-// Nothing in OpenUIKit vends a coordinator: the library never rotates a
-// window and never resizes one on its own (docs/KNOWN_GAPS.md, "App
-// lifecycle / environment" — the host owns the surface). So this is the same
-// shape as `UILayoutSupport`: the protocols are declared so app source
-// compiles, no type conforms, and a host that grows real size transitions
-// implements them then rather than inheriting a fake now. `animate(
-// alongsideTransition:completion:)` returning Bool is UIKit's signature —
-// false means "not animated" — so a future conformer has somewhere honest to
-// say so.
+// MEASURED animprobe, iPhone SE 2x / iOS 26.1: push/pop/present/dismiss vend
+// a coordinator on from, to, and the container controller for the animated
+// case. Rotation still has no size-transition vendor (the host owns the
+// surface); `viewWillTransition(to:with:)` keeps the protocol so app
+// overrides compile.
 @preconcurrency @MainActor
 public protocol UIViewControllerTransitionCoordinatorContext: AnyObject {
     var isAnimated: Bool { get }
@@ -376,5 +414,253 @@ extension UIViewControllerTransitionCoordinator {
         animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?
     ) -> Bool {
         animateAlongsideTransition(in: view, animation: animation, completion: nil)
+    }
+}
+
+// MARK: - Concrete coordinator
+//
+// MEASURED animprobe, iPhone SE 2x / iOS 26.1:
+//   * Non-nil on from, to, and the navigation controller during animated
+//     push; still non-nil in viewDidAppear; nil after the transition ends.
+//   * Push: duration 0.35, presentationStyle .none, completionCurve raw 7,
+//     completionVelocity 1, isAnimated true, initiallyInteractive false,
+//     isInteractive false, isInterruptible false, targetTransform identity,
+//     percentComplete 0 at viewWillAppear.
+//   * PageSheet present: presentationStyle .pageSheet, completionCurve
+//     easeInOut (0), transitionDuration 0 at viewWillAppear, presenting
+//     controller also vends the coordinator.
+//   * animate(alongsideTransition:) returns true; the animation block is
+//     NOT invoked synchronously in viewWillAppear (alongsideRanSync false);
+//     completion runs after the transition, not in willAppear.
+
+@preconcurrency @MainActor
+final class _UITransitionCoordinator: UIViewControllerTransitionCoordinator {
+    let isAnimated: Bool
+    let presentationStyle: UIModalPresentationStyle
+    let initiallyInteractive: Bool
+    var isInterruptible: Bool
+    var isInteractive: Bool
+    var isCancelled = false
+    var transitionDuration: TimeInterval
+    var percentComplete: CGFloat = 0
+    var completionVelocity: CGFloat = 1
+    var completionCurve: UIView.AnimationCurve
+    let containerView: UIView
+    var targetTransform: CGAffineTransform = .identity
+    private weak var fromVC: UIViewController?
+    private weak var toVC: UIViewController?
+    private weak var fromView: UIView?
+    private weak var toView: UIView?
+    private var attached: [UIViewController] = []
+    private var items: [(animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?,
+                         completion: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?)] = []
+    private var interactionHandlers: [(any UIViewControllerTransitionCoordinatorContext) -> Void] = []
+    private var alongsideFlushed = false
+    private var finished = false
+
+    init(animated: Bool,
+         presentationStyle: UIModalPresentationStyle,
+         duration: TimeInterval,
+         completionCurve: UIView.AnimationCurve,
+         containerView: UIView,
+         from: UIViewController?,
+         to: UIViewController?,
+         fromView: UIView?,
+         toView: UIView?,
+         interactive: Bool,
+         interruptible: Bool) {
+        self.isAnimated = animated
+        self.presentationStyle = presentationStyle
+        self.initiallyInteractive = interactive
+        self.isInteractive = interactive
+        self.isInterruptible = interruptible
+        self.transitionDuration = duration
+        self.completionCurve = completionCurve
+        self.containerView = containerView
+        self.fromVC = from
+        self.toVC = to
+        self.fromView = fromView
+        self.toView = toView
+    }
+
+    func viewController(forKey key: UITransitionContextViewControllerKey) -> UIViewController? {
+        key == .from ? fromVC : toVC
+    }
+    func view(forKey key: UITransitionContextViewKey) -> UIView? {
+        key == .from ? fromView : toView
+    }
+
+    func attach(_ controllers: UIViewController?...) {
+        for vc in controllers {
+            guard let vc else { continue }
+            vc._transitionCoordinator = self
+            if !attached.contains(where: { $0 === vc }) { attached.append(vc) }
+        }
+    }
+
+    func detach() {
+        for vc in attached {
+            if vc._transitionCoordinator === self {
+                vc._transitionCoordinator = nil
+            }
+        }
+        attached.removeAll()
+    }
+
+    @discardableResult
+    func animate(
+        alongsideTransition animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?,
+        completion: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?
+    ) -> Bool {
+        guard isAnimated, !finished else { return false }
+        items.append((animation, completion))
+        if alongsideFlushed {
+            animation?(self)
+        }
+        return true
+    }
+
+    @discardableResult
+    func animateAlongsideTransition(
+        in view: UIView?,
+        animation: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?,
+        completion: ((any UIViewControllerTransitionCoordinatorContext) -> Void)?
+    ) -> Bool {
+        _ = view
+        return animate(alongsideTransition: animation, completion: completion)
+    }
+
+    func notifyWhenInteractionChanges(
+        _ handler: @escaping (any UIViewControllerTransitionCoordinatorContext) -> Void
+    ) {
+        interactionHandlers.append(handler)
+    }
+
+    func notifyWhenInteractionEnds(
+        _ handler: @escaping (any UIViewControllerTransitionCoordinatorContext) -> Void
+    ) {
+        notifyWhenInteractionChanges(handler)
+    }
+
+    func performAlongsideAnimations() {
+        guard !alongsideFlushed else { return }
+        alongsideFlushed = true
+        for item in items { item.animation?(self) }
+    }
+
+    func setInteractive(_ value: Bool) {
+        guard isInteractive != value else { return }
+        isInteractive = value
+        for handler in interactionHandlers { handler(self) }
+    }
+
+    func flushAlongsideIfNeeded(duration: TimeInterval) {
+        guard !alongsideFlushed else { return }
+        if duration <= 1e-12 {
+            performAlongsideAnimations()
+            return
+        }
+        UIView.animate(withDuration: duration, animations: {
+            self.performAlongsideAnimations()
+        })
+    }
+
+    func complete(cancelled: Bool) {
+        guard !finished else { return }
+        finished = true
+        isCancelled = cancelled
+        if isInteractive { setInteractive(false) }
+        if !alongsideFlushed { performAlongsideAnimations() }
+        for item in items { item.completion?(self) }
+        detach()
+    }
+}
+
+// MARK: - Interactive transitioning
+
+@preconcurrency @MainActor
+public protocol UIViewControllerInteractiveTransitioning: AnyObject {
+    func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning)
+    var completionSpeed: CGFloat { get }
+    var completionCurve: UIView.AnimationCurve { get }
+    var wantsInteractiveStart: Bool { get }
+}
+
+extension UIViewControllerInteractiveTransitioning {
+    public var completionSpeed: CGFloat { 1 }
+    public var completionCurve: UIView.AnimationCurve { .easeInOut }
+    public var wantsInteractiveStart: Bool { true }
+}
+
+@preconcurrency @MainActor
+open class UIPercentDrivenInteractiveTransition: UIViewControllerInteractiveTransitioning {
+    public private(set) var duration: CGFloat = 0
+    public private(set) var percentComplete: CGFloat = 0
+    public var completionSpeed: CGFloat = 1
+    public var completionCurve: UIView.AnimationCurve = .easeInOut
+    public var timingCurve: UITimingCurveProvider?
+    public var wantsInteractiveStart = true
+
+    private weak var context: UIViewControllerContextTransitioning?
+    private weak var propertyAnimator: UIViewPropertyAnimator?
+    var _animator: UIViewControllerAnimatedTransitioning?
+
+    public init() {}
+
+    open func startInteractiveTransition(_ transitionContext: UIViewControllerContextTransitioning) {
+        context = transitionContext
+        if let animator = _animator {
+            duration = CGFloat(animator.transitionDuration(using: transitionContext))
+            if let interruptible = animator.interruptibleAnimator(using: transitionContext)
+                as? UIViewPropertyAnimator {
+                propertyAnimator = interruptible
+                if interruptible.state == .inactive {
+                    interruptible.startAnimation()
+                }
+                interruptible.pauseAnimation()
+            } else {
+                animator.animateTransition(using: transitionContext)
+            }
+        }
+    }
+
+    open func update(_ percentComplete: CGFloat) {
+        let p = min(max(percentComplete, 0), 1)
+        self.percentComplete = p
+        propertyAnimator?.fractionComplete = p
+        context?.updateInteractiveTransition(p)
+    }
+
+    open func pause() {
+        propertyAnimator?.pauseAnimation()
+        context?.updateInteractiveTransition(percentComplete)
+    }
+
+    open func finish() {
+        context?.finishInteractiveTransition()
+        if let animator = propertyAnimator, animator.state == .active {
+            animator.isReversed = false
+            animator.continueAnimation(withTimingParameters: timingCurve,
+                                       durationFactor: completionSpeed)
+            animator.addCompletion { [weak self] _ in
+                self?.context?.completeTransition(true)
+            }
+        } else {
+            context?.completeTransition(true)
+        }
+    }
+
+    open func cancel() {
+        context?.cancelInteractiveTransition()
+        if let animator = propertyAnimator, animator.state == .active {
+            animator.isReversed = true
+            animator.continueAnimation(withTimingParameters: timingCurve,
+                                       durationFactor: completionSpeed)
+            animator.addCompletion { [weak self] _ in
+                self?.context?.completeTransition(false)
+            }
+        } else {
+            context?.completeTransition(false)
+        }
     }
 }

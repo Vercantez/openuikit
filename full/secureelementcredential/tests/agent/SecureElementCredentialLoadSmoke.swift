@@ -1,0 +1,3 @@
+import SecureElementCredential
+
+let frameworkLoadSmokeMarker = "SECUREELEMENTCREDENTIAL_AGENT_RUNTIME_OK"

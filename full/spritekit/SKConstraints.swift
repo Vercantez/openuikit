@@ -122,7 +122,11 @@ open class SKConstraint: NSObject, NSSecureCoding {
         case .distance(let range, let target, let point):
             let dest: CGPoint
             if let target {
-                dest = node.convert(point ?? .zero, from: target)
+                if let parent = node.parent {
+                    dest = target.convert(point ?? .zero, to: parent)
+                } else {
+                    dest = target.convert(point ?? .zero, to: nil)
+                }
             } else {
                 dest = point ?? .zero
             }
@@ -138,12 +142,16 @@ open class SKConstraint: NSObject, NSSecureCoding {
         case .orient(let target, let point, let offset):
             let dest: CGPoint
             if let target {
-                dest = node.convert(point ?? .zero, from: target)
+                if let parent = node.parent {
+                    dest = target.convert(point ?? .zero, to: parent)
+                } else {
+                    dest = target.convert(point ?? .zero, to: nil)
+                }
             } else {
                 dest = point ?? node.position
             }
             let angle = CGFloat(atan2(Double(dest.y - node.position.y), Double(dest.x - node.position.x)))
-            node.zRotation = offset._clamp(angle)
+            node.zRotation = angle + offset._clamp(0)
         }
     }
 }

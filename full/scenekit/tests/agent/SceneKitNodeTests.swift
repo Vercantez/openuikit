@@ -102,6 +102,26 @@ func testNodeCloneAndBounds() {
     node.rotate(by: SCNVector4(0, 1, 0, 0.2), aroundTarget: SCNVector3Zero)
 }
 
+func testNodeHiddenOpacityPropagation() {
+    let parent = SCNNode()
+    parent.opacity = 0.5
+    parent.categoryBitMask = 1
+    let child = SCNNode()
+    child.opacity = 0.5
+    child.categoryBitMask = 3
+    parent.addChildNode(child)
+    precondition(abs(Float(child.linux_worldOpacity) - 0.25) < 1e-4)
+    precondition(!child.linux_worldHidden)
+    parent.isHidden = true
+    precondition(child.linux_worldHidden)
+    parent.isHidden = false
+    precondition(child.linux_worldCategoryBitMask == 1)
+    child.look(at: SCNVector3(0, 0, 1))
+    let converted = parent.convertPosition(SCNVector3(1, 0, 0), from: nil)
+    _ = parent.convertTransform(SCNMatrix4Identity, from: child)
+    _ = converted
+}
+
 func testNodeAudioAndParticlesAttach() {
     let node = SCNNode()
     let player = SCNAudioPlayer(source: SCNAudioSource())

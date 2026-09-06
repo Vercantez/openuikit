@@ -117,14 +117,47 @@ remaining family test: `testNWInterfaceAndPathFromGetifaddrs` at 87/1266 =
 6.9%). Enum/option-set members share family tests; C `nw_*` typealiases
 without a named test are `declared`.
 
+### Third pass (this run)
+
+Before: **1266 implemented / 754 declared / 1027 deferred / 0 unavailable /
+0 not-applicable** (2020 nondeferred).
+
+This pass keeps the existing POSIX transport and tests green and adds real
+Linux behaviour:
+
+- `NWConnection.localEndpoint` / `remoteEndpoint` / `currentPath` from
+  `getsockname` / `getpeername` after TCP and UDP loopback connect.
+- C `nw_endpoint_*` host/url/address/bonjour create/get/copy round-trips.
+- C QUIC option/metadata get/set storage, WebSocket options/metadata/response,
+  IP metadata, proxy/privacy/resolver data model, TXT-adjacent browse
+  descriptors, connection-group fail-closed start, data-transfer report
+  collect with zero counts plus a real `getifaddrs` loopback interface, and
+  a C framer host (`parseInput`/`writeOutput`/`mark_ready`/`wakeup`).
+- TLS handshake remains fail-closed with `NWError.tls(-9800)`. QUIC
+  connections remain `EOPNOTSUPP`. Bonjour browse/advertise remains
+  fail-closed empty.
+
+After: **1548 implemented / 472 declared / 1027 deferred / 0 unavailable /
+0 not-applicable** (2020 nondeferred). Implemented gain **+282**.
+
+Top-5 `implemented` evidence distribution (of 1548):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (12.3%)
+2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (5.6%)
+3. `NetworkCStructInitTests.swift#testCStructRawValueInitializers` — 83 (5.4%)
+   (C imported struct `init(rawValue:)` / `.rawValue` table)
+4. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (4.6%)
+5. `NetworkTransportTests.swift#testBrowserDescriptorsFailClosedWithPOSIXError`
+   — 54 (3.5%)
+
 Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
 `CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
 absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Active Cursor Build observed on this run was
-`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
-`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
+`bff8535c68425cc39fb45cb00d447b0981b57242` matched.
 
 `bash full/network/tests/acceptance/test_host.sh` ended:
 

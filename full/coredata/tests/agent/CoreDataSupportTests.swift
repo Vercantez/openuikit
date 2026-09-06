@@ -127,3 +127,72 @@ func makeAuthorNoteModel() -> NSManagedObjectModel {
     return model
 }
 
+func makeLoadedSQLiteContainer(
+    _ model: NSManagedObjectModel,
+    directory: URL,
+    name: String
+) throws -> NSPersistentContainer {
+    let container = NSPersistentContainer(name: name, managedObjectModel: model)
+    let url = directory.appendingPathComponent("\(name).sqlite")
+    let description = NSPersistentStoreDescription(url: url)
+    description.type = NSSQLiteStoreType
+    description.shouldAddStoreAsynchronously = false
+    description.setOption(false as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
+    container.persistentStoreDescriptions = [description]
+    var loadError: (any Error)?
+    container.loadPersistentStores { _, error in
+        loadError = error
+    }
+    if let loadError {
+        throw ProbeFailure.message("SQLite loadPersistentStores failed: \(loadError)")
+    }
+    return container
+}
+
+func agentModelContentsXML() -> String {
+    """
+    <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" userDefinedModelVersionIdentifier="notes-v1">
+        <entity name="Author" representedClassName="Author" syncable="YES">
+            <attribute name="name" optional="NO" attributeType="String"/>
+            <relationship name="notes" optional="YES" toMany="YES" ordered="YES" deletionRule="Cascade" destinationEntity="Note" inverseName="author" inverseEntity="Note"/>
+            <uniquenessConstraints>
+                <uniquenessConstraint>
+                    <constraint value="name"/>
+                </uniquenessConstraint>
+            </uniquenessConstraints>
+        </entity>
+        <entity name="Note" representedClassName="Note" syncable="YES">
+            <attribute name="title" optional="NO" attributeType="String"/>
+            <attribute name="count" optional="YES" attributeType="Integer 64" defaultValueString="0"/>
+            <attribute name="starred" optional="YES" attributeType="Boolean" defaultValueString="NO"/>
+            <attribute name="scratch" optional="YES" transient="YES" attributeType="String"/>
+            <relationship name="author" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Author" inverseName="notes" inverseEntity="Author"/>
+            <fetchedProperty name="allNotes" optional="YES">
+                <fetchRequest name="fetchedPropertyFetchRequest" entity="Note" predicateString="title != nil"/>
+            </fetchedProperty>
+        </entity>
+    </model>
+    """
+}
+
+func writeAgentXMLModelBundle(in directory: URL) throws -> URL {
+    let bundle = directory.appendingPathComponent("Notes.xcdatamodeld")
+    let current = bundle.appendingPathComponent("Notes.xcdatamodel")
+    try FileManager.default.createDirectory(at: current, withIntermediateDirectories: true)
+    let contents = current.appendingPathComponent("contents")
+    try agentModelContentsXML().write(to: contents, atomically: true, encoding: .utf8)
+    let marker = """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+        <key>_XCCurrentVersionName</key>
+        <string>Notes.xcdatamodel</string>
+    </dict>
+    </plist>
+    """
+    try marker.write(to: bundle.appendingPathComponent(".xccurrentversion"), atomically: true, encoding: .utf8)
+    return bundle
+}
+

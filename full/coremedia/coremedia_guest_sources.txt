@@ -6,6 +6,7 @@ full/coremedia/CMFailClosed.swift
 full/coremedia/CMFormatDescription.swift
 full/coremedia/CMKeys.swift
 full/coremedia/CMMediaTypes.swift
+full/coremedia/CMMemoryPool.swift
 full/coremedia/CMMetadata.swift
 full/coremedia/CMOverlay.swift
 full/coremedia/CMQueue.swift
