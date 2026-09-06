@@ -48,6 +48,8 @@ enum _UIVisualEffectDescriptor: Equatable, Sendable {
     /// inert zero-argument UIVibrancyEffect.
     case vibrancy(blurStyle: UIBlurEffect.Style?,
                   style: UIVibrancyEffectStyle?)
+    case glass(style: UIGlassEffect.Style)
+    case glassContainer(spacing: CGFloat)
 }
 
 // MARK: - Base effect
@@ -847,6 +849,21 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
             forKeyPath: "filters.gaussianBlur.inputRadius")
         let radius = _openFilterCGFloat(retainedRadius) ?? gaussian.blurRadius
         guard radius.isFinite, radius > 0 else { return nil }
+        if OpenUIKitRuntime.systemFontCut == .iOS {
+            if let blur = effect as? UIBlurEffect {
+                // Inert `UIBlurEffect()` is zero-radius (public init). A
+                // nil mix must not fall through to the token's radius 20.
+                return _UIMaterialMix.blurConfiguration(
+                    style: blur._style,
+                    traits: traitCollection)
+            }
+            if let glass = effect as? UIGlassEffect {
+                return _UIMaterialMix.glassConfiguration(
+                    style: glass.storedStyle,
+                    tintColor: glass.tintColor,
+                    traits: traitCollection)
+            }
+        }
         return CanvasBackdropFilterConfiguration(blurRadius: radius)
     }
 
@@ -901,7 +918,7 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
             _materializeContentView(usingBoundsOrigin: false)
         }
 
-        if effect is UIBlurEffect {
+        if effect is UIBlurEffect || effect is UIGlassEffect {
             if backdropView == nil {
                 let backdrop = _UIVisualEffectBackdropView(
                     frame: CGRect(origin: storedContentView?.frame.origin ?? .zero,

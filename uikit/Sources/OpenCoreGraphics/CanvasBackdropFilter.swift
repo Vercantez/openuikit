@@ -100,19 +100,29 @@ public struct CanvasBackdropFilterConfiguration: Equatable, Sendable {
     public var intensity: CGFloat
     public var blurMask: CanvasBackdropFilterMask?
     public var normalizesMaskEdges: Bool
+    /// When true (default), saturation is clamped to `[0, alpha]` before
+    /// the source-over tint. MEASURED UIBlurEffect classic styles
+    /// (extraLight overlay α=0.8) need that clamp: yellow B sat goes
+    /// negative and the overlay still matches (249,233,198).
+    /// `_UIGlassMaterial` tab-bar / `UIGlassEffect` regular need false:
+    /// unclamped sat 5.651 maps yellow (242,179,64) → platter (255,240,156)
+    /// with the 222/255 mix (`/tmp/materials-probe`, iPhone SE 2x / iOS 26.1).
+    public var clampsSaturation: Bool
 
     public init(blurRadius: CGFloat = 0,
                 saturation: CGFloat = 1,
                 tintColor: CGColor? = nil,
                 intensity: CGFloat = 1,
                 blurMask: CanvasBackdropFilterMask? = nil,
-                normalizesMaskEdges: Bool = true) {
+                normalizesMaskEdges: Bool = true,
+                clampsSaturation: Bool = true) {
         self.blurRadius = blurRadius
         self.saturation = saturation
         self.tintColor = tintColor
         self.intensity = intensity
         self.blurMask = blurMask
         self.normalizesMaskEdges = normalizesMaskEdges
+        self.clampsSaturation = clampsSaturation
     }
 }
 
@@ -200,7 +210,8 @@ extension Canvas {
             blurMask: deviceMask,
             saturation: Double(saturation),
             tint: tint,
-            intensity: Double(intensity))
+            intensity: Double(intensity),
+            clampsSaturation: configuration.clampsSaturation)
         backend.applyBackdropFilter(resolved, coverage: coverage, bounds: bounds)
     }
 
@@ -1377,6 +1388,7 @@ struct _CanvasBackdropFilter {
     let saturation: Double
     let tint: CGColor?
     let intensity: Double
+    let clampsSaturation: Bool
 }
 
 /// Shared deterministic premultiplied-RGBA8 filter kernel.
@@ -1623,9 +1635,11 @@ enum _BackdropFilterCPU {
                     outBlue = luminance + filter.saturation * (blue - luminance)
                 }
                 var outAlpha = alpha
-                outRed = Swift.min(alpha, Swift.max(0, outRed))
-                outGreen = Swift.min(alpha, Swift.max(0, outGreen))
-                outBlue = Swift.min(alpha, Swift.max(0, outBlue))
+                if filter.clampsSaturation {
+                    outRed = Swift.min(alpha, Swift.max(0, outRed))
+                    outGreen = Swift.min(alpha, Swift.max(0, outGreen))
+                    outBlue = Swift.min(alpha, Swift.max(0, outBlue))
+                }
 
                 if tintAlpha > 0 {
                     outRed = tintRed + outRed * tintInverse
