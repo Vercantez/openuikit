@@ -1,0 +1,12 @@
+full/cinematic/CNAssetInfo.swift
+full/cinematic/CNAssetSpatialAudioInfo.swift
+full/cinematic/CNCinematicError.swift
+full/cinematic/CNDecision.swift
+full/cinematic/CNDetection.swift
+full/cinematic/CNDetectionTrack.swift
+full/cinematic/CNEnums.swift
+full/cinematic/CNObjectTracker.swift
+full/cinematic/CNRenderingSession.swift
+full/cinematic/CNScript.swift
+full/cinematic/Cinematic.swift
+full/cinematic/CinematicLookalikes.swift
