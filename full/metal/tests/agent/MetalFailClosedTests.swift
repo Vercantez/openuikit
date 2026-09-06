@@ -215,3 +215,87 @@ func testComputeDispatchFailClosed() {
     precondition(commandBuffer.status == .error)
     precondition((commandBuffer.error as? MTLCommandBufferError)?.code == .notPermitted)
 }
+
+func testIOCommandBufferFailClosed() {
+    let device = MTLCreateSystemDefaultDevice()!
+    let queueDesc = MTLIOCommandQueueDescriptor()
+    queueDesc.maxCommandBufferCount = 2
+    queueDesc.maxCommandsInFlight = 1
+    queueDesc.priority = .normal
+    queueDesc.type = .serial
+    queueDesc.scratchBufferAllocator = nil
+    let queue = try! device.makeIOCommandQueue(descriptor: queueDesc)
+    queue.label = "io"
+    precondition(queue.label == "io")
+    queue.enqueueBarrier()
+    let empty = queue.makeCommandBuffer()
+    empty.label = "empty"
+    precondition(empty.status == .pending)
+    var emptyCompleted = false
+    empty.addCompletedHandler { buffer in
+        emptyCompleted = true
+        precondition(buffer.status == .complete)
+        precondition(buffer.error == nil)
+    }
+    empty.addBarrier()
+    empty.pushDebugGroup("g")
+    empty.popDebugGroup()
+    let event = device.makeSharedEvent()!
+    empty.signalEvent(event, value: 1)
+    empty.waitForEvent(event, value: 1)
+    empty.enqueue()
+    empty.commit()
+    empty.waitUntilCompleted()
+    precondition(emptyCompleted)
+    precondition(empty.status == .complete)
+    let statusBuffer = device.makeBuffer(length: 8, options: [])!
+    empty.copyStatus(buffer: statusBuffer, offset: 0)
+    precondition(statusBuffer.contents().load(as: UInt64.self) == UInt64(MTLIOStatus.complete.rawValue))
+
+    let loaded = queue.makeCommandBufferWithUnretainedReferences()
+    let handle = MetalTestIOFileHandle()
+    handle.label = "file"
+    precondition(handle.label == "file")
+    loaded.load(device.makeBuffer(length: 4, options: [])!, offset: 0, size: 4, sourceHandle: handle, sourceHandleOffset: 0)
+    var bytes: UInt8 = 0
+    withUnsafeMutableBytes(of: &bytes) { raw in
+        loaded.loadBytes(raw.baseAddress!, size: 1, sourceHandle: handle, sourceHandleOffset: 0)
+    }
+    let tex = device.makeTexture(descriptor: MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .r8Unorm,
+        width: 1,
+        height: 1,
+        mipmapped: false
+    ))!
+    loaded.load(
+        tex,
+        slice: 0,
+        level: 0,
+        size: MTLSizeMake(1, 1, 1),
+        sourceBytesPerRow: 1,
+        sourceBytesPerImage: 1,
+        destinationOrigin: MTLOrigin(),
+        sourceHandle: handle,
+        sourceHandleOffset: 0
+    )
+    var loadCompleted = false
+    loaded.addCompletedHandler { buffer in
+        loadCompleted = true
+        precondition(buffer.status == .error)
+        let error = buffer.error as? MTLIOError
+        precondition(error?.code == .internal)
+        precondition(MTLIOError.internal ~= buffer.error!)
+    }
+    loaded.commit()
+    loaded.waitUntilCompleted()
+    precondition(loadCompleted)
+    precondition(loaded.status == .error)
+
+    let cancelled = queue.makeCommandBuffer()
+    cancelled.tryCancel()
+    precondition(cancelled.status == .cancelled)
+}
+
+private final class MetalTestIOFileHandle: NSObject, MTLIOFileHandle, @unchecked Sendable {
+    var label: String?
+}

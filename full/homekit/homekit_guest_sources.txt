@@ -3,6 +3,7 @@ full/homekit/HMConstants.swift
 full/homekit/HMEnums.swift
 full/homekit/HMError.swift
 full/homekit/HMEvents.swift
+full/homekit/HMLocalSupport.swift
 full/homekit/HMObjects.swift
 full/homekit/HMProtocols.swift
 full/homekit/HomeKit.swift

@@ -119,7 +119,23 @@ public enum HKHealthStorePortable {
     fileprivate static var observerQueries: [ObjectIdentifier: HKObserverQuery] = [:]
     fileprivate static var routeLocations: [UUID: [CLLocation]] = [:]
     fileprivate static var workoutSampleIDs: [UUID: Set<UUID>] = [:]
+    fileprivate static var electrocardiogramSampleIDs: [UUID: Set<UUID>] = [:]
+    fileprivate static var quantitySeries: [UUID: [HKQuantitySeriesPoint]] = [:]
+    fileprivate static var heartbeatSeries: [UUID: [HKHeartbeatPoint]] = [:]
+    fileprivate static var voltageSeries: [UUID: [HKElectrocardiogram.VoltageMeasurement]] = [:]
+    fileprivate static var effortRelationships: [HKWorkoutEffortRelationship] = []
+    fileprivate static var liveSamples: [UUID: HKSample] = [:]
     fileprivate static var nextAnchor: Int = 1
+
+    struct HKQuantitySeriesPoint {
+        var quantity: HKQuantity
+        var dateInterval: DateInterval
+    }
+
+    struct HKHeartbeatPoint {
+        var timeIntervalSinceStart: TimeInterval
+        var precededByGap: Bool
+    }
 
     public static var storeDirectory: URL {
         lock.lock()
@@ -154,6 +170,12 @@ public enum HKHealthStorePortable {
         observerQueries.removeAll()
         routeLocations.removeAll()
         workoutSampleIDs.removeAll()
+        electrocardiogramSampleIDs.removeAll()
+        quantitySeries.removeAll()
+        heartbeatSeries.removeAll()
+        voltageSeries.removeAll()
+        effortRelationships.removeAll()
+        liveSamples.removeAll()
         nextAnchor = 1
         lock.unlock()
         if let dir {
@@ -197,6 +219,83 @@ public enum HKHealthStorePortable {
     public static func _setRouteLocations(_ locations: [CLLocation], for route: HKWorkoutRoute) {
         lock.lock()
         routeLocations[route.uuid] = locations
+        lock.unlock()
+    }
+
+    /// Documented test hook: persist objects through the local store without `await`.
+    public static func _save(_ objects: [HKObject]) throws {
+        try HKHealthStore().hkSave(objects)
+    }
+
+    public static func _setActivitySummaries(_ summaries: [HKActivitySummary]) {
+        mutate { state in
+            state.summaries = summaries.map { summary in
+                HKStoredSummary(
+                    year: summary.dateComponents.year ?? 0,
+                    month: summary.dateComponents.month ?? 1,
+                    day: summary.dateComponents.day ?? 1,
+                    activeEnergy: summary.activeEnergyBurned.doubleValue(for: .kilocalorie()),
+                    exerciseMinutes: summary.appleExerciseTime.doubleValue(for: .minute()),
+                    standHours: summary.appleStandHours.doubleValue(for: .count()),
+                    moveTimeMinutes: summary.appleMoveTime.doubleValue(for: .minute()),
+                    moveMode: summary.activityMoveMode.rawValue,
+                    paused: summary.isPaused
+                )
+            }
+        }
+    }
+
+    public static func _setQuantitySeries(
+        _ points: [(HKQuantity, DateInterval)],
+        for sample: HKQuantitySample
+    ) {
+        lock.lock()
+        quantitySeries[sample.uuid] = points.map {
+            HKQuantitySeriesPoint(quantity: $0.0, dateInterval: $0.1)
+        }
+        lock.unlock()
+    }
+
+    public static func _setHeartbeats(
+        _ beats: [(TimeInterval, Bool)],
+        for sample: HKHeartbeatSeriesSample
+    ) {
+        lock.lock()
+        heartbeatSeries[sample.uuid] = beats.map {
+            HKHeartbeatPoint(timeIntervalSinceStart: $0.0, precededByGap: $0.1)
+        }
+        lock.unlock()
+    }
+
+    public static func _setVoltageMeasurements(
+        _ measurements: [HKElectrocardiogram.VoltageMeasurement],
+        for electrocardiogram: HKElectrocardiogram
+    ) {
+        lock.lock()
+        voltageSeries[electrocardiogram.uuid] = measurements
+        lock.unlock()
+    }
+
+    public static func _relateEffort(
+        sample: HKSample,
+        workout: HKWorkout,
+        activity: HKWorkoutActivity?
+    ) {
+        let relationship = HKWorkoutEffortRelationship()
+        relationship.workout = workout
+        relationship.activity = activity
+        relationship.sample = sample
+        lock.lock()
+        effortRelationships.append(relationship)
+        lock.unlock()
+        associate(sampleIDs: [sample.uuid], with: workout.uuid)
+    }
+
+    public static func _associate(sampleIDs: [UUID], withElectrocardiogram uuid: UUID) {
+        lock.lock()
+        var set = electrocardiogramSampleIDs[uuid] ?? []
+        sampleIDs.forEach { set.insert($0) }
+        electrocardiogramSampleIDs[uuid] = set
         lock.unlock()
     }
 
@@ -270,6 +369,48 @@ public enum HKHealthStorePortable {
         lock.lock()
         defer { lock.unlock() }
         return workoutSampleIDs[workout] ?? []
+    }
+
+    static func sampleIDs(forElectrocardiogram uuid: UUID) -> Set<UUID> {
+        lock.lock()
+        defer { lock.unlock() }
+        return electrocardiogramSampleIDs[uuid] ?? []
+    }
+
+    static func quantitySeriesPoints(for uuid: UUID) -> [HKQuantitySeriesPoint] {
+        lock.lock()
+        defer { lock.unlock() }
+        return quantitySeries[uuid] ?? []
+    }
+
+    static func heartbeatPoints(for uuid: UUID) -> [HKHeartbeatPoint] {
+        lock.lock()
+        defer { lock.unlock() }
+        return heartbeatSeries[uuid] ?? []
+    }
+
+    static func voltageMeasurements(for uuid: UUID) -> [HKElectrocardiogram.VoltageMeasurement] {
+        lock.lock()
+        defer { lock.unlock() }
+        return voltageSeries[uuid] ?? []
+    }
+
+    static func effortRelationshipsLocked() -> [HKWorkoutEffortRelationship] {
+        lock.lock()
+        defer { lock.unlock() }
+        return effortRelationships
+    }
+
+    static func remember(_ sample: HKSample) {
+        lock.lock()
+        liveSamples[sample.uuid] = sample
+        lock.unlock()
+    }
+
+    static func liveSample(uuid: UUID) -> HKSample? {
+        lock.lock()
+        defer { lock.unlock() }
+        return liveSamples[uuid]
     }
 
     private static func storeDirectoryUnlocked() -> URL {

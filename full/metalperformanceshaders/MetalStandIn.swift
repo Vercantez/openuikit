@@ -10,6 +10,8 @@ public typealias vector_float3 = SIMD3<Float>
 public typealias vector_float4 = SIMD4<Float>
 public typealias vector_ushort4 = SIMD4<UInt16>
 public typealias vector_uchar16 = SIMD16<UInt8>
+public typealias NSErrorPointer = UnsafeMutablePointer<NSError?>?
+public typealias AutoreleasingUnsafeMutablePointer<Pointee> = UnsafeMutablePointer<Pointee>
 
 public protocol MTLResource: AnyObject {
     var label: String? { get set }
@@ -25,6 +27,12 @@ public protocol MTLDevice: AnyObject {
 public protocol MTLCommandBuffer: AnyObject {
     var device: any MTLDevice { get }
     var label: String? { get set }
+}
+
+public protocol MTLCommandQueue: AnyObject {
+    var device: any MTLDevice { get }
+    var label: String? { get set }
+    func makeCommandBuffer() -> (any MTLCommandBuffer)?
 }
 
 public protocol MTLComputeCommandEncoder: AnyObject {
@@ -208,6 +216,10 @@ public final class MPSHostDevice: NSObject, MTLDevice {
     public func makeCommandBuffer() -> MPSHostCommandBuffer {
         MPSHostCommandBuffer(device: self)
     }
+
+    public func makeCommandQueue() -> MPSHostCommandQueue {
+        MPSHostCommandQueue(device: self)
+    }
 }
 
 public final class MPSHostBuffer: NSObject, MTLBuffer {
@@ -282,6 +294,20 @@ public final class MPSHostCommandBuffer: NSObject, MTLCommandBuffer {
     public init(device: any MTLDevice) {
         self.device = device
         super.init()
+    }
+}
+
+public final class MPSHostCommandQueue: NSObject, MTLCommandQueue {
+    public let device: any MTLDevice
+    public var label: String?
+
+    public init(device: any MTLDevice) {
+        self.device = device
+        super.init()
+    }
+
+    public func makeCommandBuffer() -> (any MTLCommandBuffer)? {
+        MPSHostCommandBuffer(device: device)
     }
 }
 

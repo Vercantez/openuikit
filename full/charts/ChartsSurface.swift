@@ -35,7 +35,10 @@ public struct ChartAxisContent: View {
 }
 
 public struct Chart3D<Content: Chart3DContent>: View {
-    public init(@Chart3DContentBuilder content: () -> Content) { _ = content }
+    public let content: Content
+    public init(@Chart3DContentBuilder content: () -> Content) {
+        self.content = content()
+    }
     public var body: some View { EmptyView() }
 }
 
@@ -43,10 +46,76 @@ public struct Chart3D<Content: Chart3DContent>: View {
 public struct Chart3DContentBuilder {
     public static func buildBlock() -> _EmptyChart3DContent { _EmptyChart3DContent() }
     public static func buildBlock<Content: Chart3DContent>(_ content: Content) -> Content { content }
+    public static func buildBlock<each Content: Chart3DContent>(
+        _ content: repeat each Content
+    ) -> AnyChart3DContent {
+        var names: [String] = []
+        repeat names.append(String(describing: type(of: each content)))
+        return AnyChart3DContent(childCount: names.count, childTypeNames: names)
+    }
+    public static func buildEither<C1: Chart3DContent, C2: Chart3DContent>(
+        first component: C1
+    ) -> BuilderConditional<C1, C2> {
+        BuilderConditional(storage: .first(component))
+    }
+    public static func buildEither<C1: Chart3DContent, C2: Chart3DContent>(
+        second component: C2
+    ) -> BuilderConditional<C1, C2> {
+        BuilderConditional(storage: .second(component))
+    }
+    public static func buildOptional<Content: Chart3DContent>(
+        _ component: Content
+    ) -> Content {
+        component
+    }
+    public static func buildExpression<Content: Chart3DContent>(
+        _ expression: Content
+    ) -> Content {
+        expression
+    }
+    public static func buildLimitedAvailability<Content: Chart3DContent>(
+        _ components: Content
+    ) -> AnyChart3DContent {
+        AnyChart3DContent(
+            childCount: 1,
+            childTypeNames: [String(describing: type(of: components))]
+        )
+    }
 }
 
 public struct _EmptyChart3DContent: Chart3DContent {
     public init() {}
+    public var body: some View { EmptyView() }
+}
+
+public struct AnyChart3DContent: Chart3DContent {
+    public var childCount: Int
+    public var childTypeNames: [String]
+    public var metalness: Double?
+    public var roughness: Double?
+    public var symbolSize: CGFloat?
+    public var foregroundStyleName: String?
+    public var surfaceStyleName: String?
+    public var symbolName: String?
+    public init(
+        childCount: Int = 0,
+        childTypeNames: [String] = [],
+        metalness: Double? = nil,
+        roughness: Double? = nil,
+        symbolSize: CGFloat? = nil,
+        foregroundStyleName: String? = nil,
+        surfaceStyleName: String? = nil,
+        symbolName: String? = nil
+    ) {
+        self.childCount = childCount
+        self.childTypeNames = childTypeNames
+        self.metalness = metalness
+        self.roughness = roughness
+        self.symbolSize = symbolSize
+        self.foregroundStyleName = foregroundStyleName
+        self.surfaceStyleName = surfaceStyleName
+        self.symbolName = symbolName
+    }
     public var body: some View { EmptyView() }
 }
 
@@ -67,15 +136,12 @@ public struct Chart3DCameraProjection: Hashable, Sendable {
     private init(_ name: String) { self.name = name }
     public static let perspective = Chart3DCameraProjection("perspective")
     public static let orthographic = Chart3DCameraProjection("orthographic")
+    public static let automatic = Chart3DCameraProjection("automatic")
 }
 
 public struct BasicChart3DSymbolShape: Hashable, Sendable, Chart3DSymbolShape {
     private let name: String
-    private init(_ name: String) { self.name = name }
-    public static let sphere = BasicChart3DSymbolShape("sphere")
-    public static let cube = BasicChart3DSymbolShape("cube")
-    public static let cone = BasicChart3DSymbolShape("cone")
-    public static let cylinder = BasicChart3DSymbolShape("cylinder")
+    init(_ name: String) { self.name = name }
 }
 
 public struct BasicChart3DSurfaceStyle: Hashable, Sendable, Chart3DSurfaceStyle {
@@ -97,7 +163,8 @@ public struct AnyAxisMark: View, AxisMark {
 }
 
 public struct AnyAxisContent: View, AxisContent {
-    public init<Content: AxisContent>(_ content: Content) { _ = content }
+    public init<Content: AxisContent>(erasing content: Content) { _ = content }
+    public init(_ content: any AxisContent) { _ = content }
     public var body: some View { EmptyView() }
 }
 
@@ -106,7 +173,7 @@ public struct BuilderConditional<TrueContent, FalseContent>: View {
         case first(TrueContent)
         case second(FalseContent)
     }
-    let storage: Storage?
+    public let storage: Storage?
     public init() { storage = nil }
     public init(storage: Storage) { self.storage = storage }
     public var body: some View { EmptyView() }
@@ -126,8 +193,18 @@ extension BuilderConditional: AxisMark where TrueContent: AxisMark, FalseContent
 extension BuilderConditional: AxisContent where TrueContent: AxisContent, FalseContent: AxisContent {}
 
 public struct AutomaticScaleDomain: ScaleDomain, Hashable, Sendable {
-    public static let automatic = AutomaticScaleDomain()
-    public init() {}
+    public var includesZero: Bool?
+    public var reversed: Bool?
+    public var modifiedDomain: [Double]
+    public init(
+        includesZero: Bool? = nil,
+        reversed: Bool? = nil,
+        modifiedDomain: [Double] = []
+    ) {
+        self.includesZero = includesZero
+        self.reversed = reversed
+        self.modifiedDomain = modifiedDomain
+    }
 }
 
 public struct ScaleType: Hashable, Sendable, CustomStringConvertible {
@@ -462,23 +539,36 @@ public struct AnnotationPosition: Hashable, Sendable, CustomStringConvertible {
 
 public struct AnnotationOverflowResolution: Hashable, Sendable {
     public struct Boundary: Hashable, Sendable {
-        public static let automatic = Boundary()
-        public static let plot = Boundary()
-        public static let chart = Boundary()
-        public init() {}
+        public let name: String
+        private init(_ name: String) { self.name = name }
+        public static let automatic = Boundary("automatic")
+        public static let plot = Boundary("plot")
+        public static let chart = Boundary("chart")
+        public init() { self = .automatic }
     }
     public struct Strategy: Hashable, Sendable {
-        public static let automatic = Strategy()
-        public static let fit = Strategy(name: "fit")
-        public static let padScale = Strategy(name: "padScale")
-        public static func fit(to boundary: Boundary) -> Strategy {
-            _ = boundary
-            return .fit
+        public let name: String
+        public let boundary: Boundary?
+        private init(name: String, boundary: Boundary? = nil) {
+            self.name = name
+            self.boundary = boundary
         }
-        public init() {}
-        init(name: String) { _ = name }
+        public static let automatic = Strategy(name: "automatic")
+        public static let fit = Strategy(name: "fit", boundary: .automatic)
+        public static let padScale = Strategy(name: "padScale")
+        public static let disabled = Strategy(name: "disabled")
+        public static func fit(to boundary: Boundary) -> Strategy {
+            Strategy(name: "fit", boundary: boundary)
+        }
+        public init() { self = .automatic }
     }
-    public init() {}
+    public var x: Strategy
+    public var y: Strategy
+    public init(x: Strategy = .automatic, y: Strategy = .automatic) {
+        self.x = x
+        self.y = y
+    }
+    public static let automatic = AnnotationOverflowResolution()
 }
 
 public struct ChartBinRange<Bound: Comparable & Hashable>: Hashable, RangeExpression {
@@ -1108,14 +1198,111 @@ public struct MajorValueAlignment<Value: Plottable>: Hashable {
 }
 
 public struct ValueAlignedLimitBehavior: Hashable, Sendable {
-    public static let automatic = ValueAlignedLimitBehavior()
-    public static let never = ValueAlignedLimitBehavior()
-    public static let always = ValueAlignedLimitBehavior()
-    public init() {}
+    public let name: String
+    private init(_ name: String) { self.name = name }
+    public static let automatic = ValueAlignedLimitBehavior("automatic")
+    public static let never = ValueAlignedLimitBehavior("never")
+    public static let always = ValueAlignedLimitBehavior("always")
+    public init() { self = .automatic }
 }
 
 public struct ValueAlignedChartScrollTargetBehavior: ChartScrollTargetBehavior {
-    public init() {}
+    public var unitValue: Double?
+    public var yUnitValue: Double?
+    public var matching: DateComponents?
+    public var yMatching: DateComponents?
+    public var limitBehavior: ValueAlignedLimitBehavior
+    public init() {
+        unitValue = nil
+        yUnitValue = nil
+        matching = nil
+        yMatching = nil
+        limitBehavior = .automatic
+    }
+    public init<T: Plottable & Numeric>(
+        unit: T,
+        majorAlignment: MajorValueAlignment<T>? = nil,
+        limitBehavior: ValueAlignedLimitBehavior = .automatic
+    ) {
+        _ = majorAlignment
+        unitValue = chartNumericScalar(unit)
+        yUnitValue = nil
+        matching = nil
+        yMatching = nil
+        self.limitBehavior = limitBehavior
+    }
+    public init<X: Plottable & Numeric, Y: Plottable & Numeric>(
+        xUnit: X,
+        yUnit: Y,
+        xMajorAlignment: MajorValueAlignment<X>? = nil,
+        yMajorAlignment: MajorValueAlignment<Y>? = nil,
+        limitBehavior: ValueAlignedLimitBehavior = .automatic
+    ) {
+        _ = xMajorAlignment
+        _ = yMajorAlignment
+        unitValue = chartNumericScalar(xUnit)
+        yUnitValue = chartNumericScalar(yUnit)
+        matching = nil
+        yMatching = nil
+        self.limitBehavior = limitBehavior
+    }
+    public init<X: Plottable & Numeric>(
+        xUnit: X,
+        yMatching yComponents: DateComponents,
+        xMajorAlignment: MajorValueAlignment<X>? = nil,
+        yMajorAlignment: MajorValueAlignment<Date>? = nil,
+        limitBehavior: ValueAlignedLimitBehavior = .automatic
+    ) {
+        _ = xMajorAlignment
+        _ = yMajorAlignment
+        unitValue = chartNumericScalar(xUnit)
+        yUnitValue = nil
+        matching = nil
+        yMatching = yComponents
+        self.limitBehavior = limitBehavior
+    }
+    public init(
+        matching components: DateComponents,
+        majorAlignment: MajorValueAlignment<Date>? = nil,
+        limitBehavior: ValueAlignedLimitBehavior = .automatic
+    ) {
+        _ = majorAlignment
+        unitValue = nil
+        yUnitValue = nil
+        matching = components
+        yMatching = nil
+        self.limitBehavior = limitBehavior
+    }
+    public init(
+        xMatching xComponents: DateComponents,
+        yMatching yComponents: DateComponents,
+        xMajorAlignment: MajorValueAlignment<Date>? = nil,
+        yMajorAlignment: MajorValueAlignment<Date>? = nil,
+        limitBehavior: ValueAlignedLimitBehavior = .automatic
+    ) {
+        _ = xMajorAlignment
+        _ = yMajorAlignment
+        unitValue = nil
+        yUnitValue = nil
+        matching = xComponents
+        yMatching = yComponents
+        self.limitBehavior = limitBehavior
+    }
+    public init<Y: Plottable & Numeric>(
+        xMatching xComponents: DateComponents,
+        yUnit: Y,
+        xMajorAlignment: MajorValueAlignment<Date>? = nil,
+        yMajorAlignment: MajorValueAlignment<Y>? = nil,
+        limitBehavior: ValueAlignedLimitBehavior = .automatic
+    ) {
+        _ = xMajorAlignment
+        _ = yMajorAlignment
+        unitValue = nil
+        yUnitValue = chartNumericScalar(yUnit)
+        matching = xComponents
+        yMatching = nil
+        self.limitBehavior = limitBehavior
+    }
 }
 
 @dynamicMemberLookup
@@ -1413,7 +1600,51 @@ public struct SectorMark: ChartContent {
 }
 
 public struct SurfacePlot: Chart3DContent {
-    public init() {}
+    public var xLabel: String
+    public var yLabel: String
+    public var zLabel: String
+    public var samples: [(x: Double, y: Double, z: Double)]
+    public init() {
+        xLabel = ""
+        yLabel = ""
+        zLabel = ""
+        samples = []
+    }
+    public init(
+        x: LocalizedStringResource,
+        y: LocalizedStringResource,
+        z: LocalizedStringResource,
+        function: @escaping (Double, Double) -> Double
+    ) {
+        self.init(x: x.key, y: y.key, z: z.key, function: function)
+    }
+    public init(
+        x: LocalizedStringKey,
+        y: LocalizedStringKey,
+        z: LocalizedStringKey,
+        function: @escaping (Double, Double) -> Double
+    ) {
+        self.init(x: x.key, y: y.key, z: z.key, function: function)
+    }
+    public init(
+        x: Text,
+        y: Text,
+        z: Text,
+        function: @escaping (Double, Double) -> Double
+    ) {
+        self.init(x: x.content, y: y.content, z: z.content, function: function)
+    }
+    public init(
+        x: some StringProtocol,
+        y: some StringProtocol,
+        z: some StringProtocol,
+        function: @escaping (Double, Double) -> Double
+    ) {
+        xLabel = String(x)
+        yLabel = String(y)
+        zLabel = String(z)
+        samples = chartSampleSurfaceFunction(function)
+    }
     public var body: some View { EmptyView() }
 }
 
@@ -1559,15 +1790,19 @@ public struct SectorPlot<Content: VectorizedChartContent>: VectorizedChartConten
     public var body: some View { EmptyView() }
 }
 
-public struct FunctionAreaPlotContent: ChartContent {
+public struct FunctionAreaPlotContent: VectorizedChartContent {
+    public typealias DataElement = Double
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 
-public struct FunctionLinePlotContent: ChartContent {
+public struct FunctionLinePlotContent: VectorizedChartContent {
+    public typealias DataElement = Double
     public var chartPlotRecords: [ChartPlotRecord]
     public init() { chartPlotRecords = [] }
+    public init(records: [ChartPlotRecord]) { chartPlotRecords = records }
     public var body: some View { EmptyView() }
 }
 

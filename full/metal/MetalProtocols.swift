@@ -594,7 +594,23 @@ public protocol MTLRenderPipelineState: MTLAllocation, Sendable {
     var imageblockSampleLength: Int { get }
     var supportIndirectCommandBuffers: Bool { get }
     var shaderValidation: MTLShaderValidation { get }
+    var maxTotalThreadgroupsPerMeshGrid: Int { get }
+    var maxTotalThreadsPerMeshThreadgroup: Int { get }
+    var maxTotalThreadsPerObjectThreadgroup: Int { get }
+    var meshThreadExecutionWidth: Int { get }
+    var objectThreadExecutionWidth: Int { get }
+    var requiredThreadsPerMeshThreadgroup: MTLSize { get }
+    var requiredThreadsPerObjectThreadgroup: MTLSize { get }
+    var requiredThreadsPerTileThreadgroup: MTLSize { get }
+    var threadgroupSizeMatchesTileSize: Bool { get }
     func imageblockMemoryLength(forDimensions imageblockDimensions: MTLSize) -> Int
+    func makeRenderPipelineState(
+        additionalBinaryFunctions binaryFunctionsDescriptor: MTL4RenderPipelineBinaryFunctionsDescriptor
+    ) throws -> any MTLRenderPipelineState
+    func makeRenderPipelineState(
+        additionalBinaryFunctions: MTLRenderPipelineFunctionsDescriptor
+    ) throws -> any MTLRenderPipelineState
+    func makeRenderPipelineDescriptorForSpecialization() -> MTL4PipelineDescriptor
 }
 
 public protocol MTLComputePipelineState: MTLAllocation, Sendable {
@@ -748,5 +764,9 @@ open class MTLCaptureManager: NSObject, @unchecked Sendable {
 
     public func makeCaptureScope(commandQueue: any MTLCommandQueue) -> any MTLCaptureScope {
         LinuxMTLCaptureScope(device: commandQueue.device, commandQueue: commandQueue)
+    }
+
+    public func makeCaptureScope(commandQueue: any MTL4CommandQueue) -> any MTLCaptureScope {
+        LinuxMTLCaptureScope(device: commandQueue.device, commandQueue: nil)
     }
 }

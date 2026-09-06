@@ -1286,6 +1286,14 @@ open class UITableViewCell: UIView, ReusableView {
             if let img = imageView, !img.isHidden { mirror(img, inWidth: cw) }
         }
     }
+
+    open func defaultContentConfiguration() -> UIListContentConfiguration {
+        switch style {
+        case .subtitle: return .subtitleCell()
+        case .value1, .value2: return .valueCell()
+        default: return .cell()
+        }
+    }
 }
 
 // MARK: - Header/footer view

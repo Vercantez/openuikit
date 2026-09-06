@@ -1845,6 +1845,162 @@ func testMetalEnumOptionSetAndConstantValues() {
     var MTLMotionBorderModeSet: Set<MTLMotionBorderMode> = [.clamp]
     MTLMotionBorderModeSet.insert(.vanish)
     precondition(MTLMotionBorderModeSet.count == 2)
+
+    metalExerciseRawEnum([
+        MTL4AlphaToCoverageState.disabled, .enabled
+    ])
+    metalExerciseRawEnum([
+        MTL4AlphaToOneState.disabled, .enabled
+    ])
+    metalExerciseRawEnum([
+        MTL4BlendState.disabled, .enabled, .unspecialized
+    ])
+    metalExerciseRawEnum([
+        MTL4IndirectCommandBufferSupportState.disabled, .enabled
+    ])
+    metalExerciseRawEnum([
+        MTL4LogicalToPhysicalColorAttachmentMappingState.identity, .inherited
+    ])
+    metalExerciseRawEnum([
+        MTL4CompilerTaskStatus.none, .scheduled, .compiling, .finished
+    ])
+    metalExerciseRawEnum([
+        MTL4TimestampGranularity.relaxed, .precise
+    ])
+    metalExerciseRawEnum([
+        MTL4CounterHeapType.invalid, .timestamp
+    ])
+    metalExerciseRawEnum([
+        MTLCurveType.round, .flat
+    ])
+    metalExerciseRawEnum([
+        MTLCurveBasis.bSpline, .linear, .bezier, .catmullRom
+    ])
+    metalExerciseRawEnum([
+        MTLCurveEndCaps.none, .disk, .sphere
+    ])
+    metalExerciseRawEnum([
+        MTLIOPriority.high, .normal, .low
+    ])
+    metalExerciseRawEnum([
+        MTLIOStatus.pending, .cancelled, .error, .complete
+    ])
+    metalExerciseRawEnum([
+        MTLIOCompressionMethod.zlib, .lzfse, .lz4, .lzma, .lzBitmap
+    ])
+    metalExerciseRawEnum([
+        MTLIOCommandQueueType.concurrent, .serial
+    ])
+    metalExerciseRawEnum([
+        MTLMatrixLayout.columnMajor, .rowMajor
+    ])
+    metalExerciseRawEnum([
+        MTLPrimitiveTopologyClass.unspecified, .point, .line, .triangle
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationControlPointIndexType.none, .uint16, .uint32
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationFactorFormat.half
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationFactorStepFunction.constant, .perPatch, .perInstance, .perPatchAndPerInstance
+    ])
+    metalExerciseRawEnum([
+        MTLTessellationPartitionMode.pow2, .integer, .fractionalOdd, .fractionalEven
+    ])
+    metalExerciseRawEnum([
+        MTLTransformType.packedFloat4x3, .component
+    ])
+    metalExerciseRawEnum([
+        MTLAccelerationStructureInstanceDescriptorType.default, .userID, .motion, .indirect, .indirectMotion
+    ])
+    metalExerciseRawEnum([
+        MTLSparseTextureRegionAlignmentMode.outward, .inward
+    ])
+    metalExerciseRawEnum([
+        MTL4CommandQueueError.Code.none, .internal, .timeout, .notPermitted, .outOfMemory, .accessRevoked, .deviceRemoved
+    ])
+    precondition(MTL4CommandQueueError.none == .none)
+    precondition(MTL4CommandQueueError.internal == .internal)
+    precondition(MTL4CommandQueueError.timeout == .timeout)
+    precondition(MTL4CommandQueueError.notPermitted == .notPermitted)
+    precondition(MTL4CommandQueueError.outOfMemory == .outOfMemory)
+    precondition(MTL4CommandQueueError.accessRevoked == .accessRevoked)
+    precondition(MTL4CommandQueueError.deviceRemoved == .deviceRemoved)
+    precondition(MTL4CommandQueueError.errorDomain == MTL4CommandQueueErrorDomain)
+    let queueError = MTL4CommandQueueError(.notPermitted, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(queueError.code == .notPermitted)
+    precondition(queueError.errorCode == MTL4CommandQueueError.Code.notPermitted.rawValue)
+    _ = queueError.errorUserInfo
+    _ = queueError.hashValue
+    var hasher = Hasher()
+    queueError.hash(into: &hasher)
+    precondition(MTL4CommandQueueError.notPermitted ~= queueError)
+    precondition(queueError != MTL4CommandQueueError(.none))
+
+    let timestamp = MTLCommonCounter.timestamp
+    precondition(timestamp.rawValue == "Timestamp")
+    precondition(MTLCommonCounter(rawValue: "Timestamp") == timestamp)
+    precondition(MTLCommonCounter.clipperInvocations != MTLCommonCounter.clipperPrimitivesOut)
+    precondition(MTLCommonCounter.computeKernelInvocations.rawValue == "ComputeKernelInvocations")
+    precondition(MTLCommonCounter.fragmentCycles.rawValue == "FragmentCycles")
+    precondition(MTLCommonCounter.fragmentInvocations.rawValue == "FragmentInvocations")
+    precondition(MTLCommonCounter.fragmentsPassed.rawValue == "FragmentsPassed")
+    precondition(MTLCommonCounter.postTessellationVertexCycles.rawValue == "PostTessellationVertexCycles")
+    precondition(MTLCommonCounter.postTessellationVertexInvocations.rawValue == "PostTessellationVertexInvocations")
+    precondition(MTLCommonCounter.renderTargetWriteCycles.rawValue == "RenderTargetWriteCycles")
+    precondition(MTLCommonCounter.tessellationCycles.rawValue == "TessellationCycles")
+    precondition(MTLCommonCounter.tessellationInputPatches.rawValue == "TessellationInputPatches")
+    precondition(MTLCommonCounter.totalCycles.rawValue == "TotalCycles")
+    precondition(MTLCommonCounter.vertexCycles.rawValue == "VertexCycles")
+    precondition(MTLCommonCounter.vertexInvocations.rawValue == "VertexInvocations")
+    var counterSet: Set<MTLCommonCounter> = [.timestamp]
+    counterSet.insert(.totalCycles)
+    precondition(counterSet.count == 2)
+    _ = timestamp.hashValue
+    var counterHasher = Hasher()
+    timestamp.hash(into: &counterHasher)
+
+    precondition(MTLCommonCounterSet.timestamp.rawValue == "timestamp")
+    precondition(MTLCommonCounterSet.stageUtilization.rawValue == "stageUtilization")
+    precondition(MTLCommonCounterSet.statistic.rawValue == "statistic")
+    precondition(MTLCommonCounterSet(rawValue: "timestamp") == .timestamp)
+    precondition(MTLCommonCounterSet.timestamp != MTLCommonCounterSet.statistic)
+    var namedSets: Set<MTLCommonCounterSet> = [.timestamp]
+    namedSets.insert(.statistic)
+    precondition(namedSets.count == 2)
+    _ = MTLCommonCounterSet.stageUtilization.hashValue
+    var setHasher = Hasher()
+    MTLCommonCounterSet.stageUtilization.hash(into: &setHasher)
+
+    var ts = MTLCounterResultTimestamp()
+    ts.timestamp = 42
+    precondition(ts.timestamp == 42)
+    var stage = MTLCounterResultStageUtilization()
+    stage.totalCycles = 1
+    stage.vertexCycles = 2
+    stage.tessellationCycles = 3
+    stage.postTessellationVertexCycles = 4
+    stage.fragmentCycles = 5
+    stage.renderTargetCycles = 6
+    precondition(stage.totalCycles == 1)
+    precondition(stage.vertexCycles == 2)
+    precondition(stage.tessellationCycles == 3)
+    precondition(stage.postTessellationVertexCycles == 4)
+    precondition(stage.fragmentCycles == 5)
+    precondition(stage.renderTargetCycles == 6)
+    var stat = MTLCounterResultStatistic()
+    stat.clipperInvocations = 1
+    stat.clipperPrimitivesOut = 2
+    stat.computeKernelInvocations = 3
+    stat.fragmentInvocations = 4
+    stat.fragmentsPassed = 5
+    stat.postTessellationVertexInvocations = 6
+    stat.tessellationInputPatches = 7
+    stat.vertexInvocations = 8
+    precondition(stat.clipperInvocations == 1)
+    precondition(stat.vertexInvocations == 8)
 }
 
 private func metalExerciseOptionSet<T: OptionSet & Hashable>(_ first: T, _ second: T)
@@ -1886,4 +2042,23 @@ where T.RawValue: FixedWidthInteger, T.Element == T {
     value.hash(into: &hasher)
     _ = hasher.finalize()
     _ = T(rawValue: first.rawValue)
+}
+
+private func metalExerciseRawEnum<T: RawRepresentable & Hashable>(_ values: [T])
+where T.RawValue: Equatable {
+    precondition(!values.isEmpty)
+    for value in values {
+        precondition(T(rawValue: value.rawValue) == value)
+        _ = value.hashValue
+        var hasher = Hasher()
+        value.hash(into: &hasher)
+        _ = hasher.finalize()
+    }
+    if values.count >= 2 {
+        precondition(values[0] != values[1])
+        var set = Set<T>()
+        set.insert(values[0])
+        set.insert(values[1])
+        precondition(set.count == 2)
+    }
 }
