@@ -1,0 +1,135 @@
+import OpenAL
+
+func testALConstantsErrors() {
+    oaRequire(AL_NO_ERROR == 0, "AL_NO_ERROR")
+    oaRequire(AL_INVALID_NAME == 0xA001, "AL_INVALID_NAME")
+    oaRequire(AL_INVALID_ENUM == 0xA002, "AL_INVALID_ENUM")
+    oaRequire(AL_INVALID_VALUE == 0xA003, "AL_INVALID_VALUE")
+    oaRequire(AL_INVALID_OPERATION == 0xA004, "AL_INVALID_OPERATION")
+    oaRequire(AL_OUT_OF_MEMORY == 0xA005, "AL_OUT_OF_MEMORY")
+    oaRequire(AL_ILLEGAL_ENUM == AL_INVALID_ENUM, "AL_ILLEGAL_ENUM")
+    oaRequire(AL_ILLEGAL_COMMAND == AL_INVALID_OPERATION, "AL_ILLEGAL_COMMAND")
+    oaRequire(AL_INVALID == -1, "AL_INVALID")
+    oaRequire(AL_FALSE == 0 && AL_TRUE == 1, "AL_FALSE/TRUE")
+    oaRequire(AL_NONE == 0, "AL_NONE")
+}
+
+func testALConstantsSourceState() {
+    oaRequire(AL_SOURCE_RELATIVE == 0x202, "AL_SOURCE_RELATIVE")
+    oaRequire(AL_SOURCE_STATE == 0x1010, "AL_SOURCE_STATE")
+    oaRequire(AL_INITIAL == 0x1011, "AL_INITIAL")
+    oaRequire(AL_PLAYING == 0x1012, "AL_PLAYING")
+    oaRequire(AL_PAUSED == 0x1013, "AL_PAUSED")
+    oaRequire(AL_STOPPED == 0x1014, "AL_STOPPED")
+    oaRequire(AL_BUFFERS_QUEUED == 0x1015, "AL_BUFFERS_QUEUED")
+    oaRequire(AL_BUFFERS_PROCESSED == 0x1016, "AL_BUFFERS_PROCESSED")
+    oaRequire(AL_SOURCE_TYPE == 0x1027, "AL_SOURCE_TYPE")
+    oaRequire(AL_STATIC == 0x1028, "AL_STATIC")
+    oaRequire(AL_STREAMING == 0x1029, "AL_STREAMING")
+    oaRequire(AL_UNDETERMINED == 0x1030, "AL_UNDETERMINED")
+    oaRequire(AL_LOOPING == 0x1007, "AL_LOOPING")
+    oaRequire(AL_BUFFER == 0x1009, "AL_BUFFER")
+    oaRequire(AL_QUEUE_HAS_LOOPED == 0x9000, "AL_QUEUE_HAS_LOOPED")
+}
+
+func testALConstantsFormatBuffer() {
+    oaRequire(AL_FORMAT_MONO8 == 0x1100, "AL_FORMAT_MONO8")
+    oaRequire(AL_FORMAT_MONO16 == 0x1101, "AL_FORMAT_MONO16")
+    oaRequire(AL_FORMAT_STEREO8 == 0x1102, "AL_FORMAT_STEREO8")
+    oaRequire(AL_FORMAT_STEREO16 == 0x1103, "AL_FORMAT_STEREO16")
+    oaRequire(AL_FREQUENCY == 0x2001, "AL_FREQUENCY")
+    oaRequire(AL_BITS == 0x2002, "AL_BITS")
+    oaRequire(AL_CHANNELS == 0x2003, "AL_CHANNELS")
+    oaRequire(AL_SIZE == 0x2004, "AL_SIZE")
+    oaRequire(AL_UNUSED == 0x2010, "AL_UNUSED")
+    oaRequire(AL_PENDING == 0x2011, "AL_PENDING")
+    oaRequire(AL_PROCESSED == 0x2012, "AL_PROCESSED")
+    oaRequire(AL_SEC_OFFSET == 0x1024, "AL_SEC_OFFSET")
+    oaRequire(AL_SAMPLE_OFFSET == 0x1025, "AL_SAMPLE_OFFSET")
+    oaRequire(AL_BYTE_OFFSET == 0x1026, "AL_BYTE_OFFSET")
+}
+
+func testALConstantsListener() {
+    oaRequire(AL_CONE_INNER_ANGLE == 0x1001, "AL_CONE_INNER_ANGLE")
+    oaRequire(AL_CONE_OUTER_ANGLE == 0x1002, "AL_CONE_OUTER_ANGLE")
+    oaRequire(AL_PITCH == 0x1003, "AL_PITCH")
+    oaRequire(AL_POSITION == 0x1004, "AL_POSITION")
+    oaRequire(AL_DIRECTION == 0x1005, "AL_DIRECTION")
+    oaRequire(AL_VELOCITY == 0x1006, "AL_VELOCITY")
+    oaRequire(AL_GAIN == 0x100A, "AL_GAIN")
+    oaRequire(AL_MIN_GAIN == 0x100D, "AL_MIN_GAIN")
+    oaRequire(AL_MAX_GAIN == 0x100E, "AL_MAX_GAIN")
+    oaRequire(AL_ORIENTATION == 0x100F, "AL_ORIENTATION")
+    oaRequire(AL_CONE_OUTER_GAIN == 0x1022, "AL_CONE_OUTER_GAIN")
+    oaRequire(AL_REFERENCE_DISTANCE == 0x1020, "AL_REFERENCE_DISTANCE")
+    oaRequire(AL_ROLLOFF_FACTOR == 0x1021, "AL_ROLLOFF_FACTOR")
+    oaRequire(AL_MAX_DISTANCE == 0x1023, "AL_MAX_DISTANCE")
+    oaRequire(AL_VENDOR == 0xB001, "AL_VENDOR")
+    oaRequire(AL_VERSION == 0xB002, "AL_VERSION")
+    oaRequire(AL_RENDERER == 0xB003, "AL_RENDERER")
+    oaRequire(AL_EXTENSIONS == 0xB004, "AL_EXTENSIONS")
+}
+
+func testALConstantsDistanceDoppler() {
+    oaRequire(AL_DOPPLER_FACTOR == 0xC000, "AL_DOPPLER_FACTOR")
+    oaRequire(AL_DOPPLER_VELOCITY == 0xC001, "AL_DOPPLER_VELOCITY")
+    oaRequire(AL_SPEED_OF_SOUND == 0xC003, "AL_SPEED_OF_SOUND")
+    oaRequire(AL_DISTANCE_MODEL == 0xD000, "AL_DISTANCE_MODEL")
+    oaRequire(AL_INVERSE_DISTANCE == 0xD001, "AL_INVERSE_DISTANCE")
+    oaRequire(AL_INVERSE_DISTANCE_CLAMPED == 0xD002, "AL_INVERSE_DISTANCE_CLAMPED")
+    oaRequire(AL_LINEAR_DISTANCE == 0xD003, "AL_LINEAR_DISTANCE")
+    oaRequire(AL_LINEAR_DISTANCE_CLAMPED == 0xD004, "AL_LINEAR_DISTANCE_CLAMPED")
+    oaRequire(AL_EXPONENT_DISTANCE == 0xD005, "AL_EXPONENT_DISTANCE")
+    oaRequire(AL_EXPONENT_DISTANCE_CLAMPED == 0xD006, "AL_EXPONENT_DISTANCE_CLAMPED")
+}
+
+func testALCConstantsErrors() {
+    oaRequire(ALC_FALSE == 0 && ALC_TRUE == 1, "ALC_FALSE/TRUE")
+    oaRequire(ALC_INVALID == 0, "ALC_INVALID")
+    oaRequire(ALC_NO_ERROR == 0, "ALC_NO_ERROR")
+    oaRequire(ALC_INVALID_DEVICE == 0xA001, "ALC_INVALID_DEVICE")
+    oaRequire(ALC_INVALID_CONTEXT == 0xA002, "ALC_INVALID_CONTEXT")
+    oaRequire(ALC_INVALID_ENUM == 0xA003, "ALC_INVALID_ENUM")
+    oaRequire(ALC_INVALID_VALUE == 0xA004, "ALC_INVALID_VALUE")
+    oaRequire(ALC_OUT_OF_MEMORY == 0xA005, "ALC_OUT_OF_MEMORY")
+    oaRequire(ALC_VERSION_0_1 == 1, "ALC_VERSION_0_1")
+}
+
+func testALCConstantsDevice() {
+    oaRequire(ALC_FREQUENCY == 0x1007, "ALC_FREQUENCY")
+    oaRequire(ALC_REFRESH == 0x1008, "ALC_REFRESH")
+    oaRequire(ALC_SYNC == 0x1009, "ALC_SYNC")
+    oaRequire(ALC_MONO_SOURCES == 0x1010, "ALC_MONO_SOURCES")
+    oaRequire(ALC_STEREO_SOURCES == 0x1011, "ALC_STEREO_SOURCES")
+    oaRequire(ALC_MAJOR_VERSION == 0x1000, "ALC_MAJOR_VERSION")
+    oaRequire(ALC_MINOR_VERSION == 0x1001, "ALC_MINOR_VERSION")
+    oaRequire(ALC_ATTRIBUTES_SIZE == 0x1002, "ALC_ATTRIBUTES_SIZE")
+    oaRequire(ALC_ALL_ATTRIBUTES == 0x1003, "ALC_ALL_ATTRIBUTES")
+    oaRequire(ALC_DEFAULT_DEVICE_SPECIFIER == 0x1004, "ALC_DEFAULT_DEVICE_SPECIFIER")
+    oaRequire(ALC_DEVICE_SPECIFIER == 0x1005, "ALC_DEVICE_SPECIFIER")
+    oaRequire(ALC_EXTENSIONS == 0x1006, "ALC_EXTENSIONS")
+    oaRequire(ALC_DEFAULT_ALL_DEVICES_SPECIFIER == 0x1012, "ALC_DEFAULT_ALL_DEVICES_SPECIFIER")
+    oaRequire(ALC_ALL_DEVICES_SPECIFIER == 0x1013, "ALC_ALL_DEVICES_SPECIFIER")
+}
+
+func testALCConstantsCapture() {
+    oaRequire(ALC_CAPTURE_DEVICE_SPECIFIER == 0x310, "ALC_CAPTURE_DEVICE_SPECIFIER")
+    oaRequire(ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER == 0x311, "ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER")
+    oaRequire(ALC_CAPTURE_SAMPLES == 0x312, "ALC_CAPTURE_SAMPLES")
+}
+
+func testALCASAReverbRoomTypes() {
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_SmallRoom == 0, "SmallRoom")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_MediumRoom == 1, "MediumRoom")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_LargeRoom == 2, "LargeRoom")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_MediumHall == 3, "MediumHall")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_LargeHall == 4, "LargeHall")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_Plate == 5, "Plate")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_MediumChamber == 6, "MediumChamber")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_LargeChamber == 7, "LargeChamber")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_Cathedral == 8, "Cathedral")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_LargeRoom2 == 9, "LargeRoom2")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_MediumHall2 == 10, "MediumHall2")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_MediumHall3 == 11, "MediumHall3")
+    oaRequire(ALC_ASA_REVERB_ROOM_TYPE_LargeHall2 == 12, "LargeHall2")
+}
