@@ -1185,7 +1185,8 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         }
         let h = _UIBarMetrics.platterHeight
         let y = itemPlatterY + promptOffset
-        var x = _UIBarMetrics.sideMargin + backButtonWidth
+        let side = _UIBarMetrics.navSideMargin
+        var x = side + backButtonWidth
         for (i, v) in leftItemViews.enumerated() where !v.item._isSpace {
             let w = _UIBarItemLayout.width(of: v)
             x += _UIBarItemLayout.gapBefore(leftItemViews, i)
@@ -1194,7 +1195,7 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         }
         // UIKit's order: `rightBarButtonItems[0]` is the TRAILING-most item
         // (measured — a [.edit, "Add"] pair renders "Add" then "Edit").
-        var right = bounds.width - _UIBarMetrics.sideMargin
+        var right = bounds.width - side
         for (i, v) in rightItemViews.enumerated() where !v.item._isSpace {
             let w = _UIBarItemLayout.width(of: v)
             right -= _UIBarItemLayout.gapBefore(rightItemViews, i)
@@ -1251,13 +1252,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
 
     /// Trailing edge of the leading group (bar coordinates).
     var leadingGroupMaxX: CGFloat {
-        _UIBarMetrics.sideMargin + backButtonWidth + _UIBarItemLayout.naturalWidth(leftItemViews)
+        _UIBarMetrics.navSideMargin + backButtonWidth + _UIBarItemLayout.naturalWidth(leftItemViews)
     }
 
     /// Leading edge of the trailing group.
     var trailingGroupMinX: CGFloat {
         let w = _UIBarItemLayout.naturalWidth(rightItemViews)
-        return w == 0 ? bounds.width : bounds.width - _UIBarMetrics.sideMargin - w
+        return w == 0 ? bounds.width : bounds.width - _UIBarMetrics.navSideMargin - w
     }
 
     /// Centre x for the title: centred, unless centring it would leave less
@@ -1274,10 +1275,10 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         let clearance = UINavigationBar.titleGroupClearance
         if _layoutIsRTL {
             let leadInner = bounds.width
-                - (_UIBarMetrics.sideMargin + backButtonWidth
+                - (_UIBarMetrics.navSideMargin + backButtonWidth
                    + _UIBarItemLayout.naturalWidth(leftItemViews))
             let trailW = _UIBarItemLayout.naturalWidth(rightItemViews)
-            let trailOuter = trailW == 0 ? 0 : _UIBarMetrics.sideMargin + trailW
+            let trailOuter = trailW == 0 ? 0 : _UIBarMetrics.navSideMargin + trailW
             if centered - width / 2 >= trailOuter + clearance,
                centered + width / 2 <= leadInner - clearance {
                 return centered

@@ -212,8 +212,24 @@ public enum _UIBarMetrics {
     /// (y 6.1 … 41.9 for a 48/24 capsule; a 44/22 one would give 1.5 … 42.5).
     public static let toolbarPlatterHeight: CGFloat = 48
     public static var platterRadius: CGFloat { platterHeight / 2 }
-    /// Leading / trailing margin from the bar's edge.
+    /// Leading / trailing margin from the bar's edge. Toolbar packing and
+    /// portrait navigation bars keep 16.
     public static let sideMargin: CGFloat = 16
+    /// MEASURED Ledger t200.landscape / Notes t200.landscape / NavFlow
+    /// t200.landscape, iPhone SE 2x / iOS 26.1 compact 667×375: the
+    /// trailing nav-item platter sits **38** from the bar's edge, not 16.
+    /// Notes trash `[585, 0, 44, 44]` → 667−585−44 = 38; NavFlow Filter
+    /// `[557.5, 0, 71.5]` → 38; Ledger Export `[545.5, 0, 83.5]` → 38
+    /// (Export label abs.x **561.153**). Portrait Ledger t200 platter
+    /// `[275.5, 0, 83.5]` in 375 stays 16. Toolbar packing is unmeasured
+    /// at compact height and keeps `sideMargin`.
+    public static var navSideMargin: CGFloat {
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           UINavigationBar.isCompactHeight {
+            return 38
+        }
+        return sideMargin
+    }
     /// Gap between adjacent platters.
     public static let gap: CGFloat = 12
     /// Horizontal inset from the platter edge to the content.

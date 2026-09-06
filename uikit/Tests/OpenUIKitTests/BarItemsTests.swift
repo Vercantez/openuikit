@@ -742,4 +742,39 @@ final class NavigationToolbarTests: XCTestCase {
         nav.popViewController(animated: false)
         XCTAssertEqual(nav.toolbar.items?.count, 1)
     }
+
+    /// MEASURED Ledger/Notes/NavFlow t200.landscape, iPhone SE 2x / iOS 26.1:
+    /// compact-height nav item platters sit **38** from the trailing edge.
+    func testCompactHeightNavSideMarginIs38() {
+        let saved = OpenUIKitRuntime.systemFontCut
+        let savedIdiom = UIDevice.current.userInterfaceIdiom
+        let savedTraits = UITraitCollection.current
+        let savedBounds = UIScreen.main.bounds
+        let savedScale = UIScreen.main.scale
+        OpenUIKitRuntime.systemFontCut = .iOS
+        UIDevice.current.userInterfaceIdiom = .phone
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 667, height: 375),
+                                     scale: 2)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            verticalSizeClass: .compact, userInterfaceIdiom: .phone)
+        defer {
+            OpenUIKitRuntime.systemFontCut = saved
+            UIDevice.current.userInterfaceIdiom = savedIdiom
+            UITraitCollection.current = savedTraits
+            UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
+        }
+
+        let vc = UIViewController()
+        vc.title = "Ledger"
+        vc.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Export")
+        let nav = UINavigationController(rootViewController: vc)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 667, height: 375))
+        window.rootViewController = nav
+        window.layoutIfNeeded()
+        XCTAssertEqual(_UIBarMetrics.navSideMargin, 38, accuracy: 1e-9)
+        XCTAssertEqual(nav.navigationBar.rightItemViews[0].frame.maxX,
+                       667 - 38, accuracy: 1e-9)
+        XCTAssertEqual(_UIBarMetrics.sideMargin, 16, accuracy: 1e-9)
+    }
 }
