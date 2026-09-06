@@ -421,7 +421,7 @@ func testAVCaptureSessionConfigurationModel() {
 func testAVCMTimeValueBridgesCMTime() {
     let time = CMTime(seconds: 2.5, preferredTimescale: 600)
     let boxed = AVCMTimeValue.nsValue(for: time)
-    let roundTrip = avTime(from: boxed)
+    let roundTrip = AVCMTimeValue.time(from: boxed)
     precondition(abs(roundTrip.seconds - 2.5) < 0.001)
 }
 
