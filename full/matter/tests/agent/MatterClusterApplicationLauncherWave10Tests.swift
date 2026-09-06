@@ -51,6 +51,6 @@ func testClusterApplicationLauncherDeviceCache() {
     cluster.writeAttributeCurrentApp(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeCurrentApp(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeAcceptedCommandList(with: nil)
+    let cached = cluster.readAttributeCurrentApp(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
 }

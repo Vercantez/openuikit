@@ -46,6 +46,6 @@ func testClusterContentLauncherDeviceCache() {
     cluster.writeAttributeSupportedStreamingProtocols(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeSupportedStreamingProtocols(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeAcceptHeader(with: nil)
+    let cached = cluster.readAttributeSupportedStreamingProtocols(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
 }

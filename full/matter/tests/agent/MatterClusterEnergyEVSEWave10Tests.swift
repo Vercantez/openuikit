@@ -70,6 +70,6 @@ func testClusterEnergyEVSEDeviceCache() {
     cluster.writeAttributeUserMaximumChargeCurrent(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeApproximateEVEfficiency(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeAcceptedCommandList(with: nil)
+    let cached = cluster.readAttributeApproximateEVEfficiency(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
 }

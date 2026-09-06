@@ -34,6 +34,6 @@ func testClusterTimeFormatLocalizationDeviceCache() {
     cluster.writeAttributeHourFormat(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeActiveCalendarType(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeAcceptedCommandList(with: nil)
+    let cached = cluster.readAttributeActiveCalendarType(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
 }

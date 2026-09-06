@@ -57,6 +57,6 @@ func testClusterBridgedDeviceBasicInformationDeviceCache() {
     cluster.writeAttributeNodeLabel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeNodeLabel(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeAcceptedCommandList(with: nil)
+    let cached = cluster.readAttributeNodeLabel(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
 }
