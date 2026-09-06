@@ -16,42 +16,12 @@
 import OpenUIKit
 import Foundation
 import Onboarding
+import Combine
+import DesignSystem
 
-// MARK: - DesignSystem colours
-//
-// Replaces BlockzillaPackage/Sources/DesignSystem/UIColor+AppColors.swift.
-// Hexes / component floats are copied from the named colorsets (light and
-// dark appearances where the catalog has them).
-
-extension UIColor {
-    // Accent.colorset: light #C60084; dark (1.000, 0.290, 0.635)
-    static let accent = UIColor(dynamicProvider: { traits in
-        traits.userInterfaceStyle == .dark
-            ? UIColor(red: 1, green: 0.290, blue: 0.635, alpha: 1)
-            : UIColor(red: 0xC6 / 255, green: 0, blue: 0x84 / 255, alpha: 1)
-    })
-    // PrimaryText.colorset: light #291D4F; dark (0.984, 0.984, 0.996)
-    static let primaryText = UIColor(dynamicProvider: { traits in
-        traits.userInterfaceStyle == .dark
-            ? UIColor(red: 0.984, green: 0.984, blue: 0.996, alpha: 1)
-            : UIColor(red: 0x29 / 255, green: 0x1D / 255, blue: 0x4F / 255, alpha: 1)
-    })
-    // SecondaryText.colorset: light #5B5B66; dark (0.749, 0.749, 0.788)
-    static let secondaryText = UIColor(dynamicProvider: { traits in
-        traits.userInterfaceStyle == .dark
-            ? UIColor(red: 0.749, green: 0.749, blue: 0.788, alpha: 1)
-            : UIColor(red: 0x5B / 255, green: 0x5B / 255, blue: 0x66 / 255, alpha: 1)
-    })
-    // Magenta40.colorset: #E452B9 (universal)
-    static let magenta40 = UIColor(red: 0xE4 / 255, green: 0x52 / 255, blue: 0xB9 / 255, alpha: 1)
-    // Grey10.colorset: #F9F9FA (universal)
-    static let grey10 = UIColor(red: 0xF9 / 255, green: 0xF9 / 255, blue: 0xFA / 255, alpha: 1)
-}
-
-// Replaces BlockzillaPackage/Sources/DesignSystem/UIFont+AppFonts.swift.
-extension UIFont {
-    static let footnote12 = UIFont.systemFont(ofSize: 12)
-}
+// DesignSystem colours/fonts live in the DesignSystem product
+// (FocusUIColor.swift / FocusUIFont.swift), measured from
+// BlockzillaPackage Colors.xcassets at a2832521.
 
 // MARK: - UIConstants
 //
@@ -231,7 +201,11 @@ class SearchEngineManager {
     var activeEngine = SearchEngine(name: "Google")
 }
 
-final class HarnessOnboardingEventsHandler: OnboardingEventsHandling {}
+final class HarnessOnboardingEventsHandler: OnboardingEventsHandling {
+    @Published var route: ToolTipRoute?
+    var routePublisher: Published<ToolTipRoute?>.Publisher { $route }
+    func send(_ action: Action) { _ = action }
+}
 
 // MARK: - Cells' neighbours
 

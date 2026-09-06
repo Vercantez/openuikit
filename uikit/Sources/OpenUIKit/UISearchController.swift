@@ -136,7 +136,9 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
         }
     }
 
-    public convenience override init() {
+    /// Not `override`: see UIColorPickerViewController.init() / Focus
+    /// AutocompleteSettingViewController.swift:19.
+    public convenience init() {
         self.init(searchResultsController: nil)
     }
 

@@ -50,6 +50,9 @@
 // Swift classes and breaking `@objc` parameter representability.
 #if canImport(Foundation)
 import class Foundation.NSObject
+#if canImport(Darwin)
+import class Foundation.NSUserActivity
+#endif
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
 #else
@@ -255,6 +258,36 @@ open class UIResponder: NSObject {
     /// window walks the chain collecting these in
     /// `UIWindow.performKeyCommand(input:modifierFlags:)`.
     open var keyCommands: [UIKeyCommand]? { nil }
+
+    /// UIKit's `userActivity` on every responder (UIResponder.h). Focus
+    /// BrowserViewController assigns Siri NSUserActivity here
+    /// (a2832521 BrowserViewController.swift:805).
+    open var userActivity: NSUserActivity?
+
+    /// UIKit's `canPerformAction:withSender:` (UIResponderStandardEditActions).
+    /// URLBar.swift:701 overrides it for the paste-and-go menu.
+    open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        _ = (action, sender)
+        return next?.canPerformAction(action, withSender: sender) ?? false
+    }
+
+    /// Moved out of the UIViewCompat extension so AutocompleteTextField can
+    /// `override` it from another module. MEASURED Blockzilla
+    /// AutocompleteTextField.swift:51: "non-@objc property declared in
+    /// extension of UIResponder and cannot be overridden".
+    /// `@objc` is Darwin-only: Linux Swift 6.2.4 has no ObjC interop
+    /// (`swift build --product openrender` on swift:6.2-noble).
+#if canImport(ObjectiveC)
+    @objc open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#else
+    open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#endif
 
     // MARK: Press entry points
 

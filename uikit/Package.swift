@@ -81,6 +81,18 @@ let swiftUICombineDependencies: [Target.Dependency] = [
 #if os(Linux)
 let linuxXCTestSupportTargets: [Target] = [
     .target(name: "CLinuxXCTestSupport", publicHeadersPath: "include"),
+    // SnapKit 5.7.0 LayoutConstraintItem.swift:82 associated objects.
+    // Darwin UIKit @_exported-imports SDK ObjectiveC; native ELF has none.
+    // Named OpenUIKitObjectiveC so `canImport(ObjectiveC)` stays false in
+    // OpenUIKit (a target named ObjectiveC made @objc branches compile
+    // with ObjC interop disabled — MEASURED swift:6.2-noble openrender).
+    .target(name: "OpenUIKitObjectiveC", path: "Sources/ObjectiveC"),
+    .systemLibrary(
+        name: "CLibXML2",
+        path: "Sources/CLibXML2",
+        pkgConfig: "libxml-2.0",
+        providers: [.apt(["libxml2-dev"]), .brew(["libxml2"])]
+    ),
 ]
 let openUIKitTestDeps: [Target.Dependency] = [
     "OpenUIKit", "UIKit", "ConformanceApps",
@@ -149,10 +161,41 @@ let swiftUITestTarget: Target = .testTarget(
 let imageIOModule = "ImageIO"
 let coreImageModule = "CoreImage"
 let storeKitModule = "StoreKit"
+let libkernModule = "libkern"
+let uiKitLinuxDependencies: [Target.Dependency] = ["OpenUIKitObjectiveC"]
+let fuziLinuxDependencies: [Target.Dependency] = ["CLibXML2"]
+// Clang submodules `os.log` / `os.signpost` so `import os.log` resolves
+// (focus-e2e: a SwiftPM target named "os.log" compiles as os_log). Darwin
+// keeps the SDK os module; publicHeadersPath here would shadow it.
+let osTarget: Target = .target(name: "os", publicHeadersPath: "include")
+// SnapKit 5.7.0 Debugging.swift:153 `type(of: object).description()` —
+// Darwin AnyObject is NSObject (`+description`); Linux AnyObject.Type has
+// no such member (MEASURED swift:6.2-noble). Sources stay unmodified.
+// PrivacyInfo.xcprivacy is not Swift (focus-launch Darwin SnapKit exclude).
+let snapKitExclude = ["LICENSE", "VENDOR.txt", "Debugging.swift", "PrivacyInfo.xcprivacy"]
+let onboardingPath = "Sources/RealAppProbe/FocusModules/Onboarding"
+let onboardingDeps: [Target.Dependency] = [
+    .target(name: "Combine", condition: .when(platforms: [.linux])),
+]
+let onboardingExclude: [String] = []
+let blockzillaRealAppDeps: [Target.Dependency] = []
 #else
 let imageIOModule = "OpenUIKitImageIO"
 let coreImageModule = "OpenUIKitCoreImage"
 let storeKitModule = "OpenUIKitStoreKit"
+let libkernModule = "OpenUIKitLibkern"
+let uiKitLinuxDependencies: [Target.Dependency] = []
+let fuziLinuxDependencies: [Target.Dependency] = []
+let osTarget: Target = .target(name: "os")
+let snapKitExclude = ["LICENSE", "VENDOR.txt", "PrivacyInfo.xcprivacy"]
+// Real BlockzillaPackage Onboarding (21 files, SnapKit + Widget).
+// Linux / guest keep FocusModules handlers (no SnapKit).
+let onboardingPath = "Sources/BlockzillaPackage/Onboarding"
+let onboardingDeps: [Target.Dependency] = [
+    "SnapKit", "DesignSystem", "Widget", "OpenUIKit", "UIKit", "SwiftUI",
+]
+let onboardingExclude: [String] = ["Preview Files"]
+let blockzillaRealAppDeps: [Target.Dependency] = ["Blockzilla"]
 #endif
 
 // Selector target-action (docs/OBJC_RUNTIME.md) deliberately needs NOTHING
@@ -240,6 +283,18 @@ let frameworkProducts: [Product] = [
     .library(name: "Onboarding", targets: ["Onboarding"]),
     .library(name: "Licenses", targets: ["Licenses"]),
     .library(name: "DesignSystem", targets: ["DesignSystem"]),
+    // Focus a2832521: SnapKit 5.7.0 e74fe2a, sentry-cocoa 8.20.0, Fuzi 3.1.3,
+    // libkern atomics (focus-deps). Darwin-only Blockzilla still depends on
+    // this SnapKit — one copy, not the launch Darwin-only duplicate.
+    // Launch adds FocusAppServices / LocalAuthentication / PassKit / Network.
+    .library(name: "SnapKit", targets: ["SnapKit"]),
+    .library(name: "Sentry", targets: ["Sentry"]),
+    .library(name: "Fuzi", targets: ["Fuzi"]),
+    .library(name: libkernModule, targets: [libkernModule]),
+    .library(name: "FocusAppServices", targets: ["FocusAppServices"]),
+    .library(name: "LocalAuthentication", targets: ["LocalAuthentication"]),
+    .library(name: "PassKit", targets: ["PassKit"]),
+    .library(name: "Network", targets: ["Network"]),
 ]
 
 let coreTargets: [Target] = [
@@ -342,7 +397,7 @@ let coreTargets: [Target] = [
             "OpenUIKit",
             "DeveloperToolsSupport",
             "OpenUIKitPreviewMacros",
-        ],
+        ] + uiKitLinuxDependencies,
         path: "Sources/UIKitShim"
     ),
     // M14 real-app harness: UNMODIFIED source files lifted out of a
@@ -370,12 +425,19 @@ let coreTargets: [Target] = [
     // Intents` / … lines unmodified. Colours, strings and app types live
     // in FocusShims.swift (same module as the cells). Exclude the stub
     // sources from RealAppProbe so they are not compiled twice.
-    .target(name: "Glean", path: "Sources/RealAppProbe/FocusModules/Glean"),
-    .target(name: "Intents", path: "Sources/RealAppProbe/FocusModules/Intents"),
+    .target(name: "Glean",
+            dependencies: ["OpenUIKit", "UIKit"],
+            path: "Sources/RealAppProbe/FocusModules/Glean"),
+    .target(name: "Intents",
+            dependencies: ["OpenUIKit", "UIKit"],
+            path: "Sources/RealAppProbe/FocusModules/Intents"),
     .target(name: "IntentsUI",
             dependencies: ["Intents", "OpenUIKit"],
             path: "Sources/RealAppProbe/FocusModules/IntentsUI"),
-    .target(name: "Onboarding", path: "Sources/RealAppProbe/FocusModules/Onboarding"),
+    .target(name: "Onboarding",
+            dependencies: onboardingDeps,
+            path: onboardingPath,
+            exclude: onboardingExclude),
     .target(name: "Licenses",
             dependencies: ["SwiftUI"],
             path: "Sources/RealAppProbe/FocusModules/Licenses"),
@@ -408,7 +470,7 @@ let coreTargets: [Target] = [
                 "Domain", "Shared",
                 "SwiftUI",
                 .target(name: "Combine", condition: .when(platforms: [.linux])),
-            ],
+            ] + blockzillaRealAppDeps,
             exclude: ["FocusModules", "HackersModules", "Focus/script.json"],
             swiftSettings: [
                 .enableUpcomingFeature("IsolatedDefaultValues"),
@@ -456,7 +518,41 @@ let frameworkTargets: [Target] = [
         name: "PhotosUI",
         dependencies: ["OpenUIKit", "UIKit"]
     ),
-    .target(name: "os"),
+    osTarget,
+    // Unmodified SnapKit 5.7.0 (e74fe2a). One copy: focus-deps's target
+    // (Linux excludes Debugging.swift) plus focus-launch's
+    // PrivacyInfo.xcprivacy exclude. `import UIKit` is OpenUIKit's UIKit
+    // product so `canImport(UIKit)` is true on macOS too.
+    .target(
+        name: "SnapKit",
+        dependencies: ["UIKit", "OpenUIKit"],
+        exclude: snapKitExclude
+    ),
+    .target(name: "Sentry"),
+    .target(
+        name: "Fuzi",
+        dependencies: fuziLinuxDependencies,
+        exclude: ["LICENSE", "VENDOR.txt"],
+        linkerSettings: [.linkedLibrary("xml2", .when(platforms: [.linux]))]
+    ),
+    .target(
+        name: libkernModule,
+        path: "Sources/libkern"
+    ),
+    .target(name: "FocusAppServices"),
+    .target(
+        name: "LocalAuthentication",
+        dependencies: [
+            "OpenUIKit", "UIKit",
+            .target(name: "Combine", condition: .when(platforms: [.linux])),
+        ],
+        path: "Sources/LocalAuthentication"
+    ),
+    .target(
+        name: "PassKit",
+        dependencies: ["OpenUIKit", "UIKit"]
+    ),
+    .target(name: "Network"),
 ]
 
 let conformanceTargets: [Target] = [
@@ -488,7 +584,26 @@ let conformanceTargets: [Target] = [
             swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
     // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
     // May use Foundation (it is a tool, not the library).
-    .executableTarget(name: "openrender", dependencies: ["OpenUIKit", "RealAppProbe"]),
+    .executableTarget(
+        name: "openrender",
+        dependencies: ["OpenUIKit", "RealAppProbe", "os"],
+        exclude: ["Info.plist"],
+        linkerSettings: [
+            // MEASURED mozilla-mobile/focus-ios a2832521 AppInfo /
+            // NimbusExtensions force-unwrap CFBundleName, CFBundlePackageType,
+            // CFBundleShortVersionString, NimbusAppName, NimbusAppChannel
+            // (Blockzilla/Shared/AppInfo.swift:21-62, NimbusExtensions.swift:43).
+            .unsafeFlags([
+                "-Xlinker", "-sectcreate",
+                "-Xlinker", "__TEXT",
+                "-Xlinker", "__info_plist",
+                "-Xlinker", URL(fileURLWithPath: #filePath)
+                    .deletingLastPathComponent()
+                    .appendingPathComponent("Sources/openrender/Info.plist")
+                    .path,
+            ], .when(platforms: [.macOS])),
+        ]
+    ),
     // SDL2 via pkg-config (brew install sdl2 on macOS, apt install
     // libsdl2-dev on Linux). System library — nothing vendored.
     .systemLibrary(
@@ -502,7 +617,7 @@ let conformanceTargets: [Target] = [
     // see Sources/openhost/main.swift header); openrender itself stays
     // byte-identical.
     // May use Foundation (it is a host, like openrender).
-    .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp", "RealAppProbe", "ConformanceApps"]),
+    .executableTarget(name: "openhost", dependencies: ["OpenUIKit", "CSDL2", "DemoApp", "RealAppProbe", "ConformanceApps", "os"]),
     // The TYPES half of the C ABI (the ObjC callback vtable), shared by
     // the Swift side and the ObjC facade so its layout cannot drift.
     .target(name: "COpenUIKitABI", publicHeadersPath: "include"),
@@ -605,7 +720,146 @@ let testTargets: [Target] = [
             ], .when(platforms: [.linux])),
         ]
     ),
+    .testTarget(
+        name: "SnapKitOpenUIKitTests",
+        dependencies: ["SnapKit", "UIKit", "OpenUIKit"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-default-isolation", "MainActor",
+            ], .when(platforms: [.macOS])),
+        ]
+    ),
+    .testTarget(
+        name: "GleanTests",
+        dependencies: ["Glean"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "SentryTests",
+        dependencies: ["Sentry"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "LibkernTests",
+        dependencies: [.target(name: libkernModule)],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
+    .testTarget(
+        name: "FuziTests",
+        dependencies: ["Fuzi"],
+        swiftSettings: [
+            .unsafeFlags([
+                "-swift-version", "5",
+                "-Xfrontend", "-strict-concurrency=minimal",
+                "-Xfrontend", "-warn-concurrency",
+            ], .when(platforms: [.linux])),
+        ]
+    ),
 ]
+
+#if os(Linux)
+let blockzillaProducts: [Product] = []
+let blockzillaTargets: [Target] = []
+#else
+let blockzillaProducts: [Product] = [
+    .library(name: "Blockzilla", targets: ["Blockzilla"]),
+    // MEASURED ShortcutView.swift:103 `#selector(didTap)` — Linux corelibs
+    // cannot compile it (focus-e2e.md). Darwin-only with Blockzilla.
+    .library(name: "AppShortcuts", targets: ["AppShortcuts"]),
+    // SnapKit lives in frameworkProducts (one copy, both platforms).
+    // UIHelpers ImageLoader.swift:29 URLRequest is FoundationNetworking
+    // on Linux and this is Focus source we do not patch.
+    .library(name: "WebKit", targets: ["WebKit"]),
+    .library(name: "UIHelpers", targets: ["UIHelpers"]),
+    .library(name: "UIComponents", targets: ["UIComponents"]),
+]
+let blockzillaTargets: [Target] = [
+    .target(
+        name: "WebKit",
+        dependencies: ["OpenUIKit", "UIKit"],
+        swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]
+    ),
+    .target(
+        name: "UIHelpers",
+        dependencies: ["OpenUIKit", "UIKit"],
+        path: "Sources/BlockzillaPackage/UIHelpers",
+        swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]
+    ),
+    .target(
+        name: "UIComponents",
+        dependencies: ["UIHelpers", "OpenUIKit", "UIKit"],
+        path: "Sources/BlockzillaPackage/UIComponents",
+        swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]
+    ),
+    .target(
+        name: "Widget",
+        dependencies: ["SwiftUI"],
+        path: "Sources/BlockzillaPackage/Widget",
+        swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]
+    ),
+    .target(
+        name: "AppShortcuts",
+        dependencies: [
+            "UIComponents", "DesignSystem", "OpenUIKit", "UIKit",
+        ],
+        path: "Sources/BlockzillaPackage/AppShortcuts",
+        swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]
+    ),
+    // mozilla-mobile/focus-ios a2832521 Blockzilla (129 present sources).
+    // Darwin-only: #selector is a Linux corelibs wall (focus-e2e.md).
+    .target(
+        name: "Blockzilla",
+        dependencies: [
+            "OpenUIKit", "UIKit", "SwiftUI",
+            "SnapKit", "WebKit", "Glean", "Sentry", "Fuzi",
+            "FocusAppServices", "Onboarding", "AppShortcuts",
+            "UIHelpers", "DesignSystem", "Licenses",
+            "Intents", "IntentsUI", "LocalAuthentication",
+            "SafariServices", "PassKit",
+            // MEASURED debug `swift test`: NimbusWrapper.swift:5
+            // `import os.log` compiled against this package's `os`
+            // product (`_$s2os5OSLogV9subsystem8categoryACSS_SStcfC` matches
+            // Sources/os/OSLog.swift.o) but the executable did not link
+            // it. Apple's libswiftos does not define that struct init.
+            "os",
+            .target(name: storeKitModule),
+        ],
+        path: "Sources/Blockzilla",
+        swiftSettings: [
+            .enableUpcomingFeature("IsolatedDefaultValues"),
+            .unsafeFlags([
+                "-default-isolation", "MainActor",
+                "-disable-availability-checking",
+                "-module-alias", "StoreKit=\(storeKitModule)",
+            ]),
+        ],
+    ),
+]
+#endif
 
 let package = Package(
     name: "OpenUIKit",
@@ -615,8 +869,8 @@ let package = Package(
     // it makes that explicit instead of leaving it to the default.
     // Apple-only: it has no effect on the Linux build.
     platforms: [.macOS(.v11)],
-    products: coreProducts + frameworkProducts,
+    products: coreProducts + frameworkProducts + blockzillaProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
-    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets,
+    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets,
     cxxLanguageStandard: .cxx17
 )
