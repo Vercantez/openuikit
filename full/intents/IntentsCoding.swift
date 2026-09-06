@@ -148,6 +148,7 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         if coder.containsValue(forKey: "isCanceled") { value.isCanceled = coder.decodeBool(forKey: "isCanceled") }
         if coder.containsValue(forKey: "isCompleted") { value.isCompleted = coder.decodeBool(forKey: "isCompleted") }
         if coder.containsValue(forKey: "isMissedPickup") { value.isMissedPickup = coder.decodeBool(forKey: "isMissedPickup") }
+        if coder.containsValue(forKey: "isOutstanding") { value.isOutstanding = coder.decodeBool(forKey: "isOutstanding") }
         return
     }
     if let value = object as? INRideOption {
@@ -202,8 +203,32 @@ func inLinuxApplyCoder(_ object: NSObject, _ coder: NSCoder) {
         }
         return
     }
+    if let value = object as? INPriceRange {
+        if let decoded = inDecodeString(coder, "currencyCode") { value.currencyCode = decoded }
+        return
+    }
     if let value = object as? INRestaurantReservationBooking {
         value.bookingDescription = inDecodeString(coder, "bookingDescription")
+        value.bookingIdentifier = inDecodeString(coder, "bookingIdentifier") ?? value.bookingIdentifier
+        value.bookingDate = coder.decodeObject(of: NSDate.self, forKey: "bookingDate") as Date?
+        if coder.containsValue(forKey: "partySize") {
+            value.partySize = Int(coder.decodeInt64(forKey: "partySize"))
+        }
+        if coder.containsValue(forKey: "bookingAvailable") {
+            value.isBookingAvailable = coder.decodeBool(forKey: "bookingAvailable")
+        }
+        if coder.containsValue(forKey: "requiresEmailAddress") {
+            value.requiresEmailAddress = coder.decodeBool(forKey: "requiresEmailAddress")
+        }
+        if coder.containsValue(forKey: "requiresManualRequest") {
+            value.requiresManualRequest = coder.decodeBool(forKey: "requiresManualRequest")
+        }
+        if coder.containsValue(forKey: "requiresName") {
+            value.requiresName = coder.decodeBool(forKey: "requiresName")
+        }
+        if coder.containsValue(forKey: "requiresPhoneNumber") {
+            value.requiresPhoneNumber = coder.decodeBool(forKey: "requiresPhoneNumber")
+        }
         return
     }
 }
@@ -443,7 +468,17 @@ extension INPaymentRecord: NSSecureCoding {
 extension INPriceRange: NSSecureCoding {
     public static var supportsSecureCoding: Bool { true }
     public func encode(with coder: NSCoder) {
-        coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
+        inLinuxEncodeStrings(coder, [("currencyCode", currencyCode)])
+    }
+}
+
+extension INMediaDestinationReference: NSSecureCoding {
+    public static var supportsSecureCoding: Bool { true }
+    public func encode(with coder: NSCoder) {
+        inLinuxEncodeStrings(coder, [("playlistName", playlistName)])
+        if let mediaDestinationType {
+            coder.encode(Int64(mediaDestinationType.rawValue), forKey: "mediaDestinationType")
+        }
     }
 }
 
@@ -533,6 +568,16 @@ extension INRestaurantReservationBooking: NSSecureCoding {
     public func encode(with coder: NSCoder) {
         coder.encode(INPortableArchive.version, forKey: INPortableArchive.versionKey)
         coder.encode(bookingDescription as NSString?, forKey: "bookingDescription")
+        coder.encode(bookingIdentifier as NSString, forKey: "bookingIdentifier")
+        if let bookingDate {
+            coder.encode(bookingDate as NSDate, forKey: "bookingDate")
+        }
+        coder.encode(Int64(partySize), forKey: "partySize")
+        coder.encode(isBookingAvailable, forKey: "bookingAvailable")
+        coder.encode(requiresEmailAddress, forKey: "requiresEmailAddress")
+        coder.encode(requiresManualRequest, forKey: "requiresManualRequest")
+        coder.encode(requiresName, forKey: "requiresName")
+        coder.encode(requiresPhoneNumber, forKey: "requiresPhoneNumber")
     }
 }
 
@@ -550,6 +595,7 @@ extension INRideCompletionStatus: NSSecureCoding {
         coder.encode(isCanceled, forKey: "isCanceled")
         coder.encode(isCompleted, forKey: "isCompleted")
         coder.encode(isMissedPickup, forKey: "isMissedPickup")
+        coder.encode(isOutstanding, forKey: "isOutstanding")
     }
 }
 

@@ -612,8 +612,13 @@ open class INCar: NSObject, @unchecked Sendable {
 
     public typealias HeadUnit = INCarHeadUnit
 
-    open func maximumPower(for chargingConnectorType: INCar.ChargingConnectorType) -> Measurement<UnitPower>? { nil }
-    open func setMaximumPower(_ power: Measurement<UnitPower>, for chargingConnectorType: INCar.ChargingConnectorType) { }
+    private var maximumPowerByConnector: [String: Measurement<UnitPower>] = [:]
+    open func maximumPower(for chargingConnectorType: INCar.ChargingConnectorType) -> Measurement<UnitPower>? {
+        maximumPowerByConnector[chargingConnectorType.rawValue]
+    }
+    open func setMaximumPower(_ power: Measurement<UnitPower>, for chargingConnectorType: INCar.ChargingConnectorType) {
+        maximumPowerByConnector[chargingConnectorType.rawValue] = power
+    }
     open var carIdentifier: String = ""
     open var displayName: String? = nil
     open var headUnit: INCar.HeadUnit? = nil
@@ -858,6 +863,11 @@ open class INDeleteTasksIntent: INIntent, @unchecked Sendable {
     open var taskList: INTaskList? = nil
     open var tasks: [INTask]? = nil
     public required override init() { super.init() }
+    public convenience init(taskList: INTaskList?, tasks: [INTask]?) {
+        self.init()
+        self.taskList = taskList
+        self.tasks = tasks
+    }
 }
 
 open class INDeleteTasksIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -1364,14 +1374,32 @@ open class INMediaAffinityTypeResolutionResult: INIntentResolutionResult, @unche
 }
 
 open class INMediaDestinationReference: NSObject, @unchecked Sendable {
-    open class func library() -> Self { self.init() }
-    open class func playlistDestination(withName playlistName: String) -> Self { self.init() }
+    open class func library() -> Self {
+        let value = self.init()
+        value.mediaDestinationType = .library
+        return value
+    }
+    open class func libraryDestination() -> Self { library() }
+    open class func playlistDestination(withName playlistName: String) -> Self {
+        let value = self.init()
+        value.mediaDestinationType = .playlist
+        value.playlistName = playlistName
+        return value
+    }
     open var mediaDestinationType: INMediaDestinationType?
     open var playlistName: String? = nil
     public required override init() { super.init() }
     public required convenience init?(coder: NSCoder) {
         self.init()
         inLinuxApplyCoder(self, coder)
+        if let raw = inDecodeString(coder, "playlistName") {
+            playlistName = raw
+        }
+        if coder.containsValue(forKey: "mediaDestinationType") {
+            mediaDestinationType = INMediaDestinationType(
+                rawValue: Int(coder.decodeInt64(forKey: "mediaDestinationType"))
+            )
+        }
     }
 }
 
@@ -1667,21 +1695,12 @@ open class INNoteResolutionResult: INIntentResolutionResult, @unchecked Sendable
 open class INNotebookItemTypeResolutionResult: INIntentResolutionResult, @unchecked Sendable {
     open class func confirmationRequired(with notebookItemTypeToConfirm: INNotebookItemType) -> Self { self.init(outcome: .confirmationRequired, value: notebookItemTypeToConfirm) }
     open class func success(with resolvedNotebookItemType: INNotebookItemType) -> Self { self.init(outcome: .success, value: resolvedNotebookItemType) }
+    open class func disambiguation(with notebookItemTypesToDisambiguate: [INNotebookItemType]) -> Self { self.init(outcome: .disambiguation, value: notebookItemTypesToDisambiguate) }
     public required init(outcome: INIntentResolutionResultOutcome, value: Any?) {
         super.init(outcome: outcome, value: value)
     }
 }
 
-extension INObject {
-    public var displayImage: INImage? {
-        get { nil }
-        set { _ = newValue }
-    }
-    public var subtitleString: String? {
-        get { nil }
-        set { _ = newValue }
-    }
-}
 
 extension INObjectCollection {
     public var usesIndexedCollation: Bool {
@@ -1709,6 +1728,9 @@ open class INParameter: NSObject, @unchecked Sendable {
         self.parameterKeyPath = keyPath
     }
     public convenience init(forClass aClass: AnyClass, keyPath: String) {
+        self.init(for: aClass, keyPath: keyPath)
+    }
+    open class func parameter(forClass aClass: AnyClass, keyPath: String) -> Self {
         self.init(for: aClass, keyPath: keyPath)
     }
     open func index(forSubKeyPath subKeyPath: String) -> Int {
@@ -2049,14 +2071,20 @@ open class INPriceRange: NSObject, @unchecked Sendable {
     }
     public convenience init(price: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.minimumPrice = price
+        self.maximumPrice = price
         self.currencyCode = currencyCode
     }
     public convenience init(firstPrice: NSDecimalNumber, secondPrice: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.minimumPrice = firstPrice
+        self.maximumPrice = secondPrice
         self.currencyCode = currencyCode
     }
     public convenience init(rangeBetweenPrice firstPrice: NSDecimalNumber, andPrice secondPrice: NSDecimalNumber, currencyCode: String) {
         self.init()
+        self.minimumPrice = firstPrice
+        self.maximumPrice = secondPrice
         self.currencyCode = currencyCode
     }
     public required convenience init?(coder: NSCoder) {
@@ -2464,6 +2492,24 @@ open class INRideCompletionStatus: NSObject, @unchecked Sendable {
         value.isCompleted = true
         return value
     }
+    open class func completed(outstandingFeedbackType feedbackType: INRideFeedbackTypeOptions) -> Self {
+        let value = completed()
+        value.feedbackType = feedbackType
+        value.isOutstanding = true
+        return value
+    }
+    open class func completed(outstandingPaymentAmount paymentAmount: INCurrencyAmount) -> Self {
+        let value = completed()
+        value.paymentAmount = paymentAmount
+        value.isOutstanding = true
+        return value
+    }
+    open class func completed(settledPaymentAmount paymentAmount: INCurrencyAmount) -> Self {
+        let value = completed()
+        value.paymentAmount = paymentAmount
+        value.isOutstanding = false
+        return value
+    }
     open var isCanceled: Bool = false
     open var isCompleted: Bool = false
     open var completionUserActivity: NSUserActivity? = nil
@@ -2798,6 +2844,28 @@ open class INSearchForMessagesIntent: INIntent, @unchecked Sendable {
         self.notificationIdentifiers = notificationIdentifiers
         self.speakableGroupNames = speakableGroupNames
         self.conversationIdentifiers = conversationIdentifiers
+    }
+    public convenience init(recipients: [INPerson]?, senders: [INPerson]?, searchTerms: [String]?, attributes: INMessageAttributeOptions = [], dateTimeRange: INDateComponentsRange?, identifiers: [String]?, notificationIdentifiers: [String]?, groupNames: [String]?) {
+        self.init()
+        self.recipients = recipients
+        self.senders = senders
+        self.searchTerms = searchTerms
+        self.attributes = attributes
+        self.dateTimeRange = dateTimeRange
+        self.identifiers = identifiers
+        self.notificationIdentifiers = notificationIdentifiers
+        self.groupNames = groupNames
+    }
+    public convenience init(recipients: [INPerson]?, senders: [INPerson]?, searchTerms: [String]?, attributes: INMessageAttributeOptions = [], dateTimeRange: INDateComponentsRange?, identifiers: [String]?, notificationIdentifiers: [String]?, speakableGroupNames: [INSpeakableString]?) {
+        self.init()
+        self.recipients = recipients
+        self.senders = senders
+        self.searchTerms = searchTerms
+        self.attributes = attributes
+        self.dateTimeRange = dateTimeRange
+        self.identifiers = identifiers
+        self.notificationIdentifiers = notificationIdentifiers
+        self.speakableGroupNames = speakableGroupNames
     }
 }
 
@@ -3135,7 +3203,14 @@ open class INSetClimateSettingsInCarIntentResponse: INIntentResponse, @unchecked
 open class INSetDefrosterSettingsInCarIntent: INIntent, @unchecked Sendable {
     open var carName: INSpeakableString? = nil
     open var defroster: INCarDefroster?
+    open var enable: Bool? = nil
     public required override init() { super.init() }
+    public convenience init(enable: Bool?, defroster: INCarDefroster?, carName: INSpeakableString?) {
+        self.init()
+        self.enable = enable
+        self.defroster = defroster
+        self.carName = carName
+    }
 }
 
 open class INSetDefrosterSettingsInCarIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -3251,7 +3326,23 @@ open class INSetRadioStationIntent: INIntent, @unchecked Sendable {
     open var channel: String? = nil
     open var radioType: INRadioType?
     open var stationName: String? = nil
+    open var frequency: Double? = nil
+    open var presetNumber: Int? = nil
     public required override init() { super.init() }
+    public convenience init(
+        radioType: INRadioType?,
+        frequency: Double?,
+        stationName: String?,
+        channel: String?,
+        presetNumber: Int?
+    ) {
+        self.init()
+        self.radioType = radioType
+        self.frequency = frequency
+        self.stationName = stationName
+        self.channel = channel
+        self.presetNumber = presetNumber
+    }
 }
 
 open class INSetRadioStationIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -3268,7 +3359,29 @@ open class INSetSeatSettingsInCarIntent: INIntent, @unchecked Sendable {
     open var carName: INSpeakableString? = nil
     open var relativeLevelSetting: INRelativeSetting?
     open var seat: INCarSeat?
+    open var enableCooling: Bool? = nil
+    open var enableHeating: Bool? = nil
+    open var enableMassage: Bool? = nil
+    open var level: Int? = nil
     public required override init() { super.init() }
+    public convenience init(
+        enableHeating: Bool?,
+        enableCooling: Bool?,
+        enableMassage: Bool?,
+        seat: INCarSeat?,
+        level: Int?,
+        relativeLevel relativeLevelSetting: INRelativeSetting?,
+        carName: INSpeakableString?
+    ) {
+        self.init()
+        self.enableHeating = enableHeating
+        self.enableCooling = enableCooling
+        self.enableMassage = enableMassage
+        self.seat = seat
+        self.level = level
+        self.relativeLevelSetting = relativeLevelSetting
+        self.carName = carName
+    }
 }
 
 open class INSetSeatSettingsInCarIntentResponse: INIntentResponse, @unchecked Sendable {
@@ -3568,7 +3681,23 @@ open class INStartWorkoutIntent: INIntent, @unchecked Sendable {
     open var workoutGoalUnitType: INWorkoutGoalUnitType?
     open var workoutLocationType: INWorkoutLocationType?
     open var workoutName: INSpeakableString? = nil
+    open var goalValue: Double? = nil
+    open var isOpenEnded: Bool? = nil
     public required override init() { super.init() }
+    public convenience init(
+        workoutName: INSpeakableString?,
+        goalValue: Double?,
+        workoutGoalUnitType: INWorkoutGoalUnitType?,
+        workoutLocationType: INWorkoutLocationType?,
+        isOpenEnded: Bool?
+    ) {
+        self.init()
+        self.workoutName = workoutName
+        self.goalValue = goalValue
+        self.workoutGoalUnitType = workoutGoalUnitType
+        self.workoutLocationType = workoutLocationType
+        self.isOpenEnded = isOpenEnded
+    }
 }
 
 open class INStartWorkoutIntentResponse: INIntentResponse, @unchecked Sendable {
