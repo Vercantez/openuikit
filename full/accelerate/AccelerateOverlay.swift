@@ -148,7 +148,12 @@ public enum BNNS {
         public typealias AllCases = [BNNS.ArithmeticBinaryFunction]
         case multiply
         case subtract
-        public static var allCases: [BNNS.ArithmeticBinaryFunction] { preconditionFailure("Accelerate Linux: unread property") }
+        public static var allCases: [BNNS.ArithmeticBinaryFunction] {
+            [
+                .divideNoNaN, .multiplyNoNaN, .flooringDivide, .truncatingDivide,
+                .truncatingRemainder, .add, .max, .min, .pow, .divide, .multiply, .subtract
+            ]
+        }
     }
     public enum ArithmeticTernaryFunction: Equatable, Hashable {
         case multiplyAdd
@@ -184,9 +189,43 @@ public enum BNNS {
         case square
         public typealias AllCases = [BNNS.ArithmeticUnaryFunction]
         public var bnnsArithmeticFunction: BNNSArithmeticFunction { preconditionFailure("Accelerate Linux: unread property") }
-        public static var allCases: [BNNS.ArithmeticUnaryFunction] { preconditionFailure("Accelerate Linux: unread property") }
+        public static var allCases: [BNNS.ArithmeticUnaryFunction] {
+            [
+                .reciprocal, .squareRoot, .reciprocalSquareRoot, .abs, .cos, .erf, .exp, .log,
+                .sin, .tan, .acos, .asin, .atan, .ceil, .cosh, .exp2, .log2, .sign, .sinh, .tanh,
+                .acosh, .asinh, .atanh, .floor, .round, .negate, .square
+            ]
+        }
     }
     public class BinaryArithmeticLayer: Layer {
+        var function: BNNS.ArithmeticBinaryFunction = .add
+        public init?(
+            inputA: BNNSNDArrayDescriptor,
+            inputADescriptorType: BNNS.DescriptorType,
+            inputB: BNNSNDArrayDescriptor,
+            inputBDescriptorType: BNNS.DescriptorType,
+            output: BNNSNDArrayDescriptor,
+            outputDescriptorType: BNNS.DescriptorType,
+            function: BNNS.ArithmeticBinaryFunction,
+            activation: BNNS.ActivationFunction,
+            filterParameters: BNNSFilterParameters?
+        ) {
+            _ = inputA; _ = inputADescriptorType; _ = inputB; _ = inputBDescriptorType
+            _ = output; _ = outputDescriptorType; _ = activation; _ = filterParameters
+            self.function = function
+            super.init()
+        }
+        public func apply(
+            batchSize: Int,
+            inputA: BNNSNDArrayDescriptor,
+            inputB: BNNSNDArrayDescriptor,
+            output: BNNSNDArrayDescriptor
+        ) throws {
+            _ = batchSize
+            var out = output
+            let status = _bnnsBinaryArithmeticApply(function: function, a: inputA, b: inputB, out: &out)
+            if status != 0 { throw BNNS.Error.layerApplyFail }
+        }
     }
     public class BinaryLayer: Layer {
     }
@@ -197,7 +236,7 @@ public enum BNNS {
     public enum ConvolutionPadding: Equatable, Hashable {
         case asymmetric(left: Int, right: Int, up: Int, down: Int)
         case symmetric(x: Int, y: Int)
-        public static var zero: BNNS.ConvolutionPadding { preconditionFailure("Accelerate Linux: unread property") }
+        public static var zero: BNNS.ConvolutionPadding { .symmetric(x: 0, y: 0) }
     }
     public enum ConvolutionType: Equatable, Hashable {
         case transposed
@@ -241,8 +280,27 @@ public enum BNNS {
         case vector
         public typealias AllCases = [BNNS.DataLayout]
         case imageCHW
-        public var rank: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public static var allCases: [BNNS.DataLayout] { preconditionFailure("Accelerate Linux: unread property") }
+        public var rank: Int {
+            switch self {
+            case .vector: return 1
+            case .matrixRowMajor, .matrixLastMajor, .matrixFirstMajor, .matrixColumnMajor: return 2
+            case .tensor3DNSE, .tensor3DSNE, .tensor3DLastMajor, .tensor3DFirstMajor, .imageCHW: return 3
+            case .tensor4DLastMajor, .tensor4DFirstMajor, .convolutionWeightsOIHW: return 4
+            case .tensor5DLastMajor, .tensor5DFirstMajor: return 5
+            case .tensor6DLastMajor, .tensor6DFirstMajor: return 6
+            case .tensor7DLastMajor, .tensor7DFirstMajor: return 7
+            case .tensor8DLastMajor, .tensor8DFirstMajor: return 8
+            }
+        }
+        public static var allCases: [BNNS.DataLayout] {
+            [
+                .vector, .matrixRowMajor, .matrixColumnMajor, .matrixLastMajor, .matrixFirstMajor,
+                .imageCHW, .tensor3DNSE, .tensor3DSNE, .tensor3DLastMajor, .tensor3DFirstMajor,
+                .tensor4DLastMajor, .tensor4DFirstMajor, .tensor5DLastMajor, .tensor5DFirstMajor,
+                .tensor6DLastMajor, .tensor6DFirstMajor, .tensor7DLastMajor, .tensor7DFirstMajor,
+                .tensor8DLastMajor, .tensor8DFirstMajor, .convolutionWeightsOIHW
+            ]
+        }
     }
     public enum DescriptorType: Equatable, Hashable {
         case sample
@@ -712,7 +770,7 @@ public enum BNNS {
             set { _ = newValue }
         }
     }
-    public enum Shape {
+    public enum Shape: ExpressibleByArrayLiteral {
         case tensor3DNSE(Int, Int, Int, stride: (Int, Int, Int) = (0, 0, 0))
         case tensor3DSNE(Int, Int, Int, stride: (Int, Int, Int) = (0, 0, 0))
         case matrixRowMajor(Int, Int, stride: (Int, Int) = (0, 0))
@@ -735,11 +793,126 @@ public enum BNNS {
         case convolutionWeightsOIHW(Int, Int, Int, Int, stride: (Int, Int, Int, Int) = (0, 0, 0, 0))
         case vector(Int, stride: Int = 0)
         case imageCHW(Int, Int, Int, stride: (Int, Int, Int) = (0, 0, 0))
-        public var batchStride: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var rank: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var size: (Int, Int, Int, Int, Int, Int, Int, Int) { preconditionFailure("Accelerate Linux: unread property") }
-        public var layout: BNNSDataLayout { preconditionFailure("Accelerate Linux: unread property") }
-        public var stride: (Int, Int, Int, Int, Int, Int, Int, Int) { preconditionFailure("Accelerate Linux: unread property") }
+        public var batchStride: Int { stride.0 }
+        public var rank: Int {
+            switch self {
+            case .vector: return 1
+            case .matrixRowMajor, .matrixLastMajor, .matrixFirstMajor, .matrixColumnMajor: return 2
+            case .tensor3DNSE, .tensor3DSNE, .tensor3DLastMajor, .tensor3DFirstMajor, .imageCHW: return 3
+            case .tensor4DLastMajor, .tensor4DFirstMajor, .convolutionWeightsOIHW: return 4
+            case .tensor5DLastMajor, .tensor5DFirstMajor: return 5
+            case .tensor6DLastMajor, .tensor6DFirstMajor: return 6
+            case .tensor7DLastMajor, .tensor7DFirstMajor: return 7
+            case .tensor8DLastMajor, .tensor8DFirstMajor: return 8
+            }
+        }
+        public var size: (Int, Int, Int, Int, Int, Int, Int, Int) {
+            switch self {
+            case .vector(let n, _):
+                return (n, 0, 0, 0, 0, 0, 0, 0)
+            case .matrixRowMajor(let a, let b, _), .matrixLastMajor(let a, let b, _),
+                 .matrixFirstMajor(let a, let b, _), .matrixColumnMajor(let a, let b, _):
+                return (a, b, 0, 0, 0, 0, 0, 0)
+            case .tensor3DNSE(let a, let b, let c, _), .tensor3DSNE(let a, let b, let c, _),
+                 .tensor3DLastMajor(let a, let b, let c, _), .tensor3DFirstMajor(let a, let b, let c, _),
+                 .imageCHW(let a, let b, let c, _):
+                return (a, b, c, 0, 0, 0, 0, 0)
+            case .tensor4DLastMajor(let a, let b, let c, let d, _),
+                 .tensor4DFirstMajor(let a, let b, let c, let d, _),
+                 .convolutionWeightsOIHW(let a, let b, let c, let d, _):
+                return (a, b, c, d, 0, 0, 0, 0)
+            case .tensor5DLastMajor(let a, let b, let c, let d, let e, _),
+                 .tensor5DFirstMajor(let a, let b, let c, let d, let e, _):
+                return (a, b, c, d, e, 0, 0, 0)
+            case .tensor6DLastMajor(let a, let b, let c, let d, let e, let f, _),
+                 .tensor6DFirstMajor(let a, let b, let c, let d, let e, let f, _):
+                return (a, b, c, d, e, f, 0, 0)
+            case .tensor7DLastMajor(let a, let b, let c, let d, let e, let f, let g, _),
+                 .tensor7DFirstMajor(let a, let b, let c, let d, let e, let f, let g, _):
+                return (a, b, c, d, e, f, g, 0)
+            case .tensor8DLastMajor(let a, let b, let c, let d, let e, let f, let g, let h, _),
+                 .tensor8DFirstMajor(let a, let b, let c, let d, let e, let f, let g, let h, _):
+                return (a, b, c, d, e, f, g, h)
+            }
+        }
+        public var layout: BNNSDataLayout {
+            switch self {
+            case .vector: return BNNSDataLayoutVector
+            case .matrixRowMajor: return BNNSDataLayoutRowMajorMatrix
+            case .matrixColumnMajor: return BNNSDataLayoutColumnMajorMatrix
+            case .matrixLastMajor: return BNNSDataLayout2DLastMajor
+            case .matrixFirstMajor: return BNNSDataLayout2DFirstMajor
+            case .imageCHW: return BNNSDataLayoutImageCHW
+            case .tensor3DNSE: return BNNSDataLayoutNSE
+            case .tensor3DSNE: return BNNSDataLayoutSNE
+            case .tensor3DLastMajor: return BNNSDataLayout3DLastMajor
+            case .tensor3DFirstMajor: return BNNSDataLayout3DFirstMajor
+            case .tensor4DLastMajor: return BNNSDataLayout4DLastMajor
+            case .tensor4DFirstMajor: return BNNSDataLayout4DFirstMajor
+            case .tensor5DLastMajor: return BNNSDataLayout5DLastMajor
+            case .tensor5DFirstMajor: return BNNSDataLayout5DFirstMajor
+            case .tensor6DLastMajor: return BNNSDataLayout6DLastMajor
+            case .tensor6DFirstMajor: return BNNSDataLayout6DFirstMajor
+            case .tensor7DLastMajor: return BNNSDataLayout7DLastMajor
+            case .tensor7DFirstMajor: return BNNSDataLayout7DFirstMajor
+            case .tensor8DLastMajor: return BNNSDataLayout8DLastMajor
+            case .tensor8DFirstMajor: return BNNSDataLayout8DFirstMajor
+            case .convolutionWeightsOIHW: return BNNSDataLayoutConvolutionWeightsOIHW
+            }
+        }
+        public var stride: (Int, Int, Int, Int, Int, Int, Int, Int) {
+            switch self {
+            case .vector(_, let s):
+                return (s, 0, 0, 0, 0, 0, 0, 0)
+            case .matrixRowMajor(_, _, let s), .matrixLastMajor(_, _, let s),
+                 .matrixFirstMajor(_, _, let s), .matrixColumnMajor(_, _, let s):
+                return (s.0, s.1, 0, 0, 0, 0, 0, 0)
+            case .tensor3DNSE(_, _, _, let s), .tensor3DSNE(_, _, _, let s),
+                 .tensor3DLastMajor(_, _, _, let s), .tensor3DFirstMajor(_, _, _, let s),
+                 .imageCHW(_, _, _, let s):
+                return (s.0, s.1, s.2, 0, 0, 0, 0, 0)
+            case .tensor4DLastMajor(_, _, _, _, let s), .tensor4DFirstMajor(_, _, _, _, let s),
+                 .convolutionWeightsOIHW(_, _, _, _, let s):
+                return (s.0, s.1, s.2, s.3, 0, 0, 0, 0)
+            case .tensor5DLastMajor(_, _, _, _, _, let s), .tensor5DFirstMajor(_, _, _, _, _, let s):
+                return (s.0, s.1, s.2, s.3, s.4, 0, 0, 0)
+            case .tensor6DLastMajor(_, _, _, _, _, _, let s), .tensor6DFirstMajor(_, _, _, _, _, _, let s):
+                return (s.0, s.1, s.2, s.3, s.4, s.5, 0, 0)
+            case .tensor7DLastMajor(_, _, _, _, _, _, _, let s), .tensor7DFirstMajor(_, _, _, _, _, _, _, let s):
+                return (s.0, s.1, s.2, s.3, s.4, s.5, s.6, 0)
+            case .tensor8DLastMajor(_, _, _, _, _, _, _, _, let s), .tensor8DFirstMajor(_, _, _, _, _, _, _, _, let s):
+                return (s.0, s.1, s.2, s.3, s.4, s.5, s.6, s.7)
+            }
+        }
+        public init(_ sizes: [Int], dataLayout: BNNS.DataLayout? = nil, stride: [Int]? = nil) {
+            let s = stride ?? []
+            func at(_ i: Int) -> Int { i < s.count ? s[i] : 0 }
+            switch sizes.count {
+            case 0:
+                self = .vector(0, stride: at(0))
+            case 1:
+                self = .vector(sizes[0], stride: at(0))
+            case 2:
+                switch dataLayout {
+                case .matrixColumnMajor: self = .matrixColumnMajor(sizes[0], sizes[1], stride: (at(0), at(1)))
+                default: self = .matrixRowMajor(sizes[0], sizes[1], stride: (at(0), at(1)))
+                }
+            case 3:
+                self = .tensor3DLastMajor(sizes[0], sizes[1], sizes[2], stride: (at(0), at(1), at(2)))
+            case 4:
+                self = .tensor4DLastMajor(sizes[0], sizes[1], sizes[2], sizes[3], stride: (at(0), at(1), at(2), at(3)))
+            default:
+                let padded = sizes + Array(repeating: 1, count: max(0, 8 - sizes.count))
+                self = .tensor8DLastMajor(
+                    padded[0], padded[1], padded[2], padded[3],
+                    padded[4], padded[5], padded[6], padded[7],
+                    stride: (at(0), at(1), at(2), at(3), at(4), at(5), at(6), at(7))
+                )
+            }
+        }
+        public init(arrayLiteral elements: Int...) {
+            self.init(elements, dataLayout: nil, stride: nil)
+        }
     }
     public enum ShuffleType: Equatable, Hashable {
         case depthToSpaceNCHW
@@ -769,8 +942,95 @@ public enum BNNS {
     public class TernaryArithmeticLayer: Layer {
     }
     public class UnaryArithmeticLayer: Layer {
+        var function: BNNS.ArithmeticUnaryFunction = .abs
+        public init?(
+            input: BNNSNDArrayDescriptor,
+            inputDescriptorType: BNNS.DescriptorType,
+            output: BNNSNDArrayDescriptor,
+            outputDescriptorType: BNNS.DescriptorType,
+            function: BNNS.ArithmeticUnaryFunction,
+            activation: BNNS.ActivationFunction,
+            filterParameters: BNNSFilterParameters?
+        ) {
+            _ = input; _ = inputDescriptorType; _ = output; _ = outputDescriptorType
+            _ = activation; _ = filterParameters
+            self.function = function
+            super.init()
+        }
+        public func apply(
+            batchSize: Int,
+            input: BNNSNDArrayDescriptor,
+            output: BNNSNDArrayDescriptor
+        ) throws {
+            _ = batchSize
+            var out = output
+            let status = _bnnsUnaryArithmeticApply(function: function, input: input, out: &out)
+            if status != 0 { throw BNNS.Error.layerApplyFail }
+        }
     }
     public class UnaryLayer: Layer {
+    }
+
+    public static func copy(
+        _ source: BNNSNDArrayDescriptor,
+        to destination: BNNSNDArrayDescriptor,
+        filterParameters: BNNSFilterParameters?
+    ) throws {
+        var dest = destination
+        var src = source
+        let status: Int32
+        if var params = filterParameters {
+            status = BNNSCopy(&dest, &src, &params)
+        } else {
+            status = BNNSCopy(&dest, &src, nil)
+        }
+        if status != 0 { throw BNNS.Error.arrayDescriptorInvalidData }
+    }
+
+    public static func clip(
+        to bounds: ClosedRange<Float>,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor
+    ) throws {
+        var dest = output
+        var src = input
+        if BNNSClipByValue(&dest, &src, bounds.lowerBound, bounds.upperBound) != 0 {
+            throw BNNS.Error.arrayDescriptorInvalidData
+        }
+    }
+
+    public static func gather(
+        input: BNNSNDArrayDescriptor,
+        indices: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        axis: Int,
+        filterParameters: BNNSFilterParameters?
+    ) throws {
+        var src = input
+        var idx = indices
+        var dest = output
+        if BNNSGather(axis, &src, &idx, &dest, nil) != 0 {
+            throw BNNS.Error.arrayDescriptorInvalidData
+        }
+        _ = filterParameters
+    }
+
+    public static func transpose(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        firstTransposeAxis: Int,
+        secondTransposeAxis: Int,
+        filterParameters: BNNSFilterParameters?
+    ) throws {
+        var src = input
+        var dest = output
+        if var params = filterParameters {
+            if BNNSTranspose(&dest, &src, firstTransposeAxis, secondTransposeAxis, &params) != 0 {
+                throw BNNS.Error.arrayDescriptorInvalidData
+            }
+        } else if BNNSTranspose(&dest, &src, firstTransposeAxis, secondTransposeAxis, nil) != 0 {
+            throw BNNS.Error.arrayDescriptorInvalidData
+        }
     }
 }
 
@@ -909,9 +1169,11 @@ public enum BNNSGraph {
         var baseAddress: UnsafeMutablePointer<Self.Element>? { get }
         var count: Int { get }
     }
-    public struct Shape {
+    public struct Shape: ExpressibleByArrayLiteral {
         public typealias ArrayLiteralElement = Int
-        public var dimensions: [Int] { preconditionFailure("Accelerate Linux: unread property") }
+        public var dimensions: [Int]
+        public init(_ shape: [Int]) { self.dimensions = shape }
+        public init(arrayLiteral elements: Int...) { self.dimensions = elements }
     }
     public protocol TensorDescriptor {
         var tensorData: UnsafeMutableRawPointer? { get }
@@ -1059,6 +1321,47 @@ public struct Quadrature {
 
 public enum vDSP {
     public struct Biquad<T> where T : vDSP_FloatingPointBiquadFilterable {
+        var setup: OpaquePointer?
+        var sectionCount: Int
+        public init?(
+            coefficients: [Double],
+            channelCount: Int,
+            sectionCount: Int,
+            ofType: T.Type
+        ) {
+            _ = ofType
+            _ = channelCount
+            guard let box = _BiquadSetupBox(coefficients: coefficients, sectionCount: sectionCount) else {
+                return nil
+            }
+            self.setup = _biquadRetain(box)
+            self.sectionCount = sectionCount
+        }
+        public func apply<U, V>(input: U, output: inout V)
+        where U: AccelerateBuffer, V: AccelerateMutableBuffer, U.Element == T, V.Element == T {
+            guard let setup, let box = _biquadBox(setup) else { return }
+            var delays = [T](repeating: 0, count: max(2, sectionCount * 2))
+            input.withUnsafeBufferPointer { src in
+                output.withUnsafeMutableBufferPointer { dest in
+                    let n = min(src.count, dest.count)
+                    guard let sp = src.baseAddress, let dp = dest.baseAddress else { return }
+                    delays.withUnsafeMutableBufferPointer { dpDelays in
+                        _biquadApply(
+                            source: sp,
+                            destination: dp,
+                            delays: dpDelays.baseAddress!,
+                            box: box,
+                            count: n
+                        )
+                    }
+                }
+            }
+        }
+        public func apply<U>(input: U) -> [T] where U: AccelerateBuffer, U.Element == T {
+            var output = [T](repeating: 0, count: input.count)
+            apply(input: input, output: &output)
+            return output
+        }
     }
     public class DCT {
         internal var count: Int = 0

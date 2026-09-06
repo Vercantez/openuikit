@@ -44,7 +44,32 @@ public func BNNSCropResize(_ layer_params: UnsafePointer<BNNSLayerParametersCrop
 @discardableResult
 public func BNNSCropResizeBackward(_ layer_params: UnsafePointer<BNNSLayerParametersCropResize>, _ in_delta: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ roi: UnsafePointer<BNNSNDArrayDescriptor>, _ out_delta: UnsafePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSDataLayoutGetRank(_ layout: BNNSDataLayout) -> Int { return 0 }
+public func BNNSDataLayoutGetRank(_ layout: BNNSDataLayout) -> Int {
+    switch layout.rawValue {
+    case BNNSDataLayoutVector.rawValue, BNNSDataLayout1DFirstMajor.rawValue, BNNSDataLayout1DLastMajor.rawValue:
+        return 1
+    case BNNSDataLayoutRowMajorMatrix.rawValue, BNNSDataLayoutColumnMajorMatrix.rawValue,
+         BNNSDataLayout2DFirstMajor.rawValue, BNNSDataLayout2DLastMajor.rawValue:
+        return 2
+    case BNNSDataLayoutImageCHW.rawValue, BNNSDataLayoutNSE.rawValue, BNNSDataLayoutSNE.rawValue,
+         BNNSDataLayout3DFirstMajor.rawValue, BNNSDataLayout3DLastMajor.rawValue:
+        return 3
+    case BNNSDataLayout4DFirstMajor.rawValue, BNNSDataLayout4DLastMajor.rawValue,
+         BNNSDataLayoutConvolutionWeightsOIHW.rawValue, BNNSDataLayoutConvolutionWeightsOIHrWr.rawValue,
+         BNNSDataLayoutConvolutionWeightsIOHrWr.rawValue, BNNSDataLayoutConvolutionWeightsOIHW_Pack32.rawValue:
+        return 4
+    case BNNSDataLayout5DFirstMajor.rawValue, BNNSDataLayout5DLastMajor.rawValue:
+        return 5
+    case BNNSDataLayout6DFirstMajor.rawValue, BNNSDataLayout6DLastMajor.rawValue:
+        return 6
+    case BNNSDataLayout7DFirstMajor.rawValue, BNNSDataLayout7DLastMajor.rawValue:
+        return 7
+    case BNNSDataLayout8DFirstMajor.rawValue, BNNSDataLayout8DLastMajor.rawValue:
+        return 8
+    default:
+        return 0
+    }
+}
 public func BNNSDestroyNearestNeighbors(_ knn: BNNSNearestNeighbors?) { }
 public func BNNSDestroyRandomGenerator(_ generator: BNNSRandomGenerator?) { }
 @discardableResult
@@ -130,7 +155,10 @@ public func BNNSFusedFilterApplyBatch(_ filter: BNNSFilter?, _ batch_size: Int, 
 @discardableResult
 public func BNNSFusedFilterApplyMultiInputBatch(_ filter: BNNSFilter?, _ batch_size: Int, _ number_of_inputs: Int, _ in: UnsafeMutablePointer<UnsafeRawPointer>, _ in_stride: UnsafePointer<Int>, _ out: UnsafeMutableRawPointer, _ out_stride: Int, _ training: Bool) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
-public func BNNSGather(_ axis: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
+public func BNNSGather(_ axis: Int, _ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 {
+    _ = filter_params
+    return _bnnsGatherFloat(axis: axis, input: input.pointee, indices: indices.pointee, output: &output.pointee)
+}
 @discardableResult
 public func BNNSGatherND(_ input: UnsafePointer<BNNSNDArrayDescriptor>, _ indices: UnsafePointer<BNNSNDArrayDescriptor>, _ output: UnsafeMutablePointer<BNNSNDArrayDescriptor>, _ filter_params: UnsafePointer<BNNSFilterParameters>?) -> Int32 { return BNNSLinuxFailClosedStatus }
 @discardableResult
@@ -939,87 +967,6 @@ public func dznrm2_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPoi
 public func icamax_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
 public func izamax_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-public func la_add_attributes(_ object: la_object_t, _ attributes: la_attribute_t) { }
-@discardableResult
-public func la_diagonal_matrix_from_vector(_ vector: la_object_t, _ matrix_diagonal: la_index_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_difference(_ obj_left: la_object_t, _ obj_right: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_elementwise_product(_ obj_left: la_object_t, _ obj_right: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_identity_matrix(_ matrix_size: la_count_t, _ scalar_type: la_scalar_type_t, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_inner_product(_ vector_left: la_object_t, _ vector_right: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_cols(_ matrix: la_object_t) -> la_count_t { return 0 }
-@discardableResult
-public func la_matrix_from_double_buffer(_ buffer: UnsafePointer<Double>, _ matrix_rows: la_count_t, _ matrix_cols: la_count_t, _ matrix_row_stride: la_count_t, _ matrix_hint: la_hint_t, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_from_double_buffer_nocopy(_ buffer: UnsafeMutablePointer<Double>, _ matrix_rows: la_count_t, _ matrix_cols: la_count_t, _ matrix_row_stride: la_count_t, _ matrix_hint: la_hint_t, _ deallocator: la_deallocator_t?, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_from_float_buffer(_ buffer: UnsafePointer<Float>, _ matrix_rows: la_count_t, _ matrix_cols: la_count_t, _ matrix_row_stride: la_count_t, _ matrix_hint: la_hint_t, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_from_float_buffer_nocopy(_ buffer: UnsafeMutablePointer<Float>, _ matrix_rows: la_count_t, _ matrix_cols: la_count_t, _ matrix_row_stride: la_count_t, _ matrix_hint: la_hint_t, _ deallocator: la_deallocator_t?, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_from_splat(_ splat: la_object_t, _ matrix_rows: la_count_t, _ matrix_cols: la_count_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_product(_ matrix_left: la_object_t, _ matrix_right: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_rows(_ matrix: la_object_t) -> la_count_t { return 0 }
-@discardableResult
-public func la_matrix_slice(_ matrix: la_object_t, _ matrix_first_row: la_index_t, _ matrix_first_col: la_index_t, _ matrix_row_stride: la_index_t, _ matrix_col_stride: la_index_t, _ slice_rows: la_count_t, _ slice_cols: la_count_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_matrix_to_double_buffer(_ buffer: UnsafeMutablePointer<Double>, _ buffer_row_stride: la_count_t, _ matrix: la_object_t) -> la_status_t { return 0 }
-@discardableResult
-public func la_matrix_to_float_buffer(_ buffer: UnsafeMutablePointer<Float>, _ buffer_row_stride: la_count_t, _ matrix: la_object_t) -> la_status_t { return 0 }
-@discardableResult
-public func la_norm_as_double(_ vector: la_object_t, _ vector_norm: la_norm_t) -> Double { return 0 }
-@discardableResult
-public func la_norm_as_float(_ vector: la_object_t, _ vector_norm: la_norm_t) -> Float { return 0 }
-@discardableResult
-public func la_normalized_vector(_ vector: la_object_t, _ vector_norm: la_norm_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_outer_product(_ vector_left: la_object_t, _ vector_right: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-public func la_release(_ object: la_object_t) { }
-public func la_remove_attributes(_ object: la_object_t, _ attributes: la_attribute_t) { }
-@discardableResult
-public func la_retain(_ object: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_scale_with_double(_ matrix: la_object_t, _ scalar: Double) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_scale_with_float(_ matrix: la_object_t, _ scalar: Float) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_solve(_ matrix_system: la_object_t, _ obj_rhs: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_splat_from_double(_ scalar_value: Double, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_splat_from_float(_ scalar_value: Float, _ attributes: la_attribute_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_splat_from_matrix_element(_ matrix: la_object_t, _ matrix_row: la_index_t, _ matrix_col: la_index_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_splat_from_vector_element(_ vector: la_object_t, _ vector_index: la_index_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_status(_ object: la_object_t) -> la_status_t { return 0 }
-@discardableResult
-public func la_sum(_ obj_left: la_object_t, _ obj_right: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_transpose(_ matrix: la_object_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_vector_from_matrix_col(_ matrix: la_object_t, _ matrix_col: la_count_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_vector_from_matrix_diagonal(_ matrix: la_object_t, _ matrix_diagonal: la_index_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_vector_from_matrix_row(_ matrix: la_object_t, _ matrix_row: la_count_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_vector_from_splat(_ splat: la_object_t, _ vector_length: la_count_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_vector_length(_ vector: la_object_t) -> la_count_t { return 0 }
-@discardableResult
-public func la_vector_slice(_ vector: la_object_t, _ vector_first: la_index_t, _ vector_stride: la_index_t, _ slice_length: la_count_t) -> la_object_t { return _OpenUIKitLAObject() }
-@discardableResult
-public func la_vector_to_double_buffer(_ buffer: UnsafeMutablePointer<Double>, _ buffer_stride: la_index_t, _ vector: la_object_t) -> la_status_t { return 0 }
-@discardableResult
-public func la_vector_to_float_buffer(_ buffer: UnsafeMutablePointer<Float>, _ buffer_stride: la_index_t, _ vector: la_object_t) -> la_status_t { return 0 }
 @discardableResult
 public func scasum_(_ n: UnsafeMutablePointer<Int32>!, _ cx: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Double { return 0 }
 @discardableResult
@@ -1058,210 +1005,6 @@ public func sger_(_ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<I
     }
     return 0
 }
-@discardableResult
-public func sparse_commit(_ A: UnsafeMutableRawPointer!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_elementwise_norm_double(_ A: sparse_matrix_double!, _ norm: sparse_norm) -> Double { return 0 }
-@discardableResult
-public func sparse_elementwise_norm_double_complex(_ A: sparse_matrix_double_complex!, _ norm: sparse_norm) -> Double { return 0 }
-@discardableResult
-public func sparse_elementwise_norm_float(_ A: sparse_matrix_float!, _ norm: sparse_norm) -> Float { return 0 }
-@discardableResult
-public func sparse_elementwise_norm_float_complex(_ A: sparse_matrix_float_complex!, _ norm: sparse_norm) -> Float { return 0 }
-@discardableResult
-public func sparse_extract_block_double(_ A: sparse_matrix_double!, _ bi: sparse_index, _ bj: sparse_index, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ val: UnsafeMutablePointer<Double>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_block_double_complex(_ A: sparse_matrix_double_complex!, _ bi: sparse_index, _ bj: sparse_index, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ val: OpaquePointer!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_block_float(_ A: sparse_matrix_float!, _ bi: sparse_index, _ bj: sparse_index, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ val: UnsafeMutablePointer<Float>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_block_float_complex(_ A: sparse_matrix_float_complex!, _ bi: sparse_index, _ bj: sparse_index, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ val: OpaquePointer!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_column_double(_ A: sparse_matrix_double!, _ column: sparse_index, _ row_start: sparse_index, _ row_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: UnsafeMutablePointer<Double>!, _ indx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_column_double_complex(_ A: sparse_matrix_double_complex!, _ column: sparse_index, _ row_start: sparse_index, _ row_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: OpaquePointer!, _ indx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_column_float(_ A: sparse_matrix_float!, _ column: sparse_index, _ row_start: sparse_index, _ row_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: UnsafeMutablePointer<Float>!, _ indx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_column_float_complex(_ A: sparse_matrix_float_complex!, _ column: sparse_index, _ row_start: sparse_index, _ row_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: OpaquePointer!, _ indx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_row_double(_ A: sparse_matrix_double!, _ row: sparse_index, _ column_start: sparse_index, _ column_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: UnsafeMutablePointer<Double>!, _ jndx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_row_double_complex(_ A: sparse_matrix_double_complex!, _ row: sparse_index, _ column_start: sparse_index, _ column_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: OpaquePointer!, _ jndx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_row_float(_ A: sparse_matrix_float!, _ row: sparse_index, _ column_start: sparse_index, _ column_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: UnsafeMutablePointer<Float>!, _ jndx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_extract_sparse_row_float_complex(_ A: sparse_matrix_float_complex!, _ row: sparse_index, _ column_start: sparse_index, _ column_end: UnsafeMutablePointer<sparse_index>!, _ nz: sparse_dimension, _ val: OpaquePointer!, _ jndx: UnsafeMutablePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_get_block_dimension_for_col(_ A: UnsafeMutableRawPointer!, _ j: sparse_index) -> Int { return 0 }
-@discardableResult
-public func sparse_get_block_dimension_for_row(_ A: UnsafeMutableRawPointer!, _ i: sparse_index) -> Int { return 0 }
-@discardableResult
-public func sparse_get_matrix_nonzero_count(_ A: UnsafeMutableRawPointer!) -> Int { return 0 }
-@discardableResult
-public func sparse_get_matrix_nonzero_count_for_column(_ A: UnsafeMutableRawPointer!, _ j: sparse_index) -> Int { return 0 }
-@discardableResult
-public func sparse_get_matrix_nonzero_count_for_row(_ A: UnsafeMutableRawPointer!, _ i: sparse_index) -> Int { return 0 }
-@discardableResult
-public func sparse_get_matrix_number_of_columns(_ A: UnsafeMutableRawPointer!) -> sparse_dimension { return 0 }
-@discardableResult
-public func sparse_get_matrix_number_of_rows(_ A: UnsafeMutableRawPointer!) -> sparse_dimension { return 0 }
-@discardableResult
-public func sparse_get_matrix_property(_ A: UnsafeMutableRawPointer!, _ pname: sparse_matrix_property) -> Int { return 0 }
-@discardableResult
-public func sparse_get_vector_nonzero_count_double(_ N: sparse_dimension, _ x: UnsafePointer<Double>!, _ incx: sparse_stride) -> Int { return 0 }
-@discardableResult
-public func sparse_get_vector_nonzero_count_double_complex(_ N: sparse_dimension, _ x: OpaquePointer!, _ incx: sparse_stride) -> Int { return 0 }
-@discardableResult
-public func sparse_get_vector_nonzero_count_float(_ N: sparse_dimension, _ x: UnsafePointer<Float>!, _ incx: sparse_stride) -> Int { return 0 }
-@discardableResult
-public func sparse_get_vector_nonzero_count_float_complex(_ N: sparse_dimension, _ x: OpaquePointer!, _ incx: sparse_stride) -> Int { return 0 }
-@discardableResult
-public func sparse_inner_product_dense_double(_ nz: sparse_dimension, _ x: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafePointer<Double>!, _ incy: sparse_stride) -> Double { return 0 }
-@discardableResult
-public func sparse_inner_product_dense_float(_ nz: sparse_dimension, _ x: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafePointer<Float>!, _ incy: sparse_stride) -> Float { return 0 }
-@discardableResult
-public func sparse_inner_product_sparse_double(_ nzx: sparse_dimension, _ nzy: sparse_dimension, _ x: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafePointer<Double>!, _ indy: UnsafePointer<sparse_index>!) -> Double { return 0 }
-@discardableResult
-public func sparse_inner_product_sparse_float(_ nzx: sparse_dimension, _ nzy: sparse_dimension, _ x: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafePointer<Float>!, _ indy: UnsafePointer<sparse_index>!) -> Float { return 0 }
-@discardableResult
-public func sparse_insert_block_double(_ A: sparse_matrix_double!, _ val: UnsafePointer<Double>!, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ bi: sparse_index, _ bj: sparse_index) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_block_double_complex(_ A: sparse_matrix_double_complex!, _ val: OpaquePointer!, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ bi: sparse_index, _ bj: sparse_index) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_block_float(_ A: sparse_matrix_float!, _ val: UnsafePointer<Float>!, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ bi: sparse_index, _ bj: sparse_index) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_block_float_complex(_ A: sparse_matrix_float_complex!, _ val: OpaquePointer!, _ row_stride: sparse_dimension, _ col_stride: sparse_dimension, _ bi: sparse_index, _ bj: sparse_index) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_col_double(_ A: sparse_matrix_double!, _ j: sparse_index, _ nz: sparse_dimension, _ val: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_col_double_complex(_ A: sparse_matrix_double_complex!, _ j: sparse_index, _ nz: sparse_dimension, _ val: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_col_float(_ A: sparse_matrix_float!, _ j: sparse_index, _ nz: sparse_dimension, _ val: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_col_float_complex(_ A: sparse_matrix_float_complex!, _ j: sparse_index, _ nz: sparse_dimension, _ val: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_entries_double(_ A: sparse_matrix_double!, _ N: sparse_dimension, _ val: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_entries_double_complex(_ A: sparse_matrix_double_complex!, _ N: sparse_dimension, _ val: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_entries_float(_ A: sparse_matrix_float!, _ N: sparse_dimension, _ val: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_entries_float_complex(_ A: sparse_matrix_float_complex!, _ N: sparse_dimension, _ val: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_entry_double(_ A: sparse_matrix_double!, _ val: Double, _ i: sparse_index, _ j: sparse_index) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_entry_float(_ A: sparse_matrix_float!, _ val: Float, _ i: sparse_index, _ j: sparse_index) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_row_double(_ A: sparse_matrix_double!, _ i: sparse_index, _ nz: sparse_dimension, _ val: UnsafePointer<Double>!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_row_double_complex(_ A: sparse_matrix_double_complex!, _ i: sparse_index, _ nz: sparse_dimension, _ val: OpaquePointer!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_row_float(_ A: sparse_matrix_float!, _ i: sparse_index, _ nz: sparse_dimension, _ val: UnsafePointer<Float>!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_insert_row_float_complex(_ A: sparse_matrix_float_complex!, _ i: sparse_index, _ nz: sparse_dimension, _ val: OpaquePointer!, _ jndx: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_block_create_double(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ k: sparse_dimension, _ l: sparse_dimension) -> sparse_matrix_double! { return nil }
-@discardableResult
-public func sparse_matrix_block_create_double_complex(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ k: sparse_dimension, _ l: sparse_dimension) -> sparse_matrix_double_complex! { return nil }
-@discardableResult
-public func sparse_matrix_block_create_float(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ k: sparse_dimension, _ l: sparse_dimension) -> sparse_matrix_float! { return nil }
-@discardableResult
-public func sparse_matrix_block_create_float_complex(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ k: sparse_dimension, _ l: sparse_dimension) -> sparse_matrix_float_complex! { return nil }
-@discardableResult
-public func sparse_matrix_create_double(_ M: sparse_dimension, _ N: sparse_dimension) -> sparse_matrix_double! { return nil }
-@discardableResult
-public func sparse_matrix_create_double_complex(_ M: sparse_dimension, _ N: sparse_dimension) -> sparse_matrix_double_complex! { return nil }
-@discardableResult
-public func sparse_matrix_create_float(_ M: sparse_dimension, _ N: sparse_dimension) -> sparse_matrix_float! { return nil }
-@discardableResult
-public func sparse_matrix_create_float_complex(_ M: sparse_dimension, _ N: sparse_dimension) -> sparse_matrix_float_complex! { return nil }
-@discardableResult
-public func sparse_matrix_destroy(_ A: UnsafeMutableRawPointer!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_product_dense_double(_ order: CBLAS_ORDER, _ transa: CBLAS_TRANSPOSE, _ n: sparse_dimension, _ alpha: Double, _ A: sparse_matrix_double!, _ B: UnsafePointer<Double>!, _ ldb: sparse_dimension, _ C: UnsafeMutablePointer<Double>!, _ ldc: sparse_dimension) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_product_dense_float(_ order: CBLAS_ORDER, _ transa: CBLAS_TRANSPOSE, _ n: sparse_dimension, _ alpha: Float, _ A: sparse_matrix_float!, _ B: UnsafePointer<Float>!, _ ldb: sparse_dimension, _ C: UnsafeMutablePointer<Float>!, _ ldc: sparse_dimension) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_product_sparse_double(_ order: CBLAS_ORDER, _ transa: CBLAS_TRANSPOSE, _ alpha: Double, _ A: sparse_matrix_double!, _ B: sparse_matrix_double!, _ C: UnsafeMutablePointer<Double>!, _ ldc: sparse_dimension) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_product_sparse_float(_ order: CBLAS_ORDER, _ transa: CBLAS_TRANSPOSE, _ alpha: Float, _ A: sparse_matrix_float!, _ B: sparse_matrix_float!, _ C: UnsafeMutablePointer<Float>!, _ ldc: sparse_dimension) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_trace_double(_ A: sparse_matrix_double!, _ offset: sparse_index) -> Double { return 0 }
-@discardableResult
-public func sparse_matrix_trace_float(_ A: sparse_matrix_float!, _ offset: sparse_index) -> Float { return 0 }
-@discardableResult
-public func sparse_matrix_triangular_solve_dense_double(_ order: CBLAS_ORDER, _ transt: CBLAS_TRANSPOSE, _ nrhs: sparse_dimension, _ alpha: Double, _ T: sparse_matrix_double!, _ B: UnsafeMutablePointer<Double>!, _ ldb: sparse_dimension) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_triangular_solve_dense_float(_ order: CBLAS_ORDER, _ transt: CBLAS_TRANSPOSE, _ nrhs: sparse_dimension, _ alpha: Float, _ T: sparse_matrix_float!, _ B: UnsafeMutablePointer<Float>!, _ ldb: sparse_dimension) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_variable_block_create_double(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ K: UnsafePointer<sparse_dimension>!, _ L: UnsafePointer<sparse_dimension>!) -> sparse_matrix_double! { return nil }
-@discardableResult
-public func sparse_matrix_variable_block_create_double_complex(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ K: UnsafePointer<sparse_dimension>!, _ L: UnsafePointer<sparse_dimension>!) -> sparse_matrix_double_complex! { return nil }
-@discardableResult
-public func sparse_matrix_variable_block_create_float(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ K: UnsafePointer<sparse_dimension>!, _ L: UnsafePointer<sparse_dimension>!) -> sparse_matrix_float! { return nil }
-@discardableResult
-public func sparse_matrix_variable_block_create_float_complex(_ Mb: sparse_dimension, _ Nb: sparse_dimension, _ K: UnsafePointer<sparse_dimension>!, _ L: UnsafePointer<sparse_dimension>!) -> sparse_matrix_float_complex! { return nil }
-@discardableResult
-public func sparse_matrix_vector_product_dense_double(_ transa: CBLAS_TRANSPOSE, _ alpha: Double, _ A: sparse_matrix_double!, _ x: UnsafePointer<Double>!, _ incx: sparse_stride, _ y: UnsafeMutablePointer<Double>!, _ incy: sparse_stride) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_matrix_vector_product_dense_float(_ transa: CBLAS_TRANSPOSE, _ alpha: Float, _ A: sparse_matrix_float!, _ x: UnsafePointer<Float>!, _ incx: sparse_stride, _ y: UnsafeMutablePointer<Float>!, _ incy: sparse_stride) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_operator_norm_double(_ A: sparse_matrix_double!, _ norm: sparse_norm) -> Double { return 0 }
-@discardableResult
-public func sparse_operator_norm_double_complex(_ A: sparse_matrix_double_complex!, _ norm: sparse_norm) -> Double { return 0 }
-@discardableResult
-public func sparse_operator_norm_float(_ A: sparse_matrix_float!, _ norm: sparse_norm) -> Float { return 0 }
-@discardableResult
-public func sparse_operator_norm_float_complex(_ A: sparse_matrix_float_complex!, _ norm: sparse_norm) -> Float { return 0 }
-@discardableResult
-public func sparse_outer_product_dense_double(_ M: sparse_dimension, _ N: sparse_dimension, _ nz: sparse_dimension, _ alpha: Double, _ x: UnsafePointer<Double>!, _ incx: sparse_stride, _ y: UnsafePointer<Double>!, _ indy: UnsafePointer<sparse_index>!, _ C: UnsafeMutablePointer<sparse_matrix_double?>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_outer_product_dense_float(_ M: sparse_dimension, _ N: sparse_dimension, _ nz: sparse_dimension, _ alpha: Float, _ x: UnsafePointer<Float>!, _ incx: sparse_stride, _ y: UnsafePointer<Float>!, _ indy: UnsafePointer<sparse_index>!, _ C: UnsafeMutablePointer<sparse_matrix_float?>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_pack_vector_double(_ N: sparse_dimension, _ nz: sparse_dimension, _ x: UnsafePointer<Double>!, _ incx: sparse_stride, _ y: UnsafeMutablePointer<Double>!, _ indy: UnsafeMutablePointer<sparse_index>!) -> Int { return 0 }
-@discardableResult
-public func sparse_pack_vector_double_complex(_ N: sparse_dimension, _ nz: sparse_dimension, _ x: OpaquePointer!, _ incx: sparse_stride, _ y: OpaquePointer!, _ indy: UnsafeMutablePointer<sparse_index>!) -> Int { return 0 }
-@discardableResult
-public func sparse_pack_vector_float(_ N: sparse_dimension, _ nz: sparse_dimension, _ x: UnsafePointer<Float>!, _ incx: sparse_stride, _ y: UnsafeMutablePointer<Float>!, _ indy: UnsafeMutablePointer<sparse_index>!) -> Int { return 0 }
-@discardableResult
-public func sparse_pack_vector_float_complex(_ N: sparse_dimension, _ nz: sparse_dimension, _ x: OpaquePointer!, _ incx: sparse_stride, _ y: OpaquePointer!, _ indy: UnsafeMutablePointer<sparse_index>!) -> Int { return 0 }
-@discardableResult
-public func sparse_permute_cols_double(_ A: sparse_matrix_double!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_cols_double_complex(_ A: sparse_matrix_double_complex!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_cols_float(_ A: sparse_matrix_float!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_cols_float_complex(_ A: sparse_matrix_float_complex!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_rows_double(_ A: sparse_matrix_double!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_rows_double_complex(_ A: sparse_matrix_double_complex!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_rows_float(_ A: sparse_matrix_float!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_permute_rows_float_complex(_ A: sparse_matrix_float_complex!, _ perm: UnsafePointer<sparse_index>!) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_set_matrix_property(_ A: UnsafeMutableRawPointer!, _ pname: sparse_matrix_property) -> sparse_status { return sparse_status(rawValue: 0) }
-public func sparse_unpack_vector_double(_ N: sparse_dimension, _ nz: sparse_dimension, _ zero: Bool, _ x: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafeMutablePointer<Double>!, _ incy: sparse_stride) { }
-public func sparse_unpack_vector_double_complex(_ N: sparse_dimension, _ nz: sparse_dimension, _ zero: Bool, _ x: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!, _ y: OpaquePointer!, _ incy: sparse_stride) { }
-public func sparse_unpack_vector_float(_ N: sparse_dimension, _ nz: sparse_dimension, _ zero: Bool, _ x: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafeMutablePointer<Float>!, _ incy: sparse_stride) { }
-public func sparse_unpack_vector_float_complex(_ N: sparse_dimension, _ nz: sparse_dimension, _ zero: Bool, _ x: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!, _ y: OpaquePointer!, _ incy: sparse_stride) { }
-public func sparse_vector_add_with_scale_dense_double(_ nz: sparse_dimension, _ alpha: Double, _ x: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafeMutablePointer<Double>!, _ incy: sparse_stride) { }
-public func sparse_vector_add_with_scale_dense_float(_ nz: sparse_dimension, _ alpha: Float, _ x: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!, _ y: UnsafeMutablePointer<Float>!, _ incy: sparse_stride) { }
-@discardableResult
-public func sparse_vector_norm_double(_ nz: sparse_dimension, _ x: UnsafePointer<Double>!, _ indx: UnsafePointer<sparse_index>!, _ norm: sparse_norm) -> Double { return 0 }
-@discardableResult
-public func sparse_vector_norm_double_complex(_ nz: sparse_dimension, _ x: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!, _ norm: sparse_norm) -> Double { return 0 }
-@discardableResult
-public func sparse_vector_norm_float(_ nz: sparse_dimension, _ x: UnsafePointer<Float>!, _ indx: UnsafePointer<sparse_index>!, _ norm: sparse_norm) -> Float { return 0 }
-@discardableResult
-public func sparse_vector_norm_float_complex(_ nz: sparse_dimension, _ x: OpaquePointer!, _ indx: UnsafePointer<sparse_index>!, _ norm: sparse_norm) -> Float { return 0 }
-@discardableResult
-public func sparse_vector_triangular_solve_dense_double(_ transt: CBLAS_TRANSPOSE, _ alpha: Double, _ T: sparse_matrix_double!, _ x: UnsafeMutablePointer<Double>!, _ incx: sparse_stride) -> sparse_status { return sparse_status(rawValue: 0) }
-@discardableResult
-public func sparse_vector_triangular_solve_dense_float(_ transt: CBLAS_TRANSPOSE, _ alpha: Float, _ T: sparse_matrix_float!, _ x: UnsafeMutablePointer<Float>!, _ incx: sparse_stride) -> sparse_status { return sparse_status(rawValue: 0) }
 @discardableResult
 public func srot_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ c: UnsafeMutablePointer<Float>!, _ s: UnsafeMutablePointer<Float>!) -> Int32 {
     guard let n, let sx, let incx, let sy, let incy, let c, let s else { return -1 }
