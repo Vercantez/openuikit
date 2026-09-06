@@ -393,6 +393,14 @@ enum MPSGraphCPU {
                 return [1]
             }
         }
+        if kind == "select" {
+            let pred = try input(0)
+            let truth = try input(1)
+            let falsity = try input(2)
+            return pred.enumerated().map { index, flag in
+                flag != 0 ? truth[index % truth.count] : falsity[index % falsity.count]
+            }
+        }
         if kind == "leakyReLU" {
             let values = try input(0)
             let alpha: Double
