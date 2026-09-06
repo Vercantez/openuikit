@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseChannelClassCacheFailClosed() {
+func testBaseChannelInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterChannel(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterChannel(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseChannelClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterChannel.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterChannel.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterChannel.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -26,12 +34,11 @@ func testBaseChannelClassCacheFailClosed() {
     MTRBaseClusterChannel.readAttributeLineup(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseChannelCommandFailClosed() {
+func testBaseChannelCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterChannel(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterChannel init")
         return
@@ -48,22 +55,11 @@ func testBaseChannelCommandFailClosed() {
     cluster.skip(with: MTRChannelClusterSkipChannelParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseChannelInit() {
+func testBaseChannelRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterChannel(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterChannel(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseChannelReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterChannel(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterChannel init")
         return
@@ -86,12 +82,11 @@ func testBaseChannelReadFailClosed() {
     cluster.readAttributeLineup(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseChannelSubscribeFailClosed() {
+func testBaseChannelSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterChannel(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterChannel init")
         return
@@ -113,4 +108,3 @@ func testBaseChannelSubscribeFailClosed() {
     cluster.subscribeAttributeLineup(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeLineup(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

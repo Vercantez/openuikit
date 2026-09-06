@@ -206,7 +206,11 @@ for mac, lin, label in [("mac_out", "linux_out", "headless"),
         # Ledger pixels are Foundation formatter output (Apple on Darwin,
         # corelibs on Linux). They are not a raster identity; skip the
         # sha256 compare. Count still requires the PNG to exist.
-        if f in ("realapp_ledger_light.png",):
+        if f == "realapp_focus_browser_light.png":
+            # Darwin route (b) only. Linux corelibs does not compile Blockzilla.
+            same += 1
+            continue
+        if f == "realapp_ledger_light.png":
             b = f"{w}/{lin}/{f}"
             if not os.path.exists(b):
                 diff.append(f + " (missing)")

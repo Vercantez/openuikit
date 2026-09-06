@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseEnergyEVSEClassCacheFailClosed() {
+func testBaseEnergyEVSEInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterEnergyEVSE(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
 
+func testBaseEnergyEVSEClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterEnergyEVSE.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterEnergyEVSE.readAttributeApproximateEVEfficiency(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterEnergyEVSE.readAttributeAttributeList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
@@ -32,12 +39,11 @@ func testBaseEnergyEVSEClassCacheFailClosed() {
     MTRBaseClusterEnergyEVSE.readAttributeUserMaximumChargeCurrent(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseEnergyEVSECommandFailClosed() {
+func testBaseEnergyEVSECommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterEnergyEVSE(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterEnergyEVSE init")
         return
@@ -54,21 +60,11 @@ func testBaseEnergyEVSECommandFailClosed() {
     cluster.startDiagnostics(with: MTREnergyEVSEClusterStartDiagnosticsParams(), completion: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseEnergyEVSEInit() {
+func testBaseEnergyEVSERead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterEnergyEVSE(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseEnergyEVSEReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterEnergyEVSE(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterEnergyEVSE init")
         return
@@ -97,12 +93,11 @@ func testBaseEnergyEVSEReadFailClosed() {
     cluster.readAttributeUserMaximumChargeCurrent(completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseEnergyEVSESubscribeFailClosed() {
+func testBaseEnergyEVSESubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterEnergyEVSE(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterEnergyEVSE init")
         return
@@ -131,12 +126,11 @@ func testBaseEnergyEVSESubscribeFailClosed() {
     cluster.subscribeAttributeUserMaximumChargeCurrent(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseEnergyEVSEWriteFailClosed() {
+func testBaseEnergyEVSEWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterEnergyEVSE(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterEnergyEVSE init")
         return
@@ -148,4 +142,3 @@ func testBaseEnergyEVSEWriteFailClosed() {
     cluster.writeAttributeUserMaximumChargeCurrent(withValue: n(1), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeUserMaximumChargeCurrent(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
 }
-

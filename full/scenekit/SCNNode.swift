@@ -829,6 +829,9 @@ open class SCNNode: NSObject, NSCopying, NSSecureCoding, SCNActionable, SCNAnima
         if isPaused { return }
         _linuxAdvanceActions(dt)
         _linuxApplyConstraints()
+        for system in _particleSystems {
+            system.linux_advance(dt)
+        }
         let snapshot = childNodes
         for child in snapshot {
             child.linux_advanceTime(dt)

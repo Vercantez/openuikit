@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseValveConfigurationAndControlClassCacheFailClosed() {
+func testBaseValveConfigurationAndControlInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterValveConfigurationAndControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
 
+func testBaseValveConfigurationAndControlClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterValveConfigurationAndControl.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterValveConfigurationAndControl.readAttributeAttributeList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterValveConfigurationAndControl.readAttributeAutoCloseTime(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
@@ -26,12 +33,11 @@ func testBaseValveConfigurationAndControlClassCacheFailClosed() {
     MTRBaseClusterValveConfigurationAndControl.readAttributeValveFault(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseValveConfigurationAndControlCommandFailClosed() {
+func testBaseValveConfigurationAndControlCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterValveConfigurationAndControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterValveConfigurationAndControl init")
         return
@@ -42,21 +48,11 @@ func testBaseValveConfigurationAndControlCommandFailClosed() {
     cluster.open(with: MTRValveConfigurationAndControlClusterOpenParams(), completion: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseValveConfigurationAndControlInit() {
+func testBaseValveConfigurationAndControlRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterValveConfigurationAndControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseValveConfigurationAndControlReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterValveConfigurationAndControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterValveConfigurationAndControl init")
         return
@@ -79,12 +75,11 @@ func testBaseValveConfigurationAndControlReadFailClosed() {
     cluster.readAttributeValveFault(completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseValveConfigurationAndControlSubscribeFailClosed() {
+func testBaseValveConfigurationAndControlSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterValveConfigurationAndControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterValveConfigurationAndControl init")
         return
@@ -107,12 +102,11 @@ func testBaseValveConfigurationAndControlSubscribeFailClosed() {
     cluster.subscribeAttributeValveFault(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseValveConfigurationAndControlWriteFailClosed() {
+func testBaseValveConfigurationAndControlWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterValveConfigurationAndControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterValveConfigurationAndControl init")
         return
@@ -122,4 +116,3 @@ func testBaseValveConfigurationAndControlWriteFailClosed() {
     cluster.writeAttributeDefaultOpenLevel(withValue: n(1), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeDefaultOpenLevel(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
 }
-

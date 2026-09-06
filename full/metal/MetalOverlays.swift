@@ -395,8 +395,19 @@ extension MTLDevice {
     }
 
     public func makeCounterSampleBuffer(descriptor: MTLCounterSampleBufferDescriptor) throws -> any MTLCounterSampleBuffer {
-        _ = descriptor
-        throw MTLCPUValidationError("CPU reference has no GPU counter sample buffers")
+        guard let linux = self as? LinuxMTLDevice else {
+            throw MTLCounterSampleBufferError(
+                .internal,
+                userInfo: [NSLocalizedDescriptionKey: "CPU reference has no GPU counter sample buffers"]
+            )
+        }
+        guard descriptor.sampleCount >= 0 else {
+            throw MTLCounterSampleBufferError(
+                .invalid,
+                userInfo: [NSLocalizedDescriptionKey: "sampleCount must be >= 0"]
+            )
+        }
+        return LinuxMTLCounterSampleBuffer(device: linux, descriptor: descriptor)
     }
 
     public func makeLibrary(

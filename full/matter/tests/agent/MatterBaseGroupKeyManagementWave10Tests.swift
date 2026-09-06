@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseGroupKeyManagementClassCacheFailClosed() {
+func testBaseGroupKeyManagementInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseGroupKeyManagementClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterGroupKeyManagement.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterGroupKeyManagement.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterGroupKeyManagement.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -28,12 +36,11 @@ func testBaseGroupKeyManagementClassCacheFailClosed() {
     MTRBaseClusterGroupKeyManagement.readAttributeMaxGroupsPerFabric(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGroupKeyManagementCommandFailClosed() {
+func testBaseGroupKeyManagementCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGroupKeyManagement init")
         return
@@ -49,22 +56,11 @@ func testBaseGroupKeyManagementCommandFailClosed() {
     cluster.keySetWrite(with: MTRGroupKeyManagementClusterKeySetWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGroupKeyManagementInit() {
+func testBaseGroupKeyManagementRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseGroupKeyManagementReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGroupKeyManagement init")
         return
@@ -89,12 +85,11 @@ func testBaseGroupKeyManagementReadFailClosed() {
     cluster.readAttributeMaxGroupsPerFabric(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGroupKeyManagementSubscribeFailClosed() {
+func testBaseGroupKeyManagementSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGroupKeyManagement init")
         return
@@ -119,12 +114,11 @@ func testBaseGroupKeyManagementSubscribeFailClosed() {
     cluster.subscribeAttributeMaxGroupsPerFabric(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGroupKeyManagementWriteFailClosed() {
+func testBaseGroupKeyManagementWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGroupKeyManagement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGroupKeyManagement init")
         return
@@ -134,4 +128,3 @@ func testBaseGroupKeyManagementWriteFailClosed() {
     cluster.writeAttributeGroupKeyMap(withValue: [], params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeGroupKeyMap(withValue: [], params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

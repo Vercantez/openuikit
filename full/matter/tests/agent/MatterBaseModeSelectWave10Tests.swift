@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseModeSelectClassCacheFailClosed() {
+func testBaseModeSelectInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterModeSelect(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterModeSelect(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseModeSelectClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterModeSelect.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterModeSelect.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterModeSelect.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -32,12 +40,11 @@ func testBaseModeSelectClassCacheFailClosed() {
     MTRBaseClusterModeSelect.readAttributeSupportedModes(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseModeSelectCommandFailClosed() {
+func testBaseModeSelectCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterModeSelect(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterModeSelect init")
         return
@@ -46,22 +53,11 @@ func testBaseModeSelectCommandFailClosed() {
     cluster.changeToMode(with: MTRModeSelectClusterChangeToModeParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseModeSelectInit() {
+func testBaseModeSelectRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterModeSelect(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterModeSelect(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseModeSelectReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterModeSelect(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterModeSelect init")
         return
@@ -90,12 +86,11 @@ func testBaseModeSelectReadFailClosed() {
     cluster.readAttributeSupportedModes(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseModeSelectSubscribeFailClosed() {
+func testBaseModeSelectSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterModeSelect(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterModeSelect init")
         return
@@ -124,12 +119,11 @@ func testBaseModeSelectSubscribeFailClosed() {
     cluster.subscribeAttributeSupportedModes(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseModeSelectWriteFailClosed() {
+func testBaseModeSelectWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterModeSelect(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterModeSelect init")
         return
@@ -143,4 +137,3 @@ func testBaseModeSelectWriteFailClosed() {
     cluster.writeAttributeStartUpMode(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeStartUpMode(withValue: n(1), params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

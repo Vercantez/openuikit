@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterFlowMeasurementInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterFlowMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRClusterFlowMeasurement(device: device, endpoint: 1, queue: DispatchQueue.global())
+}
+
 func testClusterFlowMeasurementDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterFlowMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterFlowMeasurement init")
         return
@@ -22,14 +30,3 @@ func testClusterFlowMeasurementDeviceCache() {
     _ = cluster.readAttributeMinMeasuredValue(with: MTRReadParams())
     _ = cluster.readAttributeTolerance(with: MTRReadParams())
 }
-
-func testClusterFlowMeasurementInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterFlowMeasurement(device: device, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRClusterFlowMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

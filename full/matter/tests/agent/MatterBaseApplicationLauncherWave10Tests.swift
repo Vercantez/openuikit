@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseApplicationLauncherClassCacheFailClosed() {
+func testBaseApplicationLauncherInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterApplicationLauncher(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterApplicationLauncher(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseApplicationLauncherClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterApplicationLauncher.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterApplicationLauncher.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterApplicationLauncher.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -24,12 +32,11 @@ func testBaseApplicationLauncherClassCacheFailClosed() {
     MTRBaseClusterApplicationLauncher.readAttributeGeneratedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseApplicationLauncherCommandFailClosed() {
+func testBaseApplicationLauncherCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterApplicationLauncher(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterApplicationLauncher init")
         return
@@ -45,22 +52,11 @@ func testBaseApplicationLauncherCommandFailClosed() {
     cluster.stopApp(with: MTRApplicationLauncherClusterStopAppParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseApplicationLauncherInit() {
+func testBaseApplicationLauncherRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterApplicationLauncher(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterApplicationLauncher(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseApplicationLauncherReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterApplicationLauncher(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterApplicationLauncher init")
         return
@@ -81,12 +77,11 @@ func testBaseApplicationLauncherReadFailClosed() {
     cluster.readAttributeGeneratedCommandList(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseApplicationLauncherSubscribeFailClosed() {
+func testBaseApplicationLauncherSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterApplicationLauncher(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterApplicationLauncher init")
         return
@@ -107,12 +102,11 @@ func testBaseApplicationLauncherSubscribeFailClosed() {
     cluster.subscribeAttributeGeneratedCommandList(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseApplicationLauncherWriteFailClosed() {
+func testBaseApplicationLauncherWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterApplicationLauncher(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterApplicationLauncher init")
         return
@@ -122,4 +116,3 @@ func testBaseApplicationLauncherWriteFailClosed() {
     cluster.writeAttributeCurrentApp(withValue: MTRApplicationLauncherClusterApplicationEPStruct(), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeCurrentApp(withValue: MTRApplicationLauncherClusterApplicationEP(), params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseOperationalCredentialsClassCacheFailClosed() {
+func testBaseOperationalCredentialsInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterOperationalCredentials(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterOperationalCredentials(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseOperationalCredentialsClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterOperationalCredentials.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterOperationalCredentials.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterOperationalCredentials.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -32,12 +40,11 @@ func testBaseOperationalCredentialsClassCacheFailClosed() {
     MTRBaseClusterOperationalCredentials.readAttributeTrustedRootCertificates(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseOperationalCredentialsCommandFailClosed() {
+func testBaseOperationalCredentialsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterOperationalCredentials(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterOperationalCredentials init")
         return
@@ -60,22 +67,11 @@ func testBaseOperationalCredentialsCommandFailClosed() {
     cluster.updateNOC(with: MTROperationalCredentialsClusterUpdateNOCParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseOperationalCredentialsInit() {
+func testBaseOperationalCredentialsRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterOperationalCredentials(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterOperationalCredentials(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseOperationalCredentialsReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterOperationalCredentials(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterOperationalCredentials init")
         return
@@ -104,12 +100,11 @@ func testBaseOperationalCredentialsReadFailClosed() {
     cluster.readAttributeTrustedRootCertificates(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseOperationalCredentialsSubscribeFailClosed() {
+func testBaseOperationalCredentialsSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterOperationalCredentials(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterOperationalCredentials init")
         return
@@ -137,4 +132,3 @@ func testBaseOperationalCredentialsSubscribeFailClosed() {
     cluster.subscribeAttributeTrustedRootCertificates(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeTrustedRootCertificates(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

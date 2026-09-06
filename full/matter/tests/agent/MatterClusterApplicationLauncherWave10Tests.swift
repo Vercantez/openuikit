@@ -2,37 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testClusterApplicationLauncherDeviceCache() {
+func testClusterApplicationLauncherInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRClusterApplicationLauncher(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRClusterApplicationLauncher init")
-        return
-    }
-    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
-    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
-    _ = cluster.readAttributeCatalogList(with: MTRReadParams())
-    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
-    _ = cluster.readAttributeCurrentApp(with: MTRReadParams())
-    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
-    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
-    cluster.writeAttributeCurrentApp(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
-    let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
-    cluster.writeAttributeCurrentApp(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeCurrentApp(with: nil)
-    mtrRequire(cached != nil, "expected-value cache round-trip")
-    cluster.writeAttributeCurrentApp(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    _ = MTRClusterApplicationLauncher(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRClusterApplicationLauncher(device: device, endpoint: 1, queue: DispatchQueue.global())
 }
 
-func testClusterApplicationLauncherCommandFailClosed() {
+func testClusterApplicationLauncherCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterApplicationLauncher(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterApplicationLauncher init")
         return
@@ -48,13 +31,26 @@ func testClusterApplicationLauncherCommandFailClosed() {
     cluster.stopApp(with: MTRApplicationLauncherClusterStopAppParams(), expectedValues: [], expectedValueInterval: n(1), completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testClusterApplicationLauncherInit() {
+func testClusterApplicationLauncherDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRClusterApplicationLauncher(device: device, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRClusterApplicationLauncher(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    guard let cluster = MTRClusterApplicationLauncher(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRClusterApplicationLauncher init")
+        return
+    }
+    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
+    _ = cluster.readAttributeCatalogList(with: MTRReadParams())
+    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
+    _ = cluster.readAttributeCurrentApp(with: MTRReadParams())
+    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
+    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
+    cluster.writeAttributeCurrentApp(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeCurrentApp(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
+    cluster.writeAttributeCurrentApp(withValue: probe, expectedValueInterval: n(1))
+    let cached = cluster.readAttributeCurrentApp(with: nil)
+    mtrRequire(cached != nil, "expected-value cache round-trip")
 }
-

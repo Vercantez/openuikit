@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseAccessControlClassCacheFailClosed() {
+func testBaseAccessControlInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterAccessControl(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseAccessControlClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterAccessControl.readAttributeACL(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterAccessControl.readAttributeARL(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterAccessControl.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -32,35 +40,11 @@ func testBaseAccessControlClassCacheFailClosed() {
     MTRBaseClusterAccessControl.readAttributeTargetsPerAccessControlEntry(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseAccessControlCommandFailClosed() {
+func testBaseAccessControlRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRBaseClusterAccessControl init")
-        return
-    }
-    cluster.reviewFabricRestrictions(with: MTRAccessControlClusterReviewFabricRestrictionsParams(), completion: { _, err in mtrExpectInvalidState(err) })
-}
-
-func testBaseAccessControlInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRBaseClusterAccessControl(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseAccessControlReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterAccessControl init")
         return
@@ -89,12 +73,23 @@ func testBaseAccessControlReadFailClosed() {
     cluster.readAttributeTargetsPerAccessControlEntry(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseAccessControlSubscribeFailClosed() {
+func testBaseAccessControlCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterAccessControl init")
+        return
+    }
+    cluster.reviewFabricRestrictions(with: MTRAccessControlClusterReviewFabricRestrictionsParams(), completion: { _, err in mtrExpectInvalidState(err) })
+}
 
+func testBaseAccessControlSubscribe() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     guard let cluster = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterAccessControl init")
         return
@@ -123,12 +118,11 @@ func testBaseAccessControlSubscribeFailClosed() {
     cluster.subscribeAttributeTargetsPerAccessControlEntry(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseAccessControlWriteFailClosed() {
+func testBaseAccessControlWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterAccessControl(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterAccessControl init")
         return
@@ -142,4 +136,3 @@ func testBaseAccessControlWriteFailClosed() {
     cluster.writeAttributeExtension(withValue: [], params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeExtension(withValue: [], params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

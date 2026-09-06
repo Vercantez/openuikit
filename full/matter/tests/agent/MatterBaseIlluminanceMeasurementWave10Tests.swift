@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseIlluminanceMeasurementClassCacheFailClosed() {
+func testBaseIlluminanceMeasurementInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterIlluminanceMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterIlluminanceMeasurement(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseIlluminanceMeasurementClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterIlluminanceMeasurement.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterIlluminanceMeasurement.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterIlluminanceMeasurement.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -30,22 +38,11 @@ func testBaseIlluminanceMeasurementClassCacheFailClosed() {
     MTRBaseClusterIlluminanceMeasurement.readAttributeTolerance(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseIlluminanceMeasurementInit() {
+func testBaseIlluminanceMeasurementRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterIlluminanceMeasurement(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterIlluminanceMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseIlluminanceMeasurementReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterIlluminanceMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterIlluminanceMeasurement init")
         return
@@ -72,12 +69,11 @@ func testBaseIlluminanceMeasurementReadFailClosed() {
     cluster.readAttributeTolerance(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseIlluminanceMeasurementSubscribeFailClosed() {
+func testBaseIlluminanceMeasurementSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterIlluminanceMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterIlluminanceMeasurement init")
         return
@@ -103,4 +99,3 @@ func testBaseIlluminanceMeasurementSubscribeFailClosed() {
     cluster.subscribeAttributeTolerance(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeTolerance(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

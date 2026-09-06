@@ -30,6 +30,12 @@
 // `.shift` in its modifierFlags — verified against UIKit's documented
 // behaviour, not measured, since key handling has no pixels).
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
 // MARK: - Modifier flags
 
 public struct UIKeyModifierFlags: OptionSet, Hashable, Sendable {
@@ -54,7 +60,7 @@ public struct UIKeyModifierFlags: OptionSet, Hashable, Sendable {
 ///       ├── UIMenu
 ///       └── UIDeferredMenuElement
 @preconcurrency @MainActor
-open class UIMenuElement {
+open class UIMenuElement: NSObject {
     public internal(set) var title: String
     public internal(set) var subtitle: String?
     public internal(set) var image: UIImage?
@@ -63,6 +69,7 @@ open class UIMenuElement {
         self.title = title
         self.subtitle = subtitle
         self.image = image
+        super.init()
     }
 
     /// UIKit's on/off/mixed check state. `.on` draws a checkmark in the
@@ -187,9 +194,13 @@ open class UICommand: UIMenuElement {
 @preconcurrency @MainActor
 public final class UIKeyCommand: UICommand {
     /// The characters the key produces ("n", "\r", or one of the
-    /// `UIKeyCommand.input*` constants).
-    public let input: String
+    /// `UIKeyCommand.input*` constants). Optional like UIKit's
+    /// `input` so Focus AutocompleteTextField.swift:101 `guard let input =
+    /// sender.input` compiles. MEASURED Blockzilla 2026-09-06.
+    public let input: String?
     public let modifierFlags: UIKeyModifierFlags
+    /// UIKit iOS 15. Focus AutocompleteTextField.swift:94.
+    public var wantsPriorityOverSystemBehavior = false
 
     public init(title: String = "",
                 image: UIImage? = nil,
@@ -248,6 +259,7 @@ public final class UIKeyCommand: UICommand {
     /// case-insensitively (see the file header).
     public func matches(input other: String, modifierFlags flags: UIKeyModifierFlags) -> Bool {
         guard modifierFlags == flags else { return false }
+        guard let input else { return false }
         if input == other { return true }
         return input.lowercased() == other.lowercased()
     }

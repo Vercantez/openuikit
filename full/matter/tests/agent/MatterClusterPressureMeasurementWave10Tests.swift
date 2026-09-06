@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterPressureMeasurementInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterPressureMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRClusterPressureMeasurement(device: device, endpoint: 1, queue: DispatchQueue.global())
+}
+
 func testClusterPressureMeasurementDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterPressureMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterPressureMeasurement init")
         return
@@ -27,14 +35,3 @@ func testClusterPressureMeasurementDeviceCache() {
     _ = cluster.readAttributeScaledValue(with: MTRReadParams())
     _ = cluster.readAttributeTolerance(with: MTRReadParams())
 }
-
-func testClusterPressureMeasurementInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterPressureMeasurement(device: device, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRClusterPressureMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

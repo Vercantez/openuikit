@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseGeneralCommissioningClassCacheFailClosed() {
+func testBaseGeneralCommissioningInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseGeneralCommissioningClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterGeneralCommissioning.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterGeneralCommissioning.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterGeneralCommissioning.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -30,12 +38,11 @@ func testBaseGeneralCommissioningClassCacheFailClosed() {
     MTRBaseClusterGeneralCommissioning.readAttributeSupportsConcurrentConnection(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralCommissioningCommandFailClosed() {
+func testBaseGeneralCommissioningCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralCommissioning init")
         return
@@ -50,22 +57,11 @@ func testBaseGeneralCommissioningCommandFailClosed() {
     cluster.setRegulatoryConfigWith(MTRGeneralCommissioningClusterSetRegulatoryConfigParams(), completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralCommissioningInit() {
+func testBaseGeneralCommissioningRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseGeneralCommissioningReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralCommissioning init")
         return
@@ -92,12 +88,11 @@ func testBaseGeneralCommissioningReadFailClosed() {
     cluster.readAttributeSupportsConcurrentConnection(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralCommissioningSubscribeFailClosed() {
+func testBaseGeneralCommissioningSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralCommissioning init")
         return
@@ -124,12 +119,11 @@ func testBaseGeneralCommissioningSubscribeFailClosed() {
     cluster.subscribeAttributeSupportsConcurrentConnection(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralCommissioningWriteFailClosed() {
+func testBaseGeneralCommissioningWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralCommissioning init")
         return
@@ -139,4 +133,3 @@ func testBaseGeneralCommissioningWriteFailClosed() {
     cluster.writeAttributeBreadcrumb(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeBreadcrumb(withValue: n(1), params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

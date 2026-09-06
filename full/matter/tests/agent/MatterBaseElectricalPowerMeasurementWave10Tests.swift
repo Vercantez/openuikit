@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseElectricalPowerMeasurementClassCacheFailClosed() {
+func testBaseElectricalPowerMeasurementInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterElectricalPowerMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
 
+func testBaseElectricalPowerMeasurementClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterElectricalPowerMeasurement.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterElectricalPowerMeasurement.readAttributeAccuracy(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterElectricalPowerMeasurement.readAttributeActiveCurrent(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
@@ -34,21 +41,11 @@ func testBaseElectricalPowerMeasurementClassCacheFailClosed() {
     MTRBaseClusterElectricalPowerMeasurement.readAttributeVoltage(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseElectricalPowerMeasurementInit() {
+func testBaseElectricalPowerMeasurementRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterElectricalPowerMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseElectricalPowerMeasurementReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterElectricalPowerMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterElectricalPowerMeasurement init")
         return
@@ -79,12 +76,11 @@ func testBaseElectricalPowerMeasurementReadFailClosed() {
     cluster.readAttributeVoltage(completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseElectricalPowerMeasurementSubscribeFailClosed() {
+func testBaseElectricalPowerMeasurementSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterElectricalPowerMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterElectricalPowerMeasurement init")
         return
@@ -114,4 +110,3 @@ func testBaseElectricalPowerMeasurementSubscribeFailClosed() {
     cluster.subscribeAttributeReactivePower(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeVoltage(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

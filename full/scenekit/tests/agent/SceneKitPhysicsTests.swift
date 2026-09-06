@@ -251,3 +251,117 @@ func testPhysicsRayAndContactQuery() {
     )
     precondition(sweep.isEmpty)
 }
+
+func testPhysicsFieldForces() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3Zero
+    scene.physicsWorld.timeStep = 1
+    let node = SCNNode()
+    let body = SCNPhysicsBody.dynamic()
+    body.mass = 1
+    body.damping = 0
+    body.isAffectedByGravity = false
+    node.physicsBody = body
+    scene.rootNode.addChildNode(node)
+    let fieldNode = SCNNode()
+    let field = SCNPhysicsField.linearGravity()
+    field.strength = 4
+    field.direction = SCNVector3(1, 0, 0)
+    field.falloffExponent = 0
+    field.halfExtent = SCNVector3(100, 100, 100)
+    field.scope = .insideExtent
+    field.isExclusive = false
+    field.usesEllipsoidalExtent = false
+    fieldNode.physicsField = field
+    scene.rootNode.addChildNode(fieldNode)
+    scene.physicsWorld.step()
+    precondition(abs(body.velocity.x - 4) < 1e-3)
+    node.worldPosition = SCNVector3Zero
+    body.velocity = SCNVector3Zero
+    let radial = SCNPhysicsField.radialGravity()
+    radial.strength = 1
+    radial.falloffExponent = 0
+    fieldNode.physicsField = radial
+    node.worldPosition = SCNVector3(2, 0, 0)
+    scene.physicsWorld.step()
+    precondition(body.velocity.x < 0)
+    var customCalls = 0
+    let custom = SCNPhysicsField.customField(evaluationBlock: { position, velocity, mass, charge, time in
+        customCalls += 1
+        _ = position
+        _ = velocity
+        _ = mass
+        _ = charge
+        _ = time
+        return SCNVector3(0, 3, 0)
+    })
+    custom.strength = 1
+    fieldNode.physicsField = custom
+    body.velocity = SCNVector3Zero
+    scene.physicsWorld.step()
+    precondition(customCalls > 0)
+    precondition(abs(body.velocity.y - 3) < 1e-3)
+    _ = SCNPhysicsField.noiseField(smoothness: 1, animationSpeed: 1)
+    _ = SCNPhysicsField.turbulenceField(smoothness: 0.5, animationSpeed: 2)
+    let drag = SCNPhysicsField.drag()
+    drag.strength = 1
+    _ = drag.linux_evaluate(
+        position: SCNVector3Zero, velocity: SCNVector3(4, 0, 0),
+        mass: 1, charge: 0, time: 0, origin: SCNVector3Zero
+    )
+}
+
+func testPhysicsVehicleAndSlider() {
+    let scene = SCNScene()
+    scene.physicsWorld.gravity = SCNVector3Zero
+    scene.physicsWorld.timeStep = 1
+    let chassis = SCNNode()
+    let body = SCNPhysicsBody.dynamic()
+    body.mass = 1
+    body.damping = 0
+    body.isAffectedByGravity = false
+    chassis.physicsBody = body
+    scene.rootNode.addChildNode(chassis)
+    let wheelNode = SCNNode()
+    let wheel = SCNPhysicsVehicleWheel(node: wheelNode)
+    wheel.axle = SCNVector3(1, 0, 0)
+    wheel.connectionPosition = SCNVector3(0, -0.5, 0)
+    wheel.frictionSlip = 1.2
+    wheel.maximumSuspensionForce = 100
+    wheel.maximumSuspensionTravel = 0.2
+    wheel.steeringAxis = SCNVector3(0, 1, 0)
+    wheel.suspensionCompression = 0.8
+    wheel.suspensionDamping = 0.5
+    wheel.suspensionRestLength = 0.4
+    wheel.suspensionStiffness = 20
+    precondition(abs(Float(wheel.frictionSlip) - 1.2) < 1e-4)
+    precondition(abs(wheel.axle.x - 1) < 1e-4)
+    let vehicle = SCNPhysicsVehicle(chassisBody: body, wheels: [wheel])
+    scene.physicsWorld.addBehavior(vehicle)
+    vehicle.applyEngineForce(10, forWheelAt: 0)
+    vehicle.applyBrakingForce(0, forWheelAt: 0)
+    vehicle.setSteeringAngle(0.1, forWheelAt: 0)
+    scene.physicsWorld.step()
+    precondition(vehicle.speedInKilometersPerHour > 0)
+    let slider = SCNPhysicsSliderJoint(
+        bodyA: body, axisA: SCNVector3(0, 1, 0), anchorA: SCNVector3Zero,
+        bodyB: SCNPhysicsBody.static(), axisB: SCNVector3(0, 1, 0), anchorB: SCNVector3Zero
+    )
+    slider.minimumLinearLimit = -1
+    slider.maximumLinearLimit = 1
+    slider.minimumAngularLimit = -0.5
+    slider.maximumAngularLimit = 0.5
+    slider.motorTargetLinearVelocity = 2
+    slider.motorMaximumForce = 5
+    slider.motorTargetAngularVelocity = 0
+    slider.motorMaximumTorque = 1
+    precondition(slider.maximumLinearLimit == 1)
+    precondition(abs(Float(slider.motorTargetLinearVelocity) - 2) < 1e-4)
+    scene.physicsWorld.addBehavior(slider)
+    _ = SCNPhysicsBehavior()
+    let cone = SCNPhysicsConeTwistJoint(bodyA: body, frameA: SCNMatrix4Identity, bodyB: nil, frameB: SCNMatrix4Identity)
+    cone.maximumAngularLimit1 = 0.4
+    cone.maximumAngularLimit2 = 0.5
+    cone.maximumTwistAngle = 0.2
+    precondition(abs(Float(cone.maximumTwistAngle) - 0.2) < 1e-4)
+}

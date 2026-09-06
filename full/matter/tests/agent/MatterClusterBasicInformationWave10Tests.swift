@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterBasicInformationInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global())
+}
+
 func testClusterBasicInformationDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterBasicInformation init")
         return
@@ -41,23 +48,13 @@ func testClusterBasicInformationDeviceCache() {
     _ = cluster.readAttributeVendorID(with: MTRReadParams())
     _ = cluster.readAttributeVendorName(with: MTRReadParams())
     cluster.writeAttributeLocalConfigDisabled(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
-    let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
-    cluster.writeAttributeLocalConfigDisabled(withValue: probe, expectedValueInterval: n(1))
-    let cached = cluster.readAttributeLocalConfigDisabled(with: nil)
-    mtrRequire(cached != nil, "expected-value cache round-trip")
     cluster.writeAttributeLocalConfigDisabled(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     cluster.writeAttributeLocation(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
     cluster.writeAttributeLocation(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     cluster.writeAttributeNodeLabel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
     cluster.writeAttributeNodeLabel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
+    let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
+    cluster.writeAttributeLocalConfigDisabled(withValue: probe, expectedValueInterval: n(1))
+    let cached = cluster.readAttributeLocalConfigDisabled(with: nil)
+    mtrRequire(cached != nil, "expected-value cache round-trip")
 }
-
-func testClusterBasicInformationInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

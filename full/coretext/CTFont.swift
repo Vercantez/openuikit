@@ -1164,15 +1164,23 @@ func _ctGlyphForCharacter(_ font: CTFont, _ scalar: UInt32) -> CGGlyph {
     return CGGlyph(truncatingIfNeeded: scalar)
 }
 
+func _ctApplyFontMatrix(_ font: CTFont, width: CGFloat) -> CGFloat {
+    width * font.matrix.a
+}
+
 func _ctAdvance(for font: CTFont, glyph: CGGlyph) -> CGFloat {
+    let width: CGFloat
     if font.sfui != nil {
-        return _SFUITable.advance(font.sfui!, scalar: UInt32(glyph))
+        width = _SFUITable.advance(font.sfui!, scalar: UInt32(glyph))
+    } else {
+        let index = Int(glyph)
+        if index >= 0, index < font.metrics.advanceWidths.count {
+            width = _scale(font, font.metrics.advanceWidths[index])
+        } else {
+            width = max(font.size * 0.5, 1)
+        }
     }
-    let index = Int(glyph)
-    if index >= 0, index < font.metrics.advanceWidths.count {
-        return _scale(font, font.metrics.advanceWidths[index])
-    }
-    return max(font.size * 0.5, 1)
+    return _ctApplyFontMatrix(font, width: width)
 }
 
 func _ctGlyphBounds(for font: CTFont, glyph: CGGlyph) -> CGRect {
@@ -1181,10 +1189,10 @@ func _ctGlyphBounds(for font: CTFont, glyph: CGGlyph) -> CGRect {
         let box = font.metrics.glyphBounds[index]
         let s = font.metrics.unitsPerEm > 0 ? font.size / font.metrics.unitsPerEm : 0
         return CGRect(
-            x: box.origin.x * s,
-            y: box.origin.y * s,
-            width: box.size.width * s,
-            height: box.size.height * s
+            x: box.origin.x * s * font.matrix.a,
+            y: box.origin.y * s * font.matrix.d,
+            width: box.size.width * s * font.matrix.a,
+            height: box.size.height * s * font.matrix.d
         )
     }
     let width = _ctAdvance(for: font, glyph: glyph)

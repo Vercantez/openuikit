@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterEthernetNetworkDiagnosticsInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterEthernetNetworkDiagnostics(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRClusterEthernetNetworkDiagnostics(device: device, endpoint: 1, queue: DispatchQueue.global())
+}
+
 func testClusterEthernetNetworkDiagnosticsDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterEthernetNetworkDiagnostics(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterEthernetNetworkDiagnostics init")
         return
@@ -28,12 +36,11 @@ func testClusterEthernetNetworkDiagnosticsDeviceCache() {
     _ = cluster.readAttributeTxErrCount(with: MTRReadParams())
 }
 
-func testClusterEthernetNetworkDiagnosticsCommandFailClosed() {
+func testClusterEthernetNetworkDiagnosticsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterEthernetNetworkDiagnostics(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterEthernetNetworkDiagnostics init")
         return
@@ -43,14 +50,3 @@ func testClusterEthernetNetworkDiagnosticsCommandFailClosed() {
     cluster.resetCounts(with: MTREthernetNetworkDiagnosticsClusterResetCountsParams(), expectedValues: [], expectedValueInterval: n(1), completion: { err in mtrExpectInvalidState(err) })
     cluster.resetCounts(with: MTREthernetNetworkDiagnosticsClusterResetCountsParams(), expectedValues: [], expectedValueInterval: n(1), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-
-func testClusterEthernetNetworkDiagnosticsInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterEthernetNetworkDiagnostics(device: device, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRClusterEthernetNetworkDiagnostics(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

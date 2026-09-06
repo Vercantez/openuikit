@@ -2,12 +2,31 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterBridgedDeviceBasicInformationInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterBridgedDeviceBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global())
+}
+
+func testClusterBridgedDeviceBasicInformationCommand() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    guard let cluster = MTRClusterBridgedDeviceBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRClusterBridgedDeviceBasicInformation init")
+        return
+    }
+    cluster.keepActive(with: MTRBridgedDeviceBasicInformationClusterKeepActiveParams(), expectedValues: [], expectedValueInterval: n(1), completion: { err in mtrExpectInvalidState(err) })
+}
+
 func testClusterBridgedDeviceBasicInformationDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterBridgedDeviceBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterBridgedDeviceBasicInformation init")
         return
@@ -35,32 +54,9 @@ func testClusterBridgedDeviceBasicInformationDeviceCache() {
     _ = cluster.readAttributeVendorID(with: MTRReadParams())
     _ = cluster.readAttributeVendorName(with: MTRReadParams())
     cluster.writeAttributeNodeLabel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeNodeLabel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeNodeLabel(withValue: probe, expectedValueInterval: n(1))
     let cached = cluster.readAttributeNodeLabel(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
-    cluster.writeAttributeNodeLabel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
 }
-
-func testClusterBridgedDeviceBasicInformationCommandFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    guard let cluster = MTRClusterBridgedDeviceBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRClusterBridgedDeviceBasicInformation init")
-        return
-    }
-    cluster.keepActive(with: MTRBridgedDeviceBasicInformationClusterKeepActiveParams(), expectedValues: [], expectedValueInterval: n(1), completion: { err in mtrExpectInvalidState(err) })
-}
-
-func testClusterBridgedDeviceBasicInformationInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterBridgedDeviceBasicInformation(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

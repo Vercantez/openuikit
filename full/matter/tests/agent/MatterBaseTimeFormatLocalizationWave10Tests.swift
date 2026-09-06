@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseTimeFormatLocalizationClassCacheFailClosed() {
+func testBaseTimeFormatLocalizationInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseTimeFormatLocalizationClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterTimeFormatLocalization.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterTimeFormatLocalization.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterTimeFormatLocalization.readAttributeActiveCalendarType(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -26,22 +34,11 @@ func testBaseTimeFormatLocalizationClassCacheFailClosed() {
     MTRBaseClusterTimeFormatLocalization.readAttributeSupportedCalendarTypes(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseTimeFormatLocalizationInit() {
+func testBaseTimeFormatLocalizationRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseTimeFormatLocalizationReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterTimeFormatLocalization init")
         return
@@ -64,12 +61,11 @@ func testBaseTimeFormatLocalizationReadFailClosed() {
     cluster.readAttributeSupportedCalendarTypes(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseTimeFormatLocalizationSubscribeFailClosed() {
+func testBaseTimeFormatLocalizationSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterTimeFormatLocalization init")
         return
@@ -92,12 +88,11 @@ func testBaseTimeFormatLocalizationSubscribeFailClosed() {
     cluster.subscribeAttributeSupportedCalendarTypes(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseTimeFormatLocalizationWriteFailClosed() {
+func testBaseTimeFormatLocalizationWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterTimeFormatLocalization(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterTimeFormatLocalization init")
         return
@@ -111,4 +106,3 @@ func testBaseTimeFormatLocalizationWriteFailClosed() {
     cluster.writeAttributeHourFormat(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeHourFormat(withValue: n(1), params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

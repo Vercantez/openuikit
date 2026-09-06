@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseBasicInformationClassCacheFailClosed() {
+func testBaseBasicInformationInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
 
+func testBaseBasicInformationClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterBasicInformation.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterBasicInformation.readAttributeAttributeList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterBasicInformation.readAttributeCapabilityMinima(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
@@ -38,21 +45,11 @@ func testBaseBasicInformationClassCacheFailClosed() {
     MTRBaseClusterBasicInformation.readAttributeVendorName(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBasicInformationInit() {
+func testBaseBasicInformationRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseBasicInformationReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBasicInformation init")
         return
@@ -87,12 +84,11 @@ func testBaseBasicInformationReadFailClosed() {
     cluster.readAttributeVendorName(completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBasicInformationSubscribeFailClosed() {
+func testBaseBasicInformationSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBasicInformation init")
         return
@@ -127,21 +123,19 @@ func testBaseBasicInformationSubscribeFailClosed() {
     cluster.subscribeAttributeVendorName(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBasicInformationWriteFailClosed() {
+func testBaseBasicInformationWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBasicInformation init")
         return
     }
     cluster.writeAttributeLocalConfigDisabled(withValue: n(1), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeLocalConfigDisabled(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
-    cluster.writeAttributeLocation(withValue: "host", completion: { err in mtrExpectInvalidState(err) })
-    cluster.writeAttributeLocation(withValue: "host", params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
-    cluster.writeAttributeNodeLabel(withValue: "host", completion: { err in mtrExpectInvalidState(err) })
-    cluster.writeAttributeNodeLabel(withValue: "host", params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.writeAttributeLocation(withValue: "", completion: { err in mtrExpectInvalidState(err) })
+    cluster.writeAttributeLocation(withValue: "", params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.writeAttributeNodeLabel(withValue: "", completion: { err in mtrExpectInvalidState(err) })
+    cluster.writeAttributeNodeLabel(withValue: "", params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
 }
-

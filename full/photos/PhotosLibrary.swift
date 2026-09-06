@@ -73,6 +73,7 @@ enum PhotosLibraryStore {
         var albumOrder: [String] = []
         var lists: [String: ListRecord] = [:]
         var listOrder: [String] = []
+        var topLevelIdentifiers: [String] = []
         var changeObservers: [ObjectIdentifier: PHPhotoLibraryChangeObserver] = [:]
         var availabilityObservers: [ObjectIdentifier: PHPhotoLibraryAvailabilityObserver] = [:]
         var uploadJobExtensionEnabled = false
@@ -214,6 +215,9 @@ enum PhotosLibraryStore {
             )
             state.albums[collection.localIdentifier] = record
             state.albumOrder.append(collection.localIdentifier)
+            if state.topLevelIdentifiers.contains(collection.localIdentifier) == false {
+                state.topLevelIdentifiers.append(collection.localIdentifier)
+            }
         }
         persistLocked()
     }
@@ -260,6 +264,28 @@ enum PhotosLibraryStore {
         }
     }
 
+    static func topLevelCollections() -> [PHCollection] {
+        lock.withLock {
+            let contained = Set(state.lists.values.flatMap(\.childIdentifiers))
+            let order: [String]
+            if state.topLevelIdentifiers.isEmpty {
+                order = state.albumOrder + state.listOrder
+            } else {
+                order = state.topLevelIdentifiers
+            }
+            return order.compactMap { identifier -> PHCollection? in
+                if contained.contains(identifier) { return nil }
+                if let album = state.albums[identifier] {
+                    return makeAlbum(album)
+                }
+                if let list = state.lists[identifier] {
+                    return makeList(list)
+                }
+                return nil
+            }
+        }
+    }
+
     static func resourceData(forAssetIdentifier identifier: String) -> Data? {
         lock.withLock {
             guard let record = state.assets[identifier] else { return nil }
@@ -283,6 +309,9 @@ enum PhotosLibraryStore {
         var insertedAlbums: [String] = []
         var removedAlbums: [String] = []
         var changedAlbums: [String] = []
+        var insertedLists: [String] = []
+        var removedLists: [String] = []
+        var changedLists: [String] = []
 
         for operation in operations {
             switch operation {
@@ -371,6 +400,9 @@ enum PhotosLibraryStore {
                 )
                 state.albums[identifier] = record
                 state.albumOrder.append(identifier)
+                if state.topLevelIdentifiers.contains(identifier) == false {
+                    state.topLevelIdentifiers.append(identifier)
+                }
                 insertedAlbums.append(identifier)
             case .updateAlbum(let request):
                 guard let identifier = request.targetCollectionIdentifier,
@@ -384,6 +416,7 @@ enum PhotosLibraryStore {
                 for identifier in identifiers {
                     if state.albums.removeValue(forKey: identifier) != nil {
                         state.albumOrder.removeAll { $0 == identifier }
+                        state.topLevelIdentifiers.removeAll { $0 == identifier }
                         removedAlbums.append(identifier)
                     }
                 }
@@ -398,27 +431,59 @@ enum PhotosLibraryStore {
                 )
                 state.lists[identifier] = record
                 state.listOrder.append(identifier)
+                if state.topLevelIdentifiers.contains(identifier) == false {
+                    state.topLevelIdentifiers.append(identifier)
+                }
+                for child in request.pendingChildIdentifiers {
+                    state.topLevelIdentifiers.removeAll { $0 == child }
+                }
+                insertedLists.append(identifier)
             case .updateList(let request):
                 guard let identifier = request.targetListIdentifier,
                     var record = state.lists[identifier]
                 else { continue }
+                let previousChildren = Set(record.childIdentifiers)
                 record.title = request.title
                 record.childIdentifiers = request.pendingChildIdentifiers
                 state.lists[identifier] = record
-            case .deleteLists(let identifiers):
-                for identifier in identifiers {
-                    if state.lists.removeValue(forKey: identifier) != nil {
-                        state.listOrder.removeAll { $0 == identifier }
+                let nextChildren = Set(record.childIdentifiers)
+                for child in nextChildren.subtracting(previousChildren) {
+                    state.topLevelIdentifiers.removeAll { $0 == child }
+                }
+                for child in previousChildren.subtracting(nextChildren) {
+                    if state.topLevelIdentifiers.contains(child) == false {
+                        state.topLevelIdentifiers.append(child)
                     }
                 }
+                changedLists.append(identifier)
+            case .deleteLists(let identifiers):
+                for identifier in identifiers {
+                    if let record = state.lists.removeValue(forKey: identifier) {
+                        state.listOrder.removeAll { $0 == identifier }
+                        state.topLevelIdentifiers.removeAll { $0 == identifier }
+                        for child in record.childIdentifiers {
+                            if state.topLevelIdentifiers.contains(child) == false {
+                                state.topLevelIdentifiers.append(child)
+                            }
+                        }
+                        removedLists.append(identifier)
+                    }
+                }
+            case .replaceTopLevel(let request):
+                state.topLevelIdentifiers = request.pendingChildIdentifiers
             }
         }
 
         let mutated = !(
             insertedAssets.isEmpty && removedAssets.isEmpty && changedAssets.isEmpty
                 && insertedAlbums.isEmpty && removedAlbums.isEmpty && changedAlbums.isEmpty
+                && insertedLists.isEmpty && removedLists.isEmpty && changedLists.isEmpty
         )
-        if mutated {
+        let topLevelMutated = operations.contains {
+            if case .replaceTopLevel = $0 { return true }
+            return false
+        }
+        if mutated || topLevelMutated {
             state.changeToken += 1
             let token = PHPersistentChangeToken(tokenValue: state.changeToken)
             let persistent = PHPersistentChange(changeToken: token)
@@ -434,6 +499,12 @@ enum PhotosLibraryStore {
                 updatedLocalIdentifiers: Set(changedAlbums),
                 deletedLocalIdentifiers: Set(removedAlbums)
             )
+            persistent.listDetails = PHPersistentObjectChangeDetails(
+                objectType: .collectionList,
+                insertedLocalIdentifiers: Set(insertedLists),
+                updatedLocalIdentifiers: Set(changedLists),
+                deletedLocalIdentifiers: Set(removedLists)
+            )
             state.persistentChanges.append(persistent)
             persistLocked()
         }
@@ -445,6 +516,9 @@ enum PhotosLibraryStore {
             insertedAlbumIdentifiers: insertedAlbums,
             removedAlbumIdentifiers: removedAlbums,
             changedAlbumIdentifiers: changedAlbums,
+            insertedListIdentifiers: insertedLists,
+            removedListIdentifiers: removedLists,
+            changedListIdentifiers: changedLists,
             token: state.changeToken
         )
     }
@@ -622,12 +696,17 @@ struct PhotosAppliedChange {
     var insertedAlbumIdentifiers: [String]
     var removedAlbumIdentifiers: [String]
     var changedAlbumIdentifiers: [String]
+    var insertedListIdentifiers: [String]
+    var removedListIdentifiers: [String]
+    var changedListIdentifiers: [String]
     var token: Int
 
     var isEmpty: Bool {
         insertedAssetIdentifiers.isEmpty && removedAssetIdentifiers.isEmpty
             && changedAssetIdentifiers.isEmpty && insertedAlbumIdentifiers.isEmpty
             && removedAlbumIdentifiers.isEmpty && changedAlbumIdentifiers.isEmpty
+            && insertedListIdentifiers.isEmpty && removedListIdentifiers.isEmpty
+            && changedListIdentifiers.isEmpty
     }
 }
 
@@ -641,6 +720,7 @@ enum PhotosPendingOperation {
     case createList(PHCollectionListChangeRequest)
     case updateList(PHCollectionListChangeRequest)
     case deleteLists([String])
+    case replaceTopLevel(PHCollectionListChangeRequest)
 }
 
 final class PhotosChangeSessionState: NSObject {
@@ -1005,13 +1085,48 @@ func photosFetchAssets(
     }
 }
 
+func photosFetchAssetsInAlbum(
+    identifier: String,
+    options: PHFetchOptions?
+) -> PHFetchResult<PHAsset> {
+    let apply = { () -> [PHAsset] in
+        let ordered = PhotosLibraryStore.album(identifier: identifier)?.transientAssetIdentifiers ?? []
+        return photosApplyFetchInOrder(ordered, options: options)
+    }
+    return PHFetchResult(apply(), refetch: apply)
+}
+
+func photosFetchAssetsInOrder(
+    _ identifiers: [String],
+    options: PHFetchOptions?
+) -> PHFetchResult<PHAsset> {
+    let objects = photosApplyFetchInOrder(identifiers, options: options)
+    return PHFetchResult(objects) {
+        photosApplyFetchInOrder(identifiers, options: options)
+    }
+}
+
+func photosApplyFetchInOrder(
+    _ identifiers: [String],
+    options: PHFetchOptions?
+) -> [PHAsset] {
+    let rank = Dictionary(uniqueKeysWithValues: identifiers.enumerated().map { ($1, $0) })
+    let fetched = photosApplyFetch(
+        matching: { rank[$0.localIdentifier] != nil },
+        options: options
+    )
+    return fetched.sorted {
+        (rank[$0.localIdentifier] ?? Int.max) < (rank[$1.localIdentifier] ?? Int.max)
+    }
+}
+
 func photosNotifyObservers(_ applied: PhotosAppliedChange) {
     guard !applied.isEmpty else { return }
     let change = PHChange(applied: applied)
     let observers = PhotosLibraryStore.changeObservers()
-    PhotosLibraryStore.callbackQueue.async {
-        for observer in observers {
-            observer.photoLibraryDidChange(change)
-        }
+    // Ice Cubes / host tests observe the payload after performChangesAndWait
+    // returns. Darwin queue identity is unobserved (`oracle-questions.tsv`).
+    for observer in observers {
+        observer.photoLibraryDidChange(change)
     }
 }

@@ -193,7 +193,7 @@ open class MFMessageComposeViewController: UIViewController {
     /// class as canSendMail.
     open class func canSendText() -> Bool { false }
 
-    public override init() {
+    public init() {
         super.init()
     }
 

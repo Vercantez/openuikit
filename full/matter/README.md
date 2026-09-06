@@ -154,7 +154,8 @@ absent on this VM. The sealed gate compiles with a clean product tree
 (`products=clean`). Starting commit
 `6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
 
-**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`):
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`, exit 0,
+~1897s):
 
 ```
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
@@ -193,83 +194,154 @@ The Swift `async throws` overlay spelling of those ObjC selectors is still
 not awaitable on the sealed runner; Apple's empty-cache error (CHIP IM vs
 `invalidState`) remains an oracle question.
 
-## Depth pass 2026-09 (wave 10)
+## Depth pass 2026-09 (wave 18 / local evidence repair)
 
-Next pass on the existing Linux starting point (wave 8 ledger is the
-before-state). Earlier passes and their tests stay green; this pass
-implements fail-closed `MTRBaseCluster*` / `MTRCluster*` I/O for the
-largest remaining families, plus in-memory `MTRCluster*` expected-value
-cache reads/writes. Completions run synchronously with
-`MTRError.invalidState` (no Matter radio).
+Merged current `origin/main` (`c1973365`) into the Cursor cloud head
+`platform/cursor/port-matter-to-linux-e694` (`7220aac4`) on
+`agent/fw-matter-r`. Main already has the larger wave-10 cluster implementation
+and its repaired cache tests. Conflict resolution preserves that superset and
+all 22,588 implemented rows from main, plus the cloud AccessControl oracle
+question. Deduplicated the `MTRClustersWave10.swift` source-manifest entry
+introduced by the merge; the resulting manifest matches main.
 
-**Coverage before:** 19372 implemented / 834 declared / 8216 deferred / 40 unavailable / 0 not-applicable
+The supplied `/tmp/fw_merge_gate-matter.log` contained four success markers,
+including `FRAMEWORK_FANOUT_HOST_OK`, when inspected on this Mac; there were no
+`error:` or `REFUSING` lines to attribute an earlier rejection to. The cloud
+head has 21,953 implemented rows, below current main's 22,588, so replaying
+that ledger would lose depth.
 
-**Coverage after:** 21953 implemented / 778 declared / 5691 deferred / 40 unavailable / 0 not-applicable
-(+2581 implemented; 22731 nondeferred; floor 150).
+The cloud ledger also has 49 implemented claims that main correctly reduced
+to declared: their broad controller/factory/certificate tests do not exercise
+the cited identifiers (some methods do not exist in either source tree).
+This repair restores nine of those claims with direct behavioral evidence;
+the other 40 retain main's declared classification. No untested claim is
+promoted merely to preserve the cloud count.
 
-**Top-5 implemented evidence distribution**
+Six new synchronous, no-argument tests in `MatterParameterEvidenceTests.swift`
+exercise certificate-array assignment/clearing and instance isolation, OTA
+delegate assignment/clearing, operational flags and subscription limits,
+storage-configuration assignment/clearing, and abstract-parameter suspension.
+They use local values, make assertions after each mutation, and have no
+semaphore, run-loop, main-queue, network, or device waits. The existing
+startSuspended row now cites the focused suspension test as well. No product
+behavior or declaration changed; these are host storage checks, not evidence
+of Apple defaults, certificate validation, NSCopying, or service success.
 
-| rows | share | evidence |
+| Measurement | Current main | Repaired merge |
+| --- | ---: | ---: |
+| Implemented | 22,588 | 22,597 (+9) |
+| Declared | 809 | 800 |
+| Deferred | 5,025 | 5,025 |
+| Unavailable | 40 | 40 |
+| Not applicable | 0 | 0 |
+| Unique cited synchronous tests | 474 | 480 |
+| Main implemented rows lost | — | 0 |
+
+Top five implemented evidence counts (22,597 total):
+
+| Rows | Share | Test |
 | ---: | ---: | --- |
-| 3788 | 17.3% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
-| 3212 | 14.6% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
-| 2541 | 11.6% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
-| 906 | 4.1% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
-| 906 | 4.1% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
+| 3,788 | 16.76% | `MatterIDTests.swift#testIDRawValues` |
+| 3,212 | 14.21% | `MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2,541 | 11.25% | `MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 4.01% | `MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 4.01% | `MatterEnumTests.swift#testEnumHashable` |
 
-**Top remaining (non table-driven) evidence** — 10600 rows after excluding
-enum/option-set/C-constant table tests; largest share 2.6% (cap 40%):
+The largest remaining test is
+`MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed`
+(277 rows), well below the 40% non-table cap. All 480 cited anchors resolve
+to top-level synchronous no-argument functions. The immutable inputs and
+acceptance gate are unchanged; all changes relative to main are confined to
+`full/matter/`.
 
-| rows | share | evidence |
-| ---: | ---: | --- |
-| 277 | 2.6% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
-| 266 | 2.5% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
-| 266 | 2.5% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
-| 253 | 2.4% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
-| 245 | 2.3% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
+**Local sealed gate: PASS (exit 0).** Ran the unmodified
+`timeout 3600 bash full/matter/tests/acceptance/test_host.sh` in the operator's
+`uikit-linux` container at `/gate-codex-matter`, using Swift 6.2.4 targeting
+`aarch64-unknown-linux-gnu`. Both library and runner compiled with
+`-warnings-as-errors`; the generated runner completed all 480 cited tests.
+All 151 local Swift/evidence/manifest/oracle-question files match the tested
+container snapshot byte-for-byte. Log: `/tmp/fw-matter-r-sealed-gate.log`.
 
-Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` did not emit
-`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
-absent on this VM. The sealed gate compiles with a clean product tree
-(`products=clean`). Starting commit
-`39dc25a2769fb88a50f0853964137a4f96d50322` matched.
-
-**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`):
-
-```
-CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
+```text
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
 FRAMEWORK_FANOUT_REFERENCE_OK
 MATTER_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
 ```
 
-### Added this pass
+## Depth pass 2026-09 (wave 10 / evidence repair)
 
-- **New cluster I/O** in `MTRClustersWave10.swift`: AccessControl, Actions,
-  ApplicationBasic, BasicInformation (+ legacy Basic subclass),
-  BridgedDeviceBasicInformation (+ BridgedDeviceBasic),
-  ElectricalPowerMeasurement, EnergyEVSE, EthernetNetworkDiagnostics,
-  GeneralCommissioning, GeneralDiagnostics, ModeSelect,
-  OperationalCredentials, PressureMeasurement, GroupKeyManagement,
-  IlluminanceMeasurement, Descriptor, FlowMeasurement, MediaInput,
-  AdministratorCommissioning, SoftwareDiagnostics,
-  ThermostatUserInterfaceConfiguration, Channel, SmokeCOAlarm,
-  TimeFormatLocalization, ApplicationLauncher, ValveConfigurationAndControl.
-- **Fail-closed completions.** ObjC `completion` / `completionHandler` /
-  subscribe `reportHandler` selectors invoke `MTRError.invalidState`
-  synchronously. Canonical surface rows whose printed declaration is the
-  Swift `async throws` overlay are implemented via the completion-handler
-  spelling of the same USR.
-- **MTRCluster* device cache.** `readAttribute*(with:)` /
-  `writeAttribute*(withValue:expectedValueInterval:)` use the in-memory
-  expected-value cache (write then read is non-nil).
-- **Unavailable (40)** still name NSXPCConnection / Security.SecKey /
-  XPC daemon reasons; none were reclassified as `not-applicable`.
+Checked merge refused `4adf0f09` with **no depth gain** (implemented 19372 → 19372).
+This pass repairs the ledger and adds real fail-closed cluster I/O.
 
-The Swift `async throws` overlay is still not awaitable on the sealed
-runner; CHIP IM empty-cache status versus `invalidState` remains an
-oracle question. Remaining mass is other `MTRBaseCluster*` families
-(TimeSynchronization, measurement clusters, ContentLauncher, Groups,
-Identify, DeviceEnergyManagement, …) plus `s:` Swift overlays.
+`MatterDeviceRuntimeTests` was split into focused tests (startup-params inits,
+factory create, controller shutdown, delegate order, device cache, optional
+delegate callbacks). `MatterFailClosedTests` was split per family (commissioning,
+base-device read/write/subscribe/command, certificates, factory aliases, OTA)
+and each cited identifier is invoked in the named `func test*()`. Rows whose
+tests did not name the identifier were reclassified to `declared` with
+`source:full/matter/<file>.swift#Symbol`.
+
+Wave-10 product work fills the next empty stub clusters (BasicInformation,
+GeneralDiagnostics, EthernetNetworkDiagnostics, PressureMeasurement,
+OperationalCredentials, EnergyEVSE, AccessControl, Identify, Descriptor,
+and matching `MTRCluster*` cache types, plus `MTRClusterLevelControl` /
+`MTRClusterWindowCovering`) with synchronous completion-handler I/O and
+in-memory expected-value cache. Completions still return `invalidState`;
+there is no Matter radio.
+
+**Coverage before:** 19372 implemented / 834 declared / 8216 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 22586 implemented / 811 declared / 5025 deferred / 40 unavailable / 0 not-applicable
+(+3214 implemented; 23397 nondeferred; floor 150). Unique implemented tests: 474.
+
+Host-gate repair after the first wave-10 ledger: three `MTRError` operator
+rows had been recast to `declared` with a missing `MTRClustersWave10.swift#MTRError`
+anchor. They now cite `MatterErrorTests.swift#testErrorOverlay`, which already
+exercises `~=`, `==`, and `!=`. Matching `MTRInteractionError` operator rows
+use the same test.
+
+**Top-5 implemented evidence distribution**
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 3788 | 16.8% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
+| 3212 | 14.2% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2541 | 11.3% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 4.0% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 4.0% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
+
+**Top remaining (non table-driven) evidence** — 11140 rows after excluding
+enum/option-set/C-constant table tests; largest share 2.5% (cap 40%):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 277 | 2.5% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
+| 266 | 2.4% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
+| 266 | 2.4% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
+| 253 | 2.3% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
+| 245 | 2.2% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
+
+Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
+Isolated `swiftc -warnings-as-errors` of `libMatter.dylib` and every
+`tests/agent/*Tests.swift` succeeded before the sealed host gate.
+`.cursor/verify-cloud-environment.sh` did not emit
+`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
+absent on this VM. The sealed gate compiles with a clean product tree
+(`products=clean`).
+
+Wave-10 cache tests that wrote one writable attribute and then read
+`AcceptedCommandList` were corrected to read the attribute they wrote.
+
+**Sealed host gate** (`bash full/matter/tests/acceptance/test_host.sh`, exit 0,
+~1922s):
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Matter lane=large-partitioned symbols=28462
+FRAMEWORK_FANOUT_REFERENCE_OK
+MATTER_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
+```
+
+Host inventory token expected by the campaign (not printed by the gate):
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.

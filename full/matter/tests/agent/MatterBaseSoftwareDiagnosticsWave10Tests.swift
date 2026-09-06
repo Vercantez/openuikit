@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseSoftwareDiagnosticsClassCacheFailClosed() {
+func testBaseSoftwareDiagnosticsInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseSoftwareDiagnosticsClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterSoftwareDiagnostics.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterSoftwareDiagnostics.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterSoftwareDiagnostics.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -28,38 +36,11 @@ func testBaseSoftwareDiagnosticsClassCacheFailClosed() {
     MTRBaseClusterSoftwareDiagnostics.readAttributeThreadMetrics(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseSoftwareDiagnosticsCommandFailClosed() {
+func testBaseSoftwareDiagnosticsRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRBaseClusterSoftwareDiagnostics init")
-        return
-    }
-    cluster.resetWatermarks(completion: { err in mtrExpectInvalidState(err) })
-    cluster.resetWatermarks(completionHandler: { err in mtrExpectInvalidState(err) })
-    cluster.resetWatermarks(with: MTRSoftwareDiagnosticsClusterResetWatermarksParams(), completion: { err in mtrExpectInvalidState(err) })
-    cluster.resetWatermarks(with: MTRSoftwareDiagnosticsClusterResetWatermarksParams(), completionHandler: { err in mtrExpectInvalidState(err) })
-}
-
-func testBaseSoftwareDiagnosticsInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseSoftwareDiagnosticsReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterSoftwareDiagnostics init")
         return
@@ -84,12 +65,26 @@ func testBaseSoftwareDiagnosticsReadFailClosed() {
     cluster.readAttributeThreadMetrics(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseSoftwareDiagnosticsSubscribeFailClosed() {
+func testBaseSoftwareDiagnosticsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterSoftwareDiagnostics init")
+        return
+    }
+    cluster.resetWatermarks(completion: { err in mtrExpectInvalidState(err) })
+    cluster.resetWatermarks(completionHandler: { err in mtrExpectInvalidState(err) })
+    cluster.resetWatermarks(with: MTRSoftwareDiagnosticsClusterResetWatermarksParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.resetWatermarks(with: MTRSoftwareDiagnosticsClusterResetWatermarksParams(), completionHandler: { err in mtrExpectInvalidState(err) })
+}
 
+func testBaseSoftwareDiagnosticsSubscribe() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     guard let cluster = MTRBaseClusterSoftwareDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterSoftwareDiagnostics init")
         return
@@ -113,4 +108,3 @@ func testBaseSoftwareDiagnosticsSubscribeFailClosed() {
     cluster.subscribeAttributeThreadMetrics(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeThreadMetrics(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

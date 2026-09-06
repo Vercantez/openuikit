@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseSmokeCOAlarmClassCacheFailClosed() {
+func testBaseSmokeCOAlarmInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
 
+func testBaseSmokeCOAlarmClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterSmokeCOAlarm.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterSmokeCOAlarm.readAttributeAttributeList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterSmokeCOAlarm.readAttributeBatteryAlert(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
@@ -28,35 +35,11 @@ func testBaseSmokeCOAlarmClassCacheFailClosed() {
     MTRBaseClusterSmokeCOAlarm.readAttributeTestInProgress(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseSmokeCOAlarmCommandFailClosed() {
+func testBaseSmokeCOAlarmRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRBaseClusterSmokeCOAlarm init")
-        return
-    }
-    cluster.selfTestRequest(completion: { err in mtrExpectInvalidState(err) })
-    cluster.selfTestRequest(with: MTRSmokeCOAlarmClusterSelfTestRequestParams(), completion: { err in mtrExpectInvalidState(err) })
-}
-
-func testBaseSmokeCOAlarmInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseSmokeCOAlarmReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterSmokeCOAlarm init")
         return
@@ -81,12 +64,24 @@ func testBaseSmokeCOAlarmReadFailClosed() {
     cluster.readAttributeTestInProgress(completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseSmokeCOAlarmSubscribeFailClosed() {
+func testBaseSmokeCOAlarmCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterSmokeCOAlarm init")
+        return
+    }
+    cluster.selfTestRequest(completion: { err in mtrExpectInvalidState(err) })
+    cluster.selfTestRequest(with: MTRSmokeCOAlarmClusterSelfTestRequestParams(), completion: { err in mtrExpectInvalidState(err) })
+}
 
+func testBaseSmokeCOAlarmSubscribe() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     guard let cluster = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterSmokeCOAlarm init")
         return
@@ -111,12 +106,11 @@ func testBaseSmokeCOAlarmSubscribeFailClosed() {
     cluster.subscribeAttributeTestInProgress(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseSmokeCOAlarmWriteFailClosed() {
+func testBaseSmokeCOAlarmWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterSmokeCOAlarm(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterSmokeCOAlarm init")
         return
@@ -124,4 +118,3 @@ func testBaseSmokeCOAlarmWriteFailClosed() {
     cluster.writeAttributeSmokeSensitivityLevel(withValue: n(1), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeSmokeSensitivityLevel(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
 }
-

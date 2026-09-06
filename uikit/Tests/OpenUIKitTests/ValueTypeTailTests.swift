@@ -6,6 +6,10 @@ import Foundation
 import XCTest
 @testable import OpenUIKit
 
+// Linux corelibs Foundation also ships NotificationCenter.default
+// (MEASURED merge-focus3 `swift build --build-tests` on swift:6.2-noble).
+private typealias NotificationCenter = OpenUIKit.NotificationCenter
+
 #if !os(Linux)
 @MainActor
 #endif

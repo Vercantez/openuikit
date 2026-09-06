@@ -522,6 +522,97 @@ CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean
 Darwin `full/charts/tests/test_charts_host.sh` is IceCubes / `xcrun` /
 `/private/tmp` and is not the Linux deliverable (`mktemp` fails here).
 
+### Sixth pass (mark-dimension layout + ChartProxy bands)
+
+Next SDK-depth pass on the wave-8 / fifth-pass tree. First-pass through
+fifth-pass sources and tests stay in place. This pass builds the
+plot-space `MarkDimension` resolver, sector polar layout, KeyPath
+interval plot inits, `ChartProxy.positionRange` category bands, and
+fail-closed `Chart3DContent` witnesses on 2D marks.
+
+Before this pass (fifth-pass ledger):
+
+| status | before |
+| --- | ---: |
+| implemented | 2192 |
+| declared | 2660 |
+| deferred | 968 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+After this pass:
+
+| status | after |
+| --- | ---: |
+| implemented | 2314 |
+| declared | 2580 |
+| deferred | 926 |
+| unavailable | 0 |
+| not-applicable | 3654 |
+
+Implemented gain is +122. Nondeferred (`implemented` + `declared`) is
+4894, above the 4737 floor. Unique cited tests: 246. Every
+`not-applicable` row remains a SwiftUI cross-import overlay
+(`s:7SwiftUI…`) with the note `SwiftUI cross-import overlay; owned by
+the SwiftUI lane`. `unavailable` stays 0.
+
+Top-5 implemented evidence after this pass (2314 rows; cap 40% = 925):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |
+
+No single test exceeds 40% of implemented rows.
+
+Public surface added in this pass:
+
+- `MarkDimension` `.automatic` / `.inset` / `.fixed` / `.ratio` resolve
+  inside a pixel span (automatic insets 4pt on a category band). Two
+  category bars on a 100-wide plot with `.inset(8)` occupy x=8 width=34
+  and x=58 width=34; `.fixed(20)` occupies 15…35 and 65…85.
+- `MarkDimensions` KeyPath `.inset(\.field)` reads per-row CGFloats.
+- `BarPlot` / `RectanglePlot` / `RulePlot` / `PointPlot` / `SectorPlot`
+  KeyPath interval inits record authored xStart/xEnd/yStart/yEnd and
+  place through `ChartLayout` against a fixed 100×40 plot.
+- Sectors start at `-π/2` (12 o'clock) and sweep with increasing angle
+  in y-down space. A full-circle `SectorMark` on 100×40 is centered at
+  (50, 20) with outer radius 20. Equal halves occupy the right and left
+  semicircle frames. Inner/outer `.ratio` / `.inset` / `.fixed` are
+  numeric.
+- Unstacked interval bars keep authored `yStart`/`yEnd` instead of
+  stacking overwrite. Rule marks with `xStart`/`xEnd` + `y` draw that
+  segment only.
+- `ChartProxy.positionRange(forX:)` returns the category band
+  (`"A"` → 0...50, `"B"` → 50...100 on two categories). Continuous Y
+  collapses to the mapped pixel (y=3 of 0...4 inverted → 10...10).
+  `value(at:)` inverts both scales; `angle(at:)` is `atan2` from the
+  plot-range center.
+- `ChartContent.position(by:axis:span:)` stamps `span` onto
+  `markWidth` (horizontal) or `markHeight` (vertical). `.fixed(20)`
+  matches the hand-computed centered band.
+- `MajorValueAlignment.page` / `.unit` / `.matching` snap domain
+  values. `.unit(5)` on 0...10 maps 3 → 5 → pixel 50.
+- `BasicChart3DSurfaceStyle.heightBased` defaults to yRange `0...1`;
+  `normalBased` is a distinct stored style. No 3D renderer.
+- `Chart3D` data/`ForEach` inits store content; `body` stays
+  `EmptyView`. `RectangleMark` / `RuleMark` / `PointMark` /
+  `BuilderConditional` / `ForEach` / `Optional` accept
+  `Chart3DContent` modifiers as attribute stamps.
+- `AnyAxisMark(erasing:)` / `init(_ content: any AxisMark)`.
+
+Fail-closed (unchanged): no RealityKit/Chart3D renderer.
+`symbolRotation` / `metalness` / `roughness` stay deferred.
+`Chart3DContent` modifiers on `Never` and lookalike-absent
+`ModifiedContent` stay `declared`. `ChartContent` modifiers
+synthesized on `Never` stay `declared` (uninhabited). Scroll and
+selection store host models only. SwiftUI `View` overlay re-exports
+stay `not-applicable`. Stdlib integer operator overlays stay
+`deferred`.
+
 ## Wave-6 deliverable gate
 
 ```sh

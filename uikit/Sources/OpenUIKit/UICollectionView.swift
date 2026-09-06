@@ -198,6 +198,21 @@ open class UICollectionView: UIScrollView {
         didSet { if dataSource !== oldValue { reloadData() } }
     }
 
+    public weak var dragDelegate: UICollectionViewDragDelegate? {
+        didSet { _installDragLift() }
+    }
+    public weak var dropDelegate: UICollectionViewDropDelegate?
+    public var dragInteractionEnabled = true
+    public internal(set) var hasActiveDrag = false
+    public internal(set) var hasActiveDrop = false
+    var _activeDrag = false {
+        didSet { hasActiveDrag = _activeDrag }
+    }
+    var _activeDrop = false {
+        didSet { hasActiveDrop = _activeDrop }
+    }
+    var _dragLift: UILongPressGestureRecognizer?
+
     // Like UIKit, the collection view's delegate IS the inherited scroll-view
     // `delegate` (UICollectionViewDelegate refines UIScrollViewDelegate); the
     // collection conformance is discovered dynamically.

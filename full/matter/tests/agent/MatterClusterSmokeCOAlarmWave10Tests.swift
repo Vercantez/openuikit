@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterSmokeCOAlarmInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterSmokeCOAlarm(device: device, endpointID: n(1), queue: DispatchQueue.global())
+}
+
 func testClusterSmokeCOAlarmDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterSmokeCOAlarm(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterSmokeCOAlarm init")
         return
@@ -31,19 +38,18 @@ func testClusterSmokeCOAlarmDeviceCache() {
     _ = cluster.readAttributeSmokeState(with: MTRReadParams())
     _ = cluster.readAttributeTestInProgress(with: MTRReadParams())
     cluster.writeAttributeSmokeSensitivityLevel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1))
+    cluster.writeAttributeSmokeSensitivityLevel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
     let probe = MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(7))
     cluster.writeAttributeSmokeSensitivityLevel(withValue: probe, expectedValueInterval: n(1))
     let cached = cluster.readAttributeSmokeSensitivityLevel(with: nil)
     mtrRequire(cached != nil, "expected-value cache round-trip")
-    cluster.writeAttributeSmokeSensitivityLevel(withValue: MTRMakeDataValue(type: MTRUnsignedIntegerValueType, value: n(1)), expectedValueInterval: n(1), params: MTRWriteParams())
 }
 
-func testClusterSmokeCOAlarmCommandFailClosed() {
+func testClusterSmokeCOAlarmCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterSmokeCOAlarm(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterSmokeCOAlarm init")
         return
@@ -51,13 +57,3 @@ func testClusterSmokeCOAlarmCommandFailClosed() {
     cluster.selfTestRequest(withExpectedValues: [], expectedValueInterval: n(1), completion: { err in mtrExpectInvalidState(err) })
     cluster.selfTestRequest(with: MTRSmokeCOAlarmClusterSelfTestRequestParams(), expectedValues: [], expectedValueInterval: n(1), completion: { err in mtrExpectInvalidState(err) })
 }
-
-func testClusterSmokeCOAlarmInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterSmokeCOAlarm(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

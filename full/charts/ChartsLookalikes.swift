@@ -178,6 +178,17 @@ extension ForEach: ChartContent where Content: ChartContent {
     public var chartPlotRecords: [ChartPlotRecord] { records }
 }
 
+extension ForEach: Chart3DContent where Content: Chart3DContent {}
+
+extension ForEach where Data.Element: Identifiable, ID == Data.Element.ID {
+    public init(
+        _ data: Data,
+        @ViewBuilder content: (Data.Element) -> Content
+    ) {
+        self.init(data, id: \.id, content: content)
+    }
+}
+
 public struct Rectangle: View {
     public init() {}
     public var body: some View { EmptyView() }
@@ -274,6 +285,14 @@ public struct Color: View, ShapeStyle, Hashable, Sendable {
         Color(red: red, green: green, blue: blue, opacity: opacity)
     }
     public var body: some View { EmptyView() }
+}
+
+/// Lookalike for SwiftUI.Gradient. Charts stores the style name; it does
+/// not rasterize a 3D height gradient on Linux.
+public struct Gradient: Hashable, Sendable {
+    public var colorCount: Int
+    public init() { colorCount = 0 }
+    public init(colors: [Color]) { colorCount = colors.count }
 }
 
 public struct StrokeStyle: Equatable, Hashable, Sendable {

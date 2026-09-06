@@ -45,3 +45,24 @@ func testMaterialLightingAndBlend() {
     _ = prop.contentsTransform
     _ = prop.textureComponents
 }
+
+func testMaterialPropertyBorderAndPrecomputed() {
+    let mat = SCNMaterial()
+    mat.colorBufferWriteMask = [.red, .green]
+    precondition(mat.colorBufferWriteMask.contains(.red))
+    let prop = SCNMaterialProperty()
+    prop.borderColor = SCNVector4(1, 0, 0, 1)
+    precondition(prop.borderColor != nil)
+    do {
+        _ = try SCNMaterialProperty.precomputedLightingEnvironmentContents(with: Data())
+        precondition(false, "precomputed lighting must fail-close")
+    } catch {
+        _ = error
+    }
+    do {
+        _ = try SCNMaterialProperty.precomputedLightingEnvironmentContents(with: URL(fileURLWithPath: "/tmp/missing.env"))
+        precondition(false, "precomputed lighting URL must fail-close")
+    } catch {
+        _ = error
+    }
+}

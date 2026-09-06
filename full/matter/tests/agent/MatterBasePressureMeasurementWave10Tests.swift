@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBasePressureMeasurementClassCacheFailClosed() {
+func testBasePressureMeasurementInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterPressureMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterPressureMeasurement(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBasePressureMeasurementClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterPressureMeasurement.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterPressureMeasurement.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterPressureMeasurement.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -38,22 +46,11 @@ func testBasePressureMeasurementClassCacheFailClosed() {
     MTRBaseClusterPressureMeasurement.readAttributeTolerance(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBasePressureMeasurementInit() {
+func testBasePressureMeasurementRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterPressureMeasurement(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterPressureMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBasePressureMeasurementReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterPressureMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterPressureMeasurement init")
         return
@@ -88,12 +85,11 @@ func testBasePressureMeasurementReadFailClosed() {
     cluster.readAttributeTolerance(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBasePressureMeasurementSubscribeFailClosed() {
+func testBasePressureMeasurementSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterPressureMeasurement(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterPressureMeasurement init")
         return
@@ -127,4 +123,3 @@ func testBasePressureMeasurementSubscribeFailClosed() {
     cluster.subscribeAttributeTolerance(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeTolerance(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

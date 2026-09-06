@@ -135,3 +135,15 @@ func testCustomActionAndRotate() {
     eased.linux_advanceTime(0.5)
     precondition(abs(eased.position.x - 2.5) < 1e-3)
 }
+
+func testJavaScriptAndPlayAudioFailClosed() {
+    let node = SCNNode()
+    node.runAction(SCNAction.javaScriptAction(withScript: "node.position.x = 9", duration: 1))
+    node.linux_advanceTime(1)
+    precondition(abs(node.position.x) < 1e-4)
+    let audio = SCNAudioSource()
+    audio.shouldStream = false
+    node.runAction(SCNAction.playAudio(audio, waitForCompletion: false))
+    node.linux_advanceTime(0)
+    precondition(abs(node.position.x) < 1e-4)
+}

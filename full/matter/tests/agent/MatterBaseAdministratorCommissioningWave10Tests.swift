@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseAdministratorCommissioningClassCacheFailClosed() {
+func testBaseAdministratorCommissioningInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseAdministratorCommissioningClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterAdministratorCommissioning.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterAdministratorCommissioning.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterAdministratorCommissioning.readAttributeAdminFabricIndex(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -26,12 +34,11 @@ func testBaseAdministratorCommissioningClassCacheFailClosed() {
     MTRBaseClusterAdministratorCommissioning.readAttributeWindowStatus(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseAdministratorCommissioningCommandFailClosed() {
+func testBaseAdministratorCommissioningCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterAdministratorCommissioning init")
         return
@@ -46,22 +53,11 @@ func testBaseAdministratorCommissioningCommandFailClosed() {
     cluster.revokeCommissioning(with: MTRAdministratorCommissioningClusterRevokeCommissioningParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseAdministratorCommissioningInit() {
+func testBaseAdministratorCommissioningRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseAdministratorCommissioningReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterAdministratorCommissioning init")
         return
@@ -84,12 +80,11 @@ func testBaseAdministratorCommissioningReadFailClosed() {
     cluster.readAttributeWindowStatus(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseAdministratorCommissioningSubscribeFailClosed() {
+func testBaseAdministratorCommissioningSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterAdministratorCommissioning(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterAdministratorCommissioning init")
         return
@@ -111,4 +106,3 @@ func testBaseAdministratorCommissioningSubscribeFailClosed() {
     cluster.subscribeAttributeWindowStatus(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeWindowStatus(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

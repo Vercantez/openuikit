@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseThermostatUserInterfaceConfigurationClassCacheFailClosed() {
+func testBaseThermostatUserInterfaceConfigurationInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseThermostatUserInterfaceConfigurationClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterThermostatUserInterfaceConfiguration.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterThermostatUserInterfaceConfiguration.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterThermostatUserInterfaceConfiguration.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -26,22 +34,11 @@ func testBaseThermostatUserInterfaceConfigurationClassCacheFailClosed() {
     MTRBaseClusterThermostatUserInterfaceConfiguration.readAttributeTemperatureDisplayMode(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseThermostatUserInterfaceConfigurationInit() {
+func testBaseThermostatUserInterfaceConfigurationRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseThermostatUserInterfaceConfigurationReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterThermostatUserInterfaceConfiguration init")
         return
@@ -64,12 +61,11 @@ func testBaseThermostatUserInterfaceConfigurationReadFailClosed() {
     cluster.readAttributeTemperatureDisplayMode(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseThermostatUserInterfaceConfigurationSubscribeFailClosed() {
+func testBaseThermostatUserInterfaceConfigurationSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterThermostatUserInterfaceConfiguration init")
         return
@@ -92,12 +88,11 @@ func testBaseThermostatUserInterfaceConfigurationSubscribeFailClosed() {
     cluster.subscribeAttributeTemperatureDisplayMode(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseThermostatUserInterfaceConfigurationWriteFailClosed() {
+func testBaseThermostatUserInterfaceConfigurationWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterThermostatUserInterfaceConfiguration(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterThermostatUserInterfaceConfiguration init")
         return
@@ -115,4 +110,3 @@ func testBaseThermostatUserInterfaceConfigurationWriteFailClosed() {
     cluster.writeAttributeTemperatureDisplayMode(withValue: n(1), params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
     cluster.writeAttributeTemperatureDisplayMode(withValue: n(1), params: MTRWriteParams(), completionHandler: { err in mtrExpectInvalidState(err) })
 }
-

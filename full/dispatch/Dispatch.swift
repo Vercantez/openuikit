@@ -30,6 +30,14 @@ private func _openuiDispatchAsync(
     _ callback: _OpenDispatchCallback
 )
 
+@_silgen_name("openui_dispatch_v1_sync")
+private func _openuiDispatchSync(
+    _ queueKind: UInt32,
+    _ queue: UnsafeMutableRawPointer?,
+    _ context: UnsafeMutableRawPointer?,
+    _ callback: _OpenDispatchCallback
+)
+
 @_silgen_name("openui_dispatch_v1_after")
 private func _openuiDispatchAfter(
     _ queueKind: UInt32,
@@ -338,6 +346,19 @@ public final class DispatchQueue: @unchecked Sendable {
             .fromOpaque(context)
             .takeUnretainedValue()
         return (base as? _OpenDispatchSpecificValue<Value>)?.value
+    }
+
+    /// Execute on the real host queue, preserving queue-specific values and
+    /// serial ordering. The callback is borrowed only for this synchronous call.
+    public func sync<T>(execute work: () -> T) -> T {
+        withoutActuallyEscaping(work) { borrowed in
+            let box = _OpenDispatchSyncClosure { borrowed() }
+            _openuiDispatchSync(queueKind, opaqueQueue,
+                Unmanaged.passUnretained(box).toOpaque()) { pointer in
+                Unmanaged<_OpenDispatchSyncBase>.fromOpaque(pointer!).takeUnretainedValue().invoke()
+            }
+            return box.result!
+        }
     }
 
     public func async(execute work: @escaping @Sendable () -> Void) {
@@ -703,4 +724,64 @@ private func _openDispatchClampedProduct(_ lhs: Int64, _ rhs: Int64) -> Int64 {
     let result = lhs.multipliedReportingOverflow(by: rhs)
     guard result.overflow else { return result.partialValue }
     return (lhs < 0) == (rhs < 0) ? .max : .min
+}
+
+private class _OpenDispatchSyncBase {
+    func invoke() { preconditionFailure("abstract dispatch callback") }
+}
+private final class _OpenDispatchSyncClosure<T>: _OpenDispatchSyncBase {
+    let work: () -> T
+    var result: T?
+    init(_ work: @escaping () -> T) { self.work = work }
+    override func invoke() { result = work() }
+}
+
+/// A reusable group. Each waiting generation owns its own semaphore; notify
+/// submits after the count reaches zero, including an already empty group.
+public final class DispatchGroup: @unchecked Sendable {
+    private struct State {
+        var count = 0
+        var waiters: [DispatchSemaphore] = []
+        var notifications: [(DispatchQueue, @Sendable () -> Void)] = []
+    }
+    private let state = Mutex(State())
+    public init() {}
+    public func enter() { state.withLock { $0.count += 1 } }
+    public func leave() {
+        let completed = state.withLock { state -> State? in
+            precondition(state.count > 0, "unbalanced DispatchGroup.leave")
+            state.count -= 1
+            guard state.count == 0 else { return nil }
+            let completed = state
+            state.waiters = []
+            state.notifications = []
+            return completed
+        }
+        guard let completed else { return }
+        for waiter in completed.waiters { waiter.signal() }
+        for (queue, work) in completed.notifications { queue.async(execute: work) }
+    }
+    public func notify(queue: DispatchQueue, execute work: @escaping @Sendable () -> Void) {
+        let ready = state.withLock { state in
+            if state.count == 0 { return true }
+            state.notifications.append((queue, work))
+            return false
+        }
+        if ready { queue.async(execute: work) }
+    }
+    @discardableResult
+    public func wait(timeout: DispatchTime = .distantFuture) -> DispatchTimeoutResult {
+        let waiter = DispatchSemaphore(value: 0)
+        let ready = state.withLock { state in
+            if state.count == 0 { return true }
+            state.waiters.append(waiter)
+            return false
+        }
+        if ready { return .success }
+        let result = waiter.wait(timeout: timeout)
+        if result == .timedOut {
+            state.withLock { $0.waiters.removeAll { $0 === waiter } }
+        }
+        return result
+    }
 }

@@ -2,35 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testClusterOperationalCredentialsDeviceCache() {
+func testClusterOperationalCredentialsInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRClusterOperationalCredentials(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRClusterOperationalCredentials init")
-        return
-    }
-    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
-    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
-    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
-    _ = cluster.readAttributeCommissionedFabrics(with: MTRReadParams())
-    _ = cluster.readAttributeCurrentFabricIndex(with: MTRReadParams())
-    _ = cluster.readAttributeFabrics(with: MTRReadParams())
-    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
-    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
-    _ = cluster.readAttributeNOCs(with: MTRReadParams())
-    _ = cluster.readAttributeSupportedFabrics(with: MTRReadParams())
-    _ = cluster.readAttributeTrustedRootCertificates(with: MTRReadParams())
+    _ = MTRClusterOperationalCredentials(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRClusterOperationalCredentials(device: device, endpoint: 1, queue: DispatchQueue.global())
 }
 
-func testClusterOperationalCredentialsCommandFailClosed() {
+func testClusterOperationalCredentialsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterOperationalCredentials(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterOperationalCredentials init")
         return
@@ -53,13 +38,24 @@ func testClusterOperationalCredentialsCommandFailClosed() {
     cluster.updateNOC(with: MTROperationalCredentialsClusterUpdateNOCParams(), expectedValues: [], expectedValueInterval: n(1), completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testClusterOperationalCredentialsInit() {
+func testClusterOperationalCredentialsDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRClusterOperationalCredentials(device: device, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRClusterOperationalCredentials(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    guard let cluster = MTRClusterOperationalCredentials(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRClusterOperationalCredentials init")
+        return
+    }
+    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
+    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
+    _ = cluster.readAttributeCommissionedFabrics(with: MTRReadParams())
+    _ = cluster.readAttributeCurrentFabricIndex(with: MTRReadParams())
+    _ = cluster.readAttributeFabrics(with: MTRReadParams())
+    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
+    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeNOCs(with: MTRReadParams())
+    _ = cluster.readAttributeSupportedFabrics(with: MTRReadParams())
+    _ = cluster.readAttributeTrustedRootCertificates(with: MTRReadParams())
 }
-

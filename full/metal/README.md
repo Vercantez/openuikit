@@ -314,3 +314,55 @@ GPU families, AIR execution, and Apple IO command processors remain absent.
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
 linux and the sealed gate compiles with a clean product tree (`products=clean`).
 
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r18`, framework `Metal`, lane `large-partitioned`.
+Fifth pass on the existing CPU reference: keep prior tests green, then add a
+software residency set, identity rasterization-rate map, CPU tensors with
+byte-exact replace/getBytes, in-memory binary archives that fail closed on
+serialize, fail-closed dynamic libraries, host log-state objects, texture
+view pools, triangle/instance/primitive and Metal 4 acceleration-structure
+descriptors, and an acceleration-structure command encoder that records
+build/copy/refit and writes compacted size 0.
+
+| Status | Before (wave-8 r17 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 3448 | 4013 |
+| declared | 249 | 203 |
+| deferred | 847 | 328 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+565**. Evidence is `test:full/metal/tests/agent/<File>Tests.swift#testName`
+naming a real synchronous `test*` function.
+
+Top-5 implemented evidence distribution (of 4013):
+
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 2109 (enum / option-set / C constant table)
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 222
+3. `MetalCommandTests.swift#testMetal4CommandEncoders` — 202
+4. `MetalDescriptorTests.swift#testMetal4PipelineDescriptors` — 190
+5. `MetalGeometryTests.swift#testGeometryHelpers` — 106
+
+No non-table test exceeds 40% of the remaining 1904 implemented rows
+(cap 761; largest family test is 222). New focused tests:
+`testTriangleAndInstanceAccelerationDescriptors`,
+`testMetal4AccelerationStructureDescriptors`,
+`testResidencySetAndRasterizationRateMap`,
+`testCPUTensorBinaryArchiveAndHandles`,
+`testAccelerationStructureCommandEncoder`,
+`testRenderEncoderAccelerationBindings`.
+
+Fail-closed this pass: `makeDynamicLibrary` throws `MTLDynamicLibraryError.unsupported`;
+binary-archive `serialize` throws `MTLBinaryArchiveError.internalError`; invalid
+tensors throw `MTLTensorError.invalidDescriptor`; `makeSharedTexture` returns nil
+(no IOSurface); `makeLogState` with a negative buffer throws `MTLLogStateError.invalidSize`;
+acceleration-structure `writeCompactedSize` writes 0 (no RT GPU).
+`supportsFamily` / `supportsRasterizationRateMap` stay false.
+
+`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
+(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
+`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
+`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
+linux and the sealed gate compiles with a clean product tree (`products=clean`).
+

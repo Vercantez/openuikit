@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseGeneralDiagnosticsClassCacheFailClosed() {
+func testBaseGeneralDiagnosticsInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseGeneralDiagnosticsClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterGeneralDiagnostics.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterGeneralDiagnostics.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterGeneralDiagnostics.readAttributeActiveHardwareFaults(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -38,12 +46,11 @@ func testBaseGeneralDiagnosticsClassCacheFailClosed() {
     MTRBaseClusterGeneralDiagnostics.readAttributeUpTime(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralDiagnosticsCommandFailClosed() {
+func testBaseGeneralDiagnosticsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralDiagnostics init")
         return
@@ -55,22 +62,11 @@ func testBaseGeneralDiagnosticsCommandFailClosed() {
     cluster.timeSnapshot(with: MTRGeneralDiagnosticsClusterTimeSnapshotParams(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralDiagnosticsInit() {
+func testBaseGeneralDiagnosticsRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseGeneralDiagnosticsReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralDiagnostics init")
         return
@@ -105,12 +101,11 @@ func testBaseGeneralDiagnosticsReadFailClosed() {
     cluster.readAttributeUpTime(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseGeneralDiagnosticsSubscribeFailClosed() {
+func testBaseGeneralDiagnosticsSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterGeneralDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterGeneralDiagnostics init")
         return
@@ -144,4 +139,3 @@ func testBaseGeneralDiagnosticsSubscribeFailClosed() {
     cluster.subscribeAttributeUpTime(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeUpTime(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseBridgedDeviceBasicInformationClassCacheFailClosed() {
+func testBaseBridgedDeviceBasicInformationInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterBridgedDeviceBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+}
 
+func testBaseBridgedDeviceBasicInformationClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterBridgedDeviceBasicInformation.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterBridgedDeviceBasicInformation.readAttributeAttributeList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterBridgedDeviceBasicInformation.readAttributeClusterRevision(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
@@ -32,12 +39,11 @@ func testBaseBridgedDeviceBasicInformationClassCacheFailClosed() {
     MTRBaseClusterBridgedDeviceBasicInformation.readAttributeVendorName(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBridgedDeviceBasicInformationCommandFailClosed() {
+func testBaseBridgedDeviceBasicInformationCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBridgedDeviceBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBridgedDeviceBasicInformation init")
         return
@@ -45,21 +51,11 @@ func testBaseBridgedDeviceBasicInformationCommandFailClosed() {
     cluster.keepActive(with: MTRBridgedDeviceBasicInformationClusterKeepActiveParams(), completion: { err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBridgedDeviceBasicInformationInit() {
+func testBaseBridgedDeviceBasicInformationRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRBaseClusterBridgedDeviceBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseBridgedDeviceBasicInformationReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBridgedDeviceBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBridgedDeviceBasicInformation init")
         return
@@ -88,12 +84,11 @@ func testBaseBridgedDeviceBasicInformationReadFailClosed() {
     cluster.readAttributeVendorName(completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBridgedDeviceBasicInformationSubscribeFailClosed() {
+func testBaseBridgedDeviceBasicInformationSubscribe() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBridgedDeviceBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBridgedDeviceBasicInformation init")
         return
@@ -122,17 +117,15 @@ func testBaseBridgedDeviceBasicInformationSubscribeFailClosed() {
     cluster.subscribeAttributeVendorName(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseBridgedDeviceBasicInformationWriteFailClosed() {
+func testBaseBridgedDeviceBasicInformationWrite() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterBridgedDeviceBasicInformation(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterBridgedDeviceBasicInformation init")
         return
     }
-    cluster.writeAttributeNodeLabel(withValue: "host", completion: { err in mtrExpectInvalidState(err) })
-    cluster.writeAttributeNodeLabel(withValue: "host", params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.writeAttributeNodeLabel(withValue: "", completion: { err in mtrExpectInvalidState(err) })
+    cluster.writeAttributeNodeLabel(withValue: "", params: MTRWriteParams(), completion: { err in mtrExpectInvalidState(err) })
 }
-

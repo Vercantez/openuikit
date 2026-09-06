@@ -2,12 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testBaseEthernetNetworkDiagnosticsClassCacheFailClosed() {
+func testBaseEthernetNetworkDiagnosticsInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    _ = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
+}
 
+func testBaseEthernetNetworkDiagnosticsClassCache() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     MTRBaseClusterEthernetNetworkDiagnostics.readAttributeAcceptedCommandList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterEthernetNetworkDiagnostics.readAttributeAcceptedCommandList(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
     MTRBaseClusterEthernetNetworkDiagnostics.readAttributeAttributeList(withAttributeCache: MTRAttributeCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completionHandler: { _, err in mtrExpectInvalidState(err) })
@@ -38,38 +46,11 @@ func testBaseEthernetNetworkDiagnosticsClassCacheFailClosed() {
     MTRBaseClusterEthernetNetworkDiagnostics.readAttributeTxErrCount(withClusterStateCache: MTRClusterStateCacheContainer(), endpoint: n(1), queue: DispatchQueue.global(), completion: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseEthernetNetworkDiagnosticsCommandFailClosed() {
+func testBaseEthernetNetworkDiagnosticsRead() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRBaseClusterEthernetNetworkDiagnostics init")
-        return
-    }
-    cluster.resetCounts(completion: { err in mtrExpectInvalidState(err) })
-    cluster.resetCounts(completionHandler: { err in mtrExpectInvalidState(err) })
-    cluster.resetCounts(with: MTREthernetNetworkDiagnosticsClusterResetCountsParams(), completion: { err in mtrExpectInvalidState(err) })
-    cluster.resetCounts(with: MTREthernetNetworkDiagnosticsClusterResetCountsParams(), completionHandler: { err in mtrExpectInvalidState(err) })
-}
-
-func testBaseEthernetNetworkDiagnosticsInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global())
-}
-
-func testBaseEthernetNetworkDiagnosticsReadFailClosed() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
     guard let cluster = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterEthernetNetworkDiagnostics init")
         return
@@ -104,12 +85,26 @@ func testBaseEthernetNetworkDiagnosticsReadFailClosed() {
     cluster.readAttributeTxErrCount(completionHandler: { _, err in mtrExpectInvalidState(err) })
 }
 
-func testBaseEthernetNetworkDiagnosticsSubscribeFailClosed() {
+func testBaseEthernetNetworkDiagnosticsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
+    guard let cluster = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRBaseClusterEthernetNetworkDiagnostics init")
+        return
+    }
+    cluster.resetCounts(completion: { err in mtrExpectInvalidState(err) })
+    cluster.resetCounts(completionHandler: { err in mtrExpectInvalidState(err) })
+    cluster.resetCounts(with: MTREthernetNetworkDiagnosticsClusterResetCountsParams(), completion: { err in mtrExpectInvalidState(err) })
+    cluster.resetCounts(with: MTREthernetNetworkDiagnosticsClusterResetCountsParams(), completionHandler: { err in mtrExpectInvalidState(err) })
+}
 
+func testBaseEthernetNetworkDiagnosticsSubscribe() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
     guard let cluster = MTRBaseClusterEthernetNetworkDiagnostics(device: baseDevice, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRBaseClusterEthernetNetworkDiagnostics init")
         return
@@ -143,4 +138,3 @@ func testBaseEthernetNetworkDiagnosticsSubscribeFailClosed() {
     cluster.subscribeAttributeTxErrCount(withMinInterval: n(1), maxInterval: n(1), params: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
     cluster.subscribeAttributeTxErrCount(with: MTRSubscribeParams.new(), subscriptionEstablished: nil as MTRSubscriptionEstablishedHandler?, reportHandler: { _, err in mtrExpectInvalidState(err) })
 }
-

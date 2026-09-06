@@ -2001,6 +2001,110 @@ func testMetalEnumOptionSetAndConstantValues() {
     stat.vertexInvocations = 8
     precondition(stat.clipperInvocations == 1)
     precondition(stat.vertexInvocations == 8)
+
+    metalExerciseRawEnum([
+        MTLTensorDataType.none, .float32, .float16, .bfloat16, .int8, .uint8, .int16, .uint16, .int32, .uint32
+    ])
+    metalExerciseRawEnum([
+        MTLStepFunction.constant, .perVertex, .perInstance, .perPatch, .perPatchControlPoint,
+        .threadPositionInGridX, .threadPositionInGridY, .threadPositionInGridXIndexed, .threadPositionInGridYIndexed
+    ])
+    metalExerciseRawEnum([
+        MTLLogLevel.undefined, .debug, .info, .notice, .error, .fault
+    ])
+    metalExerciseRawEnum([
+        MTLCommandEncoderErrorState.unknown, .completed, .affected, .pending, .faulted
+    ])
+    metalExerciseRawEnum([
+        MTLFunctionLogType.validation
+    ])
+    metalExerciseRawEnum([
+        MTLIOCompressionStatus.complete, .error
+    ])
+    metalExerciseRawEnum([
+        MTLLogStateError.invalid, .invalidSize
+    ])
+    metalExerciseRawEnum([
+        MTLDynamicLibraryError.Code.none, .invalidFile, .compilationFailure, .unresolvedInstallName,
+        .dependencyLoadFailure, .unsupported
+    ])
+    precondition(MTLDynamicLibraryError.none == .none)
+    precondition(MTLDynamicLibraryError.invalidFile == .invalidFile)
+    precondition(MTLDynamicLibraryError.compilationFailure == .compilationFailure)
+    precondition(MTLDynamicLibraryError.unresolvedInstallName == .unresolvedInstallName)
+    precondition(MTLDynamicLibraryError.dependencyLoadFailure == .dependencyLoadFailure)
+    precondition(MTLDynamicLibraryError.unsupported == .unsupported)
+    precondition(MTLDynamicLibraryError.errorDomain == MTLDynamicLibraryDomain)
+    let dynError = MTLDynamicLibraryError(.unsupported, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(dynError.code == .unsupported)
+    precondition(dynError.errorCode == Int(MTLDynamicLibraryError.Code.unsupported.rawValue))
+    _ = dynError.errorUserInfo
+    _ = dynError.hashValue
+    _ = dynError.localizedDescription
+    var dynHasher = Hasher()
+    dynError.hash(into: &dynHasher)
+    precondition(MTLDynamicLibraryError.unsupported ~= dynError)
+    precondition(dynError != MTLDynamicLibraryError(.none))
+
+    metalExerciseRawEnum([
+        MTLBinaryArchiveError.Code.none, .invalidFile, .unexpectedElement, .compilationFailure, .internalError
+    ])
+    precondition(MTLBinaryArchiveError.none == .none)
+    precondition(MTLBinaryArchiveError.invalidFile == .invalidFile)
+    precondition(MTLBinaryArchiveError.unexpectedElement == .unexpectedElement)
+    precondition(MTLBinaryArchiveError.compilationFailure == .compilationFailure)
+    precondition(MTLBinaryArchiveError.internalError == .internalError)
+    precondition(MTLBinaryArchiveError.errorDomain == MTLBinaryArchiveDomain)
+    let binError = MTLBinaryArchiveError(.internalError, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(binError.code == .internalError)
+    precondition(MTLBinaryArchiveError.internalError ~= binError)
+    _ = binError.errorUserInfo
+    _ = binError.hashValue
+    _ = binError.localizedDescription
+
+    metalExerciseRawEnum([
+        MTLCounterSampleBufferError.Code.outOfMemory, .invalid, .internal
+    ])
+    precondition(MTLCounterSampleBufferError.outOfMemory == .outOfMemory)
+    precondition(MTLCounterSampleBufferError.invalid == .invalid)
+    precondition(MTLCounterSampleBufferError.internal == .internal)
+    precondition(MTLCounterSampleBufferError.errorDomain == MTLCounterErrorDomain)
+    let counterError = MTLCounterSampleBufferError(.invalid, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(counterError.code == .invalid)
+    precondition(MTLCounterSampleBufferError.invalid ~= counterError)
+    _ = counterError.hashValue
+    _ = counterError.localizedDescription
+
+    metalExerciseRawEnum([
+        MTLTensorError.Code.none, .internalError, .invalidDescriptor
+    ])
+    precondition(MTLTensorError.none == .none)
+    precondition(MTLTensorError.internalError == .internalError)
+    precondition(MTLTensorError.invalidDescriptor == .invalidDescriptor)
+    precondition(MTLTensorError.errorDomain == MTLTensorDomain)
+    let tensorError = MTLTensorError(.invalidDescriptor, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(tensorError.code == .invalidDescriptor)
+    precondition(MTLTensorError.invalidDescriptor ~= tensorError)
+    _ = tensorError.hashValue
+    _ = tensorError.localizedDescription
+
+    precondition(MTLCommandBufferError.none == .none)
+    precondition(MTLCommandBufferError.internal == .internal)
+    precondition(MTLCommandBufferError.timeout == .timeout)
+    precondition(MTLCommandBufferError.pageFault == .pageFault)
+    precondition(MTLCommandBufferError.blacklisted == .blacklisted)
+    precondition(MTLCommandBufferError.notPermitted == .notPermitted)
+    precondition(MTLCommandBufferError.outOfMemory == .outOfMemory)
+    precondition(MTLCommandBufferError.invalidResource == .invalidResource)
+    precondition(MTLCommandBufferError.memoryless == .memoryless)
+    precondition(MTLCommandBufferError.stackOverflow == .stackOverflow)
+    _ = MTLCommandBufferError.errorDomain
+    let ioThrown = MTLIOError(.internal, userInfo: [NSLocalizedDescriptionKey: "cpu"])
+    precondition(ioThrown == MTLIOError(.internal))
+    precondition(ioThrown != MTLIOError(.urlInvalid))
+    _ = ioThrown.hashValue
+    _ = ioThrown.localizedDescription
+    precondition(MTLIOError.internal ~= ioThrown)
 }
 
 private func metalExerciseOptionSet<T: OptionSet & Hashable>(_ first: T, _ second: T)

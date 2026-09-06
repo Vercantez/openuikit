@@ -2,12 +2,19 @@ import Foundation
 import Dispatch
 import Matter
 
+func testClusterElectricalPowerMeasurementInit() {
+    let controller = MTRDeviceController()
+    let device = MTRDevice(nodeID: n(1), controller: controller)
+    let baseDevice: MTRBaseDevice = device
+    _ = (device, baseDevice)
+    _ = MTRClusterElectricalPowerMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global())
+}
+
 func testClusterElectricalPowerMeasurementDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterElectricalPowerMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterElectricalPowerMeasurement init")
         return
@@ -37,13 +44,3 @@ func testClusterElectricalPowerMeasurementDeviceCache() {
     _ = cluster.readAttributeReactivePower(with: MTRReadParams())
     _ = cluster.readAttributeVoltage(with: MTRReadParams())
 }
-
-func testClusterElectricalPowerMeasurementInit() {
-    let controller = MTRDeviceController()
-    let device = MTRDevice(nodeID: n(1), controller: controller)
-    let baseDevice: MTRBaseDevice = device
-    _ = (device, baseDevice)
-
-    _ = MTRClusterElectricalPowerMeasurement(device: device, endpointID: n(1), queue: DispatchQueue.global())
-}
-

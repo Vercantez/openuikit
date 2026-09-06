@@ -586,18 +586,20 @@ extension HKGAD7Assessment {
 }
 
 extension HKMedicationDoseEvent {
+    /// Raw values match the pinned macios `HKMedicationDoseEventLogStatus`.
     public enum LogStatus: Int, Sendable, Hashable {
-        case notInteracted
-        case notLogged
-        case notificationNotSent
-        case skipped
-        case snoozed
-        case taken
+        case notInteracted = 1
+        case notificationNotSent = 2
+        case snoozed = 3
+        case taken = 4
+        case skipped = 5
+        case notLogged = 6
     }
 
+    /// Raw values match the pinned macios `HKMedicationDoseEventScheduleType`.
     public enum ScheduleType: Int, Sendable, Hashable {
-        case asNeeded
-        case schedule
+        case asNeeded = 1
+        case schedule = 2
     }
 
 }

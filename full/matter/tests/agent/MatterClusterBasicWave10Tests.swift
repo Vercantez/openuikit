@@ -2,12 +2,11 @@ import Foundation
 import Dispatch
 import Matter
 
-func testClusterBasicCommandFailClosed() {
+func testClusterBasicCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterBasic(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterBasic init")
         return
@@ -21,7 +20,5 @@ func testClusterBasicInit() {
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     _ = MTRClusterBasic(device: device, endpoint: 1, queue: DispatchQueue.global())
 }
-

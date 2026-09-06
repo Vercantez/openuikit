@@ -2,32 +2,20 @@ import Foundation
 import Dispatch
 import Matter
 
-func testClusterActionsDeviceCache() {
+func testClusterActionsInit() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    guard let cluster = MTRClusterActions(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
-        mtrRequire(false, "MTRClusterActions init")
-        return
-    }
-    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
-    _ = cluster.readAttributeActionList(with: MTRReadParams())
-    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
-    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
-    _ = cluster.readAttributeEndpointLists(with: MTRReadParams())
-    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
-    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
-    _ = cluster.readAttributeSetupURL(with: MTRReadParams())
+    _ = MTRClusterActions(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    _ = MTRClusterActions(device: device, endpoint: 1, queue: DispatchQueue.global())
 }
 
-func testClusterActionsCommandFailClosed() {
+func testClusterActionsCommand() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
     guard let cluster = MTRClusterActions(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
         mtrRequire(false, "MTRClusterActions init")
         return
@@ -58,13 +46,21 @@ func testClusterActionsCommandFailClosed() {
     cluster.stopAction(with: MTRActionsClusterStopActionParams(), expectedValues: [], expectedValueInterval: n(1), completionHandler: { err in mtrExpectInvalidState(err) })
 }
 
-func testClusterActionsInit() {
+func testClusterActionsDeviceCache() {
     let controller = MTRDeviceController()
     let device = MTRDevice(nodeID: n(1), controller: controller)
     let baseDevice: MTRBaseDevice = device
     _ = (device, baseDevice)
-
-    _ = MTRClusterActions(device: device, endpoint: 1, queue: DispatchQueue.global())
-    _ = MTRClusterActions(device: device, endpointID: n(1), queue: DispatchQueue.global())
+    guard let cluster = MTRClusterActions(device: device, endpointID: n(1), queue: DispatchQueue.global()) else {
+        mtrRequire(false, "MTRClusterActions init")
+        return
+    }
+    _ = cluster.readAttributeAcceptedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeActionList(with: MTRReadParams())
+    _ = cluster.readAttributeAttributeList(with: MTRReadParams())
+    _ = cluster.readAttributeClusterRevision(with: MTRReadParams())
+    _ = cluster.readAttributeEndpointLists(with: MTRReadParams())
+    _ = cluster.readAttributeFeatureMap(with: MTRReadParams())
+    _ = cluster.readAttributeGeneratedCommandList(with: MTRReadParams())
+    _ = cluster.readAttributeSetupURL(with: MTRReadParams())
 }
-
