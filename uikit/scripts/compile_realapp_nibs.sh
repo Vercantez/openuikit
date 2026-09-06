@@ -8,12 +8,39 @@
 # fixtures/realapp/assets has with the app's asset catalog.
 #
 #   scripts/compile_realapp_nibs.sh [path-to-pocket-casts-ios]
+#   scripts/compile_realapp_nibs.sh --out /tmp/app-nibs path/to/View.xib ...
+#
+# Explicit sources support other ladder apps without writing their resources
+# into Pocket Casts' fixtures. A storyboard compiles to a .storyboardc directory;
+# compilation alone does not prove OpenUIKit can instantiate its custom classes.
 #
 # The corpus is not vendored (docs/REAL_APP_TEST.md "Reproducing"); pass its
 # path or set POCKET_CASTS. Requires Xcode's ibtool (macOS only) — hence the
 # checked-in fixtures, so the Linux build and CI need neither.
 set -e
 cd "$(dirname "$0")/.."
+
+if [[ "${1:-}" == --out ]]; then
+  [[ $# -ge 3 ]] || { echo "usage: $0 --out <directory> <xib/storyboard> ..." >&2; exit 1; }
+  OUT=$2
+  shift 2
+  # Validate every source before producing any output.
+  for src in "$@"; do
+    [[ -f "$src" && ( "$src" == *.xib || "$src" == *.storyboard ) ]] || {
+      echo "compile_realapp_nibs: expected a present .xib or .storyboard: $src" >&2
+      exit 1
+    }
+  done
+  mkdir -p "$OUT"
+  for src in "$@"; do
+    name=${src:t:r}
+    ext=nib
+    [[ "$src" == *.storyboard ]] && ext=storyboardc
+    xcrun ibtool --compile "$OUT/$name.$ext" "$src"
+    echo "  $OUT/$name.$ext"
+  done
+  exit 0
+fi
 
 CORPUS=${1:-${POCKET_CASTS:-../scratch/ladder-corpus/pocket-casts-ios}}
 if [[ ! -d "$CORPUS/podcasts" ]]; then

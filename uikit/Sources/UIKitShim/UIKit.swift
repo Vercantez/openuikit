@@ -341,3 +341,31 @@ public typealias NSAdaptiveImageGlyph = OpenUIKit.NSAdaptiveImageGlyph
 public typealias NSTextAttachmentContainer = OpenUIKit.NSTextAttachmentContainer
 public typealias NSTextStorageDelegate = OpenUIKit.NSTextStorageDelegate
 public typealias NSLayoutManagerDelegate = OpenUIKit.NSLayoutManagerDelegate
+
+#if !os(Linux) && canImport(Foundation) && !canImport(CoreGraphics)
+// MEASURED cold full guest rebuild on main 3e9bada0 + simplenote-launch:
+// BrowserViewController.swift:1193 cannot see loadObjects (the library was
+// compiled without Foundation/Progress); URLBar.swift:1137 supplies the
+// facade's Foundation.NSItemProvider to OpenUIKit.UIDragItem. Host Darwin
+// has CoreGraphics and native Linux has one provider, so neither needs this
+// overlay. Keep the library's process-local provider as UIKit's identity,
+// and expose the same local-object loading rule once Progress is available.
+@_spi(OpenUIKitGuest) import OpenUIKit
+public typealias NSItemProvider = OpenUIKit.NSItemProvider
+
+public extension UIDropSession {
+    @discardableResult
+    func loadObjects<T>(ofClass type: T.Type, completion: @escaping ([T]) -> Void) -> Foundation.Progress {
+        var objects: [T] = []
+        for item in items {
+            if let object = item.localObject as? T {
+                objects.append(object)
+            } else if let object = item.itemProvider._load(type) {
+                objects.append(object)
+            }
+        }
+        completion(objects)
+        return Foundation.Progress(totalUnitCount: Int64(objects.count))
+    }
+}
+#endif

@@ -873,6 +873,41 @@ let blockzillaTargets: [Target] = [
 ]
 #endif
 
+// Simplenote 9b1bb17 dependency census: 30 unchanged Swift sources at the
+// five pins in Sources/SimplenoteDependencies/PROVENANCE.json. Darwin route
+// (b) only: Foundation uses CoreData/AppKit; Gridicons has @objc factories.
+// This does not claim a guest CoreData port or an app launch.
+#if os(Linux)
+let simplenoteProducts: [Product] = []
+let simplenoteTargets: [Target] = []
+#else
+let simplenoteProducts: [Product] = [
+    "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
+    "SimplenoteSearch", "Gridicons",
+].map { .library(name: $0, targets: [$0]) }
+let simplenoteSettings: [SwiftSetting] = [
+    .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
+]
+let simplenoteTargets: [Target] = [
+    .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],
+            path: "Sources/SimplenoteDependencies/SimplenoteFoundation",
+            swiftSettings: simplenoteSettings),
+    .target(name: "SimplenoteEndpoints",
+            path: "Sources/SimplenoteDependencies/SimplenoteEndpoints",
+            swiftSettings: simplenoteSettings),
+    .target(name: "SimplenoteInterlinks", dependencies: ["SimplenoteFoundation"],
+            path: "Sources/SimplenoteDependencies/SimplenoteInterlinks",
+            swiftSettings: simplenoteSettings),
+    .target(name: "SimplenoteSearch",
+            path: "Sources/SimplenoteDependencies/SimplenoteSearch",
+            swiftSettings: simplenoteSettings),
+    .target(name: "Gridicons", dependencies: ["UIKit", "SwiftUI"],
+            path: "Sources/SimplenoteDependencies/Gridicons",
+            resources: [.copy("Resources")],
+            swiftSettings: simplenoteSettings),
+]
+#endif
+
 let package = Package(
     name: "OpenUIKit",
     // Swift concurrency (`@MainActor`, which the UI classes now carry the
@@ -881,8 +916,8 @@ let package = Package(
     // it makes that explicit instead of leaving it to the default.
     // Apple-only: it has no effect on the Linux build.
     platforms: [.macOS(.v11)],
-    products: coreProducts + frameworkProducts + blockzillaProducts,
+    products: coreProducts + frameworkProducts + blockzillaProducts + simplenoteProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
-    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets,
+    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets,
     cxxLanguageStandard: .cxx17
 )
