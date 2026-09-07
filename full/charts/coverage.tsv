@@ -54,8 +54,8 @@ s:6Charts10NumberBinsV7Indicesa	implemented	test:full/charts/tests/agent/ChartsB
 s:6Charts10NumberBinsV8Iteratora	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	
 s:6Charts10NumberBinsV8endIndexSivp	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	
 s:6Charts10NumberBinsVyAA13ChartBinRangeVyxGSicip	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	
-s:6Charts10ScaleRangeP	declared	source:full/charts/ChartsSurface.swift#ScaleRange	-
-s:6Charts10ScaleRangeP11VisualValueQa	declared	source:full/charts/Charts.swift#VisualValue	-
+s:6Charts10ScaleRangeP	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testScaleRangeVisualValueWitness	Wave 8 normalized metadata follow-up behavior.
+s:6Charts10ScaleRangeP11VisualValueQa	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testScaleRangeVisualValueWitness	Wave 8 normalized metadata follow-up behavior.
 s:6Charts10SectorMarkV	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testSectorMarkAnglePlotRecord	
 s:6Charts10SectorMarkV4Bodya	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testSectorMarkAnglePlotRecord	
 s:6Charts10SectorMarkV5angle11innerRadius05outerF012angularInsetAcA14PlottableValueVyxG_AA0C9DimensionVAL14CoreFoundation7CGFloatVSgtcAA0J0Rzlufc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testSectorMarkAnglePlotRecord	
@@ -113,7 +113,7 @@ s:6Charts12AxisGridLineV	implemented	test:full/charts/tests/agent/ChartsDepthTes
 s:6Charts12AxisGridLineV8centered6strokeACSbSg_7SwiftUI11StrokeStyleVSgtcfc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAxisGridLineCentered	
 s:6Charts12ChartContentP	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testChartCollectsSevenMarkKinds	
 s:6Charts12ChartContentP4BodyQa	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testChartCollectsSevenMarkKinds	
-s:6Charts12ChartContentP4body4BodyQzvp	declared	source:full/charts/Charts.swift#body	-
+s:6Charts12ChartContentP4body4BodyQzvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartContentBodyWitness	Wave 8 normalized metadata follow-up behavior.
 s:6Charts12ChartContentPAAE10annotation8position9alignment7spacing18overflowResolution7contentQrAA18AnnotationPositionV_7SwiftUI9AlignmentV14CoreFoundation7CGFloatVSgAA0k8OverflowI0Vqd__AA0K7ContextVctAL4ViewRd__lF	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testChartContentProtocolModifiers	
 s:6Charts12ChartContentPAAE10annotation8position9alignment7spacing18overflowResolution7contentQrAA18AnnotationPositionV_7SwiftUI9AlignmentV14CoreFoundation7CGFloatVSgAA0k8OverflowI0Vqd__AA0K7ContextVctAL4ViewRd__lF::SYNTHESIZED::s:6Charts10SectorMarkV	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers	
 s:6Charts12ChartContentPAAE10annotation8position9alignment7spacing18overflowResolution7contentQrAA18AnnotationPositionV_7SwiftUI9AlignmentV14CoreFoundation7CGFloatVSgAA0k8OverflowI0Vqd__AA0K7ContextVctAL4ViewRd__lF::SYNTHESIZED::s:6Charts10SectorPlotV	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers	
@@ -1391,8 +1391,8 @@ s:6Charts14AxisValueLabelV_8centered6anchor05multiD9Alignment19collisionResoluti
 s:6Charts14AxisValueLabelV_8centered6anchor05multiD9Alignment19collisionResolution12offsetsMarks11orientation17horizontalSpacing08verticalO0ACy7SwiftUI4TextVGAL18LocalizedStringKeyV_SbSgAL9UnitPointVSgAL0H0VSgAA0bcd9CollisionJ0VArA0bcD11OrientationV14CoreFoundation7CGFloatVSgA4_tcANRszrlufc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAxisValueLabelText	
 s:6Charts14AxisValueLabelV_8centered6anchor05multiD9Alignment19collisionResolution12offsetsMarks11orientation17horizontalSpacing08verticalO0ACy7SwiftUI4TextVGqd___SbSgAL9UnitPointVSgAL0H0VSgAA0bcd9CollisionJ0VApA0bcD11OrientationV14CoreFoundation7CGFloatVSgA2_tcANRszSyRd__lufc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAxisValueLabelText	
 s:6Charts14Chart3DContentP	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
-s:6Charts14Chart3DContentP4BodyQa	declared	source:full/charts/ChartsLookalikes.swift#Body	-
-s:6Charts14Chart3DContentP4body4BodyQzvp	declared	source:full/charts/Charts.swift#body	-
+s:6Charts14Chart3DContentP4BodyQa	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DContentBodyWitness	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentP4body4BodyQzvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DContentBodyWitness	Wave 8 normalized metadata follow-up behavior.
 s:6Charts14Chart3DContentPAAE10symbolSizeyQr14CoreFoundation7CGFloatVF	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
 s:6Charts14Chart3DContentPAAE10symbolSizeyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts11SurfacePlotV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
 s:6Charts14Chart3DContentPAAE10symbolSizeyQr14CoreFoundation7CGFloatVF::SYNTHESIZED::s:6Charts13RectangleMarkV	implemented	test:full/charts/tests/agent/ChartsMarkLayoutTests.swift#testRectangleMarkChart3DContentModifiersFailClosed	
@@ -1455,20 +1455,20 @@ s:6Charts14Chart3DContentPAAE6symbolyQrqd__AA0B12DSymbolShapeRd__lF::SYNTHESIZED
 s:6Charts14Chart3DContentPAAE6symbolyQrqd__AA0B12DSymbolShapeRd__lF::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#symbol	-
 s:6Charts14Chart3DContentPAAE9metalnessyQrSdF	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
 s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts11SurfacePlotV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
-s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts13RectangleMarkV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts18BuilderConditionalV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts8RuleMarkV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts9PointMarkV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
+s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts13RectangleMarkV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts18BuilderConditionalV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts8RuleMarkV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:6Charts9PointMarkV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
 s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:7SwiftUI15ModifiedContentV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:7SwiftUI7ForEachV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:Sq	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts14Chart3DContentPAAE9metalnessyQrSdF::SYNTHESIZED::s:s5NeverO	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts14Chart3DContentPAAE9roughnessyQrSdF	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
 s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts11SurfacePlotV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testSurfacePlotChart3DContentModifiers	
-s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts13RectangleMarkV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts18BuilderConditionalV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts8RuleMarkV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts9PointMarkV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
+s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts13RectangleMarkV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts18BuilderConditionalV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts8RuleMarkV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
+s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:6Charts9PointMarkV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChart3DMaterialAttributes	Wave 8 normalized metadata follow-up behavior.
 s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:7SwiftUI15ModifiedContentV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:7SwiftUI7ForEachV	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts14Chart3DContentPAAE9roughnessyQrSdF::SYNTHESIZED::s:Sq	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
@@ -1522,12 +1522,12 @@ s:6Charts16AxisMarkPositionV6bottomACvpZ	implemented	test:full/charts/tests/agen
 s:6Charts16AxisMarkPositionV7leadingACvpZ	implemented	test:full/charts/tests/agent/ChartsTests.swift#testAxisMarkPosition	
 s:6Charts16AxisMarkPositionV8trailingACvpZ	implemented	test:full/charts/tests/agent/ChartsTests.swift#testAxisMarkPosition	
 s:6Charts16AxisMarkPositionV9automaticACvpZ	implemented	test:full/charts/tests/agent/ChartsTests.swift#testAxisMarkPosition	
-s:6Charts16ChartAxisContentV	declared	source:full/charts/ChartsSurface.swift#ChartAxisContent	-
-s:6Charts16ChartAxisContentV4Bodya	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts16ChartAxisContentV4bodyQrvp	declared	source:full/charts/Charts.swift#body	-
-s:6Charts16ChartPlotContentV	declared	source:full/charts/ChartsSurface.swift#ChartPlotContent	-
-s:6Charts16ChartPlotContentV4Bodya	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
-s:6Charts16ChartPlotContentV4bodyQrvp	declared	source:full/charts/Charts.swift#body	-
+s:6Charts16ChartAxisContentV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartPlotAndAxisContentBodies	Wave 8 normalized metadata follow-up behavior.
+s:6Charts16ChartAxisContentV4Bodya	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartPlotAndAxisContentBodies	Wave 8 normalized metadata follow-up behavior.
+s:6Charts16ChartAxisContentV4bodyQrvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartPlotAndAxisContentBodies	Wave 8 normalized metadata follow-up behavior.
+s:6Charts16ChartPlotContentV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartPlotAndAxisContentBodies	Wave 8 normalized metadata follow-up behavior.
+s:6Charts16ChartPlotContentV4Bodya	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartPlotAndAxisContentBodies	Wave 8 normalized metadata follow-up behavior.
+s:6Charts16ChartPlotContentV4bodyQrvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testChartPlotAndAxisContentBodies	Wave 8 normalized metadata follow-up behavior.
 s:6Charts16ChartSymbolShapeP	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testChartSymbolShapeProtocolCatalog	
 s:6Charts16ChartSymbolShapeP18perceptualUnitRectSo6CGRectVvp	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:6Charts16ChartSymbolShapePA2A05BasicbcD0VRszrlE4plusAEvpZ	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testChartSymbolShapeProtocolCatalog	
@@ -1550,8 +1550,8 @@ s:6Charts16ChartSymbolShapePAA7SwiftUI010InsettableD0RzrlE12strokeBorder5styleQr
 s:6Charts16ChartSymbolShapePAA7SwiftUI010InsettableD0RzrlE12strokeBorder5styleQrAD11StrokeStyleV_tF::SYNTHESIZED::s:7SwiftUI6CircleV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testChartSymbolShapeProtocolCatalog	
 s:6Charts16ChartSymbolShapePAA7SwiftUI010InsettableD0RzrlE12strokeBorder9lineWidthQr14CoreFoundation7CGFloatV_tF	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testChartSymbolShapeProtocolCatalog	
 s:6Charts16ChartSymbolShapePAA7SwiftUI010InsettableD0RzrlE12strokeBorder9lineWidthQr14CoreFoundation7CGFloatV_tF::SYNTHESIZED::s:7SwiftUI6CircleV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testChartSymbolShapeProtocolCatalog	
-s:6Charts17AnnotationContextV	declared	source:full/charts/ChartsSurface.swift#AnnotationContext	-
-s:6Charts17AnnotationContextV10targetSizeSo6CGSizeVvp	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
+s:6Charts17AnnotationContextV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testAnnotationContextTargetSize	Wave 8 normalized metadata follow-up behavior.
+s:6Charts17AnnotationContextV10targetSizeSo6CGSizeVvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testAnnotationContextTargetSize	Wave 8 normalized metadata follow-up behavior.
 s:6Charts18AnnotationPositionV	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnnotationPositionCatalog	
 s:6Charts18AnnotationPositionV10topLeadingACvpZ	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testAnnotationCornerPositions	
 s:6Charts18AnnotationPositionV11topTrailingACvpZ	implemented	test:full/charts/tests/agent/ChartsPlotEngineTests.swift#testAnnotationCornerPositions	
@@ -1603,7 +1603,7 @@ s:6Charts18PositionScaleRangePA2A013PlotDimensioncD0VRszrlE04plotF0AEvpZ	impleme
 s:6Charts18PositionScaleRangePA2A013PlotDimensioncD0VRszrlE04plotF0AEvpZ::SYNTHESIZED::s:6Charts23PlotDimensionScaleRangeV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testPlotDimensionPaddingPixels	
 s:6Charts19AnyChartSymbolShapeV	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
 s:6Charts19AnyChartSymbolShapeV14AnimatableDataa	declared	source:full/charts/ChartsSurface.swift#AnyChartSymbolShape	-
-s:6Charts19AnyChartSymbolShapeV18perceptualUnitRectSo6CGRectVvp	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
+s:6Charts19AnyChartSymbolShapeV18perceptualUnitRectSo6CGRectVvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testSymbolPerceptualUnitRects	Wave 8 normalized metadata follow-up behavior.
 s:6Charts19AnyChartSymbolShapeV4Bodya	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
 s:6Charts19AnyChartSymbolShapeV4path2in7SwiftUI4PathVSo6CGRectV_tF	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
 s:6Charts19AnyChartSymbolShapeVyAcA0cdE0_pcfc	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
@@ -8570,10 +8570,10 @@ s:SLsE3zzzopys19PartialRangeThroughVyxGxFZ::SYNTHESIZED::s:s6UInt64V	deferred		S
 s:SN6ChartsSBRzrlE11VisualValuea	deferred		No compiling declaration with this identifier exists in the portable Charts sources yet.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:10Foundation4DateV	deferred		Stdlib Comparable/Equatable/Integer operator synthesized onto Plottable-conforming types; Charts does not redeclare the operator.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts10NumberBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testNumberBinsThresholdsCollection	
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts11Chart3DPoseV	declared	source:full/charts/ChartsSurface.swift#Chart3DPose	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts18AnnotationPositionV	declared	source:full/charts/Charts.swift#AnnotationPosition	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts18MarkStackingMethodV	declared	source:full/charts/ChartsSurface.swift#MarkStackingMethod	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts23Chart3DCameraProjectionV	declared	source:full/charts/ChartsSurface.swift#Chart3DCameraProjection	-
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts11Chart3DPoseV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testSynthesizedInequalityWitnesses	Wave 8 normalized metadata follow-up behavior.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts18AnnotationPositionV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testSynthesizedInequalityWitnesses	Wave 8 normalized metadata follow-up behavior.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts18MarkStackingMethodV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testSynthesizedInequalityWitnesses	Wave 8 normalized metadata follow-up behavior.
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts23Chart3DCameraProjectionV	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testSynthesizedInequalityWitnesses	Wave 8 normalized metadata follow-up behavior.
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts24BasicChart3DSurfaceStyleV	implemented	test:full/charts/tests/agent/ChartsMarkLayoutTests.swift#testBasicChart3DSurfaceStyleHeightBased	
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:6Charts8DateBinsV	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testDateBinsThresholdsCollection	
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:7SwiftUI11AnyGradientV	deferred		Operator has no identifier anchor in product sources.

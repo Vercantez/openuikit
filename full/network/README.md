@@ -181,27 +181,29 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 Before: **1921 implemented / 241 declared / 885 deferred / 0 unavailable /
 0 not-applicable** (2162 nondeferred).
 
-This pass adds focused runtime coverage for 80 synthesized
+This pass adds focused runtime coverage for 304 synthesized
 `FixedWidthInteger` witnesses that the pinned Network symbol graph exposes for
 the eight concrete signed and unsigned integer widths. The tests exercise bit
 width, endian values and initializers, truncation, byte swapping, remainder,
-and wrapping addition/subtraction for every concrete type. These are genuine
+wrapping addition/subtraction, comparisons, range expressions, bitwise
+operations, quotient/remainder, strides, shifts, and descriptions for every
+concrete type. These are genuine
 Swift standard-library behaviors imported into the graph; they do not pretend
 to provide an Apple network service. Existing POSIX TCP/UDP, listener, path,
 TXT, WebSocket, and framer behavior is unchanged. TLS, QUIC, Bonjour/mDNS, and
 browser service discovery retain their explicit fail-closed boundaries.
 
-After: **2001 implemented / 241 declared / 805 deferred / 0 unavailable /
-0 not-applicable** (2242 nondeferred). Implemented gain **+80**.
+After: **2225 implemented / 241 declared / 581 deferred / 0 unavailable /
+0 not-applicable** (2466 nondeferred). Implemented gain **+304**.
 
-Top-5 `implemented` evidence distribution (of 2001):
+Top-5 `implemented` evidence distribution (of 2225):
 
-1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (9.5%)
-2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (4.3%)
-3. `NetworkCStructInitTests.swift#testCStructRawValueInitializers` — 83 (4.1%)
-4. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (3.5%)
-5. `NetworkTypedTransportTests.swift#testNWParametersProviderFluentBuildersOnTCP`
-   — 66 (3.3%)
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (8.6%)
+2. `NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses`
+   — 88 (4.0%)
+3. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (3.9%)
+4. `NetworkCStructInitTests.swift#testCStructRawValueInitializers` — 83 (3.7%)
+5. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (3.2%)
 
 The required environment probe emitted
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
