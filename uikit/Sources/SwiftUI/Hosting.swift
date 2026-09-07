@@ -1178,11 +1178,25 @@ private func _openFirstButtonAction(
 @MainActor
 private func _openImageBarButtonItem(from node: _OpenViewNode) -> UIBarButtonItem? {
     guard let name = _openFirstSystemImageName(in: node) else { return nil }
-    // Only the search system item is a vector we can draw. Other SF names
-    // (gearshape, xmark) stay SwiftUI custom views so tests still find
-    // `SwiftUI.Image.systemName.*`, sitting in a 44×44 glass platter.
-    guard name == "magnifyingglass" else { return nil }
-    let item = UIBarButtonItem(barButtonSystemItem: .search, target: nil, action: nil)
+    let item: UIBarButtonItem
+    if name == "magnifyingglass" {
+        item = UIBarButtonItem(barButtonSystemItem: .search, target: nil, action: nil)
+    } else if OpenUIKitRuntime.systemFontCut == .iOS {
+        // MEASURED HackersRowMetrics / realapp_hackers_feed_light,
+        // iPhone 16 @3x, iOS 26.1: SwiftUI's gear toolbar label becomes
+        // a UIKit UIImageView with preferred body / medium / large,
+        // even when the source Label uses .font(.headline). Its 17 pt
+        // alignment box is 27.333 x 27, not the blank custom symbol's
+        // 44 x 44. Use the existing oracle mask through UIKit's image
+        // item path; unsupported symbols keep their custom view.
+        let configuration = UIImage.SymbolConfiguration(
+            pointSize: 17, weight: .medium, scale: .large)
+        guard let image = UIImage(systemName: name, withConfiguration: configuration)
+        else { return nil }
+        item = UIBarButtonItem(image: image, style: .plain, target: nil, action: nil)
+    } else {
+        return nil
+    }
     if let action = _openFirstButtonAction(in: node) {
         item.primaryAction = UIAction(title: "", handler: { _ in action() })
     }
@@ -4360,19 +4374,20 @@ private enum _ViewRenderer {
         case .insetGrouped, .sidebar: horizontalInset = 12
         case .automatic, .plain, .grouped: horizontalInset = 0
         }
-        // MEASURED realapp_hackers_feed_light, iPhone 16 @3x / iOS 26.1:
-        // `.plain` ListCollectionViewCell is full-width `[0, 0, 393, h]`
-        // with h 127.333 (two-line title) / 107 (one-line). Port content
-        // without insets measured ~75; 16+75+16 = 107 and
-        // 16+95.333+16 = 127.333. Separator
-        // `_UICollectionViewListSeparatorView [83, y, 294, 1]`:
-        // 83 = 16 leading + 55 thumbnail + 12 HStack spacing;
-        // 294 = 393 − 83 − 16 trailing; height 1 pt.
+        // MEASURED HackersRowMetrics, iPhone 16 @3x / SE @2x,
+        // iOS 26.1 (2026-09-07): plain List content starts 15 pt below
+        // the cell top and ends 15 pt above its bottom. At 3x the text
+        // column is 97.333 / 77 high, so rows are 127.333 / 107, exactly
+        // realapp_hackers_feed_light. At 2x: 98 / 77.5 -> 128 / 107.5.
+        // The old 16 + content + 16 added 2 pt per row. The 1 pt
+        // separator overlays the row bottom; it does not add height.
+        // Horizontal inset remains 16: separator x = 16 + 55 + 12 = 83,
+        // width = 393 - 83 - 16 = 294 (golden layout dump).
         let iOSPlainRowInsets: UIEdgeInsets
         if OpenUIKitRuntime.systemFontCut == .iOS {
             switch environment.listStyle.storage {
             case .automatic, .plain:
-                iOSPlainRowInsets = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+                iOSPlainRowInsets = UIEdgeInsets(top: 15, left: 16, bottom: 15, right: 16)
             default:
                 iOSPlainRowInsets = .zero
             }

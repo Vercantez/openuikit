@@ -477,6 +477,15 @@ final class _UIBarButtonItemView: UIControl {
         if item.customView != nil {
             return CGSize(width: contentSize.width, height: platterHeight)
         }
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           item._isolatesPlatter, item.image?.isSymbolImage == true {
+            // MEASURED realapp_hackers_feed_light / HackersRowMetrics,
+            // iPhone 16 @3x and SE @2x, iOS 26.1: a SwiftUI toolbar
+            // symbol occupies a 44 pt isolated platter even when its
+            // alignment box is 27.333 / 27.5 wide. Adding UIKit's
+            // ordinary image-item insets would widen the gear to 49.333.
+            return CGSize(width: platterHeight, height: platterHeight)
+        }
         if item.iOSHarvestedSystemImageName != nil {
             // MEASURED Notes t200 platter `[315, 10, 44, 44]`: the 24×28
             // trash stamp sits inside the 36×36 item (4 pt platter pad),
@@ -522,6 +531,16 @@ final class _UIBarButtonItemView: UIControl {
         var f = CGRect(x: ((bounds.width - s.width) / 2).rounded() ,
                        y: ((bounds.height - s.height) / 2).rounded(),
                        width: s.width, height: s.height)
+        if OpenUIKitRuntime.systemFontCut == .iOS,
+           item._isolatesPlatter, item.image?.isSymbolImage == true {
+            // MEASURED HackersRowMetrics, iPhone 16 @3x / iOS 26.1:
+            // the 27.333 x 27 gear is at (8.333, 9) in its 44 pt
+            // platter; whole-point x rounding shifts its ink left 1 px.
+            // Floor the horizontal centre to the device grid. The SE
+            // @2x probe gives width 27.5 and local x 8 (centre 8.25).
+            let scale = UIScreen.main.scale
+            f.origin.x = ((bounds.width - s.width) / 2 * scale).rounded(.down) / scale
+        }
         // MEASURED Notes t200 UIImageView abs [324.817, 16.817, 24, 28]
         // in platter [315, 10, 44, 44] → local (10, 7) after the 0.183
         // glass offset. Centered y is 8; px (650, 34) = (325, 17)
