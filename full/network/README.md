@@ -64,7 +64,7 @@ Linux has no Network.framework daemon, Apple TLS/QUIC stack, or mDNS responder.
   synchronous `start()` on the typed types instead.
 - Wi-Fi Aware, ethernet-channel hardware, and Security `sec_protocol_*`
   identity beyond opaque stand-ins need an Apple-oracle probe.
-- Stdlib integer protocol witnesses that the extractor attributed to Network
+- Remaining stdlib integer protocol witnesses that the extractor attributed to Network
   are `deferred` (they are not SwiftUI cross-import overlays, so they cannot
   be `not-applicable`).
 - Dispatch queue identity and after-return timing on Apple are unobserved;
@@ -72,7 +72,7 @@ Linux has no Network.framework daemon, Apple TLS/QUIC stack, or mDNS responder.
   (or inline when already on that queue) so a host test can observe the first
   snapshot before `start` returns.
 
-## Depth pass 2026-09 (wave 8)
+## Earlier depth repair
 
 Second pass over the existing first-pass tree (3047 precise IDs). Coverage
 before this pass: **1182 implemented / 872 declared / 333 deferred / 0
@@ -175,6 +175,49 @@ FRAMEWORK_FANOUT_HOST_OK module=Network dylib=libNetwork.dylib
 ```
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. Swift 6.2.4 / linux compiled `libNetwork.dylib` with a clean product tree.
+
+## Depth pass 2026-09 (wave 8)
+
+Before: **1921 implemented / 241 declared / 885 deferred / 0 unavailable /
+0 not-applicable** (2162 nondeferred).
+
+This pass adds focused runtime coverage for 80 synthesized
+`FixedWidthInteger` witnesses that the pinned Network symbol graph exposes for
+the eight concrete signed and unsigned integer widths. The tests exercise bit
+width, endian values and initializers, truncation, byte swapping, remainder,
+and wrapping addition/subtraction for every concrete type. These are genuine
+Swift standard-library behaviors imported into the graph; they do not pretend
+to provide an Apple network service. Existing POSIX TCP/UDP, listener, path,
+TXT, WebSocket, and framer behavior is unchanged. TLS, QUIC, Bonjour/mDNS, and
+browser service discovery retain their explicit fail-closed boundaries.
+
+After: **2001 implemented / 241 declared / 805 deferred / 0 unavailable /
+0 not-applicable** (2242 nondeferred). Implemented gain **+80**.
+
+Top-5 `implemented` evidence distribution (of 2001):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (9.5%)
+2. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (4.3%)
+3. `NetworkCStructInitTests.swift#testCStructRawValueInitializers` — 83 (4.1%)
+4. `NetworkTests.swift#testNWParametersPresetsAndBuilders` — 71 (3.5%)
+5. `NetworkTypedTransportTests.swift#testNWParametersProviderFluentBuildersOnTCP`
+   — 66 (3.3%)
+
+The required environment probe emitted
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
+The sealed host gate then ended with the deliverable, reference, runtime, and
+host markers recorded below:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Network lane=medium-full symbols=3047
+FRAMEWORK_FANOUT_REFERENCE_OK
+NETWORK_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Network dylib=libNetwork.dylib
+```
+
+Unresolved behavioral questions remain recorded in `oracle-questions.tsv`;
+in particular, callback timing and Apple service behavior remain deferred
+rather than inferred from declarations or independent bindings.
 
 ### Fourth pass (this run)
 
