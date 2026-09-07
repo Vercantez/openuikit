@@ -572,7 +572,30 @@ open class UITableViewCell: UIView, ReusableView {
     /// 99.689 → 99.554. Two samples disagree; the xib oracle wins and
     /// Forms-ipad x=20 stays OPEN.
     override var _defaultBaseLayoutMargins: UIEdgeInsets {
-        UIEdgeInsets(top: 15, left: trailingMargin, bottom: 15, right: trailingMargin)
+        UIEdgeInsets(top: 15, left: contentMargin, bottom: 15, right: contentMargin)
+    }
+    /// The horizontal layout margin of the cell and its content view. MEASURED
+    /// realapp_ledger_light golden (iPhone 16 / iOS 26.1, 2026-09-07) and the
+    /// focus-fidelity-tables tableprobe on the same device: inside an
+    /// inset-grouped card (itself at the 20 pt system inset) the margins are
+    /// [15, 16, 15, 16] and labels constrained to the margins guide sit at
+    /// x 36 = 20 + 16, not 40. Plain/grouped cells keep the 20 pt system
+    /// margin (realapp_storage_light SwitchCell [15, 20, 15, 20]). Accessories
+    /// keep `trailingMargin` (20): the same probe puts a custom accessory's
+    /// right edge at 353 - 20 and the PaddedSwitch at x 262.
+    var contentMargin: CGFloat {
+        if UITableViewCell.isIOSChrome, !UITableView.isPadChrome, tableView?.style == .insetGrouped {
+            // MEASURED both ways: iPhone 16 portrait (393 pt) labels at 36 =
+            // card 20 + 16; SE landscape (667 pt, Ledger.t200.landscape golden)
+            // labels at 40 = card 20 + 20. The inner inset follows the window
+            // width at 414, not the 390 threshold of the system margin (the
+            // merge check refused a flat 16: three Ledger landscape rows
+            // dropped ~1 pt).
+            let width = window?.bounds.width ?? tableView?.bounds.width ?? bounds.width
+            return width >= 414 ? UITableView.iOSSystemMargin(width: width)
+                                : UITableView.iOSPhoneInsetGroupedInnerInset
+        }
+        return trailingMargin
     }
     var iOSMargin: CGFloat {
         if UITableView.isPadChrome {
