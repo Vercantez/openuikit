@@ -19,7 +19,14 @@ set -e
 cd "$(dirname "$0")/../.."          # monorepo root
 # One merge at a time: several waiters once launched merges into main together.
 MERGE_LOCK=/tmp/agent_merge.lock
-until mkdir "$MERGE_LOCK" 2>/dev/null; do sleep 30; done
+until mkdir "$MERGE_LOCK" 2>/dev/null; do
+  # A lock whose recorded owner is dead is stale (2026-09-17: two merges slept
+  # 38 min and 3 h on locks left by finished operator chains); reclaim it.
+  lock_pid=$(cat "$MERGE_LOCK/pid" 2>/dev/null)
+  if [ -n "$lock_pid" ] && ! kill -0 "$lock_pid" 2>/dev/null; then rm -rf "$MERGE_LOCK"; continue; fi
+  sleep 30
+done
+echo $$ > "$MERGE_LOCK/pid"
 echo $$ > "$MERGE_LOCK/pid"   # the holder; a monitor removes the lock only when this pid is dead
 trap 'rmdir "$MERGE_LOCK" 2>/dev/null' EXIT INT TERM HUP
 ROOT=$(pwd)
