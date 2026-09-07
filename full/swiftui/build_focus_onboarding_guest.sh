@@ -743,8 +743,10 @@ run_link libOpenDispatch "${LD[@]}" -dylib -dead_strip -undefined dynamic_lookup
     || die 'run-local OpenDispatch Mach-O bridge ID drifted'
 dispatch_glibc=$(llvm-nm-18 --undefined-only --extern-only --just-symbol-name \
     "$DISPATCH_DARWIN" | grep -c '^_glibc_openui_dispatch_host_v1_' || true)
-[ "$dispatch_glibc" -eq 12 ] \
-    || die "run-local OpenDispatch host import count $dispatch_glibc, expected 12"
+# 13 since 58292232 (Focus as a Linux guest added the DispatchQueue.sync host
+# entry glibc_openui_dispatch_host_v1_sync); verify90 rung b measured 13.
+[ "$dispatch_glibc" -eq 13 ] \
+    || die "run-local OpenDispatch host import count $dispatch_glibc, expected 13"
 "${SWIFTC[@]}" -parse-as-library "${PACKAGE_CINC[@]}" \
     -I "$PACKAGE" \
     -module-name Dispatch -module-link-name Dispatch -emit-module \
