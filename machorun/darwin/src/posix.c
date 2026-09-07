@@ -3003,6 +3003,8 @@ EXPORT int futex(unsigned int *uaddr, int op, unsigned int val,
 #define MR_D_SO_NREAD  0x1020
 #define MR_D_SO_NWRITE 0x1024
 
+static int mr_so_d2l(int opt);   /* the shared SO_* table, defined with the socket family below */
+
 EXPORT int getsockopt(int s, int level, int optname, void *optval, unsigned *optlen)
 {
     if (level != MR_D_SOL_SOCKET)
@@ -3027,11 +3029,316 @@ EXPORT int getsockopt(int s, int level, int optname, void *optval, unsigned *opt
         *optlen = sizeof(int);
         return MR_ERRNO_CALL(glibc_ioctl(s, req, optval));
     }
-    default:
-        mr_bail("getsockopt(SOL_SOCKET, ...): only SO_ACCEPTCONN, SO_NREAD and "
-                "SO_NWRITE are translated. Every SO_* number differs between "
-                "the two systems, so a forwarded one names a different option.");
+    default: {
+        int l = mr_so_d2l(optname);
+        if (l < 0)
+            mr_bail("getsockopt(SOL_SOCKET, ...): only the SO_* options in "
+                    "mr_so_d2l (plus SO_ACCEPTCONN, SO_NREAD, SO_NWRITE) are "
+                    "translated. Every SO_* number differs between the two "
+                    "systems, so a forwarded one names a different option.");
+        return MR_ERRNO_CALL(glibc_getsockopt(s, MR_L_SOL_SOCKET, l, optval, optlen));
     }
+    }
+}
+
+/* --- BSD sockets: same sizes, different first bytes -------------------- */
+
+/* Added 2026-09-07 for the Ledger conformance app's loopback HTTP server
+ * (socket / setsockopt(SO_REUSEADDR) / bind / listen / getsockname / accept,
+ * then read/write/close): without `listen` the guest rendered five Ledger rows
+ * where iOS renders six (focus-score.md, realapp_ledger_light 87.915 FAIL).
+ *
+ * NOTHING HERE IS A PLAIN FORWARD, and the sockaddr is the one that hides:
+ *
+ *     struct sockaddr_in   Darwin { u8 sin_len; u8 sin_family; u16 port; ... }
+ *                          Linux  { u16 sin_family;            u16 port; ... }
+ *
+ * Same 16 bytes. A forwarded Darwin address makes the Linux kernel read
+ * family = sin_len | (AF_INET << 8) = 0x0210 -- EAFNOSUPPORT when you are
+ * lucky, and a real AF_* that happens to equal the length when you are not.
+ * sockaddr_in6 (28 bytes) and sockaddr_un (Darwin 106 / Linux 110) have the
+ * same two-byte head and are rewritten the same way; everything after the
+ * head is byte-identical on both systems (port and addresses are network
+ * order, flowinfo/scope_id are host u32 on both).
+ *
+ *     AF_UNIX 1/1   AF_INET 2/2   AF_INET6 30/10      (domain, both ways)
+ *     SOCK_STREAM 1/1   SOCK_DGRAM 2/2   SOCK_RAW 3/3  (type; Darwin has no
+ *                                                       SOCK_NONBLOCK/CLOEXEC bits)
+ *     SOL_SOCKET 0xffff/1   IPPROTO_TCP 6/6   IPPROTO_IPV6 41/41
+ *     SO_REUSEADDR 0x0004/2  SO_KEEPALIVE 0x0008/9  SO_BROADCAST 0x0020/6
+ *     SO_REUSEPORT 0x0200/15 SO_SNDBUF 0x1001/7     SO_RCVBUF 0x1002/8
+ *     SO_SNDTIMEO 0x1005/21  SO_RCVTIMEO 0x1006/20  SO_ERROR 0x1007/4
+ *     SO_TYPE 0x1008/3       TCP_NODELAY 1/1        IPV6_V6ONLY 27/26
+ *     MSG_OOB 1/1  MSG_PEEK 2/2  MSG_DONTWAIT 0x80/0x40  MSG_NOSIGNAL 0x80000/0x4000
+ *
+ * SO_NOSIGPIPE (Darwin 0x1022) has no Linux counterpart. It is ACCEPTED and
+ * remembered per descriptor (a 1024-bit map), and send/sendto add
+ * MSG_NOSIGNAL for a marked descriptor -- that is exactly the Darwin
+ * contract (no SIGPIPE on EPIPE for that socket), unlike fcntl's
+ * F_SETNOSIGPIPE which applies to non-sockets too and stays ENOTSUP.
+ * Options outside the table BAIL rather than forward, as getsockopt does. */
+
+#define MR_D_AF_UNIX   1
+#define MR_D_AF_INET   2
+#define MR_D_AF_INET6  30
+#define MR_L_AF_INET6  10
+
+static int mr_af_d2l(int af)
+{
+    switch (af) {
+    case 0: case MR_D_AF_UNIX: case MR_D_AF_INET: return af;
+    case MR_D_AF_INET6: return MR_L_AF_INET6;
+    default: return -1;
+    }
+}
+
+static int mr_af_l2d(int af)
+{
+    switch (af) {
+    case 0: case MR_D_AF_UNIX: case MR_D_AF_INET: return af;
+    case MR_L_AF_INET6: return MR_D_AF_INET6;
+    default: return -1;
+    }
+}
+
+/* Darwin -> Linux socket option number, SOL_SOCKET level; -1 = not mapped. */
+static int mr_so_d2l(int opt)
+{
+    switch (opt) {
+    case 0x0004: return 2;    /* SO_REUSEADDR */
+    case 0x0008: return 9;    /* SO_KEEPALIVE */
+    case 0x0020: return 6;    /* SO_BROADCAST */
+    case 0x0200: return 15;   /* SO_REUSEPORT */
+    case 0x1001: return 7;    /* SO_SNDBUF */
+    case 0x1002: return 8;    /* SO_RCVBUF */
+    case 0x1005: return 21;   /* SO_SNDTIMEO (struct timeval agrees: 16 bytes) */
+    case 0x1006: return 20;   /* SO_RCVTIMEO */
+    case 0x1007: return 4;    /* SO_ERROR */
+    case 0x1008: return 3;    /* SO_TYPE */
+    case MR_D_SO_ACCEPTCONN: return MR_L_SO_ACCEPTCONN;
+    default: return -1;
+    }
+}
+
+/* The largest Linux sockaddr we rewrite: sockaddr_un (110). */
+#define MR_SA_MAX 128
+#define MR_D_SOCKADDR_UN_LEN 106
+#define MR_L_SOCKADDR_UN_LEN 110
+
+/* Darwin sockaddr (sa_len, sa_family, body) -> Linux (family u16, body).
+ * Returns the Linux length, or -1 with errno EAFNOSUPPORT set. */
+static int mr_sockaddr_d2l(const void *d, unsigned dlen, unsigned char *l)
+{
+    const unsigned char *s = (const unsigned char *)d;
+    int af, laf;
+    unsigned body;
+    if (!d || dlen < 2 || dlen > MR_SA_MAX) { *mr_errno_slot() = 22; return -1; }   /* EINVAL */
+    af = s[1];
+    laf = mr_af_d2l(af);
+    if (laf < 0) { *mr_errno_slot() = 47; return -1; }                             /* EAFNOSUPPORT */
+    body = dlen - 2;
+    if (af == MR_D_AF_UNIX && body > MR_L_SOCKADDR_UN_LEN - 2) body = MR_L_SOCKADDR_UN_LEN - 2;
+    l[0] = (unsigned char)(laf & 0xff);
+    l[1] = (unsigned char)((laf >> 8) & 0xff);
+    glibc_memcpy(l + 2, s + 2, body);
+    return (int)(body + 2);
+}
+
+/* Linux sockaddr -> Darwin, into the caller's buffer of *dlen bytes;
+ * *dlen becomes the full Darwin length (BSD semantics: truncated copy, full
+ * length reported). */
+static void mr_sockaddr_l2d(const unsigned char *l, unsigned llen, void *d, unsigned *dlen)
+{
+    unsigned char *o = (unsigned char *)d;
+    unsigned avail = dlen ? *dlen : 0, full, n;
+    int af = l[0] | (l[1] << 8), daf = mr_af_l2d(af);
+    if (daf < 0) daf = af;                        /* unmapped family: report as-is */
+    full = llen;                                  /* Darwin length == Linux length for INET/INET6 */
+    if (af == MR_D_AF_UNIX && full > MR_D_SOCKADDR_UN_LEN) full = MR_D_SOCKADDR_UN_LEN;
+    n = full < avail ? full : avail;
+    if (o && n >= 1) o[0] = (unsigned char)full;
+    if (o && n >= 2) o[1] = (unsigned char)daf;
+    if (o && n > 2)  glibc_memcpy(o + 2, l + 2, n - 2);
+    if (dlen) *dlen = full;
+}
+
+static unsigned char mr_nosigpipe[1024 / 8];
+
+static int mr_msg_d2l(int f)
+{
+    int l = 0;
+    if (f & 0x1)     l |= 0x1;        /* MSG_OOB */
+    if (f & 0x2)     l |= 0x2;        /* MSG_PEEK */
+    if (f & 0x40)    l |= 0x100;      /* MSG_WAITALL: Darwin 0x40, Linux 0x100 */
+    if (f & 0x80)    l |= 0x40;       /* MSG_DONTWAIT */
+    if (f & 0x80000) l |= 0x4000;     /* MSG_NOSIGNAL */
+    if (f & ~(0x1 | 0x2 | 0x40 | 0x80 | 0x80000))
+        mr_bail("send/recv: a MSG_* flag outside OOB/PEEK/WAITALL/DONTWAIT/"
+                "NOSIGNAL. The numbers are rotated between the systems, so a "
+                "forwarded flag word means something else.");
+    return l;
+}
+
+static int mr_send_flags(int fd, int f)
+{
+    int l = mr_msg_d2l(f);
+    if (fd >= 0 && fd < 1024 && (mr_nosigpipe[fd >> 3] & (1u << (fd & 7))))
+        l |= 0x4000;                  /* SO_NOSIGPIPE on this socket */
+    return l;
+}
+
+EXPORT int socket(int domain, int type, int protocol)
+{
+    int ld = mr_af_d2l(domain);
+    if (ld < 0) { *mr_errno_slot() = 47; return -1; }             /* EAFNOSUPPORT */
+    if (type < 1 || type > 3)
+        mr_bail("socket(): only SOCK_STREAM/SOCK_DGRAM/SOCK_RAW are translated "
+                "(Darwin has no SOCK_NONBLOCK/SOCK_CLOEXEC bits).");
+    int fd = MR_ERRNO_CALL(glibc_socket(ld, type, protocol));
+    if (fd >= 0 && fd < 1024) mr_nosigpipe[fd >> 3] &= (unsigned char)~(1u << (fd & 7));
+    return fd;
+}
+
+EXPORT int socketpair(int domain, int type, int protocol, int sv[2])
+{
+    int ld = mr_af_d2l(domain);
+    if (ld < 0) { *mr_errno_slot() = 47; return -1; }
+    if (type < 1 || type > 3)
+        mr_bail("socketpair(): only SOCK_STREAM/SOCK_DGRAM/SOCK_RAW are translated.");
+    return MR_ERRNO_CALL(glibc_socketpair(ld, type, protocol, sv));
+}
+
+EXPORT int bind(int fd, const void *addr, unsigned len)
+{
+    unsigned char l[MR_SA_MAX];
+    int n = mr_sockaddr_d2l(addr, len, l);
+    if (n < 0) return -1;
+    return MR_ERRNO_CALL(glibc_bind(fd, l, (unsigned)n));
+}
+
+EXPORT int connect(int fd, const void *addr, unsigned len)
+{
+    unsigned char l[MR_SA_MAX];
+    int n = mr_sockaddr_d2l(addr, len, l);
+    if (n < 0) return -1;
+    return MR_ERRNO_CALL(glibc_connect(fd, l, (unsigned)n));
+}
+
+EXPORT int listen(int fd, int backlog)
+{
+    return MR_ERRNO_CALL(glibc_listen(fd, backlog));
+}
+
+EXPORT int accept(int fd, void *addr, unsigned *len)
+{
+    unsigned char l[MR_SA_MAX];
+    unsigned ll = sizeof l;
+    int c = MR_ERRNO_CALL(glibc_accept(fd, addr ? l : 0, addr ? &ll : 0));
+    if (c >= 0 && addr) mr_sockaddr_l2d(l, ll, addr, len);
+    if (c >= 0 && c < 1024) mr_nosigpipe[c >> 3] &= (unsigned char)~(1u << (c & 7));
+    return c;
+}
+
+EXPORT int getsockname(int fd, void *addr, unsigned *len)
+{
+    unsigned char l[MR_SA_MAX];
+    unsigned ll = sizeof l;
+    int rc = MR_ERRNO_CALL(glibc_getsockname(fd, l, &ll));
+    if (rc == 0) mr_sockaddr_l2d(l, ll, addr, len);
+    return rc;
+}
+
+EXPORT int getpeername(int fd, void *addr, unsigned *len)
+{
+    unsigned char l[MR_SA_MAX];
+    unsigned ll = sizeof l;
+    int rc = MR_ERRNO_CALL(glibc_getpeername(fd, l, &ll));
+    if (rc == 0) mr_sockaddr_l2d(l, ll, addr, len);
+    return rc;
+}
+
+EXPORT int setsockopt(int fd, int level, int optname, const void *optval, unsigned optlen)
+{
+    if (level == MR_D_SOL_SOCKET) {
+        if (optname == 0x1022) {                                  /* SO_NOSIGPIPE */
+            int on = optval && optlen >= sizeof(int) ? *(const int *)optval : 1;
+            if (fd < 0 || fd >= 1024) { *mr_errno_slot() = 9; return -1; }   /* EBADF */
+            if (on) mr_nosigpipe[fd >> 3] |= (unsigned char)(1u << (fd & 7));
+            else    mr_nosigpipe[fd >> 3] &= (unsigned char)~(1u << (fd & 7));
+            return 0;
+        }
+        int l = mr_so_d2l(optname);
+        if (l < 0)
+            mr_bail("setsockopt(SOL_SOCKET, ...): an SO_* option outside mr_so_d2l. "
+                    "Every SO_* number differs between the two systems, so a "
+                    "forwarded one sets a different option.");
+        return MR_ERRNO_CALL(glibc_setsockopt(fd, MR_L_SOL_SOCKET, l, optval, optlen));
+    }
+    if (level == 6) {                                             /* IPPROTO_TCP */
+        if (optname != 1)                                         /* TCP_NODELAY agrees */
+            mr_bail("setsockopt(IPPROTO_TCP, ...): only TCP_NODELAY is translated.");
+        return MR_ERRNO_CALL(glibc_setsockopt(fd, 6, 1, optval, optlen));
+    }
+    if (level == 41) {                                            /* IPPROTO_IPV6 */
+        if (optname != 27)                                        /* IPV6_V6ONLY 27 -> 26 */
+            mr_bail("setsockopt(IPPROTO_IPV6, ...): only IPV6_V6ONLY is translated.");
+        return MR_ERRNO_CALL(glibc_setsockopt(fd, 41, 26, optval, optlen));
+    }
+    mr_bail("setsockopt(): only SOL_SOCKET, IPPROTO_TCP and IPPROTO_IPV6 levels "
+            "are translated (Darwin's SOL_SOCKET is 65535, Linux's is 1, and 1 "
+            "is a valid level).");
+}
+
+EXPORT int shutdown(int fd, int how)
+{
+    if (how < 0 || how > 2) { *mr_errno_slot() = 22; return -1; }   /* SHUT_* agree */
+    return MR_ERRNO_CALL(glibc_shutdown(fd, how));
+}
+
+EXPORT long send(int fd, const void *buf, size_t n, int flags)
+{
+    return MR_ERRNO_CALL(glibc_send(fd, buf, n, mr_send_flags(fd, flags)));
+}
+
+EXPORT long recv(int fd, void *buf, size_t n, int flags)
+{
+    return MR_ERRNO_CALL(glibc_recv(fd, buf, n, mr_msg_d2l(flags)));
+}
+
+EXPORT long sendto(int fd, const void *buf, size_t n, int flags, const void *addr, unsigned len)
+{
+    unsigned char l[MR_SA_MAX];
+    int ln = 0;
+    if (addr && len) { ln = mr_sockaddr_d2l(addr, len, l); if (ln < 0) return -1; }
+    return MR_ERRNO_CALL(glibc_sendto(fd, buf, n, mr_send_flags(fd, flags),
+                                      addr ? l : 0, (unsigned)ln));
+}
+
+EXPORT long recvfrom(int fd, void *buf, size_t n, int flags, void *addr, unsigned *len)
+{
+    unsigned char l[MR_SA_MAX];
+    unsigned ll = sizeof l;
+    long rc = MR_ERRNO_CALL(glibc_recvfrom(fd, buf, n, mr_msg_d2l(flags),
+                                           addr ? l : 0, addr ? &ll : 0));
+    if (rc >= 0 && addr) mr_sockaddr_l2d(l, ll, addr, len);
+    return rc;
+}
+
+EXPORT int inet_pton(int af, const char *src, void *dst)
+{
+    int laf = mr_af_d2l(af);
+    if (laf <= 0) { *mr_errno_slot() = 47; return -1; }
+    return MR_ERRNO_CALL(glibc_inet_pton(laf, src, dst));
+}
+
+EXPORT const char *inet_ntop(int af, const void *src, char *dst, unsigned size)
+{
+    int laf = mr_af_d2l(af);
+    if (laf <= 0) { *mr_errno_slot() = 47; return 0; }
+    mr_errno_in();
+    const char *r = glibc_inet_ntop(laf, src, dst, size);
+    mr_errno_out();
+    return r;
 }
 
 /* --- fcntl: variadic, and two commands Linux simply does not have --------- */
