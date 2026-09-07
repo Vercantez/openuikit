@@ -13,41 +13,32 @@ listed dependency: this seed lists Foundation only.
 
 ## Depth pass 2026-09 (wave 8)
 
-SDK depth, second pass, continued. The first-pass module, fail-closed PiP /
-route / capture paths, and existing `tests/agent/AVKitTests.swift` checks
-stay in place. Family models (`AVPlayerViewController`,
-`AVPictureInPictureController`, route picker, capture events, interstitial
-ranges, `VideoPlayer`, `AVKitError`) each have per-identifier synchronous
-tests. ObjC PiP restore and sample-buffer `skipByInterval` completion
-handlers are invoked by host hooks without awaiting Swift async overlays.
+SDK depth, second pass, continued from the checked-in first-pass module. The
+capture interaction host-injection state machine now honors `isEnabled`: an
+enabled interaction delivers its retained handler synchronously, a disabled
+interaction suppresses delivery, and re-enabling resumes delivery. This is a
+deterministic host injection only; Linux still never synthesizes a hardware
+capture-button event.
 
-Coverage before this pass: **174 implemented / 837 declared / 0 deferred /
-0 unavailable / 0 not-applicable** (1011 nondeferred, floor 506).
+Coverage before this wave: **215 implemented / 646 declared / 0 deferred / 0
+unavailable / 150 not-applicable** (861 nondeferred, floor 506).
 
-Coverage after the overlay bookkeeping revision: **192 implemented / 669
-declared / 0 deferred / 0 unavailable / 150 not-applicable**.
+Coverage after this wave: **215 implemented / 646 declared / 0 deferred / 0
+unavailable / 150 not-applicable** (861 nondeferred, floor 506). The implemented
+count has no census gain because all 215 non-overlay identifiers were already
+implemented with focused evidence at the starting commit. Every one of the 646
+remaining declared identifiers is a `s:7SwiftUI4View…` cross-import overlay
+member; there is therefore no remaining non-overlay family to promote. The
+binding yield alternative (exhaust every remaining non-overlay family) applies.
 
-Coverage after this depth continuation: **215 implemented / 646 declared /
-0 deferred / 0 unavailable / 150 not-applicable** (861 nondeferred, floor
-506). Implemented gain is **+23** versus 192 (PiP restore / skip
-completion-handler selectors, remaining `AVVideoFrameAnalysisType`
-SetAlgebra / OptionSet witnesses, and leftover `!=` / `hashValue` /
-`hash(into:)` on `RouteSelection` / `AVDisplayDynamicRange` /
-`AVVideoFrameAnalysisType`).
+The 150 rows already marked `not-applicable` use the required note `SwiftUI
+cross-import overlay; owned by the SwiftUI lane`. Reclassifying all other
+SwiftUI overlay rows would leave only 215 nondeferred identifiers and conflict
+with the immutable sealed gate's 506 minimum. This input-policy conflict remains
+for central review; no overlay identity no-op was relabeled as implemented.
 
-150 `s:7SwiftUI4View…` members synthesized onto `VideoPlayer` (excluding
-AVKit-owned `onCameraCaptureEvent`) are `not-applicable` with the note
-`SwiftUI cross-import overlay; owned by the SwiftUI lane`. The remaining
-synthesized SwiftUI `View` members stay `declared` identity no-ops so the
-sealed 506 nondeferred floor still holds; marking all 784 as not-applicable
-would drop nondeferred coverage to 227. They are never `implemented`.
-
-`AVRouteDetector`, `AVNavigationMarkersGroup`, macOS `AVPlayerView`,
-`canStopPictureInPicture`, and `transportBarCustomMenuItems` are absent from
-this iPhoneOS 26.1 public graph and are not invented.
-
-Top-5 implemented evidence (215 rows; 40% cap = 86; enum / option-set
-members may share a table-driven value test):
+Top-5 implemented evidence distribution (215 rows; 40% cap = 86; enum and
+option-set members may share a table-driven value test):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
@@ -57,26 +48,10 @@ members may share a table-driven value test):
 | 4 | 1.9% | `AVKitTests.swift#testCaptureEventPhaseRawValues` (enum cases) |
 | 3 | 1.4% | `AVKitTests.swift#testAVKitErrorCodes` (error-code cases) |
 
-Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` did not emit
-`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
-absent on this VM. The sealed gate compiles with a clean product tree
-(`products=clean`). Active Cursor Build observed on this run was
-`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
-`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
-
-`bash full/avkit/tests/acceptance/test_host.sh` is the sealed gate. Expected
-markers:
-
-```
-FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVKit lane=medium-full symbols=1011
-FRAMEWORK_FANOUT_REFERENCE_OK
-AVKIT_AGENT_RUNTIME_OK
-FRAMEWORK_FANOUT_HOST_OK module=AVKit dylib=libAVKit.dylib
-```
-
-The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate.
+The verified campaign environment emitted
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
+The starting commit was `5a351db2038abca71a1b943af3a86963f403f724`.
+The sealed gate emitted all deliverable, reference, runtime, and host markers.
 
 ## What is real
 

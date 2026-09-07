@@ -100,10 +100,18 @@ func testCaptureEventInteractionInitPrimaryEventHandlerSecondaryEventHandler() {
 
 func testCaptureEventInteractionIsEnabled() {
     avkitOnMain {
-        let interaction = AVCaptureEventInteraction { _ in }
+        var deliveries = 0
+        let interaction = AVCaptureEventInteraction { _ in deliveries += 1 }
         precondition(interaction.isEnabled == true)
+        interaction.openUIKitHostDeliver(AVCaptureEvent())
+        precondition(deliveries == 1)
         interaction.isEnabled = false
         precondition(interaction.isEnabled == false)
+        interaction.openUIKitHostDeliver(AVCaptureEvent())
+        precondition(deliveries == 1)
+        interaction.isEnabled = true
+        interaction.openUIKitHostDeliver(AVCaptureEvent())
+        precondition(deliveries == 2)
     }
 }
 

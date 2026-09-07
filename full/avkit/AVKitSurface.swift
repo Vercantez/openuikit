@@ -193,8 +193,10 @@ open class AVCaptureEventInteraction: NSObject {
 
     /// Hardware never delivers capture events on Linux. Host hook invokes the
     /// stored primary or secondary handler so tests can observe that they were
-    /// retained.
+    /// retained. Disabled interactions suppress delivery, matching the public
+    /// `isEnabled` state machine without claiming a hardware event occurred.
     public func openUIKitHostDeliver(_ event: AVCaptureEvent, secondary: Bool = false) {
+        guard isEnabled else { return }
         if secondary {
             secondaryHandler?(event)
         } else {
@@ -1060,4 +1062,3 @@ extension AVRoutePickerViewDelegate {
         _ = routePickerView
     }
 }
-
