@@ -387,9 +387,9 @@ previously declared `INMediaUserContext.SubscriptionStatus` and
 `INSticker.StickerType` cases.
 
 Before this wave: **3340 implemented / 369 declared / 451 deferred / 0
-unavailable / 0 not-applicable**. After this wave: **3700 implemented / 361
+unavailable / 0 not-applicable**. After this wave: **3709 implemented / 352
 declared / 99 deferred / 0 unavailable / 0 not-applicable**. The implemented
-gain is **+360**. Nondeferred coverage is now 4061 of 4160 rows.
+gain is **+369**. Nondeferred coverage is now 4061 of 4160 rows.
 
 Top-5 implemented evidence distribution after this wave:
 
@@ -405,6 +405,12 @@ The shared wave-12 citation is limited to enum and option-set protocol witnesses
 which the evidence rules explicitly permit to use one table-driven value test.
 It is not used for intent objects, coding, dispatch, service behavior, or other
 non-enum APIs.
+
+The final family extension also verifies that airline, airport, and airport-gate
+initializers retain their public values. `INBillPayee` now retains the designated
+initializer's `number` argument as `accountNumber`, alongside its speakable
+nickname and organization, with focused construction tests for all nine exact
+identifiers moved from declared to implemented.
 
 Fail-closed boundaries remain unchanged: Siri authorization/preferences,
 vocabulary and voice-shortcut service operations do not fabricate daemon,

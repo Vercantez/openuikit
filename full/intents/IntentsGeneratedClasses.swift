@@ -293,6 +293,7 @@ open class INBillPayee: NSObject, @unchecked Sendable {
     public convenience init?(nickname: INSpeakableString, number: String?, organizationName: INSpeakableString?) {
         self.init()
         self.nickname = nickname
+        self.accountNumber = number
         self.organizationName = organizationName
     }
     public required convenience init?(coder: NSCoder) {
