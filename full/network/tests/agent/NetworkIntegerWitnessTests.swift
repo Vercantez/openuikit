@@ -73,3 +73,93 @@ func testFixedWidthIntegerWrappingSubtractionWitnesses() {
     requireIntegerWitness(Int32.min &- 1 == Int32.max && UInt32.min &- 1 == UInt32.max, "32-bit wrapping subtract")
     requireIntegerWitness(Int64.min &- 1 == Int64.max && UInt64.min &- 1 == UInt64.max, "64-bit wrapping subtract")
 }
+
+// The pinned Network graph includes these concrete standard-library witnesses
+// for every signed and unsigned fixed-width integer.  Keep the checks generic
+// where the graph's identifier is a protocol-extension overload, and concrete
+// where it is a concrete BinaryInteger overload.
+private func integerComparableWitness<T: FixedWidthInteger>(_ a: T, _ b: T) -> (Bool, Bool, Bool, Bool, Bool, Bool) {
+    (a < b, a <= b, b > a, b >= a, a == a, a != b)
+}
+
+func testFixedWidthIntegerComparableWitnesses() {
+    requireIntegerWitness(integerComparableWitness(Int8(2), 3) == (true, true, true, true, true, true), "Int8 comparison")
+    requireIntegerWitness(integerComparableWitness(UInt8(2), 3) == (true, true, true, true, true, true), "UInt8 comparison")
+    requireIntegerWitness(integerComparableWitness(Int16(2), 3) == (true, true, true, true, true, true), "Int16 comparison")
+    requireIntegerWitness(integerComparableWitness(UInt16(2), 3) == (true, true, true, true, true, true), "UInt16 comparison")
+    requireIntegerWitness(integerComparableWitness(Int32(2), 3) == (true, true, true, true, true, true), "Int32 comparison")
+    requireIntegerWitness(integerComparableWitness(UInt32(2), 3) == (true, true, true, true, true, true), "UInt32 comparison")
+    requireIntegerWitness(integerComparableWitness(Int64(2), 3) == (true, true, true, true, true, true), "Int64 comparison")
+    requireIntegerWitness(integerComparableWitness(UInt64(2), 3) == (true, true, true, true, true, true), "UInt64 comparison")
+}
+
+func testFixedWidthIntegerConcreteComparisonWitnesses() {
+    requireIntegerWitness(Int8(2) < 3 && Int8(2) <= 3 && Int8(3) > 2 && Int8(3) >= 2 && Int8(2) == 2 && Int8(2) != 3, "Int8 concrete comparison")
+    requireIntegerWitness(UInt8(2) < 3 && UInt8(2) <= 3 && UInt8(3) > 2 && UInt8(3) >= 2 && UInt8(2) == 2 && UInt8(2) != 3, "UInt8 concrete comparison")
+    requireIntegerWitness(Int16(2) < 3 && Int16(2) <= 3 && Int16(3) > 2 && Int16(3) >= 2 && Int16(2) == 2 && Int16(2) != 3, "Int16 concrete comparison")
+    requireIntegerWitness(UInt16(2) < 3 && UInt16(2) <= 3 && UInt16(3) > 2 && UInt16(3) >= 2 && UInt16(2) == 2 && UInt16(2) != 3, "UInt16 concrete comparison")
+    requireIntegerWitness(Int32(2) < 3 && Int32(2) <= 3 && Int32(3) > 2 && Int32(3) >= 2 && Int32(2) == 2 && Int32(2) != 3, "Int32 concrete comparison")
+    requireIntegerWitness(UInt32(2) < 3 && UInt32(2) <= 3 && UInt32(3) > 2 && UInt32(3) >= 2 && UInt32(2) == 2 && UInt32(2) != 3, "UInt32 concrete comparison")
+    requireIntegerWitness(Int64(2) < 3 && Int64(2) <= 3 && Int64(3) > 2 && Int64(3) >= 2 && Int64(2) == 2 && Int64(2) != 3, "Int64 concrete comparison")
+    requireIntegerWitness(UInt64(2) < 3 && UInt64(2) <= 3 && UInt64(3) > 2 && UInt64(3) >= 2 && UInt64(2) == 2 && UInt64(2) != 3, "UInt64 concrete comparison")
+}
+
+func testFixedWidthIntegerRangeExpressionWitnesses() {
+    let signed: Int16 = 4
+    let unsigned: UInt16 = 4
+    requireIntegerWitness((signed...).contains(5) && (...signed).contains(3), "signed partial ranges")
+    requireIntegerWitness((unsigned...).contains(5) && (...unsigned).contains(3), "unsigned partial ranges")
+    requireIntegerWitness((Int32(2)...Int32(5)).contains(4), "signed closed range")
+    requireIntegerWitness((UInt32(2)...UInt32(5)).contains(4), "unsigned closed range")
+    requireIntegerWitness((Int64(2)..<Int64(5)).contains(4), "signed half-open range")
+    requireIntegerWitness((UInt64(2)..<UInt64(5)).contains(4), "unsigned half-open range")
+}
+
+private func integerBitwiseWitness<T: FixedWidthInteger>(_ a: T, _ b: T) -> (T, T, T) {
+    (a & b, a | b, a ^ b)
+}
+
+func testFixedWidthIntegerBitwiseWitnesses() {
+    requireIntegerWitness(integerBitwiseWitness(Int8(0b1100), 0b1010) == (8, 14, 6), "Int8 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(UInt8(0b1100), 0b1010) == (8, 14, 6), "UInt8 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(Int16(0b1100), 0b1010) == (8, 14, 6), "Int16 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(UInt16(0b1100), 0b1010) == (8, 14, 6), "UInt16 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(Int32(0b1100), 0b1010) == (8, 14, 6), "Int32 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(UInt32(0b1100), 0b1010) == (8, 14, 6), "UInt32 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(Int64(0b1100), 0b1010) == (8, 14, 6), "Int64 bitwise")
+    requireIntegerWitness(integerBitwiseWitness(UInt64(0b1100), 0b1010) == (8, 14, 6), "UInt64 bitwise")
+}
+
+func testFixedWidthIntegerQuotientAndRemainderWitnesses() {
+    requireIntegerWitness(Int8(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "Int8 quotient")
+    requireIntegerWitness(UInt8(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "UInt8 quotient")
+    requireIntegerWitness(Int16(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "Int16 quotient")
+    requireIntegerWitness(UInt16(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "UInt16 quotient")
+    requireIntegerWitness(Int32(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "Int32 quotient")
+    requireIntegerWitness(UInt32(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "UInt32 quotient")
+    requireIntegerWitness(Int64(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "Int64 quotient")
+    requireIntegerWitness(UInt64(17).quotientAndRemainder(dividingBy: 5) == (3, 2), "UInt64 quotient")
+}
+
+func testFixedWidthIntegerStrideWitnesses() {
+    requireIntegerWitness(Int8(4).advanced(by: 3) == 7 && Int8(4).distance(to: 9) == 5, "Int8 stride")
+    requireIntegerWitness(UInt8(4).advanced(by: 3) == 7 && UInt8(4).distance(to: 9) == 5, "UInt8 stride")
+    requireIntegerWitness(Int16(4).advanced(by: 3) == 7 && Int16(4).distance(to: 9) == 5, "Int16 stride")
+    requireIntegerWitness(UInt16(4).advanced(by: 3) == 7 && UInt16(4).distance(to: 9) == 5, "UInt16 stride")
+    requireIntegerWitness(Int32(4).advanced(by: 3) == 7 && Int32(4).distance(to: 9) == 5, "Int32 stride")
+    requireIntegerWitness(UInt32(4).advanced(by: 3) == 7 && UInt32(4).distance(to: 9) == 5, "UInt32 stride")
+    requireIntegerWitness(Int64(4).advanced(by: 3) == 7 && Int64(4).distance(to: 9) == 5, "Int64 stride")
+    requireIntegerWitness(UInt64(4).advanced(by: 3) == 7 && UInt64(4).distance(to: 9) == 5, "UInt64 stride")
+}
+
+func testFixedWidthIntegerDescriptionWitnesses() {
+    requireIntegerWitness([Int8(7).description, Int16(7).description, Int32(7).description, Int64(7).description] == ["7", "7", "7", "7"], "signed descriptions")
+    requireIntegerWitness([UInt8(7).description, UInt16(7).description, UInt32(7).description, UInt64(7).description] == ["7", "7", "7", "7"], "unsigned descriptions")
+}
+
+func testFixedWidthIntegerShiftWitnesses() {
+    requireIntegerWitness(Int8(16) >> 2 == 4 && UInt8(16) >> 2 == 4, "8-bit shifts")
+    requireIntegerWitness(Int16(16) >> 2 == 4 && UInt16(16) >> 2 == 4, "16-bit shifts")
+    requireIntegerWitness(Int32(16) >> 2 == 4 && UInt32(16) >> 2 == 4, "32-bit shifts")
+    requireIntegerWitness(Int64(16) >> 2 == 4 && UInt64(16) >> 2 == 4, "64-bit shifts")
+}
