@@ -274,7 +274,8 @@ extension HKLiveWorkoutBuilderDelegate {
 }
 
 open class HKLiveWorkoutDataSource: NSObject, @unchecked Sendable {
-    public let typesToCollect: Set<HKQuantityType>
+    public private(set) var typesToCollect: Set<HKQuantityType>
+    private var predicates: [String: NSPredicate] = [:]
     public var workoutConfiguration: HKWorkoutConfiguration?
 
     public init(healthStore: HKHealthStore, workoutConfiguration: HKWorkoutConfiguration?) {
@@ -285,11 +286,14 @@ open class HKLiveWorkoutDataSource: NSObject, @unchecked Sendable {
     }
 
     public func enableCollection(for type: HKQuantityType, predicate: NSPredicate?) {
-        _ = (type, predicate)
+        typesToCollect.insert(type)
+        if let predicate { predicates[type.identifier] = predicate }
+        else { predicates.removeValue(forKey: type.identifier) }
     }
 
     public func disableCollection(for type: HKQuantityType) {
-        _ = type
+        typesToCollect.remove(type)
+        predicates.removeValue(forKey: type.identifier)
     }
 }
 

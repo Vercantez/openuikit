@@ -613,10 +613,38 @@ open class HKCDADocumentSample: HKDocumentSample, @unchecked Sendable {
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
-open class HKClinicalCoding: NSObject, @unchecked Sendable {
-    public var system: String = ""
-    public var code: String = ""
-    public var version: String?
+open class HKClinicalCoding: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
+    public static var supportsSecureCoding: Bool { true }
+    public private(set) var system: String
+    public private(set) var code: String
+    public private(set) var version: String?
+
+    public override convenience init() { self.init(system: "", version: nil, code: "") }
+    public init(system: String, version: String?, code: String) {
+        self.system = system
+        self.version = version
+        self.code = code
+        super.init()
+    }
+    public required init?(coder: NSCoder) {
+        guard let system = coder.decodeObject(of: NSString.self, forKey: "system") as String?,
+              let code = coder.decodeObject(of: NSString.self, forKey: "code") as String? else { return nil }
+        self.system = system
+        self.code = code
+        self.version = coder.decodeObject(of: NSString.self, forKey: "version") as String?
+        super.init()
+    }
+    public func encode(with coder: NSCoder) {
+        coder.encode(system as NSString, forKey: "system")
+        coder.encode(code as NSString, forKey: "code")
+        if let version { coder.encode(version as NSString, forKey: "version") }
+    }
+    public func copy(with zone: NSZone? = nil) -> Any { HKClinicalCoding(system: system, version: version, code: code) }
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? HKClinicalCoding else { return false }
+        return system == other.system && version == other.version && code == other.code
+    }
+    public override var hash: Int { var h = Hasher(); h.combine(system); h.combine(version); h.combine(code); return h.finalize() }
 }
 
 open class HKClinicalRecord: HKSample, @unchecked Sendable {
@@ -629,13 +657,45 @@ open class HKClinicalRecord: HKSample, @unchecked Sendable {
 
 open class HKContactsLensSpecification: NSObject, @unchecked Sendable {
     public var eye: HKVisionEye = .left
-    public var sphere: HKQuantity?
-    public var cylinder: HKQuantity?
+    public private(set) var sphere: HKQuantity?
+    public private(set) var cylinder: HKQuantity?
+    public private(set) var axis: HKQuantity?
+    public private(set) var addPower: HKQuantity?
+    public private(set) var baseCurve: HKQuantity?
+    public private(set) var diameter: HKQuantity?
+
+    public override init() { super.init() }
+    public init(sphere: HKQuantity, cylinder: HKQuantity?, axis: HKQuantity?, addPower: HKQuantity?, baseCurve: HKQuantity?, diameter: HKQuantity?) {
+        self.sphere = sphere; self.cylinder = cylinder; self.axis = axis
+        self.addPower = addPower; self.baseCurve = baseCurve; self.diameter = diameter
+        super.init()
+    }
 }
 
-open class HKContactsPrescription: NSObject, @unchecked Sendable {
+open class HKContactsPrescription: HKVisionPrescription, @unchecked Sendable {
     public var rightEye: HKContactsLensSpecification?
     public var leftEye: HKContactsLensSpecification?
+    public private(set) var brand: String = ""
+
+    public override init(type: HKSampleType, start startDate: Date, end endDate: Date, uuid: UUID = UUID(), sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil), device: HKDevice? = nil, metadata: [String: Any]? = nil) {
+        super.init(type: type, start: startDate, end: endDate, uuid: uuid, sourceRevision: sourceRevision, device: device, metadata: metadata)
+        prescriptionType = .contacts
+        dateIssued = startDate
+        expirationDate = endDate == startDate ? nil : endDate
+    }
+
+    public convenience init(rightEyeSpecification: HKContactsLensSpecification?, leftEyeSpecification: HKContactsLensSpecification?, brand: String, dateIssued: Date, expirationDate: Date?, device: HKDevice?, metadata: [String: Any]?) {
+        self.init(type: HKObjectType.visionPrescriptionType(), start: dateIssued, end: expirationDate ?? dateIssued, device: device, metadata: metadata)
+        self.rightEye = rightEyeSpecification; self.leftEye = leftEyeSpecification
+        self.brand = brand; self.dateIssued = dateIssued; self.expirationDate = expirationDate
+        self.prescriptionType = .contacts
+    }
+
+    public convenience init() {
+        self.init(rightEyeSpecification: nil, leftEyeSpecification: nil, brand: "", dateIssued: .distantPast, expirationDate: nil, device: nil, metadata: nil)
+    }
+
+    public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
 open class HKElectrocardiogram: HKSeriesSample, @unchecked Sendable {
@@ -675,7 +735,7 @@ open class HKFHIRResource: NSObject, @unchecked Sendable {
     public var resourceType: HKFHIRResourceType = .observation
     public var identifier: String = ""
     public var sourceURL: URL?
-    public var data: Data?
+    public var data: Data = Data()
     public var fhirVersion: HKFHIRVersion = HKFHIRVersion.primaryR4()
 }
 
@@ -936,6 +996,12 @@ open class HKMedicationConcept: NSObject, @unchecked Sendable {
     public var identifier: HKHealthConceptIdentifier = HKHealthConceptIdentifier()
     public var displayText: String = ""
     public var generalForm: HKMedicationGeneralForm = .unknown
+    public var relatedCodings: Set<HKClinicalCoding> = []
+
+    public convenience init(identifier: HKHealthConceptIdentifier, displayText: String, generalForm: HKMedicationGeneralForm, relatedCodings: Set<HKClinicalCoding> = []) {
+        self.init(); self.identifier = identifier; self.displayText = displayText
+        self.generalForm = generalForm; self.relatedCodings = relatedCodings
+    }
 }
 
 open class HKMedicationDoseEvent: HKSample, @unchecked Sendable {
@@ -1047,6 +1113,11 @@ open class HKUserAnnotatedMedication: NSObject, @unchecked Sendable {
     public var hasSchedule: Bool = false
     public var isArchived: Bool = false
     public var nickname: String?
+
+    public convenience init(medication: HKMedicationConcept, nickname: String?, hasSchedule: Bool, isArchived: Bool) {
+        self.init(); self.medication = medication; self.nickname = nickname
+        self.hasSchedule = hasSchedule; self.isArchived = isArchived
+    }
 }
 
 open class HKVerifiableClinicalRecord: HKSample, @unchecked Sendable {
@@ -1167,6 +1238,11 @@ open class HKVisionPrescription: HKSample, @unchecked Sendable {
     }
 
     public required init?(coder: NSCoder) { super.init(coder: coder) }
+
+    public convenience init(type: HKVisionPrescriptionType, dateIssued: Date, expirationDate: Date?, device: HKDevice?, metadata: [String: Any]?) {
+        self.init(type: HKObjectType.visionPrescriptionType(), start: dateIssued, end: expirationDate ?? dateIssued, device: device, metadata: metadata)
+        self.prescriptionType = type; self.dateIssued = dateIssued; self.expirationDate = expirationDate
+    }
 }
 
 open class HKVisionPrism: NSObject, NSCopying, NSSecureCoding, @unchecked Sendable {
