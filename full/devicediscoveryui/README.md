@@ -81,3 +81,32 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 See `oracle-questions.tsv` for Apple-oracle probes: failable-init vs trap,
 `endpoint` error identity, DevicePicker fallback vs chrome, supported
 `ListenerProvider` shapes, and `onSelect` queue/timing.
+
+## Depth pass 2026-09 (wave 8)
+
+This wave exhausted the sole remaining non-overlay family,
+`DDDevicePickerViewController.endpoint`. The async getter is now exercised by a
+bounded synchronous test: it deterministically throws
+`DeviceDiscoveryUIUnavailable.linuxHost(operation:
+"DDDevicePickerViewController.endpoint")` and never fabricates a selected peer.
+
+Coverage moved from **19 implemented / 1537 declared / 0 deferred / 0
+unavailable / 0 not-applicable** to **20 implemented / 1536 declared / 0 deferred /
+0 unavailable / 0 not-applicable**. The requested 200-row gain is impossible in
+this pinned census: only one non-overlay identifier remained unimplemented.
+The other 1536 declared rows are SwiftUI cross-import overlay re-exports. They
+remain declared because the immutable leaf-full gate requires 1245 rows in the
+`implemented` or `declared` states; reclassifying them as `not-applicable` as the
+depth-pass policy requests would reduce nondeferred coverage to 20 and make the
+sealed gate fail. Central review must resolve that conflict between the wave
+policy and the immutable acceptance floor.
+
+Top-5 implemented evidence distribution after wave 8:
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 2 | 10.0% | `DevicePairingViewTests.swift#testDevicePairingViewBody` |
+| 2 | 10.0% | `DevicePickerTests.swift#testDevicePickerBody` |
+| 1 | 5.0% | `DDDevicePickerViewControllerTests.swift#testPickerEndpointFailsClosed` |
+| 1 | 5.0% | `DDDevicePairingAccessTests.swift#testPairingAccessDefault` |
+| 1 | 5.0% | `DDDevicePairingAccessTests.swift#testPairingAccessPermanent` |
