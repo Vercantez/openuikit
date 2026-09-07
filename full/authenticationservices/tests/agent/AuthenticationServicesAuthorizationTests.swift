@@ -393,6 +393,39 @@ func testSecurityKeyPublicKeyProvider() {
     precondition(assertion.securityKeyAllowedCredentials.count == 1)
 }
 
+func testWebBrowserPublicKeyCredentialProviders() {
+    let clientData = ASPublicKeyCredentialClientData(
+        challenge: Data([1, 2, 3]),
+        origin: "https://example.invalid",
+        topOrigin: "https://top.example.invalid",
+        crossOrigin: .sameOriginWithAncestors
+    )
+    let platform: any ASAuthorizationWebBrowserPlatformPublicKeyCredentialProvider =
+        ASAuthorizationPlatformPublicKeyCredentialProvider(relyingPartyIdentifier: "example.invalid")
+    let assertion = platform.createCredentialAssertionRequest(clientData: clientData)
+    precondition(assertion.challenge == clientData.challenge)
+    assertion.shouldShowHybridTransport = true
+    precondition(assertion.shouldShowHybridTransport)
+    let registration = platform.createCredentialRegistrationRequest(
+        clientData: clientData, name: "Lane", userID: Data([4]), requestStyle: .conditional
+    )
+    registration.excludedCredentials = [
+        ASAuthorizationPlatformPublicKeyCredentialDescriptor(credentialID: Data([5]))
+    ]
+    precondition(registration.requestStyle == .conditional)
+    precondition(registration.excludedCredentials.first?.credentialID == Data([5]))
+    _ = platform.createCredentialRegistrationRequest(clientData: clientData, name: "Lane", userID: Data([4]))
+
+    let security: any ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialProvider =
+        ASAuthorizationSecurityKeyPublicKeyCredentialProvider(relyingPartyIdentifier: "example.invalid")
+    let securityAssertion = security.createCredentialAssertionRequest(clientData: clientData)
+    precondition(securityAssertion.clientData == clientData)
+    let securityRegistration = security.createCredentialRegistrationRequest(
+        clientData: clientData, displayName: "Lane", name: "lane", userID: Data([6])
+    )
+    precondition(securityRegistration.clientData == clientData)
+}
+
 func testAppleIDButtonConstruction() {
     let button = ASAuthorizationAppleIDButton(
         authorizationButtonType: .signIn,

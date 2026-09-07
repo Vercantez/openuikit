@@ -497,7 +497,37 @@ public struct ASPublicKeyCredentialClientData: Hashable, Sendable {
     }
 }
 
-open class ASAuthorizationPlatformPublicKeyCredentialProvider: NSObject, ASAuthorizationProvider {
+/// Browser-facing projection of a platform authenticator provider.  On Linux
+/// this remains a value-building API: creating a request is supported, while
+/// executing it still crosses the fail-closed authorization-controller boundary.
+public protocol ASAuthorizationWebBrowserPlatformPublicKeyCredentialProvider: AnyObject {
+    func createCredentialAssertionRequest(clientData: ASPublicKeyCredentialClientData) -> ASAuthorizationPlatformPublicKeyCredentialAssertionRequest
+    func createCredentialRegistrationRequest(clientData: ASPublicKeyCredentialClientData, name: String, userID: Data) -> ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest
+    func createCredentialRegistrationRequest(clientData: ASPublicKeyCredentialClientData, name: String, userID: Data, requestStyle: ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest.RequestStyle) -> ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest
+}
+
+public protocol ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialProvider: AnyObject {
+    func createCredentialAssertionRequest(clientData: ASPublicKeyCredentialClientData) -> ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest
+    func createCredentialRegistrationRequest(clientData: ASPublicKeyCredentialClientData, displayName: String, name: String, userID: Data) -> ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest
+}
+
+public protocol ASAuthorizationWebBrowserPlatformPublicKeyCredentialAssertionRequest: AnyObject {
+    var shouldShowHybridTransport: Bool { get set }
+}
+
+public protocol ASAuthorizationWebBrowserPlatformPublicKeyCredentialRegistrationRequest: AnyObject {
+    var excludedCredentials: [ASAuthorizationPlatformPublicKeyCredentialDescriptor] { get set }
+}
+
+public protocol ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialAssertionRequest: AnyObject {
+    var clientData: ASPublicKeyCredentialClientData? { get set }
+}
+
+public protocol ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialRegistrationRequest: AnyObject {
+    var clientData: ASPublicKeyCredentialClientData? { get set }
+}
+
+open class ASAuthorizationPlatformPublicKeyCredentialProvider: NSObject, ASAuthorizationProvider, ASAuthorizationWebBrowserPlatformPublicKeyCredentialProvider {
     public let relyingPartyIdentifier: String
 
     public init(relyingPartyIdentifier: String) {
@@ -544,7 +574,7 @@ open class ASAuthorizationPlatformPublicKeyCredentialProvider: NSObject, ASAutho
     }
 }
 
-open class ASAuthorizationSecurityKeyPublicKeyCredentialProvider: NSObject, ASAuthorizationProvider {
+open class ASAuthorizationSecurityKeyPublicKeyCredentialProvider: NSObject, ASAuthorizationProvider, ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialProvider {
     public let relyingPartyIdentifier: String
 
     public init(relyingPartyIdentifier: String) {
@@ -566,9 +596,21 @@ open class ASAuthorizationSecurityKeyPublicKeyCredentialProvider: NSObject, ASAu
             userID: userID
         )
     }
+
+    public func createCredentialAssertionRequest(clientData: ASPublicKeyCredentialClientData) -> ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest {
+        let request = createCredentialAssertionRequest(challenge: clientData.challenge)
+        request.clientData = clientData
+        return request
+    }
+
+    public func createCredentialRegistrationRequest(clientData: ASPublicKeyCredentialClientData, displayName: String, name: String, userID: Data) -> ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest {
+        let request = createCredentialRegistrationRequest(challenge: clientData.challenge, displayName: displayName, name: name, userID: userID)
+        request.clientData = clientData
+        return request
+    }
 }
 
-open class ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialRegistrationRequest {
+open class ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialRegistrationRequest, ASAuthorizationWebBrowserPlatformPublicKeyCredentialRegistrationRequest {
     public enum RequestStyle: Int, Hashable, Sendable {
         case standard = 0
         case conditional = 1
@@ -584,6 +626,7 @@ open class ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest: ASAuth
     public var userVerificationPreference: ASAuthorizationPublicKeyCredentialUserVerificationPreference = .preferred
     public var prf: ASAuthorizationPublicKeyCredentialPRFRegistrationInput?
     public var largeBlob: ASAuthorizationPublicKeyCredentialLargeBlobRegistrationInput?
+    public var excludedCredentials: [ASAuthorizationPlatformPublicKeyCredentialDescriptor] = []
 
     public init(
         provider: any ASAuthorizationProvider,
@@ -602,13 +645,14 @@ open class ASAuthorizationPlatformPublicKeyCredentialRegistrationRequest: ASAuth
     public required init?(coder: NSCoder) { return nil }
 }
 
-open class ASAuthorizationPlatformPublicKeyCredentialAssertionRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialAssertionRequest {
+open class ASAuthorizationPlatformPublicKeyCredentialAssertionRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialAssertionRequest, ASAuthorizationWebBrowserPlatformPublicKeyCredentialAssertionRequest {
     public var allowedCredentials: [any ASAuthorizationPublicKeyCredentialDescriptor] = []
     public var challenge: Data
     public var relyingPartyIdentifier: String
     public var userVerificationPreference: ASAuthorizationPublicKeyCredentialUserVerificationPreference = .preferred
     public var prf: ASAuthorizationPublicKeyCredentialPRFAssertionInput?
     public var largeBlob: ASAuthorizationPublicKeyCredentialLargeBlobAssertionInput?
+    public var shouldShowHybridTransport = false
     public var platformAllowedCredentials: [ASAuthorizationPlatformPublicKeyCredentialDescriptor] {
         get { allowedCredentials.compactMap { $0 as? ASAuthorizationPlatformPublicKeyCredentialDescriptor } }
         set { allowedCredentials = newValue }
@@ -627,7 +671,7 @@ open class ASAuthorizationPlatformPublicKeyCredentialAssertionRequest: ASAuthori
     public required init?(coder: NSCoder) { return nil }
 }
 
-open class ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialRegistrationRequest {
+open class ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialRegistrationRequest, ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialRegistrationRequest {
     public var attestationPreference: ASAuthorizationPublicKeyCredentialAttestationKind = .none
     public var challenge: Data
     public var displayName: String?
@@ -638,6 +682,7 @@ open class ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest: ASA
     public var credentialParameters: [ASAuthorizationPublicKeyCredentialParameters] = []
     public var excludedCredentials: [ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor] = []
     public var residentKeyPreference: ASAuthorizationPublicKeyCredentialResidentKeyPreference = .preferred
+    public var clientData: ASPublicKeyCredentialClientData?
 
     public init(
         provider: any ASAuthorizationProvider,
@@ -658,7 +703,7 @@ open class ASAuthorizationSecurityKeyPublicKeyCredentialRegistrationRequest: ASA
     public required init?(coder: NSCoder) { return nil }
 }
 
-open class ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialAssertionRequest {
+open class ASAuthorizationSecurityKeyPublicKeyCredentialAssertionRequest: ASAuthorizationRequest, ASAuthorizationPublicKeyCredentialAssertionRequest, ASAuthorizationWebBrowserSecurityKeyPublicKeyCredentialAssertionRequest {
     public var allowedCredentials: [any ASAuthorizationPublicKeyCredentialDescriptor] = []
     public var challenge: Data
     public var relyingPartyIdentifier: String
