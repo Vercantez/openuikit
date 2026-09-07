@@ -295,6 +295,7 @@ let frameworkProducts: [Product] = [
     .library(name: "LocalAuthentication", targets: ["LocalAuthentication"]),
     .library(name: "PassKit", targets: ["PassKit"]),
     .library(name: "Network", targets: ["Network"]),
+    .library(name: "MobileCoreServices", targets: ["MobileCoreServices"]),
 ]
 
 let coreTargets: [Target] = [
@@ -333,6 +334,7 @@ let coreTargets: [Target] = [
     .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
     // The UIKit reimplementation. Same rule as above.
     .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+    .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
     // The declaration macro executes on the build host even when UIKit is
     // being emitted for a different target triple.
     .macro(
