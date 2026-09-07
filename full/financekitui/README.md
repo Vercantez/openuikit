@@ -86,3 +86,37 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 - Authorization request completion queue and Apple Codable keys.
 - TBD-only ABI (`OrderImage`, `ShippingBox`, `OrderReceipt`, …) is outside
   the public Swift census and is not declared here.
+
+## Depth pass 2026-09 (wave 8)
+
+Wave 8 began at **40 implemented / 1536 declared / 0 deferred / 0
+unavailable / 0 not-applicable** and ends at **40 implemented / 1536
+declared / 0 deferred / 0 unavailable / 0 not-applicable**. The complete
+non-overlay FinanceKitUI census is the 40 implemented rows; all 1536 other
+rows have `s:7SwiftUI4View...::SYNTHESIZED::` precise identifiers and are
+SwiftUI cross-import overlay re-exports. Consequently there is no remaining
+non-overlay family that can honestly be moved from `declared` to
+`implemented`, and no unavailable row requiring a hardware, daemon, or
+entitlement rationale.
+
+The depth-pass direction says overlay re-exports are `not-applicable`, while
+the immutable leaf-full acceptance policy requires at least 1261 rows in its
+`implemented` or `declared` statuses. Reclassifying all 1536 overlays would
+leave 40 nondeferred rows and make the supplied sealed gate fail before it
+builds the module. Wave 8 therefore preserves the seed ledger rather than
+weakening the gate or falsely claiming that Linux tests exercise SwiftUI-owned
+modifiers. Central review should resolve this policy conflict before changing
+those rows.
+
+Top-5 implemented evidence distribution remains:
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 1 | 2.5% | `TransactionPickerTests.swift#testTransactionPickerStruct` |
+| 1 | 2.5% | `TransactionPickerTests.swift#testTransactionPickerBody` |
+| 1 | 2.5% | `AddOrderToWalletButtonTests.swift#testAddOrderToWalletButtonInitSignedArchive` |
+| 1 | 2.5% | `FinancialConnectionUITests.swift#testFinancialConnectionExtensionAuthorizationResultInitFrom` |
+| 1 | 2.5% | `FinancialConnectionUITests.swift#testFinancialConnectionExtensionAuthorizationRequestCompleteResult` |
+
+Each of the remaining 35 implemented rows also cites a distinct focused,
+top-level synchronous test. No implemented evidence is shared between rows.
