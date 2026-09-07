@@ -159,3 +159,35 @@ No non-enum test exceeds the 40% bulk-relabel ceiling. New focused tests include
 `testActivityPreviewViewKindCases` (11), `testDynamicIslandModeEquality` (7),
 and the Preview builder concatenators (5 each).
 
+
+### Depth pass 2026-09 (wave 8 continuation)
+
+This continuation started from 456 implemented, 1626 declared, 17 deferred,
+0 unavailable, and 777 not-applicable identifiers. It ends at 467 implemented,
+1615 declared, 17 deferred, 0 unavailable, and 777 not-applicable identifiers.
+
+The pass executes the remaining host-useful asynchronous families from
+synchronous, deadline-bounded gate entry points: AppIntent provider snapshots,
+timelines, and empty default relevance; TimelineProvider and
+IntentTimelineProvider empty default relevance; WidgetCenter push/configuration
+snapshots; and ControlCenter control snapshots. The tests call each async API and
+assert the deterministic process-local result rather than merely checking type
+identity. No Dispatch main queue, semaphore, or run-loop wait is used, and every
+bridge has a two-second failure deadline.
+
+The eight residual non-overlay declarations are the `Body == Never` aliases and
+`body` witnesses of ControlWidgetButton, ControlWidgetToggle,
+StaticControlConfiguration, and AppIntentControlConfiguration. Their body getters
+remain deliberately fatal because Linux has no Control Center presentation host;
+calling them cannot produce useful behavior and pretending otherwise would
+violate the fail-closed boundary. Preview APIs and the unobserved
+`NSUserActivityTypeLiveActivity` payload remain deferred. No identifier is
+`unavailable`.
+
+Top-5 implemented evidence distribution after this continuation:
+
+1. `testConfigurationDisplayNameAndDescription` — 40 rows (8.6% of 467)
+2. `testConfigurationFamiliesMarginsAndBackground` — 30 rows (6.4%)
+3. `testConfigurationPushAndSession` — 28 rows (6.0%)
+4. `testViewWidgetModifiers` — 20 rows (4.3%)
+5. `testWidgetLocationAndMounting` / `testActivityFamilyAndLevelOfDetail` — 17 rows each (3.6%)
