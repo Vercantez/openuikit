@@ -165,6 +165,121 @@ typedef NS_ENUM(int32_t, UIButtonType) {
 - (void)loadView;            /* override point */
 - (void)viewDidLoad;         /* override point */
 - (void)loadViewIfNeeded;
+- (void)viewDidLoad;
+- (void)viewWillAppear:(BOOL)animated;
+- (void)viewDidAppear:(BOOL)animated;
+- (void)viewWillDisappear:(BOOL)animated;
+- (void)viewDidDisappear:(BOOL)animated;
+- (void)addChildViewController:(UIViewController *)childController;
+- (void)willMoveToParentViewController:(UIViewController *)parent;
+- (void)didMoveToParentViewController:(UIViewController *)parent;
+@property (nonatomic, readonly, nullable) UIViewController *parentViewController;
+@property (nonatomic, readonly, nullable) UINavigationController *navigationController;
+@end
+
+#pragma mark - UIApplication / UIWindow
+
+@class UIApplication, UIWindow, UINavigationController, UITableView, UITableViewCell, UIFont;
+@protocol UIScrollViewDelegate;
+@protocol UIApplicationDelegate <NSObject>
+@optional
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
+- (void)applicationDidBecomeActive:(UIApplication *)application;
+- (void)applicationWillResignActive:(UIApplication *)application;
+- (void)applicationDidEnterBackground:(UIApplication *)application;
+- (void)applicationWillEnterForeground:(UIApplication *)application;
+- (void)applicationWillTerminate:(UIApplication *)application;
+@end
+
+@interface UIApplication : UIResponder
++ (instancetype)sharedApplication;
+@property (nonatomic, weak) id<UIApplicationDelegate> delegate;
+@property (nonatomic, strong) UIWindow *keyWindow;
+- (BOOL)openURL:(NSURL *)url options:(NSDictionary *)options completionHandler:(void (^)(BOOL success))completion;
+@end
+
+@interface UIWindow : UIView
+@property (nonatomic, strong) UIViewController *rootViewController;
+@property (nonatomic, readonly, getter=isKeyWindow) BOOL keyWindow;
+- (void)makeKeyAndVisible;
+@end
+
+#pragma mark - Navigation and table/text declarations
+
+typedef NS_ENUM(NSInteger, UINavigationControllerOperation) {
+    UINavigationControllerOperationNone,
+    UINavigationControllerOperationPush,
+    UINavigationControllerOperationPop,
+};
+
+@interface UINavigationController : UIViewController
+- (instancetype)initWithRootViewController:(UIViewController *)rootViewController;
+@property (nonatomic, readonly) NSArray<UIViewController *> *viewControllers;
+@property (nonatomic, readonly, nullable) UIViewController *topViewController;
+@property (nonatomic, readonly, nullable) UIViewController *visibleViewController;
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated;
+- (nullable UIViewController *)popViewControllerAnimated:(BOOL)animated;
+- (NSArray<UIViewController *> *)popToRootViewControllerAnimated:(BOOL)animated;
+- (NSArray<UIViewController *> *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated;
+@end
+
+@interface UIScrollView : UIView
+@property (nonatomic) CGPoint contentOffset;
+@property (nonatomic) CGSize contentSize;
+@property (nonatomic) UIEdgeInsets contentInset;
+@property (nonatomic, weak) id delegate;
+@property (nonatomic) BOOL scrollEnabled;
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
+@end
+
+typedef NS_ENUM(NSInteger, UITableViewStyle) {
+    UITableViewStylePlain, UITableViewStyleGrouped, UITableViewStyleInsetGrouped,
+};
+typedef NS_ENUM(NSInteger, UITableViewCellStyle) {
+    UITableViewCellStyleDefault, UITableViewCellStyleValue1, UITableViewCellStyleValue2, UITableViewCellStyleSubtitle,
+};
+typedef NS_ENUM(NSInteger, UITableViewCellAccessoryType) {
+    UITableViewCellAccessoryNone, UITableViewCellAccessoryDisclosureIndicator,
+};
+@protocol UITableViewDataSource <NSObject>
+@optional
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
+@end
+@protocol UITableViewDelegate <UIScrollViewDelegate>
+@optional
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath;
+@end
+@interface UITableView : UIScrollView
+- (instancetype)initWithFrame:(CGRect)frame style:(UITableViewStyle)style;
+@property (nonatomic, weak) id<UITableViewDataSource> dataSource;
+@property (nonatomic, weak) id<UITableViewDelegate> delegate;
+- (void)reloadData;
+- (nullable UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier;
+- (nullable UITableViewCell *)dequeueReusableCellWithIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath;
+- (void)registerClass:(Class)cellClass forCellReuseIdentifier:(NSString *)identifier;
+- (void)deselectRowAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
+@end
+@interface UITableViewCell : UIView
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(nullable NSString *)reuseIdentifier;
+@property (nonatomic, readonly) UILabel *textLabel;
+@property (nonatomic, readonly) UILabel *detailTextLabel;
+@property (nonatomic) UITableViewCellAccessoryType accessoryType;
+@end
+@interface UITextView : UIScrollView
+@property (nonatomic, copy, nullable) NSString *text;
+@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic, weak) id delegate;
+@end
+@interface UITextField : UIControl
+@property (nonatomic, copy, nullable) NSString *text;
+@property (nonatomic, strong) UIFont *font;
+@property (nonatomic, copy, nullable) NSString *placeholder;
+- (BOOL)becomeFirstResponder;
+- (BOOL)resignFirstResponder;
 @end
 
 #pragma mark - Runtime setup
