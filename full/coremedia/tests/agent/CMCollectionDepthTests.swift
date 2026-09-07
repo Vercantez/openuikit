@@ -199,3 +199,76 @@ func testCMSampleBufferAttachmentKeyTable() {
     precondition(Set(keys).count == keys.count)
     precondition(keys.allSatisfy { CFStringGetLength($0.rawValue) > 0 })
 }
+
+/// Exercises the standard-library algorithms inherited by each byte collection
+/// projection. Keeping the three concrete calls is intentional: the SDK graph
+/// records a synthesized witness for each concrete host type.
+func testCMDataBlockBufferCollectionAlgorithms() {
+    func verify<C: RandomAccessCollection>(_ bytes: C) where C.Element == UInt8, C.Index == Int {
+        precondition(bytes.count == 4)
+        precondition(!bytes.isEmpty)
+        precondition(bytes.first == 1 && bytes.last == 4)
+        precondition(bytes.firstIndex(of: 2) == 1)
+        precondition(bytes.lastIndex(of: 2) == 1)
+        precondition(bytes.firstIndex { $0 > 2 } == 2)
+        precondition(bytes.lastIndex { $0 < 4 } == 2)
+        precondition(bytes.contains(3))
+        precondition(bytes.contains { $0 == 4 })
+        precondition(bytes.allSatisfy { $0 > 0 })
+        precondition(bytes.first { $0.isMultiple(of: 2) } == 2)
+        precondition(bytes.last { $0.isMultiple(of: 2) } == 4)
+        precondition(bytes.map(Int.init) == [1, 2, 3, 4])
+        precondition(bytes.compactMap { $0 > 2 ? $0 : nil } == [3, 4])
+        precondition(bytes.flatMap { [$0, $0] }.count == 8)
+        precondition(bytes.filter { $0.isMultiple(of: 2) } == [2, 4])
+        precondition(bytes.reduce(0, +) == 10)
+        precondition(bytes.reduce(into: 0) { $0 += Int($1) } == 10)
+        precondition(bytes.min() == 1 && bytes.max() == 4)
+        precondition(bytes.min(by: >) == 4 && bytes.max(by: >) == 1)
+        precondition(bytes.sorted() == [1, 2, 3, 4])
+        precondition(bytes.sorted(by: >) == [4, 3, 2, 1])
+        precondition(bytes.elementsEqual([1, 2, 3, 4]))
+        precondition(bytes.elementsEqual([1, 2, 3, 4], by: ==))
+        precondition(bytes.starts(with: [1, 2]))
+        precondition(bytes.starts(with: [1, 2], by: ==))
+        precondition(bytes.lexicographicallyPrecedes([2, 0]))
+        precondition(bytes.lexicographicallyPrecedes([2, 0], by: <))
+        precondition(bytes.prefix(2).elementsEqual([1, 2]))
+        precondition(bytes.prefix(upTo: 2).elementsEqual([1, 2]))
+        precondition(bytes.prefix(through: 2).elementsEqual([1, 2, 3]))
+        precondition(bytes.prefix { $0 < 3 }.elementsEqual([1, 2]))
+        precondition(bytes.suffix(2).elementsEqual([3, 4]))
+        precondition(bytes.suffix(from: 2).elementsEqual([3, 4]))
+        precondition(bytes.dropFirst(2).elementsEqual([3, 4]))
+        precondition(bytes.dropLast(2).elementsEqual([1, 2]))
+        precondition(bytes.drop { $0 < 3 }.elementsEqual([3, 4]))
+        precondition(bytes.reversed().elementsEqual([4, 3, 2, 1]))
+        precondition(bytes.enumerated().count == 4)
+        precondition(bytes.lazy.count == 4)
+        precondition(bytes.underestimatedCount == 4)
+        precondition(bytes.distance(from: bytes.startIndex, to: bytes.endIndex) == 4)
+        precondition(bytes.index(bytes.startIndex, offsetBy: 2) == 2)
+        precondition(bytes.index(bytes.startIndex, offsetBy: 5, limitedBy: bytes.endIndex) == nil)
+        var index = bytes.startIndex
+        bytes.formIndex(after: &index)
+        bytes.formIndex(before: &index)
+        bytes.formIndex(&index, offsetBy: 2)
+        precondition(bytes.formIndex(&index, offsetBy: 3, limitedBy: bytes.endIndex) == false)
+        var visited = 0
+        bytes.forEach { _ in visited += 1 }
+        precondition(visited == 4)
+        var iterator = bytes.makeIterator()
+        precondition(iterator.next() == 1)
+    }
+
+    let readOnly = CMReadOnlyDataBlockBuffer(Data([1, 2, 3, 4]))
+    verify(readOnly)
+    verify(readOnly.regions[0])
+    var mutable = CMMutableDataBlockBuffer(count: 4)
+    for (index, byte) in [UInt8](arrayLiteral: 1, 2, 3, 4).enumerated() {
+        mutable[index] = byte
+    }
+    mutable.withUnsafeMutableBlockRegions { regions in
+        verify(regions[0])
+    }
+}
