@@ -46,11 +46,16 @@ RUNTIME="$ROOT/full/foundation/tests/FoundationExtensionGuestRuntime.swift"
         -emit-object -o "$WORK/foundation-extension.o" \
         "$FIXTURE" "$CODER_SOURCE" "$REFERENCE_SOURCE" "$SOURCE" \
         "$CONTRACT_SOURCE" \
-        "$LOCK_SOURCE" "$STREAM_SOURCE" "$CORE_FOUNDATION_EXPORT_SOURCE"
+        "$LOCK_SOURCE" "$STREAM_SOURCE" "$CORE_FOUNDATION_EXPORT_SOURCE" \
+        "$ROOT/full/foundation/Progress.swift"
     swiftc -I "$WORK/modules" "${PACKAGE_FLAGS[@]}" \
         -module-cache-path "$WORK/module-cache" -wmo \
         -module-name FoundationExtensionGuestRuntime -emit-object \
         -o "$WORK/foundation-extension-runtime.o" "$RUNTIME"
+    swiftc -I "$WORK/modules" "${PACKAGE_FLAGS[@]}" \
+        -module-cache-path "$WORK/module-cache" -wmo -parse-as-library \
+        -module-name FocusGuestDragDrop -emit-object \
+        -o "$WORK/focus-guest-dnd.o" "$ROOT/full/appshim/tests/FocusGuestDragDrop.swift"
 )
 
 COMMON_LINK=(
@@ -102,6 +107,14 @@ ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0 \
     -L"$WORK/lib" "${COMMON_LINK[@]}" -lFoundation -lCoreFoundation \
     "${FOUNDATION_LINK[@]}"
 
+ld64.lld-18 -arch arm64 -platform_version macos 15.0 15.0 \
+    -syslibroot "$PACKAGE_ROOT/sdk" -dead_strip -ignore_auto_link \
+    -exported_symbol __mh_execute_header \
+    -rpath "$WORK/lib" -rpath "$PACKAGE_ROOT/lib" \
+    -o "$WORK/FocusGuestDragDrop" "$WORK/focus-guest-dnd.o" \
+    -L"$WORK/lib" "${COMMON_LINK[@]}" -lFoundation -lCoreFoundation \
+    "${FOUNDATION_LINK[@]}"
+
 llvm-otool-18 -hv "$WORK/lib/libFoundation.dylib" \
     | grep -Eq 'MH_MAGIC_64[[:space:]]+ARM64.*[[:space:]]DYLIB'
 llvm-otool-18 -hv "$WORK/lib/libCoreFoundation.dylib" \
@@ -129,6 +142,14 @@ MACHORUN_ROOT="$PACKAGE_ROOT/guest-root" \
 grep -Fx \
     'FOUNDATION_EXTENSION_GUEST_OK module=Foundation identity=OpenUIKit callbacks=66 concurrency=64 coding=fail-closed canonical=predicate,dictionary,nscopying,coder,stream,cfuuid reference=array,data' \
     "$WORK/runtime.log" >/dev/null
+
+LD_LIBRARY_PATH="$HOST_ROOT${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
+LD_PRELOAD="$HOST_PRELOAD${LD_PRELOAD:+:$LD_PRELOAD}" \
+MACHORUN_ROOT="$PACKAGE_ROOT/guest-root" \
+    "$PACKAGE_ROOT/guest-root/machorun" "$WORK/FocusGuestDragDrop" \
+    | tee "$WORK/dnd.log"
+grep -Fx 'FOCUS_GUEST_DND_OK same-object=true urls=3 strings=1 callbacks=once progress=3/3 copy=coding=retained' \
+    "$WORK/dnd.log" >/dev/null
 
 printf '%s\n' \
     'FOUNDATION_EXTENSION_EC2_OK architecture=arm64 module=Foundation dylib=libFoundation.dylib identity=OpenUIKit callbacks=66 concurrency=64 canonical=predicate,dictionary,nscopying,coder,stream,cfuuid reference=array,data'

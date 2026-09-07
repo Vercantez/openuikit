@@ -95,10 +95,25 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
         }
     }
 
-    /// Gestures-dnd census spelling (`init(contentsOf:)`). Darwin Foundation
-    /// already vends this; Linux stores the file URL as `public.file-url`.
-    public convenience init(contentsOf fileURL: URL) {
-        self.init(item: fileURL, typeIdentifier: "public.file-url")
+    /// Apple Foundation oracle on the operator Mac (Focus guest DND): the
+    /// signature is failable, but https, existing/missing files and directories
+    /// all returned non-nil. HTTPS registered ["public.url"]. See the shared
+    /// identifier rule below for the measured file cases.
+    public convenience init?(contentsOf fileURL: URL) {
+        self.init()
+        for identifier in _itemProviderURLIdentifiers(fileURL) {
+            representations.append(Representation(
+                typeIdentifier: identifier, visibility: .all,
+                loadData: { completion in
+                    if identifier == "public.url" || identifier == "public.file-url" {
+                        completion(Data(fileURL.absoluteString.utf8), nil)
+                    } else {
+                        do { completion(try Data(contentsOf: fileURL), nil) }
+                        catch { completion(nil, error) }
+                    }
+                    return nil
+                }, object: fileURL))
+        }
         suggestedName = fileURL.lastPathComponent
     }
 
@@ -409,18 +424,29 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
 
     public override init() { super.init() }
 
-    public convenience init(item: Any?, typeIdentifier: String?) {
-        self.init()
+    public init(item: Any?, typeIdentifier: String?) {
+        super.init()
         if let typeIdentifier { typeIdentifiers.append(typeIdentifier) }
         if let item { objects.append(item) }
     }
 
-    /// Full guest rebuild, simplenote-launch: URLBar.swift:1136 conditionally
-    /// binds this initializer. Preserve the existing app-facing guest policy
-    /// (FoundationGuest.swift): file-backed providers are unavailable.
+    /// Guest umbrella bridge hook: copy representation metadata and retained
+    /// payloads together. Foundation's NSSecureCoding subclass uses this for
+    /// its existing process-local coder transport and independent provider copies.
+    public init(_openUIKitCopying provider: NSItemProvider) {
+        typeIdentifiers = provider.typeIdentifiers
+        objects = provider.objects
+        suggestedName = provider.suggestedName
+        super.init()
+    }
+
+    /// Apple Foundation oracle on the operator Mac (Focus guest DND): failable
+    /// signature, non-nil for all four samples; https -> ["public.url"]. The
+    /// payload is retained even for a missing file; see the shared rule below.
     public convenience init?(contentsOf fileURL: URL) {
-        _ = fileURL
-        return nil
+        self.init(item: fileURL, typeIdentifier: nil)
+        typeIdentifiers = _itemProviderURLIdentifiers(fileURL)
+        suggestedName = fileURL.lastPathComponent
     }
 
     open var registeredTypeIdentifiers: [String] { typeIdentifiers }
@@ -453,6 +479,25 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
     }
 }
 
+#endif
+
+#if os(Linux) || !canImport(Foundation)
+/// Apple Foundation oracle, operator Mac / Focus guest DND: https -> public.url;
+/// extensionless existing file and directory -> dyn.age8u, public.file-url,
+/// public.url; missing .txt -> public.plain-text, public.file-url, public.url.
+/// Other filename UTIs remain unmeasured: expose only their known URL forms.
+private func _itemProviderURLIdentifiers(_ url: URL) -> [String] {
+    guard url.isFileURL else { return ["public.url"] }
+    var identifiers: [String] = []
+    if url.pathExtension == "txt" {
+        identifiers.append("public.plain-text")
+    } else if url.pathExtension.isEmpty {
+        identifiers.append("dyn.age8u")
+    }
+    identifiers.append("public.file-url")
+    identifiers.append("public.url")
+    return identifiers
+}
 #endif
 
 #if canImport(Foundation)

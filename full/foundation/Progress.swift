@@ -476,3 +476,21 @@ open class Progress: NSObject, @unchecked Sendable {
         !_isIndeterminate(state) && state.completedUnitCount >= state.totalUnitCount
     }
 }
+
+#if !FOUNDATION_PROGRESS_HOST
+extension UIDropSession {
+    /// Guest-only overlay for OpenUIKit's Foundation-hidden library boundary.
+    /// MEASURED verify88 x86 rungs b/c: BrowserViewController.swift:1193 could
+    /// not call loadObjects through any UIDropSession. Payload extraction lives
+    /// in OpenUIKit; Progress retains its canonical Foundation identity here.
+    @discardableResult
+    public func loadObjects<T>(ofClass type: T.Type,
+                               completion: @escaping ([T]) -> Void) -> Progress {
+        let objects = _openUIKitLoadObjects(ofClass: type)
+        let progress = Progress(totalUnitCount: Int64(objects.count))
+        completion(objects)
+        progress.completedUnitCount = progress.totalUnitCount
+        return progress
+    }
+}
+#endif

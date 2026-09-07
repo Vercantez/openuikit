@@ -109,6 +109,56 @@ final class UIDragDropTests: XCTestCase {
         XCTAssertEqual(loaded, ["hello"])
     }
 
+    func testContentsOfURLHasFailableSignatureAndURLRepresentation() throws {
+        let construct: (URL) -> NSItemProvider? = NSItemProvider.init(contentsOf:)
+        let url = try XCTUnwrap(URL(string: "https://example.org/focus"))
+        let provider = try XCTUnwrap(construct(url))
+        XCTAssertEqual(provider.registeredTypeIdentifiers, ["public.url"])
+        let item = UIDragItem(itemProvider: provider)
+        XCTAssertTrue(item.itemProvider === provider)
+#if os(Linux)
+        let session: any UIDropSession = _UIDragSessionImpl(
+            items: [item], location: .zero, sourceView: nil)
+        XCTAssertNil(item.localObject)
+        XCTAssertTrue(session.canLoadObjects(ofClass: URL.self))
+        var loaded: [URL] = []
+        let progress: Progress = session.loadObjects(ofClass: URL.self) { loaded = $0 }
+        XCTAssertEqual(loaded, [url])
+        XCTAssertEqual(progress.totalUnitCount, 1)
+#endif
+    }
+
+#if os(Linux)
+    func testContentsOfFileIdentifiersAndURLPayload() throws {
+        // Apple Foundation operator-Mac oracle: all these are non-nil even
+        // when the .txt file is absent. Never synthesize a file to make it pass.
+        let samples: [(URL, [String])] = [
+            (URL(fileURLWithPath: "/tmp/focus-guest-dnd-missing.txt"),
+             ["public.plain-text", "public.file-url", "public.url"]),
+            (URL(fileURLWithPath: "/tmp", isDirectory: true),
+             ["dyn.age8u", "public.file-url", "public.url"]),
+        ]
+        for (url, identifiers) in samples {
+            let provider = try XCTUnwrap(NSItemProvider(contentsOf: url))
+            XCTAssertEqual(provider.registeredTypeIdentifiers, identifiers)
+            let session: any UIDropSession = _UIDragSessionImpl(
+                items: [UIDragItem(itemProvider: provider)], location: .zero, sourceView: nil)
+            var loaded: [URL] = []
+            session.loadObjects(ofClass: URL.self) { loaded = $0 }
+            XCTAssertEqual(loaded, [url])
+        }
+    }
+
+    func testStringProviderDropWithoutLocalObject() {
+        let provider = NSItemProvider(item: "focus", typeIdentifier: "public.utf8-plain-text")
+        let session: any UIDropSession = _UIDragSessionImpl(
+            items: [UIDragItem(itemProvider: provider)], location: .zero, sourceView: nil)
+        var loaded: [String] = []
+        session.loadObjects(ofClass: String.self) { loaded = $0 }
+        XCTAssertEqual(loaded, ["focus"])
+    }
+#endif
+
     func testDropProposalOperationsAndIntents() {
         let copy = UIDropProposal(operation: .copy)
         XCTAssertEqual(copy.operation, .copy)
