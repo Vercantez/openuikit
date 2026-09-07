@@ -447,3 +447,40 @@ Logs on this Mac: `/tmp/fw-audiotoolbox-r-recheck-baseline.log`,
 `/tmp/fw-audiotoolbox-r-regression.log`, and
 `/tmp/fw-audiotoolbox-r-recheck-final.log`. The coverage-preservation,
 synchronous-anchor, evidence-distribution, and `git diff --check` audits passed.
+
+## Depth pass 2026-09 (wave 8)
+
+Wave 8 adds exact value-record overlays used by Audio Unit v2 graph callbacks,
+property addressing, mixer distance configuration, external buffers, and music
+sequence tempo/loop events. The tests exercise both memberwise and zero
+initializers, preserve sentinel values, and (for `AudioUnitExternalBuffer`)
+verify that borrowed mutable storage is used rather than copied. `AUPresetEvent`
+preserves an unmanaged Core Foundation property-list reference and does not
+invent preset loading behavior.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2932 | 2980 |
+| declared | 39 | 39 |
+| deferred | 262 | 214 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+This wave gains **48 implemented rows** across nine focused, synchronous tests.
+The remaining CoreAudioTypes/CoreMIDI records are deferred rather than shadowing
+dependency-owned types, and device, daemon, MIDI-CI, dispatch-timing, and
+hardware behavior remains fail-closed or deferred.
+
+Top-five implemented evidence distribution after this wave:
+
+| rows | test |
+| ---: | --- |
+| 200 | `AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog` |
+| 200 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue` |
+| 168 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags` |
+| 163 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioFileFamily` |
+| 146 | `AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog` |
+
+The largest anchor covers 6.71% of the 2,980 implemented rows and is a permitted
+table-driven enum/option-set value test. No SwiftUI overlay rows or other rows
+were reclassified as `not-applicable`.
