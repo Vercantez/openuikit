@@ -121,3 +121,42 @@ later clean EC2 run that builds guest Foundation first.
 
 Run `bash tests/acceptance/test_host.sh` from this directory. Keep generated
 products out of the tree.
+
+## Depth pass 2026-09 (wave 8)
+
+Ledger before this wave: **1248 implemented / 0 declared / 848 deferred /
+0 unavailable / 0 not-applicable**. Ledger after this wave: **1261
+implemented / 0 declared / 38 deferred / 0 unavailable / 797
+not-applicable**.
+
+This wave added the browser-facing platform and security-key provider
+protocols, their client-data request factories, and the mutable browser request
+facets (`shouldShowHybridTransport`, platform excluded credentials, and
+security-key client data). These are deterministic request value construction;
+performing either request still uses the existing fail-closed controller and
+never claims access to an authenticator or browser daemon.
+
+The 797 precise IDs reclassified as not applicable are SwiftUI cross-import
+re-exports and use the lane-required note; they are owned by the SwiftUI lane,
+not by the Linux AuthenticationServices binary. The remaining 38 deferred rows
+require UIKit view-controller/anchor identity (25), FoundationNetworking
+response identity (5), or CryptoKit key identity (6), plus two Safari/WebKit
+request extension properties. No framework-local substitutes were invented for
+those dependency-owned types. Consequently the pinned surface contains only 13
+additional dependency-free, non-overlay rows that this wave can honestly move
+to implemented; the requested 200-row behavioral gain is not representable in
+this input without falsely claiming cross-import overlays or dependency-owned
+APIs.
+
+Top-five implemented evidence distribution after this wave:
+
+1. `testImportableCredentialAllCasesRoundTrip` — 273 rows (21.65%).
+2. `testImportableCredentialCodableRoundTrip` — 112 rows (8.88%).
+3. `testPublicKeyCredentialParametersAndPRF` — 107 rows (8.49%).
+4. `testPasskeyAssertionAndRegistrationCredentials` — 52 rows (4.12%).
+5. `testSettingsHelperVerificationAndErrorWitnesses` — 48 rows (3.81%).
+
+The sealed host gate completed with the environment, deliverable, reference,
+agent-runtime, and dylib host markers. The unresolved Apple-oracle questions
+remain in `oracle-questions.tsv`; this wave does not infer service success,
+callback semantics, UI behavior, or cryptographic key representations.
