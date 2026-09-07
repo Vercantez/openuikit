@@ -20,6 +20,7 @@ public struct AnyChartSymbolShape: Hashable, Sendable, View, ChartSymbolShape {
     public init(_ shape: BasicChartSymbolShape = .circle) { self.shape = shape }
     public var body: some View { shape }
     public func path(in rect: CGRect) -> Path { shape.path(in: rect) }
+    public var perceptualUnitRect: CGRect { shape.perceptualUnitRect }
 }
 
 extension BasicChartSymbolShape: ChartSymbolShape {}
@@ -590,7 +591,11 @@ public struct AxisValueLabelCollisionResolution: Hashable, Sendable, CustomStrin
 }
 
 public struct AnnotationContext: Hashable, Sendable {
-    public init() {}
+    public let targetSize: CGSize
+
+    public init(targetSize: CGSize = .zero) {
+        self.targetSize = targetSize
+    }
 }
 
 public struct AnnotationPosition: Hashable, Sendable, CustomStringConvertible {

@@ -623,3 +623,36 @@ bash full/charts/tests/acceptance/test_host.sh
 `tests/agent/ChartsRuntime.swift` records the runtime contract the focused
 tests exercise. `tests/agent/ChartsLoadSmoke.swift` is the canonical
 schema-v2 import/marker source.
+
+### Depth pass 2026-09 (wave 8): normalized metadata follow-up
+
+This follow-up starts from the sixth-pass ledger (`implemented` 2314,
+`declared` 2580, `deferred` 926, `unavailable` 0, `not-applicable` 3654)
+and ends at `implemented` 2340, `declared` 2566, `deferred` 914,
+`unavailable` 0, `not-applicable` 3654. The implemented gain is 26.
+Nondeferred coverage is 4906, above the medium-full floor.
+
+Concrete and erased 2D symbols now expose the normalized `0,0,1,1`
+perceptual unit rectangle, and `AnnotationContext` retains its target size.
+Focused checks also exercise protocol body/associated-type witnesses and verify
+that 3D material attributes are retained by every available Linux 3D-content
+witness. Material values are metadata only; `Chart3D` and `SurfacePlot` still
+do not render, and `symbolRotation` remains deferred because the pinned Linux
+dependency set has no genuine RealityKit `Rotation3D` type.
+
+Top-five evidence distribution (2340 implemented rows; 40% cap = 936):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
+| 41 | 1.8% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |
+
+The requested 300-row gain is not honestly reachable from this ledger: only 85
+declared rows are non-SwiftUI precise IDs, 54 of those are uninhabited `Never`
+witnesses, and most remaining deferred rows are stdlib integer/collection
+members that Charts neither owns nor redeclares. SwiftUI cross-import overlay
+rows were not relabeled as implemented, and stdlib behavior was not claimed as
+Charts behavior merely to increase the count.
