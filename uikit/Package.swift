@@ -883,12 +883,16 @@ let simplenoteTargets: [Target] = []
 #else
 let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
-    "SimplenoteSearch", "Gridicons",
+    "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
+    "AutomatticTracksModelObjC",
 ].map { .library(name: $0, targets: [$0]) }
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
 let simplenoteTargets: [Target] = [
+    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
+    .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
+    .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],
             path: "Sources/SimplenoteDependencies/SimplenoteFoundation",
             swiftSettings: simplenoteSettings),
