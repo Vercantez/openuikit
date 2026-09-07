@@ -65,10 +65,9 @@ Token-typed `DeviceActivityEvent` / `DeviceActivityFilter` members that require
 until ManagedSettings is a real module dependency. SwiftUI `View` modifiers
 synthesized onto `DeviceActivityReport` are declared as inert identifier stubs
 so the isolated Foundation compile can name them; they are not SwiftUI
-behavior. Three Foundation `AsyncSequence` overlays constrained to
-`Element == UInt8` (`characters`, `lines`, `unicodeScalars`) are `unavailable`
-because they are not SwiftUI cross-import overlay IDs and do not apply to
-report records.
+behavior. Three Foundation `AsyncSequence` overlays (`characters`, `lines`, and
+`unicodeScalars`) are conditionally declared for `DeviceActivityResults<UInt8>`;
+ordinary report-record element types do not meet that constraint.
 
 See `oracle-questions.tsv`.
 
@@ -93,3 +92,23 @@ Top-5 implemented evidence distribution:
 | 10 | `testDeviceActivityMonitoringErrorSurface` |
 
 No non-enum test exceeds 40% of the remaining implemented rows (largest is 21/216 ≈ 9.7%). SwiftUI View-modifier precise IDs stay `declared` against `DeviceActivityViewStubs.swift`.
+
+## Depth pass 2026-09 (wave 8)
+
+Coverage before wave 8: **216 implemented / 804 declared / 13 deferred / 3 unavailable / 0 not-applicable**.
+
+Coverage after wave 8: **240 implemented / 783 declared / 13 deferred / 0 unavailable / 0 not-applicable** (1023 nondeferred, floor 829).
+
+This wave exhausts the behaviorally testable, non-SwiftUI declared surface. All 24 inherited `AsyncSequence` operators are now exercised with bounded, synchronous top-level probes over in-memory results. The three Foundation byte-sequence overlays were corrected from unconditional `unavailable` to conditional declarations: they exist when `Element == UInt8`. The 780 `_DeviceActivity_SwiftUI` declarations remain non-implemented; the 13 ManagedSettings-token rows remain deferred because this lane declares Foundation as its sole dependency.
+
+Top-5 implemented evidence distribution:
+
+| citations | test |
+| --- | --- |
+| 21 | `testDeviceActivityReportBuilderBuildBlock` |
+| 15 | `testDeviceActivityDataDeviceAndUser` |
+| 11 | `testDeviceActivityActivitySegment` |
+| 11 | `testDeviceActivityDeviceModelRawValues` |
+| 10 | `testDeviceActivityMonitoringErrorSurface` |
+
+No test supplies more than 40% of implemented evidence. Async probes use a detached cooperative-executor task plus a bounded lock-protected poll; they do not depend on `DispatchQueue.main`, a semaphore, or a run loop.
