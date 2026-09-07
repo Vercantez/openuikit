@@ -1,0 +1,12 @@
+UNCHANGED MAIN GUEST BUILD
+702:/work-focus-score/uikit/Sources/Blockzilla/Blockzilla/BrowserViewController.swift:1193:21: error: value of type 'any UIDropSession' has no member 'loadObjects'
+706:     |                     `- error: value of type 'any UIDropSession' has no member 'loadObjects'
+807:/work-focus-score/uikit/Sources/Blockzilla/Blockzilla/UIComponents/URLBar/URLBar.swift:1137:49: error: cannot convert value of type 'Foundation.NSItemProvider' to expected argument type 'OpenUIKit.NSItemProvider'
+811:     |                                                 `- error: cannot convert value of type 'Foundation.NSItemProvider' to expected argument type 'OpenUIKit.NSItemProvider'
+
+LEFTOVER EXECUTABLE (NOT SCORED)
+6d705b2c8d82edfa73c560da59bfadb504b55fc2acefa7a6de7838ed7da45b32  /work-focus-score/build/full/render_full
+
+SUCCESS STAMPS
+MISSING /work-focus-score/build/full/focus-guest-subject.sha256
+MISSING /work-focus-score/build/full/focus-guest-executable.sha256
