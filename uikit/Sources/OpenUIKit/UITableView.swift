@@ -1964,16 +1964,29 @@ open class UITableView: UIScrollView {
             defaults = (UITableView.separatorLeftInset,
                         UITableView.groupedSeparatorRightInset)
         case .insetGrouped:
+            // MEASURED insetgrouped-separator probe, iOS 26.1 (2026-09-07):
+            // SE landscape 667 pt, horizontal safe area 0/0: separator
+            // x 40, width 587 inside card [20, 627] => 20/20 insets.
+            // iPhone 16 landscape 852 pt, safe area 59/59: x 95, width
+            // 662 inside card [79, 694] => 16/16. Holding that window
+            // fixed and overriding only the table's horizontal safe area:
+            // 0/0, 0/2, 2/0 give 20/20; 2/2, 4/4, 59/59 give 16/16.
+            // Window width alone (including the content margin's 414 pt
+            // threshold) therefore does not determine the separator inset.
+            if UITableView.isIOSChrome, !UITableView.isPadChrome,
+               UINavigationBar.isCompactHeight {
+                let inset = safeAreaInsets.left > 0 && safeAreaInsets.right > 0
+                    ? UITableView.iOSPhoneInsetGroupedInnerInset : iOSMargin
+                defaults = (inset, inset)
+                break
+            }
             // MEASURED `/tmp/ipad-open-cap` table_inset_nav, iPad (A16)
             // 820×1180 @2x / iOS 26.1: NavFlow-ipad mid-row separators
             // start at abs x **40** = card 20 + inner 20. Phone / Catalyst
-            // inset-grouped keep `separatorLeftInset` 16, except compact
-            // height (NavFlow t200.landscape cell-local separator x **20**).
+            // inset-grouped keep `separatorLeftInset` 16 in regular height.
             let left: CGFloat
             if UITableView.isPadChrome {
                 left = UITableView.iOSPadInsetGroupedInnerInset
-            } else if UITableView.isIOSChrome, UINavigationBar.isCompactHeight {
-                left = iOSMargin
             } else {
                 left = UITableView.separatorLeftInset
             }
