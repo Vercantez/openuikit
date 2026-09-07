@@ -744,7 +744,7 @@ public enum MTLCounterSamplingPoint: UInt, Equatable, Hashable, Sendable {
     case atBlitBoundary = 4
 }
 
-public struct MTLLogContainer: Sendable {
+public struct MTLLogContainer: Sequence, Sendable {
     public struct Iterator: IteratorProtocol {
         public typealias Element = any MTLFunctionLog
 
