@@ -138,3 +138,32 @@ func testGeneratedEnumEqualityAndHashingWitnesses() {
     wave12CheckEnumWitness(INVisualCodeType.self)
     wave12CheckEnumWitness(INVocabularyStringType.self)
 }
+
+func testAirlineAirportAndGateRetainedProperties() {
+    let airline = INAirline(name: "OpenAir", iataCode: "OA", icaoCode: "OAI")
+    precondition(airline.iataCode == "OA")
+    precondition(airline.icaoCode == "OAI")
+
+    let airport = INAirport(name: "San Francisco", iataCode: "SFO", icaoCode: "KSFO")
+    precondition(airport.name == "San Francisco")
+    precondition(airport.icaoCode == "KSFO")
+
+    let gate = INAirportGate(airport: airport, terminal: "2", gate: "G1")
+    precondition(gate.airport === airport)
+    precondition(gate.terminal == "2")
+}
+
+func testBillPayeeDesignatedValues() {
+    let nickname = INSpeakableString(spokenPhrase: "Home")
+    let organization = INSpeakableString(spokenPhrase: "Open Utilities")
+    guard let payee = INBillPayee(
+        nickname: nickname,
+        number: "account-42",
+        organizationName: organization
+    ) else {
+        preconditionFailure("valid bill payee values must initialize")
+    }
+    precondition(payee.nickname === nickname)
+    precondition(payee.accountNumber == "account-42")
+    precondition(payee.organizationName === organization)
+}

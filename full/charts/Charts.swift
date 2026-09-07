@@ -793,6 +793,15 @@ public struct BasicChartSymbolShape: Hashable, Sendable, View {
 
     public var body: some View { EmptyView() }
 
+    /// The normalized bounds used when a symbol is aligned to a mark.
+    ///
+    /// Linux symbols are authored in the complete unit square. Keeping this
+    /// value explicit lets the plot-space engine size erased and concrete
+    /// symbols identically without relying on a SwiftUI layout pass.
+    public var perceptualUnitRect: CGRect {
+        CGRect(x: 0, y: 0, width: 1, height: 1)
+    }
+
     public func path(in rect: CGRect) -> Path {
         if rect.width <= 0 || rect.height <= 0 {
             return Path()

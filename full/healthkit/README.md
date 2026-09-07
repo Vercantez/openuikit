@@ -258,7 +258,40 @@ when no store directory is writable.
 
 ## Coverage
 
-See `coverage.tsv`. Implemented 2019, declared 587, deferred 39, unavailable 0.
+See `coverage.tsv`. Implemented 2319, declared 287, deferred 39, unavailable 0,
+not-applicable 0.
 Deferred rows are `NSComparisonPredicate.Operator` and `UTType` APIs only.
 Declared rows compile but lack a focused `*Tests.swift` assertion. Wave-8/9
 async `result(for:)` / `Sci12_Concurrency` combinators remain declared.
+
+## Depth pass 2026-09 (wave 8)
+
+This continuation moved 300 identifiers from declared to implemented using
+top-level, synchronous, no-argument focused tests. Counts changed from
+**implemented 2019 / declared 587 / deferred 39 / unavailable 0 /
+not-applicable 0** to **implemented 2319 / declared 287 / deferred 39 /
+unavailable 0 / not-applicable 0**.
+
+The pass adds immutable clinical-coding values with secure-coding round trips,
+complete contact-lens and contact-prescription state, medication concept and
+user-annotation values, concrete vision-prescription and local FHIR payload
+state, and a mutable live-workout collection policy. None of those local values
+claim validation by Apple, access to a device, Health daemon, entitlement, or
+clinical network. Authorization continues to start at `.notDetermined`, and
+Apple service-backed preference/background operations remain fail-closed.
+
+Top-five evidence distribution after the pass:
+
+1. `HealthKitEnumTests.swift#testEnumRawValues` — 608 identifiers (26.2%).
+2. `HealthKitConstantTests.swift#testCStringAndIdentifierConstants` — 407 (17.6%).
+3. `HealthKitEquatableTests.swift#testEnumEquatableAndHashable1` — 109 (4.7%).
+4. `HealthKitSampleTests.swift#testQuantityCategoryWorkoutSamples` — 95 (4.1%).
+5. `HealthKitEquatableTests.swift#testEnumEquatableAndHashable2` — 85 (3.7%).
+
+Unresolved behavior remains unchanged: Apple-oracle confirmation is still
+needed for TCC authorization transitions, daemon-backed background delivery,
+Apple clinical/FHIR verification, medication-store mutations, Watch/ECG
+hardware streams, and the unavailable Linux `UniformTypeIdentifiers` and
+`NSComparisonPredicate.Operator` signatures. The inherited async-sequence
+algorithm surface remains declared rather than being relabeled from a
+synchronous identity-only test.

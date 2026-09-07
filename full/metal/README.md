@@ -366,3 +366,37 @@ acceleration-structure `writeCompactedSize` writes 0 (no RT GPU).
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
 linux and the sealed gate compiles with a clean product tree (`products=clean`).
 
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r20`, framework `Metal`, lane `large-partitioned`.
+This pass audited the already-present software device family by family and added
+a focused synchronous test for the deterministic empty host log sequence. It
+also promotes existing descriptor, command-buffer, device, reflection, resource,
+and fail-closed error behavior only where a focused synchronous family test runs.
+
+| Status | Before (wave-8 r18 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 4013 | 4313 |
+| declared | 203 | 0 |
+| deferred | 328 | 231 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+300**. The three unavailable process-info APIs now
+explicitly record their dependency on Apple's hardware device-certification
+service. Shader compilation, GPU execution, IOSurface sharing, hardware capture,
+and unsupported Metal 4 / IO operations retain the fail-closed boundaries
+described above.
+
+Top-5 implemented evidence distribution (of 4313):
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 2119
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 339
+3. `MetalCommandTests.swift#testMetal4CommandEncoders` — 204
+4. `MetalDescriptorTests.swift#testMetal4PipelineDescriptors` — 204
+5. `MetalGeometryTests.swift#testGeometryHelpers` — 108
+
+The enum/option-set/C-constant catalog is the permitted table-driven evidence.
+No other focused test approaches 40% of the remaining implemented rows.
+Unresolved Apple-oracle questions remain recorded in `oracle-questions.tsv`;
+this pass does not infer Apple GPU, daemon, entitlement, or shader behavior.
