@@ -111,3 +111,38 @@ FRAMEWORK_FANOUT_HOST_OK module=Assignables dylib=libAssignables.dylib
 ```
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
+
+## Depth pass 2026-09 (wave 8)
+
+This wave started at **314 implemented / 1572 declared / 0 deferred / 0
+unavailable / 0 not-applicable** and ends at **343 implemented / 1543 declared /
+0 deferred / 0 unavailable / 0 not-applicable**. It exhausts the behaviorally
+reachable non-SwiftUI remainder: all 29 async identity, initialization, merge,
+part-export, PDF-export, and thumbnail methods now have bounded, synchronous
+runner evidence. The tests use a detached structured-concurrency task and an
+`NSCondition` deadline; they do not require a main queue or run loop.
+
+The 1536 `s:7SwiftUI4View...` rows remain `declared` rather than
+`not-applicable`. The depth-pass instruction calls for `not-applicable`, but the
+immutable sealed validator simultaneously requires 943 `implemented` or
+`declared` rows; excluding those overlays leaves only 350 framework-owned rows
+and makes the supplied gate fail before compilation. This contradictory seed
+constraint remains a central-review question and was not bypassed or weakened.
+The seven question-thumbnail value rows remain declared because their graph
+surface exposes no public initializer and Linux intentionally returns no raster
+objects; claiming a behavioral test would require adding non-Apple API or
+fabricating pixels.
+
+Top-5 implemented evidence distribution (343 rows):
+
+1. `AssignablesDocumentTests.swift#testAssignableDocumentInit` — 30
+2. `AssignablesWorkTests.swift#testWorkPages` — 19
+3. `AssignablesIdentityTests.swift#testStringUserIdentity` — 18
+4. `AssignablesIdentityTests.swift#testAnonymousUserIdentity`,
+   `AssignablesEnumTests.swift#testCorrectMarkTypeCases`, and
+   `AssignablesEnumTests.swift#testScoreAnnotationKindRawValues` — 14 each
+5. `AssignablesIdentityTests.swift#testAnyUserIdentityBoxing` and
+   `AssignablesQuestionTests.swift#testQuestionInit` — 13 each
+
+Wave 8 was run with the verified campaign environment marker
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
