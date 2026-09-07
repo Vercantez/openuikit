@@ -622,9 +622,24 @@ def loads(gate: str, name: str, arch: str) -> tuple[str, ...]:
     return macos_overlay_autolink_loads(_loads_table(gate)[name], arch)
 
 
+# x86_64-only linker inputs measured on the x86_64 box after the Focus
+# Linux-guest work (98c16f53 / 05195b69: OpenUIKit's Foundation-less build
+# imports class ObjectiveC.NSObject, so the onboarding gate's libWidget link
+# now lists libobjc.tbd right after libSystem.tbd; verify91 at 8dea11e2:
+# "libWidget linker inputs changed ... +{SYS}/usr/lib/libobjc.tbd"). arm64's
+# Gate B did not gain it, so the insert is keyed by arch.
+X86_INPUT_INSERTS: dict[tuple[str, str], tuple[str, str]] = {
+    ("onboarding", "widget"): ("{SYS}/usr/lib/libSystem.tbd", "{SYS}/usr/lib/libobjc.tbd"),
+}
+
+
 def inputs(gate: str, name: str, arch: str) -> tuple[str, ...]:
     items = macos_overlay_autolink_inputs(_inputs_table(gate)[name], arch)
     if arch == "x86_64":
+        insert = X86_INPUT_INSERTS.get((gate, name))
+        if insert and insert[1] not in items and insert[0] in items:
+            at = items.index(insert[0]) + 1
+            items = items[:at] + (insert[1],) + items[at:]
         # The load record implies the contributing tbd: when the x86_64 loads
         # list gained libswiftDarwin by the errno replacement, the link map
         # lists libswiftDarwin.tbd too (measured on the x86_64 box at main
