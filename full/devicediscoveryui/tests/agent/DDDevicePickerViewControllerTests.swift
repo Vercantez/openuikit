@@ -1,6 +1,26 @@
 import Foundation
 @_spi(OpenUIKitHost) import DeviceDiscoveryUI
 
+private final class EndpointResultBox: @unchecked Sendable {
+    private let condition = NSCondition()
+    private var result: Result<NWEndpoint, Error>?
+
+    func finish(_ result: Result<NWEndpoint, Error>) {
+        condition.lock()
+        self.result = result
+        condition.broadcast()
+        condition.unlock()
+    }
+
+    func waitForResult() -> Result<NWEndpoint, Error>? {
+        condition.lock()
+        defer { condition.unlock() }
+        let deadline = Date(timeIntervalSinceNow: 2)
+        while result == nil && condition.wait(until: deadline) {}
+        return result
+    }
+}
+
 func testPickerViewControllerType() {
     precondition(
         String(describing: DDDevicePickerViewController.self)
@@ -45,4 +65,25 @@ func testPickerInitWithAccess() {
         access: .permanent
     )
     precondition(permanent == nil)
+}
+
+func testPickerEndpointFailsClosed() {
+    let controller = DDDevicePickerViewController()
+    let box = EndpointResultBox()
+    Task.detached {
+        do {
+            box.finish(.success(try await controller.endpoint))
+        } catch {
+            box.finish(.failure(error))
+        }
+    }
+
+    guard let result = box.waitForResult() else {
+        preconditionFailure("endpoint getter did not complete before its bounded deadline")
+    }
+    guard case let .failure(error) = result,
+          case let DeviceDiscoveryUIUnavailable.linuxHost(operation) = error else {
+        preconditionFailure("endpoint getter did not fail closed with the Linux-host error")
+    }
+    precondition(operation == "DDDevicePickerViewController.endpoint")
 }
