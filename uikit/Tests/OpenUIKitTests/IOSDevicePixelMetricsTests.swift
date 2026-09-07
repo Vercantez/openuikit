@@ -293,6 +293,16 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         let plainCell = plain.cellForRow(at: IndexPath(row: 0, section: 0))
         XCTAssertEqual(plainCell?.layoutMargins.left, 20)
         XCTAssertEqual(plainCell?.contentView.layoutMargins.left, 20)
+
+        // SE landscape (Ledger.t200.landscape golden): card 20, content 20 -> labels at 40.
+        device(667, 375, scale: 2)
+        let wide = UITableView(frame: CGRect(x: 0, y: 0, width: 667, height: 375), style: .insetGrouped)
+        wide.dataSource = source
+        wide.delegate = source
+        wide.layoutIfNeeded()
+        let wideCell = wide.cellForRow(at: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(wideCell?.layoutMargins.left, 20)
+        XCTAssertEqual(wideCell?.contentView.layoutMargins.left, 20)
     }
 
     // MARK: Untitled grouped footers + compact headers (headerprobe / NavFlow)

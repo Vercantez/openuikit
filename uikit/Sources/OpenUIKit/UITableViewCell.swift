@@ -585,7 +585,15 @@ open class UITableViewCell: UIView, ReusableView {
     /// right edge at 353 - 20 and the PaddedSwitch at x 262.
     var contentMargin: CGFloat {
         if UITableViewCell.isIOSChrome, !UITableView.isPadChrome, tableView?.style == .insetGrouped {
-            return UITableView.iOSPhoneInsetGroupedInnerInset
+            // MEASURED both ways: iPhone 16 portrait (393 pt) labels at 36 =
+            // card 20 + 16; SE landscape (667 pt, Ledger.t200.landscape golden)
+            // labels at 40 = card 20 + 20. The inner inset follows the window
+            // width at 414, not the 390 threshold of the system margin (the
+            // merge check refused a flat 16: three Ledger landscape rows
+            // dropped ~1 pt).
+            let width = window?.bounds.width ?? tableView?.bounds.width ?? bounds.width
+            return width >= 414 ? UITableView.iOSSystemMargin(width: width)
+                                : UITableView.iOSPhoneInsetGroupedInnerInset
         }
         return trailingMargin
     }
