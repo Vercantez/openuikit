@@ -890,7 +890,7 @@ let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
 let simplenoteTargets: [Target] = [
-    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
+    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include/Simperium"),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],

@@ -1,4 +1,4 @@
-#import "Simperium.h"
+#import "include/Simperium.h"
 
 static NSError *SPUnavailableError(void) {
     return [NSError errorWithDomain:@"OpenUIKit.Simperium" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Simperium networking is unavailable in OpenUIKit"}];
@@ -48,6 +48,7 @@ static void SPLogOnce(void) {
 @end
 
 @implementation SPManagedObject
+@dynamic ghost, bucket, ghostData, simperiumKey, updateWaiting;
 - (void)loadMemberData:(NSDictionary *)dictionary { (void)dictionary; SPLogOnce(); }
 - (NSDictionary *)dictionary { return @{}; }
 - (NSString *)version { return nil; }

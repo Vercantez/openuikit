@@ -155,4 +155,5 @@ typedef void (^SPBucketStatsCallback)(SPBucket *bucket, NSUInteger localPendingC
 @property (nonatomic, weak) Class authenticationViewControllerClass;
 @end
 
+NS_ASSUME_NONNULL_END
 #endif
