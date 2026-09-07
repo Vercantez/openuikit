@@ -1,0 +1,61 @@
+{
+ "campaign": "ios26.1-fwdepth-r19",
+ "createdAt": "2026-09-06T23:28:13Z",
+ "env": "6a9de055eaf081918405e62d8ea487f6",
+ "frameworks": {
+  "coreml": {
+   "applied": true,
+   "branch": "agent/fw-coreml-cc",
+   "lastStatus": "[READY] Implement CoreML framework for OpenUIKit Linux\nVercantez/openuikit-linux-platform  \u2022  9m ago\n+324/-84 \u2022 4 files",
+   "module": "CoreML",
+   "outsideOwned": [],
+   "polledAt": "2026-09-07T00:00:43Z",
+   "sha": "f9fccd3ef115e9c279e7507e4d1a738a1801ed8f",
+   "shortstat": "4 files changed, 324 insertions(+), 84 deletions(-)",
+   "status": "harvested",
+   "submittedAt": "2026-09-06T23:51:27Z",
+   "taskId": "task_e_6a9dfc7d7e30832681efb918f8a0ea3e"
+  },
+  "network": {
+   "applied": true,
+   "branch": "agent/fw-network-cc",
+   "lastStatus": "[READY] Implement Network framework for OpenUIKit Linux\nVercantez/openuikit-linux-platform  \u2022  9m ago\n+200/-82 \u2022 3 files",
+   "module": "Network",
+   "outsideOwned": [],
+   "polledAt": "2026-09-07T00:01:02Z",
+   "sha": "80de04e9011021dcdd4d177cf483a0aeeb4c34d9",
+   "shortstat": "3 files changed, 200 insertions(+), 82 deletions(-)",
+   "status": "harvested",
+   "submittedAt": "2026-09-06T23:51:35Z",
+   "taskId": "task_e_6a9dfc859a308326ae84f5d1fdf0ed13"
+  },
+  "passkit": {
+   "applied": true,
+   "branch": "agent/fw-passkit-cc",
+   "lastStatus": "[READY] Implement PassKit framework for Linux\nVercantez/openuikit-linux-platform  \u2022  9m ago\n+33/-38 \u2022 3 files",
+   "module": "PassKit",
+   "outsideOwned": [],
+   "polledAt": "2026-09-06T23:37:33Z",
+   "sha": "dd2670a25013d5039c3e2ab1cd78c95271e93536",
+   "shortstat": "3 files changed, 33 insertions(+), 38 deletions(-)",
+   "status": "harvested",
+   "submittedAt": "2026-09-06T23:28:17Z",
+   "taskId": "task_e_6a9df71030f48326ab9961eed8ed27e7"
+  },
+  "storekit": {
+   "applied": true,
+   "branch": "agent/fw-storekit-cc",
+   "lastStatus": "[READY] Implement StoreKit for OpenUIKit Linux\nVercantez/openuikit-linux-platform  \u2022  21m ago\n+201/-12 \u2022 4 files",
+   "module": "StoreKit",
+   "outsideOwned": [],
+   "polledAt": "2026-09-06T23:49:56Z",
+   "sha": "0628390b68be4c7fba72fe9be4a1668b6d55a6ba",
+   "shortstat": "4 files changed, 201 insertions(+), 12 deletions(-)",
+   "status": "harvested",
+   "submittedAt": "2026-09-06T23:28:24Z",
+   "taskId": "task_e_6a9df7176dc08326864e014e2106c214"
+  }
+ },
+ "startingRef": "experiment/cursor-framework-fanout-wave19-seed-20260917",
+ "updatedAt": "2026-09-07T00:01:17Z"
+}
