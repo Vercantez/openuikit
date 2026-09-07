@@ -206,3 +206,35 @@ fail-closed where the Linux port has no compatible backend or Apple service.
 Passing the isolated host gate is not integrated Linux success. Telegram's
 generated `AgeNet` / `U2netp` wrappers can type-check and can run only if
 the compiled artifact is an Identity / DictVectorizer / pipeline of those.
+
+### Wave 8 declared-surface exhaustion
+
+This continuation exhausts the 128 remaining declaration-only rows with
+focused runtime evidence. In particular, a concrete `MLCustomModel` now tests
+both initializer spellings, direct prediction, and the protocol extension's
+default batch prediction. Existing focused tests already exercised the model,
+description, provider, feature-value, multi-array, shaped-array protocol,
+tensor-literal/slicing, and inherited Collection witnesses; their ledger rows
+now cite those exact synchronous tests rather than source declarations.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before this continuation | 966 | 128 | 576 | 16 | 0 |
+| After this continuation | 1094 | 0 | 576 | 16 | 0 |
+
+Top-5 implemented evidence distribution (1,094 implemented):
+
+1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (11.7%)
+2. `MLShapedArrayAlgorithmsTests.swift#testShapedArrayAdvancedReadAlgorithms` — 98 (9.0%)
+3. `MLShapedArrayTests.swift#testShapedArrayConcatConvertAndSlice` — 84 (7.7%)
+4. `MLTensorTests.swift#testTensorShapeOpsAndEnums` — 78 (7.1%)
+5. `MLTensorTests.swift#testTensorReductionsAndElementwise` — 63 (5.8%)
+
+The requested 300-row gain cannot be reached from this starting ledger: only
+128 non-implemented, non-stdlib rows remained. All 128 are now implemented.
+The 576 remaining deferred IDs are synthesized Swift standard-library integer
+operators leaked into the CoreML graph, not CoreML-owned behavior; the task's
+classification rule permits `not-applicable` only for SwiftUI overlays. The 16
+unavailable rows continue to state their Apple Metal / pixel-buffer hardware
+boundary explicitly. No fail-closed inference or Apple-service boundary was
+broadened.

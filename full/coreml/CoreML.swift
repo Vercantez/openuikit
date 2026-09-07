@@ -57,12 +57,15 @@ final class CoreMLOnceToken: @unchecked Sendable {
 
 /// Fail-closed completion delivery: non-inline, exactly once, race-safe.
 /// The hop is only required to be off the caller; no particular queue is claimed.
+/// A short deadline also establishes an observable return-before-callback
+/// boundary, rather than racing the caller against an immediately scheduled
+/// global-queue job.
 func coreMLDeliverCompletion(_ body: @escaping () -> Void) {
     let token = CoreMLOnceToken()
     let work = CoreMLUncheckedWork(body: {
         token.run(body)
     })
-    DispatchQueue.global(qos: .userInitiated).async {
+    DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + .milliseconds(1)) {
         work.body()
     }
 }
