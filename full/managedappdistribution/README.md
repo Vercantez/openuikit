@@ -52,10 +52,29 @@ coverage.
 
 ## Depth pass 2026-09
 
-Fresh seed: no prior implemented/declared split. After this pass:
-**104 implemented / 1538 declared / 22 deferred**.
+The earlier pass established **104 implemented / 1538 declared / 22 deferred /
+0 unavailable / 0 not-applicable**.
 
-Nondeferred count 1642, above the leaf-full floor of 1332.
+## Depth pass 2026-09 (wave 8)
+
+Wave 8 exhausted the only remaining non-overlay family,
+`ManagedAppLibrary.ManagedApps.AsyncIterator.next`: both async overloads now have
+focused, bounded tests for the real fail-closed state machine. Each iterator emits
+`.failure(.deviceNotManaged)` once and then ends. The synchronous sealed-test
+entry points run the operations on Swift's cooperative executor and use a bounded
+`NSCondition` wait; they do not depend on a main queue or run loop.
+
+Before: **104 implemented / 1538 declared / 22 deferred / 0 unavailable /
+0 not-applicable**. After: **106 implemented / 1536 declared / 22 deferred /
+0 unavailable / 0 not-applicable**. The implemented gain is two identifiers; this
+exhausts the two-row `aB7Library` family named by the wave-8 task.
+
+The 1,536 remaining declared rows are synthesized SwiftUI cross-import modifier
+occurrences. The wave instruction calls for these to be `not-applicable`, but the
+immutable leaf-full validator requires 1,332 `implemented` or `declared` rows and
+rejects that required classification (leaving 106). They therefore remain
+`declared` pending a central gate/schema resolution; none is relabeled
+`implemented`.
 
 Top-5 implemented evidence distribution:
 
@@ -67,24 +86,8 @@ Top-5 implemented evidence distribution:
 | 4 | `ManagedAppPlatformTests.swift#testManagedAppPlatformCases` |
 | 4 | `ManagedAppDistributionErrorTests.swift#testErrorRecoveryFailClosed` |
 
-`testErrorCases` is a table-driven enum-member value test.
-`testOfferStateCases` / `testManagedAppPlatformCases` cover enum-like
-static members. No non-enum test exceeds 40% of implemented rows.
+`testErrorCases` is a table-driven enum-member value test. No non-enum test is
+cited by more than 40% of implemented rows.
 
-The sealed host gate was run as
-`bash full/managedappdistribution/tests/acceptance/test_host.sh` and ended:
-
-```
-FRAMEWORK_FANOUT_DELIVERABLE_OK module=ManagedAppDistribution lane=leaf-full symbols=1664
-FRAMEWORK_FANOUT_REFERENCE_OK
-MANAGEDAPPDISTRIBUTION_AGENT_RUNTIME_OK
-FRAMEWORK_FANOUT_HOST_OK module=ManagedAppDistribution dylib=libManagedAppDistribution.dylib
-```
-
-Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` does not print
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
-on this snapshot (`scratch/ladder-corpus/focus-ios` is missing; Cursor
-Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs campaign
-seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed
-framework gate compiles with a clean product tree (`products=clean`).
+The sealed host gate is run as
+`bash full/managedappdistribution/tests/acceptance/test_host.sh`.

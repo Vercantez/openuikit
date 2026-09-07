@@ -15,7 +15,8 @@ Usage:
                           [--slugs a,b,c] [--poll SECONDS] [--dry-run] [--once]
 State: <campaign>.codex.state.json (per slug: taskId, status, branch, sha).
 """
-import argparse, json, os, re, subprocess, sys, time, datetime, shutil
+import argparse, functools, json, os, re, subprocess, sys, time, datetime, shutil
+print = functools.partial(print, flush=True)
 
 ENV_DEFAULT = "6a9de055eaf081918405e62d8ea487f6"   # Vercantez/openuikit-linux-platform
 ROOT = os.path.expanduser("~/openuikit")
@@ -23,12 +24,17 @@ PLATFORM_URL = "git@github.com:Vercantez/openuikit-linux-platform.git"
 ADDENDUM = (
     "\n\nCODEX CLOUD RUN: this task runs in a Codex Cloud container of the platform "
     "repository with NO network in the agent phase. Do not try to push, open a PR, or "
-    "fetch anything; leave every change committed or uncommitted in the working tree — "
-    "the operator harvests it with `codex cloud apply` and pushes it as your branch. "
-    "The environment marker to cite is `CODEX_SWIFT_ENVIRONMENT_OK swift=6.2.4 "
-    "target=linux products=clean` (printed by the setup script after Cursor's own "
-    "marker). Your final message MUST paste the last 10 lines of the sealed gate "
-    "(`{gate}`) verbatim and the honest before/after implemented counts."
+    "fetch anything; commit your work on the current branch — the operator harvests it "
+    "with `codex cloud apply` and pushes it as your branch. "
+    "YIELD TARGET (binding): the pilot runs of this campaign stopped after moving 2 and 6 "
+    "rows to `implemented`; that is not a depth pass. This run must move at least {target} "
+    "rows to `implemented` with real behaviour and focused test evidence (or exhaust every "
+    "remaining non-overlay family, whichever comes first), working family by family in the "
+    "order listed above, committing after each family, and continuing until your agent time "
+    "budget is spent — do not write the README summary until the target is met or the "
+    "families are exhausted. Reclassifying rows to `not-applicable`/`unavailable` does not "
+    "count toward the target. Your final message MUST paste the last 10 lines of the sealed "
+    "gate (`{gate}`) verbatim and the honest before/after implemented counts."
 )
 
 def sh(args, cwd=None, timeout=900, check=False):
@@ -66,11 +72,13 @@ def task_status(task_id):
     if tag: return "done", raw
     return "unknown", raw
 
-def submit(env, branch, prompt, dry):
+def submit(env, branch, prompt, dry, effort=""):
     if dry:
         print(f"  DRY RUN: codex cloud exec --env {env} --branch {branch} <prompt {len(prompt)} chars>")
         return "task_dry_" + str(int(time.time()))
-    r = sh(["codex", "cloud", "exec", "--env", env, "--branch", branch, prompt], timeout=300)
+    args = ["codex", "cloud", "exec"]
+    if effort: args += ["-c", f'model_reasoning_effort="{effort}"']
+    r = sh(args + ["--env", env, "--branch", branch, prompt], timeout=300)
     out = r.stdout + r.stderr
     m = re.search(r"task_e_[0-9a-f]+", out)
     if not m:
@@ -85,6 +93,8 @@ def ensure_platform_remote():
 def harvest(fw, task_id, starting_ref, st_entry):
     """Apply the task diff onto a fresh worktree of the seed branch, commit, push agent/fw-<slug>-cc."""
     slug = fw["slug"]; branch = f"agent/fw-{slug}-cc"
+    if re.search(r"^no diff\s*$", st_entry.get("lastStatus", ""), re.M):
+        return {"status": "no_diff", "reason": "codex cloud status reports no diff"}
     ensure_platform_remote()
     sh(["git", "fetch", "-q", "platform", starting_ref], cwd=ROOT, check=True)
     wt = f"/tmp/wt-codex-{slug}"
@@ -93,7 +103,16 @@ def harvest(fw, task_id, starting_ref, st_entry):
     sh(["git", "worktree", "add", "-q", "--detach", wt, "FETCH_HEAD"], cwd=ROOT, check=True)
     r = sh(["codex", "cloud", "apply", task_id], cwd=wt, timeout=600)
     applied = r.returncode == 0
+    for junk in ("error.log",):   # the codex CLI writes its debug log (with the account id) into cwd
+        try: os.remove(os.path.join(wt, junk))
+        except FileNotFoundError: pass
     changed = sh(["git", "status", "--porcelain"], cwd=wt).stdout.strip()
+    owned_prefixes = [p.split("*")[0].rstrip("/") for p in fw.get("ownedPaths", []) + fw.get("editablePaths", [])]
+    owned_changed = [l[3:] for l in changed.splitlines() if any(l[3:].startswith(op) for op in owned_prefixes)]
+    if changed and not owned_changed:
+        sh(["git", "worktree", "remove", "--force", wt], cwd=ROOT)
+        return {"status": "no_diff", "reason": "apply changed nothing under the framework's owned paths",
+                "changed": changed.splitlines()[:10], "applyTail": (r.stdout + r.stderr)[-500:]}
     if not changed:
         sh(["git", "worktree", "remove", "--force", wt], cwd=ROOT)
         return {"status": "no_diff", "applyRc": r.returncode, "applyTail": (r.stdout + r.stderr)[-500:]}
@@ -119,6 +138,8 @@ def main():
     ap.add_argument("--slugs", default=""); ap.add_argument("--poll", type=int, default=120)
     ap.add_argument("--dry-run", action="store_true"); ap.add_argument("--once", action="store_true")
     ap.add_argument("--branch", default="")
+    ap.add_argument("--target", type=int, default=80, help="minimum rows to implement per lane (prompt yield target)")
+    ap.add_argument("--effort", default="high", help="model_reasoning_effort passed to codex cloud exec via -c ('' to omit)")
     a = ap.parse_args()
     camp = json.load(open(a.campaign))
     st_path = a.campaign.replace(".json", ".codex.state.json")
@@ -143,7 +164,7 @@ def main():
             if state == "done":
                 fw = next(f for f in camp["frameworks"] if f["slug"] == slug)
                 try:
-                    res = harvest(fw, e["taskId"], starting_ref, st); e.update(res)
+                    res = harvest(fw, e["taskId"], starting_ref, {**st, **e}); e.update(res)
                     print(f"  {slug}: {res['status']} {res.get('shortstat','')} -> {res.get('branch','')}")
                 except Exception as ex:
                     e["status"] = "harvest_failed"; e["error"] = str(ex)[-600:]; print(f"  {slug}: HARVEST FAILED {ex}")
@@ -155,9 +176,10 @@ def main():
         for fw in want:
             if len(active) >= a.max_active: break
             if fw["slug"] in fws: continue
-            prompt = fw["prompt"] + ADDENDUM.format(gate=fw.get("gate", "the framework's tests/acceptance/test_host.sh"))
+            prompt = fw["prompt"] + ADDENDUM.format(gate=fw.get("gate", "the framework's tests/acceptance/test_host.sh"),
+                                                    target=a.target)
             try:
-                tid = submit(a.env, starting_ref, prompt, a.dry_run)
+                tid = submit(a.env, starting_ref, prompt, a.dry_run, a.effort)
                 fws[fw["slug"]] = {"taskId": tid, "status": "active", "submittedAt": now(), "module": fw["module"]}
                 active.append(fw["slug"]); print(f"  submitted {fw['slug']} -> {tid}")
             except Exception as ex:

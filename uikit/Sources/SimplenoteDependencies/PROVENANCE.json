@@ -1,0 +1,1758 @@
+[
+  {
+    "module": "SimplenoteFoundation",
+    "url": "git@github.com:Automattic/SimplenoteFoundation-Swift.git",
+    "revision": "2731e4d28c42d394ddc62cd864d9f7ff96759228",
+    "swift_sources": 11,
+    "files": [
+      {
+        "path": "EntityObserver/EntityObserver.swift",
+        "sha256": "52f0705f871822bfabf38679d2be50dd9535e1d9ce97b554531a44895a481ff7"
+      },
+      {
+        "path": "Extensions/String+Line.swift",
+        "sha256": "460740505456c8a6b6d21e57e730052bbb8fc912f566573d046cb50953f73736"
+      },
+      {
+        "path": "Extensions/String+RangeConversion.swift",
+        "sha256": "166742bf61780893a7216381d4bdcc02b88789134a226dd3ed9f895cd786fe6c"
+      },
+      {
+        "path": "ResultsController/Extensions/IndexPath+ResultsController.swift",
+        "sha256": "5ab9bc80e1e838906dbc9a672da456a25a1370bd6644bd8f466165d1929fcd25"
+      },
+      {
+        "path": "ResultsController/Extensions/NSManagedObject+ResultsController.swift",
+        "sha256": "6ba0596c619e8fa74301de00f77942c060be64c843d8aa15935476da892497d2"
+      },
+      {
+        "path": "ResultsController/Extensions/NSTableView+ResultsController.swift",
+        "sha256": "8806035f4cdc0f92c95fd846a18273ee0b4cbe73bfcea57425a218f9e18364b4"
+      },
+      {
+        "path": "ResultsController/Extensions/UITableView+ResultsController.swift",
+        "sha256": "8a14d0a5c804dcd850e8123b2a2eab66a2daedcabbefeb9d377c403b3193eb2f"
+      },
+      {
+        "path": "ResultsController/Internal/FetchedResultsControllerDelegateWrapper.swift",
+        "sha256": "0e532b6347f40b4589c134bcaa58697ab3b4afa963cfc35db8176b1e5d84eade"
+      },
+      {
+        "path": "ResultsController/ResultsController.swift",
+        "sha256": "5caf4032e982a105501240d57a2521e062574f200717b8f74a89b789c289de5d"
+      },
+      {
+        "path": "ResultsController/ResultsObjectsChangeset.swift",
+        "sha256": "d21760207c8ef4ebca8fdadc2d1235a2132d203a4725ca8e7afbe9c234b121d6"
+      },
+      {
+        "path": "ResultsController/ResultsSectionsChangeset.swift",
+        "sha256": "89dde11a5e57055025c657d55c0e54014338b7a57e40b1e82d56a186b2ed9e75"
+      }
+    ]
+  },
+  {
+    "module": "SimplenoteEndpoints",
+    "url": "git@github.com:Automattic/SimplenoteEndpoints-Swift.git",
+    "revision": "3d1c0a5db39ca798a7de10e7faeef8ae66e941e6",
+    "swift_sources": 10,
+    "files": [
+      {
+        "path": "Endpoints/AccountRemote.swift",
+        "sha256": "95390bbf3cb1013ea477a941605e6b9036415c96bcfbf4bdf887dd9db11d93f7"
+      },
+      {
+        "path": "Endpoints/EndpointConstants.swift",
+        "sha256": "86c4b38ca9b5eac43c059cc9a223d1bdfd15f6cf8c86453321297e4efc178664"
+      },
+      {
+        "path": "Endpoints/LoginRemote.swift",
+        "sha256": "5ab5b7f5d390181c7e2c6954a92d1921b74043086372f6a4448acc55319f46e2"
+      },
+      {
+        "path": "Endpoints/SignupRemote.swift",
+        "sha256": "cdc831f0320fa3eda27b754f534400af6acd1e2d3258cc720b37c51133f49dc6"
+      },
+      {
+        "path": "Interfaces/LoginRemoteProtocol.swift",
+        "sha256": "b1d49908087134b70e8749bc10e8e085096fc906b00f1815ee6d0ba74a02d606"
+      },
+      {
+        "path": "Interfaces/URLSessionProtocol.swift",
+        "sha256": "0abd8edb925a65e6988a92f4c47e5567eaf12e9972e53788fc86f5de56db9744"
+      },
+      {
+        "path": "Interfaces/UserProtocol.swift",
+        "sha256": "d181a38f659ac8276a497ab8ba2845ac9b8443df23051b230c04ecfdf0e19396"
+      },
+      {
+        "path": "Tools/Remote.swift",
+        "sha256": "75082d69e12f7abab88194239eb65567c7b1fbd3ccab464864ca5caec71931a2"
+      },
+      {
+        "path": "Tools/RemoteConstants.swift",
+        "sha256": "7938fad6dc150188eb093abc3c0dbe94e33fe31421b696551f837bfc9d7aab99"
+      },
+      {
+        "path": "Tools/RemoteError.swift",
+        "sha256": "a39b940c8a5e95e1d26fad4f0fc65ce10ce0dcf9f861a255ffafd8d503ec9202"
+      }
+    ]
+  },
+  {
+    "module": "SimplenoteInterlinks",
+    "url": "git@github.com:Automattic/SimplenoteInterlinks-Swift.git",
+    "revision": "be3827a5bf05c5349ed62126c3e1dc60a2a6cee6",
+    "swift_sources": 1,
+    "files": [
+      {
+        "path": "Extensions/String+Interlinking.swift",
+        "sha256": "db471c4a6c613a4d4f044686946f7274f20ef5dc4976f8dd4cbf913e7ca5bad7"
+      }
+    ]
+  },
+  {
+    "module": "SimplenoteSearch",
+    "url": "git@github.com:Automattic/SimplenoteSearch-Swift.git",
+    "revision": "499d2809d169fcbeb9ff75568d9f1f937f290ffc",
+    "swift_sources": 6,
+    "files": [
+      {
+        "path": "Extensions/NSPredicate+Search.swift",
+        "sha256": "e1010cc3023e005d3766e4ad89ae4c60777f1a0d82dce1c94703329287ed6bf8"
+      },
+      {
+        "path": "Extensions/NSString+Search.swift",
+        "sha256": "b71437e8d234dc2373e3660c2c0da66fa98e68e2e95bab0b2d21f64b64bf556d"
+      },
+      {
+        "path": "Interfaces/SearchableNote.swift",
+        "sha256": "28f74eab8fecf78400bec357eb6c73c31032a30d676fcc2e838d8c1b979ddcf0"
+      },
+      {
+        "path": "Interfaces/SearchableTag.swift",
+        "sha256": "b113448387764a25969439cd05f090f408c455beed4433b6241483ead9f6a647"
+      },
+      {
+        "path": "Query/SearchQuery.swift",
+        "sha256": "58febf355e02a9c4c2d727546535bd71cc42790b4837233226fffcbc288566a1"
+      },
+      {
+        "path": "Query/SearchQueryItem.swift",
+        "sha256": "5cdb02cb758870309bae0928e87f0dfe229beb4d79687c99126d98b51dd344d1"
+      }
+    ]
+  },
+  {
+    "module": "Gridicons",
+    "url": "https://github.com/Automattic/Gridicons-iOS",
+    "revision": "c904cb73e26e86463a78e1335c6f4fd54a9e9223",
+    "swift_sources": 2,
+    "files": [
+      {
+        "path": "Gridicons.swift",
+        "sha256": "2aebfda08b1a830ca1179da0093f48e72e800e49d16cff1b3a7b58e374d5d408"
+      },
+      {
+        "path": "GridiconsGenerated.swift",
+        "sha256": "b5bbac3586e3f4723d17fdfa2c313aa658bb52c95b602df73c5a6ca12aae1164"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/Contents.json",
+        "sha256": "0fd49ba3c3585c709678e0046a821c3c60685ec7063720d30d3a3448be3a208b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/add-image.imageset/Contents.json",
+        "sha256": "cc5b6c89f631dff5094c00642aa395fab74c047a0963e4e4dabd2759c916c6eb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/add-image.imageset/add-image.pdf",
+        "sha256": "97b248a8c1f256593da4e7a36a203f238e3dc99afa70566eecc25ae781a92615"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/add-outline.imageset/Contents.json",
+        "sha256": "0cc9812035259818c5967089144cb218b5ad29609fb8f76996a6fa4a97109497"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/add-outline.imageset/add-outline.pdf",
+        "sha256": "33fa0ffac9404c094861f0f8d06213418f36f0696693b53a6f13e8f0866dc9a4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/add.imageset/Contents.json",
+        "sha256": "120ed18aaa59675d0a8bafe56013510b37e06cc81ccbf1181372f624325bb83a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/add.imageset/add.pdf",
+        "sha256": "a10eaeb5dfdaea5438b92ca7db19469ee539c136562c7020126ea93cbdf10402"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-center.imageset/Contents.json",
+        "sha256": "30c48d64d46c50fd8a9b0fa97256800b0c8fa621f88941a735349ce3c9e26037"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-center.imageset/align-center.pdf",
+        "sha256": "282540a9959ccf1dc5611ff3b909aed475dd697bb55b67944f33bb1175f3f4f6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-center.imageset/Contents.json",
+        "sha256": "89b0e0653dfc96036d99588443fcf99ad2026ee533db6509aeb75d11d3608fa2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-center.imageset/align-image-center.pdf",
+        "sha256": "463105f8dccb9bcc030ae446c97438a06ad0b85d88842806c8bfe6869b0d1725"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-left.imageset/Contents.json",
+        "sha256": "2d160a2e3a3a02e4ee09704484c7740e280754c3bc4d6c27ff0705f49c11f022"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-left.imageset/align-image-left.pdf",
+        "sha256": "f36b6014bb2b22f6ca86e48b898e92f68e6aa4e5c98253d92ab1f21dfc91cc53"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-none.imageset/Contents.json",
+        "sha256": "9cbc53ad40f87d8160d86fcb84549d2de867bd45e1e3f92ccd17282f871a6f5f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-none.imageset/align-image-none.pdf",
+        "sha256": "3b3be5e94e3141937375a29bbdb68a81802ec16709f30fc5206c6dd552a2dcdc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-right.imageset/Contents.json",
+        "sha256": "b19a31b8b160031be0e94a5c5a9ad73cd23533576c51f9347d3a339f83ccaf54"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-image-right.imageset/align-image-right.pdf",
+        "sha256": "b0560279b2ef6b5300a778970ad7ff9de1e752ac1b2e37bbbad3d9926979f824"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-justify.imageset/Contents.json",
+        "sha256": "98c8a1d216012974cb244ed508398f3e327b8cb19fafb18e6243cc66f2886e6a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-justify.imageset/align-justify.pdf",
+        "sha256": "617bfc4b13904e057bb329d088a41388e03069320a4dabb74f24080215748947"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-left.imageset/Contents.json",
+        "sha256": "7a990e4eda5416fb430e2485da83200348e6b1fd8f90905a1c77d70f847a7ca4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-left.imageset/align-left.pdf",
+        "sha256": "255cdfec57afa50c7414ef0bbd9717cd6d6738b3eda601d2c8028343bbf1f473"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-right.imageset/Contents.json",
+        "sha256": "ff2c1967bf46f53b82f2aec6253d041b467b82bf555eebeba97ee32877769a9a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/align-right.imageset/align-right.pdf",
+        "sha256": "f7ecf2bb36015a1d1237cacf972d84833c5cb17c3f08076132d4559f877979c7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-down.imageset/Contents.json",
+        "sha256": "9e8e77beadae2b2802439c1ca99e91359f09e7d88fa0927cf4da1d00b19970ee"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-down.imageset/arrow-down.pdf",
+        "sha256": "deee1cdb017343d319ebb1775cfa2e8b32c5e8698628665dbf5bf12f49b88d4b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-left.imageset/Contents.json",
+        "sha256": "702635e09470c1e1983272916cc0a387ab0d1c09d236bb9eed880cc4ba5f62b7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-left.imageset/arrow-left.pdf",
+        "sha256": "14ec70de62e74ee15eeb8d049b75b6e51224096fd52504bf14ebf8afa15ce0a4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-right.imageset/Contents.json",
+        "sha256": "307c11c20ba5253e151e21150639ffa082fb2f6e6c5d229c74754ca1e05e1835"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-right.imageset/arrow-right.pdf",
+        "sha256": "caeec7b12e75d9f62f3feb2a92928b118e60e142a30eea57c2053cbdc75a90d5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-up.imageset/Contents.json",
+        "sha256": "542d0e3c0e4ba5cb910eb8ad04410e1ccae107ea0b3c3ddddb10b21f00cc5387"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/arrow-up.imageset/arrow-up.pdf",
+        "sha256": "3ebb4004163b1087571f489a31064010ee370ae3c166dfabe5013e2b406c5f45"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/aside.imageset/Contents.json",
+        "sha256": "5b1b768beec1f0f1fb098f869c36238f19ec9b4989d2543c13c80ef7637ec8c0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/aside.imageset/aside.pdf",
+        "sha256": "24e40fdf1063849df1022e9a0a5e08bcbddc80a615e749aa4614d80678195eeb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/attachment.imageset/Contents.json",
+        "sha256": "833f5799705f62e243a041d8066d591f7403ecdfc81334a891e24054fc0b4a4d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/attachment.imageset/attachment.pdf",
+        "sha256": "5e7aac35ee4494fcc175982ec613d6493825cdc65d06469c13aaa4b2769e0e6b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/audio.imageset/Contents.json",
+        "sha256": "e0e76c42c0979cf90e67e87319756fadb96a6a4981c02829d437e2ef7b165fa6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/audio.imageset/audio.pdf",
+        "sha256": "f66e91be0e0daed9a3c256faefd880abfad87fbeb4ecb0f0d084651854c4453e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bell.imageset/Contents.json",
+        "sha256": "49b4250011dd48b890b826d46858960969b7ca541cde8e2760bbd4060b3c40f1"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bell.imageset/bell.pdf",
+        "sha256": "5627ef3296e20edc5a67b163189086046738db77e5f3af9e91fdfa9c4d4d604b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/block.imageset/Contents.json",
+        "sha256": "c086adb06dcdb2aa3a03c6ed7103c5dab26c088081a239911088d0d273b9cb41"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/block.imageset/block.pdf",
+        "sha256": "84d1a1782b2ea04f10b1e48a6749605f16b42e251065bc51dd1906f54e6b2fc8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bold.imageset/Contents.json",
+        "sha256": "5705b7f0388169b740d7c261e7a70d3d67d6ab20f28771c2da3ee12f4690a049"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bold.imageset/bold.pdf",
+        "sha256": "68ef2b97207570f1cfdb716599786018091f36893740c8cd9589b6b249a558e6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/book.imageset/Contents.json",
+        "sha256": "64440d1554a8492ad3d7f189a950158a2530c80293c405ec2c78275f96178eaf"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/book.imageset/book.pdf",
+        "sha256": "bf58c5f63c9e1e1cbde4158f3184535a5c63c24e740cd39b769040d5f6cb941a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bookmark-outline.imageset/Contents.json",
+        "sha256": "e6632703011c75db591ecb72af9713e658a12f47e89119da70f02c1c92ee2da1"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bookmark-outline.imageset/bookmark-outline.pdf",
+        "sha256": "d3d432b44ee7562866da5cf9825f06b3ded1a04729ca7e346331532988a53b75"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bookmark.imageset/Contents.json",
+        "sha256": "76ca557b6cbe7a419f39ed0428791d7197f5ea366774e6df18717f46f96569ba"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bookmark.imageset/bookmark.pdf",
+        "sha256": "c365e3286fd2653b717d59fbf063ce038a3d6ec36d5babaca28b6ad050ebc180"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/briefcase.imageset/Contents.json",
+        "sha256": "005fb013ba67c4599196e6e6475edc7fe6bf352655db1764e454f4b6fd807ae4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/briefcase.imageset/briefcase.pdf",
+        "sha256": "4063131374d1e29f0a8df61a8414d39450ba6c4a7a37a6375d8b7eeaf19614a8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bug.imageset/Contents.json",
+        "sha256": "4692041435f7f7a5962619a0e3b9cb8ce49bdb9fc680021c54db0e3378a614a8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/bug.imageset/bug.pdf",
+        "sha256": "efe28bf714f7a7da2bbb30382f7b5db3009888cca3ef26108f882657e1f3c199"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/calendar.imageset/Contents.json",
+        "sha256": "dba1f32c8560838a52859d5d469b22edfa5cb2f07804806e3aae8b5ad9e2388a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/calendar.imageset/calendar.pdf",
+        "sha256": "9352bf770dbc38019e47132528e75442994af2c23675dcf293ae4876e7be000e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/camera.imageset/Contents.json",
+        "sha256": "7e0acaf66430f92ec56ff92ccdb035b236237f3684d0635021c83299d50864a7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/camera.imageset/camera.pdf",
+        "sha256": "5198881545943d6811e02a8e68cc55d9fd9c904bee4b977af56c19b5aae87385"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/caption.imageset/Contents.json",
+        "sha256": "e8105df2bc652ce1ef8a187a9ee6603ed44cc17c3c4a21f393004929770c7f6d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/caption.imageset/caption.pdf",
+        "sha256": "5a76580190dbeee4f68b75bf043660f7ce7bd50b75867f07c42fc07d0da19596"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cart.imageset/Contents.json",
+        "sha256": "48532f6002ba8cb32e77e4b9e275429fd291c9ab139880dbe3a6814741a50050"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cart.imageset/cart.pdf",
+        "sha256": "0230e329d414f68be31ac72b08baba6cd1b114eb3ad2787687508ed7b02faf95"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chat.imageset/Contents.json",
+        "sha256": "beff48e055f765d7bb99cd4e9c054a7c90718549f1a19edc8bba359d2b6b1e9b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chat.imageset/chat.pdf",
+        "sha256": "157b2716db3d33e4ef7f400f297f6dd204ee14856ce97f4c8398ace5687805e5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/checkmark-circle.imageset/Contents.json",
+        "sha256": "4f3490a88079fd7b9cd30762a8b63753755d38e1e1f8a2b7039ab6877d057cc6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/checkmark-circle.imageset/checkmark-circle.pdf",
+        "sha256": "5ca94aaa33377336b0a9e10c8b8197cc01afdbb6b2081d2b248b09d963341330"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/checkmark.imageset/Contents.json",
+        "sha256": "00c7d72984a62ba98ab90be36ec771befd7fce9a0679c2c151ee84f9722bf03c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/checkmark.imageset/checkmark.pdf",
+        "sha256": "944dbcb6b8478fdf872fd12f6c4f42c7a016b30710d42e4c2c3ad5b2651231fa"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-down.imageset/Contents.json",
+        "sha256": "7eb7364b3e9464cbf9399ae280c61ed5b3be074f8c7bff0964c976d1db808c3e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-down.imageset/chevron-down.pdf",
+        "sha256": "bcde4d1c9983a792ed8c4ab603da680e1e875ae27fb472ece7cd29f02bac2304"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-left.imageset/Contents.json",
+        "sha256": "96d33a749646156b31710dfec56eb456736f8e02192f9a6224c027c9853f7c03"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-left.imageset/chevron-left.pdf",
+        "sha256": "98f12a04e17a85697f4686826b37ba8f1759d42474a9c1f35545ca39e0296a36"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-right.imageset/Contents.json",
+        "sha256": "443836d3cbc959ed93011ecdee45a0ef36cbbcc2acb51b96a493f9b08ac24e40"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-right.imageset/chevron-right.pdf",
+        "sha256": "2ff6b157ca2434c4179a0ed4c9e88183d93a1bdc90bc8f321a3b2e59cb23a6c5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-up.imageset/Contents.json",
+        "sha256": "a1297c63826741dfe1d1327c1319a614db0d9bb76f4f31dfa628e13c40852ee0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/chevron-up.imageset/chevron-up.pdf",
+        "sha256": "ace6e6effd63b0530eff650264f8fa3d6b11531596add86e965f6e53fbbacb60"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/clear-formatting.imageset/Contents.json",
+        "sha256": "564a3d4e42130fd148f0c1696629e1272b27567722b28b31ebb442a8de13d1b4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/clear-formatting.imageset/clear-formatting.pdf",
+        "sha256": "7d8398ffde92f5a9b83178fe5e695f14492724ecd7bac0dc7ff20193a9f96f30"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/clipboard.imageset/Contents.json",
+        "sha256": "7a625bf26665562e1a22f317d81080527e460cd22aaac614c9de41b4a75540f9"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/clipboard.imageset/clipboard.pdf",
+        "sha256": "1b908c53128233d13822c751f2712287a34580fe3d508a741cb4bcdd941793b9"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud-download.imageset/Contents.json",
+        "sha256": "639600dcca27da687b07ad1a6decb0c7a96e0ebbf54711f67acd61ea2920c0f5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud-download.imageset/cloud-download.pdf",
+        "sha256": "0a8e86a95817d82c9bae60caa8ace8d32b0c99a11e6528c2a2e29ddca18417bd"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud-outline.imageset/Contents.json",
+        "sha256": "5f9e38ad23471c8758f79a3b76443e4fa91a452f1499b0c17443cafc45a6c224"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud-outline.imageset/cloud-outline.pdf",
+        "sha256": "9d899050ff8ea53be0d64b98fc6f63766cb3e0b235dd80dd62ba054b53df6d87"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud-upload.imageset/Contents.json",
+        "sha256": "50f42c7875813d9f369d2bf6199eb0dad257b988dc9bdf625ea6de88be3bb09c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud-upload.imageset/cloud-upload.pdf",
+        "sha256": "354c57dcea721958deef315ab931654d4b5649cebac7451c408abaad6ba6a4cc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud.imageset/Contents.json",
+        "sha256": "8b5e8ff371926307ea9a9380ec9951e72b8539bd10d1267abfce98a5961bde47"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cloud.imageset/cloud.pdf",
+        "sha256": "d81bec1a1d139e288a25d01ccf44ea99b49b20ce6e03d5fe75adb05aab144930"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/code.imageset/Contents.json",
+        "sha256": "7249c0226fcdac8e18f3ce9b5fbfe96ff26b3322fa0c27e8955cfb0d2ae61ca4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/code.imageset/code.pdf",
+        "sha256": "cd8e4952918c57bd658a0944b1030943614021a47433a480b79909650021b820"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cog.imageset/Contents.json",
+        "sha256": "63b08b433f1f41943a3ddd8032dda9650ddd3af8d5dde574d3c65f633d623ea2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cog.imageset/cog.pdf",
+        "sha256": "42106dcc259c6cdf99b83619bece0b8dfea7e2835185bbce5ed35071349fcca0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/comment.imageset/Contents.json",
+        "sha256": "a7bef368ad9d85f80d66832ea3e174278a2d23fa895f41f10f29241100e65902"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/comment.imageset/comment.pdf",
+        "sha256": "11bbd07f9e29db787e6f13b96ed553eb719582ec423d6d3c49f6364b1f623f60"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/computer.imageset/Contents.json",
+        "sha256": "89484565bfdd8d80753f3ae129d893d9eec5dcb9fe91c64263ce42f500f79f8c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/computer.imageset/computer.pdf",
+        "sha256": "0077b87be74501db6242a0b7acae155f58eb81a1756918633ae24ebeab56920d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/coupon.imageset/Contents.json",
+        "sha256": "fa316a589101c3ca06a07b37217f99a5e1d9907536123581ff33b2e3c956f72c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/coupon.imageset/coupon.pdf",
+        "sha256": "1b0caa7e771beb1a91b71b4bbc17193be8e4952d5f0b0c8c60f6e0b59c2d93fc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/create.imageset/Contents.json",
+        "sha256": "ec4a53194b2360d9590bb4e8a1e55340ff91e51bb6d20e1e8d42971bd0e42d1a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/create.imageset/create.pdf",
+        "sha256": "2caf7eb99829951a85b15f0ea55adb04a287cba85dc68510a7b42f8b23965540"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/credit-card.imageset/Contents.json",
+        "sha256": "cfc13991bb1aeed5a6c7e0a05474b25d16a53417283fc1b30fde9a2012612813"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/credit-card.imageset/credit-card.pdf",
+        "sha256": "5a9d70c91b72ea4ee89fa4cccbc7e93875476d845073fef395057925c8c8312b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/crop.imageset/Contents.json",
+        "sha256": "dc1ad5870618c4c691aee57858e4a5d32b354fbf50a5d1f7868ab21965e9bb33"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/crop.imageset/crop.pdf",
+        "sha256": "096f440ad5d2145e5eb3982c8aaf43e764a80ed969dc24e09cca43c7a178bc5f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cross-circle.imageset/Contents.json",
+        "sha256": "786b88c585edc046895cf529df3a8e454f86ed8c6395596ec64a36845c201c45"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cross-circle.imageset/cross-circle.pdf",
+        "sha256": "75827fdc9f83f9bae4f0593b8194a7a726fb6c143d08003e5bbefd3fff112b72"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cross-small.imageset/Contents.json",
+        "sha256": "4a6722679b03d89041ee33eff2bae405453d0704d9379131e558fc381cc3499c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cross-small.imageset/cross-small.pdf",
+        "sha256": "903776af4726a6517b357d2e54825f1466a909164fe55b44e4222035d5f077e1"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cross.imageset/Contents.json",
+        "sha256": "6090f7299a30aa768e071dc881ad9939adc5600c5d685c586b0495613fbd1122"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/cross.imageset/cross.pdf",
+        "sha256": "b18140443fed7f0ce8fd010043a90bd6531e33838d58988e5e4eb3df36767e9c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/custom-post-type.imageset/Contents.json",
+        "sha256": "80d898540e2064ffab64217030eddf119c3abac3967d5cfef463ab0065a5fdf3"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/custom-post-type.imageset/custom-post-type.pdf",
+        "sha256": "5f52f12bbde3fb349e7fc65903541f2e95db2875e09bf55d77d0240684bc3cce"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/customize.imageset/Contents.json",
+        "sha256": "e66933dd9082173bcc116f42cbd35dde31ec12eddd3efe98c8fdc18b723f53c5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/customize.imageset/customize.pdf",
+        "sha256": "43d59f211692e921858449cd7c5091903e26ffe57b74557edc32edfef07ab73e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/domains.imageset/Contents.json",
+        "sha256": "70ffb4e8a829ad52af57a9f1a2a3b97d56d125dd3872373d544b6ba788816100"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/domains.imageset/domains.pdf",
+        "sha256": "f2c38415980287848bf7556da84f978fee83c1ee2269058542e87befbc322c73"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/dropdown.imageset/Contents.json",
+        "sha256": "ce93da7156e5478de844c70ba95c6f7877da1b1cdd9ae0572497f5df6e4326d2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/dropdown.imageset/dropdown.pdf",
+        "sha256": "3c7aab328c3c35dad74e90224a0b5b3107d5cec2d80c0d719defa5b563c90e6b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/ellipsis-circle.imageset/Contents.json",
+        "sha256": "a6c6230157952b9b502d7c9204538ec1026824fb992e8fa9083dd59faec927bd"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/ellipsis-circle.imageset/ellipsis-circle.pdf",
+        "sha256": "7d5e7d93dfbe24d8f6c51d19e786f689de4b45f859031d0edeb57c4626104159"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/ellipsis.imageset/Contents.json",
+        "sha256": "ee3615a34e63eb885a2e20ab028e83c0890f11abb21f9e1465376fcbfd7b8844"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/ellipsis.imageset/ellipsis.pdf",
+        "sha256": "78c5cddcc737e207671c55883f23ce6206e80e333ed6d1951b901b822dddbecd"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/external.imageset/Contents.json",
+        "sha256": "73c5237add5cd979957ec3ca736e3c58860bad3814a8080e77e04895eb167012"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/external.imageset/external.pdf",
+        "sha256": "670caa1e75692fe7830e1de3c375c17ef4b01f6d68dab6c51b13eb16519ff9e9"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/filter.imageset/Contents.json",
+        "sha256": "2f80bec8058aad18adc8272e24a3697dfafe817bb05ed4ff1f938c719d0accc0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/filter.imageset/filter.pdf",
+        "sha256": "3dd6c04fc2a1cdb867a8432d5163b5904d4ae5f3f96c1cb1656ad666c30742a2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/flag.imageset/Contents.json",
+        "sha256": "0b1bad3fe97cf237178d75eb4d5cb4c5d28523432b900ed538d6201b80abf074"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/flag.imageset/flag.pdf",
+        "sha256": "b438c24bcda60b8e7ebeaebf562a18a89da6c81683c689b3ba9683f453e6a8e8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/flip-horizontal.imageset/Contents.json",
+        "sha256": "ea37cf0461dec420f5284fca4ecc42500971001524ba308a70adb34c81f1996b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/flip-horizontal.imageset/flip-horizontal.pdf",
+        "sha256": "1ef4127bb91629aa06b21aac0c4ae29a48c775e15ae1007f5e9fba4efe413305"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/flip-vertical.imageset/Contents.json",
+        "sha256": "bbede701dbec134c2a45af52d2925863449c6758727f080c9877650297d96a52"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/flip-vertical.imageset/flip-vertical.pdf",
+        "sha256": "393f42f202046322d7d0c3db00e5f43d44f184212ef4bc5c20d729533e659ae2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/folder-multiple.imageset/Contents.json",
+        "sha256": "ce59797a33e77d86bcdbfe2629e74884c162a92876d2deee1b388c0eb95a9b7f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/folder-multiple.imageset/folder-multiple.pdf",
+        "sha256": "fa2ea1424fe7c349e013cc226cc3fd39e23387b41c59b3302c0c9080576a3251"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/folder.imageset/Contents.json",
+        "sha256": "dbce8d091912fa54e44f5719518d90523531deb75fddd1f944614a093d68a254"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/folder.imageset/folder.pdf",
+        "sha256": "5263b6560713c6c81a86000fbd17947a51cf92e399abb4a3a7f33f3e0b83a92c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/fullscreen-exit.imageset/Contents.json",
+        "sha256": "8dd9dc3af9acaf7a4b868c6082593928341a3d2151e672127556c28e806650da"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/fullscreen-exit.imageset/fullscreen-exit.pdf",
+        "sha256": "2f617a330ae4f860ae35041a6eb453473572a87a8b190e321fce2ad58f9e5e0d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/fullscreen.imageset/Contents.json",
+        "sha256": "f5bb2235f560ac6eb73cc0751856d70d776d1baa78802a2537705b5a71d786f0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/fullscreen.imageset/fullscreen.pdf",
+        "sha256": "2de1e466c09c78ecde45916cb4f0a5eee9f084ebaa5dc7a370948538cfc8d1a2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/gift.imageset/Contents.json",
+        "sha256": "8cb863a9d1c3477937ab6a664432e389576748343a0b439d8170a7220f473388"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/gift.imageset/gift.pdf",
+        "sha256": "9f814b7657e361692d2d757ad6c3f021e9083e47858af5ce9e66d52f190f221b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/globe.imageset/Contents.json",
+        "sha256": "f1b9cbd854880808ddfaaf2cb64b9aed3f7d174eb33f9aff7046822f3a636861"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/globe.imageset/globe.pdf",
+        "sha256": "54a3e8c8cd85d375667afbdd5312ed3383d35ffd740ab152e9667258f2846e93"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/grid.imageset/Contents.json",
+        "sha256": "22f7eb171b50f330075d055411974a59e0a7fe291e7156a0beb1a604113991b3"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/grid.imageset/grid.pdf",
+        "sha256": "fa6205bed950e4730ef0eef94782ba0c8ff2c6fc53bcc12e792ea610b6cf88bf"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h1.imageset/Contents.json",
+        "sha256": "c9dabc88c484bd28d865b17d4e9920a08f2d428dd4954cd1c83058419399cf89"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h1.imageset/heading-h1.pdf",
+        "sha256": "bcffefa76e072c87b3b93aadb77ab15b906bc83284676b23d5f5748360827bd5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h2.imageset/Contents.json",
+        "sha256": "f40d8d4258f885374c1d6a43774460ffea71119babb37d8329e70f46a2a45a11"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h2.imageset/heading-h2.pdf",
+        "sha256": "c8827ad600d75100306b21ed31ebc47f712469de6101c12d33d5fa2b4d4bba4f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h3.imageset/Contents.json",
+        "sha256": "b2b7d5fa1dea4b052146eafb5da65a26f38a48f4b434faab98c0195dc9723b34"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h3.imageset/heading-h3.pdf",
+        "sha256": "1cd12a963996934fb0fee80dadd7d63bcb4f2f782e8210d9f42a1d5ba29c0991"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h4.imageset/Contents.json",
+        "sha256": "8059a91f9cb98ae17e58032e47f841807821442186d57da19a8059a58f067610"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h4.imageset/heading-h4.pdf",
+        "sha256": "539b0a1ee1688c8beff82cae5f8478f68c286e91a669c6ec09599431a2ed9147"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h5.imageset/Contents.json",
+        "sha256": "523d4c1a756ac09d09bcdacd819a588cb008641b3ae0c30a83aa9fa7f1d6d423"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h5.imageset/heading-h5.pdf",
+        "sha256": "165dff91df59ec1fc914cb023fad9bb57445a2ef87fd6a755422dbac7f456b0c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h6.imageset/Contents.json",
+        "sha256": "3844dc398b89881d5820a87b9fdceec0e4e3876f7b609ddc1220319942e98b97"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading-h6.imageset/heading-h6.pdf",
+        "sha256": "96c15e33cf112f071fd628d08027eb811dca1267c921bfad16ed3bfa83e01f40"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading.imageset/Contents.json",
+        "sha256": "4e83759cf9791ece1473fd5dcdb62562cab2238fd96221e7af553947abe2665c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heading.imageset/heading.pdf",
+        "sha256": "584dfcf5fcaa60428b65ff65bb994ca00f4cff422699550e809a50dbf888f4fb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heart-outline.imageset/Contents.json",
+        "sha256": "81a688b8c8d94d386ba3cc3b669f2cf6376db8e41464c5c3668dae50cd31cb94"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heart-outline.imageset/heart-outline.pdf",
+        "sha256": "f92998f8d58c81bfbdaa646f4ada7b3526a45a68becfc2d0f9e4b31fca7d7581"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heart.imageset/Contents.json",
+        "sha256": "916567f6d3c0147782a29841af57f0e35c2b95891c667f75d4dfb77f2ded7671"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/heart.imageset/heart.pdf",
+        "sha256": "cace30c25457acfbf5394d70be1525068914169f7faf02d8d89e667647a7f13b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/help-outline.imageset/Contents.json",
+        "sha256": "4295edeb4d86ba537bd08fbb96fb3b0fcd28c58e9ecca0d396db78c2b930991d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/help-outline.imageset/help-outline.pdf",
+        "sha256": "50001ed20b880eee6fe0efa217c4cf1c015a193f7f211d35be52dd1c6d6aa6dc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/help.imageset/Contents.json",
+        "sha256": "1f2177ef0914ab65589049b906b182e66471108f651397d183d07a3af1e81306"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/help.imageset/help.pdf",
+        "sha256": "a12a7c9c520656a34c7433f5804af80715b16c996dfff4229e6feeeecc5d9e77"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/history.imageset/Contents.json",
+        "sha256": "c05593f6beb8e250e5eacb5d7afdabb3e6f76b8eefc4a0c2319d46314746b079"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/history.imageset/history.pdf",
+        "sha256": "45fa35907c2e145c699aed8553bd7e33ab7145f837243d14b353c6c1df1ff77b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/house.imageset/Contents.json",
+        "sha256": "26f7a1f54f4bd00eae7adb0fc83bee3c978856dd3030994cbd6e4b5ef231747d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/house.imageset/house.pdf",
+        "sha256": "fcd15541c1a488adcd0f36442c3e83c96f0cff7e5154ff01ace78218426a691e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/image-multiple.imageset/Contents.json",
+        "sha256": "fdd150a348186e7ea09990a752e84dc8c631bb13fd580063422e101d6ff0e705"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/image-multiple.imageset/image-multiple.pdf",
+        "sha256": "05abd838f446c80312862c4fea69f8fbaf64077421bd23171ea8c63a2ace915c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/image-remove.imageset/Contents.json",
+        "sha256": "d9943729c744eae73819f9bb3ccbe40bdad2ef07cd2ac5a64e32137d8c43b7cb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/image-remove.imageset/image-remove.pdf",
+        "sha256": "5cc5a1b534e5c950f2679ff6031194b973eb05933a110275cfca9bc5238c01ae"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/image.imageset/Contents.json",
+        "sha256": "da6e3a6f4d16f51f6988a9e3721bda714d2fb5cdf13c21b5684b449e478728ce"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/image.imageset/image.pdf",
+        "sha256": "fe79e67842749516972982f85948af16761a55e42d48dc268d1a36fd8a2b4288"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/indent-left.imageset/Contents.json",
+        "sha256": "1a4e647e7b34513f15c8c5b76a3df39c1d9f9a1c7e8ff25ca03bc073b5e7f4a7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/indent-left.imageset/indent-left.pdf",
+        "sha256": "49bee2ecc6e100aced5a49fc811671aa8635aaf4bdcf06006b8d5615d25e916a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/indent-right.imageset/Contents.json",
+        "sha256": "1cd6fadc1e7e12362e2fec3dca24dd8a5f9c7e19fb2860fcbee4cf570acc8cee"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/indent-right.imageset/indent-right.pdf",
+        "sha256": "9bdfc4387a128448ea306df2d41ed48586263c3eed970150c0507947385d404d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/info-outline.imageset/Contents.json",
+        "sha256": "339b7e915dacf4b85617b5194714ff103604c8148b0b953bed8f0725a0b324fa"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/info-outline.imageset/info-outline.pdf",
+        "sha256": "2cd0ec3d0b75baa044a813a490aa213fc494698e91258d032172ec61e07bc91c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/info.imageset/Contents.json",
+        "sha256": "5bc269794d525ffa59b44fe9a4e6f935de4a16a6e64cca9d7ebdba25be06cffe"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/info.imageset/info.pdf",
+        "sha256": "881902e85df3a09f54e58f3ac7b83004882abe986a4be8bdca5e9cd665b9e7aa"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/ink.imageset/Contents.json",
+        "sha256": "c7bf0ed17f9ade98feb4ed5be61b3ab528cd804a979cbdfc63562911c83c0aef"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/ink.imageset/ink.pdf",
+        "sha256": "e68e337f64831c6e10e96cc9d5cae7d6da327296d3bcddc29fc89c2f454299aa"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/institution.imageset/Contents.json",
+        "sha256": "57b0347211979a85a29ee59d63c5c41f422d620388fdcec78806abccb9e5a2df"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/institution.imageset/institution.pdf",
+        "sha256": "fb8f38bb10ee7dcbfff60946852bcbb885048ee3eadbffc2a3c10ec80f445dfc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/italic.imageset/Contents.json",
+        "sha256": "09ced774dfed0f6dd3591be49ed92876a69b3eca1ef27b5f9f0b8d41a30e8199"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/italic.imageset/italic.pdf",
+        "sha256": "c955f5344abd3b86bc0486eb497c2a7e8e48a54c1747c052536bf0d50697f75a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/layout-blocks.imageset/Contents.json",
+        "sha256": "72380a0126c8c9942f5f518e3788bc9c0b0ae8fba7cdaef008e2d66c23e1c7b2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/layout-blocks.imageset/layout-blocks.pdf",
+        "sha256": "1ffa7a242dd14d3affa214b888cae945fc5b30ceaa5d2a681f365a874421ee00"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/layout.imageset/Contents.json",
+        "sha256": "fed33047a1a2c90f2bfb6ab0d11a6746aa73a1a45df99aa951085d1a15e1883d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/layout.imageset/layout.pdf",
+        "sha256": "f22846b985ccd4ddab4a0f095ddf53b0e1d6adf7679d356a9b8ee1b2ece9ed0f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/line-graph.imageset/Contents.json",
+        "sha256": "b9a4308a1df9d77b0b0162020918bad0d2cf849c074733cbf5064ec959645937"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/line-graph.imageset/line-graph.pdf",
+        "sha256": "87aa9a77d1065b58608dd4654bdb003ffb4f7a21da25ba1cced9a2e91c985950"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/link-break.imageset/Contents.json",
+        "sha256": "9e0d7d7947d1fc05e7a54a6164d292f3716c1a747d6af34726ea062b264a8fde"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/link-break.imageset/link-break.pdf",
+        "sha256": "0ef9cfd3d69874cccea0e90848202d255432258f9c7a1f677e9c2c26d7fc7d33"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/link.imageset/Contents.json",
+        "sha256": "2ca2529b51b103276a495df1ca6fe65074a3637de945548d5501841413abd356"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/link.imageset/link.pdf",
+        "sha256": "524bd11c4c6dd929ecf157151c692c9827110de62da8b113f7be418a9469e4b7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-checkmark.imageset/Contents.json",
+        "sha256": "42f732bca7004b24d7891ad390455af5c524188ce52d99ec27b7bc274f08fceb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-checkmark.imageset/list-checkmark.pdf",
+        "sha256": "236639fbbb6784bc14bc5f0534205f8558f5a3b457c82416566801f7ae26b9c9"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-ordered-rtl.imageset/Contents.json",
+        "sha256": "e742fb773df61541c3d5bfce168c92086e77359edf9809685372436f55b208cd"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-ordered-rtl.imageset/list-ordered-rtl.pdf",
+        "sha256": "7830d2160fa9e4c106a43e4ede06fa70a2f7fc6cef9d60e91fe61610138aa567"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-ordered.imageset/Contents.json",
+        "sha256": "8b683f883ac6f8b85f6faea33b9abc0410874c341203509c884220483756e884"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-ordered.imageset/list-ordered.pdf",
+        "sha256": "3eccf69c947c61e2229c5eeb72961035c98f5a7927fd84d667eb42568c9f2494"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-unordered.imageset/Contents.json",
+        "sha256": "a2a10f131574a0273ceb1a2ae7aa5887d752299e0be904f06ba2798ad57933cb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/list-unordered.imageset/list-unordered.pdf",
+        "sha256": "fbfdb9e4010be200c814c8dba61f99092a819fe995358ff36fd82e432c520d58"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/location.imageset/Contents.json",
+        "sha256": "a77edd4612e58b51f6ba988df0bc47c59544e8b41f201d6e988c0fdacd1438ab"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/location.imageset/location.pdf",
+        "sha256": "d1fcd9d07f8ce42a80b637fccb05651973de3fceeef51c62afbd0a99e2ea54f8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/lock.imageset/Contents.json",
+        "sha256": "9907ffb595a8f23bc33bde5f7f901d907fa97268133e2a31af10a1d7560aacf5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/lock.imageset/lock.pdf",
+        "sha256": "dcf0339ee7171c8c50526bb45c0f53d847bca464a06b3db6f3e9656c1cce64cb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/mail.imageset/Contents.json",
+        "sha256": "006e7ca01c8c71e18f32f61843e38e741bddde3f1bb2bcd361740bb72910af70"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/mail.imageset/mail.pdf",
+        "sha256": "504c13d5a30e903767645924710d743a16aa3bc7b5c1371cfc89e0a618bbf1e5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/mention.imageset/Contents.json",
+        "sha256": "a1a9d94019c53632fa25c28f193de80de2909f3ef6e4f0bf81336479519a161d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/mention.imageset/mention.pdf",
+        "sha256": "fc342581e9c38be600cf66d71622de9e05aafe66fa79fcc7a867420794e5672a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/menu.imageset/Contents.json",
+        "sha256": "6cfdd9f8a7fc8f4c75460ac8a84599b119470390a0eb60cbaba3eb09f39e0eaa"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/menu.imageset/menu.pdf",
+        "sha256": "d06233d158f7ad68d5065d5853c3ba8b756e2349ca826087432c218aa1fa101e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/menus.imageset/Contents.json",
+        "sha256": "df2d04560851a560894dbda22341b441f5fa72bcf5477a114cd6d3d089e19d59"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/menus.imageset/menus.pdf",
+        "sha256": "14116c7eec16fdca9aeaa7be54f896d3756e81c699ef8b9418ee8e404819fc3d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/microphone.imageset/Contents.json",
+        "sha256": "90ef096b5d4ee68238fc6ce30882578fd16f2c46d4e2bf8623391924607a567b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/microphone.imageset/microphone.pdf",
+        "sha256": "f47a303453c1a86f28087e68902114e5dd73d0d452daa2bed7a403c596119971"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/minus-small.imageset/Contents.json",
+        "sha256": "92fd5cfe90e7a8dcb50096f0b3a410bfd1e425b36939840d13b5d7acebf9924e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/minus-small.imageset/minus-small.pdf",
+        "sha256": "f95443a21a64124ffe8656d1f0884f21f638e2bb9b299f4564bbcf015188d22d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/minus.imageset/Contents.json",
+        "sha256": "27a5e1aafd3d2a9b3802e18ec6a411fa14e9bb3485053049b7669b4b6018fd54"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/minus.imageset/minus.pdf",
+        "sha256": "69c3e4edaffb403caffb904379d16f70a66f65d195a319d8d724d9c1f037b94f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/money.imageset/Contents.json",
+        "sha256": "91991323549df460d4c8f0c92a5f5c9fd3af9d44a4116d474a48b505fd8ee4c7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/money.imageset/money.pdf",
+        "sha256": "b052d9cb38e6c4da274428be113de0ec91b6c3c6a06b0804ef780987823d31c1"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/multiple-users.imageset/Contents.json",
+        "sha256": "4fe2c781c26a8ed825907fbc30f6e5f8de7c80493016f682ad53c61d0292e354"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/multiple-users.imageset/multiple-users.pdf",
+        "sha256": "7a3c6e85f6a0a983288f61206f9c94dd5a950961c0e13dbd33cb6832b1700275"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/my-sites-horizon.imageset/Contents.json",
+        "sha256": "cbc74b1426ca82de337f3cf6c35860a1e430d0dcf8483ce17c07ec5e9feca162"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/my-sites-horizon.imageset/my-sites-horizon.pdf",
+        "sha256": "d8027513acc523c460516bd72b67c36ffd83a302bcb59ea9a0482d324ec3f86a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/my-sites.imageset/Contents.json",
+        "sha256": "c45d38c204e5464afb9a3ea4a4edf62ff7074b16ac30ef4b4312ee1273ed0d26"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/my-sites.imageset/my-sites.pdf",
+        "sha256": "6578e245288b5088d472b9ad6a45562bf1a665f0c7e6addacdb68401751fe207"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/nametag.imageset/Contents.json",
+        "sha256": "5032696522d4f9d01cb0a6e1071cdff2ef6c72e0e7288ab7f71226cb7c4a3ac0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/nametag.imageset/nametag.pdf",
+        "sha256": "e5d3b386032cbf922ffc00180708bc85ca207163804d2c2cff7beb6b78efbd13"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/next-page.imageset/Contents.json",
+        "sha256": "51abc203c2af4e8695c838aa0e780a6da3a9d38a2490f5c4f263763eff4c700d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/next-page.imageset/next-page.pdf",
+        "sha256": "b6abab35c603806fd6090cd6e68497e87e08cab76c5baa66a3d90816f0dfdc50"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/not-visible.imageset/Contents.json",
+        "sha256": "85f29bf613b40f620de9ecb14f25f6760125ab1e18d4131662b11e50448db070"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/not-visible.imageset/not-visible.pdf",
+        "sha256": "77b9679087f1dace94669d1c5ca59f29dabb1faa55e690eb21377d253ae3270f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/notice-outline.imageset/Contents.json",
+        "sha256": "5761aa585ee7d13bd0cf48b6c8bc03069f4fd293ba81fad00500fe067c07afa2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/notice-outline.imageset/notice-outline.pdf",
+        "sha256": "5995bf47d33f25cbd66f001825a44eb435073ae79b884e942fb5d7efd3926f53"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/notice.imageset/Contents.json",
+        "sha256": "2098489d715afc0606b480f67b7cf8e52df79f64b7f20c75dd68454f7b604efb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/notice.imageset/notice.pdf",
+        "sha256": "d2c474f0307130cbf71fbdb0cb86d24b9ac74f2be1fbace2ba283376c897657c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/offline.imageset/Contents.json",
+        "sha256": "0d95acb01177747a97ff76e84ce53dd06e03a80fb91c45509d879b63ab3aa46e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/offline.imageset/offline.pdf",
+        "sha256": "9e8aada8b8e6d6f5274b249f6ee3e83982971593d75efdd89e017095ff390031"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/p2.imageset/Contents.json",
+        "sha256": "8d03ba5bc18e15ec6e3fec7fae50ec4b8c8bb7cb4a45330d9e9fc89bde3ed00f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/p2.imageset/p2-icon.pdf",
+        "sha256": "b22c4b35e156aeee57ef5a69321d819c0af4dd733403de0ccc73e087c0009661"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pages.imageset/Contents.json",
+        "sha256": "386ec5ff94cbce05d310f1e8d4f22a316f287e622b05b00dbe192719e7e75324"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pages.imageset/pages.pdf",
+        "sha256": "0e7fe9a48db28b92f8474c60d8fc6fb7b20210c209fb6c045f65ada2e71bfd98"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pause.imageset/Contents.json",
+        "sha256": "c9b1c863e7eccfa4ea9336b01ab3201c87fdfdc62d836dd9c84c1e93df8991cf"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pause.imageset/pause.pdf",
+        "sha256": "c5f706e9a8f7e93a2b8cc6adfd02a0f974e96eb38885c5996055876adfabdae3"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pencil.imageset/Contents.json",
+        "sha256": "fa43f94977ba7c2ceabefa7a5fbf9eb6f17ec50466b98d20a3ecdf9e70f1721f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pencil.imageset/pencil.pdf",
+        "sha256": "8002ae6446f31c83b5ef75c89f129e6adb4a3d3e8b879521daf72bf041267d73"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/phone.imageset/Contents.json",
+        "sha256": "30c8f54c395ba3b61c2218cd7337cebe712682ce5f7f00d21949bcb419d68e07"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/phone.imageset/phone.pdf",
+        "sha256": "6a946592888e133e78e1ba2afbea5b7b3298d742962d984bc4eb1a758b362d77"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pin.imageset/Contents.json",
+        "sha256": "75af7e0152ca9e34f65636d3a5c496d818f14a11ff1a6db44f697a61ec7cfca7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/pin.imageset/pin.pdf",
+        "sha256": "a5e59e6f8edb0548198fce024c1e32adb216612ade616dd478d70ba576917578"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plans.imageset/Contents.json",
+        "sha256": "9ee4f95cec1d2517737cb650f182b0f1c4c86891e39d736b5b7efc450d36b772"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plans.imageset/plans.pdf",
+        "sha256": "ae670ca007c01bb2589501aa4fd20b1560c72e77ff49a0a762f1ab6cd1f816a5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/play.imageset/Contents.json",
+        "sha256": "dd3a2472b89c98d60fbdc20f14ab1e3c0ae74b39e8c0f445f50e92cfe1960e96"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/play.imageset/play.pdf",
+        "sha256": "21005e603a3fe37e6d9f98194d0a6312bca6e6f1b8b9c600fe3b0de59f0ecf52"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plugins.imageset/Contents.json",
+        "sha256": "eb0d2335d550a43773d7283e56d00d67bfb18a5e1fa001f208b5dfe9fa78a051"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plugins.imageset/plugins.pdf",
+        "sha256": "01ae5437c0970f2dcd2fc1184e4b07cfefb79c8005c257b1467bc4263dfd93f2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plus-small.imageset/Contents.json",
+        "sha256": "1ebba66285b966a3121de3917a990d1fb60bc8a696648bc07b7a7eac42eaa540"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plus-small.imageset/plus-small.pdf",
+        "sha256": "019c75dc5f90dc07110ad2f23efc5f5e5027347d9bdd75f1ae15647dcfc9332f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plus.imageset/Contents.json",
+        "sha256": "b266d23ba841a9449b68b2fff1cb6db2349fb43d96c09afb6e46d4e0b0b9a4a4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/plus.imageset/plus.pdf",
+        "sha256": "fd8116ab5663c3d217f0be3e2b45d8137bb400e3ccd0ec7ef7be97315d21da1a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/popout.imageset/Contents.json",
+        "sha256": "1ab2687ae2c8dea8f4e5adcc0cab18e5a7c136bd8f707834ea9b148581b51521"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/popout.imageset/popout.pdf",
+        "sha256": "98665134a0adb53e71f4a23c695f4fd4fe4e82fe916c05116d7d0b66b6295725"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/posts.imageset/Contents.json",
+        "sha256": "4763c02d30d10b7205b8add80907f3c1e900ea5c809c222d15df75d6c75986c9"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/posts.imageset/posts.pdf",
+        "sha256": "3fb28ed6d79e0a309fac2694e0a5b8debd1b27ee87657a6d6eeec6de174d6dc2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/print.imageset/Contents.json",
+        "sha256": "973c2a0ce8baf405d10bc00213a2f556836cd7d5c0f7fbf302d9c35ed7054013"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/print.imageset/print.pdf",
+        "sha256": "b5c94d433d1263f028c24e7932e1f457c64372058feea4967d1a2857962af39b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product-downloadable.imageset/Contents.json",
+        "sha256": "ccd3318f96ec50b2c91e33a8c50c8b236d47ce8e52e896b88f1815ed7e0d8975"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product-downloadable.imageset/product-downloadable.pdf",
+        "sha256": "47e0ff5f79d0ed6a1a0567298b0262345be66514a9770c11a3beed9feecf5c39"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product-external.imageset/Contents.json",
+        "sha256": "ac618430b25ef0dd5ff65974290d440c05e9ecf4119ec840bcbde0cfe2f8e006"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product-external.imageset/product-external.pdf",
+        "sha256": "8d5d9fcb3f138fca78be7ab3b41eb3e6be029ea9c02204af276019d468c0b5be"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product-virtual.imageset/Contents.json",
+        "sha256": "9a790171b78d427a50fbc0b2d6c3317c56814e43265ab6b3f45f77341fe526b1"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product-virtual.imageset/product-virtual.pdf",
+        "sha256": "64a49c0860823da6ec4a5b327171a3cddecea3c5c468ff41fd18bd1224ad9c7a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product.imageset/Contents.json",
+        "sha256": "ce4ce707192ff474c2d5318bf734ae02c6828099b900fb0a41a96ddb64ab604a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/product.imageset/product.pdf",
+        "sha256": "a4d5a6f49f35e020835cd5ff01d4a6e59d8199455c0982ed8f8985511496e00c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/quote.imageset/Contents.json",
+        "sha256": "91a0f7e15e5534b4ab08c43fc949cb69702f46b5134e1a60627fbff6aae9da1e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/quote.imageset/quote.pdf",
+        "sha256": "29ea408098064e3ed278211ad69a872bfcc7226713c865e7ec3b5e8baad9661e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/read-more.imageset/Contents.json",
+        "sha256": "333263db253f67ff71836ebf7f341a293f19553c8499e2d728a387dddd8859af"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/read-more.imageset/read-more.pdf",
+        "sha256": "9d082b286a608df841e9487cbc58f317c1285ae0b80edcf3b6eed133cc948d10"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-follow-conversation.imageset/Contents.json",
+        "sha256": "ec1f81acd8081976a457d835f4cabbc4221194b4d5b874e3e0116e98d7c8347c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-follow-conversation.imageset/reader-follow-conversation.pdf",
+        "sha256": "c925a90ff5fa127faf44239daa3487b6172ae9f3a3dc22930279c01123fecfa2"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-follow.imageset/Contents.json",
+        "sha256": "d32d7d573f7eec43b45bd4d972110df5ac3048a105baee0f9416a7bb0ca633b8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-follow.imageset/reader-follow.pdf",
+        "sha256": "f8e4d3498d47ef63ebf49daf243ebba2565bdb99995ea29b759525d686f6f222"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-following-conversation.imageset/Contents.json",
+        "sha256": "875c2a64d80376e4b16094b67d7bb1d0170f819dede0f1e5cac0f08269ac80d8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-following-conversation.imageset/reader-following-conversation.pdf",
+        "sha256": "ec61b9e3694fab252d4f7b6503d65393f8caaf369a3325705a8898da3571c7a0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-following.imageset/Contents.json",
+        "sha256": "6536ca020a740bb2e098eec8f42f848faef9900f616063cc64d98693f90c77cd"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader-following.imageset/reader-following.pdf",
+        "sha256": "7f027b4e2839499b54513d407d8db390cc205e37d0ff6f1c77787d5675be5b87"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader.imageset/Contents.json",
+        "sha256": "20239fffb7c40c1a78ec0e7a372b6bd9da5345890729e287c257e6e5ccb1c303"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reader.imageset/reader.pdf",
+        "sha256": "f153f808d5bf184697313e4a6df218bb993ed5edd6356d0b2ab54dde73ca0423"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reblog.imageset/Contents.json",
+        "sha256": "33cf7417e354ed179c2e97e3b9010178863b276b6861ad15bcefa4d0c1cdfd8f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reblog.imageset/reblog.pdf",
+        "sha256": "a2f960fdbc7ce116cf20c972e51bea40842ea10a2e2f160eb19f55261ec30fdb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/redo.imageset/Contents.json",
+        "sha256": "f3a87d56d9644f50eac650450622e960a33a057a2bff1534985232c2ab664c9b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/redo.imageset/redo.pdf",
+        "sha256": "0f2a381ef5b668f5ae7851440cc7906a41091b3a509a8b67fbbc42319f3e7364"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/refresh.imageset/Contents.json",
+        "sha256": "ea4ae6df71ec0b88709ae013a13c731632092f3f60445642aac70e18f705f890"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/refresh.imageset/refresh.pdf",
+        "sha256": "1ec4f264d5a8c4f2211858d179f0d9aa3b1533ee3955583d703eeae456ff22bb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/refund.imageset/Contents.json",
+        "sha256": "083f89e72e0536b17b46d9d57717c1bb78ef22ca0a75215c0326c05a7696385a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/refund.imageset/refund.pdf",
+        "sha256": "0d6011134a364ad274532db43fd09c39e2edc272e050a260bd2345dac88bd20f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reply.imageset/Contents.json",
+        "sha256": "d381690eff2f286dc003020e221be7af8636b73d722c391cec75762c29448a9c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/reply.imageset/reply.pdf",
+        "sha256": "df6877cf9906617b20aa311b34562f06ad2979b45bf2db63e467b406229e7c25"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/resize.imageset/Contents.json",
+        "sha256": "71d4a717183f64bd0e3950dd4e520cb28222be79f67e056f2ba717774b793f2e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/resize.imageset/resize.pdf",
+        "sha256": "4cf07d2653ce624a9fa64cca28c148ea9539312ce968056104b168c1dd97692b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/rotate.imageset/Contents.json",
+        "sha256": "b2635e104515bc341ade66947108eaec39f0610ab761a6146bb1c5fc2fe90966"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/rotate.imageset/rotate.pdf",
+        "sha256": "2a129e5202f32a62b6a17694022705f332c79feae0212a038a5b2b12df1f15bf"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/scheduled.imageset/Contents.json",
+        "sha256": "9b2c4e6d10307fd4789e5beeb51335cbef04066bc55c073aeec7e00d6c865402"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/scheduled.imageset/scheduled.pdf",
+        "sha256": "b8a87ca2799da7a3da7ad811b8bb63de456ea6e89ff7926e454d573ee0e2d26c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/search.imageset/Contents.json",
+        "sha256": "e5f633b8ba8737404c084fa27542488ded31b3e55a31a3f4099b94de1d52b1ec"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/search.imageset/search.pdf",
+        "sha256": "5f40fc399b3610d0ce261d1e16e94aa105c4655836d8211cae83dd20dfece071"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/share-computer.imageset/Contents.json",
+        "sha256": "7361fc6f8e7f0945ac60aea8fe99fe52a01550ac1a00454550be6543954389d7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/share-computer.imageset/share-computer.pdf",
+        "sha256": "bcc23798f62116841e0ee54bd48090e4e60b3b4a1768db8c86291562f613d775"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/share-ios.imageset/Contents.json",
+        "sha256": "8bcc744420ccc1e73f5ca2ef1f97755e594bb39c33c56576b214f8a6dffbdecc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/share-ios.imageset/share-ios.pdf",
+        "sha256": "1af103d1240a95ad0a7e5eb202b5801a12b6646c11ab47e0f330b0e6e38e5bbc"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/share.imageset/Contents.json",
+        "sha256": "d4fe2c3caa0721916a0db6ef85cd35f483eaefb62245cb5921c4ffa78cfdb551"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/share.imageset/share.pdf",
+        "sha256": "dc63c3e136d6146ae61eeec891179a23040a721e65f5f63417e759729fb6695e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/shipping.imageset/Contents.json",
+        "sha256": "0dba9cd2f864d7b0983d0dbb71c0fdd5f0339ee2aa9d26d60887bde99a9ea4cb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/shipping.imageset/shipping.pdf",
+        "sha256": "495818ee7f048b0e0cdfb6310b048b876a8b91ac66f32ff82f6b13d2f418222c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/shutter.imageset/Contents.json",
+        "sha256": "c877a9d27afe20ec4941ad532bb8a0b2f6747db527900e28f83d75e49bbd4da8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/shutter.imageset/shutter.pdf",
+        "sha256": "57df5e2beb7098bf9a319c20a63b493055f7e063558033182b10eb9e92d26c9e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/sign-out.imageset/Contents.json",
+        "sha256": "5a17b6d33396f3c10a3796970bf374c91f4a5169b2ea42e4f9dd994ecd82c229"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/sign-out.imageset/sign-out.pdf",
+        "sha256": "fb11db08c48f9df83eac9dbf7d87c112c71b70ccc3ac9fc830de98ff77b542fa"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/site.imageset/Contents.json",
+        "sha256": "fde42fc632edf0b8c858401cf6e8469cf348f7ca69bba2dd822d62e6a4353f9f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/site.imageset/site.pdf",
+        "sha256": "bea6f92231df86b3eca7b9c3100aafa7d6293dc88041b647f4dd05362b3c9e38"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/spam.imageset/Contents.json",
+        "sha256": "5dd7f42cb4c1d49367fe780f38d7a303acf9f4516324b2ade006053f7d7e0f21"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/spam.imageset/spam.pdf",
+        "sha256": "1820fdbdb4cd59a7df2c1757d37a86ba58d7801a830b780c0b5faa98bd84579f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/speaker.imageset/Contents.json",
+        "sha256": "f06b55d5768a25490dbe9d7ae34554949eaf43d42e2fa433647477017f8d7b14"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/speaker.imageset/speaker.pdf",
+        "sha256": "10a4e84b4fedb424548ace8383c3407710f4e16f476d52241f359bf6d1e42bac"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/special-character.imageset/Contents.json",
+        "sha256": "77e7afe92768948b6da4e143edf6a7c427814c80b5842a329b0cf4b24ac45e9c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/special-character.imageset/special-character.pdf",
+        "sha256": "c5977324a4fa5f51e9d010dcf3de69e3c7c9fe575603e6bec40140d8738c4cf6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/star-outline.imageset/Contents.json",
+        "sha256": "5290ac3d53434e4cced48471f00980c409250985cf0a37c44c269e2066398b0e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/star-outline.imageset/star-outline.pdf",
+        "sha256": "f7d8437e4971ff3af9803692536e6d7930fdbab3502e340aeae9b6c172f95c82"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/star.imageset/Contents.json",
+        "sha256": "32e9ea86998bd80d0317d5a9445bf83742d5892bdfc57ba2901d0f00b8fc73b8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/star.imageset/star.pdf",
+        "sha256": "b90455fbe6369b7c33b2c29a285b68b529d3b804a53a9d422e353a13269cfb74"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-alt.imageset/Contents.json",
+        "sha256": "dca52514b4346d54af93666d8e224bd21e34c606faa97206787fb50768b3260c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-alt.imageset/stats-alt.pdf",
+        "sha256": "39cb56fe66693a7c33c5e33842a30e7d9619718edd996157b212c949356b83d6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-down-alt.imageset/Contents.json",
+        "sha256": "418f287229b0e5fa9aa560d38ddde2b15a611e18aeb5e197d317ed1e0bb7df05"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-down-alt.imageset/stats-down-alt.pdf",
+        "sha256": "aa1064895dbd74f84ba6d34d1f4978fa7e4d475e58486d26a67671c343996517"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-down.imageset/Contents.json",
+        "sha256": "57e52cca8d46ee76684106c0a47cf08ee494c07dc95e3dd687f9b24a7e2f95ea"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-down.imageset/stats-down.pdf",
+        "sha256": "06a49b30e8d55bf54cb90e356e2e65d86b1122262c04a5c8127a09f73ce6ad9d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-up-alt.imageset/Contents.json",
+        "sha256": "d9e167e2a1806aa5edff832e440584a2ec609ea745d44ad3a77433b1dc200b09"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-up-alt.imageset/stats-up-alt.pdf",
+        "sha256": "691bb52f00530d0a3328aa5236e55f35d05f807f4fdacf4fd85c3028dd407fe6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-up.imageset/Contents.json",
+        "sha256": "6d37d2c248d081de88c3c4b7fc412c5165bfddad00059c061b6d92c8435549af"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats-up.imageset/stats-up.pdf",
+        "sha256": "cebb43c25aaf01e2491b4fbfbde60b388fa16a126f59dfd9d79f849a794cbce3"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats.imageset/Contents.json",
+        "sha256": "6309f64e196fa57ac38c6a6920dfc982e587be29a884c9baf41e48cf0acd77ae"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/stats.imageset/stats.pdf",
+        "sha256": "20be71ca27e967cdd9ad813768cf2eb66e1d83c968ab50ef82759775abcd2d2f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/status.imageset/Contents.json",
+        "sha256": "6ccfb805f2a2adcc83dae195b030f3c68ea66a559896754f8c47aa53951c7835"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/status.imageset/status.pdf",
+        "sha256": "95de48bfa92dc70fa34f7671a4c4ca73531d262025f28d601ccfb6118a3648f8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/story.imageset/Contents.json",
+        "sha256": "f429e3489f26bf73d9a7e8fe2811c75f39fa169856249609887ef3c078e741df"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/story.imageset/story.pdf",
+        "sha256": "750da2a76429c7ae1950a8918bc0054371bee171739e2c810e37b34b7438d674"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/strikethrough.imageset/Contents.json",
+        "sha256": "9cbe45c7dc7547518f78939c9ba60c2ab7b53b01532f8fe01b49024f0b847984"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/strikethrough.imageset/strikethrough.pdf",
+        "sha256": "ef725930a52b472d471ba1a82c2f215d4402029ce3ba414b0b6c6851a596a96c"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/sync.imageset/Contents.json",
+        "sha256": "f66e9ccaa65fb2000652dd63f1d490eb5be2d9d1d945a98c1114ea44de0e3093"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/sync.imageset/sync.pdf",
+        "sha256": "ea51e65097e5b3f41d91b3b7a90359a6d2835e97d82a0c215c8c1b309dcf3576"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/tablet.imageset/Contents.json",
+        "sha256": "47d1c1a63f888dae64ab183707e03dd7a1e41ff25eaad9a5fde97b767291db74"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/tablet.imageset/tablet.pdf",
+        "sha256": "72c8374de9ff1e0db06342291801ca988731442a5da9929602f02424c0251052"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/tag.imageset/Contents.json",
+        "sha256": "86f6a9b450e6ce743da5dafc4049c85a94a2c027ad436c4789c3c8bb4da13350"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/tag.imageset/tag.pdf",
+        "sha256": "52d72da5caf5f8841f883b4c6dcf307f7f66c93feec0c9db619073332b560f4f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/text-color.imageset/Contents.json",
+        "sha256": "0e6e11f055c5ad5f89a1d7f964cf97da40aae1f7bcffdfb2f72a9978c1bde7c4"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/text-color.imageset/text-color.pdf",
+        "sha256": "ad4f0549f0b8df7672bdbf2dad4e8aff7a3e15afdf23cdc56527a0b89b7f1a7a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/themes.imageset/Contents.json",
+        "sha256": "375ca9c8e05fa06b446d425120a09fa636009711fbbe3bd17dc53b3a2636e530"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/themes.imageset/themes.pdf",
+        "sha256": "429e5d468deea6578d9c54c3f10041dad64839f18acb9f02a533385367f017d0"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/thumbs-up.imageset/Contents.json",
+        "sha256": "dbf52b2b5c38628a58d25e821a755e502d6f52310012d417eaf838d902982b6f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/thumbs-up.imageset/thumbs-up.pdf",
+        "sha256": "29ef96eb39e6fe606c3ad025cb9856a7276a69545631fbf57df1db873fa351cb"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/time.imageset/Contents.json",
+        "sha256": "9fba43f08ec203eb52f71dc17b3a3aa526180a549bc942564b5590418851063a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/time.imageset/time.pdf",
+        "sha256": "953247598adb02f00085d93097fb0a254c578df50bfc61d596e2c300e02c8534"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/trash.imageset/Contents.json",
+        "sha256": "b3cd764c65730aa092060d1661ba34d78fae9a0762c295687628e53195a6d855"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/trash.imageset/trash.pdf",
+        "sha256": "ede5f86bfae8131ca9bb796eca39158fae6f58e1e1400eedd81bc5ad2f7b43b9"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/trophy.imageset/Contents.json",
+        "sha256": "74f81620e48ced21b6b301181782c5a84d984583271ad663a8be2bc281a82983"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/trophy.imageset/trophy.pdf",
+        "sha256": "1cf6c51b0d830eafe08329d9a8c0ef7a97824d1aaf25ff79a1d88c91f891388e"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/types.imageset/Contents.json",
+        "sha256": "f583ff0ee17d2d5e6a1d845dcfc7909a53bf8dd71d09cc5aff9f4a004d958cb8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/types.imageset/types.pdf",
+        "sha256": "c424bf1504d7f026a191236897e5a6c9dff2c304596832e724f528106e291834"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/underline.imageset/Contents.json",
+        "sha256": "2aed66d8295fec229be28b1f94b5defba5f89cd32f6d22b7cf65def6c8e47fe5"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/underline.imageset/underline.pdf",
+        "sha256": "6935bf061eba15529d84724b309eec8b59278c84a3444fd34d1c7b255c446765"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/undo.imageset/Contents.json",
+        "sha256": "a83a73cfc620656e85be167985b5b0ec4895d80bded1a92ccc28cf3fed7ce9b6"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/undo.imageset/undo.pdf",
+        "sha256": "e2d279aa730b28e6f9e64aed742da867cc0817f8d7683b5c95fd5b4e5d5b6b6a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/user-add.imageset/Contents.json",
+        "sha256": "e63b5b837cab2c75bfb258c0f2582c7318c1dfcbf27502abf891874444802ee8"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/user-add.imageset/user-add.pdf",
+        "sha256": "c446da3b7f7b9884c8df3a2907a5ab2399d49175ec8b46d3643bb7a405e8a43d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/user-circle.imageset/Contents.json",
+        "sha256": "feb215499701a7fc6c52919ac73643cf5c02c5ad4c3f3abe59b7ffb025c26dc7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/user-circle.imageset/user-circle.pdf",
+        "sha256": "2b443fbf475e53e031e0cac3c18e998c7fd729330d43ce17bf5fbcc47667823b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/user.imageset/Contents.json",
+        "sha256": "479220ef9fc10a8d3f673e759c3a183c9294a96323c8b6300c0ecf0e12a827ed"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/user.imageset/user.pdf",
+        "sha256": "b86a7c2ff7e2426740ad1e071f726757cca5061e9b511cc2d62e241fb96c940a"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/video-camera.imageset/Contents.json",
+        "sha256": "2545355cc0fab9657dafc8decd4fd35b50a582251fbbdf73bb78965b161e197f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/video-camera.imageset/video-camera.pdf",
+        "sha256": "80d00c8c0c3f4341517f541e8992088b7c29e048563d3c7b750dc1063059df0f"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/video-remove.imageset/Contents.json",
+        "sha256": "d4897df7dec736f45f889c9dbfd7d0050da34fd0d7ff63a7ec623daee7743182"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/video-remove.imageset/video-remove.pdf",
+        "sha256": "1ed97eea3131c798490b80687ec955639d22560ba8c6b7118eb2d38539825fff"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/video.imageset/Contents.json",
+        "sha256": "07288c605753459e9dae49a7e6ddc99866d3a5aef3593c8c08de1a334fc404ad"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/video.imageset/video.pdf",
+        "sha256": "7e36ed197fd290f8ca6e67f77a01d1d87f76e29ff194d52acda15dc05b2bf64d"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/visible.imageset/Contents.json",
+        "sha256": "8dd356d1142196f974013f4a6d34e6d1b95f8127887508355b0973ed69aab314"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/visible.imageset/visible.pdf",
+        "sha256": "7060e6254b4a5bc608de839b92804afa89ab3868732fb6cc632e539891531bc7"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/zoom-in.imageset/Contents.json",
+        "sha256": "81e14ae268e0c86a60df6e1ee7c35fb83d377b328343e4993fe472389fd63209"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/zoom-in.imageset/zoom-in.pdf",
+        "sha256": "08bb37d451b0ce6f35674816952e5ea67904852b76efd10a4142e6ca759df835"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/zoom-out.imageset/Contents.json",
+        "sha256": "aeb448865cf3cdcd3150b0958deeec11f41a57696f3846f388dd849aac4dc87b"
+      },
+      {
+        "path": "Resources/Gridicons.xcassets/zoom-out.imageset/zoom-out.pdf",
+        "sha256": "ad8ffc2280956809fc0a40e7776041b565cb9a23c5b4db718a9ff4666d1be617"
+      }
+    ]
+  }
+]

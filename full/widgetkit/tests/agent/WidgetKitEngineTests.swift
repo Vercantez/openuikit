@@ -131,6 +131,25 @@ private final class _Box<T>: @unchecked Sendable {
     var failed = false
 }
 
+/// Runs an async API from the sealed gate's deliberately synchronous test
+/// entry points. The deadline makes a lost task an immediate test failure
+/// rather than an indefinitely blocked host process.
+private func _awaitCompletion(
+    timeout: TimeInterval = 2,
+    _ operation: @escaping @Sendable () async -> Void
+) {
+    let completion = _Box<Bool>()
+    Task.detached {
+        await operation()
+        completion.value = true
+    }
+    let deadline = Date().addingTimeInterval(timeout)
+    while completion.value == nil, Date() < deadline {
+        Thread.sleep(forTimeInterval: 0.001)
+    }
+    precondition(completion.value == true, "async WidgetKit operation timed out")
+}
+
 func testWidgetFamilyCanvasSizes() {
     // Cited: Apple Human Interface Guidelines, Widgets
     // https://developer.apple.com/design/human-interface-guidelines/widgets
@@ -282,6 +301,67 @@ func testAppIntentTimelineProviderAsync() {
     } catch {
         preconditionFailure("app-intent timeline must validate")
     }
+}
+
+func testAppIntentTimelineProviderAsyncRequirements() {
+    let provider = _AppProvider()
+    let context = TimelineProviderContext(
+        family: .systemLarge,
+        displaySize: CGSize(width: 338, height: 354)
+    )
+    _awaitCompletion {
+        let snapshot = await provider.snapshot(for: _AppIntent(), in: context)
+        precondition(snapshot.stamp == 1)
+        let timeline = await provider.timeline(for: _AppIntent(), in: context)
+        precondition(timeline.entries.map(\.stamp) == [100, 200])
+        precondition(timeline.policy == .never)
+        let relevance = await provider.relevance()
+        precondition(relevance.portableAttributeCount == 0)
+    }
+}
+
+func testTimelineProviderAsyncRelevance() {
+    _awaitCompletion {
+        let relevance = await _StaticProvider().relevance()
+        precondition(relevance.portableAttributeCount == 0)
+    }
+}
+
+func testIntentTimelineProviderAsyncRelevance() {
+    _awaitCompletion {
+        let relevance = await _LegacyProvider().relevance()
+        precondition(relevance.portableAttributeCount == 0)
+    }
+}
+
+func testWidgetCenterAsyncState() {
+    let center = WidgetCenter.shared
+    center.resetProcessLocalState()
+    let expected = WidgetInfo(kind: "async-widget", family: .systemSmall)
+    center.installCurrentConfigurations([expected])
+    _awaitCompletion {
+        let pushInfo = await center.currentPushInfo
+        precondition(pushInfo == nil)
+        do {
+            let values = try await center.currentConfigurations()
+            precondition(values == [expected])
+        } catch {
+            preconditionFailure("process-local configurations must not throw")
+        }
+    }
+    center.resetProcessLocalState()
+}
+
+func testControlCenterAsyncState() {
+    let center = ControlCenter.shared
+    center.resetProcessLocalState()
+    let expected = ControlInfo(kind: "async-control", pushInfo: nil)
+    center.installCurrentControls([expected])
+    _awaitCompletion {
+        let controls = await center.currentControls()
+        precondition(controls == [expected])
+    }
+    center.resetProcessLocalState()
 }
 
 func testTimelineEngineEntryAtTime() {

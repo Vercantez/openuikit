@@ -12,7 +12,7 @@ import Network
 /// Linux `isSupported(_:using:)` is always `false`. The failable convenience
 /// initializers therefore return `nil` and never start a Bonjour/Wi-Fi Aware
 /// browser. `endpoint` is declared as `async throws` and always throws
-/// `DeviceDiscoveryUIUnavailable.linuxHost`; the sealed runner cannot await it.
+/// `DeviceDiscoveryUIUnavailable.linuxHost`.
 ///
 /// macios notes that constructing the ObjC initializer when unsupported can
 /// trap. The Swift overlay is `init?`. Linux follows the failable signature

@@ -364,3 +364,40 @@ store** modelled on Xcode StoreKit Testing `.storekit` JSON
 - SKReceiptRefreshRequest / AppStore.showManageSubscriptions (unchanged).
 
 Do not treat this isolated host run as integrated Linux success.
+
+## Depth pass 2026-09 (wave 8)
+
+This wave adds a public, deterministic compact-JWS parser for Linux callers.
+It validates the three base64url segments, object-shaped JSON payload, exact
+`ES256` protected-header algorithm, nonempty fully decodable `x5c` chain, and
+the 64-byte raw ECDSA signature shape. These structural checks do **not**
+establish Apple trust: `signatureVerificationError` remains explicitly
+fail-closed as `invalidSignature` because this Foundation-only lane has neither
+Apple StoreKit trust roots nor an ES256 verification dependency. Malformed
+security fields are rejected with `VerificationError` rather than accepted or
+silently discarded.
+
+Five synthesized advanced-commerce inequality witnesses and the generic
+`VerificationResult` inequality witness now have focused synchronous behavioral
+evidence. Apple-service async entry points remain declared rather than being
+promoted through blocking tests; ExternalPurchase, ExternalLinkAccount,
+ExternalPurchaseLink, ExternalPurchaseCustomLink, PaymentMethodBinding, and
+AdvancedCommerceProduct purchase operations therefore remain fail-closed at
+their existing synchronous Linux boundaries.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before depth pass 2026-09 wave 8 | 1541 | 6673 | 180 | 0 | 7301 |
+| after depth pass 2026-09 wave 8 | 1547 | 6667 | 180 | 0 | 7301 |
+
+Nondeferred remains **8214** (floor 7848). Unique `implemented` evidence tests:
+119. Top-5 evidence distribution (of 1547 implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (7.4%)
+2. `testAdvancedCommerceTypes` — 111 (7.2%)
+3. `testJWSUnverifiedFields` — 67 (4.3%)
+4. `testHashableRawRepresentableMixing` — 48 (3.1%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (2.7%)
+
+No cited test covers more than 40% of implemented rows. The sealed host gate
+for this wave is `bash full/storekit/tests/acceptance/test_host.sh`.

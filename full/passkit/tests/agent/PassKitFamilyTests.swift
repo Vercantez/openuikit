@@ -319,6 +319,10 @@ func testPaymentRequestApplePayLaterAndMCC() {
     precondition(request.merchantCategoryCode?.rawValue == 5411)
     precondition(request.merchantCategoryCode?.description == "5411")
     precondition(PKPaymentRequest.MerchantCategoryCode("12")?.rawValue == 12)
+    precondition(
+        PKPaymentRequest.MerchantCategoryCode(rawValue: 5411).hashValue
+            == PKPaymentRequest.MerchantCategoryCode(rawValue: 5411).hashValue
+    )
     do {
         let encoded = try JSONEncoder().encode(PKPaymentRequest.MerchantCategoryCode(rawValue: 5411))
         let decoded = try JSONDecoder().decode(PKPaymentRequest.MerchantCategoryCode.self, from: encoded)
@@ -340,6 +344,10 @@ func testPaymentRequestApplePayLaterAndMCC() {
     var hasher = Hasher()
     hasher.combine(PKPaymentRequest.ApplePayLaterAvailability.Reason.itemIneligible)
     _ = hasher.finalize()
+    precondition(
+        PKPaymentRequest.ApplePayLaterAvailability.Reason.itemIneligible.hashValue
+            == PKPaymentRequest.ApplePayLaterAvailability.Reason.itemIneligible.hashValue
+    )
     precondition(PKApplePayLaterAvailability(rawValue: 0) == .available)
 }
 
