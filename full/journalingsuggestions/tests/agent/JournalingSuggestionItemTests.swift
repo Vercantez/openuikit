@@ -2,6 +2,42 @@ import Foundation
 @_spi(OpenUIKitHost)
 import JournalingSuggestions
 
+private final class AsyncResultBox<Value>: @unchecked Sendable {
+    private let condition = NSCondition()
+    private var result: Result<Value, any Error>?
+
+    func finish(_ result: Result<Value, any Error>) {
+        condition.lock()
+        self.result = result
+        condition.broadcast()
+        condition.unlock()
+    }
+
+    func wait() throws -> Value {
+        condition.lock()
+        defer { condition.unlock() }
+        let deadline = Date().addingTimeInterval(5)
+        while result == nil {
+            precondition(condition.wait(until: deadline), "async asset lookup timed out")
+        }
+        return try result!.get()
+    }
+}
+
+private func resolve<Value: Sendable>(
+    _ operation: @escaping @Sendable () async throws -> Value
+) throws -> Value {
+    let box = AsyncResultBox<Value>()
+    Task.detached {
+        do {
+            box.finish(.success(try await operation()))
+        } catch {
+            box.finish(.failure(error))
+        }
+    }
+    return try box.wait()
+}
+
 func testItemContentIdentity() {
     let id = UUID(uuidString: "12345678-1234-1234-1234-1234567890AB")!
     let item = JournalingSuggestion.ItemContent(id: id)
@@ -40,4 +76,42 @@ func testAssetProtocolAssociatedType() {
     }
     precondition(isAsset(JournalingSuggestion.Photo(photo: URL(fileURLWithPath: "/tmp/x.jpg"))))
     precondition(isAsset(JournalingSuggestion.Contact(name: "Pat")))
+}
+
+func testItemContentAsyncLookup() {
+    let photo = JournalingSuggestion.Photo(
+        photo: URL(fileURLWithPath: "/tmp/async-photo.jpg"),
+        date: Date(timeIntervalSince1970: 1_700_000_100)
+    )
+    let item = JournalingSuggestion.ItemContent(assets: [photo])
+    let loaded: JournalingSuggestion.Photo? = try! resolve {
+        try await item.content(forType: JournalingSuggestion.Photo.self)
+    }
+    let missing: JournalingSuggestion.Video? = try! resolve {
+        try await item.content(forType: JournalingSuggestion.Video.self)
+    }
+    precondition(loaded == photo)
+    precondition(missing == nil)
+}
+
+func testSuggestionAsyncContentLookup() {
+    let first = JournalingSuggestion.Photo(photo: URL(fileURLWithPath: "/tmp/async-first.jpg"))
+    let second = JournalingSuggestion.Photo(photo: URL(fileURLWithPath: "/tmp/async-second.jpg"))
+    let suggestion = JournalingSuggestion(
+        title: "Photos",
+        date: nil,
+        items: [
+            JournalingSuggestion.ItemContent(assets: [first]),
+            JournalingSuggestion.ItemContent(assets: [second]),
+            JournalingSuggestion.ItemContent()
+        ]
+    )
+    let loaded: [JournalingSuggestion.Photo] = try! resolve {
+        await suggestion.content(forType: JournalingSuggestion.Photo.self)
+    }
+    let missing: [JournalingSuggestion.Video] = try! resolve {
+        await suggestion.content(forType: JournalingSuggestion.Video.self)
+    }
+    precondition(loaded == [first, second])
+    precondition(missing.isEmpty)
 }
