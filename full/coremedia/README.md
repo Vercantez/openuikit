@@ -228,10 +228,68 @@ This pass re-ran that sealed gate in the Linux environment until
 `FRAMEWORK_FANOUT_HOST_OK`. Guest stdout is marker-only; `CMTimeShow` /
 `CMTimeRangeShow` / `CMTimeMappingShow` write debug lines to stderr.
 
-The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`
-is a host-inventory token, not printed by the sealed framework gate.
-`.cursor/verify-cloud-environment.sh` on this snapshot fails earlier
-(`missing corpus checkout: scratch/ladder-corpus/focus-ios`; Cursor Build
-`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` vs seed
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). `swiftc` is Swift 6.2.4 /
-linux and the gate compiled with a clean product tree.
+## Depth pass 2026-09 (wave 8)
+
+This continuation converts previously declared collection and value semantics
+into exercised Linux behavior. Focused synchronous tests now cover the
+`CMFormatDescription.Extensions`, `CMSampleBuffer.SamplePropertiesCollection`,
+and `CMSampleBuffer.SampleAttachmentsArray` standard-library algorithms,
+CoreMedia option-set mutation/algebra, raw-value wrapper equality and hashing,
+and the complete sample-buffer attachment-key identity table. No Apple service,
+hardware, callback-scheduling, or image/audio dependency behavior was inferred;
+those boundaries remain declared or deferred as recorded in `coverage.tsv`.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2111 | 2311 |
+| declared | 1126 | 926 |
+| deferred | 267 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (5.0%)
+2. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (3.9%)
+3. `CMFormatDescriptionExtensionOverlayTests.swift#testCMFormatDescriptionExtensionKeyRawValues` — 59 (2.6%)
+4. `CMDataBlockBufferTests.swift#testCMMutableDataBlockBufferReplaceAppendAndPointer` — 52 (2.3%)
+5. `CMSampleBufferOverlayTests.swift#testCMSampleBufferSamplePropertiesAndAttachments` — 52 (2.3%)
+
+The environment verifier emitted the required campaign marker:
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
+The sealed host gate was then run from a clean temporary build and reached all
+deliverable, reference, runtime, and dylib host markers.
+
+### Wave 8 continuation from campaign commit `5a351db2`
+
+This continuation adds focused runtime evidence for the standard-library
+collection behavior inherited by `CMReadOnlyDataBlockBuffer`, its `BlockRegion`,
+and `CMMutableDataBlockBuffer.BlockRegion`. The synchronous test specializes the
+algorithms for all three concrete byte projections and checks searching,
+transforms, folds, ordering, slicing, index movement, iteration, and boundary
+behavior. It does not reclassify Foundation comparator/formatting, Combine, or
+String Processing overloads that the test does not exercise.
+
+| status | before (`5a351db2`) | after |
+| --- | ---: | ---: |
+| implemented | 2311 | 2460 |
+| declared | 926 | 777 |
+| deferred | 267 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+The campaign ledger baseline was 2111 implemented rows, so wave 8 now has a
+cumulative gain of 349 implemented rows; this continuation itself contributes
+149 focused rows.
+
+Top-5 `implemented` evidence distribution after this continuation:
+
+1. `CMCollectionDepthTests.swift#testCMDataBlockBufferCollectionAlgorithms` — 149 (6.1%)
+2. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (4.7%)
+3. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (3.6%)
+4. `CMFormatDescriptionExtensionOverlayTests.swift#testCMFormatDescriptionExtensionKeyRawValues` — 59 (2.4%)
+5. `CMDataBlockBufferTests.swift#testCMMutableDataBlockBufferReplaceAppendAndPointer` — 52 (2.1%)
+
+The sealed gate completed with the required environment, deliverable, reference,
+runtime, and dylib markers. Existing fail-closed image/audio dependency,
+bitstream parser, handler-blob, and timer-scheduling boundaries remain unchanged.

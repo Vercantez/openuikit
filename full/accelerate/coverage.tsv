@@ -31,275 +31,275 @@ c:@E@vDSP_DFT_RealtoComplex	declared	source:full/accelerate/AccelerateCTypes.swi
 c:@E@vDSP_DFT_RealtoComplex@vDSP_DFT_Interleaved_ComplextoComplex	declared	source:full/accelerate/AccelerateCTypes.swift#interleaved_ComplextoComplex	
 c:@E@vDSP_DFT_RealtoComplex@vDSP_DFT_Interleaved_RealtoComplex	declared	source:full/accelerate/AccelerateCTypes.swift#interleaved_RealtoComplex	
 c:@EA@BNNSActivationFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunction	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionCELU	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionCELU	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionClampedLeakyRectifiedLinear	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionClampedLeakyRectifiedLinear	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionELU	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionELU	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionErf	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionErf	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELU	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionGELU	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELUApproximation	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionGELUApproximation	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELUApproximation2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionGELUApproximation2	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELUApproximationSigmoid	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionGELUApproximationSigmoid	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionGumbel	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionGumbel	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionGumbelMax	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionGumbelMax	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionHardShrink	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionHardShrink	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionHardSigmoid	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionHardSigmoid	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionHardSwish	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionHardSwish	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionLinearWithBias	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionLinearWithBias	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionLogSigmoid	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionLogSigmoid	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionLogSoftmax	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionLogSoftmax	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionPReLUPerChannel	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionPReLUPerChannel	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionReLU6	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionReLU6	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionSELU	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionSELU	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionSiLU	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionSiLU	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionSoftShrink	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionSoftShrink	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionSoftplus	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionSoftplus	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionSoftsign	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionSoftsign	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionTanhShrink	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionTanhShrink	
-c:@EA@BNNSActivationFunction@BNNSActivationFunctionThreshold	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSActivationFunctionThreshold	
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionCELU	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionClampedLeakyRectifiedLinear	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionELU	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionErf	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELU	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELUApproximation	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELUApproximation2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionGELUApproximationSigmoid	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionGumbel	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionGumbelMax	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionHardShrink	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionHardSigmoid	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionHardSwish	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionLinearWithBias	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionLogSigmoid	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionLogSoftmax	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionPReLUPerChannel	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionReLU6	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionSELU	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionSiLU	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionSoftShrink	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionSoftplus	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionSoftsign	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionTanhShrink	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSActivationFunction@BNNSActivationFunctionThreshold	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSArithmeticFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticFunction	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAbs	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAbs	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAcos	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAcos	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAcosh	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAcosh	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAdd	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAdd	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAsin	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAsin	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAsinh	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAsinh	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAtan	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAtan	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticAtanh	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticAtanh	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticCeil	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticCeil	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticCos	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticCos	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticCosh	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticCosh	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticDivide	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticDivide	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticDivideNoNaN	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticDivideNoNaN	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticErf	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticErf	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticExp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticExp	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticExp2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticExp2	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticFloor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticFloor	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticFloorDivide	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticFloorDivide	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticLog	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticLog	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticLog2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticLog2	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticMaximum	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticMaximum	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticMinimum	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticMinimum	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticMultiply	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticMultiply	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticMultiplyAdd	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticMultiplyAdd	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticMultiplyNoNaN	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticMultiplyNoNaN	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticNegate	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticNegate	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticPow	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticPow	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticReciprocal	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticReciprocal	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticReciprocalSquareRoot	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticReciprocalSquareRoot	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticRound	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticRound	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSelect	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSelect	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSign	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSign	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSin	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSin	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSinh	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSinh	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSquare	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSquare	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSquareRoot	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSquareRoot	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticSubtract	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticSubtract	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticTan	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticTan	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticTanh	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticTanh	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticTruncDivide	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticTruncDivide	
-c:@EA@BNNSArithmeticFunction@BNNSArithmeticTruncRemainder	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmeticTruncRemainder	
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAbs	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAcos	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAcosh	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAdd	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAsin	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAsinh	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAtan	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticAtanh	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticCeil	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticCos	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticCosh	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticDivide	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticDivideNoNaN	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticErf	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticExp	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticExp2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticFloor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticFloorDivide	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticLog	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticLog2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticMaximum	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticMinimum	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticMultiply	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticMultiplyAdd	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticMultiplyNoNaN	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticNegate	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticPow	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticReciprocal	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticReciprocalSquareRoot	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticRound	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSelect	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSign	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSin	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSinh	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSquare	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSquareRoot	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticSubtract	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticTan	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticTanh	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticTruncDivide	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSArithmeticFunction@BNNSArithmeticTruncRemainder	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSBoxCoordinateMode	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSBoxCoordinateMode	
-c:@EA@BNNSBoxCoordinateMode@BNNSCenterSizeHeightFirst	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSCenterSizeHeightFirst	
-c:@EA@BNNSBoxCoordinateMode@BNNSCenterSizeWidthFirst	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSCenterSizeWidthFirst	
-c:@EA@BNNSBoxCoordinateMode@BNNSCornersHeightFirst	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSCornersHeightFirst	
-c:@EA@BNNSBoxCoordinateMode@BNNSCornersWidthFirst	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSCornersWidthFirst	
+c:@EA@BNNSBoxCoordinateMode@BNNSCenterSizeHeightFirst	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSBoxCoordinateMode@BNNSCenterSizeWidthFirst	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSBoxCoordinateMode@BNNSCornersHeightFirst	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSBoxCoordinateMode@BNNSCornersWidthFirst	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSDataLayout	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout	
-c:@EA@BNNSDataLayout@BNNSDataLayout1DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout1DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout1DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout1DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout2DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout2DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout2DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout2DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout3DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout3DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout3DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout3DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout4DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout4DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout4DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout4DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout5DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout5DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout5DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout5DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout6DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout6DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout6DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout6DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout7DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout7DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout7DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout7DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout8DFirstMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout8DFirstMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayout8DLastMajor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayout8DLastMajor	
-c:@EA@BNNSDataLayout@BNNSDataLayoutColumnMajorMatrix	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutColumnMajorMatrix	
-c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsIOHrWr	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutConvolutionWeightsIOHrWr	
-c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsOIHW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutConvolutionWeightsOIHW	
-c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsOIHW_Pack32	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutConvolutionWeightsOIHW_Pack32	
-c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsOIHrWr	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutConvolutionWeightsOIHrWr	
-c:@EA@BNNSDataLayout@BNNSDataLayoutFullyConnectedSparse	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutFullyConnectedSparse	
-c:@EA@BNNSDataLayout@BNNSDataLayoutImageCHW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutImageCHW	
-c:@EA@BNNSDataLayout@BNNSDataLayoutMHA_DHK	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutMHA_DHK	
-c:@EA@BNNSDataLayout@BNNSDataLayoutNSE	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutNSE	
-c:@EA@BNNSDataLayout@BNNSDataLayoutRowMajorMatrix	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutRowMajorMatrix	
-c:@EA@BNNSDataLayout@BNNSDataLayoutSNE	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutSNE	
-c:@EA@BNNSDataLayout@BNNSDataLayoutVector	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataLayoutVector	
+c:@EA@BNNSDataLayout@BNNSDataLayout1DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout1DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout2DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout2DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout3DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout3DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout4DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout4DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout5DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues0	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout5DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout6DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout6DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout7DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout7DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout8DFirstMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayout8DLastMajor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutColumnMajorMatrix	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsIOHrWr	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsOIHW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsOIHW_Pack32	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutConvolutionWeightsOIHrWr	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutFullyConnectedSparse	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutImageCHW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutMHA_DHK	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutNSE	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutRowMajorMatrix	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutSNE	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataLayout@BNNSDataLayoutVector	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSDataType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataType	
-c:@EA@BNNSDataType@BNNSDataTypeBFloat16	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeBFloat16	
-c:@EA@BNNSDataType@BNNSDataTypeBoolean	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeBoolean	
-c:@EA@BNNSDataType@BNNSDataTypeIndexed1	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeIndexed1	
-c:@EA@BNNSDataType@BNNSDataTypeIndexed2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeIndexed2	
-c:@EA@BNNSDataType@BNNSDataTypeIndexed4	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeIndexed4	
-c:@EA@BNNSDataType@BNNSDataTypeInt1	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeInt1	
-c:@EA@BNNSDataType@BNNSDataTypeInt2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeInt2	
-c:@EA@BNNSDataType@BNNSDataTypeInt4	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeInt4	
-c:@EA@BNNSDataType@BNNSDataTypeInt64	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeInt64	
-c:@EA@BNNSDataType@BNNSDataTypeMiscellaneousBit	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeMiscellaneousBit	
-c:@EA@BNNSDataType@BNNSDataTypeUInt1	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeUInt1	
-c:@EA@BNNSDataType@BNNSDataTypeUInt2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeUInt2	
-c:@EA@BNNSDataType@BNNSDataTypeUInt3	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeUInt3	
-c:@EA@BNNSDataType@BNNSDataTypeUInt4	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeUInt4	
-c:@EA@BNNSDataType@BNNSDataTypeUInt6	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeUInt6	
-c:@EA@BNNSDataType@BNNSDataTypeUInt64	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDataTypeUInt64	
+c:@EA@BNNSDataType@BNNSDataTypeBFloat16	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeBoolean	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeIndexed1	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeIndexed2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeIndexed4	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeInt1	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeInt2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeInt4	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeInt64	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeMiscellaneousBit	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeUInt1	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeUInt2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeUInt3	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeUInt4	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeUInt6	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDataType@BNNSDataTypeUInt64	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSDescriptorType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSDescriptorType	
-c:@EA@BNNSDescriptorType@BNNSConstant	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSConstant	
-c:@EA@BNNSDescriptorType@BNNSParameter	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSParameter	
-c:@EA@BNNSDescriptorType@BNNSSample	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSSample	
+c:@EA@BNNSDescriptorType@BNNSConstant	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDescriptorType@BNNSParameter	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSDescriptorType@BNNSSample	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSEmbeddingFlags	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSEmbeddingFlags	
-c:@EA@BNNSEmbeddingFlags@BNNSEmbeddingFlagScaleGradientByFrequency	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSEmbeddingFlagScaleGradientByFrequency	
+c:@EA@BNNSEmbeddingFlags@BNNSEmbeddingFlagScaleGradientByFrequency	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSFilterType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSFilterType	
-c:@EA@BNNSFilterType@BNNSArithmetic	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSArithmetic	
-c:@EA@BNNSFilterType@BNNSBatchNorm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSBatchNorm	
-c:@EA@BNNSFilterType@BNNSConvolution	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSConvolution	
-c:@EA@BNNSFilterType@BNNSFullyConnected	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSFullyConnected	
-c:@EA@BNNSFilterType@BNNSGroupNorm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGroupNorm	
-c:@EA@BNNSFilterType@BNNSInstanceNorm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSInstanceNorm	
-c:@EA@BNNSFilterType@BNNSLayerNorm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerNorm	
-c:@EA@BNNSFilterType@BNNSQuantization	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantization	
-c:@EA@BNNSFilterType@BNNSTransposedConvolution	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSTransposedConvolution	
+c:@EA@BNNSFilterType@BNNSArithmetic	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSBatchNorm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSConvolution	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSFullyConnected	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSGroupNorm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSInstanceNorm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSLayerNorm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSQuantization	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSFilterType@BNNSTransposedConvolution	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSFlags	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSFlags	
 c:@EA@BNNSGraphArgumentIntent	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentIntent	
-c:@EA@BNNSGraphArgumentIntent@BNNSGraphArgumentIntentIn	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentIntentIn	
-c:@EA@BNNSGraphArgumentIntent@BNNSGraphArgumentIntentInOut	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentIntentInOut	
-c:@EA@BNNSGraphArgumentIntent@BNNSGraphArgumentIntentOut	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentIntentOut	
+c:@EA@BNNSGraphArgumentIntent@BNNSGraphArgumentIntentIn	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphArgumentIntent@BNNSGraphArgumentIntentInOut	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphArgumentIntent@BNNSGraphArgumentIntentOut	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSGraphArgumentType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentType	
-c:@EA@BNNSGraphArgumentType@BNNSGraphArgumentTypePointer	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentTypePointer	
-c:@EA@BNNSGraphArgumentType@BNNSGraphArgumentTypeTensor	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphArgumentTypeTensor	
+c:@EA@BNNSGraphArgumentType@BNNSGraphArgumentTypePointer	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphArgumentType@BNNSGraphArgumentTypeTensor	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSGraphMessageLevel	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphMessageLevel	
-c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelError	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphMessageLevelError	
-c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelInfo	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphMessageLevelInfo	
-c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelUnsupported	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphMessageLevelUnsupported	
-c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelWarning	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphMessageLevelWarning	
+c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelError	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelInfo	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelUnsupported	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphMessageLevel@BNNSGraphMessageLevelWarning	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSGraphOptimizationPreference	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphOptimizationPreference	
-c:@EA@BNNSGraphOptimizationPreference@BNNSGraphOptimizationPreferenceIRSize	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphOptimizationPreferenceIRSize	
-c:@EA@BNNSGraphOptimizationPreference@BNNSGraphOptimizationPreferencePerformance	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSGraphOptimizationPreferencePerformance	
+c:@EA@BNNSGraphOptimizationPreference@BNNSGraphOptimizationPreferenceIRSize	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSGraphOptimizationPreference@BNNSGraphOptimizationPreferencePerformance	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSInterpolationMethod	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSInterpolationMethod	
-c:@EA@BNNSInterpolationMethod@BNNSInterpolationMethodLinear	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSInterpolationMethodLinear	
-c:@EA@BNNSInterpolationMethod@BNNSInterpolationMethodNearest	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSInterpolationMethodNearest	
+c:@EA@BNNSInterpolationMethod@BNNSInterpolationMethodLinear	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSInterpolationMethod@BNNSInterpolationMethodNearest	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSLayerFlags	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerFlags	
-c:@EA@BNNSLayerFlags@BNNSLayerFlagsLSTMBidirectional	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerFlagsLSTMBidirectional	
-c:@EA@BNNSLayerFlags@BNNSLayerFlagsLSTMDefaultActivations	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLayerFlagsLSTMDefaultActivations	
+c:@EA@BNNSLayerFlags@BNNSLayerFlagsLSTMBidirectional	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLayerFlags@BNNSLayerFlagsLSTMDefaultActivations	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSLinearSamplingMode	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLinearSamplingMode	
-c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingAlignCorners	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLinearSamplingAlignCorners	
-c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingDefault	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLinearSamplingDefault	
-c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingOffsetCorners	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLinearSamplingOffsetCorners	
-c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingStrictAlignCorners	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLinearSamplingStrictAlignCorners	
-c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingUnalignCorners	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLinearSamplingUnalignCorners	
+c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingAlignCorners	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingDefault	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingOffsetCorners	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingStrictAlignCorners	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLinearSamplingMode@BNNSLinearSamplingUnalignCorners	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSLossFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunction	
-c:@EA@BNNSLossFunction@BNNSLossFunctionCategoricalCrossEntropy	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionCategoricalCrossEntropy	
-c:@EA@BNNSLossFunction@BNNSLossFunctionCosineDistance	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionCosineDistance	
-c:@EA@BNNSLossFunction@BNNSLossFunctionHinge	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionHinge	
-c:@EA@BNNSLossFunction@BNNSLossFunctionHuber	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionHuber	
-c:@EA@BNNSLossFunction@BNNSLossFunctionLog	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionLog	
-c:@EA@BNNSLossFunction@BNNSLossFunctionMeanAbsoluteError	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionMeanAbsoluteError	
-c:@EA@BNNSLossFunction@BNNSLossFunctionMeanSquareError	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionMeanSquareError	
-c:@EA@BNNSLossFunction@BNNSLossFunctionSigmoidCrossEntropy	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionSigmoidCrossEntropy	
-c:@EA@BNNSLossFunction@BNNSLossFunctionSoftmaxCrossEntropy	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionSoftmaxCrossEntropy	
-c:@EA@BNNSLossFunction@BNNSLossFunctionYolo	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossFunctionYolo	
+c:@EA@BNNSLossFunction@BNNSLossFunctionCategoricalCrossEntropy	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionCosineDistance	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionHinge	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionHuber	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionLog	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionMeanAbsoluteError	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionMeanSquareError	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionSigmoidCrossEntropy	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionSoftmaxCrossEntropy	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossFunction@BNNSLossFunctionYolo	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSLossReductionFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossReductionFunction	
-c:@EA@BNNSLossReductionFunction@BNNSLossReductionMean	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossReductionMean	
-c:@EA@BNNSLossReductionFunction@BNNSLossReductionNonZeroWeightMean	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossReductionNonZeroWeightMean	
-c:@EA@BNNSLossReductionFunction@BNNSLossReductionNone	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossReductionNone	
-c:@EA@BNNSLossReductionFunction@BNNSLossReductionSum	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossReductionSum	
-c:@EA@BNNSLossReductionFunction@BNNSLossReductionWeightedMean	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSLossReductionWeightedMean	
+c:@EA@BNNSLossReductionFunction@BNNSLossReductionMean	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues1	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossReductionFunction@BNNSLossReductionNonZeroWeightMean	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossReductionFunction@BNNSLossReductionNone	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossReductionFunction@BNNSLossReductionSum	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSLossReductionFunction@BNNSLossReductionWeightedMean	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSNDArrayFlags	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSNDArrayFlags	
-c:@EA@BNNSNDArrayFlags@BNNSNDArrayFlagBackpropAccumulate	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSNDArrayFlagBackpropAccumulate	
-c:@EA@BNNSNDArrayFlags@BNNSNDArrayFlagBackpropSet	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSNDArrayFlagBackpropSet	
+c:@EA@BNNSNDArrayFlags@BNNSNDArrayFlagBackpropAccumulate	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSNDArrayFlags@BNNSNDArrayFlagBackpropSet	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSNormType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSNormType	
-c:@EA@BNNSNormType@BNNSL2Norm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSL2Norm	
+c:@EA@BNNSNormType@BNNSL2Norm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSOptimizerClippingFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerClippingFunction	
-c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingByGlobalNorm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerClippingByGlobalNorm	
-c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingByNorm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerClippingByNorm	
-c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingByValue	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerClippingByValue	
-c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingNone	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerClippingNone	
+c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingByGlobalNorm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingByNorm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingByValue	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerClippingFunction@BNNSOptimizerClippingNone	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSOptimizerFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunction	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdam	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdam	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamAMSGrad	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamAMSGrad	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamAMSGradWithClipping	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamAMSGradWithClipping	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamW	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWAMSGrad	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamWAMSGrad	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWAMSGradWithClipping	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamWAMSGradWithClipping	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWWithClipping	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamWWithClipping	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWithClipping	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionAdamWithClipping	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionRMSProp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionRMSProp	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionRMSPropWithClipping	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionRMSPropWithClipping	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionSGDMomentum	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionSGDMomentum	
-c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionSGDMomentumWithClipping	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerFunctionSGDMomentumWithClipping	
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdam	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamAMSGrad	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamAMSGradWithClipping	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWAMSGrad	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWAMSGradWithClipping	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWWithClipping	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionAdamWithClipping	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionRMSProp	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionRMSPropWithClipping	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionSGDMomentum	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerFunction@BNNSOptimizerFunctionSGDMomentumWithClipping	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSOptimizerRegularizationFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationFunction	
-c:@EA@BNNSOptimizerRegularizationFunction@BNNSOptimizerRegularizationL1	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationL1	
-c:@EA@BNNSOptimizerRegularizationFunction@BNNSOptimizerRegularizationL2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationL2	
-c:@EA@BNNSOptimizerRegularizationFunction@BNNSOptimizerRegularizationNone	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerRegularizationNone	
+c:@EA@BNNSOptimizerRegularizationFunction@BNNSOptimizerRegularizationL1	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerRegularizationFunction@BNNSOptimizerRegularizationL2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerRegularizationFunction@BNNSOptimizerRegularizationNone	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSOptimizerSGDMomentumVariant	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSOptimizerSGDMomentumVariant	
-c:@EA@BNNSOptimizerSGDMomentumVariant@BNNSSGDMomentumVariant0	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSSGDMomentumVariant0	
-c:@EA@BNNSOptimizerSGDMomentumVariant@BNNSSGDMomentumVariant1	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSSGDMomentumVariant1	
-c:@EA@BNNSOptimizerSGDMomentumVariant@BNNSSGDMomentumVariant2	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSSGDMomentumVariant2	
+c:@EA@BNNSOptimizerSGDMomentumVariant@BNNSSGDMomentumVariant0	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerSGDMomentumVariant@BNNSSGDMomentumVariant1	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSOptimizerSGDMomentumVariant@BNNSSGDMomentumVariant2	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSPaddingMode	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPaddingMode	
-c:@EA@BNNSPaddingMode@BNNSPaddingModeConstant	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPaddingModeConstant	
-c:@EA@BNNSPaddingMode@BNNSPaddingModeReflect	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPaddingModeReflect	
-c:@EA@BNNSPaddingMode@BNNSPaddingModeSymmetric	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPaddingModeSymmetric	
+c:@EA@BNNSPaddingMode@BNNSPaddingModeConstant	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSPaddingMode@BNNSPaddingModeReflect	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSPaddingMode@BNNSPaddingModeSymmetric	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSPointerSpecifier	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPointerSpecifier	
-c:@EA@BNNSPointerSpecifier@BNNSPointerSpecifierAlpha	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPointerSpecifierAlpha	
-c:@EA@BNNSPointerSpecifier@BNNSPointerSpecifierBeta	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPointerSpecifierBeta	
+c:@EA@BNNSPointerSpecifier@BNNSPointerSpecifierAlpha	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSPointerSpecifier@BNNSPointerSpecifierBeta	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSPoolingFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunction	
-c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionAverageCountExcludePadding	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunctionAverageCountExcludePadding	
-c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionAverageCountIncludePadding	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunctionAverageCountIncludePadding	
-c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionL2Norm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunctionL2Norm	
-c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionUnMax	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunctionUnMax	
+c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionAverageCountExcludePadding	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionAverageCountIncludePadding	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionL2Norm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSPoolingFunction@BNNSPoolingFunctionUnMax	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSQuantizerFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantizerFunction	
-c:@EA@BNNSQuantizerFunction@BNNSQuantizerFunctionDequantize	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantizerFunctionDequantize	
-c:@EA@BNNSQuantizerFunction@BNNSQuantizerFunctionQuantize	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSQuantizerFunctionQuantize	
+c:@EA@BNNSQuantizerFunction@BNNSQuantizerFunctionDequantize	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSQuantizerFunction@BNNSQuantizerFunctionQuantize	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSRandomGeneratorMethod	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRandomGeneratorMethod	
-c:@EA@BNNSRandomGeneratorMethod@BNNSRandomGeneratorMethodAES_CTR	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRandomGeneratorMethodAES_CTR	
+c:@EA@BNNSRandomGeneratorMethod@BNNSRandomGeneratorMethodAES_CTR	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSReduceFunction	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunction	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionAll	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionAll	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionAny	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionAny	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionArgMax	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionArgMax	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionArgMin	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionArgMin	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionL1Norm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionL1Norm	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionL2Norm	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionL2Norm	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogSum	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionLogSum	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogSumExp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionLogSumExp	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogicalAnd	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionLogicalAnd	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogicalOr	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionLogicalOr	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionMax	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionMax	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionMean	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionMean	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionMeanNonZero	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionMeanNonZero	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionMin	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionMin	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionNone	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionNone	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionProduct	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionProduct	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionSum	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionSum	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionSumLog	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionSumLog	
-c:@EA@BNNSReduceFunction@BNNSReduceFunctionSumSquare	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSReduceFunctionSumSquare	
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionAll	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionAny	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionArgMax	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionArgMin	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionL1Norm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionL2Norm	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogSum	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogSumExp	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogicalAnd	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionLogicalOr	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionMax	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionMean	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionMeanNonZero	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionMin	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionNone	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionProduct	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionSum	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionSumLog	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSReduceFunction@BNNSReduceFunctionSumSquare	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSRelationalOperator	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperator	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorEqual	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorEqual	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorGreater	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorGreater	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorGreaterEqual	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorGreaterEqual	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLess	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLess	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLessEqual	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLessEqual	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalAND	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLogicalAND	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalNAND	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLogicalNAND	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalNOR	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLogicalNOR	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalNOT	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLogicalNOT	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalOR	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLogicalOR	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalXOR	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorLogicalXOR	
-c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorNotEqual	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSRelationalOperatorNotEqual	
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorEqual	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorGreater	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorGreaterEqual	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLess	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLessEqual	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalAND	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalNAND	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalNOR	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalNOT	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalOR	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorLogicalXOR	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSRelationalOperator@BNNSRelationalOperatorNotEqual	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSShuffleType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSShuffleType	
-c:@EA@BNNSShuffleType@BNNSShuffleTypeDepthToSpaceNCHW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSShuffleTypeDepthToSpaceNCHW	
-c:@EA@BNNSShuffleType@BNNSShuffleTypePixelShuffleNCHW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSShuffleTypePixelShuffleNCHW	
-c:@EA@BNNSShuffleType@BNNSShuffleTypePixelUnshuffleNCHW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSShuffleTypePixelUnshuffleNCHW	
-c:@EA@BNNSShuffleType@BNNSShuffleTypeSpaceToDepthNCHW	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSShuffleTypeSpaceToDepthNCHW	
+c:@EA@BNNSShuffleType@BNNSShuffleTypeDepthToSpaceNCHW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSShuffleType@BNNSShuffleTypePixelShuffleNCHW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSShuffleType@BNNSShuffleTypePixelUnshuffleNCHW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
+c:@EA@BNNSShuffleType@BNNSShuffleTypeSpaceToDepthNCHW	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSSparsityType	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSSparsityType	
-c:@EA@BNNSSparsityType@BNNSSparsityTypeUnstructured	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSSparsityTypeUnstructured	
+c:@EA@BNNSSparsityType@BNNSSparsityTypeUnstructured	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@BNNSTargetSystem	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSTargetSystem	
-c:@EA@BNNSTargetSystem@BNNSTargetSystemGeneric	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSTargetSystemGeneric	
+c:@EA@BNNSTargetSystem@BNNSTargetSystemGeneric	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@SparseControl_t	declared	source:full/accelerate/AccelerateCTypes.swift#SparseControl_t	
 c:@EA@SparseControl_t@SparseDefaultControl	declared	source:full/accelerate/AccelerateCTypes.swift#SparseDefaultControl	
 c:@EA@SparseFactorization_t	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorization_t	
@@ -403,29 +403,29 @@ c:@EA@sparse_status@SPARSE_ILLEGAL_PARAMETER	declared	source:full/accelerate/Acc
 c:@EA@sparse_status@SPARSE_SUCCESS	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_SUCCESS	
 c:@EA@sparse_status@SPARSE_SYSTEM_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_SYSTEM_ERROR	
 c:@EA@vImageARGBType	declared	source:full/accelerate/AccelerateCTypes.swift#vImageARGBType	
-c:@EA@vImageARGBType@kvImageARGB16Q12	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageARGB16Q12	
-c:@EA@vImageARGBType@kvImageARGB16U	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageARGB16U	
-c:@EA@vImageARGBType@kvImageARGB8888	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageARGB8888	
+c:@EA@vImageARGBType@kvImageARGB16Q12	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageARGBType@kvImageARGB16U	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageARGBType@kvImageARGB8888	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@EA@vImageMDTableUsageHint	declared	source:full/accelerate/AccelerateCTypes.swift#vImageMDTableUsageHint	
-c:@EA@vImageMDTableUsageHint@kvImageMDTableHint_16Q12	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageMDTableHint_16Q12	
-c:@EA@vImageMDTableUsageHint@kvImageMDTableHint_Float	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageMDTableHint_Float	
+c:@EA@vImageMDTableUsageHint@kvImageMDTableHint_16Q12	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageMDTableUsageHint@kvImageMDTableHint_Float	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@EA@vImageYpCbCrType	declared	source:full/accelerate/AccelerateCTypes.swift#vImageYpCbCrType	
-c:@EA@vImageYpCbCrType@kvImage420Yp8_Cb8_Cr8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage420Yp8_Cb8_Cr8	
-c:@EA@vImageYpCbCrType@kvImage420Yp8_CbCr8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage420Yp8_CbCr8	
-c:@EA@vImageYpCbCrType@kvImage422CbYpCrYp16	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage422CbYpCrYp16	
-c:@EA@vImageYpCbCrType@kvImage422CbYpCrYp8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage422CbYpCrYp8	
-c:@EA@vImageYpCbCrType@kvImage422CbYpCrYp8_AA8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage422CbYpCrYp8_AA8	
-c:@EA@vImageYpCbCrType@kvImage422CrYpCbYpCbYpCbYpCrYpCrYp10	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage422CrYpCbYpCbYpCbYpCrYpCrYp10	
-c:@EA@vImageYpCbCrType@kvImage422YpCbYpCr8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage422YpCbYpCr8	
-c:@EA@vImageYpCbCrType@kvImage444AYpCbCr16	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage444AYpCbCr16	
-c:@EA@vImageYpCbCrType@kvImage444AYpCbCr8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage444AYpCbCr8	
-c:@EA@vImageYpCbCrType@kvImage444CbYpCrA8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage444CbYpCrA8	
-c:@EA@vImageYpCbCrType@kvImage444CrYpCb10	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage444CrYpCb10	
-c:@EA@vImageYpCbCrType@kvImage444CrYpCb8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage444CrYpCb8	
+c:@EA@vImageYpCbCrType@kvImage420Yp8_Cb8_Cr8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage420Yp8_CbCr8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage422CbYpCrYp16	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage422CbYpCrYp8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage422CbYpCrYp8_AA8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage422CrYpCbYpCbYpCbYpCrYpCrYp10	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage422YpCbYpCr8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage444AYpCbCr16	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage444AYpCbCr8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage444CbYpCrA8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage444CrYpCb10	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImageYpCbCrType@kvImage444CrYpCb8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@EA@vImage_InterpolationMethod	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_InterpolationMethod	
-c:@EA@vImage_InterpolationMethod@kvImageFullInterpolation	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageFullInterpolation	
-c:@EA@vImage_InterpolationMethod@kvImageHalfInterpolation	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageHalfInterpolation	
-c:@EA@vImage_InterpolationMethod@kvImageNoInterpolation	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageNoInterpolation	
+c:@EA@vImage_InterpolationMethod@kvImageFullInterpolation	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImage_InterpolationMethod@kvImageHalfInterpolation	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@EA@vImage_InterpolationMethod@kvImageNoInterpolation	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@Ea@FFT_FORWARD@FFT_FORWARD	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_FORWARD	
 c:@Ea@FFT_FORWARD@FFT_INVERSE	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_INVERSE	
 c:@Ea@FFT_RADIX2@FFT_RADIX2	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_RADIX2	
@@ -436,70 +436,70 @@ c:@Ea@kFFTDirection_Forward@kFFTDirection_Inverse	declared	source:full/accelerat
 c:@Ea@kFFTRadix2@kFFTRadix2	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTRadix2	
 c:@Ea@kFFTRadix2@kFFTRadix3	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTRadix3	
 c:@Ea@kFFTRadix2@kFFTRadix5	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTRadix5	
-c:@Ea@kRotate0DegreesClockwise@kRotate0DegreesClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate0DegreesClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate0DegreesCounterClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate0DegreesCounterClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate180DegreesClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate180DegreesClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate180DegreesCounterClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate180DegreesCounterClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate270DegreesClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate270DegreesClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate270DegreesCounterClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate270DegreesCounterClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate90DegreesClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate90DegreesClockwise	
-c:@Ea@kRotate0DegreesClockwise@kRotate90DegreesCounterClockwise	declared	source:full/accelerate/AccelerateCTypes.swift#kRotate90DegreesCounterClockwise	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Alpha	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Alpha	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CGFormat	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_CGFormat	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Black	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_CMYK_Black	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Cyan	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_CMYK_Cyan	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Magenta	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_CMYK_Magenta	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Yellow	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_CMYK_Yellow	
+c:@Ea@kRotate0DegreesClockwise@kRotate0DegreesClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate0DegreesCounterClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate180DegreesClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate180DegreesCounterClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate270DegreesClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate270DegreesCounterClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate90DegreesClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kRotate0DegreesClockwise@kRotate90DegreesCounterClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Alpha	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CGFormat	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Black	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Cyan	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Magenta	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CMYK_Yellow	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_CVPixelBuffer_YCbCr	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Cb	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Cb	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Chroma	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Chroma	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Chunky	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Chunky	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel1	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel1	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel10	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel10	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel11	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel11	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel12	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel12	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel13	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel13	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel14	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel14	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel15	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel15	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel16	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel16	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel2	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel2	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel3	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel3	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel4	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel4	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel5	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel5	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel6	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel6	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel7	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel7	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel8	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel8	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel9	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_ColorSpaceChannel9	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Cr	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Cr	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_EndOfList	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_EndOfList	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Indexed	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Indexed	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_LAB_A	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_LAB_A	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_LAB_B	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_LAB_B	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_LAB_L	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_LAB_L	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Luminance	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Luminance	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Monochrome	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_Monochrome	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_RGB_Blue	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_RGB_Blue	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_RGB_Green	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_RGB_Green	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_RGB_Red	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_RGB_Red	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_UniqueFormatCount	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_UniqueFormatCount	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_XYZ_X	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_XYZ_X	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_XYZ_Y	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_XYZ_Y	
-c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_XYZ_Z	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageBufferTypeCode_XYZ_Z	
-c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_AlphaIsOneHint	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageCVImageFormat_AlphaIsOneHint	
-c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_ChromaSiting	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageCVImageFormat_ChromaSiting	
-c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_ColorSpace	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageCVImageFormat_ColorSpace	
-c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_ConversionMatrix	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageCVImageFormat_ConversionMatrix	
-c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_NoError	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageCVImageFormat_NoError	
-c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_VideoChannelDescription	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageCVImageFormat_VideoChannelDescription	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherAtkinson	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_DitherAtkinson	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherFloydSteinberg	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_DitherFloydSteinberg	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherNone	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_DitherNone	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherOrdered	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_DitherOrdered	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherOrderedReproducible	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_DitherOrderedReproducible	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_OrderedGaussianBlue	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_OrderedGaussianBlue	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_OrderedNoiseShapeMask	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_OrderedNoiseShapeMask	
-c:@Ea@kvImageConvert_DitherNone@kvImageConvert_OrderedUniformBlue	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageConvert_OrderedUniformBlue	
-c:@Ea@kvImageGamma_UseGammaValue@kvImageGamma_11_over_5_half_precision	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageGamma_11_over_5_half_precision	
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Cb	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Chroma	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Chunky	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel1	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel10	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel11	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel12	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel13	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel14	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel15	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel16	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel2	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel3	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel4	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel5	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel6	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel7	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel8	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_ColorSpaceChannel9	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Cr	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_EndOfList	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Indexed	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_LAB_A	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_LAB_B	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_LAB_L	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Luminance	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_Monochrome	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_RGB_Blue	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_RGB_Green	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_RGB_Red	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_UniqueFormatCount	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_XYZ_X	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_XYZ_Y	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageBufferTypeCode_EndOfList@kvImageBufferTypeCode_XYZ_Z	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_AlphaIsOneHint	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_ChromaSiting	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_ColorSpace	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_ConversionMatrix	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_NoError	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageCVImageFormat_NoError@kvImageCVImageFormat_VideoChannelDescription	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherAtkinson	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherFloydSteinberg	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherNone	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherOrdered	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_DitherOrderedReproducible	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_OrderedGaussianBlue	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_OrderedNoiseShapeMask	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageConvert_DitherNone@kvImageConvert_OrderedUniformBlue	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
+c:@Ea@kvImageGamma_UseGammaValue@kvImageGamma_11_over_5_half_precision	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues1	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@Ea@kvImageGamma_UseGammaValue@kvImageGamma_11_over_9_half_precision	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageGamma_11_over_9_half_precision	
 c:@Ea@kvImageGamma_UseGammaValue@kvImageGamma_5_over_11_half_precision	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageGamma_5_over_11_half_precision	
 c:@Ea@kvImageGamma_UseGammaValue@kvImageGamma_5_over_9_half_precision	declared	source:full/accelerate/AccelerateCTypes.swift#kvImageGamma_5_over_9_half_precision	
@@ -2820,7 +2820,7 @@ c:@kvImage_ARGBToYpCbCrMatrix_ITU_R_601_4	declared	source:full/accelerate/Accele
 c:@kvImage_ARGBToYpCbCrMatrix_ITU_R_709_2	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage_ARGBToYpCbCrMatrix_ITU_R_709_2	
 c:@kvImage_YpCbCrToARGBMatrix_ITU_R_601_4	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage_YpCbCrToARGBMatrix_ITU_R_601_4	
 c:@kvImage_YpCbCrToARGBMatrix_ITU_R_709_2	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage_YpCbCrToARGBMatrix_ITU_R_709_2	
-c:@macro@BNNS_MAX_TENSOR_DIMENSION	declared	source:full/accelerate/AccelerateCTypes.swift#BNNS_MAX_TENSOR_DIMENSION	
+c:@macro@BNNS_MAX_TENSOR_DIMENSION	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@macro@LA_ATTRIBUTE_ENABLE_LOGGING	declared	source:full/accelerate/AccelerateCTypes.swift#LA_ATTRIBUTE_ENABLE_LOGGING	
 c:@macro@LA_DEFAULT_ATTRIBUTES	declared	source:full/accelerate/AccelerateCTypes.swift#LA_DEFAULT_ATTRIBUTES	
 c:@macro@LA_DIMENSION_MISMATCH_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_DIMENSION_MISMATCH_ERROR	

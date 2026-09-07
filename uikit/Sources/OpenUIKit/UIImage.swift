@@ -32,6 +32,7 @@ import Foundation
 // builds OpenUIKit before the app-facing Foundation facade exists.
 #if canImport(Foundation)
 import class Foundation.NSError
+import class Foundation.NSObject
 #endif
 #if canImport(ObjectiveC)
 import ObjectiveC
@@ -85,7 +86,12 @@ public enum CGBlendMode: Int32, Sendable {
 }
 #endif
 
-public final class UIImage {
+// MEASURED simplenote-launch-image-oracle, iPhone 16 / iOS 26.1:
+// class_getSuperclass(UIImage.self) == NSObject; an @objc UIImage-returning
+// factory compiles and responds to its selector. Gridicons c904cb7 has two
+// such factories (Gridicons.swift:10,17). This is the class ABI surface,
+// not a rendering rule; both font cuts retain their existing pixel model.
+public final class UIImage: NSObject {
     /// Pixel backing store (width/height are in PIXELS at `scale`).
     public let bitmap: Bitmap
     /// Pixels-per-point of the backing store (like UIImage.scale).
@@ -135,7 +141,7 @@ public final class UIImage {
     /// UIKit's empty image initializer. The resulting image has zero logical
     /// size and is useful as a sentinel (for example, to suppress navigation
     /// bar background and shadow artwork).
-    public convenience init() {
+    public override convenience init() {
         self.init(bitmap: Bitmap(width: 0, height: 0), scale: 1)
     }
 

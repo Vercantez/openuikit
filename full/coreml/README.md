@@ -125,10 +125,6 @@ COREML_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreML dylib=libCoreML.dylib
 ```
 
-Passing the isolated host gate is not integrated Linux success. Telegram's
-generated `AgeNet` / `U2netp` wrappers can type-check and can run only if
-the compiled artifact is an Identity / DictVectorizer / pipeline of those.
-
 ## Depth pass 2026-09 (wave 8)
 
 Second SDK-depth pass on the existing Linux container. First-pass sources and
@@ -178,3 +174,67 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 COREML_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=CoreML dylib=libCoreML.dylib
 ```
+
+### Wave 8 collection-depth extension
+
+This continuation converts the remaining behaviorally complete shaped-array
+collection witnesses from declaration-only coverage to focused runtime evidence.
+It exercises read algorithms (search, ranges, differences, reductions,
+flattening, ordering, random selection, and shuffling) and mutating algorithms
+(swapping, reversing, sorting, partitioning, and end removal) on concrete
+`MLShapedArray` and `MLShapedArraySlice` values. No inference or Apple-service
+boundary was broadened.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before this continuation | 886 | 208 | 576 | 16 | 0 |
+| After this continuation | 966 | 128 | 576 | 16 | 0 |
+
+Top-5 implemented evidence distribution (966 implemented):
+
+1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (13.3%)
+2. `MLTensorTests.swift#testTensorShapeOpsAndEnums` — 71 (7.3%)
+3. `MLShapedArrayTests.swift#testShapedArrayConcatConvertAndSlice` — 69 (7.1%)
+4. `MLShapedArrayAlgorithmsTests.swift#testShapedArrayAdvancedReadAlgorithms` — 64 (6.6%)
+5. `MLTensorTests.swift#testTensorReductionsAndElementwise` — 63 (6.5%)
+
+The unavailable ledger remains limited to APIs requiring Apple Metal GPU or
+`CVPixelBuffer` hardware, with the hardware/daemon boundary named per row.
+Neural-network and MIL execution, model collections, and update services remain
+fail-closed where the Linux port has no compatible backend or Apple service.
+
+Passing the isolated host gate is not integrated Linux success. Telegram's
+generated `AgeNet` / `U2netp` wrappers can type-check and can run only if
+the compiled artifact is an Identity / DictVectorizer / pipeline of those.
+
+### Wave 8 declared-surface exhaustion
+
+This continuation exhausts the 128 remaining declaration-only rows with
+focused runtime evidence. In particular, a concrete `MLCustomModel` now tests
+both initializer spellings, direct prediction, and the protocol extension's
+default batch prediction. Existing focused tests already exercised the model,
+description, provider, feature-value, multi-array, shaped-array protocol,
+tensor-literal/slicing, and inherited Collection witnesses; their ledger rows
+now cite those exact synchronous tests rather than source declarations.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before this continuation | 966 | 128 | 576 | 16 | 0 |
+| After this continuation | 1094 | 0 | 576 | 16 | 0 |
+
+Top-5 implemented evidence distribution (1,094 implemented):
+
+1. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (11.7%)
+2. `MLShapedArrayAlgorithmsTests.swift#testShapedArrayAdvancedReadAlgorithms` — 98 (9.0%)
+3. `MLShapedArrayTests.swift#testShapedArrayConcatConvertAndSlice` — 84 (7.7%)
+4. `MLTensorTests.swift#testTensorShapeOpsAndEnums` — 78 (7.1%)
+5. `MLTensorTests.swift#testTensorReductionsAndElementwise` — 63 (5.8%)
+
+The requested 300-row gain cannot be reached from this starting ledger: only
+128 non-implemented, non-stdlib rows remained. All 128 are now implemented.
+The 576 remaining deferred IDs are synthesized Swift standard-library integer
+operators leaked into the CoreML graph, not CoreML-owned behavior; the task's
+classification rule permits `not-applicable` only for SwiftUI overlays. The 16
+unavailable rows continue to state their Apple Metal / pixel-buffer hardware
+boundary explicitly. No fail-closed inference or Apple-service boundary was
+broadened.

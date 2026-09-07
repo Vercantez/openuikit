@@ -7,6 +7,7 @@ full/webkit/WebKitExtensions.swift
 full/webkit/WebKitNavigation.swift
 full/webkit/WebKitOptionSets.swift
 full/webkit/WebKitPage.swift
+full/webkit/WebKitPageHistory.swift
 full/webkit/WebKitPageValues.swift
 full/webkit/WebKitPortableModel.swift
 full/webkit/WebKitSupport.swift

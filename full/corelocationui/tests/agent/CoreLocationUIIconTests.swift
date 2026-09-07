@@ -45,3 +45,15 @@ func testIconHashValue() {
     _ = hasher.finalize()
     _ = CLLocationButtonIcon.none.hashValue
 }
+
+func testIconHashInto() {
+    var first = Hasher()
+    CLLocationButtonIcon.arrowOutline.hash(into: &first)
+    let firstValue = first.finalize()
+
+    var second = Hasher()
+    CLLocationButtonIcon.arrowOutline.hash(into: &second)
+    let secondValue = second.finalize()
+
+    precondition(firstValue == secondValue)
+}

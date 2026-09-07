@@ -52,3 +52,15 @@ func testLabelHashValue() {
     _ = hasher.finalize()
     _ = CLLocationButtonLabel.sendCurrentLocation.hashValue
 }
+
+func testLabelHashInto() {
+    var first = Hasher()
+    CLLocationButtonLabel.shareMyCurrentLocation.hash(into: &first)
+    let firstValue = first.finalize()
+
+    var second = Hasher()
+    CLLocationButtonLabel.shareMyCurrentLocation.hash(into: &second)
+    let secondValue = second.finalize()
+
+    precondition(firstValue == secondValue)
+}

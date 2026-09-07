@@ -109,6 +109,58 @@ open class MPSMatrixCopy: MPSKernel {
     }
 }
 
+// Host binary kernels retain SDK configuration. Nonzero origins remain
+// fail-closed until an oracle establishes their coordinate conventions.
+open class MPSMatrixBinaryKernel: MPSKernel {
+    public var primarySourceMatrixOrigin = MTLOrigin(x: 0, y: 0, z: 0)
+    public var secondarySourceMatrixOrigin = MTLOrigin(x: 0, y: 0, z: 0)
+    public var resultMatrixOrigin = MTLOrigin(x: 0, y: 0, z: 0)
+    public var batchStart: Int = 0
+    public var batchSize: Int = 1
+
+    open override func copy(with zone: NSZone? = nil, device: (any MTLDevice)?) -> Self {
+        let copied = super.copy(with: zone, device: device)
+        copyBinaryConfiguration(to: copied)
+        return copied
+    }
+
+    func copyBinaryConfiguration(to copied: MPSMatrixBinaryKernel) {
+        copied.primarySourceMatrixOrigin = primarySourceMatrixOrigin
+        copied.secondarySourceMatrixOrigin = secondarySourceMatrixOrigin
+        copied.resultMatrixOrigin = resultMatrixOrigin
+        copied.batchStart = batchStart
+        copied.batchSize = batchSize
+    }
+
+    var hasHostOrigins: Bool {
+        let zero = MTLOrigin(x: 0, y: 0, z: 0)
+        return primarySourceMatrixOrigin == zero && secondarySourceMatrixOrigin == zero
+            && resultMatrixOrigin == zero
+    }
+}
+
+// Validate the complete batch before any write. Division-based checks avoid
+// overflow even for adversarial descriptor sizes, offsets and batch ranges.
+func mpsHostMatrixRegionFits(
+    _ matrix: MPSMatrix, rows: Int, columns: Int, origin: MTLOrigin,
+    batchStart: Int, batchSize: Int
+) -> Bool {
+    guard matrix.dataType == .float32, rows >= 0, columns >= 0,
+          origin.x >= 0, origin.y >= 0, origin.z == 0,
+          matrix.rows >= origin.y, rows <= matrix.rows - origin.y,
+          matrix.columns >= origin.x, columns <= matrix.columns - origin.x,
+          matrix.rowBytes > 0, matrix.rowBytes % 4 == 0,
+          matrix.columns <= matrix.rowBytes / 4,
+          matrix.matrixBytes > 0, matrix.matrixBytes % 4 == 0,
+          matrix.rows <= matrix.matrixBytes / matrix.rowBytes,
+          matrix.offset >= 0, matrix.offset % 4 == 0, matrix.offset <= matrix.data.length,
+          batchStart >= 0, batchSize >= 0, batchStart <= matrix.matrices,
+          batchSize <= matrix.matrices - batchStart
+    else { return false }
+    let availableMatrices = (matrix.data.length - matrix.offset) / matrix.matrixBytes
+    return batchStart <= availableMatrices && batchSize <= availableMatrices - batchStart
+}
+
 open class MPSMatrixMultiplication: MPSKernel {
     public private(set) var transposeLeft: Bool
     public private(set) var transposeRight: Bool
@@ -183,21 +235,41 @@ open class MPSMatrixMultiplication: MPSKernel {
             MPSHostBoundary.refuseGPUEncode("MPSMatrixMultiplication.encode")
             return
         }
-        mpsGEMM(
-            left: leftMatrix,
-            right: rightMatrix,
-            result: resultMatrix,
-            transposeLeft: transposeLeft,
-            transposeRight: transposeRight,
-            m: resultRows,
-            n: resultColumns,
-            k: interiorColumns,
-            alpha: Float(alpha),
-            beta: Float(beta),
-            leftOrigin: leftMatrixOrigin,
-            rightOrigin: rightMatrixOrigin,
-            resultOrigin: resultMatrixOrigin
-        )
+        guard mpsHostMatrixRegionFits(leftMatrix,
+                rows: transposeLeft ? interiorColumns : resultRows,
+                columns: transposeLeft ? resultRows : interiorColumns,
+                origin: leftMatrixOrigin, batchStart: batchStart, batchSize: batchSize),
+              mpsHostMatrixRegionFits(rightMatrix,
+                rows: transposeRight ? resultColumns : interiorColumns,
+                columns: transposeRight ? interiorColumns : resultColumns,
+                origin: rightMatrixOrigin, batchStart: batchStart, batchSize: batchSize),
+              mpsHostMatrixRegionFits(resultMatrix, rows: resultRows, columns: resultColumns,
+                origin: resultMatrixOrigin, batchStart: batchStart, batchSize: batchSize),
+              resultMatrix.data !== leftMatrix.data, resultMatrix.data !== rightMatrix.data
+        else {
+            MPSHostBoundary.refuseGPUEncode("MPSMatrixMultiplication.encode")
+            return
+        }
+        // BatchedCPUTests: batches 1/2 at independent 80/96/112-byte strides;
+        // 2*A*B-C yields [37,42;83,96] and [-3,8;13,30].
+        for batch in batchStart..<(batchStart + batchSize) {
+            mpsGEMM(
+                left: leftMatrix,
+                right: rightMatrix,
+                result: resultMatrix,
+                transposeLeft: transposeLeft,
+                transposeRight: transposeRight,
+                m: resultRows,
+                n: resultColumns,
+                k: interiorColumns,
+                alpha: Float(alpha),
+                beta: Float(beta),
+                leftOrigin: leftMatrixOrigin,
+                rightOrigin: rightMatrixOrigin,
+                resultOrigin: resultMatrixOrigin,
+                batchIndex: batch
+            )
+        }
     }
 }
 
@@ -376,11 +448,12 @@ func mpsGEMM(
     beta: Float,
     leftOrigin: MTLOrigin,
     rightOrigin: MTLOrigin,
-    resultOrigin: MTLOrigin
+    resultOrigin: MTLOrigin,
+    batchIndex: Int = 0
 ) {
-    let a = mpsFloatBuffer(left.data, offset: left.offset)
-    let b = mpsFloatBuffer(right.data, offset: right.offset)
-    let c = mpsFloatBuffer(result.data, offset: result.offset)
+    let a = mpsFloatBuffer(left.data, offset: left.offset + batchIndex * left.matrixBytes)
+    let b = mpsFloatBuffer(right.data, offset: right.offset + batchIndex * right.matrixBytes)
+    let c = mpsFloatBuffer(result.data, offset: result.offset + batchIndex * result.matrixBytes)
     let lda = max(left.rowBytes / 4, 1)
     let ldb = max(right.rowBytes / 4, 1)
     let ldc = max(result.rowBytes / 4, 1)
@@ -395,7 +468,8 @@ func mpsGEMM(
                 acc += a[aRow * lda + aCol] * b[bRow * ldb + bCol]
             }
             let cIndex = (row + resultOrigin.y) * ldc + (col + resultOrigin.x)
-            c[cIndex] = alpha * acc + beta * c[cIndex]
+            // beta=0 must not read uninitialized/NaN destination values.
+            c[cIndex] = beta == 0 ? alpha * acc : alpha * acc + beta * c[cIndex]
         }
     }
 }

@@ -362,10 +362,9 @@ INGetRideStatusIntent’s unavailable designated init, and the Swift
 needsValue/failure rather than inventing Apple Siri success.
 
 `swiftc --version` is Swift 6.2.4 targeting `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` does not print
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` on this
-snapshot (`scratch/ladder-corpus/focus-ios` is missing). That campaign token
-is expected from the sealed host inventory, not from the framework gate.
+`.cursor/verify-cloud-environment.sh` prints the required campaign marker:
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux
+products=scratch-corpus evidence=dotnet-macios`.
 
 The sealed host gate `bash full/intents/tests/acceptance/test_host.sh` ended:
 
@@ -375,3 +374,42 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 INTENTS_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=Intents dylib=libIntents.dylib
 ```
+
+## Depth pass 2026-09 (wave 8)
+
+This wave keeps every earlier behavioral implementation and adds focused
+runtime evidence for the compiler-synthesized `Equatable` and `Hashable`
+witnesses of all 121 host-declared Intents enum and option-set families. The
+table-driven check discovers a valid raw value for each family, constructs two
+values, checks equality and inequality, calls `hash(into:)`, compares
+`hashValue`, and verifies hashed `Set` lookup. It also directly covers the
+previously declared `INMediaUserContext.SubscriptionStatus` and
+`INSticker.StickerType` cases.
+
+Before this wave: **3340 implemented / 369 declared / 451 deferred / 0
+unavailable / 0 not-applicable**. After this wave: **3700 implemented / 361
+declared / 99 deferred / 0 unavailable / 0 not-applicable**. The implemented
+gain is **+360**. Nondeferred coverage is now 4061 of 4160 rows.
+
+Top-5 implemented evidence distribution after this wave:
+
+| Citations | Evidence |
+| ---: | --- |
+| 1178 | `IntentsSurfaceTests.swift#testEnumRawValues` |
+| 360 | `IntentsWave12Tests.swift#testGeneratedEnumEqualityAndHashingWitnesses` |
+| 186 | `IntentsWave10Tests.swift#testOptionSetAlgebraMessageAttribute` |
+| 80 | `IntentsSurfaceTests.swift#testOptionSetFamilies` |
+| 64 | `IntentsSurfaceTests.swift#testIntentErrorCodesCatalog` |
+
+The shared wave-12 citation is limited to enum and option-set protocol witnesses,
+which the evidence rules explicitly permit to use one table-driven value test.
+It is not used for intent objects, coding, dispatch, service behavior, or other
+non-enum APIs.
+
+Fail-closed boundaries remain unchanged: Siri authorization/preferences,
+vocabulary and voice-shortcut service operations do not fabricate daemon,
+account, entitlement, or device success; handler defaults report needs-value or
+failure; and CoreLocation, EventKit, and CoreGraphics-owned signatures remain
+deferred rather than introducing framework-local substitutes. Unresolved
+questions remain Apple archive byte compatibility, callback queue/timing and
+retention contracts, Siri daemon semantics, and live car-power observation.

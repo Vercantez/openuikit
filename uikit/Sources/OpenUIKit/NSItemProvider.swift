@@ -1,8 +1,8 @@
 // NSItemProvider — in-process representations for share / pasteboard / drop.
 //
 // Darwin Foundation already vends the type; this file adds UIImage/UIColor
-// load/register helpers (those classes are OpenUIKit's, not NSObject, so
-// they cannot conform to Foundation.NSItemProviderWriting). Linux corelibs
+// load/register helpers (the OpenUIKit classes do not adopt Foundation's
+// NSItemProviderWriting protocol). Linux corelibs
 // has no NSItemProvider, so the class lives here.
 //
 // MEASURED ValuesProbe, iPhone SE 3rd gen / iOS 26.1
@@ -468,7 +468,9 @@ open class NSItemProvider: NSObject, @unchecked Sendable {
         return !objects.isEmpty
     }
 
-    func _load<T>(_ type: T.Type) -> T? {
+    // The app-facing UIKit overlay can load these local representations
+    // after Foundation.Progress is available; the library stays Foundation-free.
+    @_spi(OpenUIKitGuest) public func _load<T>(_ type: T.Type) -> T? {
         _ = type
         for obj in objects {
             if let typed = obj as? T { return typed }

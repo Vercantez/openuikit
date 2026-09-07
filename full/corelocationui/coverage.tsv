@@ -800,7 +800,7 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLLocationButtonIcon	implemented	test:fu
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@CLLocationButtonLabel	implemented	test:full/corelocationui/tests/agent/CoreLocationUILabelTests.swift#testLabelInequality	-
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLLocationButtonIcon	implemented	test:full/corelocationui/tests/agent/CoreLocationUIIconTests.swift#testIconHashValue	-
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@CLLocationButtonLabel	implemented	test:full/corelocationui/tests/agent/CoreLocationUILabelTests.swift#testLabelHashValue	-
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLLocationButtonIcon	declared	source:full/corelocationui/CoreLocationUIViewSurface.swift#hash	identity View modifier; not Apple layout
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLLocationButtonLabel	declared	source:full/corelocationui/CoreLocationUIViewSurface.swift#hash	identity View modifier; not Apple layout
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLLocationButtonIcon	implemented	test:full/corelocationui/tests/agent/CoreLocationUIIconTests.swift#testIconHashInto	Hashable requirement exercised with deterministic same-value hashing
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@CLLocationButtonLabel	implemented	test:full/corelocationui/tests/agent/CoreLocationUILabelTests.swift#testLabelHashInto	Hashable requirement exercised with deterministic same-value hashing
 s:So20CLLocationButtonIconV8rawValueABSgSi_tcfc	implemented	test:full/corelocationui/tests/agent/CoreLocationUIIconTests.swift#testIconRawValueInit	-
 s:So21CLLocationButtonLabelV8rawValueABSgSi_tcfc	implemented	test:full/corelocationui/tests/agent/CoreLocationUILabelTests.swift#testLabelRawValueInit	-
