@@ -591,9 +591,19 @@ open class UITableViewCell: UIView, ReusableView {
             // width at 414, not the 390 threshold of the system margin (the
             // merge check refused a flat 16: three Ledger landscape rows
             // dropped ~1 pt).
-            let width = window?.bounds.width ?? tableView?.bounds.width ?? bounds.width
-            return width >= 414 ? UITableView.iOSSystemMargin(width: width)
-                                : UITableView.iOSPhoneInsetGroupedInnerInset
+            // MEASURED (insetgrouped-separator ConfProbe, real iOS 26.1): the
+            // inner inset is 16 on the iPhone 16 in BOTH orientations (landscape
+            // has 59 pt horizontal safe areas: card 79/694, separator 95/662)
+            // and on the SE in portrait, but 20 on the SE in landscape (no
+            // horizontal safe area: card 20/627, separator 40/587). The
+            // discriminator is the horizontal safe area in compact height,
+            // the same predicate UITableView.separatorDrawInsets uses -- not
+            // the 414 pt width this rule first carried.
+            if UINavigationBar.isCompactHeight {
+                let safe = tableView?.safeAreaInsets ?? safeAreaInsets
+                if !(safe.left > 0 && safe.right > 0) { return trailingMargin }
+            }
+            return UITableView.iOSPhoneInsetGroupedInnerInset
         }
         return trailingMargin
     }
