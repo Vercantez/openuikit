@@ -1591,7 +1591,7 @@ def build_manifest(
             "present_swift_sources": sum((graph.source_root / p).is_file() for p in ordered_swift),
             "objc_sources": sum(1 for s in other_sources if s["ext"] in OBJC_EXT),
             "c_sources": sum(1 for s in other_sources if s["ext"] in C_EXT),
-            "header_sources": sum(1 for s in other_sources if s["ext"] in HEADER_EXT),
+            "header_sources": len(header_sources),
             "xcassets": len(resources["xcassets"]),
             "nibs": len(resources["nibs"]),
             "strings": len(resources["strings"]),
