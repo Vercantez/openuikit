@@ -31,8 +31,8 @@ Coverage this round (ledger at start of this increment, then after):
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 1526 | 2257 | 1215 | 0 | 1588 | 3783 |
-| After | 1738 | 2052 | 1208 | 0 | 1588 | 3790 |
+| Before | 1738 | 2052 | 1208 | 0 | 1588 | 3790 |
+| After | 2088 | 1702 | 1208 | 0 | 1588 | 3790 |
 
 Prior increment on this tree was 1234 / 2548 / 1216 → 1526 / 2257 / 1215.
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
@@ -43,25 +43,20 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 53 | 3.0% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
-| 42 | 2.4% | `AppIntentsWave9Tests.swift#testIntentResultActionButtonAndSnippetFactories` |
-| 41 | 2.4% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
-| 37 | 2.1% | `AppIntentsMeasurementTests.swift#testIntentParameterVolumeUnitTable` |
-| 36 | 2.1% | `AppIntentsWaveTests.swift#testIntentPersonHandleLabelsAndParameterModes` |
+| 176 | 8.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
+| 174 | 8.3% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
+| 53 | 2.5% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
+| 42 | 2.0% | `AppIntentsWave9Tests.swift#testIntentResultActionButtonAndSnippetFactories` |
+| 41 | 2.0% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
 
-No test is cited by more than 3.0% of implemented rows (well under the
+No test is cited by more than 8.4% of implemented rows (well under the
 40% bulk-relabel line). New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
 
-Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` did not emit
-`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
-absent on this VM. The sealed gate compiles with a clean product tree
-(`products=clean`). Active Cursor Build observed on this run was
-`bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign expected
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
-`39dc25a2769fb88a50f0853964137a4f96d50322` matched.
+Environment: `.cursor/verify-cloud-environment.sh` emitted
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`. Starting commit
+`5a351db2038abca71a1b943af3a86963f403f724` matched the campaign invariant.
 
 `bash full/appintents/tests/acceptance/test_host.sh` ended:
 
@@ -72,11 +67,11 @@ APPINTENTS_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AppIntents dylib=libAppIntents.dylib
 ```
 
-The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. `swiftc` is Swift 6.2.4 / linux and the gate compiled with a clean product tree.
-
 `bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
 
 ### What this pass added
+
+- Wave 10 adds a synchronous concrete `EntityProperty<Int>` matrix covering stored values, projected wrapper identity, title / identifier, Spotlight metadata, and every synchronous getter / writable-getter combination. The getter matrix resolves an actual default `AppEntity` through `EntityResolutionEngine`; async getters remain declared rather than being driven with a blocking run loop. This moves 350 exact `EntityProperty` rows from declared to implemented with two focused tests.
 
 - `@Property` (`EntityProperty`) `CLPlacemark` identifier / title /
   KeyPath getter / getSetter / indexingKey / customIndexingKey inits
