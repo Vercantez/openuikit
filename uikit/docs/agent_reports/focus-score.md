@@ -1,151 +1,90 @@
-# Focus fidelity measurement — agent/focus-score
+# Focus fidelity score — Linux Mach-O guest vs iOS 26.1
 
-2026-09-06. Source baseline: `497db123` (origin/main). Focus app:
-`a2832521c1daa0c23419c73705ae043ed60c9791`.
+Date: 2026-09-07. Branch: `agent/focus-score2`. Source baseline:
+`4a25e111` (`origin/main`). Focus source: `a2832521c1daa0c23419c73705ae043ed60c9791`.
 
-**CANNOT produce the first current-main Linux Focus fidelity score.**
-Before: score N/A. After: score N/A; **0 fresh guest captures, 15 CANNOT,
-0 scored**. This is a measured build blocker, not a zero-percent fidelity
-result. No renderer, app, golden, pin, or build source changes are committed.
+## Result
 
-The fifteen rows in the guest report are fifteen **real-app** screens,
-including three Focus rows; they are not fifteen Blockzilla screens.
-Thirteen carried real-app goldens exist. Ledger and the isolated Focus home
-have no carried iOS real-app golden; the full browser has its own SE golden.
-
-## Measured blocker
-
-Built in the operator's `uikit-linux` container, using a private support
-copy at `/work-focus-score`. Current worktree source was copied with tar;
-`/src`, `/work`, the original support checkout, and vendor pins were not
-modified. The production builder was invoked from `uikit/`:
-
-```sh
-W=/work-focus-score bash /work-focus-score/full/scripts/build_full.sh
-```
-
-The full guest build exits **1**, at the unchanged Blockzilla source:
+This is the first current-main Focus score after the drag/drop guest bridge
+landed. The guest built successfully with the production full builder and
+rendered all 15 registered screens under `machorun`:
 
 ```text
-BrowserViewController.swift:1193:21: error: value of type 'any UIDropSession' has no member 'loadObjects'
-URLBar.swift:1137:49: error: cannot convert value of type 'Foundation.NSItemProvider' to expected argument type 'OpenUIKit.NSItemProvider'
+FOCUS_GUEST_BUILT modules=SnapKit,WebKit,DesignSystem,Licenses,UIHelpers,UIComponents,Widget,AppShortcuts,Onboarding,Blockzilla
+[render_full] realapp rendered=15 failed=0
 ```
 
-Evidence: [compiler diagnostics and missing success stamps](focus-score/build-blocker.txt).
-Complete logs remain in `uikit-linux:/work-focus-score/build-final.log`
-and `build-unchanged-main.log`. An earlier relocated libxml CMake cache
-error was resolved by clearing only the private copy's libxml build cache.
-The two API errors above are the remaining source blocker.
+Phone output is 1179×2556 at 3x; iPad output is 1640×2360 at 2x; the Focus
+browser output is 750×1334 at 2x on the measured SE geometry (375×667 points,
+safe-area top 20). Comparison uses the existing `compare_pixels` path through
+`Tools/compare/compare_realapp.py`, `PIXEL_TOL=6`, the existing structural
+diagnostics, and `golden_premultiplied=False` for the straight-alpha iOS
+golden. The existing real-app scoreboard bar is 97.5.
 
-The builder removes its success stamps before rebuilding. Its leftover
-`render_full` still has SHA-256
-`6d705b2c8d82edfa73c560da59bfadb504b55fc2acefa7a6de7838ed7da45b32`,
-the old executable named in `focus-guest-linux.md`. **It was not executed or
-scored as a fresh build.** Its documented browser geometry is also
-393×852 @2x, whereas the browser oracle is 375×667 @2x with safe area
-[20,0,0,0], portrait, and the URLBar Cancel action applied. Resizing would
-not repair that capture-state mismatch.
+The phone guest had one measured 3x ink-table miss:
+`I3|system-regular|13|light|F0.0|71`. The first unmodified diagnostic render
+trapped on that exact key. For the complete census, the temporary scoring copy
+enabled the existing miss-log fallback, which leaves that glyph blank rather
+than fabricating an outline. This is recorded as a missing-glyph cause below;
+no OpenUIKit source or ink table was changed in this branch.
 
-An opt-in geometry/scale/Cancel harness was prepared and tested natively,
-but guest compilation stopped at Blockzilla before compiling the renderer.
-It is not committed because no fresh guest render could verify it. Scratch
-copies remain at `/tmp/focus-score-prepared/`. No native image is presented
-as Linux evidence.
+| Screen | Golden | Ours | Score | Pass/fail | Top diff region / measured cause |
+|---|---:|---:|---:|---|---|
+| `realapp_focus_home_light` | missing | 1179×2556 | — | CANNOT | No carried iOS golden; guest capture exists, but no comparison is valid. |
+| `realapp_focus_settings_light` | 1179×2556 | 1179×2556 | 82.491 | FAIL | `[290,733,63,19]`; layout constant / missing view — golden has the Done/table accessory structure (151-view anchor subtree), ours has 110 views. |
+| `realapp_hackers_feed_light` | 1179×2556 | 1179×2556 | 86.311 | FAIL | `[130.7,402.0,17.7,17.3]`; layout constant / missing view — measured row heights are 129.333/109 versus golden 127.333/107, with a missing-content region `[287.3,70.0,23.0,23.0]`. |
+| `realapp_history_light` | 1179×2556 | 1179×2556 | 99.137 | PASS | `[125.7,700.3,7.7,0.3]`; residual blob only. |
+| `realapp_history_light_ipad` | 1640×2360 | 1640×2360 | 99.860 | PASS | none (`blob=0.0`). |
+| `realapp_ledger_light` | missing | 1179×2556 | — | CANNOT | No carried iOS golden; guest capture exists, but no comparison is valid. |
+| `realapp_settings_dark` | 1179×2556 | 1179×2556 | 98.548 | PASS | `[28.7,560.3,6.0,0.3]`; residual blob only. |
+| `realapp_settings_light` | 1179×2556 | 1179×2556 | 98.535 | PASS | `[28.7,560.3,6.0,0.3]`; residual blob only. |
+| `realapp_settings_light_ax1` | 1179×2556 | 1179×2556 | 96.407 | FAIL | `[119.3,695.7,18.3,22.3]`; missing glyphs/fonts — the measured 3x ink miss is blank in the temporary diagnostic render. |
+| `realapp_settings_light_ipad` | 1640×2360 | 1640×2360 | 99.650 | PASS | none (`blob=0.0`). |
+| `realapp_settings_light_xs` | 1179×2556 | 1179×2556 | 98.477 | PASS | `[95.0,701.3,9.0,11.0]`; small missing-content/glyph region, below the bar. |
+| `realapp_settings_light_xxxl` | 1179×2556 | 1179×2556 | 97.654 | PASS | `[106.0,699.0,13.3,16.0]`; small missing-content/glyph region, below the bar. |
+| `realapp_storage_light` | 1179×2556 | 1179×2556 | 99.268 | PASS | `[21.0,297.7,13.7,11.3]`; small missing-content region. |
+| `realapp_storage_light_ipad` | 1640×2360 | 1640×2360 | 99.734 | PASS | `[113.5,203.5,5.0,0.5]`; residual blob only. |
+| `realapp_focus_browser_light` | 750×1334 | 750×1334 | 96.694 | FAIL | `[44.0,327.0,62.0,49.0]`; layout constant / missing view — `HomeViewToolbar` is `[0,122,375,525]` versus golden `[0,603,375,44]`; wordmark height is 65.5 versus 61. |
 
-## Per-screen inventory
+Scored total: **13**. Pass: **9**. Fail: **4**. CANNOT: **2**. No screen
+without both a rendered guest image and an iOS golden was scored.
 
-`G` is `goldens/ios/golden_realapp_ios/`; each golden column names the PNG
-under that directory. All ours/score/diff fields are absent because the
-fresh guest executable could not be built. **B** means the exact two
-compiler errors above, documented in `focus-score/build-blocker.txt`.
-Dimensions are original pixels, never resampled. [Machine-readable
-inventory and golden hashes](focus-score/inventory.json).
+## Evidence and cause classes
 
-| Screen | Golden (G/) | Ours | Score | Pass/fail | Top diff region / reason |
-|---|---|---|---|---|---|
-| `realapp_focus_home_light` | **missing** | — | — | CANNOT | —; B + no carried golden |
-| `realapp_focus_settings_light` | `realapp_focus_settings_light.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_hackers_feed_light` | `realapp_hackers_feed_light.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_history_light` | `realapp_history_light.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_history_light_ipad` | `realapp_history_light_ipad.png` (1640×2360) | — | — | CANNOT | —; B |
-| `realapp_ledger_light` | **missing** | — | — | CANNOT | —; B + no carried golden |
-| `realapp_settings_dark` | `realapp_settings_dark.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_settings_light` | `realapp_settings_light.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_settings_light_ax1` | `realapp_settings_light_ax1.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_settings_light_ipad` | `realapp_settings_light_ipad.png` (1640×2360) | — | — | CANNOT | —; B |
-| `realapp_settings_light_xs` | `realapp_settings_light_xs.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_settings_light_xxxl` | `realapp_settings_light_xxxl.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_storage_light` | `realapp_storage_light.png` (1179×2556) | — | — | CANNOT | —; B |
-| `realapp_storage_light_ipad` | `realapp_storage_light_ipad.png` (1640×2360) | — | — | CANNOT | —; B |
-| `realapp_focus_browser_light` | `realapp_focus_browser_light.png` (750×1334) | — | — | CANNOT | —; B |
+- `/tmp/focus-score-compare.txt` contains the official comparator output for
+  the 13 available goldens and the structural diagnostics.
+- `/tmp/focus-score-browser.txt` contains the direct existing
+  `compare.compare_pixels` call for the browser at scale 2; the normal real-app
+  wrapper reaches the browser pixel result, then its layout walk encounters the
+  known null-coordinate serialization and raises `TypeError`.
+- `/tmp/focus-score-render-fatal.log` records the unmodified first-render
+  evidence: `OPENUIKIT_IOS_INK_MISS: I3|system-regular|13|light|F0.0|71`.
+- `/tmp/focus-score-render.log` records the complete diagnostic run:
+  `realapp rendered=15 failed=0`.
+- `/tmp/focus-score-final/<screen>.layout.json` and
+  `/tmp/focus-score-diff/<screen>.diff.png` are the per-screen layout and
+  pixel evidence; the goldens remain under
+  `goldens/ios/golden_realapp_ios/` and were not edited.
 
-There are **no scored FAIL rows** to assign to missing glyphs/fonts, layout
-constants, color/material, missing views, or timing. A compile failure
-cannot establish those visual cause classes. The next wave must first
-close this API/type-identity blocker; no pixels or layout dumps were
-fabricated to supply a visual diagnosis.
+The four failures have measured causes, not guesses: Focus settings is a
+layout/structural mismatch; Hackers feed is a row-layout plus missing-content
+mismatch; Settings AX1 is the explicit missing 3x ink key; and Focus browser
+has a toolbar/wordmark layout mismatch. No timing or color/material cause was
+assigned because the layout/diff evidence already identifies the dominant
+regions. The home and Ledger rows are CANNOT solely because their iOS golden
+files are absent.
 
-## Dependency and scoring continuation
+## Required merge proof
 
-`origin/agent/focus-guest-dnd` contains the measured repair at
-`ab10a3c3020b4de31eb035dfdb044a9b533a5048`. It is **not an ancestor of main**
-at measurement time. Its report names the same two diagnostics. The repair
-requires `full/appshim/FoundationGuest.swift`,
-`full/foundation/NSExtensionHost.swift`, `full/foundation/Progress.swift`,
-and the matching `uikit/` provider/session changes. A uikit-only partial
-pick cannot install the Foundation bridge. The operator must merge that
-dependency and advance pins; this branch does neither.
-
-After that merge: rebuild the fresh guest, capture each registered screen
-in its own process at its golden's native geometry/scale, and call
-`Tools/compare/compare.py`'s `compare_pixels` with
-`golden_premultiplied=False` and the golden's scale, exactly as
-`conformance_flow.sh` does. Use the existing conformance scoreboard bar
-97.5; preserve its blob/missing-content diagnostics and layout evidence.
-Do not count absent images, stale binaries, or device/scale mismatches as
-scores. Capture missing home/Ledger goldens separately if those rows are
-required. Nothing in this report introduces a new metric or threshold.
-
-## Validation
-
-- Catalyst **124/124** (`/tmp/focus-score-catalyst.log`).
-- Fresh iOS **112/113**; only existing `corner_radius` **99.411**.
-  Replayed those fresh goldens with the experimental harness stashed:
-  **112/113**, and `compare.txt` is byte-identical. Logs:
-  `/tmp/focus-score-ios-suite.log`, `/tmp/focus-score-baseline-suite.log`.
-- Twelve existing real-app scores unchanged: **99.137 / 98.535 / 98.548 /
-  99.469 / 98.639 / 98.133 / 97.516 / 99.650 / 82.170 / 99.860 /
-  99.734 / 85.393** (`/tmp/focus-score-realapp.log`). These are the standard
-  native regression gate, **not Linux Focus scores**.
-- FocusLaunchCoreTests **12/12**, zero failures (`/tmp/focus-score-tests.log`).
-- Standard Linux `swift:6.2-noble` release openrender **green, 189.30 s**
-  (`/tmp/focus-score-linux-build.log`). This native ELF build does not
-  compile Objective-C Blockzilla; it cannot clear the full-guest blocker.
-- Final operator CHECK_ONLY proof: **CANNOT complete — live external merge lock**.
-  The exact required command was started from the repository root:
-
-```sh
-CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/focus-score
-```
-
-Its log `/tmp/focus-score-merge-proof.log` remained **0 bytes** while waiting
-in the script's initial lock-acquisition loop. Thus its tail is empty:
+Command run from the monorepo root:
 
 ```text
-(no output; checks had not started)
+CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/focus-score2
 ```
 
-There was no REFUSED line, but **this is not a successful proof**. At the
-observation, `/tmp/agent_merge.lock/pid` named live PID **70855** (the operator's
-zsh process, elapsed 02:08:49); another `agent_merge.sh simplenote44` process,
-PID **90742**, was also waiting. This task's own waiter, PID **76532**, was
-stopped without changing the operator lock or either operator process.
-The final CHECK_ONLY success tail cannot honestly be supplied until the
-operator releases the lock. No gate was bypassed or script patched.
+The checker printed no `REFUSED` line. Its final output was:
 
-The unchanged-main guest rebuild repeated **both identical diagnostics**
-after the experimental harness was removed. That second log is
-`uikit-linux:/work-focus-score/build-unchanged-main.log`; the carried
-`build-blocker.txt` now uses this exact baseline rebuild. Required next steps
-are the DND dependency merge and a rerun of CHECK_ONLY after the lock is
-available. The numeric score and final proof remain incomplete.
+```text
+Build of product 'openrender' complete! (161.30s)
+checks passed (CHECK_ONLY)
+```
