@@ -81,6 +81,39 @@ func testCustomLayerFailsClosed() {
     }
 }
 
+private struct EchoCustomModel: MLCustomModel {
+    init(modelDescription: MLModelDescription, parameters: [String: Any]) throws {
+        _ = (modelDescription, parameters)
+    }
+
+    init(modelDescription: MLModelDescription, parameterDictionary parameters: [String: Any]) throws {
+        try self.init(modelDescription: modelDescription, parameters: parameters)
+    }
+
+    func prediction(
+        from input: any MLFeatureProvider,
+        options: MLPredictionOptions
+    ) throws -> any MLFeatureProvider {
+        _ = options
+        return input
+    }
+}
+
+func testCustomModelProtocolAndBatchDefault() {
+    let description = MLModelDescription()
+    let direct = try! EchoCustomModel(modelDescription: description, parameters: ["mode": "echo"])
+    let alias = try! EchoCustomModel(modelDescription: description, parameterDictionary: [:])
+    let input = try! MLDictionaryFeatureProvider(dictionary: ["value": 42])
+    let options = MLPredictionOptions()
+    let output = try! direct.prediction(from: input, options: options)
+    precondition(output.featureValue(for: "value")?.int64Value == 42)
+
+    let batch = MLArrayBatchProvider(array: [input, input])
+    let outputs = try! alias.predictions(from: batch, options: options)
+    precondition(outputs.count == 2)
+    precondition(outputs.features(at: 1).featureValue(for: "value")?.int64Value == 42)
+}
+
 func testTaskResumeAndCancel() {
     let task = MLTask()
     precondition(task.state == .failed)
