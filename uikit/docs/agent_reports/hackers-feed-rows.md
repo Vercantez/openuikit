@@ -159,7 +159,17 @@ constants were introduced to push the screen over 97.5.
 - Final fresh iOS suite: **112/113**, the same sole `corner_radius`
   99.411 miss; **113/113 rendered PNGs byte-identical** to baseline.
 - Linux `swift:6.2-noble` release build: **passed**, 207.18 s.
-- `agent_merge.sh` CHECK_ONLY: pending after the measured commit.
+- `agent_merge.sh` CHECK_ONLY on implementation commit **78dc5f53**:
+  **checks passed (CHECK_ONLY)**, **0 REFUSED**. Clean merged checkout:
+  Catalyst **124/124**, Foundation-hidden guest library green, test bundle
+  built, all real-app floors held, full conformance board **707 frames**:
+  **688 equal / 19 higher / 0 lower** against the carried board; all **487**
+  previously passing frames held their thresholds. The board improvements
+  include existing main changes; they are not attributed to the Hackers fix.
+  Both final Linux checks passed (`openrender`, `ConformanceApps`, and
+  `OpenUIKitTests` build). Documented cleanup exit **128** followed the
+  success line. This documentation-only follow-up records that proof; the
+  verified implementation is unchanged.
 
 The full real-app comparator prints all scored floors before encountering
 its pre-existing browser layout `None` coordinate error / geometry mismatch.
