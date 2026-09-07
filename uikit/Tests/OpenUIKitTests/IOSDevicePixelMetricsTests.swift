@@ -78,7 +78,12 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(narrow.plainTextInset, 16)
         let wide = UITableView(frame: CGRect(x: 0, y: 0, width: 393, height: 600), style: .insetGrouped)
         XCTAssertEqual(wide.insetGroupedSideInset, 20)
-        XCTAssertEqual(wide.plainSeparatorInsets.left, 20)
+        // The plain-table helper is not the inset-grouped drawing path.
+        // MEASURED insetgrouped-separator, iPhone 16 / iOS 26.1:
+        // card x 20 / width 353; separator x 36 / width 321 => 16/16.
+        let separator = wide.separatorDrawInsets(for: UITableViewCell())
+        XCTAssertEqual(separator.left, 16)
+        XCTAssertEqual(separator.right, 16)
         wide.insetGroupedSideInset = 8   // an explicit value still pins
         XCTAssertEqual(wide.insetGroupedSideInset, 8)
 
@@ -89,6 +94,44 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         device(820, 1180, scale: 2)
         let pad = UITableView(frame: CGRect(x: 0, y: 0, width: 820, height: 1180), style: .insetGrouped)
         XCTAssertEqual(pad.insetGroupedSideInset, 20)
+    }
+
+    func testInsetGroupedSeparatorFollowsMeasuredLandscapeSafeArea() {
+        UIDevice.current.userInterfaceIdiom = .phone
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 3,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        device(852, 393, scale: 3)
+        let table = UITableView(frame: CGRect(x: 0, y: 0, width: 852, height: 393), style: .insetGrouped)
+        let cell = UITableViewCell()
+        cell.tableView = table
+        // One-variable oracle sweep: horizontal safe area only, same
+        // iPhone 16 landscape window. Values are cell-local insets.
+        let samples: [(CGFloat, CGFloat, CGFloat)] = [
+            (0, 0, 20), (0, 2, 20), (2, 0, 20),
+            (2, 2, 16), (4, 4, 16), (59, 59, 16)
+        ]
+        for (left, right, expected) in samples {
+            table._setSafeAreaInsets(UIEdgeInsets(top: 78, left: left, bottom: 20, right: right))
+            let inset = table.separatorDrawInsets(for: cell)
+            XCTAssertEqual(inset.left, expected)
+            XCTAssertEqual(inset.right, expected)
+        }
+        // Stock iPhone 16 card [79, 694], separator [95, 662]. Pin the
+        // measured card here to isolate separator geometry from card layout.
+        cell.frame = CGRect(x: 79, y: 113, width: 694, height: 44)
+        cell.layoutSubviews()
+        XCTAssertEqual(cell.frame.minX + cell.separatorView.frame.minX, 95)
+        XCTAssertEqual(cell.separatorView.frame.width, 662)
+
+        // SE landscape: stock card [20, 627], separator [40, 587].
+        device(667, 375, scale: 2)
+        table.frame = CGRect(x: 0, y: 0, width: 667, height: 375)
+        table._setSafeAreaInsets(UIEdgeInsets(top: 78, left: 0, bottom: 0, right: 0))
+        cell.frame = CGRect(x: 20, y: 113, width: 627, height: 44)
+        cell.layoutSubviews()
+        XCTAssertEqual(cell.frame.minX + cell.separatorView.frame.minX, 40)
+        XCTAssertEqual(cell.separatorView.frame.width, 587)
     }
 
     // MARK: UIStackView rounds both edges (stack_vertical on the SE)
