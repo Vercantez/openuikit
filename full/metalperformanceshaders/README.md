@@ -250,6 +250,77 @@ Validation in the operator's `uikit-linux` container, private checkout
 - The sealed runtime now also exercises NDArray shared reshape and the
   five-channel image reshape. Immutable inputs and the sealed gate are untouched.
 
+### Local next pass: strided CPU matrix batches
+
+Baseline: `89291fae`, already carrying the preceding local reshape pass.
+Changes remain exclusively in `full/metalperformanceshaders/`.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2821 | 2827 |
+| declared | 2 | 2 |
+| deferred | 559 | 553 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **6 exact identifiers** for `MPSMatrixBinaryKernel` and its
+five configuration properties. The pinned graph establishes that softmax-gradient
+inherits this base. Its batch settings now select actual CPU work; copies retain
+all five properties. Each promoted row cites
+`MPSMatrixBatchedCPUTests.swift#testMPSMatrixBinaryKernelBatchedSoftMaxGradient`,
+which checks exact output, source preservation, copies, and refusal on each
+nonzero origin. No rows were bulk relabeled, made unavailable or not-applicable.
+
+The existing `MPSMatrixMultiplication` also now honors `batchStart` / `batchSize`.
+Both encodes use each matrix's independent buffer offset, rowBytes and
+matrixBytes, validating the entire selected batch before writing. Invalid ranges,
+short backing buffers, misaligned/invalid strides, unsupported types and shared
+result/input buffers refuse. No broadcasting or nonzero binary-origin convention
+is invented; these remain explicit oracle questions. Only softmax-gradient is
+newly connected to the binary base; other matrix subclasses are unchanged.
+
+| Linux CPU measurement | before | after |
+| --- | --- | --- |
+| 1x1 GEMM batches A=[2,5,7], B=[3,11,13], C=[100,200,300], start=1, size=2, stride=8 bytes | [6,200,300]: wrong batch changed | [100,55,91]; all three padding floats remain -999 |
+| GEMM beta=0, A=2, B=3, old C=NaN | NaN | 6 exactly |
+| Rectangular GEMM, all four transpose combinations, alpha=2/beta=-1, two selected batches | batch controls ignored | [37,42;83,96] and [-3,8;13,30] exactly, with 80/96/112-byte matrix strides |
+| Softmax gradient, y=[1/4,3/4], g=[2,6]; y=[1/2,1/2], g=[8,-4] | binary base/batch surface absent | [-3/4,3/4] and [3,-3] exactly, with 24/32/40-byte matrix strides |
+| Entire-buffer checks | not carried for batched kernels | prefixes, suffixes, row/matrix padding and unselected batches retain -999; both sources unchanged |
+| Focused synchronous regression tests | 76 | 80 passing, including all earlier tests |
+
+The first two before/after measurements compile the unmodified baseline versions
+of `MPSMatrixKernels.swift` and `MPSMatrixNN.swift` into a separate temporary
+module, then run the same probe against baseline and updated modules. All other
+numbers are hand-computed float32 oracles in the carried focused tests. This is
+host numerical evidence, not an Apple GPU or default-configuration equivalence
+claim. The pre-existing local Metal stand-ins remain the device layer; replacing
+them with the separate Metal lane requires central integration outside this scope.
+
+Top-5 implemented evidence distribution after this next pass:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 13.3% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` |
+| 343 | 12.1% | `MPSTypesTests.swift#testMPSEnumRawValues` |
+| 243 | 8.6% | `MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels` |
+| 135 | 4.8% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 104 | 3.7% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+
+All 2,827 implemented citations resolve to top-level synchronous no-argument
+tests. The largest non-table test remains the existing 243-row test, below the
+40% limit. No immutable files or acceptance scripts changed.
+
+Validation: operator container `uikit-linux`, private tree
+`/work-fw-metalperformanceshaders-c`, Swift 6.2.4 / aarch64 Linux:
+
+- `tests/acceptance/test_host.sh`: `FRAMEWORK_FANOUT_HOST_OK module=MetalPerformanceShaders`.
+  The runtime now also checks a selected softmax-gradient batch and untouched padding.
+- `tests/test_agent.sh`: `MPS_FOCUSED_TESTS_OK count=80`. These two scripts are
+  every shell test present in the framework; temporary products are removed.
+- `validate_seed.py --framework full/metalperformanceshaders --phase deliverable`:
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK` in the container and locally (from `uikit/`
+  the local paths use `../full/`).
+
 ## Depth pass 2026-09 (wave 9)
 
 Coverage before this pass: **2282 implemented / 3 declared / 1097 deferred /
