@@ -463,3 +463,38 @@ VISION_EVIDENCE_OK
 The individual evidence run completes all **107/107** cited tests. Apple model,
 video, homography, async-wrapper, and platform dependency identity limitations
 remain as documented above and in `oracle-questions.tsv`.
+
+## Depth pass 2026-09 (wave 8)
+
+This second-pass audit promoted the already implemented, synchronously exercised
+observation-value and request-configuration surface family by family. It starts
+with the requested rectangle, feature-print, text/object, alignment, contour,
+hand/body-pose, and tracking families. Each promoted exact ID now cites the
+focused test that exercises its supplied-data semantics, Codable/Hashable value
+behavior, deterministic configuration, or explicit fail-closed model boundary;
+async `perform` overloads remain declared because synchronous evidence does not
+establish their scheduling behavior.
+
+| Snapshot | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before wave 8 | 2977 | 549 | 58 | 0 | 0 |
+| After wave 8 | **3285** | **241** | **58** | **0** | **0** |
+
+Wave-8 implemented gain: **+308** exact public identifiers. The largest five
+evidence anchors after this audit are:
+
+| Focused evidence test | Implemented rows | Share of implemented |
+|---|---:|---:|
+| `testOverlayRevisionComparableOperators` | 319 | 9.71% |
+| `testValueCatalog` | 270 | 8.22% |
+| `testOverlayPoseValueTypes` | 241 | 7.34% |
+| `testOverlayFaceAndDocumentValues` | 172 | 5.24% |
+| `testHumanBodyPose3DObservationJoints` | 86 | 2.62% |
+
+The fail-closed boundary is unchanged: Linux does not claim Apple Vision ML,
+Core ML feature-value production, Apple video processing, hardware/daemon
+services, or unobserved async scheduling. Those APIs either throw the documented
+Vision error from validated input or remain `declared`/`deferred` with their
+existing reasons. There are no `unavailable` rows and no SwiftUI-overlay rows in
+this pinned surface requiring `not-applicable` classification. Remaining Apple-
+oracle questions are tracked in `oracle-questions.tsv`.
