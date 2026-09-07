@@ -74,3 +74,17 @@ assigned because the layout/diff evidence already identifies the dominant
 regions. The home and Ledger rows are CANNOT solely because their iOS golden
 files are absent.
 
+## Required merge proof
+
+Command run from the monorepo root:
+
+```text
+CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/focus-score2
+```
+
+The checker printed no `REFUSED` line. Its final output was:
+
+```text
+Build of product 'openrender' complete! (161.30s)
+checks passed (CHECK_ONLY)
+```
