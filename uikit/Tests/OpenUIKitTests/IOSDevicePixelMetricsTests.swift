@@ -265,6 +265,36 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(UINavigationBar.largeTitleExpandedInset, 116)
     }
 
+    // MARK: Inset-grouped cell content margin (realapp_ledger_light golden)
+
+    /// MEASURED realapp_ledger_light golden, iPhone 16 (393 pt) / iOS 26.1
+    /// (2026-09-07): the inset-grouped card is at x 20 and the cell content
+    /// margin inside it is 16, so labels constrained to
+    /// `contentView.layoutMarginsGuide` sit at x 36. Plain cells keep the
+    /// 20 pt system margin (realapp_storage_light SwitchCell [15, 20, 15, 20]).
+    func testInsetGroupedCellContentMarginIs16OnThePhone() {
+        device(393, 852, scale: 3)
+        let source = UntitledGroupedSource()
+        let inset = UITableView(frame: CGRect(x: 0, y: 0, width: 393, height: 852), style: .insetGrouped)
+        inset.dataSource = source
+        inset.delegate = source
+        inset.layoutIfNeeded()
+        let insetCell = inset.cellForRow(at: IndexPath(row: 0, section: 0))
+        XCTAssertNotNil(insetCell)
+        XCTAssertEqual(insetCell?.layoutMargins.left, 16)
+        XCTAssertEqual(insetCell?.layoutMargins.right, 16)
+        XCTAssertEqual(insetCell?.contentView.layoutMargins.left, 16)
+        XCTAssertEqual(inset.insetGroupedSideInset, 20, "the card itself keeps the 20 pt system inset")
+
+        let plain = UITableView(frame: CGRect(x: 0, y: 0, width: 393, height: 852), style: .plain)
+        plain.dataSource = source
+        plain.delegate = source
+        plain.layoutIfNeeded()
+        let plainCell = plain.cellForRow(at: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(plainCell?.layoutMargins.left, 20)
+        XCTAssertEqual(plainCell?.contentView.layoutMargins.left, 20)
+    }
+
     // MARK: Untitled grouped footers + compact headers (headerprobe / NavFlow)
 
     func testUntitledGroupedFooterAndCompactHeadersMatchHeaderprobe() {
