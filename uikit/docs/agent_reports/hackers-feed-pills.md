@@ -10,7 +10,7 @@ No app source, golden, or pin changed.
 | Measurement | Before | After | Real iOS |
 |---|---:|---:|---:|
 | `realapp_hackers_feed_light` score, straight alpha @3x | 94.662 | **98.235** | bar 97.5 |
-| RGB MAE | 5.799 | **2.017** | 0 |
+| Comparator MAE | 5.799 | **2.017** | 0 |
 | Two-line column window y (pt) | 138.167 | **128** | 128 |
 | Two-line column height (pt) | 77 | **97.333** | 97.333 |
 | Two-line pill window y (pt) | 209.167 | **199** | 199 |
@@ -93,7 +93,9 @@ names the probe and its measured values.
   **38/38 passed**.
 - Catalyst: before and after **124/124**; all **178 rendered PNGs**
   (including animation frames) byte-identical.
-- Real apps: other **14/14 PNGs byte-identical**. All 14 scorable screens
+- Real apps: other **14/14 PNGs byte-identical**. Within Hackers, only
+  the first and third visible row regions change (64,434 / 66,062 pixels);
+  all other visible row regions are identical. All 14 scorable screens
   print their scores; the existing browser size mismatch / `None` layout
   coordinate causes the full comparator to terminate afterward. The
   isolated Hackers score above runs cleanly against unchanged copies of
@@ -102,8 +104,20 @@ names the probe and its measured values.
 - Fresh iOS suite: before and after **112/113**; sole miss `corner_radius`
   **99.411**. All **113/113** rendered PNGs byte-identical.
 - Linux `swift:6.2-noble` release: **passed**, 230.78 s.
-- `CHECK_ONLY=1 bash scripts/agent_merge.sh agent/hackers-feed-pills` runs
-  on the implementation commit next; the follow-up report records its output.
+- `CHECK_ONLY=1 bash scripts/agent_merge.sh agent/hackers-feed-pills` on
+  implementation commit **c4eb552c**: **checks passed (CHECK_ONLY)**,
+  **0 REFUSED**. Clean merged checkout Catalyst **124/124**;
+  Foundation-hidden guest library **GUEST_ROUTE_CHECK_OK** (55 s);
+  test bundle built; real-app floors held, Hackers **98.235**.
+  Full conformance board: **707 frames, 688 equal / 19 higher / 0 lower**;
+  all **487** previously passing frames held their thresholds. These are
+  the same board deltas reported by the prior branch, not additional
+  improvements attributed to this placement change. Both final Linux
+  checks passed: `openrender` (181.84 s), then a fresh container building
+  `openrender`, `ConformanceApps`, and `OpenUIKitTests`.
+  The script printed success before its documented cleanup exit 128.
+  This documentation-only follow-up records that proof; implementation
+  and tests are unchanged. Full log: `/tmp/check-hackers-feed-pills.log`.
 
 ## Remaining measured wall
 
