@@ -1,0 +1,39 @@
+== TCP loopback
+  socket(AF_INET, SOCK_STREAM)       yes
+  setsockopt(SO_REUSEADDR)           yes
+  setsockopt(SO_NOSIGPIPE)           yes
+  bind(127.0.0.1:0)                  yes
+  listen(4)                          yes
+  getsockname                        yes
+    returned len == sizeof(sockaddr_in) yes
+    sin_len == sizeof(sockaddr_in)   yes
+    sin_family == AF_INET            yes
+    port assigned                    yes
+    address                          127.0.0.1
+  setsockopt(TCP_NODELAY) on client  yes
+  connect(ephemeral port)            yes
+  accept                             yes
+    peer family == AF_INET           yes
+    peer address                     127.0.0.1
+  send 11 bytes                      yes
+  recv 11 bytes                      yes
+  write 15 bytes on client           yes
+  read 15 bytes on accepted fd       yes
+  recv(MSG_DONTWAIT) on idle socket  EAGAIN
+  getsockopt(SO_ERROR) == 0          yes
+  getsockopt(SO_REUSEADDR) reads back set yes
+  shutdown(SHUT_WR)                  yes
+  peer read sees EOF                 yes
+== refused connect
+  connect(127.0.0.1:1)               ECONNREFUSED
+== AF_UNIX socketpair
+  socketpair(AF_UNIX, SOCK_STREAM)   yes
+  ping across the pair               yes
+== inet_pton / inet_ntop
+  inet_pton(AF_INET, 10.1.2.3)       yes
+    round trip                       10.1.2.3
+  inet_pton(AF_INET6, ::1)           yes
+    round trip                       ::1
+  inet_pton rejects 300.1.1.1        yes
+== not a socket
+  listen(stdin)                      ENOTSOCK
