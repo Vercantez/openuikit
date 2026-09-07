@@ -39,6 +39,14 @@ public enum FamilyControlsHostControl {
         try center.linuxRequestAuthorization(for: member)
     }
 
+    /// Synchronous host probe for the same fail-closed boundary used by the
+    /// completion-based revoke API.
+    public static func revokeAuthorizationSync(
+        _ center: AuthorizationCenter
+    ) throws {
+        try center.linuxRevokeAuthorization()
+    }
+
     public static func selectionBindingBox(
         _ selection: FamilyActivitySelection
     ) -> FamilyActivitySelectionBox {

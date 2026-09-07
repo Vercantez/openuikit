@@ -1,6 +1,33 @@
 import Foundation
 @_spi(OpenUIKitHost) import FamilyControls
 
+func testAuthorizationBoundaryConsistency() {
+    let center = AuthorizationCenter.shared
+    precondition(center.authorizationStatus == .denied)
+
+    for member in [FamilyControlsMember.child, .individual] {
+        do {
+            try FamilyControlsHostControl.requestAuthorizationSync(center, for: member)
+            preconditionFailure("Linux authorization must fail closed")
+        } catch let error as FamilyControlsError {
+            precondition(error == .unavailable)
+        } catch {
+            preconditionFailure("Unexpected authorization error: \(error)")
+        }
+        precondition(center.authorizationStatus == .denied)
+    }
+
+    do {
+        try FamilyControlsHostControl.revokeAuthorizationSync(center)
+        preconditionFailure("Linux revocation must report the unavailable service")
+    } catch let error as FamilyControlsError {
+        precondition(error == .unavailable)
+    } catch {
+        preconditionFailure("Unexpected revocation error: \(error)")
+    }
+    precondition(center.authorizationStatus == .denied)
+}
+
 func testSharedSingleton() {
     let a = AuthorizationCenter.shared
     let b = AuthorizationCenter.shared

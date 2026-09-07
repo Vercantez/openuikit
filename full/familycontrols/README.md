@@ -4,6 +4,34 @@ Linux starting point for Apple's public `FamilyControls` module, reconstructed
 from the pinned Xcode 26.1 iPhoneOS symbol graph. Isolated host-gate success
 is not integrated Linux success.
 
+## Depth pass 2026-09 (wave 8)
+
+Wave 8 began at **94 implemented / 2313 declared / 0 deferred / 0
+unavailable / 0 not-applicable** and ends at **94 implemented / 2313 declared /
+0 deferred / 0 unavailable / 0 not-applicable**. The implemented gain is **0**.
+
+The exact-ID audit found no remaining non-overlay FamilyControls family to move:
+all 2313 declared rows are synthesized `SwiftUI.View` members attached to the
+three FamilyControls views. They remain declarations under the immutable seed's
+leaf-full nondeferred floor; none was relabeled as implemented or treated as
+behavioral evidence. The wave instead strengthened the single fail-closed
+authorization boundary and added a focused consistency test covering both member
+requests, revocation, and the invariant denied state.
+
+Top-5 implemented evidence distribution after wave 8:
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 11 | 11.7% | `FamilyControlsErrorTests.swift#testErrorCases` (table-driven error enum / raw values) |
+| 6 | 6.4% | `AuthorizationStatusTests.swift#testStatusCases` (table-driven status enum / raw values) |
+| 5 | 5.3% | `FamilyControlsMemberTests.swift#testMemberCases` (table-driven member enum / raw values) |
+| 4 | 4.3% | `FamilyControlsErrorTests.swift#testErrorNSErrorSurface` |
+| 3 | 3.2% | `FamilyControlsErrorTests.swift#testErrorLocalizedDefaults` |
+
+The environment verifier emitted the required Swift 6.2.4 Linux
+`scratch-corpus` / `dotnet-macios` marker before editing. The sealed gate ended
+with the deliverable, reference, agent-runtime, and host markers recorded below.
+
 ## Depth pass 2026-09
 
 SDK depth for `FamilyControls` in `full/familycontrols/` (2407 exact IDs).

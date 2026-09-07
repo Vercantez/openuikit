@@ -123,7 +123,7 @@ public final class AuthorizationCenter: ObservableObject {
     public func requestAuthorization(
         completionHandler: @escaping (Result<Void, any Error>) -> Void
     ) {
-        completionHandler(.failure(FamilyControlsError.unavailable))
+        completionHandler(.failure(Self.linuxAuthorizationFailure))
     }
 
     /// Requests FamilyControls authorization for `member`. Linux never
@@ -137,11 +137,19 @@ public final class AuthorizationCenter: ObservableObject {
     public func revokeAuthorization(
         completionHandler: @escaping (Result<Void, any Error>) -> Void
     ) {
-        completionHandler(.failure(FamilyControlsError.unavailable))
+        completionHandler(.failure(Self.linuxAuthorizationFailure))
     }
 
     func linuxRequestAuthorization(for member: FamilyControlsMember) throws {
         _ = member
-        throw FamilyControlsError.unavailable
+        throw Self.linuxAuthorizationFailure
     }
+
+    func linuxRevokeAuthorization() throws {
+        throw Self.linuxAuthorizationFailure
+    }
+
+    /// A single boundary keeps every Linux authorization entry point
+    /// deterministic and prevents one overload from accidentally granting.
+    private static let linuxAuthorizationFailure = FamilyControlsError.unavailable
 }
