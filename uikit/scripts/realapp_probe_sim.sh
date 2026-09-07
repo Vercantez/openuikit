@@ -29,7 +29,12 @@ sed -e 's/^import OpenUIKit$/import UIKit/' \
     Sources/RealAppProbe/RealAppScreen.swift > "$TMPSRC/RealAppScreen.swift"
 sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Shims.swift > "$TMPSRC/Shims.swift"
 sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Focus/FocusShims.swift > "$TMPSRC/FocusShims.swift"
-sed -e 's/^import OpenUIKit$/import UIKit/' Sources/RealAppProbe/Focus/FocusScreens.swift > "$TMPSRC/FocusScreens.swift"
+# Focus home / browser guard their asset search path on OpenUIKitRuntime,
+# which real UIKit does not have; the app bundle already holds the
+# fixture PNGs, so the guard collapses to its (no-op) body on Darwin.
+sed -e 's/^import OpenUIKit$/import UIKit/' \
+    -e 's/^        if OpenUIKitRuntime.imageSearchPaths.isEmpty {$/        do {/' \
+    Sources/RealAppProbe/Focus/FocusScreens.swift > "$TMPSRC/FocusScreens.swift"
 mkdir -p "$TMPSRC/Hackers"
 sed -e 's/^import OpenUIKit$/import UIKit/' \
     Sources/RealAppProbe/Hackers/HackersScreens.swift > "$TMPSRC/Hackers/HackersScreens.swift"
@@ -123,7 +128,10 @@ SWIFT_SIM=(swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend M
   -target arm64-apple-ios26.0-simulator -sdk "$SDK")
 compile_stub() {
   local name=$1; shift
-  "${SWIFT_SIM[@]}" -parse-as-library -emit-module \
+  # -wmo: Onboarding is seven files since focus-launch; without whole-module
+  # mode `-emit-object -o` refuses multiple inputs ("cannot specify -o when
+  # generating multiple output files", measured 2026-09-07).
+  "${SWIFT_SIM[@]}" -parse-as-library -wmo -emit-module \
     -emit-module-path "$MODDIR/$name.swiftmodule" \
     -emit-object -o "$TMPSRC/$name.o" \
     -module-name "$name" -I "$MODDIR" "$@"
@@ -144,7 +152,12 @@ swiftc -O -swift-version 5 -parse-as-library \
   -module-name Domain -I "$MODDIR" \
   Sources/RealAppProbe/HackersModules/Domain/Domain.swift
 compile_stub Shared Sources/RealAppProbe/HackersModules/Shared/Shared.swift
-compile_stub DesignSystem Sources/RealAppProbe/HackersModules/DesignSystem/DesignSystem.swift
+# The whole directory: FocusUIFont / FocusUIColor / FocusUIImage carry the
+# Focus DesignSystem surface (`UIFont.footnote12`, `UIColor.secondaryText`)
+# that FocusShims' ShareTrackersViewController (Focus home) needs; with only
+# DesignSystem.swift the probe compile failed on those two members
+# (measured 2026-09-07).
+compile_stub DesignSystem Sources/RealAppProbe/HackersModules/DesignSystem/*.swift
 swiftc -O -swift-version 5 -Xfrontend -default-isolation -Xfrontend MainActor \
   -enable-upcoming-feature IsolatedDefaultValues \
   -target arm64-apple-ios26.0-simulator -sdk "$SDK" \
