@@ -16,7 +16,9 @@ not XML), picks the application target, and emits:
     localization, .json as bundled data
 
 It stops with a named gap list for CocoaPods, Carthage, Objective-C
-sources, and mixed Swift+ObjC targets — those have no OpenUIKit port.
+sources, and mixed Swift+ObjC targets. Route (b) has an Objective-C runtime,
+but SwiftPM rejects a mixed-language target; a separate Clang target or
+driver and the required Objective-C framework interfaces are still needed.
 Missing Apple frameworks and SPM products are reported, not silently
 dropped.
 
@@ -362,6 +364,14 @@ PORTED_PRODUCTS = {
     "SafariServices": "SafariServices",
     "StoreKit": "StoreKit",
 }
+
+# Simplenote 9b1bb17: these five source dependencies build on Darwin route
+# (b). CoreData/AppKit and @objc still prevent claiming a Linux/guest port.
+DARWIN_SOURCE_PRODUCTS = {
+    "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
+    "SimplenoteSearch", "Gridicons",
+}
+PORTED_PRODUCTS.update({name: name for name in DARWIN_SOURCE_PRODUCTS})
 
 # Toolchain modules that exist on Linux Swift without an OpenUIKit product.
 TOOLCHAIN_MODULES = {
@@ -1111,6 +1121,7 @@ def classify_module(name: str) -> dict[str, Any]:
             "kind": "apple_framework",
             "class": cls,
             "port": PORTED_PRODUCTS[name],
+            **({"port_platforms": ["macOS"]} if name in DARWIN_SOURCE_PRODUCTS else {}),
         }
     if name in TOOLCHAIN_MODULES:
         cls = "Foundation-heavy"
@@ -1236,7 +1247,8 @@ def detect_repo_gaps(source_root: Path, sources: list[dict[str, Any]]) -> list[d
             {
                 "kind": "ObjC sources",
                 "detail": f"{len(objc)} Objective-C source(s) in the app target "
-                f"(first: {objc[0]}); the Swift port does not compile .m/.mm",
+                f"(first: {objc[0]}); this generator does not emit a Clang target; "
+                "route (b) requires the app's Objective-C framework interfaces",
             }
         )
     if objc and swift:
@@ -1244,7 +1256,9 @@ def detect_repo_gaps(source_root: Path, sources: list[dict[str, Any]]) -> list[d
             {
                 "kind": "mixed target",
                 "detail": f"app target has {len(swift)} Swift and {len(objc)} "
-                "Objective-C sources; mixed-language targets have no port",
+                "Objective-C sources; SwiftPM rejects mixed-language targets; "
+                "a split target/custom driver must preserve bridging-header and "
+                "generated Swift-header dependencies",
             }
         )
     return gaps
@@ -1546,6 +1560,9 @@ def build_manifest(
         "sibling_targets": sibling_targets,
         "info": info,
         "swift_sources": ordered_swift,
+        # Simplenote 9b1bb17: 229 PBX references, 228 files; SPCredentials.swift
+        # is generated and absent. Never call the PBX count a compile denominator.
+        "missing_swift_sources": [p for p in ordered_swift if not (graph.source_root / p).is_file()],
         "other_sources": other_sources,
         "resources": resources,
         "other_resources": other_resources,
@@ -1557,6 +1574,7 @@ def build_manifest(
         "no_port": unique_no_port,
         "counts": {
             "swift_sources": len(ordered_swift),
+            "present_swift_sources": sum((graph.source_root / p).is_file() for p in ordered_swift),
             "objc_sources": sum(1 for s in other_sources if s["ext"] in OBJC_EXT),
             "xcassets": len(resources["xcassets"]),
             "nibs": len(resources["nibs"]),
@@ -1610,6 +1628,12 @@ def emit_package_swift(
         '                .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "StoreKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
     ]
+    demanded = {r["name"] for r in manifest["spm"] + manifest["imports"]}
+    for name in sorted(DARWIN_SOURCE_PRODUCTS & demanded):
+        products.append(
+            f'                .product(name: "{name}", package: "OpenUIKit", '
+            'condition: .when(platforms: [.macOS]))'
+        )
     resources_block = ""
     if any(manifest["resources"].values()):
         resources_block = ',\n            resources: [\n                .copy("Resources"),\n            ]'
@@ -1836,7 +1860,10 @@ def format_gap_report(manifest: dict[str, Any]) -> str:
     lines = []
     target = manifest["target"]["name"]
     lines.append(f"target {target!r}  swift={manifest['counts']['swift_sources']}  "
+                 f"present_swift={manifest['counts']['present_swift_sources']}  "
                  f"gaps={manifest['counts']['gaps']}  no_port={manifest['counts']['no_port']}")
+    for path in manifest["missing_swift_sources"]:
+        lines.append(f"MISSING SWIFT SOURCE: {path}")
     if manifest["gaps"]:
         lines.append("GAPS (no port — ingest stops):")
         for gap in manifest["gaps"]:

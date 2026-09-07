@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -97,6 +98,19 @@ class MiniAppFixtureTests(unittest.TestCase):
         self.assertEqual(self.manifest["swift_sources"], ["MiniApp/AppDelegate.swift"])
         self.assertNotIn("MiniAppTests/MiniAppTests.swift", self.manifest["swift_sources"])
 
+    def test_missing_generated_source_does_not_inflate_compile_denominator(self) -> None:
+        original = self.graph.target_inputs(self.tid, self.target)
+        inputs = dict(original)
+        inputs["sources"] = original["sources"] + [{"path": "MiniApp/GeneratedCredentials.swift"}]
+        with patch.object(self.graph, "target_inputs", return_value=inputs):
+            manifest = ingest.build_manifest(self.graph, self.tid, self.target)
+        self.assertEqual(manifest["counts"]["swift_sources"], 2)
+        self.assertEqual(manifest["counts"]["present_swift_sources"], 1)
+        self.assertEqual(manifest["missing_swift_sources"], ["MiniApp/GeneratedCredentials.swift"])
+        report = ingest.format_gap_report(manifest)
+        self.assertIn("present_swift=1", report)
+        self.assertIn("MISSING SWIFT SOURCE: MiniApp/GeneratedCredentials.swift", report)
+
     def test_resources_mapped_to_port_loaders(self) -> None:
         res = self.manifest["resources"]
         self.assertEqual(res["xcassets"], ["MiniApp/Assets.xcassets"])
@@ -129,6 +143,19 @@ class MiniAppFixtureTests(unittest.TestCase):
         os_mod = ingest.classify_module("os")
         self.assertEqual(os_mod["port"], "os")
         self.assertEqual(os_mod["class"], "Foundation-heavy")
+
+    def test_simplenote_dependencies_are_explicitly_darwin_only(self) -> None:
+        self.assertEqual(ingest.classify_module("Gridicons")["port_platforms"], ["macOS"])
+        self.manifest["imports"].append(ingest.classify_module("Gridicons"))
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "pkg"
+            ingest.emit_tree(self.graph, self.manifest, out, UIKIT)
+            text = (out / "Package.swift").read_text()
+        self.assertIn(
+            '.product(name: "Gridicons", package: "OpenUIKit", condition: .when(platforms: [.macOS]))',
+            text,
+        )
+        self.assertNotIn('.product(name: "SimplenoteSearch"', text)
 
     def test_emit_package_layout(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
