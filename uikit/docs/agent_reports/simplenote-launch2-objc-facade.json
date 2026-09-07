@@ -1,0 +1,448 @@
+{
+  "measurement": {
+    "behavioral_walls": [
+      "The declaration-only classes still lack behavior in the ObjC C ABI: navigation stack, window lifecycle, table data source/delegate dispatch, text editing, gestures, bars, alerts, image loading, and CoreData.",
+      "The generated Simplenote-Swift.h remains a measured Clang-before-Swift build-order wall."
+    ],
+    "corpus_commit": "9b1bb17d8ec224a709d306e0ec34cee38bc7d933",
+    "date": "2026-09-06",
+    "files": 50,
+    "implemented_declaration_count": 33,
+    "method": "Unique UIKit class/member declarations referenced by the 50 ObjC translation units, compared with ObjCFacade/include/UIKit.h before this pass. Constants and generated Swift-header symbols are excluded. An interface gap and each selector/property gap count once.",
+    "missing_member_count_after": 33,
+    "missing_member_count_before": 66,
+    "remaining_interface_walls": [
+      "UIActivity",
+      "UIActivityIndicatorView",
+      "UIAlertAction",
+      "UIAlertController",
+      "UIBarButtonItem",
+      "UIDevice",
+      "UIFont",
+      "UIGestureRecognizer",
+      "UIImage",
+      "UIImageView",
+      "UIImpactFeedbackGenerator",
+      "UIKeyCommand",
+      "UIMenuController",
+      "UIMenuItem",
+      "UINavigationBar",
+      "UIPanGestureRecognizer",
+      "UIPercentDrivenInteractiveTransition",
+      "UIPickerView",
+      "UIPinchGestureRecognizer",
+      "UIPresentationController",
+      "UIScreen",
+      "UIScreenEdgePanGestureRecognizer",
+      "UISearchBar",
+      "UIStackView",
+      "UISwitch",
+      "UITableViewController",
+      "UITapGestureRecognizer",
+      "UITextPosition",
+      "UITextRange",
+      "UIToolbar",
+      "UITraitCollection",
+      "UIViewPropertyAnimator",
+      "UIVisualEffectView"
+    ]
+  },
+  "missing_members": [
+    {
+      "class": "UIActivity",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UIActivityIndicatorView",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 5
+    },
+    {
+      "class": "UIAlertAction",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 17
+    },
+    {
+      "class": "UIAlertController",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 10
+    },
+    {
+      "class": "UIBarButtonItem",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 37
+    },
+    {
+      "class": "UIDevice",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 4
+    },
+    {
+      "class": "UIFont",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 10
+    },
+    {
+      "class": "UIGestureRecognizer",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 6
+    },
+    {
+      "class": "UIImage",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 24
+    },
+    {
+      "class": "UIImageView",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 2
+    },
+    {
+      "class": "UIImpactFeedbackGenerator",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UIKeyCommand",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 4
+    },
+    {
+      "class": "UIMenuController",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UIMenuItem",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UINavigationBar",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 2
+    },
+    {
+      "class": "UIPanGestureRecognizer",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 10
+    },
+    {
+      "class": "UIPercentDrivenInteractiveTransition",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 3
+    },
+    {
+      "class": "UIPickerView",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 6
+    },
+    {
+      "class": "UIPinchGestureRecognizer",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 3
+    },
+    {
+      "class": "UIPresentationController",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UIScreen",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 4
+    },
+    {
+      "class": "UIScreenEdgePanGestureRecognizer",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UISearchBar",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 3
+    },
+    {
+      "class": "UIStackView",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UISwitch",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 18
+    },
+    {
+      "class": "UITableViewController",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UITapGestureRecognizer",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 6
+    },
+    {
+      "class": "UITextPosition",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 13
+    },
+    {
+      "class": "UITextRange",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 3
+    },
+    {
+      "class": "UIToolbar",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 2
+    },
+    {
+      "class": "UITraitCollection",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 4
+    },
+    {
+      "class": "UIViewPropertyAnimator",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 8
+    },
+    {
+      "class": "UIVisualEffectView",
+      "member": "interface",
+      "reason": "UIKit class referenced by the 50 ObjC files but absent from the pre-pass facade",
+      "references": 1
+    },
+    {
+      "class": "UINavigationController",
+      "member": "initWithRootViewController:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 2
+    },
+    {
+      "class": "UINavigationController",
+      "member": "viewControllers",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 4
+    },
+    {
+      "class": "UINavigationController",
+      "member": "topViewController",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 11
+    },
+    {
+      "class": "UINavigationController",
+      "member": "visibleViewController",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 0
+    },
+    {
+      "class": "UINavigationController",
+      "member": "pushViewController:animated:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 5
+    },
+    {
+      "class": "UINavigationController",
+      "member": "popViewControllerAnimated:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 1
+    },
+    {
+      "class": "UINavigationController",
+      "member": "popToRootViewControllerAnimated:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 2
+    },
+    {
+      "class": "UINavigationController",
+      "member": "popToViewController:animated:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 0
+    },
+    {
+      "class": "UIWindow",
+      "member": "rootViewController",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 3
+    },
+    {
+      "class": "UIWindow",
+      "member": "keyWindow",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 1
+    },
+    {
+      "class": "UIWindow",
+      "member": "isKeyWindow",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 1
+    },
+    {
+      "class": "UIWindow",
+      "member": "makeKeyAndVisible",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 1
+    },
+    {
+      "class": "UIApplication",
+      "member": "sharedApplication",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 11
+    },
+    {
+      "class": "UIApplication",
+      "member": "delegate",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 32
+    },
+    {
+      "class": "UIApplication",
+      "member": "keyWindow",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 1
+    },
+    {
+      "class": "UIApplication",
+      "member": "openURL:options:completionHandler:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 11
+    },
+    {
+      "class": "UITableView",
+      "member": "initWithFrame:style:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 12
+    },
+    {
+      "class": "UITableView",
+      "member": "dataSource",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 17
+    },
+    {
+      "class": "UITableView",
+      "member": "delegate",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 32
+    },
+    {
+      "class": "UITableView",
+      "member": "reloadData",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 9
+    },
+    {
+      "class": "UITableView",
+      "member": "dequeueReusableCellWithIdentifier:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 3
+    },
+    {
+      "class": "UITableView",
+      "member": "dequeueReusableCellWithIdentifier:forIndexPath:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 3
+    },
+    {
+      "class": "UITableView",
+      "member": "registerClass:forCellReuseIdentifier:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 2
+    },
+    {
+      "class": "UITableView",
+      "member": "deselectRowAtIndexPath:animated:",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 0
+    },
+    {
+      "class": "UITextView",
+      "member": "text",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 302
+    },
+    {
+      "class": "UITextView",
+      "member": "font",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 13
+    },
+    {
+      "class": "UITextView",
+      "member": "textColor",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 11
+    },
+    {
+      "class": "UITextView",
+      "member": "delegate",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 32
+    },
+    {
+      "class": "UITextField",
+      "member": "text",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 302
+    },
+    {
+      "class": "UITextField",
+      "member": "font",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 13
+    },
+    {
+      "class": "UITextField",
+      "member": "placeholder",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 8
+    },
+    {
+      "class": "UITextField",
+      "member": "becomeFirstResponder",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 9
+    },
+    {
+      "class": "UITextField",
+      "member": "resignFirstResponder",
+      "reason": "pure declaration over an existing OpenUIKit API; behavior remains a wall where no C ABI exists",
+      "references": 5
+    }
+  ]
+}

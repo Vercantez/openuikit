@@ -295,6 +295,7 @@ let frameworkProducts: [Product] = [
     .library(name: "LocalAuthentication", targets: ["LocalAuthentication"]),
     .library(name: "PassKit", targets: ["PassKit"]),
     .library(name: "Network", targets: ["Network"]),
+    .library(name: "MobileCoreServices", targets: ["MobileCoreServices"]),
 ]
 
 let coreTargets: [Target] = [
@@ -333,6 +334,7 @@ let coreTargets: [Target] = [
     .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
     // The UIKit reimplementation. Same rule as above.
     .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+    .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
     // The declaration macro executes on the build host even when UIKit is
     // being emitted for a different target triple.
     .macro(
@@ -883,12 +885,16 @@ let simplenoteTargets: [Target] = []
 #else
 let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
-    "SimplenoteSearch", "Gridicons",
+    "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
+    "AutomatticTracksModelObjC",
 ].map { .library(name: $0, targets: [$0]) }
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
 let simplenoteTargets: [Target] = [
+    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include/Simperium"),
+    .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
+    .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],
             path: "Sources/SimplenoteDependencies/SimplenoteFoundation",
             swiftSettings: simplenoteSettings),

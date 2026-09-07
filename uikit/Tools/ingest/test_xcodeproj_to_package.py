@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -225,6 +226,49 @@ class MiniAppFixtureTests(unittest.TestCase):
         payload = json.loads(proc.stdout)
         self.assertEqual(payload["target"]["name"], "MiniApp")
         self.assertTrue("target" in proc.stderr)
+
+    def test_mixed_target_emits_regenerable_clang_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(FIXTURE, root / "MiniApp.xcodeproj")
+            shutil.copytree(FIXTURE.parent / "MiniApp", root / "MiniApp")
+            (root / "MiniApp" / "Mixed.m").write_text(
+                '#import "local.h"\n#import "MiniApp-Swift.h"\n', encoding="utf-8"
+            )
+            (root / "MiniApp" / "helper.c").write_text(
+                "int helper(void) { return 1; }\n", encoding="utf-8"
+            )
+            (root / "MiniApp" / "local.h").write_text("int helper(void);\n", encoding="utf-8")
+            pbx = root / "MiniApp.xcodeproj" / "project.pbxproj"
+            text = pbx.read_text(encoding="utf-8")
+            text = text.replace(
+                "A10000000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* AppDelegate.swift */; };",
+                "A10000000000000000000001 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* AppDelegate.swift */; };\n\t\tA10000000000000000000009 /* Mixed.m in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000B /* Mixed.m */; };\n\t\tA1000000000000000000000A /* helper.c in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000C /* helper.c */; };",
+            ).replace(
+                "B1000000000000000000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };",
+                "B1000000000000000000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = \"<group>\"; };\n\t\tB1000000000000000000000B /* Mixed.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Mixed.m; sourceTree = \"<group>\"; };\n\t\tB1000000000000000000000C /* helper.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = helper.c; sourceTree = \"<group>\"; };",
+            ).replace(
+                "A10000000000000000000001 /* AppDelegate.swift in Sources */,",
+                "A10000000000000000000001 /* AppDelegate.swift in Sources */,\n\t\t\t\tA10000000000000000000009 /* Mixed.m in Sources */,\n\t\t\t\tA1000000000000000000000A /* helper.c in Sources */,",
+                1,
+            ).replace(
+                "B1000000000000000000000A /* Info.plist */,",
+                "B1000000000000000000000A /* Info.plist */,\n\t\t\t\tB1000000000000000000000B /* Mixed.m */,\n\t\t\t\tB1000000000000000000000C /* helper.c */,",
+                1,
+            )
+            pbx.write_text(text, encoding="utf-8")
+            graph = ingest.ProjectGraph(root / "MiniApp.xcodeproj")
+            tid, target = graph.pick_app_target("MiniApp")
+            manifest = ingest.build_manifest(graph, tid, target)
+            self.assertEqual(manifest["counts"]["objc_sources"], 1)
+            self.assertEqual(manifest["counts"]["c_sources"], 1)
+            self.assertIn("MiniApp/local.h", manifest["header_sources"])
+            out = root / "generated"
+            ingest.emit_tree(graph, manifest, out, UIKIT)
+            package = (out / "Package.swift").read_text(encoding="utf-8")
+            self.assertIn('name: "MiniAppObjC"', package)
+            self.assertEqual(len(list((out / "Sources/MiniAppObjC").rglob("Mixed.m"))), 1)
+            self.assertEqual(len(list((out / "Sources/MiniAppObjC/include").rglob("local.h"))), 1)
 
 
 class XcconfigTests(unittest.TestCase):

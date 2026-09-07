@@ -369,7 +369,8 @@ PORTED_PRODUCTS = {
 # (b). CoreData/AppKit and @objc still prevent claiming a Linux/guest port.
 DARWIN_SOURCE_PRODUCTS = {
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
-    "SimplenoteSearch", "Gridicons",
+    "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
+    "AutomatticTracksModelObjC",
 }
 PORTED_PRODUCTS.update({name: name for name in DARWIN_SOURCE_PRODUCTS})
 
@@ -427,6 +428,8 @@ OBJC_MODULES = {
 SOURCE_EXTENSIONS = {".swift", ".m", ".mm", ".c", ".cc", ".cpp", ".h", ".hpp"}
 SWIFT_EXT = ".swift"
 OBJC_EXT = {".m", ".mm"}
+C_EXT = {".c", ".cc", ".cpp"}
+HEADER_EXT = {".h", ".hpp"}
 RESOURCE_CATALOG_EXT = {".xcassets"}
 NIB_EXT = {".xib", ".storyboard"}
 STRINGS_EXT = {".strings", ".stringsdict"}
@@ -1233,34 +1236,7 @@ def detect_repo_gaps(source_root: Path, sources: list[dict[str, Any]]) -> list[d
                 "detail": "Cartfile or Carthage/ present; Carthage has no OpenUIKit port",
             }
         )
-    objc = []
-    swift = []
-    for item in sources:
-        path = item.get("path") or ""
-        ext = Path(path).suffix.lower()
-        if ext in OBJC_EXT:
-            objc.append(path)
-        elif ext == SWIFT_EXT:
-            swift.append(path)
-    if objc:
-        gaps.append(
-            {
-                "kind": "ObjC sources",
-                "detail": f"{len(objc)} Objective-C source(s) in the app target "
-                f"(first: {objc[0]}); this generator does not emit a Clang target; "
-                "route (b) requires the app's Objective-C framework interfaces",
-            }
-        )
-    if objc and swift:
-        gaps.append(
-            {
-                "kind": "mixed target",
-                "detail": f"app target has {len(swift)} Swift and {len(objc)} "
-                "Objective-C sources; SwiftPM rejects mixed-language targets; "
-                "a split target/custom driver must preserve bridging-header and "
-                "generated Swift-header dependencies",
-            }
-        )
+    # Mixed Swift/Clang sources are emitted as separate dependent targets.
     return gaps
 
 
@@ -1468,6 +1444,39 @@ def build_manifest(
         row["kind"] = "linked_framework"
         framework_rows.append(row)
 
+    objc_sources = [s["path"] for s in other_sources if s["ext"] in OBJC_EXT]
+    c_sources = [s["path"] for s in other_sources if s["ext"] in C_EXT]
+    header_sources = [s["path"] for s in other_sources if s["ext"] in HEADER_EXT]
+    for path in objc_sources + c_sources:
+        directory = graph.source_root / posixpath.dirname(path)
+        if directory.is_dir():
+            for header in directory.rglob("*"):
+                if header.is_file() and header.suffix.lower() in HEADER_EXT:
+                    rel = header.relative_to(graph.source_root).as_posix()
+                    if not is_test_path(rel) and rel not in header_sources:
+                        header_sources.append(rel)
+    header_sources.sort()
+    bridging_header = None
+    raw_bridging_header = settings.get("SWIFT_OBJC_BRIDGING_HEADER")
+    if raw_bridging_header:
+        expanded = expand_setting(raw_bridging_header, settings)
+        if not expanded.startswith("$"):
+            bridging_header = expanded
+            if (graph.source_root / expanded).is_file() and expanded not in header_sources:
+                header_sources.append(expanded)
+                header_sources.sort()
+    swift_header_consumers: list[str] = []
+    for path in objc_sources + c_sources + header_sources:
+        source = graph.source_root / path
+        if source.is_file():
+            try:
+                text = source.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                continue
+            for match in re.finditer(r"#\s*import\s*[<\"]([^>\"]+-Swift\.h)[>\"]", text):
+                if match.group(1) not in swift_header_consumers:
+                    swift_header_consumers.append(match.group(1))
+
     gaps = detect_repo_gaps(graph.source_root, inputs["sources"])
     local_names: set[str] = set()
     for info in graph.local_package_infos():
@@ -1564,6 +1573,11 @@ def build_manifest(
         # is generated and absent. Never call the PBX count a compile denominator.
         "missing_swift_sources": [p for p in ordered_swift if not (graph.source_root / p).is_file()],
         "other_sources": other_sources,
+        "objc_sources": objc_sources,
+        "c_sources": c_sources,
+        "header_sources": header_sources,
+        "bridging_header": bridging_header,
+        "swift_header_consumers": swift_header_consumers,
         "resources": resources,
         "other_resources": other_resources,
         "spm": spm_rows,
@@ -1576,6 +1590,8 @@ def build_manifest(
             "swift_sources": len(ordered_swift),
             "present_swift_sources": sum((graph.source_root / p).is_file() for p in ordered_swift),
             "objc_sources": sum(1 for s in other_sources if s["ext"] in OBJC_EXT),
+            "c_sources": sum(1 for s in other_sources if s["ext"] in C_EXT),
+            "header_sources": len(header_sources),
             "xcassets": len(resources["xcassets"]),
             "nibs": len(resources["nibs"]),
             "strings": len(resources["strings"]),
@@ -1650,6 +1666,20 @@ def emit_package_swift(
         else f".library(name: {_swift_string(target_name)}, targets: [{_swift_string(target_name)}])"
     )
     target_kind = "executableTarget" if executable else "target"
+    mixed = bool(manifest.get("objc_sources") or manifest.get("c_sources"))
+    clang_name = f"{target_name}ObjC"
+    if mixed:
+        clang_target = f'''        .target(
+            name: {_swift_string(clang_name)},
+            dependencies: [.product(name: "OpenUIKit", package: "OpenUIKit")],
+            path: "Sources/{clang_name}",
+            publicHeadersPath: "include"
+        ),
+'''
+        target_deps = product_deps + f',\n                "{clang_name}"'
+    else:
+        clang_target = ""
+        target_deps = product_deps
     return f"""// swift-tools-version:5.9
 // Generated by Tools/ingest/xcodeproj_to_package.py — do not edit by hand.
 // Source project: {manifest["project"]}
@@ -1666,10 +1696,10 @@ let package = Package(
         .package(name: "OpenUIKit", path: {_swift_string(rel)}),
     ],
     targets: [
-        .{target_kind}(
+{clang_target}        .{target_kind}(
             name: {_swift_string(target_name)},
             dependencies: [
-{product_deps},
+{target_deps},
             ]{resources_block},
             swiftSettings: [
                 .unsafeFlags([
@@ -1737,9 +1767,12 @@ def emit_tree(
     if not target_name or target_name[0].isdigit():
         target_name = "App_" + target_name
     src_root = out_dir / "Sources" / target_name
+    objc_root = out_dir / "Sources" / f"{target_name}ObjC"
     res_root = src_root / "Resources"
     if src_root.exists():
         shutil.rmtree(src_root)
+    if objc_root.exists():
+        shutil.rmtree(objc_root)
     src_root.mkdir(parents=True)
 
     # Swift sources keep their repo-relative path so #filePath stays meaningful.
@@ -1755,6 +1788,30 @@ def emit_tree(
             _copy_swift_source_with_libkern(src, dest)
         else:
             _copy_file(src, dest)
+
+    if manifest.get("objc_sources") or manifest.get("c_sources"):
+        include_root = objc_root / "include"
+        include_root.mkdir(parents=True, exist_ok=True)
+        for rel in manifest.get("objc_sources", []) + manifest.get("c_sources", []):
+            src = graph.source_root / rel
+            if src.is_file():
+                _copy_file(src, objc_root / rel)
+        for rel in manifest.get("header_sources", []):
+            src = graph.source_root / rel
+            if src.is_file():
+                _copy_file(src, include_root / rel)
+        guard = re.sub(r"[^A-Za-z0-9]", "_", target_name).upper() + "_UMBRELLA_H"
+        lines = ["/* Generated umbrella. */", f"#ifndef {guard}", f"#define {guard}"]
+        lines.extend(f'#include "{path}"' for path in manifest.get("header_sources", []))
+        lines.append("#endif")
+        (include_root / f"{target_name}Umbrella.h").write_text(
+            "\n".join(lines) + "\n", encoding="utf-8"
+        )
+        for name in manifest.get("swift_header_consumers", []):
+            (include_root / posixpath.basename(name)).write_text(
+                "/* Generated compatibility header; Swift header generation is a measured wall. */\n"
+                "#import <Foundation/Foundation.h>\n", encoding="utf-8"
+            )
 
     mapping_notes = {
         "xcassets": "OpenUIKit named-color/image reader (docs/NAMED_ASSETS.md): "
