@@ -963,6 +963,17 @@ open class UITableViewCell: UIView, ReusableView {
 
     // MARK: Layout (measured cell geometry)
 
+    /// iOS: a custom `accessoryView` that is a UIImageView showing a symbol
+    /// image occupies a fixed 24 pt slot (see the accessory layout below
+    /// for the measurement). Nil for every other accessory / the Catalyst cut.
+    static let symbolAccessorySlotWidth: CGFloat = 24
+    var symbolAccessorySlotWidth: CGFloat? {
+        guard UITableViewCell.isIOSChrome,
+              let iv = accessoryView as? UIImageView,
+              iv.image?.isSymbolImage == true else { return nil }
+        return UITableViewCell.symbolAccessorySlotWidth
+    }
+
     /// Width of the content region for the current accessory / edit chrome.
     var contentWidth: CGFloat {
         var leading: CGFloat = 0
@@ -984,6 +995,9 @@ open class UITableViewCell: UIView, ReusableView {
             // stays that below — left it 8 pt short on both.
             let gap = UITableViewCell.isIOSChrome
                 ? 0 : UITableViewCell.detailAccessoryGap
+            if let slot = symbolAccessorySlotWidth {
+                return max(0, available - trailingMargin - slot)
+            }
             return max(0, available - trailingMargin
                        - accessoryView.frame.width - gap)
         }
@@ -1085,7 +1099,35 @@ open class UITableViewCell: UIView, ReusableView {
         layoutEditChrome(pad: pad, height: h, width: w)
 
         // Accessory. A custom view owns its size and replaces the stock glyph.
-        if let custom = accessoryView {
+        if let custom = accessoryView, let slot = symbolAccessorySlotWidth {
+            // A UIImageView showing a SYMBOL image takes a fixed 24 pt slot
+            // at the trailing margin and is centred in it, whatever its
+            // frame. MEASURED 2026-09-07 tableprobe, iPhone 16 3x / iOS
+            // 26.1, 353 pt insetGrouped cell: `chevron.right` 12.667 wide
+            // at x 314.667, the same view widened to 16 / 30 at 313 / 306,
+            // `gearshape` 20.667 at 310.667, `circle.fill` 19.667 at
+            // 311.167, a 30 pt chevron 22 wide at 310, a 10 pt one 7.667
+            // at 317.167 — every content view 309 = 353 − 20 − 24. Plain
+            // (non-symbol) image views and UIViews of 8–71 pt keep the
+            // ordinary right-edge-at-the-margin rule (Img12 at 321, Acc24
+            // at 309). SE 2x: chevron at 308.75 in the 343 pt cell
+            // (303 + (24 − 12.5) / 2 — the centre is not pixel-snapped).
+            // Vertically floored to the pixel: 2x (52 − 16.5) / 2 = 17.75 →
+            // 17.5; 3x 17.667 exact. (The 30 / 10 pt chevrons measured one
+            // pixel above that floor — 10.667 vs 11, 20.667 vs 21 — an
+            // OPEN point-size effect not modelled; Focus uses the body size.)
+            _accessoryGlyphView.isHidden = true
+            let size = custom.frame.size
+            let slotX = w - trailingMargin - slot
+            // Floor with a pixel-fraction epsilon: (52 − 16.667) / 2 is
+            // 17.6667 in binary, one ulp under the 53rd third, and a bare
+            // floor lands on 17.333.
+            let px = UITableView.iOSPixel
+            let y = ((h - size.height) / 2 / px + 1e-6).rounded(.down) * px
+            custom.frame = CGRect(x: slotX + (slot - size.width) / 2,
+                                  y: pad + y,
+                                  width: size.width, height: size.height)
+        } else if let custom = accessoryView {
             _accessoryGlyphView.isHidden = true
             let size = custom.frame.size
             // A custom accessory centres UP to the pixel, where the stock
@@ -1129,6 +1171,17 @@ open class UITableViewCell: UIView, ReusableView {
 
         // Labels (inside the content view, which already carries `pad`).
         var labelX = _textInset
+        // An app-assigned `contentView.layoutMargins` is where the classic
+        // labels go. MEASURED 2026-09-07 tableprobe, iPhone 16 3x + SE 2x /
+        // iOS 26.1, insetGrouped: `contentView.layoutMargins = (0, 20, 0, 0)`
+        // (Focus `SettingsTableViewCell`) puts `UITableViewLabel` at x
+        // **20** and a value1 detail's right edge at the content view's
+        // width − **0**; default margins keep 16 / (16 | 8 with accessory).
+        // Golden realapp_focus_settings_light: "Theme" `[20, 16, 53, 20.333]`,
+        // "Light" `[270.667, 16, 38.333, 20.333]` in the 309 pt content view.
+        let explicitContentMargins = UITableViewCell.isIOSChrome
+            ? contentView._baseLayoutMarginsOverride : nil
+        if let explicit = explicitContentMargins { labelX = explicit.left }
         if let imageView, let image = imageView.image {
             let size = image.size
             let longestSide = max(size.width, size.height)
@@ -1181,6 +1234,17 @@ open class UITableViewCell: UIView, ReusableView {
             primaryY = UITableViewCell.plainSubtitleAccessibilityTop
         } else if xxxxlSubtitle {
             primaryY = UITableViewCell.plainSubtitleXxxxlTop
+        } else if UITableViewCell.isIOSChrome, style == .subtitle,
+                  tableView?.style != .plain,
+                  detailTextLabel?.text?.isEmpty != false {
+            // A grouped `.subtitle` cell with NO detail text lays out as a
+            // single centred label. MEASURED 2026-09-07 tableprobe (3x + 2x)
+            // and the realapp_focus_settings_light golden: Focus's
+            // `SettingsTableViewCell(style: .subtitle)` rows ("Set as Default
+            // Browser", the toggle cells) are 52 pt with `UITableViewLabel`
+            // at y **16** = ceil-to-pixel((52 − 20.333) / 2), not the
+            // two-line block's 15.667.
+            primaryY = UITableView.iOSCeilToPixel((h - primary.height) / 2)
         } else if UITableViewCell.isIOSChrome, style == .subtitle {
             primaryY = tableView?.style == .plain
                 ? UITableViewCell.plainSubtitlePrimaryY
@@ -1231,9 +1295,14 @@ open class UITableViewCell: UIView, ReusableView {
                                  width: min(s.width, max(0, maxTextW)),
                                  height: s.height)
             default: // value1 / value2: right-aligned detail
-                let right = accessoryView == nil && accessoryType == .none
+                var right = accessoryView == nil && accessoryType == .none
                     ? bounds.width - UITableViewCell.detailTrailingMargin
                     : contentWidth - UITableViewCell.detailAccessoryGap
+                if let explicit = explicitContentMargins {
+                    // See `explicitContentMargins`: the assigned right
+                    // margin (Focus: 0) replaces the 16 / 8 defaults.
+                    right = contentWidth - explicit.right
+                }
                 // MEASURED NavFlow t200.ax1: "Automatic" is 105 at x 194
                 // against Appearance maxX 188 (gap 6), not the intrinsic
                 // 145; "1.2 GB" collapses to width 0 at the right edge.
@@ -1371,11 +1440,16 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         labelX = 8
     }
 
+    /// The table's delegate supplied this header's height: the label
+    /// bottom-aligns to `UITableView.delegateHeaderLabelBottomPadding`.
+    var _delegateHeight = false
+
     func configure(kind: Kind, text: String?, labelX: CGFloat,
                    style: UITableView.Style = .plain, firstSection: Bool = false,
-                   compact: Bool = false) {
+                   compact: Bool = false, delegateHeight: Bool = false) {
         self.kind = kind
         self.labelX = labelX
+        _delegateHeight = delegateHeight && UITableView.isIOSChrome && style != .plain
         if UITableView.isIOSChrome {
             switch style {
             case .plain: _headerLabelY = 4; _wholePointLabelHeight = true
@@ -1417,8 +1491,16 @@ open class UITableViewHeaderFooterView: UIView, ReusableView {
         let maxW = max(0, bounds.width - 2 * labelX)
         var s = textLabel.sizeThatFits(CGSize(width: maxW, height: CGFloat.greatestFiniteMagnitude))
         if _wholePointLabelHeight, kind == .header { s.height = textLabel.font.lineHeight.rounded(.up) }
-        let y = kind == .header ? _headerLabelY
+        var y = kind == .header ? _headerLabelY
                                 : UITableViewHeaderFooterView.footerLabelY
+        if kind == .header, _delegateHeight {
+            // MEASURED tableprobe 2026-09-07, iOS 26.1: with the delegate's
+            // 30 / 50 the 17 pt label sits at y 3.667 / 23.667 (3x) and
+            // 4 / 24 (2x) — bottom-aligned, not at the automatic-height
+            // 18.667 (which overflowed the 30 pt header in the port's
+            // realapp_focus_settings_light render).
+            y = bounds.height - s.height - UITableView.delegateHeaderLabelBottomPadding
+        }
         var lf = CGRect(x: labelX, y: y,
                          width: min(s.width, maxW), height: s.height)
         // MEASURED NavFlow t200.rtl, iPhone SE 2x / iOS 26.1: "General"

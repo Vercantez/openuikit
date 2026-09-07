@@ -268,7 +268,39 @@ open class UITableView: UIScrollView {
     /// + NavFlow t200, iPhone SE 2x / iOS 26.1: `rectForFooter` is 17.5 pt
     /// with no `UITableViewHeaderFooterView` when `titleForFooterInSection`
     /// is nil. Catalyst and `.plain` keep 0.
-    static let untitledGroupedFooterHeight: CGFloat = 17.5
+    ///
+    /// MEASURED 2026-09-07 tableprobe (agent/focus-fidelity-tables), iPhone
+    /// 16 3x / iOS 26.1, insetGrouped under a nav bar: every untitled
+    /// `rectForFooter` is **17.333** (52 px) and every untitled non-first
+    /// `rectForHeader` is **17.667** (53 px) — the two together are the 35
+    /// pt gap between two untitled sections (412 → 447). The same probe on
+    /// the SE 2x gives 17.5 / 17.5. One 17.5 value, footer FLOORED and
+    /// header CEILED to the device pixel.
+    static var untitledGroupedFooterHeight: CGFloat { iOSFloorToPixel(17.5) }
+    /// Untitled grouped/insetGrouped header of a LATER section (no title,
+    /// no delegate view). MEASURED tableprobe 3x: 17.667 (sections 3, 4,
+    /// 6–10, 12 of the probe, including one whose delegate
+    /// `heightForHeaderInSection` returned 30 — the delegate height is NOT
+    /// honoured for an untitled section: Focus's `SettingsViewController`
+    /// returns 30 for every non-privacy section and the golden's untitled
+    /// sections still sit 17.667 below the previous footer). SE 2x: 17.5.
+    static var untitledGroupedHeaderHeight: CGFloat { iOSCeilToPixel(17.5) }
+    /// Untitled FIRST grouped/insetGrouped section: the rows start 35 pt
+    /// down (`rectForHeader(0)` is `[35, 0]`, `rect(forSection: 0)` starts
+    /// at 35). MEASURED tableprobe 3x and 2x, and the
+    /// realapp_focus_settings_light golden (`SettingsTableViewCell`
+    /// `[0, 35, 353, 52]` with delegate header height 30 ignored). Same 35
+    /// the titled first header carries above its label.
+    static let untitledGroupedFirstSectionTop: CGFloat = 35
+    /// Bottom padding under a titled grouped header's label when the
+    /// DELEGATE supplied the header height. MEASURED tableprobe, iOS 26.1:
+    /// 3x — heights 30 / 50 put the 20.333 label at y 3.667 / 23.667 (pad
+    /// **6.0**); SE 2x — the 20.5 label at y 4 / 24 (pad **5.5**, the same
+    /// 5.5 the automatic 55.5 / 38 headers carry on that device). Not one
+    /// value rounded two ways (5.5 → 5.667 at 3x), so both are carried.
+    static var delegateHeaderLabelBottomPadding: CGFloat {
+        UIScreen.main.scale >= 3 ? 6 : 5.5
+    }
     /// The 17 pt label height under the iOS cut on the current screen
     /// (20.333 at 3x, 20.5 at 2x — FontEngine.labelLineHeight).
     static var iOSLabelHeight17: CGFloat {
@@ -570,6 +602,13 @@ open class UITableView: UIScrollView {
         var compactHeader = false
         /// False for the untitled 17.5 pt grouped gap (spacing, no view).
         var footerHasView = false
+        /// False for an untitled grouped header (35 first / 17.5 later of
+        /// spacing, no view) — see `untitledGroupedHeaderHeight`.
+        var headerHasView = true
+        /// The header height came from `heightForHeaderInSection`, so the
+        /// title label bottom-aligns to it (`delegateHeaderLabelBottomPadding`)
+        /// instead of sitting at the automatic-height label y.
+        var headerHeightFromDelegate = false
 
         var rowsEnd: CGFloat { rowEnds.last ?? rowsStart }
         func rowY(_ i: Int) -> CGFloat { i == 0 ? rowsStart : rowEnds[i - 1] }
@@ -610,10 +649,19 @@ open class UITableView: UIScrollView {
         if estimatedRowHeight >= 0 { return estimatedRowHeight }
         // MEASURED Tabs t200 + rowprobe, iPhone SE 2x / iOS 26.1: a
         // plain-style classic `textLabel` cell is 52 pt (separator stride
-        // 52, contentSize 1560/30). `defaultContentConfiguration()` is 53
-        // and grouped/insetGrouped keep `defaultRowHeight` so those
-        // fixtures stay on the content-config number.
-        if UITableView.isIOSChrome, style == .plain {
+        // 52, contentSize 1560/30). `defaultContentConfiguration()` is 53.
+        //
+        // MEASURED 2026-09-07 tableprobe (agent/focus-fidelity-tables),
+        // iPhone 16 3x + SE 2x / iOS 26.1, insetGrouped with
+        // `estimatedRowHeight = automaticDimension` as Focus sets it: every
+        // classic cell (`.default`, `.subtitle` with one label, `.value1`
+        // with a chevron / switch / no accessory) is **52**; the
+        // realapp_focus_settings_light golden has all seven visible rows
+        // at 52 where the port's `defaultRowHeight` 53 drifted every row
+        // below the first by a further point. The fixture scenes
+        // (tableview_grouped / tableview_dark) pin 53 through
+        // `heightForRowAt` in SceneBuilder, so they do not take this path.
+        if UITableView.isIOSChrome {
             return UITableViewCell.plainClassicRowHeight(compatibleWith: traitCollection)
         }
         return UITableViewCell.defaultRowHeight
@@ -752,6 +800,21 @@ open class UITableView: UIScrollView {
             for r in 0..<rows {
                 rowsH += resolveRowHeight(IndexPath(row: r, section: s))
                 rowsH += valueCellPadding(IndexPath(row: r, section: s))
+            }
+            if UITableView.isIOSChrome, style != .plain, m.headerTitle == nil,
+               delegateHeaderView(for: s) == nil {
+                // Untitled grouped section with no delegate view: iOS
+                // ignores `heightForHeaderInSection` and installs no view.
+                // MEASURED tableprobe 2026-09-07 (3x + 2x) and the
+                // realapp_focus_settings_light golden: first section rows
+                // start at 35, later untitled headers are 17.667 / 17.5
+                // although the delegate returned 30 for each of them.
+                headerH = s == 0
+                    ? UITableView.untitledGroupedFirstSectionTop
+                    : UITableView.untitledGroupedHeaderHeight
+                m.headerHasView = false
+            } else if headerH >= 0 {
+                m.headerHeightFromDelegate = true
             }
             if headerH < 0 {
                 if let view = delegateHeaderView(for: s),
@@ -903,6 +966,17 @@ open class UITableView: UIScrollView {
     private var valueCellPaddingCache: [IndexPath: CGFloat] = [:]
     func valueCellPadding(_ path: IndexPath) -> CGFloat {
         guard UITableView.valueCellPadding > 0, style != .plain else { return 0 }
+        // Only a pinned row height (delegate / `rowHeight`) carries the
+        // content-configuration 2 pt: the fixture scenes pin 53 and their
+        // oracle cells are `defaultContentConfiguration()` (55 measured).
+        // A self-sized CLASSIC value1 row is 52 with or without an
+        // accessory. MEASURED 2026-09-07 tableprobe, iPhone 16 3x / iOS
+        // 26.1: "Default no accessory" (`.value1`, detail, no accessory,
+        // `estimatedRowHeight = automaticDimension`) `rectForRow` height 52.
+        if rowHeight < 0,
+           (tableDelegate?.tableView(self, heightForRowAt: path) ?? -1) < 0 {
+            return 0
+        }
         if let c = valueCellPaddingCache[path] { return c }
         var pad: CGFloat = 0
         if let cell = visibleCellsByPath[path] ?? dataSource?.tableView(self, cellForRowAt: path),
@@ -1805,7 +1879,7 @@ open class UITableView: UIScrollView {
                                               card.bounds.height / 2,
                                               card.bounds.width / 2)
             }
-            if m.headerHeight > 0 {
+            if m.headerHeight > 0, m.headerHasView {
                 let header = delegateHeaderView(for: s) ?? {
                     let h = UITableViewHeaderFooterView()
                     headerViews[s] = h
@@ -1818,7 +1892,8 @@ open class UITableView: UIScrollView {
                         ? plainHeaderTextX
                         : groupedHeaderLabelX,
                     style: style, firstSection: s == 0,
-                    compact: m.compactHeader)
+                    compact: m.compactHeader,
+                    delegateHeight: m.headerHeightFromDelegate)
                 header.backgroundColor = style == .plain ? .systemBackground : nil
                 var y = m.headerY
                 if style == .plain {
@@ -1990,7 +2065,30 @@ open class UITableView: UIScrollView {
                             defaults.right + separatorInset.right)
             }
         }
-        guard cell._hasExplicitSeparatorInset else { return defaults }
+        guard cell._hasExplicitSeparatorInset else {
+            // An app-assigned `contentView.layoutMargins` moves the
+            // automatic separator: its left edge follows the content view's
+            // left margin, its right edge the CELL's own assigned margin.
+            // MEASURED 2026-09-07 tableprobe, iPhone 16 3x + SE 2x / iOS
+            // 26.1 (insetGrouped, classic cells): `contentView.layoutMargins`
+            // (0, 20, 0, 0) → `cell.separatorInset` (0, 20, 0, 16) and the
+            // separator `[20, 51, 317, 1]`; the same cell with
+            // `cell.layoutMargins = .zero` (Focus's `cellForRowAt`) →
+            // (0, 20, 0, 0), separator `[20, 51, 333, 1]` — the golden's
+            // `_UITableViewCellSeparatorView` under "Tracking Protection".
+            // Default margins keep (16, 16).
+            if UITableView.isIOSChrome, style != .plain {
+                var insets = defaults
+                if let content = cell.contentView._baseLayoutMarginsOverride {
+                    insets.left = content.left
+                }
+                if let own = cell._baseLayoutMarginsOverride {
+                    insets.right = own.right
+                }
+                return insets
+            }
+            return defaults
+        }
         return (cell.separatorInset.left, cell.separatorInset.right)
     }
 

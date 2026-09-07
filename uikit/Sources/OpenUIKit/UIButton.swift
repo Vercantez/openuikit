@@ -448,6 +448,22 @@ open class UIButton: UIControl {
                 // system button uses tight content height (no legacy +12).
                 return CGSize(width: contentWidth, height: contentHeight)
             }
+            if OpenUIKitRuntime.systemFontCut == .iOS, imageSize.width == 0 {
+                // iOS cut, MEASURED 2026-09-07 tableprobe (iPhone 16 3x
+                // and SE 2x, iOS 26.1), legacy `.system` / `.custom`
+                // buttons with no image: the box is never narrower than
+                // **30** and an EMPTY title still gets the one-line height
+                // — no title / "" / "I" / "." / "ab" / "abcd" at 12 pt are
+                // all 30 × 27, "abcdef" 40 × 27, "Learn more." 68 × 27;
+                // no title at 17 pt 30 × 33, at the 15 pt default 30 × 30,
+                // "Done" 37 × 30. Focus's `ActionFooterView` keeps an
+                // untitled `detailTextButton` in its stack: the golden
+                // footer is 71.667 = 8 + 28.667 + **27** + 8 where the
+                // port's 0 × 12 box gave 56.667.
+                let lineBox = _titleLabel.font.lineHeight.rounded(.up)
+                return CGSize(width: Swift.max(30, contentWidth),
+                              height: Swift.max(contentHeight, lineBox) + 12)
+            }
             return CGSize(width: contentWidth, height: contentHeight + 12)
         }
         let scale = _titleLabel.layoutScale
