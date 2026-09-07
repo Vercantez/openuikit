@@ -1,0 +1,219 @@
+[
+  {
+    "screen": "realapp_focus_home_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_focus_home_light.png",
+    "golden_exists": false,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "additional_reason": "No carried iOS real-app golden for this screen."
+  },
+  {
+    "screen": "realapp_focus_settings_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_focus_settings_light.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "7fffb41d05c1f53da88bd49706b4fa90b6415b5f434776ffcfb4691f5ead38b7"
+  },
+  {
+    "screen": "realapp_hackers_feed_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_hackers_feed_light.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "8481981f306be1b41db18887e9f8d2f2b713c667677f8c2ca3734bb67b2aa5a3"
+  },
+  {
+    "screen": "realapp_history_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_history_light.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "27a6cc98b5ea4b64d67e216c04e887ccd1da79200e753d54638d0d4f47cc305f"
+  },
+  {
+    "screen": "realapp_history_light_ipad",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_history_light_ipad.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1640,
+      2360
+    ],
+    "golden_sha256": "1b0a74725d314e69d48785da74bd8657bc7f9b415aaf22d0b2b6bff5de173844"
+  },
+  {
+    "screen": "realapp_ledger_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_ledger_light.png",
+    "golden_exists": false,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "additional_reason": "No carried iOS real-app golden for this screen."
+  },
+  {
+    "screen": "realapp_settings_dark",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_settings_dark.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "6368aff46ad48163471f2d9cc1a649473ac6c907d296628c11a67b6079781398"
+  },
+  {
+    "screen": "realapp_settings_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_settings_light.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "72d33a67d1e50eca35ea22a089a1e07a2382bdbaba8092d68beb14c812748d73"
+  },
+  {
+    "screen": "realapp_settings_light_ax1",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_settings_light_ax1.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "d30d1ee7e2dfbf476ba4ce062886e9b92605b8364fc42b7eed085640b58c9c0a"
+  },
+  {
+    "screen": "realapp_settings_light_ipad",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_settings_light_ipad.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1640,
+      2360
+    ],
+    "golden_sha256": "73855a835aa474f3af2e73fc7652e55d92f27197e119925a8bb286563b9be7fe"
+  },
+  {
+    "screen": "realapp_settings_light_xs",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_settings_light_xs.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "23ed8c22c69951d2a9315a1eae786bb6df3a13e8dc3746c554217e0811ef733e"
+  },
+  {
+    "screen": "realapp_settings_light_xxxl",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_settings_light_xxxl.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "59af3fdb84c4a4e3900ca3d87cdc670b002b12bf46d469d71585c69e32b4f087"
+  },
+  {
+    "screen": "realapp_storage_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_storage_light.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1179,
+      2556
+    ],
+    "golden_sha256": "4749f37b924907869fc534ba247e1a679cfd68c045786f354560ba09a033ed43"
+  },
+  {
+    "screen": "realapp_storage_light_ipad",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_storage_light_ipad.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      1640,
+      2360
+    ],
+    "golden_sha256": "94046ba8d461e99b3e77d1a02280345131e0328c9ade4c260522d74b80fd3e58"
+  },
+  {
+    "screen": "realapp_focus_browser_light",
+    "golden": "goldens/ios/golden_realapp_ios/realapp_focus_browser_light.png",
+    "golden_exists": true,
+    "ours": null,
+    "score": null,
+    "status": "CANNOT",
+    "top_diff_region": null,
+    "reason": "Current-main full guest build fails at BrowserViewController.swift:1193 and URLBar.swift:1137; build-blocker.txt",
+    "golden_pixels": [
+      750,
+      1334
+    ],
+    "golden_sha256": "e2f17415edd5dae113b14ba69ecab2112de7ce30dd81510adbcca06f8c5ca692"
+  }
+]
