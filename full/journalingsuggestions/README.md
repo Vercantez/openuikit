@@ -87,3 +87,34 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
 
 Run `bash full/journalingsuggestions/tests/acceptance/test_host.sh` from the
 repo root. Keep generated products out of the tree.
+
+## Depth pass 2026-09 (wave 8)
+
+This pass exhausted the remaining non-overlay family, `JournalingSuggestion`
+(two rows). Coverage moved from **141 implemented / 790 declared / 0 deferred /
+0 unavailable / 0 not-applicable** to **143 implemented / 788 declared / 0
+deferred / 0 unavailable / 0 not-applicable**. The 788 declaration-only rows are
+precise SwiftUI `View` synthesized cross-import overlay re-exports. The sealed
+leaf-full gate requires at least 745 implemented-or-declared identifiers, so its
+current policy prevents their requested `not-applicable` reclassification; they
+remain non-behavioral declarations pending alignment with the SwiftUI lane.
+
+The two public async asset APIs now have focused synchronous harness checks that
+execute their real async entry points on Swift's cooperative executor. The
+checks verify matching and missing item payloads, stable item-order collection,
+and empty results without claiming access to Apple's journaling service. A
+bounded condition wait makes a stalled task fail closed rather than hanging the
+sealed runner.
+
+Top-5 evidence distribution among 143 implemented rows:
+
+- `JournalingSuggestionActivityTests.swift#testLocationFields` — 8 (5.6%)
+- `JournalingSuggestionActivityTests.swift#testWorkoutDetailsFields` — 8 (5.6%)
+- `JournalingSuggestionTests.swift#testEventPosterFields` — 8 (5.6%)
+- `JournalingSuggestionActivityTests.swift#testWorkoutGroupFields` — 7 (4.9%)
+- `JournalingSuggestionTests.swift#testGenericMediaFields` — 7 (4.9%)
+
+The Linux boundary remains fail-closed: these APIs only expose payloads already
+installed in host-created `ItemContent` values. They do not contact, emulate, or
+report success from Apple's entitlement-protected Journaling Suggestions,
+Photos, or Health services.
