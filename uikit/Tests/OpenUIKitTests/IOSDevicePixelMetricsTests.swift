@@ -338,14 +338,35 @@ final class IOSDevicePixelMetricsTests: XCTestCase {
         XCTAssertEqual(plainCell?.contentView.layoutMargins.left, 20)
 
         // SE landscape (Ledger.t200.landscape golden): card 20, content 20 -> labels at 40.
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 2,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
         device(667, 375, scale: 2)
         let wide = UITableView(frame: CGRect(x: 0, y: 0, width: 667, height: 375), style: .insetGrouped)
+        wide._setSafeAreaInsets(UIEdgeInsets(top: 78, left: 0, bottom: 0, right: 0))
         wide.dataSource = source
         wide.delegate = source
         wide.layoutIfNeeded()
         let wideCell = wide.cellForRow(at: IndexPath(row: 0, section: 0))
         XCTAssertEqual(wideCell?.layoutMargins.left, 20)
         XCTAssertEqual(wideCell?.contentView.layoutMargins.left, 20)
+
+        // iPhone 16 landscape (insetgrouped-separator ConfProbe): 59 pt safe
+        // areas, card 79/694, separator 95/662 -> content margin 16.
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 3,
+            horizontalSizeClass: .compact, verticalSizeClass: .compact)
+        device(852, 393, scale: 3)
+        let notch = UITableView(frame: CGRect(x: 0, y: 0, width: 852, height: 393), style: .insetGrouped)
+        notch._setSafeAreaInsets(UIEdgeInsets(top: 78, left: 59, bottom: 20, right: 59))
+        notch.dataSource = source
+        notch.delegate = source
+        notch.layoutIfNeeded()
+        let notchCell = notch.cellForRow(at: IndexPath(row: 0, section: 0))
+        XCTAssertEqual(notchCell?.layoutMargins.left, 16)
+        XCTAssertEqual(notchCell?.contentView.layoutMargins.left, 16)
+        UITraitCollection.current = UITraitCollection(
+            userInterfaceStyle: .light, displayScale: 3, userInterfaceIdiom: .phone)
     }
 
     // MARK: Untitled grouped footers + compact headers (headerprobe / NavFlow)
