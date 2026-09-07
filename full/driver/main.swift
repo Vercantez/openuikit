@@ -173,14 +173,31 @@ func renderAll(_ args: [String]) {
 // is ~/uikit's Sources/openrender/RealApp.swift, compiled verbatim.
 @MainActor
 func renderRealApp(_ outdir: String, assets: String) {
+    // The same three environment knobs the host openrender honours
+    // (Sources/openrender/main.swift), so a 3x phone score no longer needs a
+    // hand-edited copy of this driver (focus-score.md "Guest render": the
+    // full driver never set realAppScale, and the first 3x run trapped on an
+    // ink miss instead of logging it):
+    //   OPENUIKIT_REALAPP_SCALE=<n>   phone render scale (default 2; goldens are 3)
+    //   OPENUIKIT_REALAPP_ONLY=<name> render one variant
+    //   OPENUIKIT_INK_LOG=<path>      record ink-table misses instead of trapping
+    if let v = envString("OPENUIKIT_REALAPP_SCALE"), let s = Double(v), s > 0 { realAppScale = CGFloat(s) }
+    let only = envString("OPENUIKIT_REALAPP_ONLY").flatMap { $0.isEmpty ? nil : $0 }
+    let inkLogPath = envString("OPENUIKIT_INK_LOG")
+    if inkLogPath != nil { GlyphInkTable.logMisses = true }
     var ok = 0, bad = 0
     for variant in realAppVariants {
+        if let only, variant.name != only { continue }
         let result = runRealApp(variant, assets: assets)
         var good = writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
         for (file, data) in result.pngs {
             if !writeBinaryFile(data, path: "\(outdir)/\(file)") { good = false }
         }
         if good { ok += 1; print("rendered \(result.name)") } else { bad += 1 }
+    }
+    if let inkLogPath {
+        let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n") + "\n"
+        _ = writeBinaryFile(Array(lines.utf8), path: inkLogPath)
     }
     warnToStderr("[render_full] realapp rendered=\(ok) failed=\(bad)")
     cpio_exit(bad == 0 ? 0 : 1)
