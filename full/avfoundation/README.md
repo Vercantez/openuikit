@@ -357,15 +357,44 @@ AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
 
-`swiftc --version` on this host is Swift 6.2.4, target
-`x86_64-unknown-linux-gnu`. The campaign inventory stamp
-`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a
-host-inventory token, not printed by the sealed framework gate.
-`.cursor/verify-cloud-environment.sh` currently stops on a missing
-`scratch/ladder-corpus/focus-ios` corpus checkout in this snapshot (active
-Cursor Build `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21`, not the
-seed `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The framework
-tree itself has no stale `.build` / `build` / `scratch` products.
+The required preflight completed and emitted
+`CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`.
+The framework tree itself has no stale `.build` / `build` / `scratch` products.
 `tests/test_avfoundation_host.sh` is a Darwin IceCubes/`xcrun` consumer and
 is not runnable on this Linux host.
 
+
+### Depth pass 2026-09 (wave 8)
+
+This pass audits previously declared surface against the focused runtime suite.
+It promotes 315 rows only where a synchronous test directly exercises the
+identifier: 146 public constants and notification names now have an explicit
+table-driven access/value check, while 169 type, enum, option-set, and model
+rows cite the existing focused test that constructs or uses that surface. No
+Apple hardware, daemon, entitlement, network, decoder, or encoder success is
+claimed by these promotions; all existing fail-closed boundaries remain in
+force.
+
+| status | before | after |
+|---|---:|---:|
+| `implemented` | 3681 | 3996 |
+| `declared` | 1707 | 1392 |
+| `deferred` | 244 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after wave 8:
+
+| citations | test |
+|---:|---|
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+| 146 | `testRemainingPublicConstantValues` (constant/notification table) |
+
+The largest evidence group is 293 rows, well below 40% of the 3,996
+implemented rows. The unresolved behavioral questions remain recorded in
+`oracle-questions.tsv`; in particular, this pass does not infer callback
+timing, queue selection, service success, coding round trips, or device state
+from static API evidence.
