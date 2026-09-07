@@ -284,6 +284,12 @@ open class UITableView: UIScrollView {
     /// cards, plain text insets, separator insets and accessory margins all
     /// move by the same 4 pt).
     static func iOSSystemMargin(width: CGFloat) -> CGFloat { width >= 390 ? 20 : 16 }
+    /// Content margin of an inset-grouped cell on a phone narrower than
+    /// 414 pt (MEASURED realapp_ledger_light golden, iPhone 16 / iOS 26.1:
+    /// card x 20, labels x 36). At 414 pt and up (landscape, Plus/Max) the
+    /// inset is the 20 pt system margin again (Ledger.t200.landscape golden,
+    /// SE 667 pt: labels x 40). See UITableViewCell.contentMargin.
+    static let iOSPhoneInsetGroupedInnerInset: CGFloat = 16
     /// Horizontal layout margin of a grouped/plain *cell* on the pad idiom.
     /// MEASURED realapp_storage_light_ipad, iPad (A16) 820×1180 @2x /
     /// iOS 26.1: SwitchCell and DisclosureCell `layoutMargins` `[15, 16, 15, 16]`;
