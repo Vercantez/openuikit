@@ -389,15 +389,26 @@ their existing synchronous Linux boundaries.
 | --- | ---: | ---: | ---: | ---: | ---: |
 | before depth pass 2026-09 wave 8 | 1541 | 6673 | 180 | 0 | 7301 |
 | after depth pass 2026-09 wave 8 | 1547 | 6667 | 180 | 0 | 7301 |
+| before this follow-on run | 1547 | 6667 | 180 | 0 | 7301 |
+| after this follow-on run | 1559 | 6655 | 180 | 0 | 7301 |
 
-Nondeferred remains **8214** (floor 7848). Unique `implemented` evidence tests:
-119. Top-5 evidence distribution (of 1547 implemented rows):
+The follow-on adds focused compatibility-typealias and synthesized inequality
+witnesses for the real StoreKit surface. Async Apple-service entry points remain
+declared: the synchronous test contract cannot honestly prove that their async
+entry points execute, even where a separately tested synchronous Linux boundary
+fails closed. The sealed medium-full gate requires 7,848 implemented/declared
+rows, so further SwiftUI-overlay reclassification cannot be made without
+violating the immutable acceptance floor; the existing 7,301 overlay rows remain
+not-applicable and no non-overlay identifier was reclassified that way.
+
+Nondeferred remains **8214** (floor 7848). Top-5 evidence distribution (of 1559
+implemented rows):
 
 1. `testOfferAndTaskStates` — 115 (7.4%)
-2. `testAdvancedCommerceTypes` — 111 (7.2%)
+2. `testAdvancedCommerceTypes` — 111 (7.1%)
 3. `testJWSUnverifiedFields` — 67 (4.3%)
 4. `testHashableRawRepresentableMixing` — 48 (3.1%)
-5. `testSKCloudServiceEnumsAndConstants` — 41 (2.7%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (2.6%)
 
 No cited test covers more than 40% of implemented rows. The sealed host gate
 for this wave is `bash full/storekit/tests/acceptance/test_host.sh`.
