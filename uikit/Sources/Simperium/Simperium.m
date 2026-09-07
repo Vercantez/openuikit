@@ -1,4 +1,4 @@
-#import "include/Simperium.h"
+#import <Simperium/Simperium.h>
 
 static NSError *SPUnavailableError(void) {
     return [NSError errorWithDomain:@"OpenUIKit.Simperium" code:-1 userInfo:@{NSLocalizedDescriptionKey: @"Simperium networking is unavailable in OpenUIKit"}];
