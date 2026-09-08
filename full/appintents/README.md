@@ -24,15 +24,16 @@ the remaining `@Property` specializations the ledger called out
 `AppEntity` / `CLPlacemark`), plus typed `@Parameter` inits for DateComponents (`kind`),
 IntentCurrencyAmount (`currencyCodes` / Decimal `inclusiveRange`),
 IntentPerson (`parameterMode`), IntentPaymentMethod, and CLPlacemark
-(`displayStyle`). `asyncGetter` stays declared (no run loop). Sample
+(`displayStyle`). Unexercised `asyncGetter` specializations stay declared (no
+blocking run loop); wave 11 adds typed host attachment below. Sample
 `PropertyPayIntent` / `Wave9PlaceIntent` evaluate `hostResult()` in-process.
 
 Coverage this round (ledger at start of this increment, then after):
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 1738 | 2052 | 1208 | 0 | 1588 | 3790 |
-| After | 2088 | 1702 | 1208 | 0 | 1588 | 3790 |
+| Before | 2088 | 1702 | 1208 | 0 | 1588 | 3790 |
+| After | 2388 | 1402 | 1208 | 0 | 1588 | 3790 |
 
 Prior increment on this tree was 1234 / 2548 / 1216 → 1526 / 2257 / 1215.
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
@@ -43,20 +44,20 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 176 | 8.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
-| 174 | 8.3% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
-| 53 | 2.5% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
-| 42 | 2.0% | `AppIntentsWave9Tests.swift#testIntentResultActionButtonAndSnippetFactories` |
-| 41 | 2.0% | `AppIntentsMeasurementTests.swift#testIntentParameterInformationStorageUnitTable` |
+| 176 | 7.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
+| 174 | 7.3% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
+| 153 | 6.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
+| 147 | 6.2% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
+| 53 | 2.2% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
 
-No test is cited by more than 8.4% of implemented rows (well under the
+No test is cited by more than 7.4% of implemented rows (well under the
 40% bulk-relabel line). New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
 
 Environment: `.cursor/verify-cloud-environment.sh` emitted
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`. Starting commit
-`5a351db2038abca71a1b943af3a86963f403f724` matched the campaign invariant.
+`08da4b0127920d2a794d74490b5a0e8faed63584` matched the campaign invariant.
 
 `bash full/appintents/tests/acceptance/test_host.sh` ended:
 
@@ -70,6 +71,16 @@ FRAMEWORK_FANOUT_HOST_OK module=AppIntents dylib=libAppIntents.dylib
 `bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
 
 ### What this pass added
+
+- Wave 11 exercises concrete `EntityProperty` storage and default-entity
+  key-path access across strings, numbers, dates, URLs, attributed strings,
+  date components, and Foundation measurement families. It also replaces the
+  catch-all async-getter constructor with typed, retained async closures and a
+  host resolution entry point. Missing getters and entity type mismatches throw
+  `AppIntentError.Unrecoverable` rather than claiming daemon-backed success.
+  The synchronous sealed tests verify attachment metadata but deliberately do
+  not block a run loop to invoke asynchronous closures. This moves 300 exact
+  rows from declared to implemented with focused evidence.
 
 - Wave 10 adds a synchronous concrete `EntityProperty<Int>` matrix covering stored values, projected wrapper identity, title / identifier, Spotlight metadata, and every synchronous getter / writable-getter combination. The getter matrix resolves an actual default `AppEntity` through `EntityResolutionEngine`; async getters remain declared rather than being driven with a blocking run loop. This moves 350 exact `EntityProperty` rows from declared to implemented with two focused tests.
 

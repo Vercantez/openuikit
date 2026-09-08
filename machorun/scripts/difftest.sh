@@ -88,7 +88,12 @@ if [ "$DO_RUN" = 1 ]; then
 fi
 if [ -f "$LNX_DIR/.status" ]; then
     st="$(cut -f1 "$LNX_DIR/.status")"
-    [ "$st" = "ran" ] || LINUX_SKIP_REASON="$(cut -f2 "$LNX_DIR/.status")"
+    if [ "$st" != "ran" ]; then
+        LINUX_SKIP_REASON="$(cut -f2 "$LNX_DIR/.status")"
+        # A shell error after run_linux truncates .status must not grade old
+        # captures: measured with Bash 3.2's embedded-heredoc parse failure.
+        LINUX_SKIP_REASON="${LINUX_SKIP_REASON:-harness/run_linux.sh did not complete (empty status)}"
+    fi
 else
     LINUX_SKIP_REASON="harness/run_linux.sh has not produced any results"
 fi
