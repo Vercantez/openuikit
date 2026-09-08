@@ -85,7 +85,7 @@
    "names": {
     "NSItemProvider": [
      "uikit/Sources/OpenUIKit/NSItemProvider.swift:72",
-     "uikit/Sources/OpenUIKit/NSItemProvider.swift:405",
+     "uikit/Sources/OpenUIKit/NSItemProvider.swift:420",
      "uikit/Sources/PhotosUI/PhotosUI.swift:61"
     ]
    }
@@ -235,19 +235,19 @@
    "cluster": "scene lifecycle",
    "names": {
     "UISceneConfiguration": [
-     "uikit/Sources/OpenUIKit/UIApplication.swift:831"
+     "uikit/Sources/OpenUIKit/UIApplication.swift:829"
     ],
     "UIOpenURLContext": [
-     "uikit/Sources/OpenUIKit/UIApplication.swift:889"
+     "uikit/Sources/OpenUIKit/UIApplication.swift:887"
     ],
     "UIUserActivityRestoring": [
-     "uikit/Sources/OpenUIKit/UIApplication.swift:292"
+     "uikit/Sources/OpenUIKit/UIApplication.swift:291"
     ],
     "UISceneActivationConditions": [
-     "uikit/Sources/OpenUIKit/UIApplication.swift:974"
+     "uikit/Sources/OpenUIKit/UIApplication.swift:972"
     ],
     "UISceneOpenURLOptions": [
-     "uikit/Sources/OpenUIKit/UIApplication.swift:901"
+     "uikit/Sources/OpenUIKit/UIApplication.swift:899"
     ]
    }
   },
@@ -264,16 +264,16 @@
      "uikit/Sources/OpenUIKit/UIDragDrop.swift:148"
     ],
     "UIDragInteraction": [
-     "uikit/Sources/OpenUIKit/UIDragDrop.swift:316"
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:331"
     ],
     "UIDragInteractionDelegate": [
-     "uikit/Sources/OpenUIKit/UIDragDrop.swift:269"
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:284"
     ],
     "UIDropInteraction": [
-     "uikit/Sources/OpenUIKit/UIDragDrop.swift:431"
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:446"
     ],
     "UIDropInteractionDelegate": [
-     "uikit/Sources/OpenUIKit/UIDragDrop.swift:394"
+     "uikit/Sources/OpenUIKit/UIDragDrop.swift:409"
     ],
     "UIDragDropSession": [
      "uikit/Sources/OpenUIKit/UIDragDrop.swift:132"
@@ -317,21 +317,33 @@
   "UIHoverGestureRecognizer": [
    "uikit/Sources/OpenUIKit/UIGestureRecognizer.swift:826"
   ],
-  "UISwipeGestureRecognizer": [],
+  "UISwipeGestureRecognizer": [
+   "uikit/Sources/OpenUIKit/UISwipeGestureRecognizer.swift:9"
+  ],
   "UIMenuController": [
    "uikit/Sources/OpenUIKit/FocusLaunchCompat.swift:63"
   ],
   "UIMenuItem": [
    "uikit/Sources/OpenUIKit/FocusLaunchCompat.swift:52"
   ],
-  "UISplitViewController": [],
-  "UICollectionViewController": [],
-  "UIEditMenuInteraction": [],
+  "UISplitViewController": [
+   "uikit/Sources/OpenUIKit/UISplitViewController.swift:10"
+  ],
+  "UICollectionViewController": [
+   "uikit/Sources/OpenUIKit/UICollectionViewController.swift:15"
+  ],
+  "UIEditMenuInteraction": [
+   "uikit/Sources/OpenUIKit/UIEditMenuInteraction.swift:107"
+  ],
   "UITextItem": [],
   "NSToolbarItem": [],
-  "UICoordinateSpace": [],
+  "UICoordinateSpace": [
+   "uikit/Sources/OpenUIKit/UICoordinateSpace.swift:11"
+  ],
   "UIScrollEdgeElementContainerInteraction": [],
-  "UICollectionViewLayoutInvalidationContext": []
+  "UICollectionViewLayoutInvalidationContext": [
+   "uikit/Sources/OpenUIKit/UICollectionViewLayoutInvalidationContext.swift:10"
+  ]
  },
  "distinct_names": 86
 }

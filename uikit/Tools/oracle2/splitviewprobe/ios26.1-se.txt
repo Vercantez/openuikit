@@ -1,0 +1,146 @@
+oracle iOS=26.1 model=iPhone screen=(0.0, 0.0, 375.0, 667.0) scale=2.0
+enum style=[0, 1, 2] mode=[0, 1, 2, 3, 4, 5, 6] column=[0, 1, 2, 3, 4] behavior=[0, 1, 2, 3] edge=[0, 1] background=[0, 1] button=[0, 1, 2]
+weakDelegate nil=true
+defaults style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=[] children=[] primary=320.0 supplementary=-1.0
+config legacy auto=-3.4028234663852886e+38 gesture=true edge=0 background=1 primary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38
+arrayAB style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+sameAB style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+arrayA style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=["A"] children=[] primary=320.0 supplementary=-1.0
+arrayEmpty style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=[] children=[] primary=320.0 supplementary=-1.0
+mutatedWidths style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+config legacy auto=-3.4028234663852886e+38 gesture=true edge=0 background=1 primary=0.4,200.0,420.0
+delegate show HandledShow handled=true
+delegate detail HandledDetail handled=true
+handled style=0 loaded=false collapsed=false mode=1 preferred=0 behavior=n/a vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+defaults style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=[] children=[] primary=320.0 supplementary=-1.0
+config auto=-3.4028234663852886e+38 gesture=true edge=0 background=1 button=0 secondaryOnly=false primary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 supplementary=n/a secondary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 inspector=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38
+empty 0:nil:false 2:nil:false 3:nil:false 4:nil:false
+setPrimaryA style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A"] children=[] primary=320.0 supplementary=-1.0
+setPrimaryA 0:A:false 2:nil:false 3:nil:false 4:nil:false
+setSecondaryB style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+setSecondaryB 0:A:false 2:B:false 3:nil:false 4:nil:false
+ancestry A=nil splitSelf=false childSplit=false
+sameSecondaryB style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+clearSecondary style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A"] children=[] primary=320.0 supplementary=-1.0
+clearSecondary 0:A:false 2:nil:false 3:nil:false 4:nil:false
+setCompactC style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+setCompactC 0:A:false 2:B:false 3:C:false 4:nil:false
+clearCompact style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+mutatedWidths style=1 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=320.0 supplementary=-1.0
+config auto=-3.4028234663852886e+38 gesture=true edge=0 background=1 button=0 secondaryOnly=false primary=0.4,280.0,200.0,420.0 supplementary=n/a secondary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 inspector=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38
+handled style=1 loaded=true collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "HandledDetail"] children=[] primary=320.0 supplementary=-1.0
+defaults style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=[] children=[] primary=280.0 supplementary=320.0
+config auto=-3.4028234663852886e+38 gesture=true edge=0 background=1 button=0 secondaryOnly=false primary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 supplementary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 secondary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 inspector=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38
+empty 0:nil:false 1:nil:false 2:nil:false 3:nil:false 4:nil:false
+setPrimaryA style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A"] children=[] primary=280.0 supplementary=320.0
+setPrimaryA 0:A:false 1:nil:false 2:nil:false 3:nil:false 4:nil:false
+setSecondaryB style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=280.0 supplementary=320.0
+setSecondaryB 0:A:false 1:nil:false 2:B:false 3:nil:false 4:nil:false
+ancestry A=nil splitSelf=false childSplit=false
+sameSecondaryB style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=280.0 supplementary=320.0
+clearSecondary style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A"] children=[] primary=280.0 supplementary=320.0
+clearSecondary 0:A:false 1:nil:false 2:nil:false 3:nil:false 4:nil:false
+setCompactC style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=280.0 supplementary=320.0
+setCompactC 0:A:false 1:nil:false 2:B:false 3:C:false 4:nil:false
+clearCompact style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "B"] children=[] primary=280.0 supplementary=320.0
+mutatedWidths style=2 loaded=false collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "S", "B"] children=[] primary=280.0 supplementary=320.0
+config auto=-3.4028234663852886e+38 gesture=true edge=0 background=1 button=0 secondaryOnly=false primary=0.4,280.0,200.0,420.0 supplementary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 secondary=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38 inspector=-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38,-3.4028234663852886e+38
+handled style=2 loaded=true collapsed=false mode=1 preferred=0 behavior=1/0 vcs=["A", "S", "HandledDetail"] children=[] primary=280.0 supplementary=320.0
+delegate mode 2
+event A willMove UISplitViewController
+event A didMove UISplitViewController
+event A load
+delegate collapsed
+style0 defaultWindow style=0 loaded=true collapsed=true mode=2 preferred=0 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+container A frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=UISplitViewController
+style0 beside style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+container A frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=UISplitViewController
+style0 absolute280 style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+container A frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=UISplitViewController
+style0 fraction0.4 style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+container A frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=UISplitViewController
+style0 minimum400 style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+style0 maximum300 style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+style0 trailing style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+container A frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=UISplitViewController
+style0 mode1 style=0 loaded=true collapsed=true mode=2 preferred=1 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+style0 mode2 style=0 loaded=true collapsed=true mode=2 preferred=2 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+style0 mode3 style=0 loaded=true collapsed=true mode=2 preferred=3 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+delegate detail ChildDetail handled=true
+style0 childDetail style=0 loaded=true collapsed=true mode=2 preferred=3 behavior=n/a vcs=["A"] children=["A"] primary=375.0 supplementary=-1.0
+delegate mode 2
+event A willMove nav[A]
+event A load
+event HandledDetail willMove nav[HandledDetail]
+event HandledDetail load
+delegate collapsed
+event HandledDetail didMove nav[HandledDetail]
+style1 defaultWindow style=1 loaded=true collapsed=true mode=2 preferred=0 behavior=1/0 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+container nav[A,nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[HandledDetail]]
+window 0:A:false 2:HandledDetail:true 3:nil:false 4:nil:false
+style1 beside style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+container nav[A,nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[HandledDetail]]
+style1 absolute280 style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+container nav[A,nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[HandledDetail]]
+style1 fraction0.4 style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+container nav[A,nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[HandledDetail]]
+style1 minimum400 style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+style1 maximum300 style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+style1 trailing style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+container nav[A,nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[HandledDetail]]
+style1 mode1 style=1 loaded=true collapsed=true mode=2 preferred=1 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+style1 mode2 style=1 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+style1 mode3 style=1 loaded=true collapsed=true mode=2 preferred=3 behavior=1/2 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+style1 hidePrimary style=1 loaded=true collapsed=true mode=2 preferred=3 behavior=1/2 vcs=["A"] children=["nav[A,nav[HandledDetail]]"] primary=375.0 supplementary=-1.0
+hidePrimary 0:A:false 2:HandledDetail:true 3:nil:false 4:nil:false
+style1 showPrimary style=1 loaded=true collapsed=true mode=2 preferred=3 behavior=1/2 vcs=["A"] children=["nav[A]"] primary=375.0 supplementary=-1.0
+showPrimary 0:A:true 2:HandledDetail:false 3:nil:false 4:nil:false
+delegate mode 2
+event S willMove nav[S]
+event S load
+event A willMove nav[A]
+event A load
+event HandledDetail willMove nav[HandledDetail]
+event HandledDetail load
+delegate collapsed
+event A didMove nav[A]
+event HandledDetail didMove nav[HandledDetail]
+style2 defaultWindow style=2 loaded=true collapsed=true mode=2 preferred=0 behavior=1/0 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+container nav[A,nav[S],nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[S],nav[HandledDetail]]
+window 0:A:false 1:S:false 2:HandledDetail:true 3:nil:false 4:nil:false
+style2 beside style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+container nav[A,nav[S],nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[S],nav[HandledDetail]]
+style2 absolute280 style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+container nav[A,nav[S],nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[S],nav[HandledDetail]]
+style2 fraction0.4 style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+container nav[A,nav[S],nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[S],nav[HandledDetail]]
+style2 minimum400 style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 maximum300 style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 trailing style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+container nav[A,nav[S],nav[HandledDetail]] frame=(0.0, 0.0, 375.0, 667.0) absolute=(0.0, 0.0, 375.0, 667.0)
+frame A (0.0, 0.0, 375.0, 667.0) child=nil parent=nav[A,nav[S],nav[HandledDetail]]
+style2 mode1 style=2 loaded=true collapsed=true mode=2 preferred=1 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 mode2 style=2 loaded=true collapsed=true mode=2 preferred=2 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 mode3 style=2 loaded=true collapsed=true mode=2 preferred=3 behavior=1/2 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 mode4 style=2 loaded=true collapsed=true mode=2 preferred=4 behavior=1/1 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 mode5 style=2 loaded=true collapsed=true mode=2 preferred=5 behavior=1/2 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 mode6 style=2 loaded=true collapsed=true mode=2 preferred=6 behavior=1/3 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+style2 hidePrimary style=2 loaded=true collapsed=true mode=2 preferred=6 behavior=1/3 vcs=["A"] children=["nav[A,nav[S],nav[HandledDetail]]"] primary=375.0 supplementary=375.0
+hidePrimary 0:A:false 1:S:false 2:HandledDetail:true 3:nil:false 4:nil:false
+style2 showPrimary style=2 loaded=true collapsed=true mode=2 preferred=6 behavior=1/3 vcs=["A"] children=["nav[A]"] primary=375.0 supplementary=375.0
+showPrimary 0:A:true 1:S:false 2:HandledDetail:false 3:nil:false 4:nil:false
+DONE

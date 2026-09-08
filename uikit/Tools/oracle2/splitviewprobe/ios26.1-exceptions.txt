@@ -1,0 +1,8 @@
+legacy-splitBehavior
+*** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'This API requires initializing the UISplitViewController with -initWithStyle:'
+
+double-supplementaryWidth
+*** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: 'UISplitViewController supplementaryColumnWidth properties unsupported for style = DoubleColumn'
+
+duplicate-column
+*** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: '<UIViewController: 0x110706370> is already specified as the view controller for the secondary column. Split view controller: <UISplitViewController: 0x10500e000>'

@@ -7,8 +7,8 @@
    "deferred": 1421
   },
   "new": {
-   "declared": 2242,
-   "implemented": 3359,
+   "declared": 1922,
+   "implemented": 3679,
    "deferred": 1252,
    "not-applicable": 3
   }
@@ -22,9 +22,9 @@
    "not-applicable": 1588
   },
   "new": {
-   "declared": 2052,
+   "declared": 1702,
    "deferred": 1208,
-   "implemented": 1738,
+   "implemented": 2088,
    "not-applicable": 1588
   }
  },
@@ -32,8 +32,8 @@
   "module": "Assignables",
   "old": null,
   "new": {
-   "implemented": 314,
-   "declared": 1572
+   "implemented": 343,
+   "declared": 1543
   }
  },
  {
@@ -45,10 +45,22 @@
    "unavailable": 319
   },
   "new": {
-   "implemented": 2932,
-   "deferred": 262,
+   "implemented": 2980,
+   "deferred": 214,
    "declared": 39,
    "unavailable": 1
+  }
+ },
+ {
+  "module": "AuthenticationServices",
+  "old": {
+   "implemented": 1248,
+   "deferred": 848
+  },
+  "new": {
+   "implemented": 1261,
+   "deferred": 38,
+   "not-applicable": 797
   }
  },
  {
@@ -59,8 +71,8 @@
    "deferred": 269
   },
   "new": {
-   "declared": 1707,
-   "implemented": 3681,
+   "implemented": 3996,
+   "declared": 1392,
    "deferred": 244
   }
  },
@@ -81,9 +93,9 @@
    "not-applicable": 816
   },
   "new": {
-   "implemented": 2314,
-   "declared": 2580,
-   "deferred": 926,
+   "implemented": 2340,
+   "declared": 2566,
+   "deferred": 914,
    "not-applicable": 3654
   }
  },
@@ -130,6 +142,17 @@
   }
  },
  {
+  "module": "CoreLocationUI",
+  "old": {
+   "implemented": 32,
+   "declared": 773
+  },
+  "new": {
+   "implemented": 34,
+   "declared": 771
+  }
+ },
+ {
   "module": "CoreMedia",
   "old": {
    "deferred": 1167,
@@ -137,9 +160,9 @@
    "declared": 1600
   },
   "new": {
-   "implemented": 2111,
+   "implemented": 2460,
    "deferred": 267,
-   "declared": 1126
+   "declared": 777
   }
  },
  {
@@ -152,8 +175,7 @@
    "not-applicable": 578
   },
   "new": {
-   "implemented": 886,
-   "declared": 208,
+   "implemented": 1094,
    "unavailable": 16,
    "deferred": 576
   }
@@ -185,6 +207,31 @@
   }
  },
  {
+  "module": "DeviceActivity",
+  "old": {
+   "implemented": 216,
+   "deferred": 13,
+   "declared": 804,
+   "unavailable": 3
+  },
+  "new": {
+   "implemented": 240,
+   "deferred": 13,
+   "declared": 783
+  }
+ },
+ {
+  "module": "DeviceDiscoveryUI",
+  "old": {
+   "implemented": 19,
+   "declared": 1537
+  },
+  "new": {
+   "implemented": 20,
+   "declared": 1536
+  }
+ },
+ {
   "module": "GSS",
   "old": null,
   "new": {
@@ -199,8 +246,8 @@
    "unavailable": 39
   },
   "new": {
-   "implemented": 2019,
-   "declared": 587,
+   "implemented": 2319,
+   "declared": 287,
    "deferred": 39
   }
  },
@@ -235,9 +282,20 @@
    "deferred": 777
   },
   "new": {
-   "implemented": 3340,
-   "declared": 369,
-   "deferred": 451
+   "implemented": 3709,
+   "declared": 352,
+   "deferred": 99
+  }
+ },
+ {
+  "module": "JournalingSuggestions",
+  "old": {
+   "implemented": 141,
+   "declared": 790
+  },
+  "new": {
+   "implemented": 143,
+   "declared": 788
   }
  },
  {
@@ -245,6 +303,19 @@
   "old": null,
   "new": {
    "implemented": 294
+  }
+ },
+ {
+  "module": "ManagedAppDistribution",
+  "old": {
+   "implemented": 104,
+   "declared": 1538,
+   "deferred": 22
+  },
+  "new": {
+   "implemented": 106,
+   "declared": 1536,
+   "deferred": 22
   }
  },
  {
@@ -256,9 +327,9 @@
    "unavailable": 40
   },
   "new": {
-   "implemented": 22588,
+   "implemented": 22597,
    "deferred": 5025,
-   "declared": 809,
+   "declared": 800,
    "unavailable": 40
   }
  },
@@ -271,10 +342,9 @@
    "unavailable": 3
   },
   "new": {
-   "deferred": 328,
-   "implemented": 4013,
-   "unavailable": 3,
-   "declared": 203
+   "implemented": 4313,
+   "deferred": 231,
+   "unavailable": 3
   }
  },
  {
@@ -285,8 +355,8 @@
    "declared": 6
   },
   "new": {
-   "deferred": 585,
-   "implemented": 2795,
+   "deferred": 553,
+   "implemented": 2827,
    "declared": 2
   }
  },
@@ -311,9 +381,22 @@
    "deferred": 1027
   },
   "new": {
-   "implemented": 1921,
+   "implemented": 2225,
    "declared": 241,
-   "deferred": 885
+   "deferred": 581
+  }
+ },
+ {
+  "module": "PassKit",
+  "old": {
+   "implemented": 1318,
+   "deferred": 51,
+   "declared": 3904
+  },
+  "new": {
+   "implemented": 1320,
+   "deferred": 49,
+   "declared": 3904
   }
  },
  {
@@ -372,9 +455,9 @@
    "not-applicable": 62
   },
   "new": {
-   "implemented": 1541,
+   "implemented": 1559,
    "deferred": 180,
-   "declared": 6673,
+   "declared": 6655,
    "not-applicable": 7301
   }
  },
@@ -408,9 +491,9 @@
    "declared": 2560
   },
   "new": {
-   "implemented": 2977,
+   "implemented": 3285,
    "deferred": 58,
-   "declared": 549
+   "declared": 241
   }
  },
  {
@@ -436,6 +519,21 @@
   }
  },
  {
+  "module": "WebKit",
+  "old": {
+   "implemented": 1133,
+   "deferred": 26,
+   "declared": 261,
+   "not-applicable": 813
+  },
+  "new": {
+   "implemented": 1279,
+   "deferred": 26,
+   "declared": 115,
+   "not-applicable": 813
+  }
+ },
+ {
   "module": "WidgetKit",
   "old": {
    "deferred": 27,
@@ -445,9 +543,9 @@
   },
   "new": {
    "deferred": 17,
-   "implemented": 456,
+   "implemented": 467,
    "not-applicable": 777,
-   "declared": 1626
+   "declared": 1615
   }
  },
  {

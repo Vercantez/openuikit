@@ -104,9 +104,31 @@ open class UICollectionViewLayout {
     /// relayout.
     open func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool { false }
 
+    // collectionblockingprobe, iPhone 16 / iOS 26.1, base.invalidate.*:
+    // invalidateLayout() dispatches once to invalidateLayout(with:), even
+    // unattached, with both invalidateEverything/counts flags false.
+    open class var invalidationContextClass: AnyClass {
+        UICollectionViewLayoutInvalidationContext.self
+    }
+
+    private func makeInvalidationContext() -> UICollectionViewLayoutInvalidationContext {
+        let contextType = type(of: self).invalidationContextClass as? UICollectionViewLayoutInvalidationContext.Type
+        return (contextType ?? UICollectionViewLayoutInvalidationContext.self).init()
+    }
+
+    open func invalidationContext(forBoundsChange newBounds: CGRect)
+        -> UICollectionViewLayoutInvalidationContext {
+        makeInvalidationContext()
+    }
+
     /// Marks the cached geometry stale; the next query re-runs `prepare()`.
     open func invalidateLayout() {
+        invalidateLayout(with: makeInvalidationContext())
+    }
+
+    open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
         isPrepared = false
+        collectionView?._applyInvalidationAdjustments(context)
         collectionView?._layoutInvalidated()
     }
 

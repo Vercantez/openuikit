@@ -1,5 +1,5 @@
 {
- "source_commit": "a17b016727114d84ba851de57589aeb111d0b4be",
+ "source_commit": "0f397452f520444805d316660e4e985ece503d62",
  "artifact_date": "2026-09-16",
  "clock_date_note": "2026-09-16 is the explicitly requested measurement-series suffix; environment current_date is 2026-09-06.",
  "apps": [
@@ -280,7 +280,7 @@
   "VisualIntelligence",
   "WirelessInsights"
  ],
- "changed_or_added_ledgers": 38,
+ "changed_or_added_ledgers": 46,
  "heavy_names": [
   "ARKit",
   "AVFoundation",
@@ -366,7 +366,7 @@
   "WatchKit"
  ],
  "sdk_types": 737,
- "openuikit_types": 411,
+ "openuikit_types": 427,
  "wall_names": [
   "NSCollectionLayoutGroup",
   "NSCollectionLayoutItem",
@@ -457,13 +457,7 @@
  ],
  "wall_absent": [
   "NSToolbarItem",
-  "UICollectionViewController",
-  "UICollectionViewLayoutInvalidationContext",
-  "UICoordinateSpace",
-  "UIEditMenuInteraction",
   "UIScrollEdgeElementContainerInteraction",
-  "UISplitViewController",
-  "UISwipeGestureRecognizer",
   "UITextItem"
  ],
  "guest_foundation_files": 41,
