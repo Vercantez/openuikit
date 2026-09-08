@@ -86,6 +86,24 @@ class MiniAppFixtureTests(unittest.TestCase):
         self.tid, self.target = self.graph.pick_app_target(None)
         self.manifest = ingest.build_manifest(self.graph, self.tid, self.target)
 
+    def test_named_library_preserves_selected_app_source(self) -> None:
+        # Eidolon 44486ed: PBX target Kiosk must become an Eidolon library,
+        # without changing the 109-file target census or upstream entry point.
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            ingest.emit_tree(self.graph, self.manifest, out, UIKIT,
+                             module_name="Eidolon", library=True)
+            package = (out / "Package.swift").read_text()
+            self.assertIn('.library(name: "Eidolon", targets: ["Eidolon"])', package)
+            self.assertNotIn('.executableTarget(', package)
+            original = self.graph.source_root / "MiniApp/AppDelegate.swift"
+            self.assertEqual(original.read_bytes(),
+                             (out / "Sources/Eidolon/MiniApp/AppDelegate.swift").read_bytes())
+            manifest = json.loads((out / "source-manifest.json").read_text())
+            self.assertEqual(manifest["target"]["name"], "MiniApp")
+            self.assertEqual(manifest["generated"]["target_name"], "Eidolon")
+            self.assertTrue(manifest["generated"]["library"])
+
     def test_picks_application_target_not_tests(self) -> None:
         self.assertEqual(self.target["name"], "MiniApp")
         self.assertEqual(self.target["productType"], ingest.APP_PRODUCT_TYPE)

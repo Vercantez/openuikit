@@ -1613,6 +1613,7 @@ def emit_package_swift(
     *,
     openuikit: Path,
     target_name: str,
+    library: bool = False,
 ) -> str:
     rel = os.fspath(openuikit)
     products = [
@@ -1659,7 +1660,7 @@ def emit_package_swift(
     # swift:6.2-noble: "library product 'podcasts' should not contain
     # executable targets"). Application targets are always emitted as
     # executableTarget so @main / main.swift apps load the manifest.
-    executable = manifest.get("target", {}).get("product_type") == APP_PRODUCT_TYPE
+    executable = not library and manifest.get("target", {}).get("product_type") == APP_PRODUCT_TYPE
     product_decl = (
         f".executable(name: {_swift_string(target_name)}, targets: [{_swift_string(target_name)}])"
         if executable
@@ -1761,9 +1762,12 @@ def emit_tree(
     manifest: dict[str, Any],
     out_dir: Path,
     openuikit: Path,
+    *,
+    module_name: str | None = None,
+    library: bool = False,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    target_name = re.sub(r"[^A-Za-z0-9_]", "_", manifest["target"]["name"])
+    target_name = re.sub(r"[^A-Za-z0-9_]", "_", module_name or manifest["target"]["name"])
     if not target_name or target_name[0].isdigit():
         target_name = "App_" + target_name
     src_root = out_dir / "Sources" / target_name
@@ -1870,7 +1874,7 @@ def emit_tree(
     # Package.swift path to OpenUIKit is relative to the generated package.
     rel_openuikit = os.path.relpath(openuikit.resolve(), start=out_dir.resolve())
     package_text = emit_package_swift(
-        manifest, openuikit=Path(rel_openuikit), target_name=target_name
+        manifest, openuikit=Path(rel_openuikit), target_name=target_name, library=library
     )
     (out_dir / "Package.swift").write_text(package_text, encoding="utf-8")
 
@@ -1878,6 +1882,7 @@ def emit_tree(
     manifest_out["generated"] = {
         "package_swift": "Package.swift",
         "target_name": target_name,
+        "library": library,
         "openuikit": rel_openuikit,
         "resource_map": resource_map,
         "ingest_info": "Sources/" + target_name + "/Resources/ingest-info.json",
@@ -1958,6 +1963,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("project", type=Path, help=".xcodeproj, project.pbxproj, or an app checkout")
     parser.add_argument("--target", help="PBX native target name (default: the application target)")
+    parser.add_argument("--library", action="store_true", help="emit a library for a separate launch harness; preserves upstream entry-point source")
+    parser.add_argument("--module-name", help="generated module identity (PBX target selection is unchanged)")
     parser.add_argument("--configuration", help="XCBuildConfiguration name (default: FocusDebug/Debug/list default)")
     parser.add_argument("--out", type=Path, help="write Package.swift + sources + source-manifest.json here")
     parser.add_argument(
@@ -2001,7 +2008,8 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
-        emit_tree(graph, manifest, args.out, args.openuikit.resolve())
+        emit_tree(graph, manifest, args.out, args.openuikit.resolve(),
+                  module_name=args.module_name, library=args.library)
         print(f"wrote {args.out / 'Package.swift'}", file=sys.stderr)
         print(f"wrote {args.out / 'source-manifest.json'}", file=sys.stderr)
 
