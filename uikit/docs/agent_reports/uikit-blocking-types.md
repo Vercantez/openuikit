@@ -1,5 +1,8 @@
 # Measured UIKit blocking-type families
 
+Follow-up: [triple-column display-mode resolution](uikit-blocking-types4.md)
+closes the measured wider-mode state question; expanded rendering remains open.
+
 Branch: `agent/uikit-blocking-types`. Measurements: 2026-09-07 (America/Chicago),
 iOS 26.1 / 23B86. Census files retain the requested `2026-09-16` series suffix.
 
@@ -45,8 +48,9 @@ own simulator script and focused tests. Library constants cite those samples.
 ## Remaining behavioral limits
 
 - Split's expanded floating-sidebar pixels, safe areas, backdrop/separator,
-  inspector, interactive/adaptive and wider triple-column behavior remain
-  open. The basic container is not asserted to match expanded iPad pixels.
+  inspector and interactive/adaptive behavior remain
+  open. Wider triple-column display-mode resolution is measured in the follow-up
+  linked above; column geometry remains open. The basic container is not asserted to match expanded iPad pixels.
 - Edit-menu horizontal rendering, three private gestures, eight suggested
   system-menu groups and successful presentation/animation lifecycle remain
   unsupported. Descriptors and measured nonpresenting requests are supplied.
