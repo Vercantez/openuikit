@@ -1,5 +1,7 @@
 # Route (a): Focus selector wall
 
+> Latest result: [branch3 generic publisher proof](#resumed-2026-09-07-one-generic-publisher-blocker-closed): **68/77** selectors emittable, **7/7** new deliveries match iOS, **9 selectors / 10 attributes** still blocked. CHECK_ONLY passes; fresh iOS **112/113**, all **113 renders unchanged**. The original run remains below as historical evidence.
+
 Measured 2026-09-07 on branch `agent/route-a-selector-wall`, starting at
 `12bb634cdc3c7ea5fa4f044d5d2a42dedc25127e`. This is a compiler/dispatch probe;
 no rendering rule or upstream Focus source was changed. The dated 2026-09-16
@@ -307,6 +309,32 @@ before reporting the two expected errors in the unmodified app file. Re-running
 the existing two-cell Linux proof also passes **6/6 deliveries, 0 unresolved**,
 with both original source hashes preserved.
 
-The branch3 CHECK_ONLY gate will be recorded here after completion. No pixel
-rule, scene, golden, app source, package manifest, vendor pin, or file outside
-`uikit/` was changed by this resumed step.
+Final verification is carried in [route-a-generic-control-verification.json](route-a-generic-control-verification.json):
+
+* Exact requested command from the repository root:
+  `CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/route-a-selector-wall3`.
+  It checked implementation commit **4ade6744** against main **a87fd559**,
+  merged cleanly, and accepted **7 changed files, all under uikit/**. No
+  `ALLOW_PATHS`, `ALLOW_DROP`, or `RECAPTURE_APPS` override was set.
+* The log prints **`checks passed (CHECK_ONLY)`**, with **0 REFUSED lines**.
+  The process subsequently exits **128** in the documented cleanup path.
+* Catalyst **124/124**; Foundation-hidden guest compile **146 OpenUIKit +
+  12 OpenCoreGraphics files**; macOS test-bundle build green; all **12/12
+  real-app floors** hold.
+* Conformance: **707 frames**, **0 lower**, **487/487 passing board frames
+  held**. Nineteen scores improve in the merged main baseline; those are not
+  attributed to this ingest-only change.
+* Both clean Linux build passes succeed, including release `openrender`,
+  `ConformanceApps`, and `OpenUIKitTests`.
+* A final fresh `scripts/ios_suite.sh /tmp/suite-route-a-selector-wall3`
+  capture on the private SE 2x / iPhone 16 3x gives **112/113**, the same sole
+  `corner_radius` miss at **99.411**, zero layout issues. **113/113 rendered
+  PNG hashes exactly match** the carried before-change regression record.
+  Production sources, Package.swift, scene fixtures, and goldens also have an
+  empty git diff from starting commit `46f92fe9`; no production-source stash
+  is needed for that comparison.
+
+The final commit only records these verification results. No pixel rule,
+scene, golden, app source, package manifest, vendor pin, or file outside
+`uikit/` was changed by this resumed step. Generated Package.resolved and the
+SimScene app bundle are excluded from the branch.
