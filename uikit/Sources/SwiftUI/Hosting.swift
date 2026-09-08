@@ -4628,7 +4628,23 @@ private enum _ViewRenderer {
             let width = spacerIndices.contains(index)
                 ? spacerWidth
                 : min(widths[index], max(0, rect.maxX - x))
-            let height = min(size.height, rect.height)
+            // MEASURED HackersPillMetrics, iPhone 16 / iOS 26.1 @3x:
+            // narrowing the column to 294 pt wraps its headline, increasing
+            // its height from 77 to 97.333 pt. Keeping the pre-compression
+            // height places it 10.167 pt too low and clips its 26.333 pt
+            // capsules to 6 pt (14.333 pt labels to zero). Match measure's
+            // width proposal before resolving the child's vertical alignment.
+            let resolvedHeight: CGFloat
+            if OpenUIKitRuntime.systemFontCut == .iOS, width < size.width {
+                resolvedHeight = measure(
+                    children[index],
+                    proposed: CGSize(width: max(0, width), height: rect.height),
+                    environment: environment
+                ).height
+            } else {
+                resolvedHeight = size.height
+            }
+            let height = min(resolvedHeight, rect.height)
             let y: CGFloat
             switch alignment.value {
             case .top: y = rect.minY
