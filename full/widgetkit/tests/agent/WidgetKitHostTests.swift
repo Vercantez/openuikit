@@ -26,6 +26,27 @@ private struct _PushHandler: ControlPushHandler {
     }
 }
 
+private final class _ControlValueResult<Value>: @unchecked Sendable {
+    var value: Value?
+    var error: NSError?
+}
+
+private func _waitForControlValue(
+    timeout: TimeInterval = 2,
+    _ operation: @escaping @Sendable () async -> Void
+) {
+    let finished = _ControlValueResult<Bool>()
+    Task.detached {
+        await operation()
+        finished.value = true
+    }
+    let deadline = Date().addingTimeInterval(timeout)
+    while finished.value == nil, Date() < deadline {
+        Thread.sleep(forTimeInterval: 0.001)
+    }
+    precondition(finished.value == true, "control value operation timed out")
+}
+
 func testWidgetPreviewContextStoresFamily() {
     let preview = WidgetPreviewContext(family: .systemLarge)
     precondition(preview.family == .systemLarge)
@@ -144,6 +165,36 @@ func testControlValueProviderPreview() {
 func testAppIntentControlValueProviderPreview() {
     let provider = _IntentValueProvider()
     precondition(ControlValueHost.preview(provider, configuration: _ControlIntent()) == 7)
+}
+
+func testControlValueProviderCurrentValueFailure() {
+    let result = _ControlValueResult<Bool>()
+    _waitForControlValue {
+        do {
+            result.value = try await _BoolValueProvider().currentValue()
+        } catch {
+            result.error = error as NSError
+        }
+    }
+    precondition(result.value == nil)
+    precondition(result.error?.domain == "WidgetKit")
+    precondition(result.error?.code == 1)
+}
+
+func testAppIntentControlValueProviderCurrentValueFailure() {
+    let result = _ControlValueResult<Int>()
+    _waitForControlValue {
+        do {
+            result.value = try await _IntentValueProvider().currentValue(
+                configuration: _ControlIntent()
+            )
+        } catch {
+            result.error = error as NSError
+        }
+    }
+    precondition(result.value == nil)
+    precondition(result.error?.domain == "WidgetKit")
+    precondition(result.error?.code == 1)
 }
 
 func testStaticControlConfigurationKind() {
