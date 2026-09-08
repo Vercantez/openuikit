@@ -1,0 +1,13 @@
+{
+  "bundle_identifier": "net.artsy.kiosk.beta",
+  "display_name": "Kiosk \u03b2",
+  "keys": {
+    "CFBundleDisplayName": "Kiosk \u03b2",
+    "CFBundleExecutable": "$(EXECUTABLE_NAME)",
+    "CFBundleIdentifier": "net.artsy.kiosk.beta",
+    "CFBundleName": "Kiosk",
+    "CFBundleShortVersionString": "5.9.3",
+    "CFBundleVersion": "2018.02.07"
+  },
+  "product_name": "Kiosk"
+}

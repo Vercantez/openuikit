@@ -33,6 +33,13 @@
       "commit": "1c6f02c7ed8140c0ba7a783aaddb6e0685a0037b",
       "tree": "66a9d91efc910c7577e40b2dec166a2de427594a",
       "destination": "scratch/opencombine-core-durable-20260828-r2/source"
+    },
+    {
+      "id": "eidolon",
+      "repository": "https://github.com/artsy/eidolon.git",
+      "commit": "44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "tree": "0ed18d46bbf1dfec16eb83b1df129eeeb48fa0c4",
+      "destination": "scratch/ladder-corpus/eidolon"
     }
   ]
 }

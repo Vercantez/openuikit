@@ -130,6 +130,12 @@ enum StoreKitJWSCodec {
         guard header["alg"] as? String == "ES256" else {
             throw VerificationResult<Transaction>.VerificationError.invalidSignature
         }
+        // StoreKit signed values use a protected JWS header.  Accept an absent
+        // `typ` for forward compatibility, but never accept a value claiming a
+        // different envelope type.
+        if let type = header["typ"] as? String, type != "JWS" {
+            throw VerificationResult<Transaction>.VerificationError.invalidEncoding
+        }
         guard signatureData.count == 64 else {
             throw VerificationResult<Transaction>.VerificationError.invalidSignature
         }
@@ -180,14 +186,21 @@ enum StoreKitJWSCodec {
     }
 
     static func base64urlDecode(_ string: String) -> Data? {
+        // RFC 7515 compact serialization uses the URL-safe, unpadded alphabet.
+        // Foundation's base64 decoder is intentionally permissive in some
+        // configurations, so validate the wire representation before padding.
+        guard !string.contains("=") else { return nil }
         var base64 = ""
         for character in string {
             if character == "-" {
                 base64.append("+")
             } else if character == "_" {
                 base64.append("/")
-            } else {
+            } else if character.isASCII,
+                      character.isLetter || character.isNumber {
                 base64.append(character)
+            } else {
+                return nil
             }
         }
         let remainder = base64.count % 4

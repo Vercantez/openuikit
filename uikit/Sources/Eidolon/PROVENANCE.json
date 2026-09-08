@@ -1,0 +1,593 @@
+{
+  "repository": "https://github.com/artsy/eidolon.git",
+  "commit": "44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+  "tree": "0ed18d46bbf1dfec16eb83b1df129eeeb48fa0c4",
+  "upstream_source_changes": 0,
+  "files": [
+    {
+      "source": "Kiosk/App/Logger.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Logger.swift",
+      "sha256": "f662a5c614a16fa745ec18a864b0511de43e7f13c20d690a606d9db68079d582"
+    },
+    {
+      "source": "Kiosk/App/Views/Button Subclasses/Button.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/Button Subclasses/Button.swift",
+      "sha256": "6b5bee4bb5d44e77f741ace787a3899767b2b07b91aebbe19eb61f4a8d8cfaa3"
+    },
+    {
+      "source": "Kiosk/App/CardHandler.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/CardHandler.swift",
+      "sha256": "15f30d10e59899b7d652b4fee7604eed1002240e48787a00a2d0b85c33d61c19"
+    },
+    {
+      "source": "Kiosk/App/Networking/ArtsyAPI.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Networking/ArtsyAPI.swift",
+      "sha256": "466dd3e0958c3e8ed718b55863614b56e84d5c998a47081da83e96a80a13c35c"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/KeypadView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadView.swift",
+      "sha256": "4594d09856c2e8acb632930ff06feff7b3dcc96fe6119da0bea604cad7685386"
+    },
+    {
+      "source": "Kiosk/App/Constants.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Constants.swift",
+      "sha256": "3f79e90dbe4e4688ac72f7d839037bef85c6f494f9fdbd87aa31f06532a4970a"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+      "sha256": "678204a6fc1535d01c2c1a14a119e2c9603fe7a07aa76ee195b08073916df7c2"
+    },
+    {
+      "source": "Kiosk/Auction Listings/ListingsViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift",
+      "sha256": "11bd990c474d2da7e8a6179e31a345c60a24dea4d5016c38ecd040edfbdfa6e3"
+    },
+    {
+      "source": "Kiosk/App/GlobalFunctions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/GlobalFunctions.swift",
+      "sha256": "6646fc75c4346a7bb88f0b9ae9c4bb3812fb5688c4ad6a430c1b2e9f0c4c49d6"
+    },
+    {
+      "source": "Kiosk/App/Networking/NetworkLogger.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Networking/NetworkLogger.swift",
+      "sha256": "79f1dab2c112794f85ef0323b846277a14d5c5714c4aa7b7a79b68d3d9157ff5"
+    },
+    {
+      "source": "Kiosk/Observable+Operators.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Observable+Operators.swift",
+      "sha256": "eefcfba2692a0e70a54322516f712491dccf6700957faad822aeaad848d4233f"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/LoadingViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewController.swift",
+      "sha256": "870065d1b0ba453eabc6a3a40afa2121d36c1551f71d633d47a0e97bb5afe12b"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+      "sha256": "b6454165679c4b028e7aadffdc2615f30b89215ef3fbbb1287d28348deb6afa7"
+    },
+    {
+      "source": "Kiosk/App/Views/SwitchView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/SwitchView.swift",
+      "sha256": "82f6f1b520c01e5220482147a08f5e57cd2f775be71b68ab2910dbf261e92590"
+    },
+    {
+      "source": "Kiosk/App/Models/Image.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Image.swift",
+      "sha256": "e04133f2f707960bea0db0b9711c80887bb622b73c8e24c54a54c9acaf336f89"
+    },
+    {
+      "source": "Kiosk/App/Models/CreditCard.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/CreditCard.swift",
+      "sha256": "36d8a9e6ee76fa3c8e1b178b188876c84a4d0c4d032f3823bc7adda47a8aad3a"
+    },
+    {
+      "source": "Kiosk/App/Models/SystemTime.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/SystemTime.swift",
+      "sha256": "cbfd5b2fe22f53ac0e1a4d768f8209878d9285df867e0a9aa414ef9a261d1667"
+    },
+    {
+      "source": "Kiosk/Observable+JSONAble.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Observable+JSONAble.swift",
+      "sha256": "1f807ee23a5995abd60beb4c1cfc8e44c1193876cb9180b65eb657c86fb39fe7"
+    },
+    {
+      "source": "Kiosk/App/APIPingManager.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/APIPingManager.swift",
+      "sha256": "2f1764df1c4706d364aa647edc3af997bbe392cf1f84ca98b6b035193bf85536"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/RegisterViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/RegisterViewController.swift",
+      "sha256": "8ea0790d61b058484892cfed0e6fc288fb711cb33974fe08a9181075ca517ab7"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+      "sha256": "0720280e9fd0038d081d11b1bdd70234d03cd0d0aea02c7b4064d3745320cba9"
+    },
+    {
+      "source": "Kiosk/App/MarkdownParser.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/MarkdownParser.swift",
+      "sha256": "5a8869975a16987c04a5e12bfeb6b307c176c1f325a10fc67fb2d2c2d8a226d2"
+    },
+    {
+      "source": "Kiosk/Admin/AuctionWebViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Admin/AuctionWebViewController.swift",
+      "sha256": "861fc5ca4418dddc30e06f310b7664fd1f25acc3bee17201f2b23218a2cd4849"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+      "sha256": "29e9883c9a2d0a9ac6b43b96fa6ed7bf04e3aa42a5e3b3d7542dfc60900ce9a0"
+    },
+    {
+      "source": "Kiosk/App/UIViewSubclassesErrorExtensions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/UIViewSubclassesErrorExtensions.swift",
+      "sha256": "2221d454a55b4940d4f0d7d2d1ca8f577a3ea2ffa70960fcab373fda11f1e037"
+    },
+    {
+      "source": "Kiosk/App/AppDelegate.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+      "sha256": "ec7e39ea137f2a4b5db0f00c2ffcfc77e22e233402ac432b45e8fb79c532bbfd"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+      "sha256": "5763e059151e6cec5ef236aa857bab42c59c574372174cd5d8a267d6a32a2663"
+    },
+    {
+      "source": "Kiosk/App/SwiftExtensions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/SwiftExtensions.swift",
+      "sha256": "a4a9f4a5e6c1f8a145eff14aae9fa69f8db6d125499ded36cb189e24909c9771"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+      "sha256": "1fd1972d2853fe845386df6510b72cb4962e7ed22d7277b521be19d73aa630a6"
+    },
+    {
+      "source": "Kiosk/App/Views/SimulatorOnlyView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/SimulatorOnlyView.swift",
+      "sha256": "d5a72a9905f2fb34fd25a44e51cd001b739d485af0761545ff5425022ce095b9"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/Models/RegistrationCoordinator.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/Models/RegistrationCoordinator.swift",
+      "sha256": "e8fd6cf64adc7a732e1b1c8b8b8a5c75a1df5060cd0553023a36b286698a9e68"
+    },
+    {
+      "source": "Kiosk/Sale Artwork Details/SaleArtworkZoomViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkZoomViewController.swift",
+      "sha256": "8e90956bf92c4326e7cf6a2fc61314873c1fa31ecae771da3ab63076fcd53aaa"
+    },
+    {
+      "source": "Kiosk/App/Networking/Networking.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Networking/Networking.swift",
+      "sha256": "0f1c28001effaf2f206377dadac0b0e5a918881f892b83e14b5a1a54e9ed5e80"
+    },
+    {
+      "source": "Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift",
+      "sha256": "8ce0f0a1064dd59f6c2260b4a986e9326549e3d4f0004e2fa976cfae99a0d0f6"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+      "sha256": "2ed24b75556f7c8e633b7739574d428fbeaf289c16896fa18c7ed78943c27b71"
+    },
+    {
+      "source": "Kiosk/Auction Listings/ListingsCountdownManager.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Auction Listings/ListingsCountdownManager.swift",
+      "sha256": "fcbb880254dce268e437bceaca55a9279e4a95d20fb224450a4bc6d98d862e0c"
+    },
+    {
+      "source": "Kiosk/Sale Artwork Details/ImageTiledDataSource.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Sale Artwork Details/ImageTiledDataSource.swift",
+      "sha256": "120f37f038acb2927a0c8e6e60451f12688660c73fe849148c8f65daeae9129e"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+      "sha256": "67254ce0bcb84a9d32762b6042b211f14d16087883a1df2f05ca6184473ac354"
+    },
+    {
+      "source": "Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+      "sha256": "8867d84db29f64107a0bb2aa2de44e83255e8bbe01a292a40deaee651a833a16"
+    },
+    {
+      "source": "Kiosk/Admin/ChooseAuctionViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+      "sha256": "af3f82eb36aa726b2548cadca44e87414813a10530afa54695db5faebd46e4e2"
+    },
+    {
+      "source": "Kiosk/Auction Listings/ListingsViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Auction Listings/ListingsViewModel.swift",
+      "sha256": "24149309a720c8f8fdaf7a48e581ce1da7440c21562d96e158cac82131ed3704"
+    },
+    {
+      "source": "Kiosk/App/Models/Sale.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Sale.swift",
+      "sha256": "99f94f52ddd274de3dbb44a5b6351998a0fa7334a6f358fd561feae10d1a5715"
+    },
+    {
+      "source": "Kiosk/Admin/AdminLogViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Admin/AdminLogViewController.swift",
+      "sha256": "d3d6110cd7183b91b6002d9489055b7587001b6da285eba5db94a30799cc156e"
+    },
+    {
+      "source": "Kiosk/App/Models/User.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/User.swift",
+      "sha256": "aa489e02cf699589671c32edc72c10ecdaaa50c1e5212e95d5ad27f94c671c39"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+      "sha256": "32949c83175444694c287eb7639545ad87589ecb4de37beccb92f908eec809b2"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+      "sha256": "d2c9ac0f9f6a79feea01af2cc290621f8b8f9f45efaa1f1fe449fba3dd74fa71"
+    },
+    {
+      "source": "Kiosk/UIKit+Rx.swift",
+      "vendored": "Sources/Eidolon/Kiosk/UIKit+Rx.swift",
+      "sha256": "8c86eebd1db692cd2b0604a6d15f4da31e41e7ebf8178bd171e84bd947ce0754"
+    },
+    {
+      "source": "Kiosk/App/Networking/XAppToken.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Networking/XAppToken.swift",
+      "sha256": "ba5ef1e3000af7ff95791049b7749563ba1135d75b29fec1a92b1c746f08bd10"
+    },
+    {
+      "source": "Kiosk/App/Views/Text Fields/TextField.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/Text Fields/TextField.swift",
+      "sha256": "e16bf5308574f93c8a4b0e1f7a3cd114704defcdfdc2d84566479aaa5a38f5c1"
+    },
+    {
+      "source": "Kiosk/Storyboards/UIStoryboardExtensions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Storyboards/UIStoryboardExtensions.swift",
+      "sha256": "ac7091723481e276a39d924051b32f3149560dbf5712ebd73074d5a976793b86"
+    },
+    {
+      "source": "Kiosk/App/Models/Card.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Card.swift",
+      "sha256": "9d868283dcae189218dc29703ab1969098e9314daef94bd8ab21ecfecf68c867"
+    },
+    {
+      "source": "Kiosk/App/Models/BidderPosition.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/BidderPosition.swift",
+      "sha256": "bf5e4044a0017cbd49afffd119a69a1ecf5d3f3b9b273cca5f853ccc4cbe48ed"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+      "sha256": "9abb52355efa832fcebfa5011e9b5286732c1766ce746a40dad0438ffeb06440"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+      "sha256": "5b5b4b37e21cc594dddf7f8d0e386254b6f1f6c28b53d41d25a6ffe890dc47b3"
+    },
+    {
+      "source": "Kiosk/App/Models/Artist.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Artist.swift",
+      "sha256": "0980c835b281462dbd3e91bf522892fd32b865671fc64563ba16227c62285065"
+    },
+    {
+      "source": "Kiosk/App/Views/Text Fields/CursorView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/Text Fields/CursorView.swift",
+      "sha256": "570ab73973e9c6e3cf54217c630e1d1ac732176261446ebbb5908417905bbe90"
+    },
+    {
+      "source": "Kiosk/Admin/AdminCardTestingViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Admin/AdminCardTestingViewController.swift",
+      "sha256": "a9a3ddef6abcb4e37ccd363aefedde0afa3f9d5906873c71addd3a78c4aa06a0"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+      "sha256": "011cc82f1aa9c7f58fab6fb19ed4e4aa4de0824a001efba4925a8486d514a0b2"
+    },
+    {
+      "source": "Kiosk/App/Views/RegisterFlowView.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/RegisterFlowView.swift",
+      "sha256": "35c5f1f555792974ac1bf165475dbfc8e06c017fa5b2b4b286dafc9194326979"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+      "sha256": "acb4cdb0914886ab1d6951804709420ee5f7e53bfedb30d210da512c8d93e074"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/Models/NewUser.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/Models/NewUser.swift",
+      "sha256": "39a9f790605d3041a702445962147ccf7c81a71680b8d3e9349d548ed7b8f98d"
+    },
+    {
+      "source": "Kiosk/Help/HelpViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+      "sha256": "7dc1c8111511a7f8b1eb87d05e8272f1361312c9113c58a6f64a769a97ca24d9"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+      "sha256": "21bee6ed6d0f76de629ab56d676806d0249afcc72546befa30e09e71e9f29a09"
+    },
+    {
+      "source": "Kiosk/Auction Listings/TableCollectionViewCell.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Auction Listings/TableCollectionViewCell.swift",
+      "sha256": "1a10b387b076cedb674e64846ce9fb94d639d01371967ad075bd113c3c519e65"
+    },
+    {
+      "source": "Kiosk/App/AppDelegate+GlobalActions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+      "sha256": "99f9060f0a09c3c5d16f9a7a971c9be5619461434025cf0c4fb234a8dc51161a"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+      "sha256": "389f1f55a7b51b850b5c2f56f7eac88d87afa5513e70f8683d79f8cc6aaaa0be"
+    },
+    {
+      "source": "Kiosk/App/Models/Bidder.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Bidder.swift",
+      "sha256": "d67b127d6c407cab3027aabab1688e812eaab13b301e3cde2aa33395de57a8e7"
+    },
+    {
+      "source": "Kiosk/Help/HelpAnimator.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Help/HelpAnimator.swift",
+      "sha256": "09c1644de97f584a0a81e3074c01983156003bf9a47049c4e1d8c7759b52e951"
+    },
+    {
+      "source": "Kiosk/Admin/PasswordAlertViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Admin/PasswordAlertViewController.swift",
+      "sha256": "7623b0b006bfa1bfb25596c97b49ba037a254292b5e90251ec98eb26a05821c6"
+    },
+    {
+      "source": "Kiosk/App/AppViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/AppViewController.swift",
+      "sha256": "c1192d7bcc60a99c23aeb45e1617a2b7e9740e5d73e24198c28ede0a1dc10f0f"
+    },
+    {
+      "source": "Kiosk/App/Models/GenericError.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/GenericError.swift",
+      "sha256": "a9fb5af2432a3d4e46c3da50547c3bb570000aecb80625e92c1c5357f2744a02"
+    },
+    {
+      "source": "Kiosk/App/AppSetup.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/AppSetup.swift",
+      "sha256": "0ec5cdf2586c8bbee17e70d8fe291030d9243036ee5d3b7ed0e978bd77009028"
+    },
+    {
+      "source": "Kiosk/ListingsCollectionViewCell.swift",
+      "vendored": "Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift",
+      "sha256": "431ed9ec05a8592ef3b738d3ac2c5d664b70ff85e6c8342c516e244cd67894d1"
+    },
+    {
+      "source": "Kiosk/Observable+Logging.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Observable+Logging.swift",
+      "sha256": "8e53ec469a80ee7ba82de295bbc26ca877d12de429465aba2076a02e46a613a5"
+    },
+    {
+      "source": "Kiosk/Auction Listings/WebViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Auction Listings/WebViewController.swift",
+      "sha256": "369a0b568b73d8b623dd3514f4b5dda888b7755edd97b38c84752cf34a5342dc"
+    },
+    {
+      "source": "Kiosk/App/UIViewControllerExtensions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/UIViewControllerExtensions.swift",
+      "sha256": "42502f8593e88042bba43564f3bf2e9619b8e261069615e4954b3023808b003e"
+    },
+    {
+      "source": "Kiosk/App/NSErrorExtensions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/NSErrorExtensions.swift",
+      "sha256": "caecb06360f4402892fb10c3b2c95369fb41ad621053eebb2db81692e274a8be"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/FulfillmentContainerViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentContainerViewController.swift",
+      "sha256": "0681b40ab37d6fa5b6176d84ac16d24f4bab57061aed5d2bdb51fb2a0e97ea3e"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/RegistrationPostalZipViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPostalZipViewController.swift",
+      "sha256": "c504172773670149b81f099b9f2f590c6713c4dc19392c83421916b9e21722a9"
+    },
+    {
+      "source": "Kiosk/App/Models/Bid.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Bid.swift",
+      "sha256": "bcf8ff1edb74c4c3bd231c851b971c4516a8d8538411a3d4495c1a44bb4a055d"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+      "sha256": "96f95d6e949175eda4da04a9442d96b32b0a9c656bf254782af466dedaa74e58"
+    },
+    {
+      "source": "Kiosk/Admin/AdminPanelViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Admin/AdminPanelViewController.swift",
+      "sha256": "2d4ccbfcd4f1f39fc23e52761f899562d6bcbe7b43119520b5642090c1328e93"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+      "sha256": "1d2bd1ce1083d2ca3400bf86a38912d02e66b3a83062416c9db9bf8aff85cf24"
+    },
+    {
+      "source": "Kiosk/App/Models/Artwork.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Artwork.swift",
+      "sha256": "2e1dd46eb1b5dbbd27f989aa610ac0ab481b2f64aa60aeb6f724ed23fb15325b"
+    },
+    {
+      "source": "Kiosk/App/Models/SaleArtworkViewModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/SaleArtworkViewModel.swift",
+      "sha256": "a817e7e82604eb5fb7ac6dd3737f8f4d58b67550ca455769643ea5e451a58f1a"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+      "sha256": "2c745e24910d1dd82de10965898d321cb04d16c10520d33bcae27880d24e5a47"
+    },
+    {
+      "source": "Kiosk/App/Networking/UserCredentials.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Networking/UserCredentials.swift",
+      "sha256": "aafedf9c8c62c91a9c08be0ec5ab03c996026534ead7e4dcf8b4b8b5602b1282"
+    },
+    {
+      "source": "Kiosk/App/Views/Spinner.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Views/Spinner.swift",
+      "sha256": "cdfffa8cab5915f2290da479c98c098caad29f489604c4e6a96d271dce67ce20"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+      "sha256": "cea969c114aaf0bd3f8596b5ca0bb5d6c56061b33750a0715e4e95889f0f29e9"
+    },
+    {
+      "source": "Kiosk/App/Networking/APIKeys.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Networking/APIKeys.swift",
+      "sha256": "f60a8df0f4001821fafffe5deb6373cb987ff6aa68dfb42563c6164d81e94783"
+    },
+    {
+      "source": "Kiosk/App/BidderDetailsRetrieval.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/BidderDetailsRetrieval.swift",
+      "sha256": "36cd03ed1c816eb3570448ca85db736a25b6fa5dc084cba4fdaed60121cd6aeb"
+    },
+    {
+      "source": "Kiosk/UIView+LongPressDisplayMessage.swift",
+      "vendored": "Sources/Eidolon/Kiosk/UIView+LongPressDisplayMessage.swift",
+      "sha256": "279c087957374ec03e58fc2f70af3ffc55eac7363be3ede53f2c457f5d0b7061"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+      "sha256": "54a5d8ca74a59134b11a90bccc31e87a545a5a28bf282ccfb56941661e2ac268"
+    },
+    {
+      "source": "Kiosk/App/Models/JSONAble.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/JSONAble.swift",
+      "sha256": "43cb332d4f982f918378c9ec9af47b1d57d691e3f8a03cf5e71a2685b267c449"
+    },
+    {
+      "source": "Kiosk/App/UIStoryboardSegueExtensions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/UIStoryboardSegueExtensions.swift",
+      "sha256": "5975f08d74df4cae4aeb414be9bbd38dc7bf5d20bad6432d90740cbb9e3ef522"
+    },
+    {
+      "source": "Kiosk/App/Models/Location.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/Location.swift",
+      "sha256": "e83d3898ba6952f14e809fa3f517e29640ffe74b698dc2facac59f4d10f54265"
+    },
+    {
+      "source": "Kiosk/UIViewController+Bidding.swift",
+      "vendored": "Sources/Eidolon/Kiosk/UIViewController+Bidding.swift",
+      "sha256": "088995a1ef3352fee7e7023a73271a07915bd74fae6d5759c05464ee3f927f36"
+    },
+    {
+      "source": "Kiosk/App/OfflineViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/OfflineViewController.swift",
+      "sha256": "51f174638c14d04426d9a1a06105d2d457742dc0d15198f9c75a0b8e64a57ae4"
+    },
+    {
+      "source": "Kiosk/HelperFunctions.swift",
+      "vendored": "Sources/Eidolon/Kiosk/HelperFunctions.swift",
+      "sha256": "85e394430e809a5169aa92e3759f1e1acd1af6ce551e0933d7fde661a843d7d0"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/StripeManager.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/StripeManager.swift",
+      "sha256": "241b194690dd0dfb860463970c0136eed956fce2975f2bad661815e6cec016dc"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+      "sha256": "7493d2ee1c64d1f630be59cdd3f8862603a60331a81effdcf9e6cb70f4fef9d3"
+    },
+    {
+      "source": "Kiosk/UILabel+Fonts.swift",
+      "vendored": "Sources/Eidolon/Kiosk/UILabel+Fonts.swift",
+      "sha256": "fd9eccb449dbd928c4d212662cd874970ba5d24fce95a2d5494649da30a9d02d"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+      "sha256": "e8634a6268648678e90722062cd2dc1933d64473b1cd1d410ab0faac15a17c66"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ConfirmYourBidPasswordViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPasswordViewController.swift",
+      "sha256": "9ed0570dcf5b2771d17cffccf522991af055c6be11bf22a1fd3cec03cf51c5cb"
+    },
+    {
+      "source": "Kiosk/Sale Artwork Details/WhitespaceGobbler.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Sale Artwork Details/WhitespaceGobbler.swift",
+      "sha256": "f39059766557508d943fe3ef98a91874d2712e4ce95e07b49b2a61365b86f98c"
+    },
+    {
+      "source": "Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+      "sha256": "19070e5e63c9ad4f14a899f4cda2515561af74def1a2e257aeaf76eb3c1bd7e3"
+    },
+    {
+      "source": "Kiosk/App/Models/BuyersPremium.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/BuyersPremium.swift",
+      "sha256": "049a27e6cdeea7b8c2b29d2f00ba9f3c6c3e4040d304165f11ee72bf89cd7044"
+    },
+    {
+      "source": "Kiosk/App/Models/SaleArtwork.swift",
+      "vendored": "Sources/Eidolon/Kiosk/App/Models/SaleArtwork.swift",
+      "sha256": "c88ba72f7728649782c7244d3ae4679986133073c52bd953b1e0cc52dac60565"
+    },
+    {
+      "source": "Kiosk/Storyboards/StoryboardIdentifiers.swift",
+      "vendored": "Sources/Eidolon/Kiosk/Storyboards/StoryboardIdentifiers.swift",
+      "sha256": "76e1788113391facb838f91f95b050a3874579f82b6ec3f24ad1e67901e1ee7b"
+    },
+    {
+      "source": "Kiosk/App/KioskDateFormatter.m",
+      "vendored": "Sources/EidolonObjC/Kiosk/App/KioskDateFormatter.m",
+      "sha256": "86cad2099888bf9ac9f81bd41dcbe6393c0f76dcc443a9271f954b91fad12f90"
+    },
+    {
+      "source": "Kiosk/App/CreditCardValidation.m",
+      "vendored": "Sources/EidolonObjC/Kiosk/App/CreditCardValidation.m",
+      "sha256": "6518be2a18969050c05bcc34923817548ca389d7cd424d0ae36c787502ac37ca"
+    },
+    {
+      "source": "Kiosk/App/StubResponses.m",
+      "vendored": "Sources/EidolonObjC/Kiosk/App/StubResponses.m",
+      "sha256": "e21ac938f4ae3361509d950247d641ec67788c3689f185d93f985d573a3b63ae"
+    },
+    {
+      "source": "Kiosk/App/CreditCardValidation.h",
+      "vendored": "Sources/EidolonObjC/include/Kiosk/App/CreditCardValidation.h",
+      "sha256": "63aeb6dc08956388436bb91f34bc313dd53886dc66dc25bf2e3a0ad2e55f31aa"
+    },
+    {
+      "source": "Kiosk/App/KioskDateFormatter.h",
+      "vendored": "Sources/EidolonObjC/include/Kiosk/App/KioskDateFormatter.h",
+      "sha256": "7f71eea14444df1933d8d55192e3b37814d6965c5402750f481fd368c59d7560"
+    },
+    {
+      "source": "Kiosk/App/StubResponses.h",
+      "vendored": "Sources/EidolonObjC/include/Kiosk/App/StubResponses.h",
+      "sha256": "4dcd5af44c9025f45c3a294e896c64bbe59be2dfe964677a1363e2d6ee2d29d9"
+    },
+    {
+      "source": "Kiosk/Supporting Files/BridgingHeader.h",
+      "vendored": "Sources/EidolonObjC/include/Kiosk/Supporting Files/BridgingHeader.h",
+      "sha256": "1d20000bf4ec8a60587932d0a5e244e2f72ba3e279b298a25a0acfea2725ea04"
+    },
+    {
+      "source": "Kiosk/Supporting Files/PodsBridgingHeader.h",
+      "vendored": "Sources/EidolonObjC/include/Kiosk/Supporting Files/PodsBridgingHeader.h",
+      "sha256": "4f974d243323f4266e8aca5616c881668e2ada0dce6b4319cec07b8624bbd7d5"
+    }
+  ]
+}

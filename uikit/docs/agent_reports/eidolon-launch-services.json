@@ -1,0 +1,123 @@
+{
+  "date": "2026-09-07",
+  "corpus_commit": "44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+  "score": null,
+  "first_screen": "not reached",
+  "services": {
+    "Keys": {
+      "source": "Podfile:5-18; Kiosk/App/Networking/APIKeys.swift:31",
+      "key_properties": 11,
+      "available": false,
+      "stub_response_predicate": "key.count < 2 || secret.count < 2",
+      "unavailable_marker": "OPENUIKIT_SERVICE_UNAVAILABLE"
+    },
+    "ARAnalytics": {
+      "version": "5.0.1",
+      "commit": "888744016bb4f53ad5b652819406645bd21f80c7",
+      "source": "https://github.com/orta/ARAnalytics.git",
+      "selectors": [
+        "setupWithAnalytics:",
+        "event:",
+        "event:withProperties:"
+      ],
+      "configuration_constants": 3,
+      "available": false
+    },
+    "Stripe": {
+      "locked_version": "12.1.0",
+      "requested_version": "14.0.1",
+      "commit": "e3c35c97963b938baac22612e4f4aae4b1cab8eb",
+      "source": "https://github.com/stripe/stripe-ios.git",
+      "error": "EidolonStripeError.serviceUnavailable",
+      "token_callbacks": 1,
+      "tokens_returned": 0,
+      "available": false,
+      "objc_header_adapter": false
+    },
+    "CardFlight": {
+      "locked_version": "4.3.1",
+      "source": "https://github.com/CardFlight/cardflight-v4-ios.git",
+      "tag_from_podspec": "v4.3.1",
+      "license": "commercial; Copyright 2018 Cardflight, Inc. All rights reserved.",
+      "shim_implemented": false,
+      "reason": "SDK repository unavailable; CFTCredentials.setup completion callback type cannot be inferred from completion:nil at the app call site.",
+      "fetch": {
+        "command": [
+          "git",
+          "ls-remote",
+          "https://github.com/CardFlight/cardflight-v4-ios.git",
+          "refs/tags/*4.3.1*"
+        ],
+        "exit_code": 128,
+        "output": "remote: Repository not found.\nfatal: repository 'https://github.com/CardFlight/cardflight-v4-ios.git/' not found\n"
+      }
+    },
+    "EidolonLaunchCompat": {
+      "preflight": "throws before evaluating createApplication closure",
+      "application_constructions": 0,
+      "network_provider_constructions": 0
+    }
+  },
+  "compiler": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)\nTarget: arm64-apple-macosx26.0",
+  "native_interface_probe": {
+    "source": "import UIKit\nclass EidolonInterfaceProbe: UIViewController {\n    @IBOutlet weak var textView: UITextView!\n    @IBAction func backButtonTapped(_ sender: AnyObject) {}\n    func launchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {}\n    func webView() -> String? {\n        let webView = UIWebView(frame: CGRect.zero)\n        return webView.stringByEvaluatingJavaScript(from: \"navigator.userAgent\")\n    }\n}\n",
+    "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk",
+    "target": "arm64-apple-ios26.1-simulator",
+    "results": [
+      {
+        "language": "4",
+        "exit_code": 0,
+        "diagnostics": "/tmp/eidolon-services/AppleInterfaceProbe.swift:7:23: warning: 'UIWebView' was deprecated in iOS 12.0: No longer supported; please adopt WKWebView. [#DeprecatedDeclaration]\n 5 |     func launchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {}\n 6 |     func webView() -> String? {\n 7 |         let webView = UIWebView(frame: CGRect.zero)\n   |                       `- warning: 'UIWebView' was deprecated in iOS 12.0: No longer supported; please adopt WKWebView. [#DeprecatedDeclaration]\n 8 |         return webView.stringByEvaluatingJavaScript(from: \"navigator.userAgent\")\n 9 |     }\n\n[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>\n"
+      },
+      {
+        "language": "5",
+        "exit_code": 1,
+        "diagnostics": "/tmp/eidolon-services/AppleInterfaceProbe.swift:5:36: error: 'UIApplicationLaunchOptionsKey' has been renamed to 'UIApplication.LaunchOptionsKey'\n 3 |     @IBOutlet weak var textView: UITextView!\n 4 |     @IBAction func backButtonTapped(_ sender: AnyObject) {}\n 5 |     func launchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {}\n   |                                    `- error: 'UIApplicationLaunchOptionsKey' has been renamed to 'UIApplication.LaunchOptionsKey'\n 6 |     func webView() -> String? {\n 7 |         let webView = UIWebView(frame: CGRect.zero)\n\n/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIApplication.h:352:20: note: 'UIApplicationLaunchOptionsKey' was obsoleted in Swift 4.2\n350 | \n351 | \n352 | typedef NSString * UIApplicationLaunchOptionsKey NS_TYPED_ENUM API_UNAVAILABLE(watchos);\n    |                    `- note: 'UIApplicationLaunchOptionsKey' was obsoleted in Swift 4.2\n353 | \n354 | API_UNAVAILABLE(watchos) NS_SWIFT_UI_ACTOR\n\n/tmp/eidolon-services/AppleInterfaceProbe.swift:7:23: warning: 'UIWebView' was deprecated in iOS 12.0: No longer supported; please adopt WKWebView. [#DeprecatedDeclaration]\n 5 |     func launchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {}\n 6 |     func webView() -> String? {\n 7 |         let webView = UIWebView(frame: CGRect.zero)\n   |                       `- warning: 'UIWebView' was deprecated in iOS 12.0: No longer supported; please adopt WKWebView. [#DeprecatedDeclaration]\n 8 |         return webView.stringByEvaluatingJavaScript(from: \"navigator.userAgent\")\n 9 |     }\n\n[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>\n"
+      }
+    ]
+  },
+  "port_interface_probe": {
+    "import": "Foundation; OpenUIKit",
+    "language": "4",
+    "exit_code": 1,
+    "diagnostics": "/tmp/eidolon-services/PortInterfaceProbe.swift:6:36: error: cannot find type 'UIApplicationLaunchOptionsKey' in scope\n 4 |     @IBOutlet weak var textView: UITextView!\n 5 |     @IBAction func backButtonTapped(_ sender: AnyObject) {}\n 6 |     func launchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {}\n   |                                    `- error: cannot find type 'UIApplicationLaunchOptionsKey' in scope\n 7 |     func webView() -> String? {\n 8 |         let webView = UIWebView(frame: CGRect.zero)\n\n/tmp/eidolon-services/PortInterfaceProbe.swift:8:23: error: cannot find 'UIWebView' in scope\n 6 |     func launchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {}\n 7 |     func webView() -> String? {\n 8 |         let webView = UIWebView(frame: CGRect.zero)\n   |                       `- error: cannot find 'UIWebView' in scope\n 9 |         return webView.stringByEvaluatingJavaScript(from: \"navigator.userAgent\")\n10 |     }\n",
+    "note": "Uses the current native package release OpenUIKit module; not a guest runtime execution."
+  },
+  "guest_wiring": {
+    "file": "full/scripts/build_full.sh",
+    "inspection": "read-only",
+    "eidolon_named_targets": 0,
+    "swift_app_compiler": "compile_app_module at lines 1367-1383",
+    "real_app_source_globs": "lines 1472-1476 include top-level, Vendored, Vendored/*, Focus, Hackers; not EidolonServiceShims",
+    "guest_execution": "N/A; no service module object or Eidolon app object is wired by the existing guest builder"
+  },
+  "tests": {
+    "Darwin": {
+      "command": "swift test --package-path Sources/EidolonServiceShims --scratch-path /tmp/eidolon-services/shim-build --filter ServiceFailureTests",
+      "passed": 4,
+      "failed": 0
+    },
+    "Linux": {
+      "image": "swift:6.2-noble",
+      "swift_version": "6.2.4",
+      "target": "aarch64-unknown-linux-gnu",
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "authority_calls": {
+    "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk",
+    "language": "4",
+    "exit_code": 0,
+    "calls": "import Foundation\nfunc serviceCalls() {\n    ARAnalytics.setup(withAnalytics: [ARHockeyAppBetaID: \"unavailable\", ARHockeyAppLiveID: \"unavailable\", ARSegmentioWriteKey: \"unavailable\"])\n    ARAnalytics.event(\"Session Started\")\n    ARAnalytics.event(\"Placed a bid\", withProperties: [\"top_bidder\": false])\n    Stripe.setDefaultPublishableKey(\"unavailable\")\n    let client: STPAPIClient = STPAPIClient.shared()\n    let card = STPCardParams()\n    card.number = \"unavailable\"\n    card.expMonth = 0\n    card.expYear = 0\n    card.cvc = \"unavailable\"\n    card.address.postalCode = \"unavailable\"\n    let completion: ((STPToken?, Error?) -> Void)? = nil\n    client.createToken(withCard: card, completion: completion)\n}\nfunc readToken(_ token: STPToken) -> (String, String?, String?, String?) {\n    return (token.tokenId, token.card?.name, token.card?.last4, token.card.map { String($0.brand.rawValue) })\n}\n",
+    "headers": "ARAnalytics.h and Stripe PublicHeaders/Stripe.h from commits above",
+    "diagnostics": "2 PKAddressField deprecation warnings; no errors"
+  },
+  "provenance_files": {
+    "ARAnalytics-LICENSE": "350c2b5afd9b8e1abd2f23d7f3ebdfc2c4caabdfce88394ce6be7da6b605cb14",
+    "ARAnalytics.podspec.json": "a27d7e7365f7158a72e05db3eae28dd0b053d33efd952315fab74c0656ee5316",
+    "CardFlight-v4.podspec.json": "3c163ae1b8f5eebfb709c9e2f559c5a082e8f3e97f41c1aa48051ab76bc12bee",
+    "Stripe-LICENSE": "0edd9895d6a8630a4694dc1175e64849fc8b5927c2137a81bbcdf9eb35ddec52",
+    "Stripe.podspec.json": "eb73fa37f9252202a40995efa4d5ab24bf09e5f3f1d5ca7769ce827801afc0cf"
+  }
+}
