@@ -217,10 +217,17 @@ class MiniAppFixtureTests(unittest.TestCase):
                 '.product(name: "Fuzi", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
                 text,
             )
-            self.assertIn(
-                '.product(name: "libkern", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-                text,
-            )
+            # libkern / StoreKit are named per platform in OpenUIKit's manifest;
+            # SwiftPM validates a product name even under a platform condition
+            # (MEASURED simplenote-launch3: `product 'libkern' ... not found`).
+            self.assertNotIn('.product(name: "libkern", package: "OpenUIKit", condition:', text)
+            self.assertIn("#if os(Linux)", text)
+            self.assertIn('.product(name: "libkern", package: "OpenUIKit")', text)
+            self.assertIn('.product(name: "OpenUIKitLibkern", package: "OpenUIKit")', text)
+            self.assertIn('.product(name: "OpenUIKitStoreKit", package: "OpenUIKit")', text)
+            self.assertIn('"-module-alias", "libkern=OpenUIKitLibkern"', text)
+            self.assertIn("] + platformNamedProducts", text)
+            self.assertIn("] + platformModuleAliases", text)
             self.assertIn("-default-isolation", text)
             self.assertTrue((out / "Sources" / "MiniApp" / "MiniApp" / "AppDelegate.swift").is_file())
             self.assertTrue((out / "Sources" / "MiniApp" / "Resources" / "Assets.xcassets").is_dir())
@@ -289,6 +296,18 @@ class MiniAppFixtureTests(unittest.TestCase):
             self.assertEqual(manifest["counts"]["objc_sources"], 1)
             self.assertEqual(manifest["counts"]["c_sources"], 1)
             self.assertIn("MiniApp/local.h", manifest["header_sources"])
+            self.assertEqual(manifest["swift_header_consumers"], ["MiniApp-Swift.h"])
+            # A bridging header and a main.m, as Simplenote has (the fixture
+            # pbxproj carries neither; the manifest is the emitter's input).
+            (root / "MiniApp" / "MiniApp-Bridging-Header.h").write_text(
+                '#import "local.h"\n', encoding="utf-8"
+            )
+            (root / "MiniApp" / "main.m").write_text(
+                "int main(int argc, char *argv[]) { return 0; }\n", encoding="utf-8"
+            )
+            manifest["bridging_header"] = "MiniApp/MiniApp-Bridging-Header.h"
+            manifest["header_sources"].append("MiniApp/MiniApp-Bridging-Header.h")
+            manifest["objc_sources"].append("MiniApp/main.m")
             self.assertIn("Support/Transitive.h", manifest["header_sources"])
             out = root / "generated"
             ingest.emit_tree(graph, manifest, out, UIKIT)
@@ -298,6 +317,62 @@ class MiniAppFixtureTests(unittest.TestCase):
             self.assertIn('.headerSearchPath("include/Support")', package)
             self.assertEqual(len(list((out / "Sources/MiniAppObjC").rglob("Mixed.m"))), 1)
             self.assertEqual(len(list((out / "Sources/MiniAppObjC/include").rglob("local.h"))), 1)
+            # Route (b) staged order: the Clang target depends on the Swift
+            # target, so SwiftPM has emitted MiniApp-Swift.h (and its module
+            # map) before Mixed.m compiles. No placeholder header is written.
+            objc_block = package[package.index('name: "MiniAppObjC"'):package.index(".executableTarget(")]
+            self.assertIn('"MiniApp",', objc_block)
+            self.assertIn('.product(name: "OpenUIKitObjCSupport", package: "OpenUIKit"', objc_block)
+            self.assertFalse((out / "Sources/MiniAppObjC/include/MiniApp-Swift.h").exists())
+            # The Swift target reads the ObjC headers through the bridging
+            # header and the generated OpenUIKit header directories.
+            swift_block = package[package.index('.target(\n            name: "MiniApp",'):]
+            self.assertIn('"-import-objc-header", "Sources/MiniAppObjC/include/MiniApp/MiniApp-Bridging-Header.h"', swift_block)
+            self.assertIn('"-Xcc", "-I.build/arm64-apple-macosx/debug/OpenUIKit.build/include"', swift_block)
+            for name in ingest.SWIFT_SIDE_NS_RENAMES:
+                self.assertIn(f'"-Xcc", "-D{name}=OUK_{name}"', swift_block)
+            self.assertNotIn('"MiniAppObjC"', swift_block)  # no cycle
+            self.assertIn('.library(name: "MiniApp", targets: ["MiniApp", "MiniAppObjC"])', package)
+            # main.m is its own executable target so a harness can link the pair.
+            self.assertTrue((out / "Sources/MiniAppMain/main.m").is_file())
+            self.assertFalse((out / "Sources/MiniAppObjC/MiniApp/main.m").exists())
+            self.assertIn('.executable(name: "MiniAppMain", targets: ["MiniAppMain"])', package)
+            # <UIKit/UIKit.h> is the generated OpenUIKit header plus the support header.
+            shim = (out / "Sources/MiniAppObjC/include/UIKit/UIKit.h").read_text(encoding="utf-8")
+            self.assertIn('#import "OpenUIKit-Swift.h"', shim)
+            self.assertIn('#import "UIKitObjCSupport.h"', shim)
+            self.assertIn('#import "OpenUIKitObjCBridge-Swift.h"', shim)
+            self.assertIn('.product(name: "OpenUIKitObjCBridge", package: "OpenUIKit"', objc_block)
+            self.assertIn('.headerSearchPath("include/UIKit")', objc_block)
+            self.assertIn('.define("OPENUIKIT_OBJC_SIDE", to: "1")', objc_block)
+
+    def test_missing_source_with_demo_sibling_is_emitted_from_the_demo(self) -> None:
+        # Simplenote 9b1bb17: Simplenote/Credentials/SPCredentials.swift is a
+        # build-phase secret; Simplenote/SPCredentials-demo.swift is public.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            shutil.copytree(FIXTURE, root / "MiniApp.xcodeproj")
+            shutil.copytree(FIXTURE.parent / "MiniApp", root / "MiniApp")
+            (root / "MiniApp" / "Credentials-demo.swift").write_text(
+                "enum Credentials { static let key = \"demo\" }\n", encoding="utf-8"
+            )
+            graph = ingest.ProjectGraph(root / "MiniApp.xcodeproj")
+            tid, target = graph.pick_app_target("MiniApp")
+            original = graph.target_inputs(tid, target)
+            inputs = dict(original)
+            inputs["sources"] = original["sources"] + [{"path": "MiniApp/Secrets/Credentials.swift"}]
+            with patch.object(graph, "target_inputs", return_value=inputs):
+                manifest = ingest.build_manifest(graph, tid, target)
+            self.assertEqual(manifest["missing_swift_sources"], ["MiniApp/Secrets/Credentials.swift"])
+            self.assertEqual(
+                manifest["demo_substitutes"],
+                [{"missing": "MiniApp/Secrets/Credentials.swift", "demo": "MiniApp/Credentials-demo.swift"}],
+            )
+            out = root / "generated"
+            ingest.emit_tree(graph, manifest, out, UIKIT)
+            emitted = out / "Sources/MiniApp/MiniApp/Secrets/Credentials.swift"
+            self.assertTrue(emitted.is_file())
+            self.assertIn("demo", emitted.read_text(encoding="utf-8"))
 
 
 class XcconfigTests(unittest.TestCase):
@@ -463,10 +538,13 @@ class PocketCastsTests(unittest.TestCase):
         kinds = {g["kind"] for g in self.manifest["gaps"]}
         self.assertNotIn("CocoaPods", kinds)
 
-    def test_stops_on_objc_mixed_target(self) -> None:
+    def test_objc_sources_are_counted_not_a_gap(self) -> None:
+        # Pass 2 (simplenote-launch2) made mixed targets an emitted split
+        # rather than a stop; this corpus-gated test still asserted the stop
+        # and had not been run since (simplenote-launch3 measured it).
         kinds = {g["kind"] for g in self.manifest["gaps"]}
-        self.assertIn("ObjC sources", kinds)
-        self.assertIn("mixed target", kinds)
+        self.assertNotIn("ObjC sources", kinds)
+        self.assertNotIn("mixed target", kinds)
         self.assertGreater(self.manifest["counts"]["objc_sources"], 0)
 
     def test_bundle_id_from_xcconfig(self) -> None:
@@ -478,11 +556,76 @@ class PocketCastsTests(unittest.TestCase):
             "au.com.shiftyjelly.podcasts",
         )
 
-    def test_automattic_tracks_import_is_no_port(self) -> None:
-        # Linux swift:6.2-noble first error with --allow-gaps is
+    def test_automattic_tracks_import_is_a_darwin_only_port(self) -> None:
+        # Linux swift:6.2-noble first error with --allow-gaps was
         # podcasts/ABTest/ABTestProvider.swift:1 `no such module 'AutomatticTracks'`.
+        # Pass 2 added the fail-closed Darwin target; the import is a port
+        # on macOS only and the sibling ObjC-only modules stay unported.
         names = {row["name"] for row in self.manifest["no_port"]}
-        self.assertIn("AutomatticTracks", names)
+        self.assertNotIn("AutomatticTracks", names)
+        self.assertEqual(ingest.classify_module("AutomatticTracks")["port_platforms"], ["macOS"])
+        self.assertIn("AutomatticTracksModel", names)
+
+
+SIMPLENOTE_PIN = "9b1bb17d8ec224a709d306e0ec34cee38bc7d933"
+
+
+def _simplenote_available() -> bool:
+    return (CORPUS / "simplenote-ios" / "Simplenote.xcodeproj" / "project.pbxproj").is_file()
+
+
+@unittest.skipUnless(_simplenote_available(), f"simplenote-ios missing at {CORPUS}")
+class SimplenoteTests(unittest.TestCase):
+    """Mixed Swift/ObjC target on route (b) (simplenote-launch3)."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.repo = CORPUS / "simplenote-ios"
+        cls.graph = ingest.ProjectGraph(cls.repo / "Simplenote.xcodeproj")
+        cls.tid, cls.target = cls.graph.pick_app_target("Simplenote")
+        cls.manifest = ingest.build_manifest(cls.graph, cls.tid, cls.target)
+
+    def test_pin(self) -> None:
+        self.assertEqual(_git_head(self.repo), SIMPLENOTE_PIN)
+
+    def test_mixed_denominators(self) -> None:
+        counts = self.manifest["counts"]
+        self.assertEqual(counts["swift_sources"], 229)
+        self.assertEqual(counts["present_swift_sources"], 228)
+        self.assertEqual(counts["objc_sources"], 50)
+        self.assertEqual(counts["c_sources"], 12)
+        self.assertEqual(counts["header_sources"], 59)
+        self.assertEqual(self.manifest["bridging_header"], "Simplenote/Simplenote-Bridging-Header.h")
+        self.assertEqual(self.manifest["swift_header_consumers"], ["Simplenote-Swift.h"])
+
+    def test_credentials_come_from_the_public_demo(self) -> None:
+        self.assertEqual(
+            self.manifest["missing_swift_sources"], ["Simplenote/Credentials/SPCredentials.swift"]
+        )
+        self.assertEqual(
+            self.manifest["demo_substitutes"],
+            [{"missing": "Simplenote/Credentials/SPCredentials.swift",
+              "demo": "Simplenote/SPCredentials-demo.swift"}],
+        )
+
+    def test_emits_staged_mixed_package(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "pkg"
+            ingest.emit_tree(self.graph, self.manifest, out, UIKIT)
+            package = (out / "Package.swift").read_text(encoding="utf-8")
+            self.assertTrue((out / "Sources/Simplenote/Simplenote/Credentials/SPCredentials.swift").is_file())
+            self.assertTrue((out / "Sources/SimplenoteMain/main.m").is_file())
+            self.assertEqual(len(list((out / "Sources/SimplenoteObjC").rglob("*.m"))), 49)
+            self.assertEqual(len(list((out / "Sources/SimplenoteObjC").rglob("*.c"))), 12)
+            self.assertFalse((out / "Sources/SimplenoteObjC/include/Simplenote-Swift.h").exists())
+            objc_block = package[package.index('name: "SimplenoteObjC"'):package.index(".executableTarget(")]
+            self.assertIn('"Simplenote",', objc_block)
+            self.assertIn('.product(name: "Simperium", package: "OpenUIKit", condition: .when(platforms: [.macOS]))', objc_block)
+            self.assertIn('.product(name: "AutomatticTracksModelObjC", package: "OpenUIKit", condition: .when(platforms: [.macOS]))', objc_block)
+            self.assertIn(
+                '"-import-objc-header", "Sources/SimplenoteObjC/include/Simplenote/Simplenote-Bridging-Header.h"',
+                package,
+            )
 
 
 class LibkernIngestCopyTests(unittest.TestCase):

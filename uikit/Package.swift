@@ -886,13 +886,26 @@ let simplenoteTargets: [Target] = []
 let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
-    "AutomatticTracksModelObjC",
+    "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge",
 ].map { .library(name: $0, targets: [$0]) }
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
 let simplenoteTargets: [Target] = [
-    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include/Simperium"),
+    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
+    // Route (b) Objective-C declarations that OpenUIKit-Swift.h cannot carry
+    // (enums, structs, protocols, typed strings). Pure declarations; values
+    // read off the iOS 26.1 SDK and OpenUIKit's Swift raw values
+    // (simplenote-launch3).
+    .target(name: "OpenUIKitObjCSupport", path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
+            cSettings: [.define("OPENUIKIT_OBJC_SIDE", to: "1")]),
+    // Route (b) `@objc(selector)` twins of existing OpenUIKit members; the
+    // generated OpenUIKitObjCBridge-Swift.h adds them as categories. Chosen
+    // from the Simplenote per-TU selector census (simplenote-launch3).
+    .target(name: "OpenUIKitObjCBridge", dependencies: ["OpenUIKit", "OpenUIKitObjCSupport"],
+            path: "Sources/OpenUIKitObjCBridge", swiftSettings: simplenoteSettings),
+    .testTarget(name: "OpenUIKitObjCBridgeTests", dependencies: ["OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/OpenUIKitObjCBridgeTests", swiftSettings: simplenoteSettings),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],
