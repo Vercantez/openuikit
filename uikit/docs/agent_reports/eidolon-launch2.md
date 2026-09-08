@@ -86,7 +86,7 @@ oracle has **16** cases, adding ownership isolation and the event union.
 | Existing real-app screens, iOS cut @3 | All **15/15 PNGs and layouts** unchanged. All **14** available golden scores identical; browser's golden remains absent in `/tmp/golden_realapp_ios`, so its numeric score is N/A. |
 | Launch preflight / load list | Before and after exit **2**, unavailable, with no output directory; `openrender` dylib load list unchanged. |
 | Linux Swift 6.2 noble | Release `openrender` build **green (183.17 s)**; required `OpenUIKitTests` target **green (23.94 s)**; isolated native-ELF ownership probe **5/5 assertions**. |
-| Required merge proof | Pending after the implementation commit. |
+| Required merge proof | **`checks passed (CHECK_ONLY)`**, **0 REFUSED**; guest library **146+12 files**, test bundle build, real-app floors, **707 conformance frames / 0 lower**, and both Linux gate invocations passed. Returned **128 after success**, as described in the brief. |
 
 An optional **whole-package** Linux `swift test` did not reach execution:
 the current run reported four Hackers `NotificationCenter.publisher` inference
@@ -134,3 +134,11 @@ Required merge proof from the repository root:
 ```sh
 CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/eidolon-launch2
 ```
+
+The checker validated implementation commit `adb34026` against main
+`a87fd559`; rebasing onto that main required only keeping both fidelity rows.
+Production package/source/test/fixture inputs between the original baseline
+and that main are identical. Of the 707 board comparisons, **688 are equal
+and 19 are higher**; those increases are not attributed to this change without
+a matching baseline conformance run. The final commit only records these
+proof results in documentation; it changes no executable source or fixtures.

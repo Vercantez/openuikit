@@ -355,7 +355,33 @@
       "method": "Private SwiftPM executable depending only on the local UIKit product; built and run with swift:6.2-noble. Native ELF, not Mach-O guest."
     }
   },
-  "merge_proof": "pending",
+  "merge_proof": {
+    "command_from_repository_root": "CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/eidolon-launch2",
+    "checked_commit": "adb34026fb6722b22de08f728aeaf4ae416dc217",
+    "main": "a87fd5592ce9d216057392bb7c4be218b48b786a",
+    "printed_success": "checks passed (CHECK_ONLY)",
+    "refused_lines": 0,
+    "exit_code": 128,
+    "exit_note": "Returned 128 after printed success, matching the cleanup behavior specified in the brief.",
+    "catalyst": "124/124",
+    "guest_library": {
+      "openuikit": 146,
+      "opencoregraphics": 12,
+      "elapsed_seconds": 53
+    },
+    "darwin_test_bundle": "build passed",
+    "realapp_floors": "all held",
+    "conformance": {
+      "frames": 707,
+      "lower_than_board": 0,
+      "equal_to_board": 688,
+      "higher_than_board": 19,
+      "attribution": "Higher scores are not credited to this change without a matching baseline conformance run."
+    },
+    "linux_release": "passed (163.43 seconds)",
+    "linux_conformance_and_OpenUIKitTests_targets": "passed",
+    "log_sha256": "24066629a36c8ab9ff31731a6f97c5dd4dc8e9c2475ea305bcc7223ace60ded4"
+  },
   "realapp_scores": {
     "realapp_history_light": 99.137,
     "realapp_settings_light": 98.535,
