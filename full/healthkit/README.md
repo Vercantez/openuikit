@@ -295,3 +295,35 @@ hardware streams, and the unavailable Linux `UniformTypeIdentifiers` and
 `NSComparisonPredicate.Operator` signatures. The inherited async-sequence
 algorithm surface remains declared rather than being relabeled from a
 synchronous identity-only test.
+
+## Depth pass 2026-09 (wave 8 continuation)
+
+This continuation exhausted the 287 identifiers that were still declared after
+the preceding wave. Counts changed from **implemented 2319 / declared 287 /
+deferred 39 / unavailable 0 / not-applicable 0** to **implemented 2606 /
+declared 0 / deferred 39 / unavailable 0 / not-applicable 0**. The gain is 287;
+the requested 300-row target was arithmetically unreachable because only 287
+nondeferred rows remained.
+
+The pass makes clinical records project their local coding fields into an
+`HKFHIRResource`, exposes typed clinical/document sample types, makes series
+count overridable, and adds focused synchronous checks for specialized types,
+secure-coding wrappers, builder discard/finish state, attachment byte
+sequences, and descriptor sequence-transform construction. These are local
+value and state-machine semantics only. The implementation does not claim
+Apple clinical validation, Health daemon access, TCC authorization, device
+sensor access, entitlement grants, or attachment service retrieval.
+
+Top-five evidence distribution after this continuation:
+
+1. `HealthKitEnumTests.swift#testEnumRawValues` — 608 identifiers (23.3%).
+2. `HealthKitConstantTests.swift#testCStringAndIdentifierConstants` — 407 (15.6%).
+3. `HealthKitDepthWave11Tests.swift#testAsyncDescriptorSequenceConstruction` — 225 (8.6%).
+4. `HealthKitEquatableTests.swift#testEnumEquatableAndHashable1` — 109 (4.2%).
+5. `HealthKitSampleTests.swift#testQuantityCategoryWorkoutSamples` — 95 (3.6%).
+
+The remaining 39 deferred identifiers require APIs absent from isolated Linux:
+`NSComparisonPredicate.Operator` or `UniformTypeIdentifiers.UTType`. They remain
+unclaimed rather than fabricating Apple-only behavior. Oracle questions remain
+open for authorization/daemon transitions, clinical verification, attachment
+services, and device-backed streams.

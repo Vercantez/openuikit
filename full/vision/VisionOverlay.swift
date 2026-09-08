@@ -2122,7 +2122,7 @@ public struct CoreMLRequest: ImageProcessingRequest {
 }
 
 
-public final class TrackObjectRequest: ImageProcessingRequest, StatefulRequest, @unchecked Sendable {
+public final class TrackObjectRequest: ImageProcessingRequest, StatefulRequest, TargetedRequest, @unchecked Sendable {
     public typealias Result = DetectedObjectObservation?
     public enum Revision: Int, Codable, Hashable, Sendable, Comparable {
         case revision2

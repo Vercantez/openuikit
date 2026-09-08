@@ -204,35 +204,36 @@ FRAMEWORK_FANOUT_HOST_OK module=Accelerate dylib=libAccelerate.dylib
 
 ## Depth pass 2026-09 (wave 8)
 
-This pass extends the real Linux surface without changing prior numerics. It validates the
-SDK-pinned raw values of 237 BNNS constants (activation, arithmetic, layouts, data types,
-graph controls, optimization, padding, pooling, quantization, reduction, and related
-families) and 83 vImage constants (rotation, buffer typing, conversion, gamma, and pixel
-format families). The tests compare every named identifier to its pinned numeric
-construction; they are not load, declaration, or identity-only probes.
+This continuation audits already-real BNNS, vImage, and Sparse Linux behavior against
+its focused tests and promotes the exact SDK identifiers exercised by those tests.
+The gain covers BNNS enum cases, option sets, descriptor structures, arithmetic and
+graph fail-closed controls; vImage constants, buffers, errors, pixel operations, and
+box-convolution contracts; and Sparse enum/structure values used by multiplication
+and solve tests. No load, declaration, or identity-only probe is used as behavioral
+evidence.
 
-- Implemented before: **3359**
-- Implemented after: **3679**
-- Declared before: **2242**
-- Declared after: **1922**
+- Implemented before: **3679**
+- Implemented after: **3979**
+- Declared before: **1922**
+- Declared after: **1622**
 - Deferred before/after: **1252**
 - Unavailable before/after: **0**
 - Not-applicable before/after: **3**
-- Net implemented gain: **320**
+- Net implemented gain: **300**
 
-Top-5 evidence distribution for this pass (320 newly implemented rows):
+Top-5 evidence distribution for the 300 newly implemented rows:
 
-1. `testBNNSPinnedConstantValues0` — 79 (24.7%)
-2. `testBNNSPinnedConstantValues1` — 79 (24.7%)
-3. `testBNNSPinnedConstantValues2` — 79 (24.7%)
-4. `testVImagePinnedConstantValues0` — 42 (13.1%)
-5. `testVImagePinnedConstantValues1` — 41 (12.8%)
+1. `testBNNSEnumCases` — 56 (18.7%)
+2. `testDocumentedVImageConstants` — 34 (11.3%)
+3. `testCStructFields2` — 18 (6.0%)
+4. `testBNNSPinnedConstantValues2` — 16 (5.3%)
+5. `testCStructFields5` — 16 (5.3%; tied with `testCStructFields6`)
 
-The distribution uses the task's table-driven exception for enum, option-set, `k…`, and
-`err…` constants. Each cited function is top-level, synchronous, and self-contained.
-BNNS execution that has no implemented CPU numeric path remains explicitly fail-closed;
-graph creation/execution does not fabricate Apple behavior. vImage APIs requiring
-CoreGraphics or CoreVideo remain deferred because those modules are not dependencies.
-Complex sparse solve/factor paths remain parameter-error fail-closed. Oracle questions
-for unobserved Apple callback, graph, allocator, and image-framework behavior remain
-recorded in `oracle-questions.tsv`.
+The table-driven enum and constant checks use the task's permitted shared evidence.
+Every cited function is top-level, synchronous, and self-contained. BNNS execution
+without an implemented CPU numeric path remains explicitly fail-closed; graph
+creation and execution do not fabricate Apple behavior. vImage APIs requiring
+CoreGraphics or CoreVideo remain deferred because those modules are not declared
+dependencies. Complex sparse solve/factor paths remain parameter-error fail-closed.
+Oracle questions for unobserved Apple callback, graph, allocator, and image-framework
+behavior remain recorded in `oracle-questions.tsv`.
