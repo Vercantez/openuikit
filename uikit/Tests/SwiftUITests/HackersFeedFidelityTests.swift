@@ -16,6 +16,37 @@ private struct MeasuredFeedRows: View {
     }
 }
 
+private struct MeasuredPillRow: View {
+    let name: String
+    let title: String
+    func pill(_ icon: String, _ text: String) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon).font(.system(size: 11)).frame(width: 12, height: 12)
+            Text(text).font(.system(size: 12)).accessibilityIdentifier(name + ".pillText." + icon)
+        }.accessibilityIdentifier(name + ".pillInner." + icon)
+        .padding(.vertical, 6).padding(.horizontal, 10)
+        .background(Capsule().fill(Color.secondary.opacity(0.14)))
+        .accessibilityIdentifier(name + ".pill." + icon)
+    }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center, spacing: 12) {
+                Button {} label: { Image(systemName: "safari").frame(width: 55, height: 55) }.buttonStyle(.plain).accessibilityIdentifier(name + ".thumbnail")
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("EXAMPLE.COM").font(.system(size: 12)).lineLimit(1).accessibilityIdentifier(name + ".domain")
+                    Text(title).font(.system(size: 17, weight: .semibold)).frame(maxWidth: .infinity, alignment: .leading).accessibilityIdentifier(name + ".title")
+                    HStack(spacing: 8) {
+                        pill("arrow.up", "128")
+                        Button {} label: { pill("message", "42") }.buttonStyle(.plain)
+                        Spacer(minLength: 8)
+                        pill("bookmark", "Save")
+                    }.font(.system(size: 12)).accessibilityIdentifier(name + ".pillsInner").padding(.top, 4).accessibilityIdentifier(name + ".pills")
+                }.frame(maxWidth: .infinity, alignment: .leading).layoutPriority(1).accessibilityIdentifier(name + ".column")
+            }
+        }.frame(maxWidth: .infinity, alignment: .leading).accessibilityIdentifier(name + ".row")
+    }
+}
+
 private struct MeasuredFeedToolbar: View {
     var body: some View {
         Text("Feed").toolbar {
@@ -78,6 +109,41 @@ final class HackersFeedFidelityTests: XCTestCase {
         XCTAssertEqual(second.frame.height, 107, accuracy: 0.001)
         XCTAssertEqual(second.frame.minY, first.frame.maxY, accuracy: 0.001)
         XCTAssertEqual(first.subviews.first?.frame.minY ?? -1, 15, accuracy: 0.001)
+    }
+
+    // HackersPillMetrics, iPhone 16 / iOS 26.1 @3x, window points.
+    // Same nested stacks, fonts, capsule and padding as the scratch oracle.
+    func testCompressedTwoLineColumnRetainsPillIdealHeight() throws {
+        let host = UIHostingController(rootView: List {
+            MeasuredPillRow(name: "two", title: "Show HN: A tiny UIKit Hacker News client")
+            MeasuredPillRow(name: "one", title: "Swift 6.2 is now available")
+        }.listStyle(.plain))
+        let nav = UINavigationController(rootViewController: host)
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window._setSafeAreaInsets(UIEdgeInsets(top: 59, left: 0, bottom: 34, right: 0))
+        window.rootViewController = nav
+        window.makeKeyAndVisible()
+        defer { window.isHidden = true; window.rootViewController = nil }
+        window.layoutIfNeeded()
+        host.view.layoutIfNeeded()
+        func frame(_ name: String) throws -> CGRect {
+            let view = try XCTUnwrap(descendants(host.view).first { $0.accessibilityIdentifier == name })
+            return view.convert(view.bounds, to: window)
+        }
+        for name in ["two.column", "two.title", "two.pill.arrow.up", "two.pillText.arrow.up", "one.column", "one.pill.arrow.up", "one.pillText.arrow.up"] {
+            print("PILL FRAME \(name): \(try frame(name))")
+        }
+        XCTAssertEqual(try frame("two.column").minY, 128, accuracy: 0.001)
+        XCTAssertEqual(try frame("two.column").width, 294, accuracy: 0.001)
+        XCTAssertEqual(try frame("two.column").height, 97 + 1.0 / 3, accuracy: 0.001)
+        XCTAssertEqual(try frame("two.pill.arrow.up").minY, 199, accuracy: 0.001)
+        XCTAssertEqual(try frame("two.pill.arrow.up").height, 26 + 1.0 / 3, accuracy: 0.001)
+        XCTAssertEqual(try frame("two.pillText.arrow.up").minY, 205, accuracy: 0.001)
+        XCTAssertEqual(try frame("two.pillText.arrow.up").height, 14 + 1.0 / 3, accuracy: 0.001)
+        XCTAssertEqual(try frame("one.column").minY, 255 + 1.0 / 3, accuracy: 0.001)
+        XCTAssertEqual(try frame("one.column").height, 77, accuracy: 0.001)
+        XCTAssertEqual(try frame("one.pill.arrow.up").height, 26 + 1.0 / 3, accuracy: 0.001)
+        XCTAssertEqual(try frame("one.pillText.arrow.up").height, 14 + 1.0 / 3, accuracy: 0.001)
     }
 
     func testCatalystListKeepsItsExistingInsets() throws {
