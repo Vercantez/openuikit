@@ -1,0 +1,459 @@
+{
+  "pin": "44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+  "sources": [
+    {
+      "path": "Kiosk/Storyboards/Auction.storyboard",
+      "sha256": "aa156fe7f8d645f0a4d21172e15425c92991996ece945a26ad2f65c459852e26",
+      "scenes": 12,
+      "custom_class_instances": 39,
+      "custom_classes": [
+        "ARSerifLabel",
+        "ActionButton",
+        "AdminCardTestingViewController",
+        "AdminLogViewController",
+        "AdminPanelViewController",
+        "AppViewController",
+        "AuctionWebViewController",
+        "ChooseAuctionViewController",
+        "ListingsCountdownManager",
+        "ListingsViewController",
+        "ORStackScrollView",
+        "ORTagBasedAutoStackView",
+        "OfflineViewController",
+        "SaleArtworkDetailsViewController",
+        "SaleArtworkZoomViewController",
+        "SecondaryActionButton",
+        "Spinner"
+      ],
+      "initial_view_controller": "KCM-cT-BEX"
+    },
+    {
+      "path": "Kiosk/Storyboards/Fulfillment.storyboard",
+      "sha256": "32feefd9a8d2412078c683afc09f2b41c8fec798e12b1c5a16dc1d5fb7b35530",
+      "scenes": 20,
+      "custom_class_instances": 130,
+      "custom_classes": [
+        "ARSansSerifLabel",
+        "ARSerifLabel",
+        "ActionButton",
+        "BidDetailsPreviewView",
+        "CancelModalButton",
+        "ConfirmYourBidArtsyLoginViewController",
+        "ConfirmYourBidEnterYourEmailViewController",
+        "ConfirmYourBidPINViewController",
+        "ConfirmYourBidPasswordViewController",
+        "ConfirmYourBidViewController",
+        "CursorView",
+        "DeveloperOnlyView",
+        "FulfillmentContainerViewController",
+        "FulfillmentNavigationController",
+        "KeypadContainerView",
+        "LoadingViewController",
+        "ManualCreditCardInputViewController",
+        "ORTagBasedAutoStackView",
+        "PlaceBidViewController",
+        "RegisterFlowView",
+        "RegisterViewController",
+        "RegistrationEmailViewController",
+        "RegistrationMobileViewController",
+        "RegistrationPasswordViewController",
+        "RegistrationPostalZipViewController",
+        "SecondaryActionButton",
+        "SecureTextField",
+        "Spinner",
+        "SwipeCreditCardViewController",
+        "TextField",
+        "UIImageViewAligned",
+        "YourBiddingDetailsViewController"
+      ],
+      "initial_view_controller": "O1R-5R-23t"
+    },
+    {
+      "path": "Kiosk/Storyboards/KeypadView.xib",
+      "sha256": "5e2538042ed5d09d81f202d8dfe1b16fb5629a6678ac315c32c9de5c9f326cd8",
+      "scenes": 0,
+      "custom_class_instances": 14,
+      "custom_classes": [
+        "KeypadButton",
+        "KeypadView",
+        "LargeKeypadButton",
+        "UIResponder"
+      ],
+      "initial_view_controller": null
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "Auction.storyboardc/8YY-cB-YpC-view-7KS-Qt-fFc.nib",
+      "bytes": 3167,
+      "sha256": "feccd871fdc8f98832600904714e4a3678be4040c25ff7d384e6a29c9320c056",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/ADb-HQ-Xrv-view-FO4-2G-EgI.nib",
+      "bytes": 8158,
+      "sha256": "76eba3550d921d0357478ff2c3636c51a4e1ad11cd4eaf4aae758ac0811a99ab",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/AppViewController.nib",
+      "bytes": 2299,
+      "sha256": "b15e54ab2fb9c77d07a309a2828e18b25cc5a1edca8cd5899cd7406a3d776abd",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/AuctionListings.nib",
+      "bytes": 1442,
+      "sha256": "5e97142d2a58f296def797eb9d9be4c30fce1ea9a44f3d3f49b559e4b4473511",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/Card Tester.nib",
+      "bytes": 1132,
+      "sha256": "358a6b861802b51395823b6575688dde9a6c5f75d36be7330f1606e81de1a814",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/Info.plist",
+      "bytes": 809,
+      "sha256": "a0bb85c24e2173fab97745c89a5b9b9fad5121168c197f04fb1483dd68a8f5c0",
+      "magic": "b'bplist00\\xd3\\x01'"
+    },
+    {
+      "path": "Auction.storyboardc/Jj5-n3-bv0-view-nu4-re-HAA.nib",
+      "bytes": 5205,
+      "sha256": "80b799beaab67cdedb17c1b06ce8806301b8ec4d9fc455bf3a8243f533674fcb",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/KCM-cT-BEX-view-jGy-SO-AWq.nib",
+      "bytes": 5727,
+      "sha256": "2136aa5b2bd1a993b498f25cb2d66cb1a55d8903f729b4609da1829cd53c7b11",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/MKI-if-fbr-view-Kmy-Hx-K8l.nib",
+      "bytes": 9149,
+      "sha256": "acdf0af002c84c9c0490d352700ae12688b010ba3abf0151c544cc17d518b608",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/No Internet Connection.nib",
+      "bytes": 1104,
+      "sha256": "886797ff133481cf4564a061e274099373bd2259a9c9cba9bdafdc3e5d329440",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/SaleArtworkDetail.nib",
+      "bytes": 1456,
+      "sha256": "da2c5c4551e04a6113641f87c8999fc481eeec4f0ffab2a9cbd954bf4b7b8f97",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/Sb3-CP-VQj-view-eXy-cL-60c.nib",
+      "bytes": 3458,
+      "sha256": "51605ce82ba770849377618d5577dbdadfaaabe2d4fbffdcc2987e534320a092",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/UINavigationController-2lC-Vc-1XS.nib",
+      "bytes": 2167,
+      "sha256": "7d2c3b4683d8b5a2612b49ec4156f67b95cf6be503ee094b9cc31cf8f59e9ffd",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/UINavigationController-WE8-fs-xzH.nib",
+      "bytes": 2541,
+      "sha256": "df00af82c6231383ec2485f8a3df3230cb84451d138a645274d02bcd7c6719df",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/UIViewController-Sb3-CP-VQj.nib",
+      "bytes": 1085,
+      "sha256": "f588eefae3997dfa39f614bf0c167d399064c1f0093efb65aafa6a4e59304d7a",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/UIViewController-wIW-NU-4pH.nib",
+      "bytes": 1265,
+      "sha256": "72d5304e83fdfffd95bbe24a3fa11ed3b0d291a368befdc1d20efcaad58e9cba",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/UIViewController-xVq-Ix-pQs.nib",
+      "bytes": 1083,
+      "sha256": "6de30237cfb1fd141bea92ee885358f20f60321c2216b07b82b69abf60e822f0",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/UIViewController-yff-WV-ozf.nib",
+      "bytes": 1078,
+      "sha256": "7978e7230a4364745703daf886a358ed631495fd76530ef59ccfeba2df949830",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/anX-QX-ldh-view-gf1-MR-Qcf.nib",
+      "bytes": 2628,
+      "sha256": "35fb7ac61d064ea63e6269947e15599a8a06e15f53663701826a9dab4d329e16",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/wIW-NU-4pH-view-b5a-hg-oLU.nib",
+      "bytes": 1835,
+      "sha256": "5e3d4de7712372fcaff8814894c8539fbf95038143d39a281cd069be4a0d837b",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/xVq-Ix-pQs-view-fiB-0O-nhZ.nib",
+      "bytes": 4556,
+      "sha256": "af2df4d30774dc5aee1c5120481010d3531d946538b5f75908a8b0154d17f2d9",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Auction.storyboardc/yff-WV-ozf-view-F6N-AU-wHA.nib",
+      "bytes": 7515,
+      "sha256": "ca504d5e93bc8733e2c665e5907126c20cc90939f7a6f084fcd65a710acb141e",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/2lt-co-qW2-view-5i6-CZ-9za.nib",
+      "bytes": 6977,
+      "sha256": "cda18e6eef206b1282962e7aed24c3531eb777b0bd0424d5f7ff1285849521dd",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/BKe-0r-2Pc-view-8HC-EN-LKn.nib",
+      "bytes": 7512,
+      "sha256": "821f396e147bbcecedc5d3b2560791ff21575529702fa145836dc47d1ead994a",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Confirm Your Bid Artsy Login.nib",
+      "bytes": 1617,
+      "sha256": "3680ef4d161a1914e428dd63e2f160188e281e51eb15e29148ebaeb6f69eaab1",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Confirm Your Bid Enter Email.nib",
+      "bytes": 1601,
+      "sha256": "2831b7ba259ecaf0ecafaf281c2a08b3768cf0676f61bafc1428f4b5eaa3bb42",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Confirm Your Bid Enter Password.nib",
+      "bytes": 1158,
+      "sha256": "559adc0e97794a9199fac10434aa798f9d30ffbf5e605c45b6af7df5d445538f",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Confirm Your Bid PIN.nib",
+      "bytes": 1596,
+      "sha256": "470471db4faff7454389b5255c89ba2700165fc8a6c6ab55d7fb0fc986c653ac",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Confirm Your Bid.nib",
+      "bytes": 1762,
+      "sha256": "12bc98d0b18d81c7ffbde1086fc868facc4d888c453721cb324f1437377615bc",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Djc-do-o8V-view-C0u-LT-eEX.nib",
+      "bytes": 7737,
+      "sha256": "1b3beb12f3139f6b6cb09e1e9ebc9f5ded276ebe8164cec6ec29b51507622b67",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Fulfillment Container.nib",
+      "bytes": 1383,
+      "sha256": "0f498555103f2e5c48988ad68647efb3c11eb0c8a59f5989e2edf89cc0c2ee70",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/HtL-zn-13v-view-e0d-hR-IJc.nib",
+      "bytes": 5596,
+      "sha256": "d0d59138c2c7f7b38f6b0e7bebc74f3d74fb0e25fc1e0c68fce29284af0a6fb4",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Info.plist",
+      "bytes": 1229,
+      "sha256": "14b0cb44605a759d73a797bd9fa8b3f1ade015f8f152ef1ed250bdb1cdab72bf",
+      "magic": "b'bplist00\\xd3\\x01'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Loading Bids or Registering.nib",
+      "bytes": 1591,
+      "sha256": "c0de209ed7bc6de01f6a8e65ac6c40f5cdd878ad8e1eebfbd44507e513a9d78e",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/MRb-fW-vfZ-view-eoi-Zv-BeQ.nib",
+      "bytes": 9484,
+      "sha256": "9efe81d36bfdc972268277324c2f90e317dfdbd7efd73e95c075d6b83c5f8f85",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/MZV-Pg-x2N-view-VNA-Px-nYJ.nib",
+      "bytes": 10594,
+      "sha256": "ef395bd5bb2c3d31e4d54e03b66162fb34b6c9a572fbc8d4eee7d3f47556e199",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Manual Card Details Input.nib",
+      "bytes": 1151,
+      "sha256": "10681cd4320e6ae33b9ea7955439fc9229a9b2a5c44adda715eb311da78d69f0",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/O1R-5R-23t-view-EbC-dQ-hBv.nib",
+      "bytes": 3769,
+      "sha256": "a0b719fb71e21fed9df45b2ffe624ecc3b66a2a8d54359630a543840502e1e79",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Place Your Bid.nib",
+      "bytes": 1542,
+      "sha256": "1acdd995d2e2f931708fd90ff5cedc0863adf1799a9b981b7229d13b9b791264",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register An Account.nib",
+      "bytes": 1686,
+      "sha256": "7a6527785241b1138a536628d2f94826779c3fea2eb4c8cdfd266aafb52c0d95",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register Confirm .nib",
+      "bytes": 1051,
+      "sha256": "8b5889c070b4b7b903e470dd76fcc2db9e7156542d5f6e830837d025460e9a29",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register Credit Card.nib",
+      "bytes": 1582,
+      "sha256": "e0d3af7e9c7da2374fd159d1e5f2a13e9cf177d4a665003d254ed3b1a8454e1d",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register Email.nib",
+      "bytes": 1448,
+      "sha256": "723a70415c468568c21909f6b8944d2d43a6e8ab472164ded6044a9e367ba7d5",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register Mobile.nib",
+      "bytes": 1444,
+      "sha256": "2cb6d6783184915f2f7ef987db5c010a3dbe665217f2f3deca5a1f67422677b3",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register Password.nib",
+      "bytes": 1466,
+      "sha256": "e97b92c7f43c420934fc2ff0f9c17d0a7bb2fee32e04f8ea49a41cff937d5eb7",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Register Postal or Zip.nib",
+      "bytes": 1460,
+      "sha256": "0d1bfc6da19f827f3eb9d2508078e33b1b0895ba16ced0120085d51eaf2f9fa4",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/SQx-bj-vr1-view-ySl-MI-0X8.nib",
+      "bytes": 1835,
+      "sha256": "edca485ffde29de200f2e87a631e75bde9032c04473ba9f3f1947a119362e732",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/UINavigationController-B8h-mi-lOQ.nib",
+      "bytes": 1981,
+      "sha256": "a65c45a838962cee746a4814f110a6da2ae3dc38bb8208cdd3bf30648b60e906",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/UINavigationController-w8O-U4-lhE.nib",
+      "bytes": 2359,
+      "sha256": "e8daa6f5ce5b9a181dbaa4fd25ada555f6138f142498cfc422cdadaa6ed9d07b",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Your Bidder Details.nib",
+      "bytes": 1142,
+      "sha256": "dfc54bba6d5eca6b9f9b4765d9c712fd832ce22b0d2b11508286561c3f5b39e4",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/Yzb-AU-icr-view-PY1-Lf-UOn.nib",
+      "bytes": 9272,
+      "sha256": "9fa191c9e329226863136a3d95b95d702ba4cba4908f571993e1abd809690f55",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/awQ-xt-Guo-view-4VH-9a-8Ed.nib",
+      "bytes": 4429,
+      "sha256": "39df04bfb5a5d832170aa482c6e991c5b142042f916a88dbda6fd3c8c4d91dbf",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/b5H-c8-Ctw-view-bfU-8z-kUE.nib",
+      "bytes": 5989,
+      "sha256": "25ae55b282dcf9b27610834635b4ab6646ed2d9dde59072f4ba0c0055dece5c5",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/b7X-gR-AEL-view-AgK-EL-Rn1.nib",
+      "bytes": 4399,
+      "sha256": "3b26c08c7c0543ee28863f41a6cb2c735d0ae76e9b98900e5f1a83403952dfe2",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/hrW-WV-2L3-view-dVu-kh-jLt.nib",
+      "bytes": 8638,
+      "sha256": "d02baa5a9fe09b0adfeaa2bd461f5438c8f1ce8a6cf94eae4c6806442694ef4b",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/igv-xv-sfe-view-EVf-2q-VBn.nib",
+      "bytes": 6685,
+      "sha256": "28c8f691c55a269702369693af67e91665abbf4351a4462c6ec8be99aa54dee7",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/ljx-1e-Xv5-view-se7-qy-Xk6.nib",
+      "bytes": 13130,
+      "sha256": "04c6b819058b316a08ce8d86bfdf113f6e2be4a67a8be78fe90b8ab9be488930",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/q7z-ij-DNu-view-z3s-jo-rdg.nib",
+      "bytes": 2774,
+      "sha256": "9c3ea4100b6e0c60f08771a5867f633e3fadcf858d46c3aff6800b1b6d57bfe5",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/rWY-Fx-Onm-view-hOe-9d-uPK.nib",
+      "bytes": 4806,
+      "sha256": "bfa3267e5db3d21c32159e9a65ffbf4357840c14dd203b650717f15d889fa026",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "Fulfillment.storyboardc/vkP-Fx-jvL-view-LB4-fL-p0q.nib",
+      "bytes": 4431,
+      "sha256": "734fde80367afaa3b8da1afa9ae1cd5572a2c7c1ea4d3da751684c61bcf41374",
+      "magic": "b'NIBArchive'"
+    },
+    {
+      "path": "KeypadView.nib",
+      "bytes": 6551,
+      "sha256": "d9f819e1177a37d1cefa866ae9dbee7906e44f7a563c3a6f610157edd262d7e2",
+      "magic": "b'NIBArchive'"
+    }
+  ],
+  "repository": "https://github.com/artsy/eidolon.git",
+  "xcode": "26.1 (17B55)",
+  "sdk": "iOS 26.1",
+  "compilation_tool": "scripts/compile_realapp_nibs.sh",
+  "artifact_kind": "compiled resources, not simulator goldens",
+  "license": "MIT, upstream LICENSE; see Sources/Eidolon for carried app source license"
+}
