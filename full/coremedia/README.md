@@ -293,3 +293,33 @@ Top-5 `implemented` evidence distribution after this continuation:
 The sealed gate completed with the required environment, deliverable, reference,
 runtime, and dylib markers. Existing fail-closed image/audio dependency,
 bitstream parser, handler-blob, and timer-scheduling boundaries remain unchanged.
+
+### Depth pass 2026-09 (wave 8 continuation from `08da4b01`)
+
+This continuation audits the already-present format-description and sample-buffer
+implementations against their concrete synchronous behavioral tests. It promotes
+358 formerly declared identifiers whose synthesized value/collection operations,
+format presentation, sample timing/range copying, readiness transitions, and
+attachment semantics are directly exercised on Linux. No Apple callback queue,
+hardware codec, image-buffer, audio-packet, daemon, or entitlement behavior was
+inferred; those boundaries remain deferred or declared in `coverage.tsv`.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2460 | 2818 |
+| declared | 777 | 419 |
+| deferred | 267 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Top-5 `implemented` evidence distribution after this continuation:
+
+1. `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` — 180 (6.4%)
+2. `CMCollectionDepthTests.swift#testCMDataBlockBufferCollectionAlgorithms` — 149 (5.3%)
+3. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (4.1%)
+4. `CMCollectionDepthTests.swift#testCMSampleAttachmentsArrayCollectionAlgorithms` — 110 (3.9%)
+5. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (3.2%)
+
+The sealed Linux host gate completed with all deliverable, reference, runtime,
+and dylib markers. The environment verifier separately confirmed Swift 6.2.4,
+the Linux target, scratch corpus, and dotnet-macios evidence marker.

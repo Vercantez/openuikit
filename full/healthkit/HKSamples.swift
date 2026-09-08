@@ -468,7 +468,7 @@ open class HKDeletedObject: NSObject, NSSecureCoding, @unchecked Sendable {
 }
 
 open class HKSeriesSample: HKSample, @unchecked Sendable {
-    public var count: Int { 0 }
+    open var count: Int { 0 }
 
     public override init(
         type: HKSampleType,
@@ -550,6 +550,7 @@ open class HKDiscreteQuantitySample: HKQuantitySample, @unchecked Sendable {
 }
 open class HKCumulativeQuantitySeriesSample: HKCumulativeQuantitySample, @unchecked Sendable {}
 open class HKDocumentSample: HKSample, @unchecked Sendable {
+    public var documentType: HKDocumentType { sampleType as! HKDocumentType }
     public override init(
         type: HKSampleType,
         start startDate: Date,
