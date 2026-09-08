@@ -579,6 +579,12 @@ open class UIViewController: UIResponder, UIContentContainer {
             _appearanceAnimated = animated
             loadViewIfNeeded()
             viewWillAppear(animated)
+            // Collection lifecycle oracle (iPhone16/iOS26.1): nonanimated
+            // selection clearing occurs after willAppear, before the next
+            // appearance phase. Other controller families are unaffected.
+            if !animated {
+                (self as? UICollectionViewController)?._clearSelectionForAppearance()
+            }
         } else {
             guard _appearanceState != .disappeared,
                   _appearanceState != .disappearing else { return }
@@ -593,6 +599,11 @@ open class UIViewController: UIResponder, UIContentContainer {
     public func endAppearanceTransition() {
         switch _appearanceState {
         case .appearing:
+            // Animated collection returns retain selection during appearance,
+            // then clear it before entering the subclass's didAppear callback.
+            if _appearanceAnimated {
+                (self as? UICollectionViewController)?._clearSelectionForAppearance()
+            }
             _appearanceState = .appeared
             viewDidAppear(_appearanceAnimated)
         case .disappearing:

@@ -1,0 +1,1002 @@
+{
+  "rows" : [
+    {
+      "loaded" : false,
+      "stage" : "nil.fresh.before"
+    },
+    {
+      "loaded" : false,
+      "stage" : "nil.fresh.afterSet",
+      "subviews" : null
+    },
+    {
+      "dataSource" : true,
+      "delegate" : true,
+      "frame" : [
+        0,
+        0,
+        393,
+        852
+      ],
+      "initialLayout" : true,
+      "loaded" : true,
+      "nil" : false,
+      "stage" : "nil.fresh.afterGet",
+      "subviews" : 1
+    },
+    {
+      "loaded" : true,
+      "oldDataSource" : false,
+      "oldDelegate" : false,
+      "oldSuperview" : false,
+      "stage" : "nil.loaded.afterSet",
+      "subviews" : 0
+    },
+    {
+      "dataSource" : false,
+      "delegate" : false,
+      "frame" : null,
+      "initialLayout" : false,
+      "nil" : true,
+      "same" : false,
+      "stage" : "nil.loaded.afterGet",
+      "subviews" : 0
+    },
+    {
+      "controllerInitialLayout" : true,
+      "initialLayout" : false,
+      "nil" : true,
+      "replacementLayout" : false,
+      "sameReplacement" : false,
+      "stage" : "nil.replacement.afterGet"
+    },
+    {
+      "loaded" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshClear.selectedBeforeFirstAttachment",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshClear.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshClear.willAppear.after",
+      "window" : false
+    },
+    {
+      "selected" : [
+
+      ],
+      "stage" : "freshClear.makeVisibleReturned",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshClear.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshClear.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshClear.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshClear.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+
+      ],
+      "stage" : "freshClear.firstAppearanceSettled",
+      "window" : true
+    },
+    {
+      "loaded" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.selectedBeforeFirstAttachment",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.willAppear.after",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.makeVisibleReturned",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshRetain.firstAppearanceSettled",
+      "window" : true
+    },
+    {
+      "loaded" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavClear.selectedBeforeFirstAttachment",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavClear.makeVisibleReturned",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavClear.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavClear.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshNavClear.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshNavClear.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshNavClear.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "freshNavClear.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+
+      ],
+      "stage" : "freshNavClear.firstAppearanceSettled",
+      "window" : true
+    },
+    {
+      "loaded" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.selectedBeforeFirstAttachment",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.makeVisibleReturned",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "freshNavRetain.firstAppearanceSettled",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clear.selected",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clear.away",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clear.popReturned",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clear.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clear.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clear.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+
+      ],
+      "stage" : "clear.settled",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retain.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retain.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retain.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retain.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retain.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retain.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.selected",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.away",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.popReturned",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retain.settled",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.selected",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.away",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.popReturned",
+      "window" : false
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "clearAnimated.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : true,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : true,
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+
+      ],
+      "stage" : "clearAnimated.settled",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retainAnimated.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retainAnimated.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retainAnimated.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retainAnimated.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retainAnimated.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : false,
+      "selected" : [
+
+      ],
+      "stage" : "retainAnimated.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.selected",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.away",
+      "window" : false
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.popReturned",
+      "window" : false
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.willAppear.before",
+      "window" : false
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.willAppear.after",
+      "window" : false
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.isAppearing.before",
+      "window" : true
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.isAppearing.after",
+      "window" : true
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.didAppear.before",
+      "window" : true
+    },
+    {
+      "animated" : true,
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.didAppear",
+      "window" : true
+    },
+    {
+      "selected" : [
+        [
+          0,
+          0
+        ]
+      ],
+      "stage" : "retainAnimated.settled",
+      "window" : true
+    }
+  ],
+  "system" : "26.1"
+}
