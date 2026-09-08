@@ -58,6 +58,64 @@ scripts/swift_gate.sh           the same again, for the SWIFT fixture (q)
 scripts/swift_gate.sh --record  (re-)record its baseline — Darwin only
 ```
 
+### Optional Linux runtime builds
+
+`build.sh all` omits objc4 and quartz because of their C++ build cost.
+`harness/run_linux.sh` builds the optional runtimes required by its selected
+manifest fixtures before recording the build fingerprint: `objc` needs
+`build.sh objc4`; `quartz` needs `build.sh quartz`; `objc_quartz` and
+`objc_shapes` need both. The drawing fixtures remain in `draw_manifest.tsv`
+and run through `quartz_pixel.sh`, which already builds their declared needs.
+Selecting an ordinary C fixture does not trigger either optional build.
+
+The harness rebuilds required runtimes even if a dylib is already present,
+then runs `build.sh tbd` so the SDK describes the completed runtime set.
+An optional build failure stops before fixture execution, records the target
+in `.status`, and leaves the compiler diagnostics in
+`tests/actual/linux/.build.log`; difftest reports that build reason rather
+than grading stale captures. Optional-build wall time, including the final
+stub generation/checks, is printed and saved as integer seconds in
+`tests/actual/linux/.dependency-build-seconds`. No Linux path writes baselines.
+
+The embedded script is read literally with `read`, so the macOS `/bin/bash`
+3.2 used by the runner's shebang and Homebrew Bash 5.3 receive identical
+container code. An empty `.status` is an incomplete run, even when old capture
+files still exist: difftest reports the reason and exits 2.
+
+Measured 2026-09-07 on an Apple-silicon Mac, Docker
+`machorun-testbed:24.04` (`linux/arm64`), starting at monorepo `12bb634c`:
+
+| Main corpus | Pass | Fail | objc exit | Added optional-build time |
+|---|---:|---:|---:|---:|
+| Before | 69 | 1 | 72 (missing libobjc.A.dylib) | none |
+| After | 70 | 0 | 0 (stdout/stderr also match) | 79 s in final run |
+
+Both verdicts retain xfail 1, xpass 0, skipped 0, no-oracle 1, drift 0.
+The optional timer brackets `build.sh objc4` (32 objects, zero failures) and
+`build.sh tbd`; earlier rebuild samples were 154 s and 200 s, so this is an
+observed cost, not a fixed runtime promise. Quartz is not selected by the main
+manifest; its drawing-manifest declarations and separate runner are unchanged.
+
+Proof from `uikit/` (the second command re-verifies Darwin and runs Linux again):
+
+```sh
+bash ../machorun/harness/run_linux.sh && bash ../machorun/scripts/difftest.sh
+# pass 70  fail 0  xfail 1  xpass 0  skipped 0  no-oracle 1  drift 0
+```
+
+The final `difftest.sh` took 157.65 s end to end and reported the stable build
+fingerprint `d0d2ddf4fd77` before/after fixture execution. In the same test-bed
+image, `bash machorun/scripts/test_check_undefined_park.sh` passed (4 images
+with and without the parked dylib, 5 for the live-path control), and
+`bash machorun/scripts/gen_tbd.sh --check` passed all six checks.
+`bash machorun/scripts/test_difftest_incomplete.sh` verifies that matching
+leftover captures plus an empty status are refused with exit 2. The embedded
+script was also extracted under Bash 3.2 and 5.3 and compared byte for byte.
+A subsequent `run_linux.sh printf` completed in 39.77 s with **0 s** of
+optional builds; `difftest.sh --no-run printf` reported pass 1 / fail 0 with
+no skips or drift, and the build fingerprint remained `d0d2ddf4fd77`.
+No expected outputs, manifest verdicts, or vendor pins were changed.
+
 ---
 
 ## Two structural axes that split the corpus
