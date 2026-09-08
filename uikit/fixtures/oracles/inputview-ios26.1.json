@@ -1,0 +1,541 @@
+{
+  "records" : [
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : false,
+      "sizeThatFitsLarge" : [
+        0,
+        0
+      ],
+      "sizeThatFitsZero" : [
+        0,
+        0
+      ],
+      "stage" : "init.detached",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "clips" : false,
+      "frame" : [
+        0,
+        0,
+        0,
+        0
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : true,
+      "sizeThatFitsLarge" : [
+        0,
+        0
+      ],
+      "sizeThatFitsZero" : [
+        0,
+        0
+      ],
+      "stage" : "init.selfSizing",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            0,
+            0
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        140,
+        70
+      ],
+      "clips" : false,
+      "frame" : [
+        4,
+        6,
+        140,
+        70
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : false,
+      "sizeThatFitsLarge" : [
+        140,
+        70
+      ],
+      "sizeThatFitsZero" : [
+        140,
+        70
+      ],
+      "stage" : "frame.detached",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            70,
+            70
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            70,
+            0,
+            70,
+            70
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        140,
+        70
+      ],
+      "clips" : false,
+      "frame" : [
+        4,
+        6,
+        140,
+        70
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : true,
+      "sizeThatFitsLarge" : [
+        140,
+        70
+      ],
+      "sizeThatFitsZero" : [
+        140,
+        70
+      ],
+      "stage" : "frame.selfSizing",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            70,
+            70
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            70,
+            0,
+            70,
+            70
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        300,
+        80
+      ],
+      "clips" : false,
+      "frame" : [
+        20,
+        150,
+        300,
+        80
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : false,
+      "sizeThatFitsLarge" : [
+        300,
+        80
+      ],
+      "sizeThatFitsZero" : [
+        300,
+        80
+      ],
+      "stage" : "default.detached",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            150,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        300,
+        80
+      ],
+      "clips" : false,
+      "frame" : [
+        20,
+        150,
+        300,
+        80
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : true,
+      "sizeThatFitsLarge" : [
+        300,
+        80
+      ],
+      "sizeThatFitsZero" : [
+        300,
+        80
+      ],
+      "stage" : "default.selfSizing",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            150,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        300,
+        80
+      ],
+      "clips" : false,
+      "frame" : [
+        20,
+        300,
+        300,
+        80
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : false,
+      "sizeThatFitsLarge" : [
+        300,
+        80
+      ],
+      "sizeThatFitsZero" : [
+        300,
+        80
+      ],
+      "stage" : "keyboard.detached",
+      "style" : 1,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            150,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        300,
+        80
+      ],
+      "clips" : false,
+      "frame" : [
+        20,
+        300,
+        300,
+        80
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : true,
+      "sizeThatFitsLarge" : [
+        300,
+        80
+      ],
+      "sizeThatFitsZero" : [
+        300,
+        80
+      ],
+      "stage" : "keyboard.selfSizing",
+      "style" : 1,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            150,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "absentProperty" : true,
+      "explicitTrue" : true,
+      "stage" : "audioFeedback"
+    },
+    {
+      "callsReturned" : 2,
+      "stage" : "playInputClick"
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        300,
+        80
+      ],
+      "clips" : false,
+      "frame" : [
+        20,
+        150,
+        300,
+        80
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : false,
+      "sizeThatFitsLarge" : [
+        300,
+        80
+      ],
+      "sizeThatFitsZero" : [
+        300,
+        80
+      ],
+      "stage" : "default.attached",
+      "style" : 0,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            150,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    },
+    {
+      "background" : null,
+      "bounds" : [
+        0,
+        0,
+        300,
+        80
+      ],
+      "clips" : false,
+      "frame" : [
+        20,
+        300,
+        300,
+        80
+      ],
+      "intrinsic" : [
+        -1,
+        -1
+      ],
+      "opaque" : true,
+      "selfSizing" : false,
+      "sizeThatFitsLarge" : [
+        300,
+        80
+      ],
+      "sizeThatFitsZero" : [
+        300,
+        80
+      ],
+      "stage" : "keyboard.attached",
+      "style" : 1,
+      "subviews" : [
+        {
+          "frame" : [
+            0,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        },
+        {
+          "frame" : [
+            150,
+            0,
+            150,
+            80
+          ],
+          "type" : "_UIInputViewContent"
+        }
+      ]
+    }
+  ],
+  "scale" : 3,
+  "screen" : [
+    0,
+    0,
+    393,
+    852
+  ],
+  "systemVersion" : "26.1"
+}
