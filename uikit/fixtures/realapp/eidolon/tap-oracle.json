@@ -1,0 +1,118 @@
+{
+  "device" : "iPhone",
+  "rows" : [
+    {
+      "case" : "button-without-rx",
+      "released" : true
+    },
+    {
+      "case" : "child-does-not-retain-parent",
+      "parentReleased" : true,
+      "superviewCleared" : true
+    },
+    {
+      "case" : "parent-retains-child-until-removal",
+      "releasedAfterRemoval" : true,
+      "retainedWhileAttached" : true
+    },
+    {
+      "case" : "subscribe",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 64,
+      "first" : 0,
+      "onMain" : true,
+      "second" : 0
+    },
+    {
+      "case" : "unrelated-events",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 64,
+      "first" : 0,
+      "onMain" : true,
+      "second" : 0
+    },
+    {
+      "case" : "touch-up-inside",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 64,
+      "first" : 1,
+      "onMain" : true,
+      "second" : 1
+    },
+    {
+      "case" : "combined-events",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 64,
+      "first" : 2,
+      "onMain" : true,
+      "second" : 2
+    },
+    {
+      "case" : "disabled-explicit-send",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 64,
+      "first" : 3,
+      "onMain" : true,
+      "second" : 3
+    },
+    {
+      "case" : "dispose-first",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 64,
+      "first" : 3,
+      "onMain" : true,
+      "second" : 4
+    },
+    {
+      "case" : "dispose-all",
+      "completed" : 0,
+      "errors" : 0,
+      "events" : 0,
+      "first" : 3,
+      "onMain" : true,
+      "second" : 4
+    },
+    {
+      "case" : "control-event-filter",
+      "events" : 0,
+      "next" : 1
+    },
+    {
+      "case" : "control-event-union",
+      "combined" : 3,
+      "disposed" : 3,
+      "events" : 0,
+      "individual" : 2
+    },
+    {
+      "case" : "dispose-during-delivery",
+      "completed" : 1,
+      "events" : 0,
+      "next" : 1
+    },
+    {
+      "case" : "deallocate-subscribed-control",
+      "completed" : 1,
+      "next" : 1,
+      "released" : true
+    },
+    {
+      "case" : "subscribe-after-deallocation",
+      "completed" : 1,
+      "next" : 0
+    },
+    {
+      "case" : "dispose-releases-observer",
+      "events" : 0,
+      "releasedAfterDispose" : true,
+      "retainedBeforeDispose" : true
+    }
+  ],
+  "system" : "26.1"
+}

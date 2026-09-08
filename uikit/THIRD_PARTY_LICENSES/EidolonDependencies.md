@@ -11,6 +11,11 @@ Eidolon `44486ed9149f16b3eb3a5e687f99ae078309f4fe` Podfile.lock versions, resolv
 - Vendored paths: `Sources/EidolonDependencies/RxSwift/`
 - Complete license: `Sources/EidolonDependencies/RxSwift/LICENSE.md`
 
+`RxCocoa/OpenUIKit/OpenUIKitControlEvents.swift` is an OpenUIKit adapter
+derived from the MIT-licensed `iOS/UIControl+Rx.swift` event implementation.
+It is additional port code, outside the unchanged upstream file hashes.
+The native oracle compiles the original iOS files, not this adapter.
+
 ### Moya 11.0.0
 
 - Upstream: https://github.com/Moya/Moya.git
