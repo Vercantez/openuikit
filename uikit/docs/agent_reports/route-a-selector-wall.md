@@ -18,6 +18,7 @@ are excluded; conditional compilation branches are included.
 | `Sources/BlockzillaPackage` | 51 | 3 | 3 | 0 | 0 | 0 / 7 |
 | SnapKit | 37 | 0 | 0 | 0 | 0 | 0 / 1 |
 | Fuzi | 8 | 0 | 0 | 0 | 0 | 0 / 0 |
+| Local Focus dependency adapters | 14 | 0 | 0 | 0 | 0 | 11 / 2 |
 
 NSObject ancestry above is the iOS SDK inheritance chain, **not** a claim
 that native Linux OpenUIKit has the same NSObject superclass graph. The
@@ -114,6 +115,17 @@ this run supplies a compiler measurement without silently rescoring them.
 
 ## Focus compile and execution proof
 
+The [direct swiftc reproduction](route-a-focus-direct-swiftc.json), driven by
+`Tools/ingest/route_a_focus_swiftc.py`, typechecks the complete original
+ThemeTableViewToggleCell against the built native UIKit/OpenUIKit modules,
+without modifying Package.swift. Default flags and the experimental-feature
+flag each give exactly two errors: line 30 disabled `@objc`, and line 21
+`#selector` requiring the ObjC runtime. The frontend interop flag instead
+reports the UISwitch argument as not representable in Objective-C and asks
+for the ObjectiveC module. The lowered file gives **2 → 0 errors**, exit zero
+with empty diagnostic output. Exact argument arrays and source hashes are
+carried in the record.
+
 `Tools/ingest/route_a_focus_probe.py` compiles the complete pinned
 `SwitchTableViewCell.swift` and `ThemeTableViewToggleCell.swift`, first
 original and then lowered. It uses the real PaddedSwitch, ToggleItem and
@@ -158,6 +170,38 @@ source, scene, golden, package manifest or pin changes are part of this branch.
 
 ## Regression verification
 
-Fresh private-device iOS suite, Catalyst, real-app screens, nearby Swift
-selector tests and the CHECK_ONLY operator gate are in progress. Final
-measurements will be appended before the branch is pushed.
+* Fresh private iOS 26.1 capture: **112/113**, sole `corner_radius` miss
+  **99.411**, zero layout issues. All 113 scenes captured with the private
+  `-route-a-selector-wall` simulator suffix.
+
+* Catalyst: **124/124**, 178 rendered PNG hashes carried in the
+  [regression record](route-a-selector-regressions.json).
+* Real-app: **12/12 enforced floors hold**. Fifteen screens render, fourteen
+  have existing goldens; the Focus browser golden is absent, so its score is
+  unavailable. History/settings/dark/storage: **99.137 / 98.535 / 98.548 /
+  99.740**; xs/xxxl/ax1: **98.720 / 98.334 / 97.549**; iPad
+  settings/history/storage: **99.650 / 99.860 / 99.734**; Focus settings/home:
+  **98.823 / 99.287**; Hackers feed/Ledger: **98.235 / 99.610**.
+* Replaying after importing main leaves **178/178 Catalyst**, **113/113
+  iOS** and **14/15 real-app** PNGs byte-identical to the earlier run. The
+  one changed real-app image is Hackers, **94.662 → 98.235**, from the
+  operator's upstream pill change; it is not a selector-adapter improvement.
+* `swift test --filter 'Selector|ActionTable'`: **38/38**, zero failures.
+* Python census/rewriter tests: **18/18**.
+* Production `Sources`, `Package.swift`, fixtures and goldens are identical to
+  the final merged main baseline `21a78014`; the generated adapter is opt-in and outside all production
+  targets. No production-source stash is needed to establish unchanged
+  renderer inputs.
+
+The first CHECK_ONLY attempt found a concurrent fidelity-table insertion
+conflict after the operator advanced main. Merge `f94894d2` imports main
+`21a78014` and preserves both rows. The rerun is now checking that merged
+production baseline. It is invoked from the repo root with the existing `ALLOW_PATHS` hook scoped
+only to the brief-authorized ladder document:
+
+```sh
+export ALLOW_PATHS='^full/ladder/APP_LADDER[.]md$'
+CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/route-a-selector-wall
+```
+
+Final operator measurements will be appended before the branch is pushed.
