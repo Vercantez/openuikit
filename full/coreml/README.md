@@ -230,11 +230,41 @@ Top-5 implemented evidence distribution (1,094 implemented):
 4. `MLTensorTests.swift#testTensorShapeOpsAndEnums` — 78 (7.1%)
 5. `MLTensorTests.swift#testTensorReductionsAndElementwise` — 63 (5.8%)
 
-The requested 300-row gain cannot be reached from this starting ledger: only
-128 non-implemented, non-stdlib rows remained. All 128 are now implemented.
-The 576 remaining deferred IDs are synthesized Swift standard-library integer
-operators leaked into the CoreML graph, not CoreML-owned behavior; the task's
-classification rule permits `not-applicable` only for SwiftUI overlays. The 16
-unavailable rows continue to state their Apple Metal / pixel-buffer hardware
-boundary explicitly. No fail-closed inference or Apple-service boundary was
-broadened.
+That continuation implemented all 128 then-remaining CoreML-owned declarations.
+At that point, 576 synthesized Swift standard-library integer witnesses still
+needed concrete behavioral evidence; the later synthesized-scalar continuation
+below supplies it. The 16 unavailable rows continue to state their Apple Metal
+/ pixel-buffer hardware boundary explicitly. No fail-closed inference or
+Apple-service boundary was broadened.
+
+### Wave 8 synthesized-scalar exhaustion
+
+This continuation exhausts the final 576 deferred graph rows. These rows are
+all synthesized Swift standard-library witnesses attached to the integer
+scalar types that CoreML shaped arrays accept (`Int`, `Int8`, `Int16`, `Int32`,
+`UInt8`, `UInt16`, and `UInt32`). Focused synchronous runtime tests now invoke
+their concrete comparison/range, arithmetic/overflow, bitwise/shift,
+conversion, endian/property, stride, random-range, formatting, and parsing
+overloads after importing CoreML. The coverage ledger therefore records tested
+behavior rather than treating these graph-emitted identifiers as declarations
+or as non-CoreML deferrals.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Before this continuation | 1,094 | 0 | 576 | 16 | 0 |
+| After this continuation | 1,670 | 0 | 0 | 16 | 0 |
+
+Top-5 implemented evidence distribution (1,670 implemented):
+
+1. `IntegerOverlayTests.swift#testIntegerOverlayComparisonsAndRanges` — 140 (8.4%)
+2. `CoreMLEnumTests.swift#testEnumAndConstantRawValues` — 128 (7.7%)
+3. `IntegerOverlayTests.swift#testIntegerOverlayBitwiseAndShifts` — 112 (6.7%)
+4. `MLShapedArrayAlgorithmsTests.swift#testShapedArrayAdvancedReadAlgorithms` — 98 (5.9%)
+5. `IntegerOverlayTests.swift#testIntegerOverlayArithmeticAndOverflow` — 85 (5.1%)
+
+All non-overlay families in the pinned graph are now either implemented with
+focused evidence or explicitly unavailable. The 16 unavailable rows continue
+to name the Apple Metal GPU / `CVPixelBuffer` hardware boundary and the absence
+of a Linux daemon or entitlement fallback. This evidence improvement does not
+broaden inference: unsupported neural-network and MIL execution, model update
+services, model collections, and Apple compilation remain fail-closed.

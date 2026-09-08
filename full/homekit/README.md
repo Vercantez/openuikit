@@ -172,3 +172,29 @@ Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). The sealed gate compiles
 with a clean product tree (`products=clean`). Starting commit
 `6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
+
+## Depth pass 2026-09 (wave 9)
+
+This continuation preserves wave 8 and verifies compiler-synthesized enum
+semantics plus deterministic local object state. Coverage moved from **1129
+implemented / 382 declared / 0 deferred / 8 unavailable / 776 not-applicable**
+to **1437 implemented / 74 declared / 0 deferred / 8 unavailable / 776
+not-applicable**. The implemented gain is **+308**.
+
+The enum table now directly exercises `init(rawValue:)`, `!=`, `hashValue`, and
+`hash(into:)` for all 66 native enums. Focused synchronous tests additionally
+exercise base action/event identity, characteristic-event immutable and mutable
+state, fail-closed trigger-value updates, accessory/network profile defaults,
+camera source/control defaults, and accessory setup request value state. No
+Apple daemon, RTP stream, network, pairing, entitlement, or hardware success is
+fabricated; those boundaries remain as documented above.
+
+**Top-5 implemented evidence distribution (after wave 9)**
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 410 | 28.5% | `HomeKitEnumTests.swift#testEnumRawValues` |
+| 264 | 18.4% | `HomeKitEnumTests.swift#testSynthesizedEnumWitnesses` |
+| 253 | 17.6% | `HomeKitConstantTests.swift#testCStringConstants` |
+| 107 | 7.4% | `HomeKitEnumTests.swift#testErrorCodeStatics` |
+| 50 | 3.5% | `HomeKitAccessoryDepthTests.swift#testAccessoryGraphAndDelegate` |

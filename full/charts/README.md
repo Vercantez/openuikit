@@ -656,3 +656,39 @@ witnesses, and most remaining deferred rows are stdlib integer/collection
 members that Charts neither owns nor redeclares. SwiftUI cross-import overlay
 rows were not relabeled as implemented, and stdlib behavior was not claimed as
 Charts behavior merely to increase the count.
+
+#### Wave 8 depth continuation: scroll-target model and remaining witnesses
+
+This continuation starts from `implemented` 2340, `declared` 2566,
+`deferred` 914, `unavailable` 0, and `not-applicable` 3654. It ends at
+`implemented` 2353, `declared` 2558, `deferred` 909, `unavailable` 0, and
+`not-applicable` 3654: an honest implemented gain of 13, with nondeferred
+coverage remaining 4911. The 300-row target is exhausted by the ownership
+boundary: the remaining declared Charts rows are overwhelmingly uninhabited
+`Never` synthesized witnesses, while the deferred bulk is stdlib and SwiftUI
+surface that Charts cannot honestly claim.
+
+The Linux scroll starting point now includes a deterministic programmatic
+`ScrollTarget` model, a `ChartScrollTargetBehaviorContext` that exposes its
+`ChartProxy` and forwards base context properties by key path, and protocol
+bridging from a base scroll context to a chart context. Value-aligned behavior
+snaps x/y origins to configured numeric units. This does not synthesize gesture
+prediction, paging, animation, or Apple scroll-view limit behavior.
+
+Focused tests additionally establish the `AxisMark` and `AxisContent` protocol
+witnesses, the `ChartSymbolShape.perceptualUnitRect` contract, distinct basic 3D
+symbol identities, and record retention by function area/line content. 3D
+rendering, camera/pose interaction, and `Rotation3D` remain fail-closed. Function
+content and `Plot` `Body == Never` ABI questions remain deferred because the
+portable diagnostic views intentionally expose inspectable bodies.
+
+Top-five implemented evidence distribution (2353 implemented rows; 40% cap =
+941):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 41 | 1.7% | `ChartsPlotEngineTests.swift#testSectorMarkChartContentModifiers` |
+| 41 | 1.7% | `ChartsPlotEngineTests.swift#testSectorPlotChartContentModifiers` |
+| 41 | 1.7% | `ChartsPlotEngineTests.swift#testRectangleMarkChartContentModifiers` |
+| 41 | 1.7% | `ChartsPlotEngineTests.swift#testRectanglePlotChartContentModifiers` |
+| 41 | 1.7% | `ChartsPlotEngineTests.swift#testAnyChartContentModifiers` |

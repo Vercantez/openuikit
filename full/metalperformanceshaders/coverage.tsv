@@ -1,5 +1,5 @@
 precise	status	evidence	notes
-::SYNTHESIZED::c:@T@MPSPackedFloat3	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	validated packed vector value semantics
 c:@E@MPSAccelerationStructureStatus	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSEnumRawValues	Linux host implementation exercised by a focused agent test
 c:@E@MPSAccelerationStructureStatus@MPSAccelerationStructureStatusBuilt	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSEnumRawValues	Linux host implementation exercised by a focused agent test
 c:@E@MPSAccelerationStructureStatus@MPSAccelerationStructureStatusUnbuilt	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSEnumRawValues	Linux host implementation exercised by a focused agent test
@@ -398,9 +398,9 @@ c:@S@MPSStateTextureInfo@FI@usage	implemented	test:full/metalperformanceshaders/
 c:@S@MPSStateTextureInfo@FI@width	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSGeometryStructs	Linux host implementation exercised by a focused agent test
 c:@S@_MPSAxisAlignedBoundingBox@FI@max::SYNTHESIZED::c:@T@MPSAxisAlignedBoundingBox	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
 c:@S@_MPSAxisAlignedBoundingBox@FI@min::SYNTHESIZED::c:@T@MPSAxisAlignedBoundingBox	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
-c:@S@_MPSPackedFloat3@Ua::SYNTHESIZED::c:@T@MPSPackedFloat3	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:@S@_MPSPackedFloat3@Ua::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	validated packed vector value semantics
 c:@S@_MPSPackedFloat3@Ua@FI@elements::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
-c:@S@_MPSPackedFloat3@Ua@Sa::SYNTHESIZED::c:@T@MPSPackedFloat3	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:@S@_MPSPackedFloat3@Ua@Sa::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	validated packed vector value semantics
 c:@S@_MPSPackedFloat3@Ua@Sa@FI@x::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
 c:@S@_MPSPackedFloat3@Ua@Sa@FI@y::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
 c:@S@_MPSPackedFloat3@Ua@Sa@FI@z::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
@@ -575,10 +575,10 @@ c:objc(cs)MPSBinaryImageKernel(py)primaryEdgeMode	implemented	test:full/metalper
 c:objc(cs)MPSBinaryImageKernel(py)primaryOffset	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSBinaryImageKernel(py)secondaryEdgeMode	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSBinaryImageKernel(py)secondaryOffset	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSCNNAdd	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNAdd(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNAddGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNAddGradient(im)initWithDevice:isSecondarySourceFilter:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNAdd	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNAdd(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNAddGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNAddGradient(im)initWithDevice:isSecondarySourceFilter:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
 c:objc(cs)MPSCNNArithmetic	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNArithmetic(im)encodeBatchToCommandBuffer:primaryImages:secondaryImages:destinationStates:destinationImages:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNArithmetic(im)encodeToCommandBuffer:primaryImage:secondaryImage:destinationState:destinationImage:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
@@ -849,26 +849,26 @@ c:objc(cs)MPSCNNCrossChannelNormalizationNode(im)initWithSource:kernelSize:	defe
 c:objc(cs)MPSCNNCrossChannelNormalizationNode(py)kernelSizeInFeatureChannels	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
 c:objc(cs)MPSCNNDepthWiseConvolutionDescriptor	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
 c:objc(cs)MPSCNNDepthWiseConvolutionDescriptor(py)channelMultiplier	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMax(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMax(im)initWithDevice:kernelWidth:kernelHeight:dilationRateX:dilationRateY:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMax(py)dilationRateX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMax(py)dilationRateY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradient(im)initWithDevice:kernelWidth:kernelHeight:dilationRateX:dilationRateY:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode(im)initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode(py)dilationRateX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode(py)dilationRateY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxNode(im)initWithSource:filterSize:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxNode(im)initWithSource:filterSize:stride:dilationRate:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxNode(im)initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxNode(py)dilationRateX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDilatedPoolingMaxNode(py)dilationRateY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDivide	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNDivide(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNDilatedPoolingMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMax(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMax(im)initWithDevice:kernelWidth:kernelHeight:dilationRateX:dilationRateY:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMax(py)dilationRateX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMax(py)dilationRateY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradient(im)initWithDevice:kernelWidth:kernelHeight:dilationRateX:dilationRateY:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode(im)initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode(py)dilationRateX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxGradientNode(py)dilationRateY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxNode(im)initWithSource:filterSize:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxNode(im)initWithSource:filterSize:stride:dilationRate:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxNode(im)initWithSource:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:dilationRateX:dilationRateY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxNode(py)dilationRateX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDilatedPoolingMaxNode(py)dilationRateY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNDivide	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNDivide(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
 c:objc(cs)MPSCNNDropout	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNDropout(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNDropout(im)initWithDevice:keepProbability:seed:maskStrideInPixels:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
@@ -1034,14 +1034,14 @@ c:objc(cs)MPSCNNLocalContrastNormalizationNode(py)kernelWidth	implemented	test:f
 c:objc(cs)MPSCNNLocalContrastNormalizationNode(py)p0	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNLocalContrastNormalizationNode(py)pm	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNLocalContrastNormalizationNode(py)ps	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSCNNLogSoftMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxGradient(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxGradientNode(im)initWithSourceGradient:sourceImage:gradientState:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNLogSoftMaxNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNLogSoftMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxGradient(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxGradientNode(im)initWithSourceGradient:sourceImage:gradientState:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNLogSoftMaxNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
 c:objc(cs)MPSCNNLoss	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNLossAndForwardLoss	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNLoss(im)encodeBatchToCommandBuffer:sourceImages:labels:	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNLossAndForwardLoss	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNLoss(im)encodeBatchToCommandBuffer:sourceImages:labels:destinationImages:	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNLossAndForwardLoss	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
@@ -1126,10 +1126,10 @@ c:objc(cs)MPSCNNMultiaryKernel(py)isBackwards	implemented	test:full/metalperform
 c:objc(cs)MPSCNNMultiaryKernel(py)isStateModified	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNMultiaryKernel	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNMultiaryKernel(py)padding	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNMultiaryKernel	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNMultiaryKernel(py)sourceCount	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNMultiaryKernel	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
-c:objc(cs)MPSCNNMultiply	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNMultiply(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNMultiplyGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNMultiplyGradient(im)initWithDevice:isSecondarySourceFilter:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNMultiply	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNMultiply(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNMultiplyGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNMultiplyGradient(im)initWithDevice:isSecondarySourceFilter:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
 c:objc(cs)MPSCNNNeuron	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuron(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuron(im)initWithDevice:neuronDescriptor:	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
@@ -1138,22 +1138,22 @@ c:objc(cs)MPSCNNNeuron(py)b	implemented	test:full/metalperformanceshaders/tests/
 c:objc(cs)MPSCNNNeuron(py)c	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuron(py)data	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuron(py)neuronType	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSCNNNeuronAbsolute	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronAbsolute(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronAbsoluteNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronAbsoluteNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronELU	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronELU(im)initWithDevice:a:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronELUNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronELUNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronELUNode(im)initWithSource:a:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronExponential	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronExponential(im)initWithDevice:a:b:c:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronExponentialNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronExponentialNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronExponentialNode(im)initWithSource:a:b:c:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronGeLUNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronGeLUNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNNeuronAbsolute	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronAbsolute(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronAbsoluteNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronAbsoluteNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronELU	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronELU(im)initWithDevice:a:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronELUNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronELUNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronELUNode(im)initWithSource:a:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronExponential	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronExponential(im)initWithDevice:a:b:c:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronExponentialNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronExponentialNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronExponentialNode(im)initWithSource:a:b:c:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronGeLUNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronGeLUNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
 c:objc(cs)MPSCNNNeuronGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuronGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuronGradient(im)initWithDevice:neuronDescriptor:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
@@ -1162,66 +1162,66 @@ c:objc(cs)MPSCNNNeuronGradient(py)b	implemented	test:full/metalperformanceshader
 c:objc(cs)MPSCNNNeuronGradient(py)c	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuronGradient(py)data	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuronGradient(py)neuronType	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSCNNNeuronGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronGradientNode(im)initWithSourceGradient:sourceImage:gradientState:descriptor:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronGradientNode(py)descriptor	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronHardSigmoid	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronHardSigmoid(im)initWithDevice:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronHardSigmoidNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronHardSigmoidNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronHardSigmoidNode(im)initWithSource:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLinear	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLinear(im)initWithDevice:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLinearNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLinearNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLinearNode(im)initWithSource:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLogarithm	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLogarithm(im)initWithDevice:a:b:c:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLogarithmNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLogarithmNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronLogarithmNode(im)initWithSource:a:b:c:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronNode(cm)nodeWithSource:descriptor:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronNode(py)a	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronNode(py)b	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronNode(py)c	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPReLU	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPReLU(im)initWithDevice:a:count:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPReLUNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPReLUNode(im)initWithSource:aData:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPower	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPower(im)initWithDevice:a:b:c:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPowerNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPowerNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronPowerNode(im)initWithSource:a:b:c:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNNeuronGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronGradientNode(im)initWithSourceGradient:sourceImage:gradientState:descriptor:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronGradientNode(py)descriptor	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronHardSigmoid	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronHardSigmoid(im)initWithDevice:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronHardSigmoidNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronHardSigmoidNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronHardSigmoidNode(im)initWithSource:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLinear	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLinear(im)initWithDevice:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLinearNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLinearNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLinearNode(im)initWithSource:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLogarithm	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLogarithm(im)initWithDevice:a:b:c:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLogarithmNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLogarithmNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronLogarithmNode(im)initWithSource:a:b:c:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronNode(cm)nodeWithSource:descriptor:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronNode(py)a	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronNode(py)b	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronNode(py)c	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPReLU	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPReLU(im)initWithDevice:a:count:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPReLUNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPReLUNode(im)initWithSource:aData:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPower	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPower(im)initWithDevice:a:b:c:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPowerNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPowerNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronPowerNode(im)initWithSource:a:b:c:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
 c:objc(cs)MPSCNNNeuronReLU	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNeuronReLU(im)initWithDevice:a:	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNNeuron	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSCNNNeuronReLUN	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUN(im)initWithDevice:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUNNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUNNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUNNode(im)initWithSource:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronReLUNode(im)initWithSource:a:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSigmoid	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSigmoid(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSigmoidNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSigmoidNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftPlus	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftPlus(im)initWithDevice:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftPlusNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftPlusNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftPlusNode(im)initWithSource:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftSign	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftSign(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftSignNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronSoftSignNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronTanH	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronTanH(im)initWithDevice:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronTanHNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronTanHNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNNeuronTanHNode(im)initWithSource:a:b:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNNeuronReLUN	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUN(im)initWithDevice:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUNNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUNNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUNNode(im)initWithSource:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronReLUNode(im)initWithSource:a:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSigmoid	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSigmoid(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSigmoidNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSigmoidNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftPlus	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftPlus(im)initWithDevice:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftPlusNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftPlusNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftPlusNode(im)initWithSource:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftSign	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftSign(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftSignNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronSoftSignNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronTanH	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronTanH(im)initWithDevice:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronTanHNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronTanHNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
+c:objc(cs)MPSCNNNeuronTanHNode(im)initWithSource:a:b:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NeuronDescriptors	validated neuron descriptor parameters and fail-closed kernel surface
 c:objc(cs)MPSCNNNormalizationGammaAndBetaState	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNBatchNormalization	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNormalizationGammaAndBetaState(cm)temporaryStateWithCommandBuffer:numberOfFeatureChannels:	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNBatchNormalization	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNNormalizationGammaAndBetaState(im)initWithGamma:beta:	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNBatchNormalization	Linux host implementation exercised by a focused agent test
@@ -1246,40 +1246,40 @@ c:objc(cs)MPSCNNPoolingAverage(im)initWithCoder:device:	implemented	test:full/me
 c:objc(cs)MPSCNNPoolingAverage(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNPoolingDescriptor	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingAverage(py)zeroPadSizeX	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNPoolingDescriptor	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingAverage(py)zeroPadSizeY	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNPoolingDescriptor	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
-c:objc(cs)MPSCNNPoolingAverageGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingAverageGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingAverageGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingAverageGradient(py)zeroPadSizeX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingAverageGradient(py)zeroPadSizeY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingAverageGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingAverageNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradient(im)initWithDevice:kernelWidth:kernelHeight:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradient(py)sourceSize	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradientNode(im)initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradientNode(py)kernelHeight	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradientNode(py)kernelWidth	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradientNode(py)strideInPixelsX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingGradientNode(py)strideInPixelsY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2Norm	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2Norm(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2Norm(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2NormGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2NormGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2NormGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2NormGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingL2NormNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNPoolingAverageGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingAverageGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingAverageGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingAverageGradient(py)zeroPadSizeX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingAverageGradient(py)zeroPadSizeY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingAverageGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingAverageNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradient(im)initWithDevice:kernelWidth:kernelHeight:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradient(py)sourceSize	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradientNode(im)initWithSourceGradient:sourceImage:gradientState:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:paddingPolicy:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradientNode(py)kernelHeight	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradientNode(py)kernelWidth	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradientNode(py)strideInPixelsX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingGradientNode(py)strideInPixelsY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2Norm	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2Norm(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2Norm(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2NormGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2NormGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2NormGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2NormGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingL2NormNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
 c:objc(cs)MPSCNNPoolingMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNPoolingDescriptor	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingMax(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNPoolingDescriptor	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingMax(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSCNNDescriptorTests.swift#testMPSCNNPoolingDescriptor	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
-c:objc(cs)MPSCNNPoolingMaxGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingMaxGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingMaxGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingMaxGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNPoolingMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNPoolingMaxGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingMaxGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingMaxGradient(im)initWithDevice:kernelWidth:kernelHeight:strideInPixelsX:strideInPixelsY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingMaxGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNPoolingMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
 c:objc(cs)MPSCNNPoolingNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingNode(im)initWithSource:filterSize:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingNode(im)initWithSource:filterSize:stride:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
@@ -1288,78 +1288,78 @@ c:objc(cs)MPSCNNPoolingNode(py)kernelHeight	implemented	test:full/metalperforman
 c:objc(cs)MPSCNNPoolingNode(py)kernelWidth	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingNode(py)strideInPixelsX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSCNNPoolingNode(py)strideInPixelsY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSCNNSoftMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxGradient(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxGradientNode(im)initWithSourceGradient:sourceImage:gradientState:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSoftMaxNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalization	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalization(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalization(im)initWithDevice:kernelWidth:kernelHeight:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalization(py)alpha	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalization(py)beta	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalization(py)delta	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradient(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradient(im)initWithDevice:kernelWidth:kernelHeight:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradient(py)alpha	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradient(py)beta	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradient(py)delta	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode(im)initWithSourceGradient:sourceImage:gradientState:kernelSize:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)alpha	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)beta	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)delta	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)kernelHeight	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)kernelWidth	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationNode(im)initWithSource:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationNode(im)initWithSource:kernelSize:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationNode(py)kernelHeight	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSpatialNormalizationNode(py)kernelWidth	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNSoftMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxGradient(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxGradientNode(im)initWithSourceGradient:sourceImage:gradientState:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSoftMaxNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSpatialNormalization	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalization(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalization(im)initWithDevice:kernelWidth:kernelHeight:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalization(py)alpha	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalization(py)beta	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalization(py)delta	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradient(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradient(im)initWithDevice:kernelWidth:kernelHeight:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradient(py)alpha	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradient(py)beta	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradient(py)delta	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode(im)initWithSourceGradient:sourceImage:gradientState:kernelSize:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)alpha	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)beta	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)delta	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)kernelHeight	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationGradientNode(py)kernelWidth	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationNode(im)initWithSource:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationNode(im)initWithSource:kernelSize:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationNode(py)kernelHeight	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
+c:objc(cs)MPSCNNSpatialNormalizationNode(py)kernelWidth	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10NormalizationPoolingDescriptors	validated pooling/normalization geometry descriptor
 c:objc(cs)MPSCNNSubPixelConvolutionDescriptor	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
 c:objc(cs)MPSCNNSubPixelConvolutionDescriptor(py)subPixelScaleFactor	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSubtract	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSubtract(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSubtractGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNSubtractGradient(im)initWithDevice:isSecondarySourceFilter:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsampling	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsampling(py)alignCorners	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsampling(py)scaleFactorX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsampling(py)scaleFactorY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinear	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinear(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinear(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:alignCorners:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearGradient(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearGradientNode(im)initWithSourceGradient:sourceImage:gradientState:scaleFactorX:scaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearGradientNode(py)scaleFactorX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearGradientNode(py)scaleFactorY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearNode(im)initWithSource:integerScaleFactorX:integerScaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearNode(im)initWithSource:integerScaleFactorX:integerScaleFactorY:alignCorners:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearNode(py)alignCorners	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearNode(py)scaleFactorX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingBilinearNode(py)scaleFactorY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingGradient(py)scaleFactorX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingGradient(py)scaleFactorY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearest	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearest(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestGradient	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestGradient(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestGradientNode(im)initWithSourceGradient:sourceImage:gradientState:scaleFactorX:scaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestGradientNode(py)scaleFactorX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestGradientNode(py)scaleFactorY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestNode(im)initWithSource:integerScaleFactorX:integerScaleFactorY:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestNode(py)scaleFactorX	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSCNNUpsamplingNearestNode(py)scaleFactorY	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSCNNSubtract	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSubtract(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSubtractGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNSubtractGradient(im)initWithDevice:isSecondarySourceFilter:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ArithmeticSoftmaxFailClosed	validated arithmetic/softmax construction and fail-closed surface
+c:objc(cs)MPSCNNUpsampling	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsampling(py)alignCorners	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsampling(py)scaleFactorX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsampling(py)scaleFactorY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinear	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinear(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinear(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:alignCorners:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearGradient(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearGradientNode(im)initWithSourceGradient:sourceImage:gradientState:scaleFactorX:scaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearGradientNode(py)scaleFactorX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearGradientNode(py)scaleFactorY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearNode(im)initWithSource:integerScaleFactorX:integerScaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearNode(im)initWithSource:integerScaleFactorX:integerScaleFactorY:alignCorners:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearNode(py)alignCorners	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearNode(py)scaleFactorX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingBilinearNode(py)scaleFactorY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingGradient(py)scaleFactorX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingGradient(py)scaleFactorY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearest	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearest(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestGradient	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestGradient(im)initWithDevice:integerScaleFactorX:integerScaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestGradientNode(im)initWithSourceGradient:sourceImage:gradientState:scaleFactorX:scaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestGradientNode(py)scaleFactorX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestGradientNode(py)scaleFactorY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestNode(im)initWithSource:integerScaleFactorX:integerScaleFactorY:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestNode(py)scaleFactorX	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
+c:objc(cs)MPSCNNUpsamplingNearestNode(py)scaleFactorY	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10UpsamplingDescriptorsFailClosed	validated scale descriptor and fail-closed encode
 c:objc(cs)MPSCNNYOLOLoss	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNYOLOLoss	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNYOLOLoss(im)encodeBatchToCommandBuffer:sourceImages:labels:	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNYOLOLoss	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
 c:objc(cs)MPSCNNYOLOLoss(im)encodeBatchToCommandBuffer:sourceImages:labels:destinationImages:	implemented	test:full/metalperformanceshaders/tests/agent/MPSDepthPassTests.swift#testMPSCNNYOLOLoss	Constructable Linux surface with fail-closed GPU encode, exercised by a focused agent test
@@ -2409,83 +2409,83 @@ c:objc(cs)MPSNNPadGradientNode(im)initWithSourceGradient:sourceImage:gradientSta
 c:objc(cs)MPSNNPadNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
 c:objc(cs)MPSNNPadNode(im)initWithSource:paddingSizeBefore:paddingSizeAfter:edgeMode:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
 c:objc(cs)MPSNNPadNode(py)fillValue	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceBinary	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceBinary(py)primaryOffset	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceBinary(py)primarySourceClipRect	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceBinary(py)secondaryOffset	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceBinary(py)secondarySourceClipRect	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMax(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMax(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMean	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMean(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMean(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMin	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMin(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnMin(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnSum	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnSum(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceColumnSum(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsMean	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsMean(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsMean(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(im)initWithDevice:doWeightedSumByNonZeroWeights:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(py)doWeightedSumByNonZeroWeights	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsArgumentMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsArgumentMax(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsArgumentMax(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsArgumentMin	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsArgumentMin(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsArgumentMin(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMax(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMax(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMean	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMean(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMean(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMin	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMin(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsMin(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsSum	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsSum(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsSum(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceFeatureChannelsSum(py)weight	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMax	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMax(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMax(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMean	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMean(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMean(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMin	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMin(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowMin(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowSum	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowSum(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceRowSum(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceUnary	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceUnary(py)clipRectSource	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReduceUnary(py)offset	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionColumnMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionColumnMeanNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionColumnMinNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionColumnSumNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsArgumentMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsArgumentMinNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsMeanNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsMinNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsSumNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionFeatureChannelsSumNode(py)weight	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionRowMaxNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionRowMeanNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionRowMinNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionRowSumNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionSpatialMeanGradientNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionSpatialMeanGradientNode(im)initWithSourceGradient:sourceImage:gradientState:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSNNReductionSpatialMeanNode	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSNNReduceBinary	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceBinary(py)primaryOffset	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceBinary(py)primarySourceClipRect	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceBinary(py)secondaryOffset	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceBinary(py)secondarySourceClipRect	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMax(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMax(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMean	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMean(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMean(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMin	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMin(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnMin(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnSum	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnSum(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceColumnSum(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsMean	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsMean(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsMean(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(im)initWithDevice:doWeightedSumByNonZeroWeights:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsAndWeightsSum(py)doWeightedSumByNonZeroWeights	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsArgumentMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsArgumentMax(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsArgumentMax(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsArgumentMin	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsArgumentMin(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsArgumentMin(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMax(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMax(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMean	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMean(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMean(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMin	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMin(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsMin(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsSum	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsSum(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsSum(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceFeatureChannelsSum(py)weight	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMax	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMax(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMax(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMean	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMean(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMean(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMin	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMin(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowMin(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowSum	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowSum(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceRowSum(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceUnary	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceUnary(py)clipRectSource	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReduceUnary(py)offset	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionColumnMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionColumnMeanNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionColumnMinNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionColumnSumNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsArgumentMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsArgumentMinNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsMeanNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsMinNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsSumNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionFeatureChannelsSumNode(py)weight	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionRowMaxNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionRowMeanNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionRowMinNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionRowSumNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionSpatialMeanGradientNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionSpatialMeanGradientNode(im)initWithSourceGradient:sourceImage:gradientState:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
+c:objc(cs)MPSNNReductionSpatialMeanNode	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSWave10ReductionDescriptors	validated reduction configuration descriptor
 c:objc(cs)MPSNNReshape	implemented	test:full/metalperformanceshaders/tests/agent/MPSReshapeTests.swift#testMPSNNReshapePackedChannels	Exact packed HWC host reshape for unorm8/float16/float32; gradient-state overloads explicitly refuse; no Apple GPU result claimed
 c:objc(cs)MPSNNReshape(im)encodeBatchToCommandBuffer:sourceImages:destinationStates:destinationStateIsTemporary:reshapedWidth:reshapedHeight:reshapedFeatureChannels:	implemented	test:full/metalperformanceshaders/tests/agent/MPSReshapeTests.swift#testMPSNNReshapeGradientStateRefusal	Exact packed HWC host reshape for unorm8/float16/float32; gradient-state overloads explicitly refuse; no Apple GPU result claimed
 c:objc(cs)MPSNNReshape(im)encodeBatchToCommandBuffer:sourceImages:reshapedWidth:reshapedHeight:reshapedFeatureChannels:	implemented	test:full/metalperformanceshaders/tests/agent/MPSReshapeTests.swift#testMPSNNReshapeBatch	Exact packed HWC host reshape for unorm8/float16/float32; gradient-state overloads explicitly refuse; no Apple GPU result claimed
@@ -2705,13 +2705,13 @@ c:objc(cs)MPSStateResourceList	implemented	test:full/metalperformanceshaders/tes
 c:objc(cs)MPSStateResourceList(im)appendBuffer:	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSStateResourceList(im)appendTexture:	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSStateResourceList(im)init	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
-c:objc(cs)MPSTemporalAA	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSTemporalAA(im)copyWithZone:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSTemporalAA(im)encodeToCommandBuffer:sourceTexture:previousTexture:destinationTexture:motionVectorTexture:depthTexture:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSTemporalAA(im)encodeWithCoder:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSTemporalAA(im)initWithCoder:device:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSTemporalAA(im)initWithDevice:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(cs)MPSTemporalAA(py)blendFactor	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(cs)MPSTemporalAA	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
+c:objc(cs)MPSTemporalAA(im)copyWithZone:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
+c:objc(cs)MPSTemporalAA(im)encodeToCommandBuffer:sourceTexture:previousTexture:destinationTexture:motionVectorTexture:depthTexture:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
+c:objc(cs)MPSTemporalAA(im)encodeWithCoder:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
+c:objc(cs)MPSTemporalAA(im)initWithCoder:device:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
+c:objc(cs)MPSTemporalAA(im)initWithDevice:	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
+c:objc(cs)MPSTemporalAA(py)blendFactor	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave10DescriptorTests.swift#testMPSTemporalAAFailClosed	validated blend configuration and explicit host refusal
 c:objc(cs)MPSTemporaryImage	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSImageHostIO	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSTemporaryImage(cm)defaultAllocator	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSImageHostIO	Linux host implementation exercised by a focused agent test
 c:objc(cs)MPSTemporaryImage(cm)prefetchStorageWithCommandBuffer:imageDescriptorList:	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSImageHostIO	Linux host implementation exercised by a focused agent test
@@ -3009,10 +3009,10 @@ s:So16MPSDeviceOptionsV8rawValueABSu_tcfc	implemented	test:full/metalperformance
 s:So16MPSImageEdgeModeV8rawValueABSgSu_tcfc	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSEnumRawValues	Linux host implementation exercised by a focused agent test
 s:So16MPSKernelOptionsV8rawValueABSu_tcfc	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSOptionSetAlgebra	Linux host implementation exercised by a focused agent test
 s:So16MPSTransformTypeV8rawValueABSgSu_tcfc	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSEnumRawValues	Linux host implementation exercised by a focused agent test
-s:So16MTLCommandBufferP5MetalE16useResidencySetsyySaySo15MTLResidencySet_pGF::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-s:So16MTLCommandBufferP5MetalE4logsAC15MTLLogContainerVvp::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-s:So16MTLCommandBufferP5MetalE9completedyyYaF::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-s:So16MTLCommandBufferP5MetalE9scheduledyyYaF::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+s:So16MTLCommandBufferP5MetalE16useResidencySetsyySaySo15MTLResidencySet_pGF::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCommandBufferAndKeyedUnarchiver	validated host command-buffer wrapper behavior
+s:So16MTLCommandBufferP5MetalE4logsAC15MTLLogContainerVvp::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCommandBufferAndKeyedUnarchiver	validated host command-buffer wrapper behavior
+s:So16MTLCommandBufferP5MetalE9completedyyYaF::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCommandBufferAndKeyedUnarchiver	validated host command-buffer wrapper behavior
+s:So16MTLCommandBufferP5MetalE9scheduledyyYaF::SYNTHESIZED::c:objc(cs)MPSCommandBuffer	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCommandBufferAndKeyedUnarchiver	validated host command-buffer wrapper behavior
 s:So16_MPSPackedFloat3V34__Unnamed_union___Anonymous_field0V02__c10_struct___e1_F0V1x1y1zAFSf_S2ftcfc::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
 s:So16_MPSPackedFloat3V34__Unnamed_union___Anonymous_field0V02__c10_struct___e1_F0VAFycfc::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test
 s:So16_MPSPackedFloat3V34__Unnamed_union___Anonymous_field0V8elementsADSf_S2ft_tcfc::SYNTHESIZED::c:@T@MPSPackedFloat3	implemented	test:full/metalperformanceshaders/tests/agent/MPSGeometryTests.swift#testMPSPackedAndRayStructs	Linux host implementation exercised by a focused agent test

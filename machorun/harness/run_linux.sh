@@ -50,7 +50,7 @@ mkdir -p "$OUT_DIR"
 # A fingerprint left by the PREVIOUS run would be read as this one's if this
 # one dies before writing its own -- the stale-artifact shape, one directory
 # over. Remove it before anything can produce a verdict from it.
-rm -f "$OUT_DIR/.fingerprint"
+rm -f "$OUT_DIR/.fingerprint" "$OUT_DIR/.dependency-build-seconds"
 
 # skip_all <reason>: record a machine-readable reason so difftest.sh can print
 # it once instead of repeating it on every row.
@@ -103,7 +103,10 @@ done < <(manifest_rows)
 
 [ ${#IDS[@]} -gt 0 ] || die "no fixtures selected"
 
-CONTAINER_SCRIPT="$(cat <<'INNER'
+# Bash 3.2 misparses this heredoc nested inside $(cat ...): measured
+# here as an outer-shell "OUT: unbound variable" before Docker started. Read
+# the literal script directly; EOF is the expected nonzero status from read.
+IFS= read -r -d '' CONTAINER_SCRIPT <<'INNER' || :
 set -u
 cd /work
 
@@ -121,6 +124,36 @@ if [ ! -x "$LOADER" ]; then
     exit 0
 fi
 LOADER="$(cd "$(dirname "$LOADER")" && pwd)/$(basename "$LOADER")"
+
+# build.sh all deliberately omits these expensive libraries. The selected
+# manifest fixtures decide which are needed, even if an old dylib exists.
+# Measured 2026-09-07 in the arm64 test bed: objc exited 72 with libobjc absent;
+# llvm-objdump --dylibs-used shows objc -> libobjc, quartz -> libquartz, and
+# objc_quartz/objc_shapes -> both. Drawing fixtures currently have their own
+# manifest/runner; retain their dependency mapping if selected here later.
+need_objc=0
+need_quartz=0
+for id in $FIXTURE_IDS; do
+    case "$id" in
+        objc) need_objc=1 ;;
+        quartz) need_quartz=1 ;;
+        objc_quartz|objc_shapes) need_objc=1; need_quartz=1 ;;
+    esac
+done
+dependency_start=$SECONDS
+for target in objc4 quartz tbd; do
+    case "$target" in
+        objc4) [ "$need_objc" = 1 ] || continue ;;
+        quartz) [ "$need_quartz" = 1 ] || continue ;;
+        tbd) [ "$need_objc" = 1 ] || [ "$need_quartz" = 1 ] || continue ;;
+    esac
+    # Regenerate stubs AFTER adding libraries, before the fingerprint window.
+    if ! bash scripts/build.sh "$target" >> /work/tests/actual/linux/.build.log 2>&1; then
+        echo "DEPENDENCY-BUILD-FAILED:$target"
+        exit 1
+    fi
+done
+echo "$((SECONDS - dependency_start))" > /work/tests/actual/linux/.dependency-build-seconds
 
 # THE MEASUREMENT WINDOW IS BRACKETED, AND IT STARTS AFTER THE BUILD.
 # The build legitimately changes the loader -- that is what it is for -- so
@@ -145,7 +178,6 @@ done
 printf '%s\t%s\n' "$FP_BEFORE" "$(gate_fingerprint)" > "$OUT/.fingerprint"
 echo "RAN"
 INNER
-)"
 
 set +e
 # -i is required: the work script is fed to `bash -s` on the container's stdin.
@@ -168,12 +200,19 @@ case "$tail_marker" in
         printf '%sBUILD FAILED%s -- see tests/actual/linux/.build.log\n' "$C_RED" "$C_RESET"
         printf '%s\n' "$result" | tail -20
         exit 1 ;;
+    DEPENDENCY-BUILD-FAILED:*)
+        target="${tail_marker#DEPENDENCY-BUILD-FAILED:}"
+        printf 'build\tscripts/build.sh %s failed; see tests/actual/linux/.build.log\n' "$target" > "$STATUS_FILE"
+        printf '%sBUILD FAILED%s -- scripts/build.sh %s; see tests/actual/linux/.build.log\n' "$C_RED" "$C_RESET" "$target"
+        tail -20 "$OUT_DIR/.build.log"
+        exit 1 ;;
     RAN)
         printf 'ran\t\n' > "$STATUS_FILE" ;;
     *)
         skip_all "container run failed (rc=$rc): $(printf '%s' "$result" | tail -3 | tr '\n' ' ')" ;;
 esac
 
+printf 'optional dependency builds (including tbd): %ss\n' "$(cat "$OUT_DIR/.dependency-build-seconds")"
 for id in "${IDS[@]}"; do
     if [ -f "$OUT_DIR/$id.exit" ]; then
         printf '  %-24s exit=%s\n' "$id" "$(cat "$OUT_DIR/$id.exit")"

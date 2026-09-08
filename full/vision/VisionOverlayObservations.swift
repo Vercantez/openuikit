@@ -565,7 +565,7 @@ public struct ClassificationObservation: VisionObservation {
     }
 }
 
-public struct FaceObservation: VisionObservation, BoundingBoxProviding {
+public struct FaceObservation: VisionObservation, BoundingBoxProviding, Codable {
     public struct CaptureQuality: Hashable, Sendable, Codable, CustomStringConvertible {
         public let score: Float
         public let originatingRequestDescriptor: RequestDescriptor?
@@ -764,7 +764,11 @@ public struct HumanObservation: VisionObservation, BoundingBoxProviding, Codable
     }
 }
 
-public struct HorizonObservation: VisionObservation {
+public struct HorizonObservation: VisionObservation, Codable {
+    private enum CodingKeys: String, CodingKey {
+        case angle, transformA, transformB, transformC, transformD, transformTX, transformTY
+        case confidence, uuid, timeRange, originatingRequestDescriptor
+    }
     public var angle: Measurement<UnitAngle>
     public let transform: CGAffineTransform
     public let confidence: Float
@@ -789,6 +793,38 @@ public struct HorizonObservation: VisionObservation {
         self.uuid = observation.uuid
         self.timeRange = observation.timeRange
         self.originatingRequestDescriptor = nil
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        angle = Measurement(value: try values.decode(Double.self, forKey: .angle), unit: .radians)
+        transform = CGAffineTransform(
+            a: try values.decode(CGFloat.self, forKey: .transformA),
+            b: try values.decode(CGFloat.self, forKey: .transformB),
+            c: try values.decode(CGFloat.self, forKey: .transformC),
+            d: try values.decode(CGFloat.self, forKey: .transformD),
+            tx: try values.decode(CGFloat.self, forKey: .transformTX),
+            ty: try values.decode(CGFloat.self, forKey: .transformTY)
+        )
+        confidence = try values.decode(Float.self, forKey: .confidence)
+        uuid = try values.decode(UUID.self, forKey: .uuid)
+        timeRange = try values.decodeIfPresent(CMTimeRange.self, forKey: .timeRange)
+        originatingRequestDescriptor = try values.decodeIfPresent(RequestDescriptor.self, forKey: .originatingRequestDescriptor)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var values = encoder.container(keyedBy: CodingKeys.self)
+        try values.encode(angle.converted(to: .radians).value, forKey: .angle)
+        try values.encode(transform.a, forKey: .transformA)
+        try values.encode(transform.b, forKey: .transformB)
+        try values.encode(transform.c, forKey: .transformC)
+        try values.encode(transform.d, forKey: .transformD)
+        try values.encode(transform.tx, forKey: .transformTX)
+        try values.encode(transform.ty, forKey: .transformTY)
+        try values.encode(confidence, forKey: .confidence)
+        try values.encode(uuid, forKey: .uuid)
+        try values.encodeIfPresent(timeRange, forKey: .timeRange)
+        try values.encodeIfPresent(originatingRequestDescriptor, forKey: .originatingRequestDescriptor)
     }
 
     public func transform(for imageSize: CGSize) -> CGAffineTransform {
@@ -2130,7 +2166,75 @@ extension TrackTranslationalImageRegistrationRequest: ImageProcessingRequestBox 
     }
 }
 
-public struct TargetedImageRequestHandler: @unchecked Sendable {}
+public final class TargetedImageRequestHandler: @unchecked Sendable {
+    private let source: VNImageRequestHandler
+    private let target: VNImageRequestHandler
+
+    public convenience init(sourceURL: URL, targetURL: URL, orientation: CGImagePropertyOrientation? = nil) {
+        self.init(
+            source: VNImageRequestHandler(url: sourceURL, orientation: orientation ?? .up),
+            target: VNImageRequestHandler(url: targetURL, orientation: orientation ?? .up)
+        )
+    }
+
+    public convenience init(source: Data, target: Data, orientation: CGImagePropertyOrientation? = nil) {
+        self.init(
+            source: VNImageRequestHandler(data: source, orientation: orientation ?? .up),
+            target: VNImageRequestHandler(data: target, orientation: orientation ?? .up)
+        )
+    }
+
+    public convenience init(source: CGImage, target: CGImage, orientation: CGImagePropertyOrientation? = nil) {
+        self.init(
+            source: VNImageRequestHandler(cgImage: source, orientation: orientation ?? .up),
+            target: VNImageRequestHandler(cgImage: target, orientation: orientation ?? .up)
+        )
+    }
+
+    public convenience init(source: CIImage, target: CIImage, orientation: CGImagePropertyOrientation? = nil) {
+        self.init(
+            source: VNImageRequestHandler(ciImage: source, orientation: orientation ?? .up),
+            target: VNImageRequestHandler(ciImage: target, orientation: orientation ?? .up)
+        )
+    }
+
+    public convenience init(source: CVPixelBuffer, target: CVPixelBuffer, orientation: CGImagePropertyOrientation? = nil) {
+        self.init(
+            source: VNImageRequestHandler(cvPixelBuffer: source, orientation: orientation ?? .up),
+            target: VNImageRequestHandler(cvPixelBuffer: target, orientation: orientation ?? .up)
+        )
+    }
+
+    public convenience init(source: CMSampleBuffer, target: CMSampleBuffer, orientation: CGImagePropertyOrientation? = nil) {
+        self.init(
+            source: VNImageRequestHandler(cmSampleBuffer: source, orientation: orientation ?? .up),
+            target: VNImageRequestHandler(cmSampleBuffer: target, orientation: orientation ?? .up)
+        )
+    }
+
+    private init(source: VNImageRequestHandler, target: VNImageRequestHandler) {
+        self.source = source
+        self.target = target
+    }
+
+    @_spi(OpenUIKitHost)
+    public func validateInputs() throws {
+        try visionPrepareOverlayPerform(handler: source, roi: .fullImage)
+        try visionPrepareOverlayPerform(handler: target, roi: .fullImage)
+    }
+
+    public func perform<T: TargetedRequest>(_ request: T) async throws -> T.Result {
+        _ = request
+        try validateInputs()
+        throw VisionError.invalidModel("Linux has no Apple model for targeted image requests")
+    }
+
+    public func performAll<S: Sequence>(_ requests: S) async throws where S.Element == any TargetedRequest {
+        _ = requests
+        try validateInputs()
+        throw VisionError.invalidModel("Linux has no Apple models for targeted image requests")
+    }
+}
 
 public protocol PoseProviding {
     associatedtype PoseJointName: Decodable, Encodable, Hashable, RawRepresentable where PoseJointName.RawValue == String

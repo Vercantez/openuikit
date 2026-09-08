@@ -694,7 +694,40 @@ open class VNSaliencyImageObservation: VNPixelBufferObservation {
     }
 }
 
-open class VNRecognizedObjectObservation: VNDetectedObjectObservation {}
+open class VNRecognizedObjectObservation: VNDetectedObjectObservation {
+    public let labels: [VNClassificationObservation]
+
+    public init(
+        boundingBox: CGRect,
+        labels: [VNClassificationObservation],
+        confidence: VNConfidence = 1,
+        uuid: UUID = UUID(),
+        requestRevision: Int = VNRequestRevisionUnspecified
+    ) {
+        self.labels = labels.sorted { $0.confidence > $1.confidence }
+        super.init(
+            requestRevision: requestRevision,
+            boundingBox: boundingBox,
+            confidence: confidence,
+            uuid: uuid
+        )
+    }
+
+    public required init?(coder: NSCoder) {
+        labels = []
+        super.init(coder: coder)
+    }
+
+    open override func copy(with zone: NSZone? = nil) -> Any {
+        VNRecognizedObjectObservation(
+            boundingBox: boundingBox,
+            labels: labels,
+            confidence: confidence,
+            uuid: uuid,
+            requestRevision: requestRevision
+        )
+    }
+}
 
 open class VNImageAestheticsScoresObservation: VNObservation {
     public let isUtility: Bool
