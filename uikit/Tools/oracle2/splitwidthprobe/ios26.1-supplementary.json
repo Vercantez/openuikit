@@ -1,0 +1,7949 @@
+{
+  "os" : "26.1",
+  "profile" : "supplementary",
+  "samples" : [
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1000,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1000,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            679.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1000,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 280,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 280,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.24,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            693.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 280,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.24,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 240,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 240,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 240,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            694,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            694,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            694,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 240,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 240,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 240,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 240,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 240,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.25,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 240,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.25,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 240,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 240,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 240,
+      "requestedMode" : 0,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            694,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            694,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            694,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 240,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 240,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 240,
+      "requestedMode" : 4,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1014.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 240,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 240,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1014.5,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            550,
+            700
+          ],
+          "safeArea" : [
+            32,
+            250,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            240,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            550.5,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 240,
+      "requestedMode" : 6,
+      "requestedWidth" : 1014.5,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 550
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 0,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 0,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 0,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 0,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            -320.5,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -610.5,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 0,
+      "preferredMode" : 1,
+      "primaryWidth" : 280,
+      "requestedMode" : 1,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            703.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            703.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            320.5,
+            0,
+            703.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 2,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 2,
+      "primaryWidth" : 280,
+      "requestedMode" : 2,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            -290,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 3,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 3,
+      "primaryWidth" : 280,
+      "requestedMode" : 3,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 4,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 4,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 1,
+      "preferredMode" : 4,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 4,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            320,
+            700
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 1,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 320
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            610,
+            700
+          ],
+          "safeArea" : [
+            32,
+            290,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            280,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            0,
+            0,
+            1024,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 5,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 2,
+      "preferredMode" : 5,
+      "primaryWidth" : 280,
+      "requestedMode" : 5,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 2,
+      "supplementaryWidth" : 610
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "initial",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 6,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.immediate",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 6,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    },
+    {
+      "boundsWidth" : 1024,
+      "collapsed" : false,
+      "containers" : [
+        {
+          "frame" : [
+            0,
+            0,
+            559.5,
+            700
+          ],
+          "safeArea" : [
+            32,
+            259.5,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            10,
+            32,
+            249.5,
+            658
+          ],
+          "safeArea" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "frame" : [
+            560,
+            0,
+            464,
+            700
+          ],
+          "safeArea" : [
+            32,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "displayMode" : 4,
+      "horizontalSizeClass" : 2,
+      "minima" : [
+        240,
+        300,
+        464
+      ],
+      "phase" : "mounted.settled",
+      "preferredBehavior" : 3,
+      "preferredMode" : 6,
+      "primaryWidth" : 249.5,
+      "requestedMode" : 6,
+      "requestedWidth" : 1024,
+      "splitBehavior" : 1,
+      "supplementaryWidth" : 559.5
+    }
+  ],
+  "scale" : 2,
+  "screen" : [
+    820,
+    1180
+  ]
+}
