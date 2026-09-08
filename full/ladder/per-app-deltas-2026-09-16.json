@@ -96,6 +96,49 @@
   "newly_declared": []
  },
  {
+  "app": "eigen",
+  "score_b_before": 7,
+  "score_b_after": 6,
+  "score_a_before": 9,
+  "score_a_after": 8,
+  "subscore_changes": {
+   "UIK": [
+    1,
+    0
+   ]
+  },
+  "gap_uses": [
+   5,
+   0
+  ],
+  "gap_types": [
+   4,
+   0
+  ],
+  "newly_declared": [
+   [
+    "UISplitViewController",
+    2
+   ],
+   [
+    "UIStoryboard",
+    2
+   ],
+   [
+    "NSTextAttachment",
+    1
+   ],
+   [
+    "UICollectionViewController",
+    1
+   ],
+   [
+    "UISplitViewControllerDelegate",
+    1
+   ]
+  ]
+ },
+ {
   "app": "eidolon",
   "score_b_before": 6,
   "score_b_after": 6,
@@ -167,32 +210,6 @@
    ],
    [
     "UIPrintInteractionController",
-    1
-   ]
-  ]
- },
- {
-  "app": "eigen",
-  "score_b_before": 7,
-  "score_b_after": 7,
-  "score_a_before": 9,
-  "score_a_after": 9,
-  "subscore_changes": {},
-  "gap_uses": [
-   5,
-   4
-  ],
-  "gap_types": [
-   4,
-   3
-  ],
-  "newly_declared": [
-   [
-    "UIStoryboard",
-    2
-   ],
-   [
-    "NSTextAttachment",
     1
    ]
   ]
@@ -280,16 +297,20 @@
   "subscore_changes": {},
   "gap_uses": [
    75,
-   28
+   16
   ],
   "gap_types": [
    19,
-   9
+   7
   ],
   "newly_declared": [
    [
     "UIAccessibilityCustomAction",
     15
+   ],
+   [
+    "UISwipeGestureRecognizer",
+    10
    ],
    [
     "UIContextualAction",
@@ -310,6 +331,10 @@
    [
     "UIDocumentPickerViewController",
     3
+   ],
+   [
+    "UICollectionViewController",
+    2
    ],
    [
     "UIGlassEffect",
@@ -343,11 +368,11 @@
   },
   "gap_uses": [
    100,
-   37
+   25
   ],
   "gap_types": [
    27,
-   14
+   8
   ],
   "newly_declared": [
    [
@@ -367,6 +392,10 @@
     6
    ],
    [
+    "UIEditMenuInteraction",
+    4
+   ],
+   [
     "UIBackgroundConfiguration",
     3
    ],
@@ -375,7 +404,15 @@
     3
    ],
    [
+    "UIEditMenuConfiguration",
+    3
+   ],
+   [
     "NSTextAttachment",
+    2
+   ],
+   [
+    "UIInputView",
     2
    ],
    [
@@ -391,7 +428,15 @@
     1
    ],
    [
+    "UIEditMenuInteractionDelegate",
+    1
+   ],
+   [
     "UIImagePickerControllerDelegate",
+    1
+   ],
+   [
+    "UIInputViewAudioFeedback",
     1
    ],
    [
@@ -400,6 +445,10 @@
    ],
    [
     "UISelectionFeedbackGenerator",
+    1
+   ],
+   [
+    "UISwipeGestureRecognizer",
     1
    ]
   ]
@@ -418,11 +467,11 @@
   },
   "gap_uses": [
    361,
-   61
+   25
   ],
   "gap_types": [
    54,
-   15
+   7
   ],
   "newly_declared": [
    [
@@ -466,6 +515,10 @@
     13
    ],
    [
+    "UICoordinateSpace",
+    13
+   ],
+   [
     "UICellConfigurationState",
     10
    ],
@@ -482,7 +535,19 @@
     7
    ],
    [
+    "UICollectionViewLayoutInvalidationContext",
+    6
+   ],
+   [
     "UIConfigurationState",
+    6
+   ],
+   [
+    "UISplitViewController",
+    6
+   ],
+   [
+    "UISwipeGestureRecognizer",
     6
    ],
    [
@@ -554,7 +619,15 @@
     2
    ],
    [
+    "UIInputView",
+    2
+   ],
+   [
     "NSLayoutManagerDelegate",
+    1
+   ],
+   [
+    "UICollectionViewController",
     1
    ],
    [
@@ -574,6 +647,10 @@
     1
    ],
    [
+    "UIEditMenuInteractionDelegate",
+    1
+   ],
+   [
     "UIPreviewParameters",
     1
    ],
@@ -583,6 +660,10 @@
    ],
    [
     "UISelectionFeedbackGenerator",
+    1
+   ],
+   [
+    "UISplitViewControllerDelegate",
     1
    ]
   ]
@@ -601,11 +682,11 @@
   },
   "gap_uses": [
    291,
-   42
+   32
   ],
   "gap_types": [
    56,
-   15
+   14
   ],
   "newly_declared": [
    [
@@ -647,6 +728,10 @@
    [
     "UICollectionViewDiffableDataSource",
     11
+   ],
+   [
+    "UISwipeGestureRecognizer",
+    10
    ],
    [
     "UIListContentConfiguration",
@@ -788,16 +873,20 @@
   },
   "gap_uses": [
    150,
-   71
+   50
   ],
   "gap_types": [
    28,
-   6
+   2
   ],
   "newly_declared": [
    [
     "UIStoryboard",
     34
+   ],
+   [
+    "UISplitViewController",
+    16
    ],
    [
     "UIBackgroundConfiguration",
@@ -852,7 +941,15 @@
     2
    ],
    [
+    "UICollectionViewController",
+    2
+   ],
+   [
     "UIDocumentPickerDelegate",
+    2
+   ],
+   [
+    "UISwipeGestureRecognizer",
     2
    ],
    [
@@ -886,173 +983,9 @@
    [
     "UISelectionFeedbackGenerator",
     1
-   ]
-  ]
- },
- {
-  "app": "duckduckgo-ios",
-  "score_b_before": 11,
-  "score_b_after": 11,
-  "score_a_before": 14,
-  "score_a_after": 14,
-  "subscore_changes": {},
-  "gap_uses": [
-   99,
-   19
-  ],
-  "gap_types": [
-   35,
-   10
-  ],
-  "newly_declared": [
-   [
-    "UIStoryboard",
-    27
    ],
    [
-    "NSItemProvider",
-    7
-   ],
-   [
-    "UIDropSession",
-    7
-   ],
-   [
-    "NSTextAttachment",
-    6
-   ],
-   [
-    "UICollectionViewDropProposal",
-    5
-   ],
-   [
-    "UIMenuController",
-    5
-   ],
-   [
-    "UIMenuItem",
-    5
-   ],
-   [
-    "UIDragItem",
-    4
-   ],
-   [
-    "UIDropInteraction",
-    4
-   ],
-   [
-    "UISelectionFeedbackGenerator",
-    4
-   ],
-   [
-    "UISwipeActionsConfiguration",
-    4
-   ],
-   [
-    "UICollectionViewDropCoordinator",
-    3
-   ],
-   [
-    "UIDragSession",
-    3
-   ],
-   [
-    "UIViewControllerInteractiveTransitioning",
-    3
-   ],
-   [
-    "UICollectionViewDragDelegate",
-    2
-   ],
-   [
-    "UICollectionViewDropDelegate",
-    2
-   ],
-   [
-    "UIContextualAction",
-    2
-   ],
-   [
-    "UIDocumentPickerViewController",
-    2
-   ],
-   [
-    "UIDragPreview",
-    2
-   ],
-   [
-    "UIDropProposal",
-    2
-   ],
-   [
-    "UIPercentDrivenInteractiveTransition",
-    2
-   ],
-   [
-    "UIPrintInteractionController",
-    2
-   ],
-   [
-    "UIDocumentPickerDelegate",
-    1
-   ],
-   [
-    "UIDropInteractionDelegate",
-    1
-   ],
-   [
-    "UIPrintInfo",
-    1
-   ],
-   [
-    "UIViewImplicitlyAnimating",
-    1
-   ]
-  ]
- },
- {
-  "app": "ios-oss",
-  "score_b_before": 11,
-  "score_b_after": 11,
-  "score_a_before": 14,
-  "score_a_after": 14,
-  "subscore_changes": {},
-  "gap_uses": [
-   27,
-   2
-  ],
-  "gap_types": [
-   8,
-   2
-  ],
-  "newly_declared": [
-   [
-    "UIPinchGestureRecognizer",
-    9
-   ],
-   [
-    "NSTextAttachment",
-    6
-   ],
-   [
-    "UINotificationFeedbackGenerator",
-    5
-   ],
-   [
-    "UIImagePickerController",
-    2
-   ],
-   [
-    "UISelectionFeedbackGenerator",
-    2
-   ],
-   [
-    "NSTextContainer",
-    1
-   ],
-   [
-    "UIStoryboard",
+    "UISplitViewControllerDelegate",
     1
    ]
   ]
@@ -1060,17 +993,22 @@
  {
   "app": "Telegram-iOS",
   "score_b_before": 12,
-  "score_b_after": 12,
+  "score_b_after": 11,
   "score_a_before": 15,
-  "score_a_after": 15,
-  "subscore_changes": {},
+  "score_a_after": 14,
+  "subscore_changes": {
+   "UIK": [
+    2,
+    1
+   ]
+  },
   "gap_uses": [
    368,
-   123
+   97
   ],
   "gap_types": [
    66,
-   41
+   33
   ],
   "newly_declared": [
    [
@@ -1126,11 +1064,23 @@
     7
    ],
    [
+    "UIEditMenuInteraction",
+    7
+   ],
+   [
     "NSAdaptiveImageGlyph",
     6
    ],
    [
+    "UIEditMenuConfiguration",
+    5
+   ],
+   [
     "UIDocumentPickerViewController",
+    4
+   ],
+   [
+    "UIInputViewAudioFeedback",
     4
    ],
    [
@@ -1142,11 +1092,23 @@
     3
    ],
    [
+    "UIInputView",
+    3
+   ],
+   [
+    "UISwipeGestureRecognizer",
+    3
+   ],
+   [
     "NSTextAttachmentViewProvider",
     2
    ],
    [
     "NSTextStorageDelegate",
+    2
+   ],
+   [
+    "UIEditMenuInteractionAnimating",
     2
    ],
    [
@@ -1158,6 +1120,10 @@
     2
    ],
    [
+    "UICoordinateSpace",
+    1
+   ],
+   [
     "UIDocumentPickerDelegate",
     1
    ],
@@ -1166,11 +1132,207 @@
     1
    ],
    [
+    "UIEditMenuInteractionDelegate",
+    1
+   ],
+   [
     "UIGlassContainerEffect",
     1
    ],
    [
     "UIImagePickerController",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "duckduckgo-ios",
+  "score_b_before": 11,
+  "score_b_after": 11,
+  "score_a_before": 14,
+  "score_a_after": 14,
+  "subscore_changes": {},
+  "gap_uses": [
+   99,
+   9
+  ],
+  "gap_types": [
+   35,
+   5
+  ],
+  "newly_declared": [
+   [
+    "UIStoryboard",
+    27
+   ],
+   [
+    "NSItemProvider",
+    7
+   ],
+   [
+    "UIDropSession",
+    7
+   ],
+   [
+    "NSTextAttachment",
+    6
+   ],
+   [
+    "UICollectionViewDropProposal",
+    5
+   ],
+   [
+    "UIMenuController",
+    5
+   ],
+   [
+    "UIMenuItem",
+    5
+   ],
+   [
+    "UIDragItem",
+    4
+   ],
+   [
+    "UIDropInteraction",
+    4
+   ],
+   [
+    "UIEditMenuInteraction",
+    4
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    4
+   ],
+   [
+    "UISwipeActionsConfiguration",
+    4
+   ],
+   [
+    "UICollectionViewDropCoordinator",
+    3
+   ],
+   [
+    "UIDragSession",
+    3
+   ],
+   [
+    "UIEditMenuConfiguration",
+    3
+   ],
+   [
+    "UIViewControllerInteractiveTransitioning",
+    3
+   ],
+   [
+    "UICollectionViewDragDelegate",
+    2
+   ],
+   [
+    "UICollectionViewDropDelegate",
+    2
+   ],
+   [
+    "UIContextualAction",
+    2
+   ],
+   [
+    "UIDocumentPickerViewController",
+    2
+   ],
+   [
+    "UIDragPreview",
+    2
+   ],
+   [
+    "UIDropProposal",
+    2
+   ],
+   [
+    "UIPercentDrivenInteractiveTransition",
+    2
+   ],
+   [
+    "UIPrintInteractionController",
+    2
+   ],
+   [
+    "UICollectionViewController",
+    1
+   ],
+   [
+    "UIDocumentPickerDelegate",
+    1
+   ],
+   [
+    "UIDropInteractionDelegate",
+    1
+   ],
+   [
+    "UIEditMenuInteractionAnimating",
+    1
+   ],
+   [
+    "UIEditMenuInteractionDelegate",
+    1
+   ],
+   [
+    "UIPrintInfo",
+    1
+   ],
+   [
+    "UIViewImplicitlyAnimating",
+    1
+   ]
+  ]
+ },
+ {
+  "app": "ios-oss",
+  "score_b_before": 11,
+  "score_b_after": 11,
+  "score_a_before": 14,
+  "score_a_after": 14,
+  "subscore_changes": {},
+  "gap_uses": [
+   27,
+   1
+  ],
+  "gap_types": [
+   8,
+   1
+  ],
+  "newly_declared": [
+   [
+    "UIPinchGestureRecognizer",
+    9
+   ],
+   [
+    "NSTextAttachment",
+    6
+   ],
+   [
+    "UINotificationFeedbackGenerator",
+    5
+   ],
+   [
+    "UIImagePickerController",
+    2
+   ],
+   [
+    "UISelectionFeedbackGenerator",
+    2
+   ],
+   [
+    "NSTextContainer",
+    1
+   ],
+   [
+    "UICollectionViewController",
+    1
+   ],
+   [
+    "UIStoryboard",
     1
    ]
   ]
@@ -1189,11 +1351,11 @@
   },
   "gap_uses": [
    269,
-   69
+   44
   ],
   "gap_types": [
    42,
-   20
+   16
   ],
   "newly_declared": [
    [
@@ -1211,6 +1373,10 @@
    [
     "UIImagePickerController",
     22
+   ],
+   [
+    "UISplitViewController",
+    20
    ],
    [
     "UISwipeActionsConfiguration",
@@ -1261,7 +1427,15 @@
     2
    ],
    [
+    "UICollectionViewFlowLayoutInvalidationContext",
+    2
+   ],
+   [
     "UIDropProposal",
+    2
+   ],
+   [
+    "UIEditMenuInteraction",
     2
    ],
    [
@@ -1287,6 +1461,10 @@
    [
     "UIOpenURLContext",
     1
+   ],
+   [
+    "UISplitViewControllerDelegate",
+    1
    ]
   ]
  },
@@ -1299,11 +1477,11 @@
   "subscore_changes": {},
   "gap_uses": [
    48,
-   14
+   6
   ],
   "gap_types": [
    19,
-   8
+   5
   ],
   "newly_declared": [
    [
@@ -1317,6 +1495,10 @@
    [
     "UIImagePickerController",
     8
+   ],
+   [
+    "UISplitViewController",
+    5
    ],
    [
     "NSTextAttachment",
@@ -1339,6 +1521,10 @@
     2
    ],
    [
+    "UISwipeGestureRecognizer",
+    2
+   ],
+   [
     "NSTextAttachmentViewProvider",
     1
    ],
@@ -1353,6 +1539,10 @@
    [
     "UISearchControllerDelegate",
     1
+   ],
+   [
+    "UISplitViewControllerDelegate",
+    1
    ]
   ]
  },
@@ -1365,16 +1555,20 @@
   "subscore_changes": {},
   "gap_uses": [
    79,
-   56
+   46
   ],
   "gap_types": [
    11,
-   6
+   5
   ],
   "newly_declared": [
    [
     "UINotificationFeedbackGenerator",
     18
+   ],
+   [
+    "UISwipeGestureRecognizer",
+    10
    ],
    [
     "UIPinchGestureRecognizer",
@@ -1408,11 +1602,11 @@
   },
   "gap_uses": [
    120,
-   28
+   5
   ],
   "gap_types": [
    31,
-   8
+   4
   ],
   "newly_declared": [
    [
@@ -1440,7 +1634,19 @@
     8
    ],
    [
+    "UISwipeGestureRecognizer",
+    8
+   ],
+   [
+    "UIEditMenuInteraction",
+    7
+   ],
+   [
     "UICollectionViewDropCoordinator",
+    6
+   ],
+   [
+    "UIEditMenuConfiguration",
     6
    ],
    [
@@ -1477,6 +1683,10 @@
    ],
    [
     "UIDocumentPickerDelegate",
+    2
+   ],
+   [
+    "UIEditMenuInteractionDelegate",
     2
    ],
    [
@@ -1527,11 +1737,11 @@
   },
   "gap_uses": [
    126,
-   8
+   6
   ],
   "gap_types": [
    40,
-   7
+   5
   ],
   "newly_declared": [
    [
@@ -1639,7 +1849,15 @@
     1
    ],
    [
+    "UICollectionViewLayoutInvalidationContext",
+    1
+   ],
+   [
     "UIDocumentPickerDelegate",
+    1
+   ],
+   [
+    "UIInputView",
     1
    ],
    [
@@ -1686,11 +1904,11 @@
   },
   "gap_uses": [
    100,
-   61
+   49
   ],
   "gap_types": [
    39,
-   28
+   23
   ],
   "newly_declared": [
    [
@@ -1700,6 +1918,10 @@
    [
     "NSTextAttachment",
     8
+   ],
+   [
+    "UICollectionViewLayoutInvalidationContext",
+    6
    ],
    [
     "UISearchControllerDelegate",
@@ -1714,6 +1936,10 @@
     4
    ],
    [
+    "UICollectionViewController",
+    2
+   ],
+   [
     "UIOpenURLContext",
     2
    ],
@@ -1726,6 +1952,10 @@
     2
    ],
    [
+    "UISwipeGestureRecognizer",
+    2
+   ],
+   [
     "NSTextContainer",
     1
    ],
@@ -1734,7 +1964,15 @@
     1
    ],
    [
+    "UICollectionViewFlowLayoutInvalidationContext",
+    1
+   ],
+   [
     "UIContextualAction",
+    1
+   ],
+   [
+    "UIInputView",
     1
    ],
    [

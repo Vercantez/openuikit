@@ -4,32 +4,16 @@
   "Hackers": {},
   "NetNewsWire": {
    "blocking": {
-    "types": 6,
-    "uses": 71,
+    "types": 2,
+    "uses": 50,
     "list": [
      [
       "NSToolbarItem",
       48
      ],
      [
-      "UISplitViewController",
-      16
-     ],
-     [
-      "UICollectionViewController",
-      2
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      2
-     ],
-     [
       "NSMenuToolbarItem",
       2
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ]
     ]
    }
@@ -48,28 +32,12 @@
   },
   "Signal-iOS": {
    "blocking": {
-    "types": 14,
-    "uses": 57,
+    "types": 6,
+    "uses": 21,
     "list": [
-     [
-      "UICoordinateSpace",
-      13
-     ],
      [
       "UIScrollEdgeElementContainerInteraction",
       12
-     ],
-     [
-      "UICollectionViewLayoutInvalidationContext",
-      6
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      6
-     ],
-     [
-      "UISplitViewController",
-      6
      ],
      [
       "UITab",
@@ -77,10 +45,6 @@
      ],
      [
       "UINavigationBarDelegate",
-      2
-     ],
-     [
-      "UIInputView",
       2
      ],
      [
@@ -93,18 +57,6 @@
      ],
      [
       "UIBarPositioning",
-      1
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      1
-     ],
-     [
-      "UICollectionViewController",
-      1
-     ],
-     [
-      "UISplitViewControllerDelegate",
       1
      ]
     ]
@@ -122,8 +74,8 @@
   },
   "Telegram-iOS": {
    "stub-able": {
-    "types": 15,
-    "uses": 45,
+    "types": 14,
+    "uses": 41,
     "list": [
      [
       "UIFindSession",
@@ -139,10 +91,6 @@
      ],
      [
       "UIInterpolatingMotionEffect",
-      4
-     ],
-     [
-      "UIInputViewAudioFeedback",
       4
      ],
      [
@@ -188,13 +136,9 @@
     ]
    },
    "blocking": {
-    "types": 26,
-    "uses": 78,
+    "types": 19,
+    "uses": 56,
     "list": [
-     [
-      "UIEditMenuInteraction",
-      7
-     ],
      [
       "NSTextLocation",
       6
@@ -212,10 +156,6 @@
       5
      ],
      [
-      "UIEditMenuConfiguration",
-      5
-     ],
-     [
       "NSTextRange",
       4
      ],
@@ -226,14 +166,6 @@
      [
       "UICornerRadius",
       4
-     ],
-     [
-      "UIInputView",
-      3
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      3
      ],
      [
       "NSTextContentStorage",
@@ -260,14 +192,6 @@
       2
      ],
      [
-      "UIEditMenuInteractionAnimating",
-      2
-     ],
-     [
-      "UICoordinateSpace",
-      1
-     ],
-     [
       "NSTextParagraph",
       1
      ],
@@ -288,10 +212,6 @@
       1
      ],
      [
-      "UIEditMenuInteractionDelegate",
-      1
-     ],
-     [
       "UITextSelectionDisplayInteractionDelegate",
       1
      ]
@@ -300,13 +220,9 @@
   },
   "WordPress-iOS": {
    "blocking": {
-    "types": 9,
-    "uses": 51,
+    "types": 5,
+    "uses": 26,
     "list": [
-     [
-      "UISplitViewController",
-      20
-     ],
      [
       "UITextItem",
       12
@@ -318,18 +234,6 @@
      [
       "NSTextTab",
       2
-     ],
-     [
-      "UIEditMenuInteraction",
-      2
-     ],
-     [
-      "UICollectionViewFlowLayoutInvalidationContext",
-      2
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ],
      [
       "NSTextLayoutManager",
@@ -394,32 +298,12 @@
   },
   "duckduckgo-ios": {
    "blocking": {
-    "types": 7,
-    "uses": 15,
+    "types": 2,
+    "uses": 5,
     "list": [
      [
       "UIImageAsset",
       4
-     ],
-     [
-      "UIEditMenuInteraction",
-      4
-     ],
-     [
-      "UIEditMenuConfiguration",
-      3
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      1
-     ],
-     [
-      "UIEditMenuInteractionAnimating",
-      1
-     ],
-     [
-      "UICollectionViewController",
-      1
      ],
      [
       "NSIndexPath",
@@ -447,46 +331,15 @@
    }
   },
   "eidolon": {},
-  "eigen": {
-   "blocking": {
-    "types": 3,
-    "uses": 4,
-    "list": [
-     [
-      "UISplitViewController",
-      2
-     ],
-     [
-      "UICollectionViewController",
-      1
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
-     ]
-    ]
-   }
-  },
+  "eigen": {},
   "element-ios": {
    "blocking": {
-    "types": 7,
-    "uses": 13,
+    "types": 4,
+    "uses": 5,
     "list": [
-     [
-      "UISplitViewController",
-      5
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      2
-     ],
      [
       "UIBarItem",
       2
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ],
      [
       "UIResponderStandardEditActions",
@@ -557,13 +410,9 @@
     ]
    },
    "blocking": {
-    "types": 6,
-    "uses": 18,
+    "types": 5,
+    "uses": 8,
     "list": [
-     [
-      "UISwipeGestureRecognizer",
-      10
-     ],
      [
       "UIToolbarDelegate",
       2
@@ -590,16 +439,12 @@
   "focus-ios": {},
   "home-assistant-ios": {
    "blocking": {
-    "types": 6,
-    "uses": 56,
+    "types": 5,
+    "uses": 46,
     "list": [
      [
       "NSToolbarItem",
       37
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      10
      ],
      [
       "UIMenuBuilder",
@@ -621,16 +466,6 @@
    }
   },
   "ios-oss": {
-   "blocking": {
-    "types": 1,
-    "uses": 1,
-    "list": [
-     [
-      "UICollectionViewController",
-      1
-     ]
-    ]
-   },
    "stub-able": {
     "types": 1,
     "uses": 1,
@@ -644,8 +479,8 @@
   },
   "mastodon-ios": {
    "stub-able": {
-    "types": 5,
-    "uses": 15,
+    "types": 4,
+    "uses": 14,
     "list": [
      [
       "UIInterpolatingMotionEffect",
@@ -662,44 +497,20 @@
      [
       "UILargeContentViewerInteraction",
       1
-     ],
-     [
-      "UIInputViewAudioFeedback",
-      1
      ]
     ]
    },
    "blocking": {
-    "types": 9,
-    "uses": 22,
+    "types": 4,
+    "uses": 11,
     "list": [
      [
       "UITraitLegibilityWeight",
       6
      ],
      [
-      "UIEditMenuInteraction",
-      4
-     ],
-     [
       "UIResponderStandardEditActions",
       3
-     ],
-     [
-      "UIEditMenuConfiguration",
-      3
-     ],
-     [
-      "UIInputView",
-      2
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      1
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      1
      ],
      [
       "UITabBarItemAppearance",
@@ -713,36 +524,6 @@
    }
   },
   "nextcloud-ios": {
-   "blocking": {
-    "types": 6,
-    "uses": 25,
-    "list": [
-     [
-      "UISwipeGestureRecognizer",
-      8
-     ],
-     [
-      "UIEditMenuInteraction",
-      7
-     ],
-     [
-      "UIEditMenuConfiguration",
-      6
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      2
-     ],
-     [
-      "UIActionSheetDelegate",
-      1
-     ],
-     [
-      "NSIndexPath",
-      1
-     ]
-    ]
-   },
    "stub-able": {
     "types": 2,
     "uses": 3,
@@ -753,6 +534,20 @@
      ],
      [
       "UIWindowSceneDestructionRequestOptions",
+      1
+     ]
+    ]
+   },
+   "blocking": {
+    "types": 2,
+    "uses": 2,
+    "list": [
+     [
+      "UIActionSheetDelegate",
+      1
+     ],
+     [
+      "NSIndexPath",
       1
      ]
     ]
@@ -770,8 +565,8 @@
     ]
    },
    "blocking": {
-    "types": 6,
-    "uses": 6,
+    "types": 4,
+    "uses": 4,
     "list": [
      [
       "UITabAccessory",
@@ -779,14 +574,6 @@
      ],
      [
       "UIPopoverPresentationControllerSourceItem",
-      1
-     ],
-     [
-      "UIInputView",
-      1
-     ],
-     [
-      "UICollectionViewLayoutInvalidationContext",
       1
      ],
      [
@@ -821,32 +608,6 @@
    }
   },
   "vlc-ios": {
-   "blocking": {
-    "types": 5,
-    "uses": 17,
-    "list": [
-     [
-      "UISwipeGestureRecognizer",
-      10
-     ],
-     [
-      "UITableViewRowAction",
-      3
-     ],
-     [
-      "UICollectionViewController",
-      2
-     ],
-     [
-      "NSIndexPath",
-      1
-     ],
-     [
-      "UICornerConfiguration",
-      1
-     ]
-    ]
-   },
    "stub-able": {
     "types": 4,
     "uses": 11,
@@ -868,20 +629,34 @@
       1
      ]
     ]
+   },
+   "blocking": {
+    "types": 3,
+    "uses": 5,
+    "list": [
+     [
+      "UITableViewRowAction",
+      3
+     ],
+     [
+      "NSIndexPath",
+      1
+     ],
+     [
+      "UICornerConfiguration",
+      1
+     ]
+    ]
    }
   },
   "wikipedia-ios": {
    "blocking": {
-    "types": 22,
-    "uses": 52,
+    "types": 17,
+    "uses": 40,
     "list": [
      [
       "UITextItem",
       8
-     ],
-     [
-      "UICollectionViewLayoutInvalidationContext",
-      6
      ],
      [
       "NSTextContentStorage",
@@ -902,14 +677,6 @@
      [
       "UICalendarSelectionSingleDate",
       3
-     ],
-     [
-      "UICollectionViewController",
-      2
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      2
      ],
      [
       "UITab",
@@ -933,14 +700,6 @@
      ],
      [
       "UITabBarItemAppearance",
-      1
-     ],
-     [
-      "UIInputView",
-      1
-     ],
-     [
-      "UICollectionViewFlowLayoutInvalidationContext",
       1
      ],
      [
@@ -1025,21 +784,12 @@
     "UICalendarSelectionSingleDateDelegate",
     "UICalendarView",
     "UICalendarViewDelegate",
-    "UICollectionViewController",
-    "UICollectionViewFlowLayoutInvalidationContext",
-    "UICollectionViewLayoutInvalidationContext",
     "UICollectionViewUpdateItem",
     "UICommandAlternate",
     "UIContentSizeCategoryAdjusting",
-    "UICoordinateSpace",
     "UICornerConfiguration",
     "UICornerRadius",
-    "UIEditMenuConfiguration",
-    "UIEditMenuInteraction",
-    "UIEditMenuInteractionAnimating",
-    "UIEditMenuInteractionDelegate",
     "UIImageAsset",
-    "UIInputView",
     "UIMenuBuilder",
     "UIMenuSystem",
     "UINavigationBarDelegate",
@@ -1047,9 +797,6 @@
     "UIResponderStandardEditActions",
     "UIScrollEdgeEffect",
     "UIScrollEdgeElementContainerInteraction",
-    "UISplitViewController",
-    "UISplitViewControllerDelegate",
-    "UISwipeGestureRecognizer",
     "UITab",
     "UITabAccessory",
     "UITabBarItemAppearance",
@@ -1067,7 +814,7 @@
     "UITraitLegibilityWeight",
     "UITraitTabAccessoryEnvironment"
    ],
-   "uses": 487
+   "uses": 280
   },
   "stub-able": {
    "types": [
@@ -1084,7 +831,6 @@
     "UIFocusAnimationCoordinator",
     "UIFocusGuide",
     "UIFocusUpdateContext",
-    "UIInputViewAudioFeedback",
     "UIInterpolatingMotionEffect",
     "UILargeContentViewerInteraction",
     "UILocalNotification",
@@ -1112,7 +858,7 @@
     "UIViewPrintFormatter",
     "UIWindowSceneDestructionRequestOptions"
    ],
-   "uses": 143
+   "uses": 138
   },
   "unclassified": {
    "types": [],

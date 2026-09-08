@@ -1026,6 +1026,12 @@ full/ladder/ledger_supply.py full ledger-supply-2026-09-14.json
 
 Measurement only, against commit `a17b016727114d84ba851de57589aeb111d0b4be`. The suffix **2026-09-16** is the requested measurement-series date; the execution environment reports 2026-09-06. This section compares the **dated 2026-09-14 JSON files**, not the later prose overlays in §8.5. Older artifacts and §0–§8 remain unchanged. No application was rebuilt or launched in this census, and no OpenUIKit source or scoring threshold changed.
 
+**UIKit implementation follow-up — 2026-09-07 local clock, retained 2026-09-16 artifact-series suffix.** The table and narrative below describe the original re-measurement; the dated JSONs have now been regenerated again by `uikit/scripts/blocking_types_census.sh` around the unchanged §9.7 instrument. This follow-up adds measured programmatic behavior and preserves explicit partial-service/rendering limits; declaration coverage does not prove every app member or launch. See `uikit/docs/agent_reports/uikit-blocking-types.md`.
+
+| implementation branch | blocking types / uses, before → after | stub-able types / uses, before → after | weighted / effective UIKit coverage, before → after | demand / measurement |
+| --- | --- | --- | --- | --- |
+| `agent/uikit-blocking-types` (2026-09-07) | **66 / 487 → 54 / 280** | **40 / 143 → 39 / 138** | **95.677883% / 99.456175% → 95.860884% / 99.639176%** | 20 apps, 25,371 Swift files, 115,846 references unchanged. Thirteen new names across swipe, split, collection, coordinates, edit-menu and input-view families; private iOS 26.1 oracles. The frozen Simplenote HEAD is checked out clean in `/tmp` because ignored local probe files altered manifest/nib counts; no corpus or rubric edits. |
+
 ### 9.1 Enumeration and invariant demand
 
 Re-ran `ladder_census.py` for apps and dependencies, `union_and_imports.py`, `nibdeps.sh`, `deps.py`, `dep_class.py`, `classify_gaps.py`, `model_supply.py`, `score_ladder.py`, and `ledger_supply.py`. All outputs use `-2026-09-16`; the original instruments were run unchanged. The dependency walk retains §8.7’s demo/test exclusions. No repository was cloned or fetched.
