@@ -368,3 +368,40 @@ fails earlier (`missing corpus checkout: scratch/ladder-corpus/focus-ios`).
 `swiftc` is Swift 6.2.4 / linux and the sealed gate compiles with a clean
 product tree (`products=clean`). Starting commit
 `6bf18072f4bc9ca119f4b0ad49dd8478f92dd5f0` matched.
+## Depth pass 2026-09 (wave 8)
+
+Coverage before this pass: **2,827 implemented / 2 declared / 553 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **3,129 implemented / 2 declared / 251 deferred /
+0 unavailable / 0 not-applicable**. The implemented gain is **+302**.
+
+This pass adds validated host descriptors for the largest remaining CNN
+families: spatial normalization and its gradient nodes, dilated and gradient
+pooling, bilinear/nearest upsampling and gradients, legacy neuron kernels and
+nodes, and unary/binary reduction kernels and nodes. It also fills the
+arithmetic and softmax descriptor surfaces. Parameters are normalized to safe,
+positive geometry and copied into owned descriptor state. Focused synchronous
+tests exercise each cited initializer or property with concrete values.
+
+Encode paths for these neural-network descriptors remain fail-closed through
+`MPSHostBoundary`; Linux does not claim Apple GPU execution. `MPSTemporalAA`
+likewise preserves/copies `blendFactor` but explicitly refuses texture encode
+without writing a destination. NSCoder restoration remains unavailable rather
+than manufacturing an Apple archive interpretation.
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 12.0% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (table-driven option-set values) |
+| 343 | 11.0% | `MPSTypesTests.swift#testMPSEnumRawValues` (table-driven enum values) |
+| 243 | 7.8% | `MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels` |
+| 135 | 4.3% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 107 | 3.4% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+
+All added evidence names real top-level synchronous no-argument tests. The
+remaining 251 rows stay deferred where the pinned surface does not support an
+honest host behavior or where a focused identifier-level probe is still absent.
+No row was classified unavailable or not-applicable, and no Apple-only result
+is fabricated.

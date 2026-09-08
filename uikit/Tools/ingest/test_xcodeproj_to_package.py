@@ -86,6 +86,30 @@ class MiniAppFixtureTests(unittest.TestCase):
         self.tid, self.target = self.graph.pick_app_target(None)
         self.manifest = ingest.build_manifest(self.graph, self.tid, self.target)
 
+    def test_named_library_preserves_selected_app_source(self) -> None:
+        # Eidolon 44486ed: PBX target Kiosk must become an Eidolon library,
+        # without changing the 109-file target census or upstream entry point.
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            ingest.emit_tree(self.graph, self.manifest, out, UIKIT,
+                             module_name="Eidolon", library=True)
+            package = (out / "Package.swift").read_text()
+            self.assertIn('.library(name: "Eidolon", targets: ["Eidolon"])', package)
+            self.assertNotIn('.executableTarget(', package)
+            original = self.graph.source_root / "MiniApp/AppDelegate.swift"
+            self.assertEqual(original.read_bytes(),
+                             (out / "Sources/Eidolon/MiniApp/AppDelegate.swift").read_bytes())
+            manifest = json.loads((out / "source-manifest.json").read_text())
+            self.assertEqual(manifest["target"]["name"], "MiniApp")
+            self.assertEqual(manifest["generated"]["target_name"], "Eidolon")
+            self.assertTrue(manifest["generated"]["library"])
+
+    def test_eidolon_swift_dialect_is_preserved(self) -> None:
+        self.manifest["swift_language_version"] = "4.0"
+        package = ingest.emit_package_swift(self.manifest, openuikit=UIKIT,
+                                            target_name="Eidolon", library=True)
+        self.assertIn('swiftLanguageVersions: [.version("4")]', package)
+
     def test_picks_application_target_not_tests(self) -> None:
         self.assertEqual(self.target["name"], "MiniApp")
         self.assertEqual(self.target["productType"], ingest.APP_PRODUCT_TYPE)
@@ -238,7 +262,9 @@ class MiniAppFixtureTests(unittest.TestCase):
             (root / "MiniApp" / "helper.c").write_text(
                 "int helper(void) { return 1; }\n", encoding="utf-8"
             )
-            (root / "MiniApp" / "local.h").write_text("int helper(void);\n", encoding="utf-8")
+            (root / "Support").mkdir()
+            (root / "Support" / "Transitive.h").write_text("int helper(void);\n", encoding="utf-8")
+            (root / "MiniApp" / "local.h").write_text('#include "../Support/Transitive.h"\n', encoding="utf-8")
             pbx = root / "MiniApp.xcodeproj" / "project.pbxproj"
             text = pbx.read_text(encoding="utf-8")
             text = text.replace(
@@ -263,10 +289,13 @@ class MiniAppFixtureTests(unittest.TestCase):
             self.assertEqual(manifest["counts"]["objc_sources"], 1)
             self.assertEqual(manifest["counts"]["c_sources"], 1)
             self.assertIn("MiniApp/local.h", manifest["header_sources"])
+            self.assertIn("Support/Transitive.h", manifest["header_sources"])
             out = root / "generated"
             ingest.emit_tree(graph, manifest, out, UIKIT)
             package = (out / "Package.swift").read_text(encoding="utf-8")
             self.assertIn('name: "MiniAppObjC"', package)
+            self.assertIn('.headerSearchPath("include/MiniApp")', package)
+            self.assertIn('.headerSearchPath("include/Support")', package)
             self.assertEqual(len(list((out / "Sources/MiniAppObjC").rglob("Mixed.m"))), 1)
             self.assertEqual(len(list((out / "Sources/MiniAppObjC/include").rglob("local.h"))), 1)
 

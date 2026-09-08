@@ -15,6 +15,7 @@ full/metalperformanceshaders/MPSPacked.swift
 full/metalperformanceshaders/MPSRayIntersector.swift
 full/metalperformanceshaders/MPSReshape.swift
 full/metalperformanceshaders/MPSTypes.swift
+full/metalperformanceshaders/MPSWave10Descriptors.swift
 full/metalperformanceshaders/MPSWave9Kernels.swift
 full/metalperformanceshaders/MetalPerformanceShaders.swift
 full/metalperformanceshaders/MetalStandIn.swift

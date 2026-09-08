@@ -1,0 +1,776 @@
+{
+  "project": "scratch/ladder-corpus/eidolon/Kiosk.xcodeproj",
+  "project_name": "Kiosk",
+  "source_root": "scratch/ladder-corpus/eidolon",
+  "target": {
+    "id": "5EB0B6EC1A5C3E6800B7CBF2",
+    "name": "Kiosk",
+    "product_type": "com.apple.product-type.application",
+    "product_name": "Kiosk"
+  },
+  "sibling_targets": [
+    {
+      "id": "5EB0B6EC1A5C3E6800B7CBF2",
+      "name": "Kiosk",
+      "product_type": "com.apple.product-type.application"
+    },
+    {
+      "id": "5EB0B7011A5C3E6800B7CBF2",
+      "name": "KioskTests",
+      "product_type": "com.apple.product-type.bundle.unit-test"
+    }
+  ],
+  "info": {
+    "info_plist_file": "Kiosk/Supporting Files/Info.plist",
+    "bundle_identifier": "net.artsy.kiosk.beta",
+    "display_name": "Kiosk β",
+    "product_name": "Kiosk",
+    "keys": {
+      "CFBundleIdentifier": "net.artsy.kiosk.beta",
+      "CFBundleDisplayName": "Kiosk β",
+      "CFBundleName": "Kiosk",
+      "CFBundleExecutable": "$(EXECUTABLE_NAME)",
+      "CFBundleShortVersionString": "5.9.3",
+      "CFBundleVersion": "2018.02.07"
+    },
+    "configuration_settings": {
+      "PRODUCT_BUNDLE_IDENTIFIER": "net.artsy.kiosk.beta",
+      "PRODUCT_NAME": "$(TARGET_NAME)",
+      "INFOPLIST_FILE": "Kiosk/Supporting Files/Info.plist"
+    }
+  },
+  "swift_sources": [
+    "Kiosk/App/Logger.swift",
+    "Kiosk/App/Views/Button Subclasses/Button.swift",
+    "Kiosk/App/CardHandler.swift",
+    "Kiosk/App/Networking/ArtsyAPI.swift",
+    "Kiosk/Bid Fulfillment/KeypadView.swift",
+    "Kiosk/App/Constants.swift",
+    "Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+    "Kiosk/Auction Listings/ListingsViewController.swift",
+    "Kiosk/App/GlobalFunctions.swift",
+    "Kiosk/App/Networking/NetworkLogger.swift",
+    "Kiosk/Observable+Operators.swift",
+    "Kiosk/Bid Fulfillment/LoadingViewController.swift",
+    "Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+    "Kiosk/App/Views/SwitchView.swift",
+    "Kiosk/App/Models/Image.swift",
+    "Kiosk/App/Models/CreditCard.swift",
+    "Kiosk/App/Models/SystemTime.swift",
+    "Kiosk/Observable+JSONAble.swift",
+    "Kiosk/App/APIPingManager.swift",
+    "Kiosk/Bid Fulfillment/RegisterViewController.swift",
+    "Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+    "Kiosk/App/MarkdownParser.swift",
+    "Kiosk/Admin/AuctionWebViewController.swift",
+    "Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+    "Kiosk/App/UIViewSubclassesErrorExtensions.swift",
+    "Kiosk/App/AppDelegate.swift",
+    "Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+    "Kiosk/App/SwiftExtensions.swift",
+    "Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+    "Kiosk/App/Views/SimulatorOnlyView.swift",
+    "Kiosk/Bid Fulfillment/Models/RegistrationCoordinator.swift",
+    "Kiosk/Sale Artwork Details/SaleArtworkZoomViewController.swift",
+    "Kiosk/App/Networking/Networking.swift",
+    "Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift",
+    "Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+    "Kiosk/Auction Listings/ListingsCountdownManager.swift",
+    "Kiosk/Sale Artwork Details/ImageTiledDataSource.swift",
+    "Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+    "Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+    "Kiosk/Admin/ChooseAuctionViewController.swift",
+    "Kiosk/Auction Listings/ListingsViewModel.swift",
+    "Kiosk/App/Models/Sale.swift",
+    "Kiosk/Admin/AdminLogViewController.swift",
+    "Kiosk/App/Models/User.swift",
+    "Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+    "Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+    "Kiosk/UIKit+Rx.swift",
+    "Kiosk/App/Networking/XAppToken.swift",
+    "Kiosk/App/Views/Text Fields/TextField.swift",
+    "Kiosk/Storyboards/UIStoryboardExtensions.swift",
+    "Kiosk/App/Models/Card.swift",
+    "Kiosk/App/Models/BidderPosition.swift",
+    "Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+    "Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+    "Kiosk/App/Models/Artist.swift",
+    "Kiosk/App/Views/Text Fields/CursorView.swift",
+    "Kiosk/Admin/AdminCardTestingViewController.swift",
+    "Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+    "Kiosk/App/Views/RegisterFlowView.swift",
+    "Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+    "Kiosk/Bid Fulfillment/Models/NewUser.swift",
+    "Kiosk/Help/HelpViewController.swift",
+    "Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+    "Kiosk/Auction Listings/TableCollectionViewCell.swift",
+    "Kiosk/App/AppDelegate+GlobalActions.swift",
+    "Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+    "Kiosk/App/Models/Bidder.swift",
+    "Kiosk/Help/HelpAnimator.swift",
+    "Kiosk/Admin/PasswordAlertViewController.swift",
+    "Kiosk/App/AppViewController.swift",
+    "Kiosk/App/Models/GenericError.swift",
+    "Kiosk/App/AppSetup.swift",
+    "Kiosk/ListingsCollectionViewCell.swift",
+    "Kiosk/Observable+Logging.swift",
+    "Kiosk/Auction Listings/WebViewController.swift",
+    "Kiosk/App/UIViewControllerExtensions.swift",
+    "Kiosk/App/NSErrorExtensions.swift",
+    "Kiosk/Bid Fulfillment/FulfillmentContainerViewController.swift",
+    "Kiosk/Bid Fulfillment/RegistrationPostalZipViewController.swift",
+    "Kiosk/App/Models/Bid.swift",
+    "Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+    "Kiosk/Admin/AdminPanelViewController.swift",
+    "Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+    "Kiosk/App/Models/Artwork.swift",
+    "Kiosk/App/Models/SaleArtworkViewModel.swift",
+    "Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+    "Kiosk/App/Networking/UserCredentials.swift",
+    "Kiosk/App/Views/Spinner.swift",
+    "Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+    "Kiosk/App/Networking/APIKeys.swift",
+    "Kiosk/App/BidderDetailsRetrieval.swift",
+    "Kiosk/UIView+LongPressDisplayMessage.swift",
+    "Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+    "Kiosk/App/Models/JSONAble.swift",
+    "Kiosk/App/UIStoryboardSegueExtensions.swift",
+    "Kiosk/App/Models/Location.swift",
+    "Kiosk/UIViewController+Bidding.swift",
+    "Kiosk/App/OfflineViewController.swift",
+    "Kiosk/HelperFunctions.swift",
+    "Kiosk/Bid Fulfillment/StripeManager.swift",
+    "Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+    "Kiosk/UILabel+Fonts.swift",
+    "Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+    "Kiosk/Bid Fulfillment/ConfirmYourBidPasswordViewController.swift",
+    "Kiosk/Sale Artwork Details/WhitespaceGobbler.swift",
+    "Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+    "Kiosk/App/Models/BuyersPremium.swift",
+    "Kiosk/App/Models/SaleArtwork.swift",
+    "Kiosk/Storyboards/StoryboardIdentifiers.swift"
+  ],
+  "missing_swift_sources": [],
+  "other_sources": [
+    {
+      "path": "Kiosk/App/KioskDateFormatter.m",
+      "ext": ".m"
+    },
+    {
+      "path": "Kiosk/App/CreditCardValidation.m",
+      "ext": ".m"
+    },
+    {
+      "path": "Kiosk/App/StubResponses.m",
+      "ext": ".m"
+    }
+  ],
+  "objc_sources": [
+    "Kiosk/App/KioskDateFormatter.m",
+    "Kiosk/App/CreditCardValidation.m",
+    "Kiosk/App/StubResponses.m"
+  ],
+  "c_sources": [],
+  "header_sources": [
+    "Kiosk/App/CreditCardValidation.h",
+    "Kiosk/App/KioskDateFormatter.h",
+    "Kiosk/App/StubResponses.h",
+    "Kiosk/Supporting Files/BridgingHeader.h",
+    "Kiosk/Supporting Files/PodsBridgingHeader.h"
+  ],
+  "bridging_header": "Kiosk/Supporting Files/BridgingHeader.h",
+  "swift_language_version": "4.0",
+  "swift_header_consumers": [],
+  "resources": {
+    "xcassets": [
+      "Kiosk/Images.xcassets"
+    ],
+    "nibs": [
+      "Kiosk/Storyboards/Auction.storyboard",
+      "Kiosk/Storyboards/KeypadView.xib",
+      "Kiosk/Storyboards/Fulfillment.storyboard"
+    ],
+    "strings": [],
+    "json": [
+      "Kiosk/Stubbed Responses/MyBidPosition.json",
+      "Kiosk/Stubbed Responses/FindBidder.json",
+      "Kiosk/Stubbed Responses/Artwork.json",
+      "Kiosk/Stubbed Responses/CreatePINForBidder.json",
+      "Kiosk/Stubbed Responses/CreateABid.json",
+      "Kiosk/Stubbed Responses/FindMyBidderRegistration.json",
+      "Kiosk/Stubbed Responses/Auctions.json",
+      "Kiosk/Stubbed Responses/MyBiddersForAuction.json",
+      "Kiosk/Stubbed Responses/AuctionInfo.json",
+      "Kiosk/Stubbed Responses/XApp.json",
+      "Kiosk/Stubbed Responses/Me.json",
+      "Kiosk/Stubbed Responses/RegisterToBid.json",
+      "Kiosk/Stubbed Responses/RegisterCard.json",
+      "Kiosk/Stubbed Responses/Artist.json",
+      "Kiosk/Stubbed Responses/AuctionListings.json",
+      "Kiosk/Stubbed Responses/ForgotPassword.json",
+      "Kiosk/Stubbed Responses/XAuth.json",
+      "Kiosk/Stubbed Responses/Ping.json",
+      "Kiosk/Stubbed Responses/MyCreditCards.json",
+      "Kiosk/Stubbed Responses/CreateABidFail.json",
+      "Kiosk/Stubbed Responses/MyBidPositionsForAuctionArtwork.json",
+      "Kiosk/Stubbed Responses/SystemTime.json",
+      "Kiosk/Stubbed Responses/ActiveAuctions.json",
+      "Kiosk/Stubbed Responses/AuctionInfoForArtwork.json"
+    ]
+  },
+  "other_resources": [
+    "Kiosk/Bid Fulfillment/KeypadViewPreviewIB.png",
+    "Kiosk/Bid Fulfillment/edit_button@2x.png",
+    "Kiosk/Bid Fulfillment/toolbar_close@2x.png"
+  ],
+  "spm": [],
+  "frameworks": [
+    {
+      "name": "Pods_Kiosk",
+      "kind": "linked_framework",
+      "class": "unmeasured",
+      "port": null
+    }
+  ],
+  "imports": [
+    {
+      "name": "UIKit",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "UIKit",
+      "files": 62
+    },
+    {
+      "name": "RxSwift",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "RxSwift",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 58
+    },
+    {
+      "name": "Foundation",
+      "kind": "toolchain",
+      "class": "Foundation-heavy",
+      "port": "toolchain",
+      "files": 39
+    },
+    {
+      "name": "Moya",
+      "kind": "apple_framework",
+      "class": "networking-bound",
+      "port": "Moya",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 18
+    },
+    {
+      "name": "Action",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Action",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 17
+    },
+    {
+      "name": "SwiftyJSON",
+      "kind": "apple_framework",
+      "class": "Foundation-heavy",
+      "port": "SwiftyJSON",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 14
+    },
+    {
+      "name": "Artsy_UILabels",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 10
+    },
+    {
+      "name": "RxOptional",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "RxOptional",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 9
+    },
+    {
+      "name": "Artsy_UIButtons",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 7
+    },
+    {
+      "name": "RxCocoa",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "RxCocoa",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 7
+    },
+    {
+      "name": "ARAnalytics",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "ARAnalytics",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 6
+    },
+    {
+      "name": "ORStackView",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 6
+    },
+    {
+      "name": "Keys",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Keys",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 5
+    },
+    {
+      "name": "Stripe",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Stripe",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 5
+    },
+    {
+      "name": "Artsy_UIFonts",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 4
+    },
+    {
+      "name": "ARTiledImageView",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 2
+    },
+    {
+      "name": "Alamofire",
+      "kind": "apple_framework",
+      "class": "networking-bound",
+      "port": "Alamofire",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 2
+    },
+    {
+      "name": "FLKAutoLayout",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 2
+    },
+    {
+      "name": "NSObject_Rx",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "NSObject_Rx",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 2
+    },
+    {
+      "name": "QuartzCore",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": null,
+      "files": 2
+    },
+    {
+      "name": "SDWebImage",
+      "kind": "spm",
+      "class": "ObjC",
+      "port": null,
+      "files": 2
+    },
+    {
+      "name": "ARCollectionViewMasonryLayout",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "CardFlight",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "DZNWebViewController",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "ECPhoneNumberFormatter",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "Reachability",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Reachability",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 1
+    },
+    {
+      "name": "Result",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Result",
+      "port_platforms": [
+        "macOS"
+      ],
+      "files": 1
+    },
+    {
+      "name": "SVProgressHUD",
+      "kind": "spm",
+      "class": "ObjC",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "SystemConfiguration",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "UIImageViewAligned",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 1
+    },
+    {
+      "name": "XNGMarkdownParser",
+      "kind": "unknown",
+      "class": "unmeasured",
+      "port": null,
+      "files": 1
+    }
+  ],
+  "in_tree_modules": [],
+  "gaps": [
+    {
+      "kind": "CocoaPods",
+      "detail": "Podfile or Pods/ present; CocoaPods has no OpenUIKit port"
+    }
+  ],
+  "no_port": [
+    {
+      "name": "Pods_Kiosk",
+      "kind": "linked_framework",
+      "class": "unmeasured",
+      "reason": "Pods_Kiosk has no OpenUIKit package product (ladder class unmeasured)"
+    },
+    {
+      "name": "Artsy_UILabels",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "Artsy_UILabels is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "Artsy_UIButtons",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "Artsy_UIButtons is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "ORStackView",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "ORStackView is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "Artsy_UIFonts",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "Artsy_UIFonts is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "ARTiledImageView",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "ARTiledImageView is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "FLKAutoLayout",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "FLKAutoLayout is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "QuartzCore",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "reason": "QuartzCore has no OpenUIKit package product (ladder class UIKit-bound)"
+    },
+    {
+      "name": "SDWebImage",
+      "kind": "spm",
+      "class": "ObjC",
+      "reason": "SDWebImage has no OpenUIKit package product (ladder class ObjC)"
+    },
+    {
+      "name": "ARCollectionViewMasonryLayout",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "ARCollectionViewMasonryLayout is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "CardFlight",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "CardFlight is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "DZNWebViewController",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "DZNWebViewController is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "ECPhoneNumberFormatter",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "ECPhoneNumberFormatter is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "SVProgressHUD",
+      "kind": "spm",
+      "class": "ObjC",
+      "reason": "SVProgressHUD has no OpenUIKit package product (ladder class ObjC)"
+    },
+    {
+      "name": "SystemConfiguration",
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "reason": "SystemConfiguration has no OpenUIKit package product (ladder class UIKit-bound)"
+    },
+    {
+      "name": "UIImageViewAligned",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "UIImageViewAligned is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    },
+    {
+      "name": "XNGMarkdownParser",
+      "kind": "import",
+      "class": "unmeasured",
+      "reason": "XNGMarkdownParser is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
+    }
+  ],
+  "counts": {
+    "swift_sources": 109,
+    "present_swift_sources": 109,
+    "objc_sources": 3,
+    "c_sources": 0,
+    "header_sources": 5,
+    "xcassets": 1,
+    "nibs": 3,
+    "strings": 0,
+    "json": 24,
+    "spm": 0,
+    "imports": 31,
+    "no_port": 17,
+    "gaps": 1
+  },
+  "generated": {
+    "package_swift": "Package.swift",
+    "target_name": "Eidolon",
+    "library": true,
+    "openuikit": "../..",
+    "resource_map": {
+      "xcassets": [
+        {
+          "from": "Kiosk/Images.xcassets",
+          "to": "Resources/Images.xcassets",
+          "loader": "OpenUIKit named-color/image reader (docs/NAMED_ASSETS.md): raw Colors.xcassets / Assets.xcassets / Media.xcassets at the resource root, or an openuikit-xcassets-index"
+        }
+      ],
+      "nibs": [
+        {
+          "from": "Kiosk/Storyboards/Auction.storyboard",
+          "to": "Resources/nibs/Auction.storyboard",
+          "loader": "OpenUIKit UINib reads compiled NIBArchive (fixtures/realapp/nibs); source .xib/.storyboard is copied here. ibtool --compile is macOS-only"
+        },
+        {
+          "from": "Kiosk/Storyboards/KeypadView.xib",
+          "to": "Resources/nibs/KeypadView.xib",
+          "loader": "OpenUIKit UINib reads compiled NIBArchive (fixtures/realapp/nibs); source .xib/.storyboard is copied here. ibtool --compile is macOS-only"
+        },
+        {
+          "from": "Kiosk/Storyboards/Fulfillment.storyboard",
+          "to": "Resources/nibs/Fulfillment.storyboard",
+          "loader": "OpenUIKit UINib reads compiled NIBArchive (fixtures/realapp/nibs); source .xib/.storyboard is copied here. ibtool --compile is macOS-only"
+        }
+      ],
+      "strings": [],
+      "json": [
+        {
+          "from": "Kiosk/Stubbed Responses/MyBidPosition.json",
+          "to": "Resources/json/MyBidPosition.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/FindBidder.json",
+          "to": "Resources/json/FindBidder.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/Artwork.json",
+          "to": "Resources/json/Artwork.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/CreatePINForBidder.json",
+          "to": "Resources/json/CreatePINForBidder.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/CreateABid.json",
+          "to": "Resources/json/CreateABid.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/FindMyBidderRegistration.json",
+          "to": "Resources/json/FindMyBidderRegistration.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/Auctions.json",
+          "to": "Resources/json/Auctions.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/MyBiddersForAuction.json",
+          "to": "Resources/json/MyBiddersForAuction.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/AuctionInfo.json",
+          "to": "Resources/json/AuctionInfo.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/XApp.json",
+          "to": "Resources/json/XApp.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/Me.json",
+          "to": "Resources/json/Me.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/RegisterToBid.json",
+          "to": "Resources/json/RegisterToBid.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/RegisterCard.json",
+          "to": "Resources/json/RegisterCard.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/Artist.json",
+          "to": "Resources/json/Artist.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/AuctionListings.json",
+          "to": "Resources/json/AuctionListings.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/ForgotPassword.json",
+          "to": "Resources/json/ForgotPassword.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/XAuth.json",
+          "to": "Resources/json/XAuth.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/Ping.json",
+          "to": "Resources/json/Ping.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/MyCreditCards.json",
+          "to": "Resources/json/MyCreditCards.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/CreateABidFail.json",
+          "to": "Resources/json/CreateABidFail.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/MyBidPositionsForAuctionArtwork.json",
+          "to": "Resources/json/MyBidPositionsForAuctionArtwork.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/SystemTime.json",
+          "to": "Resources/json/SystemTime.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/ActiveAuctions.json",
+          "to": "Resources/json/ActiveAuctions.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        },
+        {
+          "from": "Kiosk/Stubbed Responses/AuctionInfoForArtwork.json",
+          "to": "Resources/json/AuctionInfoForArtwork.json",
+          "loader": "bundled JSON next to the module, same as fixtures/realapp/*.json"
+        }
+      ]
+    },
+    "ingest_info": "Sources/Eidolon/Resources/ingest-info.json",
+    "local_packages": []
+  }
+}

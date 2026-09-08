@@ -32,7 +32,7 @@ Two build routes exist and per-app feasibility differs:
 | | route (a) — Linux cross-swiftc | route (b) — Apple toolchain on the Mac |
 |---|---|---|
 | the story | no Apple hardware anywhere | Apple toolchain, our runtime target |
-| hard limit | Swift `#selector` / `@objc` **cannot compile** (stdlib ABI, docs/OBJC_RUNTIME.md); the user rejected a source rewriter, so an app must already be written with `Selector.named()` / closures / `UIAction` | no `#selector` limit |
+| hard limit | Stock Linux Swift rejects `#selector` / `@objc`. The explicitly authorized 2026-09-07 bounded source adapter proves two Focus cells and six actions on native Linux (see §4.1); unchanged-source interop and whole-app route (a) remain unproved | no `#selector` limit |
 | everything else | identical | identical |
 
 Both routes are scored. The `SEL` column is the only difference between them.
@@ -278,6 +278,23 @@ different per app: focus-ios is 22 stub-able types against 13 blocking,
 wikipedia-ios is 12 against 53.
 
 ### 4.1 focus-ios (Firefox Focus) — B 6 / A 8, **NEAR on both routes; the only route-(a) NEAR**
+
+**Native Linux selector measurement, 2026-09-07** ([report](../../uikit/docs/agent_reports/route-a-selector-wall.md)):
+the table below is the frozen 227-file baseline. The checked-in Blockzilla
+slice has **74 code `#selector`, 82 `@objc`, four dynamic `perform` calls**;
+its vendored BlockzillaPackage adds **3 / 3 / 0**. SnapKit/Fuzi add no sites.
+The old 86-attribute lexical total includes one block-comment hit (85 code
+attributes). Stock Linux Swift 6.2.4 fails the complete original Focus
+SwitchTableViewCell and ThemeTableViewToggleCell at `#selector`/`@objc`;
+an explicit route-(a) generated-source adapter compiles both and delivers
+**6/6 target/actions, zero unresolved**, through their real private methods,
+delegate and Combine publisher. Source-emission coverage is **67/77 selector
+sites in 29 files**; **10 selectors, 11 attributes and all four dynamic
+`perform` calls remain outside that proof**. This is not 67 executed sites
+or a native-Linux Focus launch. Flag/shim experiments include emitted IR,
+missing SwiftObject symbols and an objc4-root subclass initialization crash;
+a working C objc4 control does not establish Swift interoperability. Route
+(b), original Focus sources, the frozen scores and the WebKit wall are unchanged.
 
 227 Swift files, 24,139 lines. 51 UIKit-subclass files vs 18 SwiftUI, **0 ObjC,
 0 nib-bound files**.
@@ -1211,4 +1228,3 @@ Shared remaining reach: `UISwipeGestureRecognizer` 10 apps/54 uses; `UICollectio
 Use §8.7 commands from `uikit/`, prefixing tool paths with `../full/ladder/`, reading the frozen `~/openuikit/scratch/ladder-corpus` and `~/openuikit/scratch/ladder-deps`, and writing each input/output with suffix `-2026-09-16` into a new output directory. `remeasure-2026-09-16.sh` records the executable sequence. `audit-2026-09-16.py` regenerates the supplemental declaration, delta, ledger-change and reviewed-model artifacts; `SHA256SUMS-2026-09-16.txt` records artifact hashes.
 
 Validation: all 50 HEADs equal frozen pins; 20 app and 30 dependency denominators retained; app non-UIKit demand/imports unchanged; SDK and nib rows unchanged modulo order; app UIKit use totals unchanged; 16 cluster groups / 86 names explicitly checked; no unclassified genuine UIKit gaps; all score sums and route counts checked; model band sums equal 130,883 before and after correction. No older dated artifact overwritten. Pixel/simulator/Catalyst/real-app/Linux-build gates were not re-run for this measurement-only change, consistent with `uikit/docs/agent_reports/ladder-census2.md`; no Sources, fixture, golden, package, or runtime implementation changes, and no build/pixel claim is made.
-
