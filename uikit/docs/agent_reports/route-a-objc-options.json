@@ -1,0 +1,1010 @@
+{
+  "measured_date_local": "2026-09-07",
+  "container": "uikit-linux",
+  "work_directory": "/work-route-a/objc-probes",
+  "probe_source_sha256": "9a4223769dc06b54fb474f3cfe114322d7111d1d2fc82e9de51a24756d7235b2",
+  "commands": [
+    {
+      "name": "swift-version",
+      "command": [
+        "swiftc",
+        "--version"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "Swift version 6.2.4 (swift-6.2.4-RELEASE)\nTarget: aarch64-unknown-linux-gnu\n",
+      "stderr": "",
+      "seconds": 0.125
+    },
+    {
+      "name": "clang-version",
+      "command": [
+        "clang-18",
+        "--version"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "Ubuntu clang version 18.1.3 (1ubuntu1)\nTarget: aarch64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n",
+      "stderr": "",
+      "seconds": 0.052
+    },
+    {
+      "name": "kernel",
+      "command": [
+        "uname",
+        "-a"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "Linux 538e9f75d329 6.12.76-linuxkit #1 SMP Sun Mar  8 14:41:59 UTC 2026 aarch64 aarch64 aarch64 GNU/Linux\n",
+      "stderr": "",
+      "seconds": 0.004
+    },
+    {
+      "name": "FoundationSelector-default",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "/work-route-a/objc-probes/FoundationSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/FoundationSelector.swift:3:6: error: Objective-C interoperability is disabled\n1 | import Foundation\n2 | final class Probe: NSObject {\n3 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n4 |     func action() { _ = #selector(tapped) }\n5 | }\n\n/work-route-a/objc-probes/FoundationSelector.swift:4:25: error: '#selector' can only be used with the Objective-C runtime\n2 | final class Probe: NSObject {\n3 |     @objc func tapped() {}\n4 |     func action() { _ = #selector(tapped) }\n  |                         `- error: '#selector' can only be used with the Objective-C runtime\n5 | }\n6 | \n",
+      "seconds": 0.148
+    },
+    {
+      "name": "FoundationSelector-experimental",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "/work-route-a/objc-probes/FoundationSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/FoundationSelector.swift:3:6: error: Objective-C interoperability is disabled\n1 | import Foundation\n2 | final class Probe: NSObject {\n3 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n4 |     func action() { _ = #selector(tapped) }\n5 | }\n\n/work-route-a/objc-probes/FoundationSelector.swift:4:25: error: '#selector' can only be used with the Objective-C runtime\n2 | final class Probe: NSObject {\n3 |     @objc func tapped() {}\n4 |     func action() { _ = #selector(tapped) }\n  |                         `- error: '#selector' can only be used with the Objective-C runtime\n5 | }\n6 | \n",
+      "seconds": 0.171
+    },
+    {
+      "name": "FoundationSelector-frontend",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/FoundationSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/FoundationSelector.swift:4:25: error: import the 'ObjectiveC' module to use '#selector'\n2 | final class Probe: NSObject {\n3 |     @objc func tapped() {}\n4 |     func action() { _ = #selector(tapped) }\n  |                         `- error: import the 'ObjectiveC' module to use '#selector'\n5 | }\n6 | \n",
+      "seconds": 0.119
+    },
+    {
+      "name": "FoundationSelector-both",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/FoundationSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/FoundationSelector.swift:4:25: error: import the 'ObjectiveC' module to use '#selector'\n2 | final class Probe: NSObject {\n3 |     @objc func tapped() {}\n4 |     func action() { _ = #selector(tapped) }\n  |                         `- error: import the 'ObjectiveC' module to use '#selector'\n5 | }\n6 | \n",
+      "seconds": 0.109
+    },
+    {
+      "name": "local-shim-default",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "/work-route-a/objc-probes/LocalSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/LocalSelector.swift:4:6: error: Objective-C interoperability is disabled\n2 | public class NSObject {}\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n5 |     func action() { _ = #selector(tapped) }\n6 | }\n\n/work-route-a/objc-probes/LocalSelector.swift:5:25: error: '#selector' can only be used with the Objective-C runtime\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n5 |     func action() { _ = #selector(tapped) }\n  |                         `- error: '#selector' can only be used with the Objective-C runtime\n6 | }\n7 | \n",
+      "seconds": 0.079
+    },
+    {
+      "name": "local-shim-experimental",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "/work-route-a/objc-probes/LocalSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/LocalSelector.swift:4:6: error: Objective-C interoperability is disabled\n2 | public class NSObject {}\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n5 |     func action() { _ = #selector(tapped) }\n6 | }\n\n/work-route-a/objc-probes/LocalSelector.swift:5:25: error: '#selector' can only be used with the Objective-C runtime\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n5 |     func action() { _ = #selector(tapped) }\n  |                         `- error: '#selector' can only be used with the Objective-C runtime\n6 | }\n7 | \n",
+      "seconds": 0.146
+    },
+    {
+      "name": "local-shim-frontend",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/LocalSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/LocalSelector.swift:4:6: error: @objc attribute used without importing module 'Foundation'\n2 | public class NSObject {}\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n  |      `- error: @objc attribute used without importing module 'Foundation'\n5 |     func action() { _ = #selector(tapped) }\n6 | }\n\n/work-route-a/objc-probes/LocalSelector.swift:5:25: error: import the 'ObjectiveC' module to use '#selector'\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n5 |     func action() { _ = #selector(tapped) }\n  |                         `- error: import the 'ObjectiveC' module to use '#selector'\n6 | }\n7 | \n",
+      "seconds": 0.082
+    },
+    {
+      "name": "emit-Swift-Foundation-shim",
+      "command": [
+        "swiftc",
+        "-emit-module",
+        "-module-name",
+        "Foundation",
+        "/work-route-a/objc-probes/swift-shim/Foundation.swift",
+        "-emit-module-path",
+        "/work-route-a/objc-probes/swift-shim/Foundation.swiftmodule"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.172
+    },
+    {
+      "name": "emit-Swift-ObjectiveC-shim",
+      "command": [
+        "swiftc",
+        "-emit-module",
+        "-module-name",
+        "ObjectiveC",
+        "/work-route-a/objc-probes/swift-shim/ObjectiveC.swift",
+        "-emit-module-path",
+        "/work-route-a/objc-probes/swift-shim/ObjectiveC.swiftmodule"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.202
+    },
+    {
+      "name": "imported-shim-default",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "/work-route-a/objc-probes/ImportedSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/ImportedSelector.swift:4:6: error: Objective-C interoperability is disabled\n2 | import ObjectiveC\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n5 |     func action() -> Selector { #selector(tapped) }\n6 | }\n\n/work-route-a/objc-probes/ImportedSelector.swift:5:33: error: '#selector' can only be used with the Objective-C runtime\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n5 |     func action() -> Selector { #selector(tapped) }\n  |                                 `- error: '#selector' can only be used with the Objective-C runtime\n6 | }\n7 | \n",
+      "seconds": 0.083
+    },
+    {
+      "name": "imported-shim-experimental",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "/work-route-a/objc-probes/ImportedSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/ImportedSelector.swift:4:6: error: Objective-C interoperability is disabled\n2 | import ObjectiveC\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n5 |     func action() -> Selector { #selector(tapped) }\n6 | }\n\n/work-route-a/objc-probes/ImportedSelector.swift:5:33: error: '#selector' can only be used with the Objective-C runtime\n3 | final class Probe: NSObject {\n4 |     @objc func tapped() {}\n5 |     func action() -> Selector { #selector(tapped) }\n  |                                 `- error: '#selector' can only be used with the Objective-C runtime\n6 | }\n7 | \n",
+      "seconds": 0.069
+    },
+    {
+      "name": "imported-shim-frontend",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.07
+    },
+    {
+      "name": "imported-shim-both",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.122
+    },
+    {
+      "name": "imported-shim-frontend-object",
+      "command": [
+        "swiftc",
+        "-c",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift",
+        "-o",
+        "/work-route-a/objc-probes/ImportedSelector.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.086
+    },
+    {
+      "name": "imported-shim-selector-SIL",
+      "command": [
+        "swiftc",
+        "-emit-silgen",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift",
+        "-o",
+        "/work-route-a/objc-probes/ImportedSelector.sil"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.094
+    },
+    {
+      "name": "imported-shim-selector-IR",
+      "command": [
+        "swiftc",
+        "-emit-ir",
+        "-I",
+        "/work-route-a/objc-probes/swift-shim",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift",
+        "-o",
+        "/work-route-a/objc-probes/ImportedSelector.ll"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.14
+    },
+    {
+      "name": "stock-Foundation-ObjectiveC-shim-typecheck",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.154
+    },
+    {
+      "name": "stock-Foundation-ObjectiveC-shim-object",
+      "command": [
+        "swiftc",
+        "-c",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift",
+        "-o",
+        "/work-route-a/objc-probes/StockFoundationSelector.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.183
+    },
+    {
+      "name": "imported-shim-frontend-undefined",
+      "command": [
+        "nm",
+        "-u",
+        "/work-route-a/objc-probes/ImportedSelector.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "                 U $s10Foundation8NSObjectCACycfCTq\n                 U $s10Foundation8NSObjectCACycfc\n                 U $s10Foundation8NSObjectCMm\n                 U $s10Foundation8NSObjectCMn\n                 U $s10Foundation8NSObjectCN\n                 U $s10Foundation8NSObjectCfd\n                 U $sBoWV\n                 U OBJC_METACLASS_$__TtCs12_SwiftObject\n                 U _objc_empty_cache\n                 U objc_opt_self\n                 U swift_allocObject\n                 U swift_deallocClassInstance\n                 U swift_release\n                 U swift_retain\n",
+      "stderr": "",
+      "seconds": 0.026
+    },
+    {
+      "name": "OpenUIKitSelector-default",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/Modules",
+        "-I",
+        "/work-route-a/uikit/Sources/CQuartz/include",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CSTBTrueType.build",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CPortableIO.build",
+        "/work-route-a/objc-probes/OpenUIKitSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/OpenUIKitSelector.swift:4:6: error: Objective-C interoperability is disabled\n2 | import OpenUIKit\n3 | @MainActor final class Probe: UIViewController {\n4 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n5 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n6 | }\n\n/work-route-a/objc-probes/OpenUIKitSelector.swift:5:68: error: '#selector' can only be used with the Objective-C runtime\n3 | @MainActor final class Probe: UIViewController {\n4 |     @objc func tapped() {}\n5 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n  |                                                                    `- error: '#selector' can only be used with the Objective-C runtime\n6 | }\n7 | \n",
+      "seconds": 0.199
+    },
+    {
+      "name": "OpenUIKitSelector-experimental",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/Modules",
+        "-I",
+        "/work-route-a/uikit/Sources/CQuartz/include",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CSTBTrueType.build",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CPortableIO.build",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "/work-route-a/objc-probes/OpenUIKitSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/OpenUIKitSelector.swift:4:6: error: Objective-C interoperability is disabled\n2 | import OpenUIKit\n3 | @MainActor final class Probe: UIViewController {\n4 |     @objc func tapped() {}\n  |      `- error: Objective-C interoperability is disabled\n5 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n6 | }\n\n/work-route-a/objc-probes/OpenUIKitSelector.swift:5:68: error: '#selector' can only be used with the Objective-C runtime\n3 | @MainActor final class Probe: UIViewController {\n4 |     @objc func tapped() {}\n5 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n  |                                                                    `- error: '#selector' can only be used with the Objective-C runtime\n6 | }\n7 | \n",
+      "seconds": 0.134
+    },
+    {
+      "name": "OpenUIKitSelector-frontend",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/Modules",
+        "-I",
+        "/work-route-a/uikit/Sources/CQuartz/include",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CSTBTrueType.build",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CPortableIO.build",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/OpenUIKitSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/OpenUIKitSelector.swift:5:68: error: import the 'ObjectiveC' module to use '#selector'\n3 | @MainActor final class Probe: UIViewController {\n4 |     @objc func tapped() {}\n5 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n  |                                                                    `- error: import the 'ObjectiveC' module to use '#selector'\n6 | }\n7 | \n",
+      "seconds": 0.103
+    },
+    {
+      "name": "OpenUIKitSelector-both",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/Modules",
+        "-I",
+        "/work-route-a/uikit/Sources/CQuartz/include",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CSTBTrueType.build",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CPortableIO.build",
+        "-enable-experimental-feature",
+        "ObjCInterop",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/OpenUIKitSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/OpenUIKitSelector.swift:5:68: error: import the 'ObjectiveC' module to use '#selector'\n3 | @MainActor final class Probe: UIViewController {\n4 |     @objc func tapped() {}\n5 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n  |                                                                    `- error: import the 'ObjectiveC' module to use '#selector'\n6 | }\n7 | \n",
+      "seconds": 0.194
+    },
+    {
+      "name": "OpenUIKitSelector-ObjectiveC-shim",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/Modules",
+        "-I",
+        "/work-route-a/uikit/Sources/CQuartz/include",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CSTBTrueType.build",
+        "-I",
+        "/work-route-a/uikit/.build/aarch64-unknown-linux-gnu/release/CPortableIO.build",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/OpenUIKitSelectorWithShim.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/work-route-a/objc-probes/OpenUIKitSelectorWithShim.swift:6:68: error: cannot convert value of type 'ObjectiveC.Selector' to expected argument type 'OpenUIKit.Selector'\n4 | @MainActor final class Probe: UIViewController {\n5 |     @objc func tapped() {}\n6 |     func wire(_ button: UIButton) { button.addTarget(self, action: #selector(tapped), for: .touchUpInside) }\n  |                                                                    `- error: cannot convert value of type 'ObjectiveC.Selector' to expected argument type 'OpenUIKit.Selector'\n7 | }\n8 | \n",
+      "seconds": 0.142
+    },
+    {
+      "name": "plain-Swift-interop-object",
+      "command": [
+        "swiftc",
+        "-c",
+        "-parse-as-library",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/Plain.swift",
+        "-o",
+        "/work-route-a/objc-probes/Plain.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.12
+    },
+    {
+      "name": "plain-Swift-interop-sections",
+      "command": [
+        "readelf",
+        "-SW",
+        "/work-route-a/objc-probes/Plain.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "There are 36 section headers, starting at offset 0xf30:\n\nSection Headers:\n  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al\n  [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0\n  [ 1] .strtab           STRTAB          0000000000000000 000c28 000308 00      0   0  1\n  [ 2] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  4\n  [ 3] .text.$s5PlainAACABycfC PROGBITS        0000000000000000 000040 000038 00 AXR  0   0  4\n  [ 4] .rela.text.$s5PlainAACABycfC RELA            0000000000000000 0008f8 000030 18   I 35   3  8\n  [ 5] .text.$s5PlainAACABycfc PROGBITS        0000000000000000 000078 000024 00 AXR  0   0  4\n  [ 6] .text.$s5PlainAACfd PROGBITS        0000000000000000 00009c 000024 00 AXR  0   0  4\n  [ 7] .text.$s5PlainAACfD PROGBITS        0000000000000000 0000c0 00003c 00 AXR  0   0  4\n  [ 8] .rela.text.$s5PlainAACfD RELA            0000000000000000 000928 000030 18   I 35   7  8\n  [ 9] .text.$s5PlainAACMa PROGBITS        0000000000000000 0000fc 000024 00 AXR  0   0  4\n  [10] .rela.text.$s5PlainAACMa RELA            0000000000000000 000958 000048 18   I 35   9  8\n  [11] .data.$s5PlainAACMm PROGBITS        0000000000000000 000120 000028 00 WAR  0   0  8\n  [12] .rela.data.$s5PlainAACMm RELA            0000000000000000 0009a0 000060 18   I 35  11  8\n  [13] .rodata.str1.16   PROGBITS        0000000000000000 000150 000011 01 AMS  0   0 16\n  [14] .data             PROGBITS        0000000000000000 000168 000100 00  WA  0   0  8\n  [15] .rela.data        RELA            0000000000000000 000a00 0000f0 18   I 35  14  8\n  [16] .rodata           PROGBITS        0000000000000000 000268 000014 00   A  0   0  4\n  [17] .rodata           PROGBITS        0000000000000000 00027c 00003c 00  AR  0   0  4\n  [18] .rela.rodata      RELA            0000000000000000 000af0 000078 18   I 35  17  8\n  [19] swift5_typeref    PROGBITS        0000000000000000 0002b8 000006 00   A  0   0  2\n  [20] .relaswift5_typeref RELA            0000000000000000 000b68 000018 18   I 35  19  8\n  [21] swift5_fieldmd    PROGBITS        0000000000000000 0002c0 000010 00  AR  0   0  4\n  [22] .relaswift5_fieldmd RELA            0000000000000000 000b80 000018 18   I 35  21  8\n  [23] swift5_type_metadata PROGBITS        0000000000000000 0002d0 000004 00  AR  0   0  4\n  [24] .relaswift5_type_metadata RELA            0000000000000000 000b98 000018 18   I 35  23  8\n  [25] .rodata.__swift_reflection_version PROGBITS        0000000000000000 0002d4 000002 00  AR  0   0  4\n  [26] .swift_modhash    PROGBITS        0000000000000000 0002d8 000010 00  AR  0   0  4\n  [27] .swift1_autolink_entries PROGBITS        0000000000000000 0002e8 00006d 00  RE  0   0  8\n  [28] objc_classlist    PROGBITS        0000000000000000 000358 000008 00 WAR  0   0  8\n  [29] .relaobjc_classlist RELA            0000000000000000 000bb0 000018 18   I 35  28  8\n  [30] .linker-options   LOOS+0xfff4c01  0000000000000000 000360 000000 00   E  0   0  1\n  [31] objc_imageinfo    PROGBITS        0000000000000000 000360 000008 00   A  0   0  1\n  [32] .note.GNU-stack   PROGBITS        0000000000000000 000368 000000 00      0   0  1\n  [33] .eh_frame         PROGBITS        0000000000000000 000368 000080 00   A  0   0  8\n  [34] .rela.eh_frame    RELA            0000000000000000 000bc8 000060 18   I 35  33  8\n  [35] .symtab           SYMTAB          0000000000000000 0003e8 000510 18      1  35  8\nKey to Flags:\n  W (write), A (alloc), X (execute), M (merge), S (strings), I (info),\n  L (link order), O (extra OS processing required), G (group), T (TLS),\n  C (compressed), x (unknown), o (OS specific), E (exclude),\n  R (retain), D (mbind), p (processor specific)\n",
+      "stderr": "",
+      "seconds": 0.005
+    },
+    {
+      "name": "plain-Swift-interop-undefined",
+      "command": [
+        "nm",
+        "-u",
+        "/work-route-a/objc-probes/Plain.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "                 U $sBoWV\n                 U OBJC_CLASS_$__TtCs12_SwiftObject\n                 U OBJC_METACLASS_$__TtCs12_SwiftObject\n                 U _objc_empty_cache\n                 U objc_opt_self\n                 U swift_allocObject\n                 U swift_deallocClassInstance\n",
+      "stderr": "",
+      "seconds": 0.028
+    },
+    {
+      "name": "stock-swiftCore-exported-symbols",
+      "command": [
+        "nm",
+        "-D",
+        "--defined-only",
+        "/usr/lib/swift/linux/libswiftCore.so"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "stdout_sha256": "6a449c780ffd464e4b4694e3cf26866a05ca4ed52bf08b412ed3cb801b0ae0e8",
+      "stdout_total_lines": 14211,
+      "stdout_filter": "Only lines containing OBJC_CLASS_, OBJC_METACLASS_, or objc_ retained; other symbols irrelevant to ObjC interop.",
+      "seconds": 0.179
+    },
+    {
+      "name": "objc4-patch-0001-config-linux-branch.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0001-config-linux-branch.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.016
+    },
+    {
+      "name": "objc4-patch-0002-objc-os-h-linux-branch.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0002-objc-os-h-linux-branch.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.011
+    },
+    {
+      "name": "objc4-patch-0003-isa-linux-48bit-addresses.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0003-isa-linux-48bit-addresses.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.019
+    },
+    {
+      "name": "objc4-patch-0004-asm-named-macro-params.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0004-asm-named-macro-params.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.012
+    },
+    {
+      "name": "objc4-patch-0005-elf-inline-asm-dialect.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0005-elf-inline-asm-dialect.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.017
+    },
+    {
+      "name": "objc4-patch-0006-objc-os-mm-linux.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0006-objc-os-mm-linux.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.007
+    },
+    {
+      "name": "objc4-patch-0007-preopt-fallback-completion.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0007-preopt-fallback-completion.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.007
+    },
+    {
+      "name": "objc4-patch-0008-elf-symbol-naming.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0008-elf-symbol-naming.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.027
+    },
+    {
+      "name": "objc4-patch-0009-objc-h-bool-is-bool-on-linux.patch",
+      "command": [
+        "patch",
+        "-p1",
+        "-d",
+        "/work-route-a/objc-probes/objc4-linux/build/objc4-src",
+        "--forward",
+        "--silent",
+        "-i",
+        "/work-route-a/objc-probes/objc4-linux/patches/0009-objc-h-bool-is-bool-on-linux.patch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.003
+    },
+    {
+      "name": "objc4-configure",
+      "command": [
+        "cmake",
+        "-S",
+        "/work-route-a/objc-probes/objc4-linux",
+        "-B",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_C_COMPILER=clang-18",
+        "-DCMAKE_CXX_COMPILER=clang++-18",
+        "-DCMAKE_C_FLAGS=-I/usr/lib/swift/Block",
+        "-DCMAKE_CXX_FLAGS=-I/usr/lib/swift/Block",
+        "-DCMAKE_SHARED_LINKER_FLAGS=-L/usr/lib/swift/linux -Wl,-rpath,/usr/lib/swift/linux"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "-- Configuring done (0.2s)\n-- Generating done (0.0s)\n-- Build files have been written to: /work-route-a/objc-probes/objc4-linux/build/linux-aarch64\n",
+      "stderr": "",
+      "seconds": 0.231
+    },
+    {
+      "name": "objc4-build",
+      "command": [
+        "cmake",
+        "--build",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "--target",
+        "objc",
+        "--parallel",
+        "2"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "[1/33] translating Mach-O assembly to ELF dialect\n[2/33] generating <objc/*.h> include tree\n[3/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/Object.mm.o\n[4/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/Protocol.mm.o\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/Protocol.mm:56:17: warning: cannot find interface declaration for 'Protocol'\n   56 | @implementation Protocol\n      |                 ^\nIn file included from /work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/Protocol.mm:28:\nIn file included from /work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-private.h:308:\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc.h:51:8: warning: class 'Protocol' defined without specifying a base class [-Wobjc-root-class]\n   51 | @class Protocol;\n      |        ^\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc.h:51:16: note: add a super class to fix this problem\n   51 | @class Protocol;\n      |                ^\n      |                 : NSObject \n2 warnings generated.\n[5/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/NSObject.mm.o\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/NSObject.mm:1195:26: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n 1191 |             _objc_inform(\"MISSING POOLS: (%p) Object %p of class %s \"\n      |                                           ~~\n      |                                           %lu\n 1192 |                          \"autoreleased with no pool in place - \"\n 1193 |                          \"just leaking - break on \"\n 1194 |                          \"objc_autoreleaseNoPool() to debug\", \n 1195 |                          objc_thread_self(), (void*)obj, object_getClassName(obj));\n      |                          ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/NSObject.mm:1434:57: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n 1434 |         _objc_inform(\"AUTORELEASE POOLS for thread %p\", objc_thread_self());\n      |                                                    ~~   ^~~~~~~~~~~~~~~~~~\n      |                                                    %lu\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/NSObject.mm:1495:32: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n 1494 |                          \"pending releases for thread %p:\",\n      |                                                       ~~\n      |                                                       %lu\n 1495 |                          mark, objc_thread_self());\n      |                                ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/NSObject.mm:2447:17: warning: method definition for 'load' not found [-Wincomplete-implementation]\n 2447 | @implementation NSObject\n      |                 ^\n/work-route-a/objc-probes/objc4-linux/build/gen/include/objc/NSObject.h:62:1: note: method 'load' declared here\n   62 | + (void)load;\n      | ^\n/work-route-a/objc-probes/objc4-linux/build/gen/include/objc/NSObject.h:53:12: warning: class 'NSObject' defined without specifying a base class [-Wobjc-root-class]\n   53 | @interface NSObject <NSObject> {\n      |            ^\n/work-route-a/objc-probes/objc4-linux/build/gen/include/objc/NSObject.h:53:20: note: add a super class to fix this problem\n   53 | @interface NSObject <NSObject> {\n      |                    ^\n      |                     : NSObject \n5 warnings generated.\n[6/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/hashtable2.mm.o\n[7/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/maptable.mm.o\n[8/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-accessors.mm.o\n[9/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-auto.mm.o\n[10/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-block-trampolines.mm.o\n[11/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-cache.mm.o\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-cache.mm:720:38: warning: offset of on non-standard-layout type 'objc_class' [-Winvalid-offsetof]\n  720 |     return (Class)((uintptr_t)this - offsetof(objc_class, cache));\n      |                                      ^                    ~~~~~\n/usr/lib/llvm-18/lib/clang/18/include/__stddef_offsetof.h:16:24: note: expanded from macro 'offsetof'\n   16 | #define offsetof(t, d) __builtin_offsetof(t, d)\n      |                        ^                     ~\n1 warning generated.\n[12/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-class.mm.o\n[13/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-errors.mm.o\n[14/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-exception.mm.o\n[15/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-file.mm.o\n[16/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-layout.mm.o\n[17/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-initialize.mm.o\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:449:42: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  448 |         _objc_inform(\"INITIALIZE: thread %p: acquiring lock for \"\n      |                                          ~~\n      |                                          %lu\n  449 |                      \"+[%s initialize]\", objc_thread_self(), cls->nameForLogging());\n      |                                          ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:499:22: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  498 |         _objc_inform(\"INITIALIZE: thread %p: %s is fully +initialized\",\n      |                                          ~~\n      |                                          %lu\n  499 |                      objc_thread_self(), cls->nameForLogging());\n      |                      ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:546:22: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  544 |         _objc_inform(\"INITIALIZE: thread %p: class %s will be marked as fully \"\n      |                                          ~~\n      |                                          %lu\n  545 |                      \"+initialized after superclass +[%s initialize] completes\",\n  546 |                      objc_thread_self(), cls->nameForLogging(),\n      |                      ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:651:26: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  649 |             _objc_inform(\"INITIALIZE: thread %p: skipping trivial +[%s \"\n      |                                              ~~\n      |                                              %lu\n  650 |                          \"initialize] in fork() child process\",\n  651 |                          objc_thread_self(), cls->nameForLogging());\n      |                          ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:660:26: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  657 |             _objc_inform(\"INITIALIZE: thread %p: refusing to call +[%s \"\n      |                                              ~~\n      |                                              %lu\n  658 |                          \"initialize] in fork() child process because \"\n  659 |                          \"it may have been in progress when fork() was called\",\n  660 |                          objc_thread_self(), cls->nameForLogging());\n      |                          ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:754:22: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  753 |         _objc_inform(\"INITIALIZE: thread %p: calling +[%s initialize]\",\n      |                                          ~~\n      |                                          %lu\n  754 |                      objc_thread_self(), cls->nameForLogging());\n      |                      ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:766:26: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  765 |             _objc_inform(\"INITIALIZE: thread %p: finished +[%s initialize]\",\n      |                                              ~~\n      |                                              %lu\n  766 |                          objc_thread_self(), cls->nameForLogging());\n      |                          ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-initialize.mm:773:26: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n  771 |             _objc_inform(\"INITIALIZE: thread %p: +[%s initialize] \"\n      |                                              ~~\n      |                                              %lu\n  772 |                          \"threw an exception\",\n  773 |                          objc_thread_self(), cls->nameForLogging());\n      |                          ^~~~~~~~~~~~~~~~~~\n8 warnings generated.\n[18/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-loadmethod.mm.o\n[19/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-load.mm.o\n[20/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-lockdebug.mm.o\n[21/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-opt.mm.o\n[22/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-os.mm.o\n[23/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-references.mm.o\n[24/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-runtime.mm.o\n[25/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-sel.mm.o\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-sel.mm:117:29: warning: cast of type 'SEL' to 'const char *' is deprecated; use sel_getName instead [-Wcast-of-sel-type]\n  117 |                 *it.first = (const char *)sel_alloc(name, copy);\n      |                                           ^~~~~~~~~~~~~~~~~~~~~\n1 warning generated.\n[26/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-sync.mm.o\n[27/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-typeencoding.mm.o\n[28/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-weak.mm.o\n[29/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-runtime-new.mm.o\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-runtime-new.mm:7370:2: warning: fixme build and search caches [-W#warnings]\n 7370 | #warning fixme build and search caches\n      |  ^\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-runtime-new.mm:7375:2: warning: fixme build and search caches [-W#warnings]\n 7375 | #warning fixme build and search caches\n      |  ^\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-runtime-new.mm:7901:22: warning: format specifies type 'void *' but the argument has type 'objc_thread_t' (aka 'unsigned long') [-Wformat]\n 7900 |         _objc_inform(\"INITIALIZE: thread %p: setInitialized(%s)\",\n      |                                          ~~\n      |                                          %lu\n 7901 |                      objc_thread_self(), cls->nameForLogging());\n      |                      ^~~~~~~~~~~~~~~~~~\n/work-route-a/objc-probes/objc4-linux/build/objc4-src/runtime/objc-runtime-new.mm:9361:2: warning: fixme optimize class_createInstances [-W#warnings]\n 9361 | #warning fixme optimize class_createInstances\n      |  ^\n4 warnings generated.\n[30/33] Building ASM object CMakeFiles/objc.dir/build/gen/asm/objc-msg-arm64-elf.s.o\n[31/33] Building ASM object CMakeFiles/objc.dir/build/gen/asm/retain-release-helpers-arm64-elf.s.o\n[32/33] Building CXX object CMakeFiles/objc.dir/build/objc4-src/runtime/objc-zalloc.mm.o\n[33/33] Linking CXX shared library libobjc.so\n",
+      "stderr": "",
+      "seconds": 17.475
+    },
+    {
+      "name": "plain-Swift-link-objc4",
+      "command": [
+        "swiftc",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/Plain.swift",
+        "-L",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-lobjc",
+        "-o",
+        "/work-route-a/objc-probes/plain-objc4"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "error: link command failed with exit code 1 (use -v to see invocation)\n/tmp/TemporaryDirectory.yQ38xz/Plain-1.o:Plain-1.o:$s4main5PlainCMm:(.data.$s4main5PlainCMm+0x0): error: undefined reference to 'OBJC_METACLASS_$__TtCs12_SwiftObject'\n/tmp/TemporaryDirectory.yQ38xz/Plain-1.o:Plain-1.o:$s4main5PlainCMm:(.data.$s4main5PlainCMm+0x8): error: undefined reference to 'OBJC_METACLASS_$__TtCs12_SwiftObject'\n/tmp/TemporaryDirectory.yQ38xz/Plain-1.o:Plain-1.o:$s4main5PlainCMf:(.data+0xb0): error: undefined reference to 'OBJC_CLASS_$__TtCs12_SwiftObject'\nclang: error: linker command failed with exit code 1 (use -v to see invocation)\n",
+      "seconds": 0.383
+    },
+    {
+      "name": "stock-Foundation-ObjectiveC-shim-link-objc4",
+      "command": [
+        "swiftc",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "/work-route-a/objc-probes/ImportedSelector.swift",
+        "-L",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-lobjc",
+        "-o",
+        "/work-route-a/objc-probes/stock-shim-objc4"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "error: link command failed with exit code 1 (use -v to see invocation)\n/tmp/TemporaryDirectory.vxLFt1/ImportedSelector-1.o:ImportedSelector-1.o:$s4main5ProbeCMm:(.data+0x8): error: undefined reference to 'OBJC_METACLASS_$__TtCs12_SwiftObject'\n/tmp/TemporaryDirectory.vxLFt1/ImportedSelector-1.o:ImportedSelector-1.o:$s4main5ProbeCMm:(.data+0x10): error: undefined reference to '$s10Foundation8NSObjectCMm'\nclang: error: linker command failed with exit code 1 (use -v to see invocation)\n",
+      "seconds": 0.325
+    },
+    {
+      "name": "objc4-exported-symbols",
+      "command": [
+        "nm",
+        "-D",
+        "--defined-only",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/libobjc.so"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "00000000000805c8 D OBJC_CLASS_$_NSObject\n0000000000080530 D OBJC_METACLASS_$_NSObject\n000000000001bd08 T __objc_personality_v0\n007ffffffffffff8 A _objc_absolute_packed_isa_class_mask\n000000000001cbe4 T _objc_addWillInitializeClassFunc\n000000000001fba0 T _objc_atfork_child\n000000000001faa4 T _objc_atfork_parent\n000000000001f99c T _objc_atfork_prepare\n0000000000012aa0 T _objc_autoreleasePoolPop\n0000000000012aa4 T _objc_autoreleasePoolPrint\n0000000000012a9c T _objc_autoreleasePoolPush\n000000000002bd08 T _objc_beginClassEnumeration\n00000000000130cc T _objc_deallocOnMainThreadHelper\n0000000000051540 R _objc_empty_cache\n0000000000000000 A _objc_empty_vtable\n000000000002c6c4 T _objc_endClassEnumeration\n000000000002bf14 T _objc_enumerateNextClass\n0000000000025ad4 T _objc_flush_caches\n0000000000035e3c T _objc_getClassForTag\n0000000000035cdc T _objc_getFreedObjectClass\n000000000002b918 T _objc_getRealizedClassList_trylock\n000000000004c368 R _objc_has_weak_formation_callout\n0000000000020578 T _objc_init\n000000000004a860 T _objc_msgForward\n000000000001f870 T _objc_patch_root_of_class\n0000000000023a88 T _objc_realizeClassFromSwift\n0000000000035ce4 T _objc_registerTaggedPointerClass\n0000000000012784 T _objc_rootAlloc\n0000000000035738 T _objc_rootAllocWithZone\n0000000000012430 T _objc_rootAutorelease\n0000000000012a40 T _objc_rootDealloc\n0000000000012a70 T _objc_rootFinalize\n0000000000012a90 T _objc_rootHash\n0000000000012a84 T _objc_rootInit\n0000000000012250 T _objc_rootIsDeallocating\n00000000000126e4 T _objc_rootRelease\n0000000000012370 T _objc_rootReleaseWasZero\n000000000001266c T _objc_rootRetain\n0000000000012668 T _objc_rootRetainCount\n00000000000121b8 T _objc_rootTryRetain\n0000000000012a88 T _objc_rootZone\n000000000000ef4c T _objc_setBadAllocHandler\n00000000000231fc T _objc_setClassCopyFixupHandler\n000000000002ca2c T _objc_setHook_msgSendCacheMiss\n0000000000045568 T _objc_supportsLazyRealization\n00000000000876c8 B gdb_objc_realized_classes\n000000000001eed4 T objc_addLoadImageFunc\n000000000001ef98 T objc_addLoadImageFunc2\n00000000000127ac T objc_alloc\n00000000000127d8 T objc_allocWithZone\n0000000000012808 T objc_alloc_init\n0000000000034af0 T objc_allocateClassPair\n000000000002ab48 T objc_allocateProtocol\n000000000000f870 T objc_autorelease\n0000000000012a98 T objc_autoreleasePoolPop\n0000000000012a94 T objc_autoreleasePoolPush\n0000000000012aa8 T objc_autoreleaseReturnValue\n000000000001be24 T objc_begin_catch\n000000000001a0b8 T objc_cache_buckets\n000000000001a0c4 T objc_cache_bytesForCapacity\n000000000001a0d4 T objc_cache_capacity\n000000000001a0cc T objc_cache_occupied\n0000000000012eb8 T objc_claimAutoreleasedReturnValue\n0000000000012348 T objc_clear_deallocating\n00000000000354a8 T objc_constructInstance\n000000000002bbf4 T objc_copyClassList\n000000000002e254 T objc_copyClassNamesForImage\n000000000002e8b4 T objc_copyClassNamesForImageHeader\n000000000002e584 T objc_copyClassesForImage\n0000000000019004 T objc_copyCppObjectAtomic\n000000000002dce8 T objc_copyImageNames\n000000000002cb48 T objc_copyProtocolList\n000000000002bae4 T objc_copyRealizedClassList\n0000000000018f18 T objc_copyStruct\n0000000000010a20 T objc_copyWeak\n000000000002e9c4 T objc_debug_class_getNameRaw\n0000000000055550 R objc_debug_class_rw_data_mask\n0000000000081780 D objc_debug_constant_cfstring_tag_bits\n000000000007ed98 D objc_debug_future_named_class_map\n0000000000087550 B objc_debug_headerInfoRWs\n0000000000055568 R objc_debug_indexed_isa_index_mask\n0000000000055570 R objc_debug_indexed_isa_index_shift\n0000000000055558 R objc_debug_indexed_isa_magic_mask\n0000000000055560 R objc_debug_indexed_isa_magic_value\n0000000000055578 R objc_debug_isa_class_mask\n0000000000055580 R objc_debug_isa_magic_mask\n0000000000055588 R objc_debug_isa_magic_value\n00000000000876d0 B objc_debug_realized_class_generation_count\n000000000007ec00 D objc_debug_side_tables_map\n0000000000055590 R objc_debug_swift_stable_abi_bit\n0000000000081778 D objc_debug_tag60_permutations\n0000000000082040 D objc_debug_taggedpointer_classes\n0000000000081840 D objc_debug_taggedpointer_ext_classes\n0000000000081758 D objc_debug_taggedpointer_ext_mask\n0000000000081770 D objc_debug_taggedpointer_ext_payload_lshift\n0000000000081774 D objc_debug_taggedpointer_ext_payload_rshift\n0000000000081768 D objc_debug_taggedpointer_ext_slot_mask\n0000000000081760 D objc_debug_taggedpointer_ext_slot_shift\n0000000000081740 D objc_debug_taggedpointer_mask\n0000000000087710 B objc_debug_taggedpointer_obfuscator\n0000000000081750 D objc_debug_taggedpointer_payload_lshift\n0000000000081754 D objc_debug_taggedpointer_payload_rshift\n0000000000081748 D objc_debug_taggedpointer_slot_mask\n0000000000087718 B objc_debug_taggedpointer_slot_shift\n000000000001061c T objc_destroyWeak\n0000000000035a28 T objc_destructInstance\n00000000000351d4 T objc_disposeClassPair\n0000000000033d04 T objc_duplicateClass\n000000000007ed08 D objc_ehtype_vtable\n000000000001be74 T objc_end_catch\n000000000002c6dc T objc_enumerateClasses\n0000000000045500 T objc_enumerationMutation\n000000000000e5e4 T objc_exception_rethrow\n000000000000e480 T objc_exception_throw\n0000000000045538 T objc_getAssociatedObject\n00000000000442b8 T objc_getClass\n000000000002b9f8 T objc_getClassList\n0000000000025884 T objc_getFutureClass\n0000000000044324 T objc_getMetaClass\n0000000000018bc0 T objc_getProperty\n000000000002cfd8 T objc_getProtocol\n00000000000442cc T objc_getRequiredClass\n0000000000087688 B objc_indexed_classes\n0000000000087690 B objc_indexed_classes_count\n0000000000010134 T objc_initWeak\n00000000000103a8 T objc_initWeakOrNil\n00000000000344a8 T objc_initializeClassPair\n0000000000012160 T objc_isUniquelyReferenced\n0000000000023890 T objc_loadClassref\n00000000000109fc T objc_loadWeak\n00000000000106b4 T objc_loadWeakRetained\n0000000000044310 T objc_lookUpClass\n0000000000010a58 T objc_moveWeak\n000000000004a4c0 T objc_msgLookup\n000000000004a640 T objc_msgLookupSuper2\n000000000004a400 T objc_msgSend\n000000000004a5a0 T objc_msgSendSuper\n000000000004a5c0 T objc_msgSendSuper2\n000000000004a8c0 T objc_msgSendSuper2_debug\n000000000004a8a0 T objc_msgSend_debug\n000000000004a880 T objc_msgSend_noarg\n00000000000128e8 T objc_opt_class\n0000000000012950 T objc_opt_isKindOfClass\n000000000001284c T objc_opt_new\n00000000000129d8 T objc_opt_respondsToSelector\n00000000000128c0 T objc_opt_self\n0000000000034f9c T objc_readClassPair\n0000000000034d6c T objc_registerClassPair\n000000000002adb4 T objc_registerProtocol\n000000000004afe0 T objc_release\n000000000004afe0 T objc_release_x0\n000000000004b080 T objc_release_x1\n000000000004b620 T objc_release_x10\n000000000004b6c0 T objc_release_x11\n000000000004b760 T objc_release_x12\n000000000004b800 T objc_release_x13\n000000000004b8a0 T objc_release_x14\n000000000004b940 T objc_release_x15\n000000000004b9e0 T objc_release_x19\n000000000004b120 T objc_release_x2\n000000000004ba80 T objc_release_x20\n000000000004bb20 T objc_release_x21\n000000000004bbc0 T objc_release_x22\n000000000004bc60 T objc_release_x23\n000000000004bd00 T objc_release_x24\n000000000004bda0 T objc_release_x25\n000000000004be40 T objc_release_x26\n000000000004bee0 T objc_release_x27\n000000000004bf80 T objc_release_x28\n000000000004b1c0 T objc_release_x3\n000000000004b260 T objc_release_x4\n000000000004b300 T objc_release_x5\n000000000004b3a0 T objc_release_x6\n000000000004b440 T objc_release_x7\n000000000004b4e0 T objc_release_x8\n000000000004b580 T objc_release_x9\n0000000000045544 T objc_removeAssociatedObjects\n000000000004a9b4 T objc_retain\n00000000000130b8 T objc_retainAutorelease\n0000000000012c2c T objc_retainAutoreleaseReturnValue\n0000000000012dc0 T objc_retainAutoreleasedReturnValue\n000000000000f84c T objc_retainBlock\n000000000000f858 T objc_retain_autorelease\n000000000004a9b4 T objc_retain_x0\n000000000004a9f0 T objc_retain_x1\n000000000004ac0c T objc_retain_x10\n000000000004ac48 T objc_retain_x11\n000000000004ac84 T objc_retain_x12\n000000000004acc0 T objc_retain_x13\n000000000004acfc T objc_retain_x14\n000000000004ad38 T objc_retain_x15\n000000000004ad74 T objc_retain_x19\n000000000004aa2c T objc_retain_x2\n000000000004adb0 T objc_retain_x20\n000000000004adec T objc_retain_x21\n000000000004ae28 T objc_retain_x22\n000000000004ae64 T objc_retain_x23\n000000000004aea0 T objc_retain_x24\n000000000004aedc T objc_retain_x25\n000000000004af18 T objc_retain_x26\n000000000004af54 T objc_retain_x27\n000000000004af90 T objc_retain_x28\n000000000004aa68 T objc_retain_x3\n000000000004aaa4 T objc_retain_x4\n000000000004aae0 T objc_retain_x5\n000000000004ab1c T objc_retain_x6\n000000000004ab58 T objc_retain_x7\n000000000004ab94 T objc_retain_x8\n000000000004abd0 T objc_retain_x9\n00000000000130d8 T objc_retainedObject\n0000000000045540 T objc_setAssociatedObject\n000000000004552c T objc_setEnumerationMutationHandler\n000000000001bce0 T objc_setExceptionMatcher\n000000000001bccc T objc_setExceptionPreprocessor\n0000000000045440 T objc_setForwardHandler\n0000000000033bbc T objc_setHook_getClass\n000000000004544c T objc_setHook_getImageName\n0000000000031ad8 T objc_setHook_lazyClassNamer\n0000000000018c38 T objc_setProperty\n0000000000018d44 T objc_setProperty_atomic\n0000000000018e40 T objc_setProperty_atomic_copy\n0000000000018ddc T objc_setProperty_nonatomic\n0000000000018ebc T objc_setProperty_nonatomic_copy\n000000000001bcf4 T objc_setUncaughtExceptionHandler\n000000000000f850 T objc_should_deallocate\n000000000000fad4 T objc_storeStrong\n000000000000fb34 T objc_storeWeak\n000000000000fe34 T objc_storeWeakOrNil\n0000000000046438 T objc_sync_enter\n00000000000469a8 T objc_sync_exit\n0000000000046918 T objc_sync_try_enter\n000000000000e610 T objc_terminate\n00000000000130dc T objc_unretainedObject\n00000000000130e0 T objc_unretainedPointer\n0000000000012f98 T objc_unsafeClaimAutoreleasedReturnValue\n",
+      "stderr": "",
+      "stdout_sha256": "8c19caed568c236fb64992dcdc226d93b283335bab284e3e170e30f136ccbe8e",
+      "stdout_total_lines": 386,
+      "stdout_filter": "Only lines containing OBJC_CLASS_, OBJC_METACLASS_, or objc_ retained; other symbols irrelevant to ObjC interop.",
+      "seconds": 0.026
+    },
+    {
+      "name": "objc4-C-target-action-compile",
+      "command": [
+        "clang-18",
+        "-fobjc-runtime=macosx-10.15",
+        "-I",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include",
+        "/work-route-a/objc-probes/objc4_dispatch.m",
+        "-L",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-lobjc",
+        "-Wl,-rpath,/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-o",
+        "/work-route-a/objc-probes/objc4_dispatch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "In file included from /work-route-a/objc-probes/objc4_dispatch.m:1:\n/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include/objc/NSObject.h:61:34: warning: unknown warning group '-Wobjc-load-method', ignored [-Wunknown-warning-option]\n   61 | #pragma clang diagnostic ignored \"-Wobjc-load-method\"\n      |                                  ^\n1 warning generated.\n",
+      "seconds": 0.167
+    },
+    {
+      "name": "objc4-C-target-action-run",
+      "command": [
+        "/work-route-a/objc-probes/objc4_dispatch"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "OBJC4_TARGET_ACTION_FIRED\n",
+      "stderr": "",
+      "seconds": 0.01
+    },
+    {
+      "name": "objc4-NSObject-ObjectiveC-shim-typecheck",
+      "command": [
+        "swiftc",
+        "-typecheck",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "-I",
+        "/work-route-a/objc-probes/clang-shim",
+        "-I",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include",
+        "-Xcc",
+        "-fobjc-runtime=macosx-10.15",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "/work-route-a/objc-probes/ObjC4RootSelector.swift"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "<module-includes>:1:9: note: in file included from <module-includes>:1:\n1 | #import \"ObjCRoot.h\"\n  |         `- note: in file included from <module-includes>:1:\n2 | \n\n/work-route-a/objc-probes/clang-shim/ObjCRoot/ObjCRoot.h:1:10: note: in file included from /work-route-a/objc-probes/clang-shim/ObjCRoot/ObjCRoot.h:1:\n1 | #include <objc/NSObject.h>\n  |          `- note: in file included from /work-route-a/objc-probes/clang-shim/ObjCRoot/ObjCRoot.h:1:\n2 | \n\n/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include/objc/NSObject.h:61:34: warning: unknown warning group '-Wobjc-load-method', ignored\n 59 | \n 60 | #pragma clang diagnostic push\n 61 | #pragma clang diagnostic ignored \"-Wobjc-load-method\"\n    |                                  `- warning: unknown warning group '-Wobjc-load-method', ignored\n 62 | + (void)load;\n 63 | #pragma clang diagnostic pop\n",
+      "seconds": 0.977
+    },
+    {
+      "name": "objc4-NSObject-ObjectiveC-shim-link",
+      "command": [
+        "swiftc",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "-I",
+        "/work-route-a/objc-probes/clang-shim",
+        "-I",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include",
+        "-Xcc",
+        "-fobjc-runtime=macosx-10.15",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "/work-route-a/objc-probes/ObjC4RootSelector.swift",
+        "-L",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-lobjc",
+        "-o",
+        "/work-route-a/objc-probes/clang-root-shim"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.27
+    },
+    {
+      "name": "objc4-NSObject-allocated-link",
+      "command": [
+        "swiftc",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "-I",
+        "/work-route-a/objc-probes/clang-shim",
+        "-I",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include",
+        "-Xcc",
+        "-fobjc-runtime=macosx-10.15",
+        "-I",
+        "/work-route-a/objc-probes/objc-only",
+        "/work-route-a/objc-probes/ObjC4RootAllocated.swift",
+        "-L",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-lobjc",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-o",
+        "/work-route-a/objc-probes/clang-root-allocated"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.388
+    },
+    {
+      "name": "objc4-NSObject-allocated-run",
+      "command": [
+        "/work-route-a/objc-probes/clang-root-allocated"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": -11,
+      "stdout": "",
+      "stderr": "\n*** Signal 11: Backtracing from 0xffffa71ca5cc... done ***\n\n*** Program crashed: Bad pointer dereference at 0x000000ffffa72015 ***\n\nPlatform: arm64 Linux (Ubuntu 24.04.4 LTS)\n\nThread 0 \"clang-root-allo\" crashed:\n\n  0              0x0000ffffa71ca5cc pruneCallback(dl_phdr_info*, unsigned long, void*) + 1640 in libobjc.so\n  1 [ra] [thunk] 0x0000aaaacade11f8 @objc Probe.init() + 19 in clang-root-allocated\n  2 [ra] [thunk] 0x0000aaaacade1120 Probe.__allocating_init() + 27 in clang-root-allocated\n  3 [ra]         0x0000aaaacade1290 main + 67 in clang-root-allocated\n  4 [ra]         0x0000ffffa56284c4 <unknown> in libc.so.6\n  5 [ra]         0x0000ffffa5628598 <unknown> in libc.so.6\n...\n\n\nRegisters:\n\n x0 0x0000aaaadf790a70  91 01 e0 ca aa aa 00 01 00 00 00 00 00 00 00 00  \u00b7\u00b7\u00e0\u00ca\u00aa\u00aa\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\n x1 0x0000aaaacae00070  69 6e 69 74 00 74 61 70 70 65 64 00 64 65 61 6c  init\u00b7tapped\u00b7deal\n x2 0x0000000000000018  24\n x3 0x0000000000000051  81\n x4 0x0000aaaadf790a60  00 00 00 00 00 00 00 00 21 00 00 00 00 00 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7!\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\n x5 0x0000000000000020  32\n x6 0xfffffffffffffff0  18446744073709551600\n x7 0x0000000000000000  0\n x8 0x0000aaaacae00000  00 85 62 a5 ff ff 00 00 60 0d de ca aa aa 00 00  \u00b7\u00b7b\u00a5\u00ff\u00ff\u00b7\u00b7`\u00b7\u00de\u00ca\u00aa\u00aa\u00b7\u00b7\n x9 0x0000aaaadf790a70  91 01 e0 ca aa aa 00 01 00 00 00 00 00 00 00 00  \u00b7\u00b7\u00e0\u00ca\u00aa\u00aa\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx10 0x0000000000000000  0\nx11 0x0000000000000000  0\nx12 0x0000ffffa7253350  00 00 de ca aa aa 00 00 30 39 25 a7 ff ff 00 00  \u00b7\u00b7\u00de\u00ca\u00aa\u00aa\u00b7\u00b709%\u00a7\u00ff\u00ff\u00b7\u00b7\nx13 0x0000000000000034  52\nx14 0x00000000005b95c5  6002117\nx15 0xb00000ffffa72005  12682137650181120005\nx16 0xb00000ffffa72005  12682137650181120005\nx17 0x0000aaaacae00048  c0 a5 1c a7 ff ff 00 00 60 0d de ca aa aa 00 00  \u00c0\u00a5\u00b7\u00a7\u00ff\u00ff\u00b7\u00b7`\u00b7\u00de\u00ca\u00aa\u00aa\u00b7\u00b7\nx18 0x0000000000000016  22\nx19 0x0000ffffe69f7558  64 7e 9f e6 ff ff 00 00 00 00 00 00 00 00 00 00  d~\u00b7\u00e6\u00ff\u00ff\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx20 0x0000aaaadf790a70  91 01 e0 ca aa aa 00 01 00 00 00 00 00 00 00 00  \u00b7\u00b7\u00e0\u00ca\u00aa\u00aa\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx21 0x0000aaaacadffcc0  03 00 00 00 00 00 00 00 e8 ff df ca aa aa 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00e8\u00ff\u00df\u00ca\u00aa\u00aa\u00b7\u00b7\nx22 0x0000aaaacade124c  ff 83 01 d1 fd 7b 04 a9 f4 2b 00 f9 fd 03 01 91  \u00ff\u00b7\u00b7\u00d1\u00fd{\u00b7\u00a9\u00f4+\u00b7\u00f9\u00fd\u00b7\u00b7\u00b7\nx23 0x0000ffffe69f7568  93 7e 9f e6 ff ff 00 00 d5 7e 9f e6 ff ff 00 00  \u00b7~\u00b7\u00e6\u00ff\u00ff\u00b7\u00b7\u00d5~\u00b7\u00e6\u00ff\u00ff\u00b7\u00b7\nx24 0x0000ffffa7251b58  00 00 00 00 00 00 00 00 18 77 9f e6 ff ff 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7w\u00b7\u00e6\u00ff\u00ff\u00b7\u00b7\nx25 0x0000000000000000  0\nx26 0x0000ffffa7252000  50 33 25 a7 ff ff 00 00 17 00 00 00 00 00 00 00  P3%\u00a7\u00ff\u00ff\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx27 0x0000aaaacadffcc0  03 00 00 00 00 00 00 00 e8 ff df ca aa aa 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00e8\u00ff\u00df\u00ca\u00aa\u00aa\u00b7\u00b7\nx28 0x0000000000000000  0\n fp 0x0000ffffe69f7340  50 73 9f e6 ff ff 00 00 f8 11 de ca aa aa 00 00  Ps\u00b7\u00e6\u00ff\u00ff\u00b7\u00b7\u00f8\u00b7\u00de\u00ca\u00aa\u00aa\u00b7\u00b7\n lr 0x0000aaaacade1178  e0 0b 00 f9 20 01 00 b5 01 00 00 14 e0 0b 40 f9  \u00e0\u00b7\u00b7\u00f9 \u00b7\u00b7\u00b5\u00b7\u00b7\u00b7\u00b7\u00e0\u00b7@\u00f9\n sp 0x0000ffffe69f7310  70 0a 79 df aa aa 00 00 70 00 e0 ca aa aa 00 00  p\u00b7y\u00df\u00aa\u00aa\u00b7\u00b7p\u00b7\u00e0\u00ca\u00aa\u00aa\u00b7\u00b7\n pc 0x0000ffffa71ca5cc  0a 0a 40 f9 4b fd 70 d3 4a bd 40 92 2c 00 0b 0a  \u00b7\u00b7@\u00f9K\u00fdp\u00d3J\u00bd@\u00b7,\u00b7\u00b7\u00b7\n\n\nImages (19 omitted):\n\n0x0000aaaacade0000\u20130x0000aaaacade1730 be0d14dc5931c0da33969e2ffe02378f5d652308 clang-root-allocated /work-route-a/objc-probes/clang-root-allocated\n0x0000ffffa5600000\u20130x0000ffffa5799d91 54ae5337044aaabab70d65e0c3444f7e4735e059 libc.so.6            /usr/lib/aarch64-linux-gnu/libc.so.6\n0x0000ffffa7180000\u20130x0000ffffa71e45f4 fea617ed7fd8cc1c835109925fee05ee0705a742 libobjc.so           /work-route-a/objc-probes/objc4-linux/build/linux-aarch64/libobjc.so\n\nBacktrace took 0.02s\n\n",
+      "seconds": 0.067
+    },
+    {
+      "name": "emit-pointer-ObjectiveC-shim",
+      "command": [
+        "swiftc",
+        "-emit-module",
+        "-module-name",
+        "ObjectiveC",
+        "/work-route-a/objc-probes/pointer-shim/ObjectiveC.swift",
+        "-emit-module-path",
+        "/work-route-a/objc-probes/pointer-shim/ObjectiveC.swiftmodule"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.16
+    },
+    {
+      "name": "objc4-route-send-object",
+      "command": [
+        "clang-18",
+        "-c",
+        "-fobjc-runtime=macosx-10.15",
+        "-I",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include",
+        "/work-route-a/objc-probes/route_send.m",
+        "-o",
+        "/work-route-a/objc-probes/route_send.o"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "seconds": 0.045
+    },
+    {
+      "name": "objc4-raw-selector-target-action-link",
+      "command": [
+        "swiftc",
+        "-Xfrontend",
+        "-enable-objc-interop",
+        "-I",
+        "/work-route-a/objc-probes/clang-shim",
+        "-I",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include",
+        "-Xcc",
+        "-fobjc-runtime=macosx-10.15",
+        "-I",
+        "/work-route-a/objc-probes/pointer-shim",
+        "/work-route-a/objc-probes/ObjC4TargetAction.swift",
+        "/work-route-a/objc-probes/route_send.o",
+        "-L",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-lobjc",
+        "-Xlinker",
+        "-rpath",
+        "-Xlinker",
+        "/work-route-a/objc-probes/objc4-linux/build/linux-aarch64",
+        "-o",
+        "/work-route-a/objc-probes/swift-objc4-target-action"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": 0,
+      "stdout": "",
+      "stderr": "<module-includes>:1:9: note: in file included from <module-includes>:1:\n1 | #import \"ObjCRoot.h\"\n  |         `- note: in file included from <module-includes>:1:\n2 | \n\n/work-route-a/objc-probes/clang-shim/ObjCRoot/ObjCRoot.h:1:10: note: in file included from /work-route-a/objc-probes/clang-shim/ObjCRoot/ObjCRoot.h:1:\n1 | #include <objc/NSObject.h>\n  |          `- note: in file included from /work-route-a/objc-probes/clang-shim/ObjCRoot/ObjCRoot.h:1:\n2 | void route_send(void *target, void *selector);\n3 | \n\n/work-route-a/objc-probes/objc4-linux/build/linux-aarch64/include/objc/NSObject.h:61:34: warning: unknown warning group '-Wobjc-load-method', ignored\n 59 | \n 60 | #pragma clang diagnostic push\n 61 | #pragma clang diagnostic ignored \"-Wobjc-load-method\"\n    |                                  `- warning: unknown warning group '-Wobjc-load-method', ignored\n 62 | + (void)load;\n 63 | #pragma clang diagnostic pop\n",
+      "seconds": 0.271
+    },
+    {
+      "name": "objc4-raw-selector-target-action-run",
+      "command": [
+        "/work-route-a/objc-probes/swift-objc4-target-action"
+      ],
+      "cwd": "/work-route-a/objc-probes",
+      "exit": -11,
+      "stdout": "",
+      "stderr": "\n*** Signal 11: Backtracing from 0xffff81cca5cc... done ***\n\n*** Program crashed: Bad pointer dereference at 0x000000ffff81d015 ***\n\nPlatform: arm64 Linux (Ubuntu 24.04.4 LTS)\n\nThread 0 \"swift-objc4-tar\" crashed:\n\n  0              0x0000ffff81cca5cc pruneCallback(dl_phdr_info*, unsigned long, void*) + 1640 in libobjc.so\n  1 [ra] [thunk] 0x0000aaaae22e153c @objc Probe.init() + 19 in swift-objc4-target-action\n  2 [ra] [thunk] 0x0000aaaae22e13e0 Probe.__allocating_init() + 27 in swift-objc4-target-action\n  3 [ra]         0x0000aaaae22e15e0 main + 67 in swift-objc4-target-action\n  4 [ra]         0x0000ffff801284c4 <unknown> in libc.so.6\n  5 [ra]         0x0000ffff80128598 <unknown> in libc.so.6\n...\n\n\nRegisters:\n\n x0 0x0000aaaaf3e1ea90  c1 01 30 e2 aa aa 00 01 00 00 00 00 00 00 00 00  \u00c1\u00b70\u00e2\u00aa\u00aa\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\n x1 0x0000aaaae23000a7  69 6e 69 74 00 64 65 61 6c 6c 6f 63 00 00 00 00  init\u00b7dealloc\u00b7\u00b7\u00b7\u00b7\n x2 0x0000000000000028  40\n x3 0x0000000000000031  49\n x4 0x0000aaaaf3e1ea80  00 00 00 00 00 00 00 00 31 00 00 00 00 00 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b71\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\n x5 0x0000000000000020  32\n x6 0xfffffffffffffff0  18446744073709551600\n x7 0x0000000000000000  0\n x8 0x0000aaaae2300000  00 85 12 80 ff ff 00 00 d0 0f 2e e2 aa aa 00 00  \u00b7\u00b7\u00b7\u00b7\u00ff\u00ff\u00b7\u00b7\u00d0\u00b7.\u00e2\u00aa\u00aa\u00b7\u00b7\n x9 0x0000aaaaf3e1ea90  c1 01 30 e2 aa aa 00 01 00 00 00 00 00 00 00 00  \u00c1\u00b70\u00e2\u00aa\u00aa\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx10 0x0000000000000000  0\nx11 0x0000000000000000  0\nx12 0x0000ffff81d4e350  00 00 2e e2 aa aa 00 00 30 e9 d4 81 ff ff 00 00  \u00b7\u00b7.\u00e2\u00aa\u00aa\u00b7\u00b70\u00e9\u00d4\u00b7\u00ff\u00ff\u00b7\u00b7\nx13 0x0000000000000034  52\nx14 0x00000000005b95c5  6002117\nx15 0xb00000ffff81d005  12682137650178674693\nx16 0xb00000ffff81d005  12682137650178674693\nx17 0x0000aaaae2300058  c0 a5 cc 81 ff ff 00 00 d0 0f 2e e2 aa aa 00 00  \u00c0\u00a5\u00cc\u00b7\u00ff\u00ff\u00b7\u00b7\u00d0\u00b7.\u00e2\u00aa\u00aa\u00b7\u00b7\nx18 0x0000000000000016  22\nx19 0x0000ffffcbb68818  5a 8e b6 cb ff ff 00 00 00 00 00 00 00 00 00 00  Z\u00b7\u00b6\u00cb\u00ff\u00ff\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx20 0x0000aaaaf3e1ea90  c1 01 30 e2 aa aa 00 01 00 00 00 00 00 00 00 00  \u00c1\u00b70\u00e2\u00aa\u00aa\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx21 0x0000aaaae22ffcb0  03 00 00 00 00 00 00 00 e8 ff 2f e2 aa aa 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00e8\u00ff/\u00e2\u00aa\u00aa\u00b7\u00b7\nx22 0x0000aaaae22e159c  ff 83 01 d1 fd 7b 04 a9 f4 2b 00 f9 fd 03 01 91  \u00ff\u00b7\u00b7\u00d1\u00fd{\u00b7\u00a9\u00f4+\u00b7\u00f9\u00fd\u00b7\u00b7\u00b7\nx23 0x0000ffffcbb68828  8e 8e b6 cb ff ff 00 00 d0 8e b6 cb ff ff 00 00  \u00b7\u00b7\u00b6\u00cb\u00ff\u00ff\u00b7\u00b7\u00d0\u00b7\u00b6\u00cb\u00ff\u00ff\u00b7\u00b7\nx24 0x0000ffff81d4cb58  00 00 00 00 00 00 00 00 d8 89 b6 cb ff ff 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00d8\u00b7\u00b6\u00cb\u00ff\u00ff\u00b7\u00b7\nx25 0x0000000000000000  0\nx26 0x0000ffff81d4d000  50 e3 d4 81 ff ff 00 00 17 00 00 00 00 00 00 00  P\u00e3\u00d4\u00b7\u00ff\u00ff\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\nx27 0x0000aaaae22ffcb0  03 00 00 00 00 00 00 00 e8 ff 2f e2 aa aa 00 00  \u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00b7\u00e8\u00ff/\u00e2\u00aa\u00aa\u00b7\u00b7\nx28 0x0000000000000000  0\n fp 0x0000ffffcbb68600  10 86 b6 cb ff ff 00 00 3c 15 2e e2 aa aa 00 00  \u00b7\u00b7\u00b6\u00cb\u00ff\u00ff\u00b7\u00b7<\u00b7.\u00e2\u00aa\u00aa\u00b7\u00b7\n lr 0x0000aaaae22e14bc  e0 0b 00 f9 20 01 00 b5 01 00 00 14 e0 0b 40 f9  \u00e0\u00b7\u00b7\u00f9 \u00b7\u00b7\u00b5\u00b7\u00b7\u00b7\u00b7\u00e0\u00b7@\u00f9\n sp 0x0000ffffcbb685d0  90 ea e1 f3 aa aa 00 00 a7 00 30 e2 aa aa 00 00  \u00b7\u00ea\u00e1\u00f3\u00aa\u00aa\u00b7\u00b7\u00a7\u00b70\u00e2\u00aa\u00aa\u00b7\u00b7\n pc 0x0000ffff81cca5cc  0a 0a 40 f9 4b fd 70 d3 4a bd 40 92 2c 00 0b 0a  \u00b7\u00b7@\u00f9K\u00fdp\u00d3J\u00bd@\u00b7,\u00b7\u00b7\u00b7\n\n\nImages (19 omitted):\n\n0x0000aaaae22e0000\u20130x0000aaaae22e1c50 c791259a17ae1f130c024c32357a54edcffc16f1 swift-objc4-target-action /work-route-a/objc-probes/swift-objc4-target-action\n0x0000ffff80100000\u20130x0000ffff80299d91 54ae5337044aaabab70d65e0c3444f7e4735e059 libc.so.6                 /usr/lib/aarch64-linux-gnu/libc.so.6\n0x0000ffff81c80000\u20130x0000ffff81ce45f4 fea617ed7fd8cc1c835109925fee05ee0705a742 libobjc.so                /work-route-a/objc-probes/objc4-linux/build/linux-aarch64/libobjc.so\n\nBacktrace took 0.00s\n\n",
+      "seconds": 0.018
+    }
+  ],
+  "selector_abi_evidence": {
+    "sil_action": "// Probe.action()\n// Isolation: unspecified\nsil hidden [ossa] @$s16ImportedSelector5ProbeC6action10ObjectiveC0B0VyF : $@convention(method) (@guaranteed Probe) -> @owned Selector {\n// %0 \"self\"                                      // user: %1\nbb0(%0 : @guaranteed $Probe):\n  debug_value %0, let, name \"self\", argno 1       // id: %1\n  %2 = string_literal objc_selector \"tapped\"      // user: %3\n  %3 = struct $String (%2)                        // user: %4\n  %4 = struct $Selector (%3)                      // user: %5\n  return %4                                       // id: %5\n} // end sil function '$s16ImportedSelector5ProbeC6action10ObjectiveC0B0VyF'",
+    "ir_action": "define hidden swiftcc { i64, ptr } @\"$s16ImportedSelector5ProbeC6action10ObjectiveC0B0VyF\"(ptr swiftself %0) #0 {\nentry:\n  %self.debug = alloca ptr, align 8\n  call void @llvm.memset.p0.i64(ptr align 8 %self.debug, i8 0, i64 8, i1 false)\n  %.coercion.coerced = alloca { i64, ptr }, align 8\n  store ptr %0, ptr %self.debug, align 8\n  %1 = load ptr, ptr @\"\\01L_selector(tapped)\", align 8\n  call void @llvm.lifetime.start.p0(i64 128, ptr %.coercion.coerced)\n  store ptr %1, ptr %.coercion.coerced, align 8\n  %2 = load { i64, ptr }, ptr %.coercion.coerced, align 8\n  call void @llvm.lifetime.end.p0(i64 128, ptr %.coercion.coerced)\n  ret { i64, ptr } %2\n}"
+  },
+  "darwin_selector_names": {
+    "command": [
+      "swift",
+      "Tools/ingest/route_a_selector_names.swift"
+    ],
+    "source_sha256": "b4e9fab885999e5763f424ab19afeeb35847d9809a6e0314e2b2bfc4c21e7541",
+    "toolchain": "Apple Swift version 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)\nTarget: arm64-apple-macosx26.0\n",
+    "exit": 0,
+    "stdout": "plain()=plain\nchanged(_:)=changed:\ntoggle(sender:)=toggleWithSender:\ndidPressSearch(sender:)=didPressSearchWithSender:\nkeyboardWillShow(notification:)=keyboardWillShowWithNotification:\nmixed(sender:event:)=mixedWithSender:event:\nexplicit(_:)=chosenName:\ntappedLearnMoreFooter(gestureRecognizer:)=tappedLearnMoreFooterWithGestureRecognizer:\ndidToggle(enabled:)=didToggleWithEnabled:\npaste(clipboardString:)=pasteWithClipboardString:\npasteAndGo(clipboardString:)=pasteAndGoWithClipboardString:\nf(with:)=fWith:\n",
+    "stderr": ""
+  },
+  "objc4_source_tree": "6b9413838b719e27a22b3a0b7528778bd7ae9e8c"
+}
