@@ -100,6 +100,39 @@ class Owner:
     methods: list[Method] = field(default_factory=list)
 
 
+def dispatch_header(owner: Owner, code: str) -> tuple[str, int, bool]:
+    """Return the specialized type, conformance insertion, and inheritance flag.
+
+    This is deliberately a small grammar, not a general Swift type parser.
+    In particular, generic superclass applications/packs stay unsupported.
+    """
+    if "<" not in owner.header and not re.search(r"\bwhere\b", owner.header):
+        return owner.name, owner.opening, ":" in owner.header
+    if not re.search(r"\bfinal\s+$", code[:owner.start]):
+        raise ValueError("generic dispatch requires a final class")
+    identifier = r"[A-Za-z_]\w*"
+    qualified = identifier + r"(?:\." + identifier + r")*"
+    header = re.fullmatch(r"\s*<([^<>]+)>\s*(?::\s*(" + qualified +
+                          r"(?:\s*,\s*" + qualified + r")*))?\s*(?:where\s+(.+?))?\s*",
+                          owner.header, re.DOTALL)
+    if not header:
+        raise ValueError("unsupported generic class header")
+    names = []
+    for parameter in header.group(1).split(","):
+        parsed = re.fullmatch(r"\s*(" + identifier + r")(?:\s*:\s*" + qualified + r")?\s*", parameter)
+        if not parsed or parsed.group(1) in names:
+            raise ValueError("only simple named generic parameters are supported")
+        names.append(parsed.group(1))
+    if header.group(3):
+        for requirement in header.group(3).split(","):
+            parsed = re.fullmatch(r"\s*(" + qualified + r")\s*==\s*(" + qualified + r")\s*", requirement)
+            if not parsed or any(term.split(".")[0] not in names for term in parsed.groups()):
+                raise ValueError("only same-type requirements between generic parameters are supported")
+    where = re.search(r"\bwhere\b", owner.header)
+    insertion = owner.opening - len(owner.header) + where.start() if where else owner.opening
+    return owner.name + "<" + ", ".join(names) + ">", insertion, header.group(2) is not None
+
+
 @dataclass
 class Method:
     owner: Owner
@@ -184,8 +217,14 @@ def transform(source: str, path: str = "<source>") -> tuple[str, dict]:
         if owner is None or owner.kind != "class" or declaration is None:
             entry["reason"] = "only instance methods directly declared in a class are supported"
             continue
-        if "<" in owner.header or "where" in owner.header:
-            entry["reason"] = "generic class requires separate dispatch evidence"
+        try:
+            dispatch_type, _, _ = dispatch_header(owner, code)
+        except ValueError as error:
+            entry["reason"] = str(error)
+            continue
+        generic = dispatch_type != owner.name
+        if generic and any(other.opening < owner.start < other.closing for other in owners):
+            entry["reason"] = "nested generic class dispatch is unsupported"
             continue
         if conditional_scopes(attr.start()) != conditional_scopes(owner.opening):
             entry["reason"] = "conditionally declared method requires matching dispatch conditions"
@@ -204,6 +243,9 @@ def transform(source: str, path: str = "<source>") -> tuple[str, dict]:
             continue
         label = None
         if params:
+            if generic:
+                entry["reason"] = "generic dispatch is measured only for zero-argument Void methods"
+                continue
             param = re.fullmatch(
                 r"([A-Za-z_]\w*)(?:\s+[A-Za-z_]\w*)?\s*:\s*"
                 r"([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*[?!]?)(?:\s*=\s*nil)?", params)
@@ -246,6 +288,9 @@ def transform(source: str, path: str = "<source>") -> tuple[str, dict]:
             entry["reason"] = "target declaration is absent or ambiguous in this file"
             continue
         target = targets[0]
+        if "<" in target.header and target is not owner:
+            entry["reason"] = "generic selector requires the enclosing specialization"
+            continue
         candidates = [method for method in target.methods if method.name == name
                       and ("(" not in expression or method.label == label)]
         if len(candidates) != 1:
@@ -271,19 +316,25 @@ def transform(source: str, path: str = "<source>") -> tuple[str, dict]:
         # The method stays inside its class, so private action methods remain
         # callable. Using an instance-local table also avoids stored static state
         # and Swift concurrency checks on ActionTable's closures.
-        entries = "\n".join(f'            .action({json.dumps(m.selector)}, {owner.name}.{m.reference}),' for m in methods)
+        # MEASURED iPhone 16 / iOS 26.1 vs native Linux Swift 6.2.4:
+        # full Focus Combine+UIControl.swift eventHandler, 3 specializations,
+        # 7 deliveries, identical identity/filter/cancel results (generic-control
+        # probe). Specialize both the table and method reference; insert the
+        # conformance before `where`, not among its same-type requirements.
+        dispatch_type, insertion, inherited = dispatch_header(owner, code)
+        entries = "\n".join(f'            .action({json.dumps(m.selector)}, {dispatch_type}.{m.reference}),' for m in methods)
         witness = f"""
     // Generated by Tools/ingest/route_a_selectors.py for native Linux route (a).
     public func perform(_ selectorName: String, with sender: Any?) -> Bool {{
-        let actions: ActionTable<{owner.name}> = [
+        let actions: ActionTable<{dispatch_type}> = [
 {entries}
         ]
         return actions.perform(selectorName, on: self, with: sender)
     }}
 """
         edits.append((owner.closing, owner.closing, witness))
-        edits.append((owner.opening, owner.opening,
-                      (", " if ":" in owner.header else ": ") + "SelectorDispatching "))
+        edits.append((insertion, insertion,
+                      (", " if inherited else ": ") + "SelectorDispatching "))
 
     report["counts"] = {
         "selectors": len(report["selectors"]),

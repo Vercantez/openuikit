@@ -97,6 +97,60 @@ class Example: UIView {
             _, report = adapter.transform(source)
             self.assertFalse(report["complete"])
 
+    def test_actual_generic_focus_publisher(self):
+        path = UIKIT / "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift"
+        result, report = adapter.transform(path.read_text(), str(path))
+        self.assertTrue(report["complete"], report)
+        self.assertEqual(report["counts"]["lowered_selectors"], 1)
+        self.assertEqual(report["counts"]["lowered_objc_attributes"], 1)
+        self.assertIn("SelectorDispatching where SubscriberType.Input == Control", result)
+        self.assertIn("ActionTable<UIControlSubscription<SubscriberType, Control>>", result)
+        self.assertIn('.action("eventHandler", UIControlSubscription<SubscriberType, Control>.eventHandler)', result)
+        self.assertIn('action: Selector.named("eventHandler")', result)
+        self.assertIn("private func eventHandler()", result)
+
+    def test_generic_constraints_are_not_an_inheritance_clause(self):
+        source = '''final class Target<T: AnyObject> {
+            @objc private func tap() {}
+            func wire() { use(#selector(tap)) }
+        }'''
+        result, report = adapter.transform(source)
+        self.assertTrue(report["complete"], report)
+        self.assertIn("Target<T: AnyObject> : SelectorDispatching", result)
+        self.assertIn("ActionTable<Target<T>>", result)
+
+    def test_unmeasured_generic_shapes_fail_closed(self):
+        headers = ["class Target<T>", "final class Target<each T>",
+                   "final class Target<T>: Base<T>",
+                   "final class Target<T> where T: Equatable",
+                   "final class Target<T> where T == Int",
+                   "final class Target<T: P & Q>"]
+        for header in headers:
+            source = header + " { @objc func tap() {} func wire() { use(#selector(tap)) } }"
+            result, report = adapter.transform(source)
+            self.assertFalse(report["complete"], header)
+            self.assertEqual(result, source)
+        source = '''class Outer<T> {
+            final class Target<U> { @objc func tap() {} func wire() { use(#selector(tap)) } }
+        }'''
+        _, report = adapter.transform(source)
+        self.assertFalse(report["complete"])
+        self.assertIn("nested generic", report["objc_attributes"][0]["reason"])
+        source = '''final class Target<T> {
+            @objc func tap(_ sender: UIControl) {}
+            func wire() { use(#selector(tap(_:))) }
+        }'''
+        _, report = adapter.transform(source)
+        self.assertFalse(report["complete"])
+        self.assertIn("zero-argument", report["objc_attributes"][0]["reason"])
+
+    def test_generic_selector_outside_specialization_is_refused(self):
+        source = '''final class Target<T> { @objc func tap() {} }
+        class Caller { func wire() { use(#selector(Target.tap)) } }'''
+        _, report = adapter.transform(source)
+        self.assertFalse(report["complete"])
+        self.assertIn("enclosing specialization", report["selectors"][0]["reason"])
+
     def test_unmeasured_label_requires_explicit_objc_name(self):
         source = "class Example { @objc func move(with sender: NSObject) {} }"
         _, report = adapter.transform(source)
