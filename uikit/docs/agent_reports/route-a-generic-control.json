@@ -1,0 +1,649 @@
+{
+  "schema": 1,
+  "date": "2026-09-07",
+  "branch": "agent/route-a-selector-wall3",
+  "scope": "Only generic zero-argument selector dispatch in the complete Focus Combine+UIControl.swift; not a whole-app build",
+  "oracle": {
+    "source_sha256": "cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa",
+    "probe_sha256": "e979484345ce48a2e09efde9474fdac9ce83f699d604ebecc3c9ad6bd8c63f49",
+    "commands": [
+      {
+        "name": "swift-version",
+        "command": [
+          "xcrun",
+          "swiftc",
+          "--version"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "sdk",
+        "command": [
+          "xcrun",
+          "--show-sdk-path",
+          "--sdk",
+          "iphonesimulator"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "original-build",
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphonesimulator",
+          "swiftc",
+          "-swift-version",
+          "5",
+          "-O",
+          "-target",
+          "arm64-apple-ios26.0-simulator",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.1.sdk",
+          "/Users/miguelsalinas/.codex-worktrees/openuikit/route-a-selector-wall3/uikit/Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift",
+          "/Users/miguelsalinas/.codex-worktrees/openuikit/route-a-selector-wall3/uikit/Tools/ingest/fixtures/route_a_generic_control/Probe.swift",
+          "-o",
+          "/private/tmp/route-a-generic-control/oracle2/RouteAGenericControl.app/RouteAGenericControl"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "devices",
+        "command": [
+          "xcrun",
+          "simctl",
+          "list",
+          "devices",
+          "available",
+          "-j"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "boot",
+        "command": [
+          "xcrun",
+          "simctl",
+          "boot",
+          "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "bootstatus",
+        "command": [
+          "xcrun",
+          "simctl",
+          "bootstatus",
+          "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC",
+          "-b"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "install",
+        "command": [
+          "xcrun",
+          "simctl",
+          "install",
+          "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC",
+          "/private/tmp/route-a-generic-control/oracle2/RouteAGenericControl.app"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "container",
+        "command": [
+          "xcrun",
+          "simctl",
+          "get_app_container",
+          "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC",
+          "org.openuikit.route-a-generic-control",
+          "data"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "launch",
+        "command": [
+          "xcrun",
+          "simctl",
+          "launch",
+          "--console-pty",
+          "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC",
+          "org.openuikit.route-a-generic-control"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "shutdown",
+        "command": [
+          "xcrun",
+          "simctl",
+          "shutdown",
+          "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC"
+        ],
+        "exit": 0
+      }
+    ],
+    "device": {
+      "name": "OpenUIKit-GenericControl-route-a-selector-wall3",
+      "udid": "7AF5D418-B321-45E7-B2D5-DEFCBD8416FC",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-1",
+      "type": "iPhone 16"
+    },
+    "oracle": {
+      "measurement": {
+        "limited_after_cancel": 2,
+        "limited_after_two_events_requesting_one": 2,
+        "limited_after_wrong_event": 0,
+        "limited_identity": [
+          true,
+          true
+        ],
+        "sink_after_cancel": 3,
+        "sink_after_matching_events": 3,
+        "sink_after_wrong_event": 0,
+        "sink_identity": [
+          true,
+          true,
+          true
+        ],
+        "switch_identity": [
+          true,
+          true
+        ],
+        "switch_states": [
+          true,
+          false
+        ]
+      },
+      "registered_selectors": [
+        "eventHandler"
+      ],
+      "scale": 3,
+      "system_version": "26.1",
+      "source_sha256": "cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa",
+      "probe_sha256": "e979484345ce48a2e09efde9474fdac9ce83f699d604ebecc3c9ad6bd8c63f49"
+    }
+  },
+  "linux": {
+    "source_sha256": "cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa",
+    "probe_sha256": "e979484345ce48a2e09efde9474fdac9ce83f699d604ebecc3c9ad6bd8c63f49",
+    "commands": [
+      {
+        "name": "swift-version",
+        "command": [
+          "swift",
+          "--version"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "original-build",
+        "command": [
+          "swift",
+          "build",
+          "-c",
+          "release",
+          "--product",
+          "RouteAGenericControlProbe"
+        ],
+        "exit": 1
+      },
+      {
+        "name": "lower",
+        "command": [
+          "python3",
+          "Tools/ingest/route_a_selectors.py",
+          "rewrite",
+          "--route-a",
+          "/work-route-a/uikit/Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift",
+          "--output",
+          "/work-route-a/uikit/RouteAGenericControlScratch/Combine+UIControl.swift",
+          "--report",
+          "/work-route-a/generic-proof3/lower.json"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "lowered-build",
+        "command": [
+          "swift",
+          "build",
+          "-c",
+          "release",
+          "--product",
+          "RouteAGenericControlProbe"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "execution",
+        "command": [
+          "/work-route-a/uikit/.build/release/RouteAGenericControlProbe"
+        ],
+        "exit": 0
+      }
+    ],
+    "original_diagnostics": [
+      "/work-route-a/uikit/RouteAGenericControlScratch/Combine+UIControl.swift:56:6: error: Objective-C interoperability is disabled",
+      "|      `- error: Objective-C interoperability is disabled",
+      "/work-route-a/uikit/RouteAGenericControlScratch/Combine+UIControl.swift:44:41: error: '#selector' can only be used with the Objective-C runtime",
+      "|                                         `- error: '#selector' can only be used with the Objective-C runtime"
+    ],
+    "measurement": {
+      "limited_after_cancel": 2,
+      "limited_after_two_events_requesting_one": 2,
+      "limited_after_wrong_event": 0,
+      "limited_identity": [
+        true,
+        true
+      ],
+      "sink_after_cancel": 3,
+      "sink_after_matching_events": 3,
+      "sink_after_wrong_event": 0,
+      "sink_identity": [
+        true,
+        true,
+        true
+      ],
+      "switch_identity": [
+        true,
+        true
+      ],
+      "switch_states": [
+        true,
+        false
+      ]
+    },
+    "matches_ios_oracle": true,
+    "manifest_restored": true,
+    "original_source_unchanged": true
+  },
+  "before_file": {
+    "path": "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift",
+    "source_sha256": "cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa",
+    "selectors": [
+      {
+        "line": 44,
+        "expression": "eventHandler",
+        "status": "unsupported",
+        "reason": "no unique supported explicitly @objc method declaration"
+      }
+    ],
+    "objc_attributes": [
+      {
+        "line": 56,
+        "status": "unsupported",
+        "reason": "generic class requires separate dispatch evidence"
+      }
+    ],
+    "errors": [],
+    "counts": {
+      "selectors": 1,
+      "lowered_selectors": 0,
+      "objc_attributes": 1,
+      "lowered_objc_attributes": 0,
+      "dispatch_classes": 0
+    },
+    "complete": false
+  },
+  "after_file": {
+    "path": "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift",
+    "source_sha256": "cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa",
+    "selectors": [
+      {
+        "line": 44,
+        "expression": "eventHandler",
+        "status": "lowered",
+        "selector": "eventHandler",
+        "method": "UIControlSubscription.eventHandler"
+      }
+    ],
+    "objc_attributes": [
+      {
+        "line": 56,
+        "status": "lowered",
+        "method": "UIControlSubscription.eventHandler",
+        "selector": "eventHandler"
+      }
+    ],
+    "errors": [],
+    "counts": {
+      "selectors": 1,
+      "lowered_selectors": 1,
+      "objc_attributes": 1,
+      "lowered_objc_attributes": 1,
+      "dispatch_classes": 1
+    },
+    "complete": true
+  },
+  "audit_paths": [
+    "Sources/Blockzilla",
+    "Sources/BlockzillaPackage",
+    "Sources/SnapKit",
+    "Sources/Fuzi"
+  ],
+  "before_totals": {
+    "selectors": 77,
+    "lowered_selectors": 75,
+    "objc_attributes": 85,
+    "lowered_objc_attributes": 81,
+    "dispatch_classes": 33,
+    "remaining_selectors": 2,
+    "remaining_objc_attributes": 4,
+    "emittable_selectors": 67,
+    "emittable_objc_attributes": 74,
+    "not_emittable_selectors": 10,
+    "not_emittable_objc_attributes": 11,
+    "emittable_files_with_selectors": 29
+  },
+  "after_totals": {
+    "selectors": 77,
+    "lowered_selectors": 76,
+    "objc_attributes": 85,
+    "lowered_objc_attributes": 82,
+    "dispatch_classes": 34,
+    "remaining_selectors": 1,
+    "remaining_objc_attributes": 3,
+    "emittable_selectors": 68,
+    "emittable_objc_attributes": 75,
+    "not_emittable_selectors": 9,
+    "not_emittable_objc_attributes": 10,
+    "emittable_files_with_selectors": 30
+  },
+  "remaining_incomplete_files": [
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Modules/WebView/WebViewController.swift",
+      "source_sha256": "1d8aa958b5a9fe5da4c0f32ca2a3c3d2f005f8abbba4b59055a576c2fda0242d",
+      "selectors": [
+        {
+          "line": 214,
+          "expression": "reloadPage",
+          "status": "lowered",
+          "selector": "reloadPage",
+          "method": "WebViewController.reloadPage"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 198,
+          "status": "unsupported",
+          "reason": "only zero arguments or one simply typed sender is supported"
+        },
+        {
+          "line": 217,
+          "status": "lowered",
+          "method": "WebViewController.reloadPage",
+          "selector": "reloadPage"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/AutocompleteCustomUrlViewController.swift",
+      "source_sha256": "577eecd80287c4d89b2eaa821c008109acab55a190759ce73ae1367a30e47c41",
+      "selectors": [
+        {
+          "line": 38,
+          "expression": "AutocompleteCustomUrlViewController.toggleEditing",
+          "status": "lowered",
+          "selector": "toggleEditing",
+          "method": "AutocompleteCustomUrlViewController.toggleEditing"
+        },
+        {
+          "line": 178,
+          "expression": "updateEmptyStateView",
+          "status": "unsupported",
+          "reason": "no unique supported explicitly @objc method declaration"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 73,
+          "status": "lowered",
+          "method": "AutocompleteCustomUrlViewController.toggleEditing",
+          "selector": "toggleEditing"
+        },
+        {
+          "line": 90,
+          "status": "lowered",
+          "method": "AutocompleteCustomUrlViewController.updateEmptyStateView",
+          "selector": "updateEmptyStateView"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 1,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/AutocompleteTextField.swift",
+      "source_sha256": "5ebf0057037392a64f15b7e9c2730bdbde2beabd09057ea8ab0a5b454af09dfb",
+      "selectors": [
+        {
+          "line": 72,
+          "expression": "AutocompleteTextField.textDidChange",
+          "status": "lowered",
+          "selector": "textDidChange:",
+          "method": "AutocompleteTextField.textDidChange(_:)"
+        },
+        {
+          "line": 83,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 87,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 88,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 89,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 342,
+          "expression": "Callback.go",
+          "status": "lowered",
+          "selector": "go",
+          "method": "Callback.go"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 100,
+          "status": "lowered",
+          "method": "AutocompleteTextField.handleKeyCommand",
+          "selector": "handleKeyCommandWithSender:"
+        },
+        {
+          "line": 173,
+          "status": "unsupported",
+          "reason": "only instance methods directly declared in a class are supported"
+        },
+        {
+          "line": 180,
+          "status": "lowered",
+          "method": "AutocompleteTextField.clear",
+          "selector": "clear"
+        },
+        {
+          "line": 290,
+          "status": "lowered",
+          "method": "AutocompleteTextField.textDidChange",
+          "selector": "textDidChange:"
+        },
+        {
+          "line": 355,
+          "status": "lowered",
+          "method": "Callback.go",
+          "selector": "go"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 6,
+        "lowered_selectors": 6,
+        "objc_attributes": 5,
+        "lowered_objc_attributes": 4,
+        "dispatch_classes": 2
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/InsetButton.swift",
+      "source_sha256": "04c92da2475226f26f931b6f539400d3de512ecf796a786cd49c4de944a669b0",
+      "selectors": [],
+      "objc_attributes": [
+        {
+          "line": 28,
+          "status": "unsupported",
+          "reason": "only instance methods directly declared in a class are supported"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": false
+    }
+  ],
+  "python_tests": {
+    "command": "python3 -m unittest discover -s Tools/ingest -p 'test_route_a_*.py'",
+    "passed": 22,
+    "failed": 0
+  },
+  "linux_lowered_build_tail": [
+    "    /work-route-a/uikit/Sources/OpenUIKit/Resources/font_kerning.json",
+    "[0/1] Planning build",
+    "Building for production...",
+    "[0/5] Write sources",
+    "[1/5] Write swift-version-24593BA9C3E375BF.txt",
+    "[3/5] Compiling RouteAGenericControlProbe Combine+UIControl.swift",
+    "[3/5] Write Objects.LinkFileList",
+    "[4/5] Linking RouteAGenericControlProbe",
+    "Build of product 'RouteAGenericControlProbe' complete! (2.67s)"
+  ],
+  "oracle_probe_hazard": "An initial allTargets read trapped in Set._forceBridgeFromObjectiveC trying to cast the pure Swift UIControlSubscription to NSObject. The final fixture queries actions(forTarget:forControlEvent:) with a known subscription, without changing the app source.",
+  "previous_cell_regression": {
+    "source_sha256": {
+      "Sources/Blockzilla/Blockzilla/Theme/ThemeCells/ThemeTableViewToggleCell.swift": "e777016ba647573335a09fe81a5f5101564ceb6acad303fd1140c6339cd904dc",
+      "Sources/Blockzilla/Blockzilla/Tracking Protection/Views/SwitchTableViewCell.swift": "29abf53e7320da753b3b9e4689f5b1d3e42078bbd00f87c686d6865e5b47e6de",
+      "Sources/Blockzilla/Blockzilla/Lib/PaddedSwitch.swift": "325787a717b1de74c87261bf6885af835918439a99bd8821557de0f505e9d668",
+      "Sources/Blockzilla/Blockzilla/Theme/SystemThemeDelegate.swift": "a214f059b6cfce9c272d20677e7b7c71e49ebe9e0cc8fce0c7564ba2df3b65ec",
+      "Sources/Blockzilla/Blockzilla/Tracking Protection/Model/ToggleItem.swift": "23b95c78ee515ffa2c5c314b82a5107675cd3cb68424c9b97df4f6dcc8d3f93e"
+    },
+    "commands": [
+      {
+        "name": "original-build",
+        "command": [
+          "swift",
+          "build",
+          "-c",
+          "release",
+          "--product",
+          "RouteASelectorProbe"
+        ],
+        "exit": 1
+      },
+      {
+        "name": "lower-ThemeTableViewToggleCell",
+        "command": [
+          "python3",
+          "Tools/ingest/route_a_selectors.py",
+          "rewrite",
+          "--route-a",
+          "/work-route-a/uikit/Sources/Blockzilla/Blockzilla/Theme/ThemeCells/ThemeTableViewToggleCell.swift",
+          "--output",
+          "/work-route-a/uikit/RouteASelectorProbeScratch/ThemeTableViewToggleCell.swift",
+          "--report",
+          "/work-route-a/generic-cell-regression3/ThemeTableViewToggleCell.json"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "lower-SwitchTableViewCell",
+        "command": [
+          "python3",
+          "Tools/ingest/route_a_selectors.py",
+          "rewrite",
+          "--route-a",
+          "/work-route-a/uikit/Sources/Blockzilla/Blockzilla/Tracking Protection/Views/SwitchTableViewCell.swift",
+          "--output",
+          "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift",
+          "--report",
+          "/work-route-a/generic-cell-regression3/SwitchTableViewCell.json"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "lowered-build",
+        "command": [
+          "swift",
+          "build",
+          "-c",
+          "release",
+          "--product",
+          "RouteASelectorProbe"
+        ],
+        "exit": 0
+      },
+      {
+        "name": "execution",
+        "command": [
+          "/work-route-a/uikit/.build/release/RouteASelectorProbe"
+        ],
+        "exit": 0
+      }
+    ],
+    "original_diagnostics": [
+      "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:13:40: error: '#selector' can only be used with the Objective-C runtime",
+      "|                                        `- error: '#selector' can only be used with the Objective-C runtime",
+      "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:13:40: error: '#selector' can only be used with the Objective-C runtime",
+      "|                                        `- error: '#selector' can only be used with the Objective-C runtime",
+      "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:9:41: error: type of expression is ambiguous without a type annotation",
+      "|                                         `- error: type of expression is ambiguous without a type annotation",
+      "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:45:6: error: Objective-C interoperability is disabled",
+      "|      `- error: Objective-C interoperability is disabled",
+      "/work-route-a/uikit/RouteASelectorProbeScratch/ThemeTableViewToggleCell.swift:30:6: error: Objective-C interoperability is disabled",
+      "|      `- error: Objective-C interoperability is disabled",
+      "/work-route-a/uikit/RouteASelectorProbeScratch/ThemeTableViewToggleCell.swift:21:40: error: '#selector' can only be used with the Objective-C runtime",
+      "|                                        `- error: '#selector' can only be used with the Objective-C runtime"
+    ],
+    "execution": "ThemeTableViewToggleCell: valueChanged -> private toggleSwitched(_:) -> delegate = [true, false, true]\nSwitchTableViewCell: valueChanged -> private toggle(sender:) -> Combine = [true, false, true]\nROUTE_A_SELECTOR_PASS cells=2 deliveries=6 unresolved=0\n",
+    "original_sources_unchanged": true
+  }
+}
