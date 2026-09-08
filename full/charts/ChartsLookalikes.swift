@@ -613,7 +613,43 @@ public struct ShapeRole: Hashable, Sendable {
     public init() {}
 }
 
-public protocol ScrollTargetBehavior {}
+public struct ScrollTarget: Equatable, Sendable {
+    public var rect: CGRect
+
+    public init(rect: CGRect = .zero) {
+        self.rect = rect
+    }
+}
+
+public struct ScrollTargetBehaviorContext: Equatable, Sendable {
+    public var originalTarget: ScrollTarget
+    public var velocity: CGPoint
+    public var contentSize: CGSize
+    public var containerSize: CGSize
+
+    public init(
+        originalTarget: ScrollTarget = ScrollTarget(),
+        velocity: CGPoint = .zero,
+        contentSize: CGSize = .zero,
+        containerSize: CGSize = .zero
+    ) {
+        self.originalTarget = originalTarget
+        self.velocity = velocity
+        self.contentSize = contentSize
+        self.containerSize = containerSize
+    }
+}
+
+public protocol ScrollTargetBehavior {
+    func updateTarget(_ target: inout ScrollTarget, context: ScrollTargetBehaviorContext)
+}
+
+public extension ScrollTargetBehavior {
+    func updateTarget(_ target: inout ScrollTarget, context: ScrollTargetBehaviorContext) {
+        _ = target
+        _ = context
+    }
+}
 
 public extension View {
     func overlay<Overlay: View>(
