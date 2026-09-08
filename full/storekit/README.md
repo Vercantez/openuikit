@@ -412,3 +412,41 @@ implemented rows):
 
 No cited test covers more than 40% of implemented rows. The sealed host gate
 for this wave is `bash full/storekit/tests/acceptance/test_host.sh`.
+
+## Depth pass 2026-09 (wave 8, canonical JWS follow-on)
+
+This follow-on tightens the Foundation-only compact-JWS boundary. Compact
+segments now accept only the RFC 7515 URL-safe, unpadded alphabet, and an
+explicit protected-header `typ` must be `JWS`. A missing `typ` remains accepted
+for forward compatibility. These checks only validate envelope structure:
+Apple certificate trust and ES256 signature verification still fail closed as
+`invalidSignature`.
+
+The pass also supplies focused evidence for the four remaining synthesized
+`hashValue` witnesses on StoreKit's string-backed newtypes. Equal raw values are
+checked through `Set` membership in addition to direct in-process hash access.
+The other non-overlay rows left declared are Apple-service async entry points,
+async-sequence synthesized algorithms, the dependency-owned
+`StoreDownloaderExtension`, or UI-confirmation APIs. They cannot honestly be
+promoted by the required synchronous test harness. CryptoKit signature and
+Foundation format-style witnesses remain deferred for absent dependencies or
+host declarations. The remaining declared `s:7SwiftUI4View…` specializations
+cannot be reclassified without dropping the immutable medium-full nondeferred
+floor; none is labeled implemented.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before canonical JWS follow-on | 1559 | 6655 | 180 | 0 | 7301 |
+| after canonical JWS follow-on | 1563 | 6655 | 176 | 0 | 7301 |
+
+Nondeferred remains **8218** (floor 7848). Top-5 evidence distribution (of 1563
+implemented rows):
+
+1. `testOfferAndTaskStates` — 115 (7.4%)
+2. `testAdvancedCommerceTypes` — 111 (7.1%)
+3. `testJWSUnverifiedFields` — 67 (4.3%)
+4. `testHashableRawRepresentableMixing` — 48 (3.1%)
+5. `testSKCloudServiceEnumsAndConstants` — 41 (2.6%)
+
+No cited test covers more than 40% of implemented rows. The sealed host gate is
+`bash full/storekit/tests/acceptance/test_host.sh`.

@@ -183,7 +183,7 @@
       "id": "uikit-inrepo",
       "kind": "in-repo-subtree",
       "path": "uikit",
-      "tree": "5c5ded17700c4c61649fca1ef36cb8933422e492",
+      "tree": "18e88141a4288d61c27754bd3e806706737543b7",
       "lock": "scripts/vendor_pins.sh",
       "attestation": "git rev-parse HEAD:uikit",
       "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"],
@@ -193,7 +193,7 @@
       "id": "machorun-inrepo",
       "kind": "in-repo-subtree",
       "path": "machorun",
-      "tree": "bb422dab8ebbe587b70b0a4eb8ddc9f5824efacb",
+      "tree": "7633ada2ff79e88cc26c77aaa6398431b1383f16",
       "lock": "scripts/vendor_pins.sh",
       "attestation": "git rev-parse HEAD:machorun",
       "demanded_by": ["focus-widget", "focus-onboarding", "focus-package", "build-full", "core-guest-package"]

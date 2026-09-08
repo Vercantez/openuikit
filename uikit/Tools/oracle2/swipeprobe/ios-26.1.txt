@@ -1,0 +1,83 @@
+scale=2.0 size=(375.0, 667.0) version=26.1
+default direction=1 touches=1 state=possible enabled=true cancels=true delaysBegan=false delaysEnded=true number=0 location=(0.0, 0.0)
+raw right=1 left=2 up=4 down=8
+direction assigned=0 read=0
+direction assigned=1 read=1
+direction assigned=2 read=2
+direction assigned=3 read=3
+direction assigned=4 read=4
+direction assigned=8 read=8
+direction assigned=15 read=15
+direction assigned=16 read=16
+direction assigned=18446744073709551615 read=18446744073709551615
+touches assigned=0 read=0
+touches assigned=1 read=1
+touches assigned=2 read=2
+touches assigned=3 read=3
+touches assigned=5 read=5
+touches assigned=6 read=6
+touches assigned=16 read=16
+touches assigned=-1 read=-1
+default-private _maximumDuration=0.5
+default-private _minimumPrimaryMovement=50
+default-private _maximumSecondaryMovement=50
+default-private _maximumOppositeMovement=0
+default-private _rateOfMinimumMovementDecay=0.06
+default-private _rateOfMaximumMovementDecay=0.02
+distance-fast begin=possible | move(2.0,0.0,0.01)=possible | move(5.0,0.0,0.02)=possible | move(10.0,0.0,0.03)=possible | move(20.0,0.0,0.04)=possible | move(30.0,0.0,0.05)=possible | move(40.0,0.0,0.06)=possible | move(50.0,0.0,0.07)=possible | move(60.0,0.0,0.08)=possible | move(80.0,0.0,0.09)=possible | move(120.0,0.0,0.1)=possible | end=possible | step=move(50.0,0.0,0.07),action=ended,n=1,loc=(0.0, 0.0)
+left begin=possible | move(-100.0,0.0,0.1)=possible | end=possible | step=move(-100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+up begin=possible | move(0.0,-100.0,0.1)=possible | end=possible | step=move(0.0,-100.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+down begin=possible | move(0.0,100.0,0.1)=possible | end=possible | step=move(0.0,100.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+wrong-left begin=possible | move(-100.0,0.0,0.1)=possible | end=possible
+diagonal begin=possible | move(100.0,100.0,0.1)=possible | end=possible
+duration-0.49 begin=possible | move(100.0,0.0,0.49)=possible | end=possible | step=move(100.0,0.0,0.49),action=ended,n=1,loc=(0.0, 0.0)
+duration-0.499 begin=possible | move(100.0,0.0,0.499)=possible | end=possible | step=move(100.0,0.0,0.499),action=ended,n=1,loc=(0.0, 0.0)
+duration-0.5 begin=possible | move(100.0,0.0,0.5)=possible | end=possible | step=move(100.0,0.0,0.5),action=ended,n=1,loc=(0.0, 0.0)
+duration-0.501 begin=possible | move(100.0,0.0,0.501)=possible | end=possible
+duration-0.51 begin=possible | move(100.0,0.0,0.51)=possible | end=possible
+duration-0.6 begin=possible | move(100.0,0.0,0.6)=possible | end=possible
+duration-1.0 begin=possible | move(100.0,0.0,1.0)=possible | end=possible
+measured-primary-0.0-49.999 begin=possible | move(49.999,0.0,0.0)=possible | end=possible
+measured-secondary-0.0-49.999 begin=possible | move(100.0,49.999,0.0)=possible | end=possible | step=move(100.0,49.999,0.0),action=ended,n=1,loc=(0.0, 0.0)
+measured-primary-0.0-50.001 begin=possible | move(50.001,0.0,0.0)=possible | end=possible | step=move(50.001,0.0,0.0),action=ended,n=1,loc=(0.0, 0.0)
+measured-secondary-0.0-50.001 begin=possible | move(100.0,50.001,0.0)=possible | end=possible
+measured-primary-0.1-45.299 begin=possible | move(45.299,0.0,0.1)=possible | end=possible
+measured-secondary-0.1-45.099000000000004 begin=possible | move(100.0,45.099000000000004,0.1)=possible | end=possible | step=move(100.0,45.099000000000004,0.1),action=ended,n=1,loc=(0.0, 0.0)
+measured-primary-0.1-45.300999999999995 begin=possible | move(45.300999999999995,0.0,0.1)=possible | end=possible | step=move(45.300999999999995,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+measured-secondary-0.1-45.101 begin=possible | move(100.0,45.101,0.1)=possible | end=possible
+measured-primary-0.2-40.599000000000004 begin=possible | move(40.599000000000004,0.0,0.2)=possible | end=possible
+measured-secondary-0.2-40.199000000000005 begin=possible | move(100.0,40.199000000000005,0.2)=possible | end=possible | step=move(100.0,40.199000000000005,0.2),action=ended,n=1,loc=(0.0, 0.0)
+measured-primary-0.2-40.601 begin=possible | move(40.601,0.0,0.2)=possible | end=possible | step=move(40.601,0.0,0.2),action=ended,n=1,loc=(0.0, 0.0)
+measured-secondary-0.2-40.201 begin=possible | move(100.0,40.201,0.2)=possible | end=possible
+measured-primary-0.3-35.899 begin=possible | move(35.899,0.0,0.3)=possible | end=possible
+measured-secondary-0.3-35.299 begin=possible | move(100.0,35.299,0.3)=possible | end=possible | step=move(100.0,35.299,0.3),action=ended,n=1,loc=(0.0, 0.0)
+measured-primary-0.3-35.900999999999996 begin=possible | move(35.900999999999996,0.0,0.3)=possible | end=possible | step=move(35.900999999999996,0.0,0.3),action=ended,n=1,loc=(0.0, 0.0)
+measured-secondary-0.3-35.300999999999995 begin=possible | move(100.0,35.300999999999995,0.3)=possible | end=possible
+measured-primary-0.4-31.198999999999998 begin=possible | move(31.198999999999998,0.0,0.4)=possible | end=possible
+measured-secondary-0.4-30.398999999999997 begin=possible | move(100.0,30.398999999999997,0.4)=possible | end=possible | step=move(100.0,30.398999999999997,0.4),action=ended,n=1,loc=(0.0, 0.0)
+measured-primary-0.4-31.201 begin=possible | move(31.201,0.0,0.4)=possible | end=possible | step=move(31.201,0.0,0.4),action=ended,n=1,loc=(0.0, 0.0)
+measured-secondary-0.4-30.401 begin=possible | move(100.0,30.401,0.4)=possible | end=possible
+measured-primary-0.5-26.499 begin=possible | move(26.499,0.0,0.5)=possible | end=possible
+measured-secondary-0.5-25.499 begin=possible | move(100.0,25.499,0.5)=possible | end=possible | step=move(100.0,25.499,0.5),action=ended,n=1,loc=(0.0, 0.0)
+measured-primary-0.5-26.501 begin=possible | move(26.501,0.0,0.5)=possible | end=possible | step=move(26.501,0.0,0.5),action=ended,n=1,loc=(0.0, 0.0)
+measured-secondary-0.5-25.501 begin=possible | move(100.0,25.501,0.5)=possible | end=possible
+two-required begin=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=2,loc=(0.0, 0.0)
+two-one-required begin=possible | move(100.0,0.0,0.1)=possible | end=possible
+one-two-required begin=possible | move(100.0,0.0,0.1)=possible | end=possible
+two-both-required begin=possible | move(100.0,0.0,0.1)=possible | end=possible
+two-unequal-qualified begin=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=2,loc=(0.0, 0.0)
+two-opposite begin=possible | move(100.0,0.0,0.1)=possible | end=possible
+right-left-union-right begin=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+right-left-union-left begin=possible | move(-100.0,0.0,0.1)=possible | end=possible | step=move(-100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+right-down-right begin=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+right-down-down begin=possible | move(0.0,100.0,0.1)=possible | end=possible
+right-down-diagonal begin=possible | move(100.0,100.0,0.1)=possible | end=possible
+all-right begin=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+all-diagonal-zero begin=possible | move(50.0,50.0,0.0)=possible | end=possible | step=move(50.0,50.0,0.0),action=ended,n=1,loc=(0.0, 0.0)
+direction-empty begin=possible | move(100.0,0.0,0.1)=possible | end=possible
+direction-unknown begin=possible | move(100.0,0.0,0.1)=possible | end=possible
+reversal begin=possible | move(-0.1,0.0,0.01)=possible | move(100.0,0.0,0.1)=possible | end=possible
+cross-first begin=possible | move(0.0,20.0,0.01)=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+retreat-positive begin=possible | move(20.0,0.0,0.01)=possible | move(10.0,0.0,0.02)=possible | move(100.0,0.0,0.1)=possible | end=possible | step=move(100.0,0.0,0.1),action=ended,n=1,loc=(0.0, 0.0)
+no-move begin=possible | end=possible
+zero-required begin=possible | move(100.0,0.0,0.1)=possible | end=possible

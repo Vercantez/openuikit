@@ -286,3 +286,35 @@ FRAMEWORK_FANOUT_HOST_OK module=Network dylib=libNetwork.dylib
 ```
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean` is a host-inventory token, not printed by the sealed framework gate. Swift 6.2.4 / linux compiled `libNetwork.dylib` with a clean product tree.
+
+## Depth pass 2026-09 (wave 9)
+
+Before: **2225 implemented / 241 declared / 581 deferred / 0 unavailable /
+0 not-applicable** (2466 nondeferred).
+
+This pass adds focused, synchronous runtime checks for a further 300 concrete
+fixed-width-integer witnesses present in the pinned Network graph. The checks
+exercise arithmetic and shift assignment, exact/clamping/radix/string
+conversions, signed and unsigned bounds, multiplicity, literals, deterministic
+one-element random ranges (including explicit generators), and Foundation's
+default integer formatting across all eight fixed-width integer types. These
+are real standard-library and Foundation behaviors attributed to Network by
+the immutable graph, not simulated network behavior. Existing POSIX transport,
+WebSocket, TXT, framer, path-monitor, and explicit TLS/QUIC/mDNS fail-closed
+boundaries are unchanged.
+
+After: **2525 implemented / 241 declared / 281 deferred / 0 unavailable /
+0 not-applicable** (2766 nondeferred). Implemented gain **+300**.
+
+Top-5 `implemented` evidence distribution (of 2525):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (7.6%)
+2. `NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses` — 96 (3.8%)
+3. `NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses` — 88 (3.5%)
+4. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (3.4%)
+5. `NetworkCStructInitTests.swift#testCStructRawValueInitializers` — 83 (3.3%)
+
+The required cloud-environment probe and sealed host gate pass together. The
+remaining behavioral questions are recorded in `oracle-questions.tsv`; Apple
+TLS/QUIC, Bonjour/mDNS, service discovery, and callback timing remain
+fail-closed or deferred rather than fabricated.

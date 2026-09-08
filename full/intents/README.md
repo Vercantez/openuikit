@@ -419,3 +419,39 @@ failure; and CoreLocation, EventKit, and CoreGraphics-owned signatures remain
 deferred rather than introducing framework-local substitutes. Unresolved
 questions remain Apple archive byte compatibility, callback queue/timing and
 retention contracts, Siri daemon semantics, and live car-power observation.
+
+### Wave 13 extension
+
+This continuation exhausts the 352 rows that entered the run as declared by
+adding synchronous runtime checks for every generated resolution-result class,
+the highest-priority typed factories, retained intent/response values, and the
+remaining deterministic value/fail-closed surface. Before this extension:
+**3709 implemented / 352 declared / 99 deferred / 0 unavailable / 0
+not-applicable**. After it: **4061 implemented / 0 declared / 99 deferred / 0
+unavailable / 0 not-applicable**, an implemented gain of **+352**.
+
+The resolution checks instantiate every declared concrete result metatype across
+success, confirmation-required, needs-value, not-required, and unsupported
+states, verify dynamic subclass preservation and payload retention, and directly
+exercise the priority date-components, energy, length, mass, payment-amount, and
+payment-method factories. Intent/response checks cover ride cancellation, call
+hang-up, car listing, focus sharing, and message unsending with retained values
+and user activities. Remaining service-backed behavior stays fail-closed: these
+checks do not claim Siri daemon, live observer, entitlement, UI, or Apple archive
+compatibility.
+
+Top-5 implemented evidence distribution after the extension:
+
+| Citations | Evidence |
+| ---: | --- |
+| 1178 | `IntentsSurfaceTests.swift#testEnumRawValues` |
+| 360 | `IntentsWave12Tests.swift#testGeneratedEnumEqualityAndHashingWitnesses` |
+| 186 | `IntentsWave10Tests.swift#testOptionSetAlgebraMessageAttribute` |
+| 172 | `IntentsWave13Tests.swift#testWave13ResolutionResultStateMachine` |
+| 118 | `IntentsWave13Tests.swift#testWave13FailClosedAndValueSurface` |
+
+The remaining 99 deferred rows require dependency-owned CoreLocation, EventKit,
+or CoreGraphics types, Apple overlay/runtime behavior, or explicit synthesis
+witnesses not safely representable in this lane. The unresolved behavioral
+questions remain callback queue/timing and retention, Siri/account service
+semantics, live car-power updates, and Apple keyed-archive byte compatibility.
