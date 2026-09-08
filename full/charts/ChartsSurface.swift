@@ -6,7 +6,13 @@ import Foundation
 // Additional Charts-owned types from the Xcode 26.1 public surface.
 // 3D, scroll, and vectorized plot rendering stay fail-closed.
 
-public protocol ChartSymbolShape: Shape {}
+public protocol ChartSymbolShape: Shape {
+    var perceptualUnitRect: CGRect { get }
+}
+
+public extension ChartSymbolShape {
+    var perceptualUnitRect: CGRect { CGRect(x: 0, y: 0, width: 1, height: 1) }
+}
 public protocol Chart3DContent: View {}
 public protocol Chart3DSymbolShape {}
 public protocol Chart3DSurfaceStyle: Hashable {}
@@ -14,7 +20,21 @@ public protocol ScaleRange { associatedtype VisualValue }
 public protocol ScaleDomain {}
 public protocol PositionScaleRange: ScaleRange where VisualValue == CGFloat {}
 public protocol VectorizedChartContent: ChartContent { associatedtype DataElement }
-public protocol ChartScrollTargetBehavior: ScrollTargetBehavior {}
+public protocol ChartScrollTargetBehavior: ScrollTargetBehavior {
+    func updateTarget(_ target: inout ScrollTarget, context: ChartScrollTargetBehaviorContext)
+}
+
+public extension ChartScrollTargetBehavior {
+    func updateTarget(_ target: inout ScrollTarget, context: ScrollTargetBehaviorContext) {
+        updateTarget(
+            &target,
+            context: ChartScrollTargetBehaviorContext(
+                chartProxy: ChartProxy(),
+                scrollTargetBehaviorContext: context
+            )
+        )
+    }
+}
 public struct AnyChartSymbolShape: Hashable, Sendable, View, ChartSymbolShape {
     private let shape: BasicChartSymbolShape
     public init(_ shape: BasicChartSymbolShape = .circle) { self.shape = shape }
@@ -1407,14 +1427,39 @@ public struct ValueAlignedChartScrollTargetBehavior: ChartScrollTargetBehavior {
         yMatching = nil
         self.limitBehavior = limitBehavior
     }
+
+    /// Deterministic Linux model for programmatic scroll targeting. It snaps
+    /// the target origin to configured numeric units. Gesture prediction,
+    /// paging, and Apple scroll-view limit behavior remain unavailable.
+    public func updateTarget(
+        _ target: inout ScrollTarget,
+        context: ChartScrollTargetBehaviorContext
+    ) {
+        _ = context
+        if let unitValue, unitValue > 0 {
+            target.rect.origin.x = (target.rect.origin.x / unitValue).rounded() * unitValue
+        }
+        if let yUnitValue, yUnitValue > 0 {
+            target.rect.origin.y = (target.rect.origin.y / yUnitValue).rounded() * yUnitValue
+        }
+    }
 }
 
 @dynamicMemberLookup
 public struct ChartScrollTargetBehaviorContext {
-    public init() {}
-    public subscript<T>(dynamicMember member: String) -> T? {
-        _ = member
-        return nil
+    public var chartProxy: ChartProxy
+    public var scrollTargetBehaviorContext: ScrollTargetBehaviorContext
+
+    public init(
+        chartProxy: ChartProxy = ChartProxy(),
+        scrollTargetBehaviorContext: ScrollTargetBehaviorContext = ScrollTargetBehaviorContext()
+    ) {
+        self.chartProxy = chartProxy
+        self.scrollTargetBehaviorContext = scrollTargetBehaviorContext
+    }
+
+    public subscript<T>(dynamicMember keyPath: KeyPath<ScrollTargetBehaviorContext, T>) -> T {
+        scrollTargetBehaviorContext[keyPath: keyPath]
     }
 }
 
