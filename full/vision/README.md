@@ -498,3 +498,35 @@ Vision error from validated input or remain `declared`/`deferred` with their
 existing reasons. There are no `unavailable` rows and no SwiftUI-overlay rows in
 this pinned surface requiring `not-applicable` classification. Remaining Apple-
 oracle questions are tracked in `oracle-questions.tsv`.
+
+### Wave 8 next-pass continuation
+
+The next-pass audit exhausted the remaining synchronously provable non-video
+families. It adds mutable `VNGenerateOpticalFlowRequest` output configuration
+with a validated `invalidModel` boundary, confidence-ordered recognized-object
+labels with copy preservation, Codable face/horizon values, concrete overlay
+protocol witnesses, and all six targeted-image input constructors. The targeted
+handler validates both images before its async model boundary; it never reports
+Apple optical flow or registration results on Linux.
+
+| Snapshot | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before next-pass continuation | 3285 | 241 | 58 | 0 | 0 |
+| After next-pass continuation | **3310** | **216** | **58** | **0** | **0** |
+
+The honest implemented gain is **+25**. A 300-row gain is arithmetically
+impossible from the supplied starting ledger, which contains only 299 total
+non-implemented rows, and 58 of those are Core ML/video-runtime deferred rows.
+The remaining 216 declared IDs are async `ImageProcessingRequest`,
+`ImageRequestHandler`, and `TargetedImageRequestHandler` overloads (including
+synthesized conformer occurrences). The sealed synchronous-test rule forbids
+using `Task`/`await` or blocking run-loop work to claim those identifiers, so
+they remain declared rather than receiving invented evidence.
+
+The five largest evidence anchors remain `testOverlayRevisionComparableOperators`
+(319 rows), `testValueCatalog` (270), `testOverlayPoseValueTypes` (241),
+`testOverlayFaceAndDocumentValues` (172), and
+`testHumanBodyPose3DObservationJoints` (86). The largest accounts for 9.64% of
+the 3310 implemented rows. The new focused anchors cover 5 optical-flow rows,
+7 targeted-input rows, 7 protocol/typealias rows, 4 Codable rows, and 2
+recognized-object rows.

@@ -704,6 +704,8 @@ open class VNGenerateOpticalFlowRequest: VNTargetedImageRequest {
     }
 
     public var computationAccuracy: ComputationAccuracy = .medium
+    public var outputPixelFormat: OSType = kCVPixelFormatType_32BGRA
+    public var keepNetworkOutput: Bool = false
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
         _ = context
