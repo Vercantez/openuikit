@@ -14,50 +14,29 @@ closed.
 
 ## Depth pass 2026-09 (wave 8)
 
-SDK depth for `PhotosUI` in `full/photosui/` (1,037 exact IDs). This is a
-second pass: the first-pass sources and `tests/agent/PhotosUITests.swift`
-stay in the tree and remain green.
+SDK depth for `PhotosUI` in `full/photosui/` covers all 1,037 exact IDs.
+This next-pass audit began from the supplied ledger and preserved all existing
+behavior and focused synchronous tests.
 
-Coverage this round:
+| Status | Before | After |
+| --- | ---: | ---: |
+| implemented | 259 | 259 |
+| declared | 634 | 634 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 144 | 144 |
+| **total** | **1037** | **1037** |
 
-| Status | Before (first pass) | After (bookkeeping) | After (depth) |
-| --- | ---: | ---: | ---: |
-| implemented | 257 | 238 | 259 |
-| declared | 780 | 655 | 634 |
-| deferred | 0 | 0 | 0 |
-| unavailable | 0 | 0 | 0 |
-| not-applicable | 0 | 144 | 144 |
-| **total** | **1037** | **1037** | **1037** |
+All 634 remaining declared IDs are precise `s:7SwiftUI4ViewPAAE…` synthesized
+`View` members on `_PhotosUI_SwiftUI.PhotosPicker`; every non-overlay identifier
+is already implemented. This exhausts the remaining non-overlay families, so
+the honest implemented gain is 0. These inherited declarations remain in the
+ledger because the sealed medium-full gate requires 519 implemented-or-declared
+IDs, while only 259 IDs are non-overlay. They are not claimed as implemented
+behavior. This seed/gate conflict remains an unresolved central-review question;
+relabeling them as implemented would fabricate PhotosUI-owned behavior.
 
-259 + 634 = 893 nondeferred (floor 519). Implemented gain vs first pass:
-+2 (257 → 259). The bookkeeping pass relabeled 144 SwiftUI overlay
-re-exports (`s:7SwiftUI4ViewP07_Photos…` View modifiers plus synthesized
-`accessibility*` witnesses on `PhotosPicker`) to `not-applicable` with
-the note `SwiftUI cross-import overlay; owned by the SwiftUI lane`; those
-stay `not-applicable` and are never `implemented`. Remaining generic
-`s:7SwiftUI4ViewPAAE*` identity modifiers stay `declared`.
-
-This depth pass adds per-identifier synchronous tests and host storage:
-
-- `PHPickerConfiguration` properties (selectionLimit, filter, mode,
-  preferredAssetRepresentationMode, selection, preselectedAssetIdentifiers,
-  disabledCapabilities, edgesWithoutContentMargins) and `Update`.
-- `PHPickerFilter` catalog members and `any`/`all`/`not` against
-  `PHPickerHostAsset` attributes.
-- `PhotosPicker` inits store maxSelectionCount / filter / encoding /
-  library; `photosPickerStyle` / accessory / disabledCapabilities
-  copy-and-set; `photosPicker(isPresented:)` overlays store presentation
-  config. `PhotosPickerItem.loadTransferable(type:)` is **throws/inline**
-  on the isolated host (Apple's USR is `async throws`; sealed runner
-  cannot await).
-- `PHLivePhoto` Transferable overlay methods throw
-  `PhotosUIUnavailable.linuxHost` synchronously.
-- `PHContentEditingController` host stub: `canHandle` by format,
-  start/finish/cancel.
-- `PHLivePhotoView` records last playback style without invoking the
-  delegate.
-
-Top-5 implemented evidence (of 259 rows; 40% cap = 103):
+Top-5 implemented evidence distribution (259 rows; 40% cap = 103 rows):
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
@@ -67,22 +46,11 @@ Top-5 implemented evidence (of 259 rows; 40% cap = 103):
 | 17 | 6.6% | `PhotosUITests.swift#testPhotosPickerStyleAndBehavior` (table-driven values) |
 | 17 | 6.6% | `PhotosUITests.swift#testPickerConfigurationNestedEnums` (table-driven enum) |
 
-No non-enum/OptionSet test exceeds 40% of implemented rows. Catalog
-filters each cite a dedicated `PHPickerFilterTests.swift#testPickerFilter*`
-asset-attribute test.
-
-Sealed gate: `bash full/photosui/tests/acceptance/test_host.sh` ended
-`FRAMEWORK_FANOUT_HOST_OK` on this revision. `tests/test_photosui_host.sh`
-is Darwin/IceCubes-only (`mktemp /private/tmp/...` fails on Linux).
-
-Environment: `swiftc` reports Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
-`.cursor/verify-cloud-environment.sh` did not emit
-`CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios` is
-absent on this VM. The sealed gate compiles with a clean product tree
-(`products=clean`). Active Cursor Build observed on this run was
-`bld-20260905-9aa65d65-b87d-46a7-b154-e2f1440dbba3` (campaign expected
-`bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). Starting commit
-`dd4c8bca7e8735289928bbd1abd44f4b35815308` matched.
+No test supplies more than 40% of implemented evidence. Apple-service, Photos
+library, picker chrome, and Live Photo playback behavior remains explicitly
+fail-closed as documented below; no unavailable row is used as a substitute.
+The verified environment emitted the required Swift 6.2.4 Linux scratch-corpus
+marker at starting commit `08da4b0127920d2a794d74490b5a0e8faed63584`.
 
 ## What is real
 
