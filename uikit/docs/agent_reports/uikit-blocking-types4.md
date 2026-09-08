@@ -50,6 +50,13 @@ cover regular-width containers at 700 pt height, including widths beyond
 the physical screen; they do not claim additional physical devices. The
 other families' remaining items are unchanged.
 
+One pre-existing double-column state issue remains outside this item:
+`hide(.primary)` writes `.secondaryOnly` through the preference setter,
+which resets the preferred behavior to tile. The carried earlier
+`splitviewprobe/ios26.1-ipad.txt` rows 133/136 retain preferred overlay
+(behavior 1/2 while hidden, 2/2 after showing). This change does not claim
+that hide/show sequence is fixed.
+
 ## Validation
 
 - **19 tests pass**: the new 805-observation replay plus all 18 existing
@@ -62,4 +69,20 @@ other families' remaining items are unchanged.
 - All 15 real-app PNGs and all 14 scorable values are identical. The browser
   golden is absent in both runs. Hackers feed remains 98.235, Ledger 99.610.
 - Linux `swift:6.2-noble` release `openrender` passes (219.30 s).
-- Required merge-check proof is recorded after completion.
+- Required proof: `CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh
+  agent/uikit-blocking-types4`, run from the repository root on `ca456bba`.
+  It printed **`checks passed (CHECK_ONLY)`**, with **zero REFUSED lines**.
+  The expected cleanup exit was 128 after that success message.
+- Merged-tree macOS release, Catalyst **124/124**, full test-bundle build,
+  all real-app floors, Foundation-hidden guest compile
+  (`openuikit=146 opencoregraphics=12`, 76 s), Linux release (164.87 s),
+  Linux `ConformanceApps` and `OpenUIKitTests` target builds all passed.
+- Conformance board: **707 frames, zero lower scores**; all **487 previously
+  passing frames** held their bars. Improvements already present in main
+  are not attributed to this split-view change.
+
+Current main was integrated to retain its Route (a) and Eidolon fidelity
+rows. The only merge conflict was the shared table; upstream pin values
+were carried unchanged. The net diff against main is entirely under `uikit/`.
+The final follow-up commit records this proof and remaining limits only;
+source, tests and probe files are unchanged from the validated commit.
