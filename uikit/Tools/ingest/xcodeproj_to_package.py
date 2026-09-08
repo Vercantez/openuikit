@@ -16,9 +16,15 @@ not XML), picks the application target, and emits:
     localization, .json as bundled data
 
 It stops with a named gap list for CocoaPods, Carthage, Objective-C
-sources, and mixed Swift+ObjC targets. Route (b) has an Objective-C runtime,
-but SwiftPM rejects a mixed-language target; a separate Clang target or
-driver and the required Objective-C framework interfaces are still needed.
+sources, and mixed Swift+ObjC targets. With --allow-gaps a mixed target is
+emitted in Xcode's staged order on route (b): a Swift library target that
+reads the app's ObjC headers through its bridging header, a Clang target that
+depends on it (so SwiftPM has written `<App>-Swift.h` before any .m file
+compiles), and a `<App>Main` executable for main.m. `<UIKit/UIKit.h>` is
+OpenUIKit's compiler-generated header plus OpenUIKitObjCSupport. What that
+does NOT give is Objective-C subclasses of OpenUIKit classes: the generated
+header marks them objc_subclassing_restricted, and lifting the attribute
+crashes on the first Swift vtable read (simplenote-launch3, measured).
 Missing Apple frameworks and SPM products are reported, not silently
 dropped.
 
@@ -371,8 +377,56 @@ DARWIN_SOURCE_PRODUCTS = {
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
     "AutomatticTracksModelObjC",
+    # Eidolon 44486ed: ten host modules compile in Swift 4. RxCocoa selects
+    # AppKit on route (b); a product is not proof of its inactive UIKit APIs.
+    "RxSwift", "RxCocoa", "Moya", "Action", "RxOptional", "NSObject_Rx",
+    "SwiftyJSON", "Result", "Alamofire", "Reachability",
+    "Keys", "ARAnalytics", "Stripe", "EidolonLaunchCompat",
 }
 PORTED_PRODUCTS.update({name: name for name in DARWIN_SOURCE_PRODUCTS})
+
+# Route (b) mixed targets (simplenote-launch3). SwiftPM emits
+# `<Target>-Swift.h` plus a module map under `.build/<triple>/<cfg>/
+# <Target>.build/include/` for every Swift target that a Clang target depends
+# on (MEASURED: OpenUIKit.build/include/OpenUIKit-Swift.h, 134 interfaces,
+# after `swift build --target OpenUIKit`). That header IS the Objective-C
+# UIKit on route (b); OpenUIKitObjCSupport carries the C enums, structs,
+# protocols and typed strings the generated header cannot express. The
+# ordering Xcode gives a mixed target (Swift first, then the .m files that
+# import the generated header) is therefore an ordinary SwiftPM dependency:
+# the Clang target depends on the Swift target.
+OBJC_SUPPORT_PRODUCT = "OpenUIKitObjCSupport"
+# `@objc(selector)` twins of OpenUIKit members (Sources/OpenUIKitObjCBridge);
+# SwiftPM emits its generated header the same way. ObjC side only: the Swift
+# half already has the members natively.
+OBJC_BRIDGE_PRODUCT = "OpenUIKitObjCBridge"
+OBJC_DARWIN_PRODUCTS = {"Simperium", "AutomatticTracksModelObjC"}
+# The app's Swift half reads the OpenUIKit Clang module through the bridging
+# header, and OpenUIKit imports AppKit on macOS (FoundationTypes.swift:63), so
+# these six OpenUIKit classes collide with AppKit's: `'NSLayoutConstraint' has
+# different definitions in different modules` (MEASURED probe1). Renaming the
+# identifiers for the Swift-side parse keeps the runtime name, and Swift maps
+# the interface back to the OpenUIKit class (MEASURED probe1: an ObjC
+# subclass of the module's UITextView is assignable to OpenUIKit.UITextView;
+# a textual copy of the same header is NOT mapped).
+SWIFT_SIDE_NS_RENAMES = [
+    "NSAdaptiveImageGlyph", "NSLayoutConstraint", "NSLayoutManager",
+    "NSTextAttachment", "NSTextAttachmentViewProvider", "NSTextContainer",
+]
+# Where SwiftPM writes OpenUIKit's generated header, relative to the generated
+# package root (MEASURED: swiftc runs with the package root as cwd, so a
+# relative -Xcc -I resolves). Missing directories are ignored by clang.
+GENERATED_HEADER_DIRS = [
+    f".build/{triple}/{cfg}/OpenUIKit.build/include"
+    for cfg in ("debug", "release")
+    for triple in ("arm64-apple-macosx", "x86_64-apple-macosx")
+]
+# OpenUIKit names these modules differently per platform (Package.swift:155):
+# the literal Apple names on Linux, OpenUIKit* on Darwin. SwiftPM validates a
+# product name even under a platform condition (MEASURED: `product 'libkern'
+# required by package ... not found` on macOS), so the generated manifest
+# carries the same #if.
+PLATFORM_NAMED_PRODUCTS = [("libkern", "OpenUIKitLibkern"), ("StoreKit", "OpenUIKitStoreKit")]
 
 # Toolchain modules that exist on Linux Swift without an OpenUIKit product.
 TOOLCHAIN_MODULES = {
@@ -1466,6 +1520,26 @@ def build_manifest(
                 header_sources.append(expanded)
                 header_sources.sort()
     swift_header_consumers: list[str] = []
+    # Eidolon 44486ed BridgingHeader.h imports sibling PodsBridgingHeader.h,
+    # which is not a PBX source. Follow existing local quoted includes rather
+    # than emitting a library with a header we silently failed to copy.
+    pending_headers = list(header_sources)
+    while pending_headers:
+        header = graph.source_root / pending_headers.pop()
+        if not header.is_file():
+            continue
+        for name in re.findall(r'^\s*#\s*(?:import|include)\s*"([^"]+)"',
+                               header.read_text(encoding="utf-8", errors="replace"),
+                               flags=re.MULTILINE):
+            candidate = (header.parent / name).resolve()
+            if (not candidate.is_file() or candidate.suffix.lower() not in HEADER_EXT
+                    or not candidate.is_relative_to(graph.source_root.resolve())):
+                continue
+            rel = candidate.relative_to(graph.source_root.resolve()).as_posix()
+            if rel not in header_sources:
+                header_sources.append(rel)
+                pending_headers.append(rel)
+    header_sources.sort()
     for path in objc_sources + c_sources + header_sources:
         source = graph.source_root / path
         if source.is_file():
@@ -1476,6 +1550,26 @@ def build_manifest(
             for match in re.finditer(r"#\s*import\s*[<\"]([^>\"]+-Swift\.h)[>\"]", text):
                 if match.group(1) not in swift_header_consumers:
                     swift_header_consumers.append(match.group(1))
+
+    # Simplenote 9b1bb17: Simplenote/Credentials/SPCredentials.swift is written
+    # by a build phase from ~/.configure secrets; the repo ships the public
+    # Simplenote/SPCredentials-demo.swift instead. A missing source whose
+    # `<stem>-demo.swift` sibling exists in its directory or the parent is
+    # emitted under the expected path from that demo. Real credentials are
+    # never read.
+    demo_substitutes: list[dict[str, str]] = []
+    for missing in ordered_swift:
+        if (graph.source_root / missing).is_file():
+            continue
+        stem = PurePosixPath(missing).stem
+        directory = posixpath.dirname(missing)
+        candidates = [posixpath.join(directory, f"{stem}-demo.swift")]
+        if directory:
+            candidates.append(posixpath.join(posixpath.dirname(directory), f"{stem}-demo.swift"))
+        for candidate in candidates:
+            if (graph.source_root / candidate).is_file():
+                demo_substitutes.append({"missing": missing, "demo": candidate})
+                break
 
     gaps = detect_repo_gaps(graph.source_root, inputs["sources"])
     local_names: set[str] = set()
@@ -1572,11 +1666,13 @@ def build_manifest(
         # Simplenote 9b1bb17: 229 PBX references, 228 files; SPCredentials.swift
         # is generated and absent. Never call the PBX count a compile denominator.
         "missing_swift_sources": [p for p in ordered_swift if not (graph.source_root / p).is_file()],
+        "demo_substitutes": demo_substitutes,
         "other_sources": other_sources,
         "objc_sources": objc_sources,
         "c_sources": c_sources,
         "header_sources": header_sources,
         "bridging_header": bridging_header,
+        "swift_language_version": settings.get("SWIFT_VERSION"),
         "swift_header_consumers": swift_header_consumers,
         "resources": resources,
         "other_resources": other_resources,
@@ -1613,6 +1709,7 @@ def emit_package_swift(
     *,
     openuikit: Path,
     target_name: str,
+    library: bool = False,
 ) -> str:
     rel = os.fspath(openuikit)
     products = [
@@ -1632,7 +1729,6 @@ def emit_package_swift(
         '                .product(name: "SnapKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Sentry", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Fuzi", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-        '                .product(name: "libkern", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "WebKit", package: "OpenUIKit")',
         '                .product(name: "FocusAppServices", package: "OpenUIKit")',
         '                .product(name: "UIHelpers", package: "OpenUIKit")',
@@ -1642,8 +1738,10 @@ def emit_package_swift(
         '                .product(name: "PassKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "Network", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
-        '                .product(name: "StoreKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
     ]
+    # libkern / StoreKit are emitted through PLATFORM_NAMED_PRODUCTS below
+    # (eidolon-launch and simplenote-launch3 both measured that SwiftPM
+    # resolves a product name before evaluating its platform condition).
     demanded = {r["name"] for r in manifest["spm"] + manifest["imports"]}
     for name in sorted(DARWIN_SOURCE_PRODUCTS & demanded):
         products.append(
@@ -1659,7 +1757,7 @@ def emit_package_swift(
     # swift:6.2-noble: "library product 'podcasts' should not contain
     # executable targets"). Application targets are always emitted as
     # executableTarget so @main / main.swift apps load the manifest.
-    executable = manifest.get("target", {}).get("product_type") == APP_PRODUCT_TYPE
+    executable = not library and manifest.get("target", {}).get("product_type") == APP_PRODUCT_TYPE
     product_decl = (
         f".executable(name: {_swift_string(target_name)}, targets: [{_swift_string(target_name)}])"
         if executable
@@ -1668,29 +1766,146 @@ def emit_package_swift(
     target_kind = "executableTarget" if executable else "target"
     mixed = bool(manifest.get("objc_sources") or manifest.get("c_sources"))
     clang_name = f"{target_name}ObjC"
+    main_name = f"{target_name}Main"
+    has_main = mixed and any(
+        posixpath.basename(p) == "main.m" for p in manifest.get("objc_sources", [])
+    )
+    swift_flags = [
+        '"-default-isolation", "MainActor"',
+        '"-disable-availability-checking"',
+    ]
+    clang_target = ""
+    target_deps = product_deps
+    extra_products = ""
     if mixed:
+        # Route (b) staged order (Xcode's): the Swift target compiles first
+        # against the app's ObjC headers through the bridging header, emits
+        # `<App>-Swift.h`, then the Clang target (which depends on it) compiles
+        # the .m files. The Swift target must NOT depend on the Clang target;
+        # its references to ObjC classes resolve at the final link.
+        header_dirs = sorted({posixpath.dirname(h) for h in manifest.get("header_sources", [])})
+        xcc: list[str] = []
+        for directory in GENERATED_HEADER_DIRS:
+            xcc += ["-Xcc", f"-I{directory}"]
+        for directory in header_dirs:
+            xcc += ["-Xcc", f"-ISources/{clang_name}/include/{directory}" if directory else f"-ISources/{clang_name}/include"]
+        xcc += ["-Xcc", f"-ISources/{clang_name}/include"]
+        for name in SWIFT_SIDE_NS_RENAMES:
+            xcc += ["-Xcc", f"-D{name}=OUK_{name}"]
+        bridging = manifest.get("bridging_header")
+        if bridging:
+            swift_flags.append(f'"-import-objc-header", "Sources/{clang_name}/include/{bridging}"')
+        swift_flags.extend(
+            f'"{xcc[i]}", "{xcc[i + 1]}"' for i in range(0, len(xcc), 2)
+        )
+        # The bridging header reaches <UIKit/UIKit.h>, which imports the
+        # support header; depending on the product gives the Swift target its
+        # include path and module map (MEASURED: 'UIKitObjCSupport.h' file not
+        # found in the bridging-header PCH without it).
+        target_deps = product_deps + (
+            f',\n                .product(name: "{OBJC_SUPPORT_PRODUCT}", package: "OpenUIKit", '
+            'condition: .when(platforms: [.macOS]))'
+        )
+        objc_products = [
+            f'                .product(name: "{OBJC_SUPPORT_PRODUCT}", package: "OpenUIKit", condition: .when(platforms: [.macOS]))',
+            f'                .product(name: "{OBJC_BRIDGE_PRODUCT}", package: "OpenUIKit", condition: .when(platforms: [.macOS]))',
+        ]
+        # AutomatticTracks' ObjC surface is its own Clang target (pass 2);
+        # the app demands the Swift product name.
+        demanded_objc = set(demanded)
+        if "AutomatticTracks" in demanded:
+            demanded_objc.add("AutomatticTracksModelObjC")
+        for name in sorted(OBJC_DARWIN_PRODUCTS & demanded_objc):
+            objc_products.append(
+                f'                .product(name: "{name}", package: "OpenUIKit", condition: .when(platforms: [.macOS]))'
+            )
+        search_paths = [
+            f'                .headerSearchPath("include/{d}")' if d else '                .headerSearchPath("include")'
+            for d in header_dirs
+        ]
+        search_paths += [
+            f'                .headerSearchPath("{d}")'
+            for d in sorted({posixpath.dirname(p) for p in manifest.get("objc_sources", []) + manifest.get("c_sources", [])})
+            if d
+        ]
+        search_paths.append('                .headerSearchPath("include/UIKit")')
+        # UIKitObjCSupport.h carries an AppKit-colliding C struct for the
+        # Objective-C side only (see the header).
+        search_paths.append('                .define("OPENUIKIT_OBJC_SIDE", to: "1")')
+        objc_product_lines = ",\n".join(objc_products)
+        search_lines = ",\n".join(search_paths)
         clang_target = f'''        .target(
             name: {_swift_string(clang_name)},
-            dependencies: [.product(name: "OpenUIKit", package: "OpenUIKit")],
+            dependencies: [
+                {_swift_string(target_name)},
+                .product(name: "OpenUIKit", package: "OpenUIKit"),
+{objc_product_lines},
+            ],
             path: "Sources/{clang_name}",
-            publicHeadersPath: "include"
+            publicHeadersPath: "include",
+            cSettings: [
+{search_lines},
+            ]
         ),
 '''
-        target_deps = product_deps + f',\n                "{clang_name}"'
-    else:
-        clang_target = ""
-        target_deps = product_deps
+        if has_main:
+            clang_target += f'''        .executableTarget(
+            name: {_swift_string(main_name)},
+            dependencies: [{_swift_string(clang_name)}, {_swift_string(target_name)}],
+            path: "Sources/{main_name}",
+            cSettings: [
+                .headerSearchPath("../{clang_name}/include"),
+{search_lines.replace('.headerSearchPath("include', '.headerSearchPath("../' + clang_name + '/include')},
+            ]
+        ),
+'''
+            extra_products = f',\n        .executable(name: {_swift_string(main_name)}, targets: [{_swift_string(main_name)}])'
+        # A mixed app's product is the library pair; main.m is its own executable.
+        product_decl = (
+            f'.library(name: {_swift_string(target_name)}, targets: [{_swift_string(target_name)}, {_swift_string(clang_name)}])'
+        )
+        target_kind = "target"
+    swift_flag_lines = ",\n".join(f"                    {flag}" for flag in swift_flags)
+    linux_named = ",\n".join(
+        f'    .product(name: "{linux}", package: "OpenUIKit")' for linux, _ in PLATFORM_NAMED_PRODUCTS
+    )
+    darwin_named = ",\n".join(
+        f'    .product(name: "{darwin}", package: "OpenUIKit")' for _, darwin in PLATFORM_NAMED_PRODUCTS
+    )
+    darwin_aliases = ", ".join(
+        f'"-module-alias", "{linux}={darwin}"' for linux, darwin in PLATFORM_NAMED_PRODUCTS
+    )
+    # Swift 4.0 is a source rule at Eidolon's pin: the same native UIKit
+    # UIApplicationLaunchOptionsKey probe fails in Swift 5 and passes in 4.
+    language = manifest.get("swift_language_version")
+    language = {"4.0": "4", "5.0": "5", "6.0": "6"}.get(language, language)
+    language_setting = (f',\n    swiftLanguageVersions: [.version({_swift_string(language)})]'
+                        if language in {"4", "4.2", "5", "6"} else "")
     return f"""// swift-tools-version:5.9
 // Generated by Tools/ingest/xcodeproj_to_package.py — do not edit by hand.
 // Source project: {manifest["project"]}
 // Target: {manifest["target"]["name"]}
 import PackageDescription
 
+// OpenUIKit names these modules per platform (its Package.swift:155); a
+// product name is validated even under a platform condition.
+#if os(Linux)
+let platformNamedProducts: [Target.Dependency] = [
+{linux_named},
+]
+let platformModuleAliases: [String] = []
+#else
+let platformNamedProducts: [Target.Dependency] = [
+{darwin_named},
+]
+let platformModuleAliases: [String] = [{darwin_aliases}]
+#endif
+
 let package = Package(
     name: {_swift_string(target_name)},
     platforms: [.macOS(.v11)],
     products: [
-        {product_decl},
+        {product_decl}{extra_products},
     ],
     dependencies: [
         .package(name: "OpenUIKit", path: {_swift_string(rel)}),
@@ -1700,15 +1915,14 @@ let package = Package(
             name: {_swift_string(target_name)},
             dependencies: [
 {target_deps},
-            ]{resources_block},
+            ] + platformNamedProducts{resources_block},
             swiftSettings: [
                 .unsafeFlags([
-                    "-default-isolation", "MainActor",
-                    "-disable-availability-checking",
-                ]),
+{swift_flag_lines},
+                ] + platformModuleAliases),
             ]
         ),
-    ]
+    ]{language_setting}
 )
 """
 
@@ -1761,9 +1975,12 @@ def emit_tree(
     manifest: dict[str, Any],
     out_dir: Path,
     openuikit: Path,
+    *,
+    module_name: str | None = None,
+    library: bool = False,
 ) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    target_name = re.sub(r"[^A-Za-z0-9_]", "_", manifest["target"]["name"])
+    target_name = re.sub(r"[^A-Za-z0-9_]", "_", module_name or manifest["target"]["name"])
     if not target_name or target_name[0].isdigit():
         target_name = "App_" + target_name
     src_root = out_dir / "Sources" / target_name
@@ -1788,13 +2005,26 @@ def emit_tree(
             _copy_swift_source_with_libkern(src, dest)
         else:
             _copy_file(src, dest)
+    # A generated source that is absent but has a public `-demo` sibling is
+    # emitted from the demo under the expected path (Simplenote SPCredentials).
+    for row in manifest.get("demo_substitutes", []):
+        _copy_swift_source_with_libkern(graph.source_root / row["demo"], src_root / row["missing"])
 
+    main_root = out_dir / "Sources" / f"{target_name}Main"
+    if main_root.exists():
+        shutil.rmtree(main_root)
     if manifest.get("objc_sources") or manifest.get("c_sources"):
         include_root = objc_root / "include"
         include_root.mkdir(parents=True, exist_ok=True)
         for rel in manifest.get("objc_sources", []) + manifest.get("c_sources", []):
             src = graph.source_root / rel
-            if src.is_file():
+            if not src.is_file():
+                continue
+            if posixpath.basename(rel) == "main.m":
+                # UIApplicationMain lives in its own executable target so the
+                # library pair can be linked by a harness (Focus recipe).
+                _copy_file(src, main_root / "main.m")
+            else:
                 _copy_file(src, objc_root / rel)
         for rel in manifest.get("header_sources", []):
             src = graph.source_root / rel
@@ -1807,11 +2037,27 @@ def emit_tree(
         (include_root / f"{target_name}Umbrella.h").write_text(
             "\n".join(lines) + "\n", encoding="utf-8"
         )
-        for name in manifest.get("swift_header_consumers", []):
-            (include_root / posixpath.basename(name)).write_text(
-                "/* Generated compatibility header; Swift header generation is a measured wall. */\n"
-                "#import <Foundation/Foundation.h>\n", encoding="utf-8"
-            )
+        # `<UIKit/UIKit.h>` on route (b): OpenUIKit's compiler-generated header
+        # (SwiftPM hands the Clang target `-I .build/.../OpenUIKit.build/include`
+        # because it depends on OpenUIKit) plus the hand declarations. The
+        # app's own `<App>-Swift.h` is generated by SwiftPM the same way when
+        # the Swift target builds; no placeholder is written.
+        (include_root / "UIKit").mkdir(parents=True, exist_ok=True)
+        (include_root / "UIKit" / "UIKit.h").write_text(
+            "/* Generated route-(b) UIKit umbrella (Tools/ingest/xcodeproj_to_package.py).\n"
+            " * OpenUIKit-Swift.h is emitted by SwiftPM for the OpenUIKit target; the\n"
+            " * support header carries the enums/structs/protocols it cannot. */\n"
+            "#ifndef OPENUIKIT_ROUTE_B_UIKIT_H\n"
+            "#define OPENUIKIT_ROUTE_B_UIKIT_H\n"
+            "#import <Foundation/Foundation.h>\n"
+            '#import "OpenUIKit-Swift.h"\n'
+            '#import "UIKitObjCSupport.h"\n'
+            "#if !__swift__\n"
+            '#import "OpenUIKitObjCBridge-Swift.h"\n'
+            "#endif\n"
+            "#endif\n",
+            encoding="utf-8",
+        )
 
     mapping_notes = {
         "xcassets": "OpenUIKit named-color/image reader (docs/NAMED_ASSETS.md): "
@@ -1870,7 +2116,7 @@ def emit_tree(
     # Package.swift path to OpenUIKit is relative to the generated package.
     rel_openuikit = os.path.relpath(openuikit.resolve(), start=out_dir.resolve())
     package_text = emit_package_swift(
-        manifest, openuikit=Path(rel_openuikit), target_name=target_name
+        manifest, openuikit=Path(rel_openuikit), target_name=target_name, library=library
     )
     (out_dir / "Package.swift").write_text(package_text, encoding="utf-8")
 
@@ -1878,6 +2124,7 @@ def emit_tree(
     manifest_out["generated"] = {
         "package_swift": "Package.swift",
         "target_name": target_name,
+        "library": library,
         "openuikit": rel_openuikit,
         "resource_map": resource_map,
         "ingest_info": "Sources/" + target_name + "/Resources/ingest-info.json",
@@ -1958,6 +2205,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("project", type=Path, help=".xcodeproj, project.pbxproj, or an app checkout")
     parser.add_argument("--target", help="PBX native target name (default: the application target)")
+    parser.add_argument("--library", action="store_true", help="emit a library for a separate launch harness; preserves upstream entry-point source")
+    parser.add_argument("--module-name", help="generated module identity (PBX target selection is unchanged)")
     parser.add_argument("--configuration", help="XCBuildConfiguration name (default: FocusDebug/Debug/list default)")
     parser.add_argument("--out", type=Path, help="write Package.swift + sources + source-manifest.json here")
     parser.add_argument(
@@ -2001,7 +2250,8 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
-        emit_tree(graph, manifest, args.out, args.openuikit.resolve())
+        emit_tree(graph, manifest, args.out, args.openuikit.resolve(),
+                  module_name=args.module_name, library=args.library)
         print(f"wrote {args.out / 'Package.swift'}", file=sys.stderr)
         print(f"wrote {args.out / 'source-manifest.json'}", file=sys.stderr)
 

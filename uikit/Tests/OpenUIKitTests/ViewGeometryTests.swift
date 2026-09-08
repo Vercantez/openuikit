@@ -35,6 +35,35 @@ private final class ViewHierarchyLifecycleProbe: UIView {
 #endif
 final class ViewGeometryTests: XCTestCase {
 
+    func testMeasuredSuperviewOwnershipAllowsButtonDeallocation() {
+        // EidolonTap: real iOS 26.1 and Catalyst both release the bare button
+        // and parent, retain an attached child, then release a removed child.
+        weak var weakButton: UIButton?
+        var button: UIButton? = UIButton(type: .custom)
+        weakButton = button
+        button = nil
+        XCTAssertNil(weakButton)
+
+        weak var weakParent: UIView?
+        var parent: UIView? = UIView()
+        weakParent = parent
+        let retainedChild = UIView()
+        parent?.addSubview(retainedChild)
+        parent = nil
+        XCTAssertNil(weakParent)
+        XCTAssertNil(retainedChild.superview)
+
+        let owner = UIView()
+        weak var weakChild: UIView?
+        var child: UIView? = UIView()
+        weakChild = child
+        owner.addSubview(child!)
+        child = nil
+        XCTAssertNotNil(weakChild)
+        weakChild?.removeFromSuperview()
+        XCTAssertNil(weakChild)
+    }
+
     func testHierarchyCallbacksDeliverRealWindowTransitionsToWholeSubtree() {
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 200, height: 100))
         let left = UIView()

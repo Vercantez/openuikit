@@ -64,6 +64,23 @@ public enum UICollectionViewScrollDirection: Sendable {
 open class UICollectionViewFlowLayout: UICollectionViewLayout {
     public typealias ScrollDirection = UICollectionViewScrollDirection
 
+    open override class var invalidationContextClass: AnyClass {
+        UICollectionViewFlowLayoutInvalidationContext.self
+    }
+
+    open override func invalidationContext(forBoundsChange newBounds: CGRect)
+        -> UICollectionViewLayoutInvalidationContext {
+        let context = super.invalidationContext(forBoundsChange: newBounds)
+        if let flow = context as? UICollectionViewFlowLayoutInvalidationContext {
+            // collectionblockingprobe flow.bounds.{same,origin,width}, iOS
+            // 26.1 iPhone 16: attributes false/true/true; metrics always false.
+            flow.invalidateFlowLayoutAttributes = collectionView?.bounds != newBounds
+            flow.invalidateFlowLayoutDelegateMetrics = false
+        }
+        return context
+    }
+
+
     // MARK: Configuration (UIKit defaults)
 
     public var itemSize = CGSize(width: 50, height: 50) {

@@ -267,6 +267,26 @@ extern int      glibc_getegid(void)                          GLIBCSYM(getegid);
 extern int     glibc_fcntl(int, int, long)                  GLIBCSYM(fcntl);
 extern int     glibc_ioctl(int, unsigned long, void *)      GLIBCSYM(ioctl);
 extern int     glibc_getsockopt(int, int, int, void *, unsigned *) GLIBCSYM(getsockopt);
+/* BSD sockets (2026-09-07; consumer: the Ledger conformance app's loopback
+ * HTTP server -- socket/setsockopt/bind/listen/getsockname/accept). Fixed
+ * arity throughout; sockaddr shapes are translated in posix.c, never
+ * forwarded (Darwin's sin_len/u8 family vs Linux's u16 family). */
+extern int     glibc_socket(int, int, int)                  GLIBCSYM(socket);
+extern int     glibc_socketpair(int, int, int, int *)       GLIBCSYM(socketpair);
+extern int     glibc_bind(int, const void *, unsigned)      GLIBCSYM(bind);
+extern int     glibc_listen(int, int)                       GLIBCSYM(listen);
+extern int     glibc_accept(int, void *, unsigned *)        GLIBCSYM(accept);
+extern int     glibc_connect(int, const void *, unsigned)   GLIBCSYM(connect);
+extern int     glibc_setsockopt(int, int, int, const void *, unsigned) GLIBCSYM(setsockopt);
+extern int     glibc_getsockname(int, void *, unsigned *)   GLIBCSYM(getsockname);
+extern int     glibc_getpeername(int, void *, unsigned *)   GLIBCSYM(getpeername);
+extern int     glibc_shutdown(int, int)                     GLIBCSYM(shutdown);
+extern long    glibc_send(int, const void *, size_t, int)   GLIBCSYM(send);
+extern long    glibc_recv(int, void *, size_t, int)         GLIBCSYM(recv);
+extern long    glibc_sendto(int, const void *, size_t, int, const void *, unsigned) GLIBCSYM(sendto);
+extern long    glibc_recvfrom(int, void *, size_t, int, void *, unsigned *)        GLIBCSYM(recvfrom);
+extern int     glibc_inet_pton(int, const char *, void *)   GLIBCSYM(inet_pton);
+extern const char *glibc_inet_ntop(int, const void *, char *, unsigned) GLIBCSYM(inet_ntop);
 extern int     glibc_madvise(void *, size_t, int)           GLIBCSYM(madvise);
 extern long    glibc_pwrite(int, const void *, size_t, long) GLIBCSYM(pwrite);
 extern int     glibc_pthread_attr_init(void *)              GLIBCSYM(pthread_attr_init);

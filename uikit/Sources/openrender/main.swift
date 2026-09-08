@@ -6,6 +6,7 @@
 
 import Foundation
 import OpenUIKit
+import RealAppProbe
 
 @MainActor
 func renderScene(file: String, outdir: String) throws {
@@ -97,6 +98,7 @@ try MainActor.assumeIsolated {
         print("usage: openrender render <outdir> <scene.json>...")
         print("       openrender scrolltrace <oracle-trace.json> <out.json>")
         print("       openrender realapp <outdir> [assets-dir]")
+        print("       openrender eidolon-launch <outdir>")
         exit(1)
     }
     switch args[1] {
@@ -111,6 +113,17 @@ try MainActor.assumeIsolated {
         } catch {
             print("FAIL \(args[2]): \(error)")
             exit(1)
+        }
+    case "eidolon-launch":
+        // No directory or PNG is created for an unavailable launch. The real-app
+        // comparison denominator remains the existing set of rendered screens.
+        do {
+            try EidolonLaunchHarness.withLaunchPreflight {
+                throw EidolonLaunchHarnessError.appModuleUnavailable
+            }
+        } catch {
+            print("EIDOLON_UNAVAILABLE score=N/A: \(error)")
+            exit(2)
         }
     case "realapp":
         // The real-app harness (docs/REAL_APP_TEST.md): unmodified pocket-casts

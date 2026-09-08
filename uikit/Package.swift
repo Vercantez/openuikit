@@ -466,7 +466,7 @@ let coreTargets: [Target] = [
             swiftSettings: [.unsafeFlags(["-disable-availability-checking"])]),
     .target(name: "RealAppProbe",
             dependencies: [
-                "OpenUIKit", "UIKit",
+                "OpenUIKit", "UIKit", "EidolonLaunchCompat",
                 "Glean", "Intents", "IntentsUI",
                 "Onboarding", "Licenses", "DesignSystem",
                 "Domain", "Shared",
@@ -582,7 +582,7 @@ let conformanceTargets: [Target] = [
     // scripts/conformance_probe_sim.sh), not a bundled resource.
     .target(name: "ConformanceApps",
             dependencies: ["OpenUIKit", "UIKit", "SafariServices", "MessageUI", "LinkPresentation"],
-            exclude: conformanceScriptExcludes,
+            exclude: conformanceScriptExcludes + ["EidolonTap"],
             swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
     // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
     // May use Foundation (it is a tool, not the library).
@@ -886,13 +886,26 @@ let simplenoteTargets: [Target] = []
 let simplenoteProducts: [Product] = [
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
-    "AutomatticTracksModelObjC",
+    "AutomatticTracksModelObjC", "OpenUIKitObjCSupport", "OpenUIKitObjCBridge",
 ].map { .library(name: $0, targets: [$0]) }
 let simplenoteSettings: [SwiftSetting] = [
     .unsafeFlags(["-default-isolation", "MainActor", "-disable-availability-checking"]),
 ]
 let simplenoteTargets: [Target] = [
-    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include/Simperium"),
+    .target(name: "Simperium", path: "Sources/Simperium", publicHeadersPath: "include"),
+    // Route (b) Objective-C declarations that OpenUIKit-Swift.h cannot carry
+    // (enums, structs, protocols, typed strings). Pure declarations; values
+    // read off the iOS 26.1 SDK and OpenUIKit's Swift raw values
+    // (simplenote-launch3).
+    .target(name: "OpenUIKitObjCSupport", path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
+            cSettings: [.define("OPENUIKIT_OBJC_SIDE", to: "1")]),
+    // Route (b) `@objc(selector)` twins of existing OpenUIKit members; the
+    // generated OpenUIKitObjCBridge-Swift.h adds them as categories. Chosen
+    // from the Simplenote per-TU selector census (simplenote-launch3).
+    .target(name: "OpenUIKitObjCBridge", dependencies: ["OpenUIKit", "OpenUIKitObjCSupport"],
+            path: "Sources/OpenUIKitObjCBridge", swiftSettings: simplenoteSettings),
+    .testTarget(name: "OpenUIKitObjCBridgeTests", dependencies: ["OpenUIKitObjCBridge", "OpenUIKit"],
+                path: "Tests/OpenUIKitObjCBridgeTests", swiftSettings: simplenoteSettings),
     .target(name: "AutomatticTracksModelObjC", path: "Sources/AutomatticTracksModelObjC", publicHeadersPath: "include"),
     .target(name: "AutomatticTracks", dependencies: ["AutomatticTracksModelObjC"], path: "Sources/AutomatticTracks", swiftSettings: simplenoteSettings),
     .target(name: "SimplenoteFoundation", dependencies: ["UIKit"],
@@ -914,6 +927,68 @@ let simplenoteTargets: [Target] = [
 ]
 #endif
 
+// Eidolon 44486ed: exact fail-closed service surfaces measured against the
+// locked headers/call sites. These targets contain no working remote services.
+let eidolonServiceProducts: [Product] = ["Keys", "ARAnalytics", "Stripe", "EidolonLaunchCompat"]
+    .map { .library(name: $0, targets: [$0]) }
+let eidolonServiceTargets: [Target] = [
+    .target(name: "Keys", path: "Sources/EidolonServiceShims/Keys"),
+    .target(name: "ARAnalytics", path: "Sources/EidolonServiceShims/ARAnalytics"),
+    .target(name: "Stripe", path: "Sources/EidolonServiceShims/Stripe"),
+    .target(name: "EidolonLaunchCompat", dependencies: ["Keys"],
+            path: "Sources/EidolonServiceShims/EidolonLaunchCompat"),
+    .testTarget(name: "EidolonServiceShimTests",
+                dependencies: ["Keys", "ARAnalytics", "Stripe", "EidolonLaunchCompat"],
+                path: "Sources/EidolonServiceShims/Tests/EidolonServiceShimTests"),
+]
+
+// Upstream source below is byte-identical to the Podfile.lock revisions in
+// Sources/EidolonDependencies/PROVENANCE.json. The separately authored
+// RxCocoa/OpenUIKit adapter exposes the measured UIKit control event surface
+// on the macOS toolchain; it does not patch the upstream platform branches.
+// Apple Swift 6.2.1 emits all
+// ten runtime modules in Swift 4 mode; this is host evidence, not guest support.
+#if os(Linux)
+let eidolonDependencyProducts: [Product] = []
+let eidolonDependencyTargets: [Target] = []
+#else
+let eidolonDependencyProducts: [Product] = [
+    "RxSwift", "RxCocoa", "Moya", "Action", "RxOptional", "NSObject_Rx",
+    "SwiftyJSON", "Result", "Alamofire", "Reachability",
+].map { .library(name: $0, targets: [$0]) }
+let eidolonDependencySwiftSettings: [SwiftSetting] = [.unsafeFlags(["-swift-version", "4"])]
+let eidolonDependencyTargets: [Target] = [
+    .target(name: "RxSwift", path: "Sources/EidolonDependencies/RxSwift/RxSwift",
+            swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "RxCocoaRuntime", path: "Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime",
+            publicHeadersPath: "include", cSettings: [.unsafeFlags(["-fobjc-arc"])]),
+    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit"],
+            path: "Sources/EidolonDependencies/RxSwift/RxCocoa",
+            exclude: ["Runtime", "iOS", "RxCocoa.h"],
+            swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "Result", path: "Sources/EidolonDependencies/Result/Result",
+            exclude: ["Result.h"], swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "Alamofire", path: "Sources/EidolonDependencies/Alamofire/Source",
+            exclude: ["Alamofire.h"], swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "SwiftyJSON", path: "Sources/EidolonDependencies/SwiftyJSON/Source",
+            exclude: ["SwiftyJSON.h"], swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "Reachability", path: "Sources/EidolonDependencies/Reachability/Reachability",
+            swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "Moya", dependencies: ["Alamofire", "Result", "RxSwift"],
+            path: "Sources/EidolonDependencies/Moya/Sources",
+            swiftSettings: eidolonDependencySwiftSettings + [.define("COCOAPODS")]),
+    .target(name: "Action", dependencies: ["RxSwift", "RxCocoa"],
+            path: "Sources/EidolonDependencies/Action/Sources", swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "RxOptional", dependencies: ["RxSwift", "RxCocoa"],
+            path: "Sources/EidolonDependencies/RxOptional/Source", swiftSettings: eidolonDependencySwiftSettings),
+    .target(name: "NSObject_Rx", dependencies: ["RxSwift"],
+            path: "Sources/EidolonDependencies/NSObjectRx",
+            exclude: ["LICENSE", "NSObject+Rx.podspec"], swiftSettings: eidolonDependencySwiftSettings),
+    .testTarget(name: "EidolonRxCocoaTests", dependencies: ["UIKit", "RxSwift", "RxCocoa"],
+                path: "Sources/ConformanceApps/EidolonTap", exclude: ["OracleMain.swift"]),
+]
+#endif
+
 let package = Package(
     name: "OpenUIKit",
     // Swift concurrency (`@MainActor`, which the UI classes now carry the
@@ -922,8 +997,8 @@ let package = Package(
     // it makes that explicit instead of leaving it to the default.
     // Apple-only: it has no effect on the Linux build.
     platforms: [.macOS(.v11)],
-    products: coreProducts + frameworkProducts + blockzillaProducts + simplenoteProducts,
+    products: coreProducts + frameworkProducts + blockzillaProducts + simplenoteProducts + eidolonServiceProducts + eidolonDependencyProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
-    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets,
+    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets + eidolonServiceTargets + eidolonDependencyTargets,
     cxxLanguageStandard: .cxx17
 )

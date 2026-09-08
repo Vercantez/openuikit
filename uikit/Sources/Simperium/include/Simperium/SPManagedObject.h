@@ -1,1 +1,1 @@
-#import "../SimperiumUmbrella.h"
+#import "Simperium.h"

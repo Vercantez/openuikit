@@ -605,6 +605,12 @@ want statfs              && build statfs              "$CHAINED_TARGET" statfs  
 # success-or-fallback, and fcopyfile's EINVAL / ENOTSUP errno paths.
 want copyfile            && build copyfile            "$CHAINED_TARGET" copyfile            copyfile.c --
 
+# socket_loopback. BSD sockets over 127.0.0.1 and AF_UNIX: the same 16-byte
+# sockaddr_in with a DIFFERENT first two bytes, AF_INET6 30/10, SOL_SOCKET
+# 0xffff/1, every SO_* renumbered, errno by name. Consumer: the Ledger
+# conformance app's loopback HTTP server (guest row six).
+want socket_loopback     && build socket_loopback     "$CHAINED_TARGET" socket_loopback     socket_loopback.c --
+
 # pthread_mutex_variants. Darwin publishes THREE static mutex initialisers and
 # the signature word IS the type -- a constant nothing at any call site names,
 # because the guest's compiler laid it down. CoreFoundation's CFLockInit is the

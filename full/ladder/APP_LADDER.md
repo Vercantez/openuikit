@@ -32,7 +32,7 @@ Two build routes exist and per-app feasibility differs:
 | | route (a) — Linux cross-swiftc | route (b) — Apple toolchain on the Mac |
 |---|---|---|
 | the story | no Apple hardware anywhere | Apple toolchain, our runtime target |
-| hard limit | Swift `#selector` / `@objc` **cannot compile** (stdlib ABI, docs/OBJC_RUNTIME.md); the user rejected a source rewriter, so an app must already be written with `Selector.named()` / closures / `UIAction` | no `#selector` limit |
+| hard limit | Stock Linux Swift rejects `#selector` / `@objc`. The explicitly authorized 2026-09-07 bounded source adapter proves two Focus cells and six actions on native Linux (see §4.1); unchanged-source interop and whole-app route (a) remain unproved | no `#selector` limit |
 | everything else | identical | identical |
 
 Both routes are scored. The `SEL` column is the only difference between them.
@@ -278,6 +278,23 @@ different per app: focus-ios is 22 stub-able types against 13 blocking,
 wikipedia-ios is 12 against 53.
 
 ### 4.1 focus-ios (Firefox Focus) — B 6 / A 8, **NEAR on both routes; the only route-(a) NEAR**
+
+**Native Linux selector measurement, 2026-09-07** ([report](../../uikit/docs/agent_reports/route-a-selector-wall.md)):
+the table below is the frozen 227-file baseline. The checked-in Blockzilla
+slice has **74 code `#selector`, 82 `@objc`, four dynamic `perform` calls**;
+its vendored BlockzillaPackage adds **3 / 3 / 0**. SnapKit/Fuzi add no sites.
+The old 86-attribute lexical total includes one block-comment hit (85 code
+attributes). Stock Linux Swift 6.2.4 fails the complete original Focus
+SwitchTableViewCell and ThemeTableViewToggleCell at `#selector`/`@objc`;
+an explicit route-(a) generated-source adapter compiles both and delivers
+**6/6 target/actions, zero unresolved**, through their real private methods,
+delegate and Combine publisher. Source-emission coverage is **67/77 selector
+sites in 29 files**; **10 selectors, 11 attributes and all four dynamic
+`perform` calls remain outside that proof**. This is not 67 executed sites
+or a native-Linux Focus launch. Flag/shim experiments include emitted IR,
+missing SwiftObject symbols and an objc4-root subclass initialization crash;
+a working C objc4 control does not establish Swift interoperability. Route
+(b), original Focus sources, the frozen scores and the WebKit wall are unchanged.
 
 227 Swift files, 24,139 lines. 51 UIKit-subclass files vs 18 SwiftUI, **0 ObjC,
 0 nib-bound files**.
@@ -1026,6 +1043,12 @@ full/ladder/ledger_supply.py full ledger-supply-2026-09-14.json
 
 Measurement only, against commit `a17b016727114d84ba851de57589aeb111d0b4be`. The suffix **2026-09-16** is the requested measurement-series date; the execution environment reports 2026-09-06. This section compares the **dated 2026-09-14 JSON files**, not the later prose overlays in §8.5. Older artifacts and §0–§8 remain unchanged. No application was rebuilt or launched in this census, and no OpenUIKit source or scoring threshold changed.
 
+**UIKit implementation follow-up — 2026-09-07 local clock, retained 2026-09-16 artifact-series suffix.** The table and narrative below describe the original re-measurement; the dated JSONs have now been regenerated again by `uikit/scripts/blocking_types_census.sh` around the unchanged §9.7 instrument. This follow-up adds measured programmatic behavior and preserves explicit partial-service/rendering limits; declaration coverage does not prove every app member or launch. See `uikit/docs/agent_reports/uikit-blocking-types.md`.
+
+| implementation branch | blocking types / uses, before → after | stub-able types / uses, before → after | weighted / effective UIKit coverage, before → after | demand / measurement |
+| --- | --- | --- | --- | --- |
+| `agent/uikit-blocking-types` (2026-09-07) | **66 / 487 → 54 / 280** | **40 / 143 → 39 / 138** | **95.677883% / 99.456175% → 95.860884% / 99.639176%** | 20 apps, 25,371 Swift files, 115,846 references unchanged. Thirteen new names across swipe, split, collection, coordinates, edit-menu and input-view families; private iOS 26.1 oracles. The frozen Simplenote HEAD is checked out clean in `/tmp` because ignored local probe files altered manifest/nib counts; no corpus or rubric edits. |
+
 ### 9.1 Enumeration and invariant demand
 
 Re-ran `ladder_census.py` for apps and dependencies, `union_and_imports.py`, `nibdeps.sh`, `deps.py`, `dep_class.py`, `classify_gaps.py`, `model_supply.py`, `score_ladder.py`, and `ledger_supply.py`. All outputs use `-2026-09-16`; the original instruments were run unchanged. The dependency walk retains §8.7’s demo/test exclusions. No repository was cloned or fetched.
@@ -1205,4 +1228,3 @@ Shared remaining reach: `UISwipeGestureRecognizer` 10 apps/54 uses; `UICollectio
 Use §8.7 commands from `uikit/`, prefixing tool paths with `../full/ladder/`, reading the frozen `~/openuikit/scratch/ladder-corpus` and `~/openuikit/scratch/ladder-deps`, and writing each input/output with suffix `-2026-09-16` into a new output directory. `remeasure-2026-09-16.sh` records the executable sequence. `audit-2026-09-16.py` regenerates the supplemental declaration, delta, ledger-change and reviewed-model artifacts; `SHA256SUMS-2026-09-16.txt` records artifact hashes.
 
 Validation: all 50 HEADs equal frozen pins; 20 app and 30 dependency denominators retained; app non-UIKit demand/imports unchanged; SDK and nib rows unchanged modulo order; app UIKit use totals unchanged; 16 cluster groups / 86 names explicitly checked; no unclassified genuine UIKit gaps; all score sums and route counts checked; model band sums equal 130,883 before and after correction. No older dated artifact overwritten. Pixel/simulator/Catalyst/real-app/Linux-build gates were not re-run for this measurement-only change, consistent with `uikit/docs/agent_reports/ladder-census2.md`; no Sources, fixture, golden, package, or runtime implementation changes, and no build/pixel claim is made.
-

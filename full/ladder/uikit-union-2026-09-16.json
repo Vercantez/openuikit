@@ -3,8 +3,8 @@
  "swift_files": 25371,
  "uses": 115846,
  "distinct": 361,
- "weighted_coverage": 95.67788270635154,
- "gap_uses": 630,
+ "weighted_coverage": 95.86088427740276,
+ "gap_uses": 418,
  "types": {
   "UIColor": {
    "apps": 20,
@@ -539,7 +539,7 @@
   "UISwipeGestureRecognizer": {
    "apps": 10,
    "uses": 54,
-   "ours": false
+   "ours": true
   },
   "UIDocumentPickerViewController": {
    "apps": 10,
@@ -559,7 +559,7 @@
   "UISplitViewController": {
    "apps": 5,
    "uses": 49,
-   "ours": false
+   "ours": true
   },
   "UIDropInteraction": {
    "apps": 6,
@@ -784,7 +784,7 @@
   "UIEditMenuInteraction": {
    "apps": 5,
    "uses": 24,
-   "ours": false
+   "ours": true
   },
   "UIActivityItemSource": {
    "apps": 8,
@@ -894,7 +894,7 @@
   "UIEditMenuConfiguration": {
    "apps": 4,
    "uses": 17,
-   "ours": false
+   "ours": true
   },
   "UITraitUserInterfaceStyle": {
    "apps": 7,
@@ -949,7 +949,7 @@
   "UICoordinateSpace": {
    "apps": 2,
    "uses": 14,
-   "ours": false
+   "ours": true
   },
   "UIScrollEdgeElementContainerInteraction": {
    "apps": 2,
@@ -959,7 +959,7 @@
   "UICollectionViewLayoutInvalidationContext": {
    "apps": 3,
    "uses": 13,
-   "ours": false
+   "ours": true
   },
   "UITabBarAppearance": {
    "apps": 6,
@@ -994,7 +994,7 @@
   "UICollectionViewController": {
    "apps": 7,
    "uses": 10,
-   "ours": false
+   "ours": true
   },
   "UIContextMenuInteractionDelegate": {
    "apps": 8,
@@ -1059,7 +1059,7 @@
   "UIInputView": {
    "apps": 5,
    "uses": 9,
-   "ours": false
+   "ours": true
   },
   "UIPointerInteractionDelegate": {
    "apps": 5,
@@ -1164,7 +1164,7 @@
   "UIEditMenuInteractionDelegate": {
    "apps": 5,
    "uses": 6,
-   "ours": false
+   "ours": true
   },
   "UIGlassContainerEffect": {
    "apps": 2,
@@ -1204,7 +1204,7 @@
   "UISplitViewControllerDelegate": {
    "apps": 5,
    "uses": 5,
-   "ours": false
+   "ours": true
   },
   "NSMenuToolbarItem": {
    "apps": 2,
@@ -1219,7 +1219,7 @@
   "UIInputViewAudioFeedback": {
    "apps": 2,
    "uses": 5,
-   "ours": false
+   "ours": true
   },
   "UITextChecker": {
    "apps": 2,
@@ -1369,7 +1369,7 @@
   "UIEditMenuInteractionAnimating": {
    "apps": 2,
    "uses": 3,
-   "ours": false
+   "ours": true
   },
   "UITextLoupeSession": {
    "apps": 1,
@@ -1389,7 +1389,7 @@
   "UICollectionViewFlowLayoutInvalidationContext": {
    "apps": 2,
    "uses": 3,
-   "ours": false
+   "ours": true
   },
   "UIAttachmentBehavior": {
    "apps": 1,

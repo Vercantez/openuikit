@@ -1,7 +1,7 @@
 {
  "_meta": {
   "sdk_types": 737,
-  "ours": 411
+  "ours": 427
  },
  "apps": {
   "Hackers": {
@@ -554,10 +554,10 @@
     "swift_files": 605,
     "uses": 1598,
     "distinct_types": 129,
-    "implemented_types": 120,
-    "implemented_uses": 1351,
-    "missing_types": 9,
-    "missing_uses": 247,
+    "implemented_types": 124,
+    "implemented_uses": 1372,
+    "missing_types": 5,
+    "missing_uses": 226,
     "missing": [
      [
       "NSString",
@@ -572,24 +572,8 @@
       39
      ],
      [
-      "UISplitViewController",
-      16
-     ],
-     [
-      "UICollectionViewController",
-      2
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      2
-     ],
-     [
       "NSMenuToolbarItem",
       2
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ],
      [
       "UIStoryboardSegue",
@@ -2038,10 +2022,10 @@
     "swift_files": 2631,
     "uses": 15163,
     "distinct_types": 195,
-    "implemented_types": 177,
-    "implemented_uses": 14328,
-    "missing_types": 18,
-    "missing_uses": 835,
+    "implemented_types": 185,
+    "implemented_uses": 14364,
+    "missing_types": 10,
+    "missing_uses": 799,
     "missing": [
      [
       "NSObject",
@@ -2056,24 +2040,8 @@
       13
      ],
      [
-      "UICoordinateSpace",
-      13
-     ],
-     [
       "UIScrollEdgeElementContainerInteraction",
       12
-     ],
-     [
-      "UICollectionViewLayoutInvalidationContext",
-      6
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      6
-     ],
-     [
-      "UISplitViewController",
-      6
      ],
      [
       "UILocalizedIndexedCollation",
@@ -2088,10 +2056,6 @@
       2
      ],
      [
-      "UIInputView",
-      2
-     ],
-     [
       "NSIndexPath",
       2
      ],
@@ -2101,18 +2065,6 @@
      ],
      [
       "UIBarPositioning",
-      1
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      1
-     ],
-     [
-      "UICollectionViewController",
-      1
-     ],
-     [
-      "UISplitViewControllerDelegate",
       1
      ]
     ],
@@ -2885,10 +2837,10 @@
     "swift_files": 4435,
     "uses": 35691,
     "distinct_types": 168,
-    "implemented_types": 123,
-    "implemented_uses": 34085,
-    "missing_types": 45,
-    "missing_uses": 1606,
+    "implemented_types": 131,
+    "implemented_uses": 34111,
+    "missing_types": 37,
+    "missing_uses": 1580,
     "missing": [
      [
       "NSString",
@@ -2905,10 +2857,6 @@
      [
       "UIFindSession",
       10
-     ],
-     [
-      "UIEditMenuInteraction",
-      7
      ],
      [
       "UIReferenceLibraryViewController",
@@ -2931,19 +2879,11 @@
       5
      ],
      [
-      "UIEditMenuConfiguration",
-      5
-     ],
-     [
       "UIPencilInteraction",
       4
      ],
      [
       "UIInterpolatingMotionEffect",
-      4
-     ],
-     [
-      "UIInputViewAudioFeedback",
       4
      ],
      [
@@ -2957,14 +2897,6 @@
      [
       "UICornerRadius",
       4
-     ],
-     [
-      "UIInputView",
-      3
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      3
      ],
      [
       "NSTextContentStorage",
@@ -3015,10 +2947,6 @@
       2
      ],
      [
-      "UIEditMenuInteractionAnimating",
-      2
-     ],
-     [
       "UITextChecker",
       2
      ],
@@ -3032,10 +2960,6 @@
      ],
      [
       "UIWebView",
-      1
-     ],
-     [
-      "UICoordinateSpace",
       1
      ],
      [
@@ -3056,10 +2980,6 @@
      ],
      [
       "UITextCursorView",
-      1
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
       1
      ],
      [
@@ -3846,10 +3766,10 @@
     "swift_files": 2628,
     "uses": 11071,
     "distinct_types": 180,
-    "implemented_types": 156,
-    "implemented_uses": 10610,
-    "missing_types": 24,
-    "missing_uses": 461,
+    "implemented_types": 160,
+    "implemented_uses": 10635,
+    "missing_types": 20,
+    "missing_uses": 436,
     "missing": [
      [
       "NSObject",
@@ -3858,10 +3778,6 @@
      [
       "NSString",
       134
-     ],
-     [
-      "UISplitViewController",
-      20
      ],
      [
       "NSValue",
@@ -3896,14 +3812,6 @@
       2
      ],
      [
-      "UIEditMenuInteraction",
-      2
-     ],
-     [
-      "UICollectionViewFlowLayoutInvalidationContext",
-      2
-     ],
-     [
       "UIDynamicAnimator",
       2
      ],
@@ -3914,10 +3822,6 @@
      [
       "UIPushBehavior",
       2
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ],
      [
       "UIMotionEffectGroup",
@@ -4777,10 +4681,10 @@
     "swift_files": 1197,
     "uses": 3538,
     "distinct_types": 143,
-    "implemented_types": 129,
-    "implemented_uses": 3427,
-    "missing_types": 14,
-    "missing_uses": 111,
+    "implemented_types": 134,
+    "implemented_uses": 3437,
+    "missing_types": 9,
+    "missing_uses": 101,
     "missing": [
      [
       "NSObject",
@@ -4799,32 +4703,12 @@
       4
      ],
      [
-      "UIEditMenuInteraction",
-      4
-     ],
-     [
       "NSValue",
-      3
-     ],
-     [
-      "UIEditMenuConfiguration",
       3
      ],
      [
       "UILocalizedIndexedCollation",
       2
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      1
-     ],
-     [
-      "UIEditMenuInteractionAnimating",
-      1
-     ],
-     [
-      "UICollectionViewController",
-      1
      ],
      [
       "NSIndexPath",
@@ -6200,10 +6084,10 @@
     "swift_files": 140,
     "uses": 574,
     "distinct_types": 60,
-    "implemented_types": 55,
-    "implemented_uses": 544,
-    "missing_types": 5,
-    "missing_uses": 30,
+    "implemented_types": 58,
+    "implemented_uses": 548,
+    "missing_types": 2,
+    "missing_uses": 26,
     "missing": [
      [
       "NSObject",
@@ -6212,18 +6096,6 @@
      [
       "NSString",
       7
-     ],
-     [
-      "UISplitViewController",
-      2
-     ],
-     [
-      "UICollectionViewController",
-      1
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ]
     ],
     "top_used": [
@@ -6844,10 +6716,10 @@
     "swift_files": 2006,
     "uses": 4418,
     "distinct_types": 117,
-    "implemented_types": 106,
-    "implemented_uses": 4127,
-    "missing_types": 11,
-    "missing_uses": 291,
+    "implemented_types": 109,
+    "implemented_uses": 4135,
+    "missing_types": 8,
+    "missing_uses": 283,
     "missing": [
      [
       "NSObject",
@@ -6862,20 +6734,8 @@
       6
      ],
      [
-      "UISplitViewController",
-      5
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      2
-     ],
-     [
       "UIBarItem",
       2
-     ],
-     [
-      "UISplitViewControllerDelegate",
-      1
      ],
      [
       "UIDocumentInteractionControllerDelegate",
@@ -7631,10 +7491,10 @@
     "swift_files": 2086,
     "uses": 10006,
     "distinct_types": 200,
-    "implemented_types": 182,
-    "implemented_uses": 9852,
-    "missing_types": 18,
-    "missing_uses": 154,
+    "implemented_types": 183,
+    "implemented_uses": 9862,
+    "missing_types": 17,
+    "missing_uses": 144,
     "missing": [
      [
       "NSObject",
@@ -7647,10 +7507,6 @@
      [
       "UILargeContentViewerInteraction",
       11
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      10
      ],
      [
       "UIPasteControl",
@@ -9243,10 +9099,10 @@
     "swift_files": 1400,
     "uses": 1281,
     "distinct_types": 74,
-    "implemented_types": 66,
-    "implemented_uses": 1127,
-    "missing_types": 8,
-    "missing_uses": 154,
+    "implemented_types": 67,
+    "implemented_uses": 1137,
+    "missing_types": 7,
+    "missing_uses": 144,
     "missing": [
      [
       "NSObject",
@@ -9259,10 +9115,6 @@
      [
       "NSString",
       30
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      10
      ],
      [
       "UIMenuBuilder",
@@ -10067,10 +9919,10 @@
     "swift_files": 2055,
     "uses": 6176,
     "distinct_types": 109,
-    "implemented_types": 104,
-    "implemented_uses": 6119,
-    "missing_types": 5,
-    "missing_uses": 57,
+    "implemented_types": 105,
+    "implemented_uses": 6120,
+    "missing_types": 4,
+    "missing_uses": 56,
     "missing": [
      [
       "NSString",
@@ -10083,10 +9935,6 @@
      [
       "NSValue",
       6
-     ],
-     [
-      "UICollectionViewController",
-      1
      ],
      [
       "UITableViewDataSourcePrefetching",
@@ -10840,10 +10688,10 @@
     "swift_files": 704,
     "uses": 2448,
     "distinct_types": 138,
-    "implemented_types": 121,
-    "implemented_uses": 2369,
-    "missing_types": 17,
-    "missing_uses": 79,
+    "implemented_types": 127,
+    "implemented_uses": 2381,
+    "missing_types": 11,
+    "missing_uses": 67,
     "missing": [
      [
       "NSObject",
@@ -10862,15 +10710,7 @@
       6
      ],
      [
-      "UIEditMenuInteraction",
-      4
-     ],
-     [
       "UIResponderStandardEditActions",
-      3
-     ],
-     [
-      "UIEditMenuConfiguration",
       3
      ],
      [
@@ -10886,18 +10726,6 @@
       2
      ],
      [
-      "UIInputView",
-      2
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      1
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      1
-     ],
-     [
       "UILargeContentViewerInteraction",
       1
      ],
@@ -10907,10 +10735,6 @@
      ],
      [
       "NSCollectionLayoutEdgeSpacing",
-      1
-     ],
-     [
-      "UIInputViewAudioFeedback",
       1
      ]
     ],
@@ -11672,10 +11496,10 @@
     "swift_files": 422,
     "uses": 3477,
     "distinct_types": 142,
-    "implemented_types": 130,
-    "implemented_uses": 3277,
-    "missing_types": 12,
-    "missing_uses": 200,
+    "implemented_types": 134,
+    "implemented_uses": 3300,
+    "missing_types": 8,
+    "missing_uses": 177,
     "missing": [
      [
       "NSString",
@@ -11686,24 +11510,8 @@
       66
      ],
      [
-      "UISwipeGestureRecognizer",
-      8
-     ],
-     [
-      "UIEditMenuInteraction",
-      7
-     ],
-     [
-      "UIEditMenuConfiguration",
-      6
-     ],
-     [
       "NSValue",
       4
-     ],
-     [
-      "UIEditMenuInteractionDelegate",
-      2
      ],
      [
       "UICollectionViewDataSourcePrefetching",
@@ -12486,10 +12294,10 @@
     "swift_files": 1692,
     "uses": 6131,
     "distinct_types": 175,
-    "implemented_types": 165,
-    "implemented_uses": 5983,
-    "missing_types": 10,
-    "missing_uses": 148,
+    "implemented_types": 167,
+    "implemented_uses": 5985,
+    "missing_types": 8,
+    "missing_uses": 146,
     "missing": [
      [
       "NSObject",
@@ -12513,14 +12321,6 @@
      ],
      [
       "UIPopoverPresentationControllerSourceItem",
-      1
-     ],
-     [
-      "UIInputView",
-      1
-     ],
-     [
-      "UICollectionViewLayoutInvalidationContext",
       1
      ],
      [
@@ -14075,10 +13875,10 @@
     "swift_files": 240,
     "uses": 3145,
     "distinct_types": 116,
-    "implemented_types": 104,
-    "implemented_uses": 3022,
-    "missing_types": 12,
-    "missing_uses": 123,
+    "implemented_types": 106,
+    "implemented_uses": 3034,
+    "missing_types": 10,
+    "missing_uses": 111,
     "missing": [
      [
       "NSObject",
@@ -14087,10 +13887,6 @@
      [
       "NSString",
       26
-     ],
-     [
-      "UISwipeGestureRecognizer",
-      10
      ],
      [
       "NSValue",
@@ -14111,10 +13907,6 @@
      [
       "UITableViewRowAction",
       3
-     ],
-     [
-      "UICollectionViewController",
-      2
      ],
      [
       "NSIndexPath",
@@ -14859,10 +14651,10 @@
     "swift_files": 1296,
     "uses": 7049,
     "distinct_types": 177,
-    "implemented_types": 145,
-    "implemented_uses": 6738,
-    "missing_types": 32,
-    "missing_uses": 311,
+    "implemented_types": 150,
+    "implemented_uses": 6750,
+    "missing_types": 27,
+    "missing_uses": 299,
     "missing": [
      [
       "NSObject",
@@ -14875,10 +14667,6 @@
      [
       "UITextItem",
       8
-     ],
-     [
-      "UICollectionViewLayoutInvalidationContext",
-      6
      ],
      [
       "NSTextContentStorage",
@@ -14909,19 +14697,11 @@
       3
      ],
      [
-      "UICollectionViewController",
-      2
-     ],
-     [
       "NSValue",
       2
      ],
      [
       "UIInterpolatingMotionEffect",
-      2
-     ],
-     [
-      "UISwipeGestureRecognizer",
       2
      ],
      [
@@ -14962,14 +14742,6 @@
      ],
      [
       "UIScribbleInteraction",
-      1
-     ],
-     [
-      "UIInputView",
-      1
-     ],
-     [
-      "UICollectionViewFlowLayoutInvalidationContext",
       1
      ],
      [
