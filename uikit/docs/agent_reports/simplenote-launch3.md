@@ -165,5 +165,5 @@ architecture decisions, not facade members, and both are outside a pass.
 | Catalyst gate | **124/124** (`/tmp/gate-simplenote-launch3`) |
 | real-app 3x floors | 99.137 / 98.535 / 98.548 / 99.469 / 98.639 / 98.133 / 97.516 / 99.65 / 82.17 / 99.286 / 99.86 / 99.734 / 85.393 / 97.096 (unchanged; no rendering rule touched) |
 | Linux `swift:6.2-noble` release openrender | green, 191.18 s (new targets are inside the Darwin `#else` block) |
-| iOS suite | recorded in the final commit message |
-| `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/simplenote-launch3` | recorded in the final commit message |
+| iOS suite (fresh goldens, `/tmp/suite-simplenote-launch3`) | **112/113**, only the known `corner_radius` (99.411); no passing scene dropped |
+| `CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/simplenote-launch3` | first run: `MERGE CONFLICT with main` on the fidelity-table row (main had advanced); after merging origin/main with both rows kept: **`checks passed (CHECK_ONLY)`**, no REFUSED line; the script exits 128 in its cleanup, as in passes 1 and 2 |
