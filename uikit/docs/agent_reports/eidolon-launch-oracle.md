@@ -134,7 +134,7 @@ payment, or network callback was fabricated.
 | blocker | measured state |
 |---|---|
 | NIB compilation | Cleared: 3/3 Interface Builder inputs compile; 59 NIBArchive files plus 2 plists. |
-| NIB runtime | Not measured: native dependency setup blocks app build; archive compilation is not an instantiation test. |
+| NIB runtime | Port probe executes: Auction initial controller is nil; direct compiled controller NIB falls back to plain UIViewController with 10 unhandled entries. Native app runtime remains unmeasured. |
 | Native dependency workspace | Original iOS 26.1 Xcode build exits 65, one missing Pods base-configuration error. |
 | Locked CardFlight source | Version 4.3.1 spec's repository probe exits 128, `Repository not found`; native dependencies remain unavailable. |
 | Locked dependency metadata | CocoaPods compatibility check confirms Stripe 14.0.1 vs 12.1.0 conflict; default OSS fonts differ from the private locked fonts. |
@@ -148,3 +148,39 @@ Logs remain at `/tmp/eidolon-launch-xcodebuild.log`,
 `/tmp/eidolon-launch-cardflight.log`. The JSON companion carries the
 fatal diagnostic, command, source/resource hashes, and measured counts
 so the report remains reviewable without these temporary logs.
+
+## Port runtime boundary, executed
+
+A `/tmp` Swift executable linked the already-built OpenUIKit release
+module and 190 object files from OpenUIKit, OpenCoreGraphics, CSTBTrueType,
+CPortableIO, and CQuartz. It loaded the carried compiled resources without
+registering substitute app classes. Compile and execution both exited **0**.
+The source, runtime output, input source hashes, and linker inputs recipe
+are retained in this report's JSON companion (`port_runtime`).
+
+```text
+storyboard.initial.isNil=true
+factory.AppViewController=false
+factory.ActionButton=false
+factory.ListingsCountdownManager=false
+```
+
+| compiled archive directly opened with UINib | parsed | actual top-level type | distinct unhandled entries |
+|---|---|---|---:|
+| Auction.storyboardc/AppViewController.nib | yes | OpenUIKit.UIViewController | 10 |
+| Auction.storyboardc/KCM-cT-BEX-view-jGy-SO-AWq.nib | yes | OpenUIKit.UIView | 17 |
+| KeypadView.nib | yes | OpenUIKit.UIView | 12 |
+
+`Sources/OpenUIKit/UIApplication.swift` implements
+`UIStoryboard.instantiateInitialViewController()` as unconditional `nil`.
+The direct archive decoder falls back to UIKit base classes for absent
+custom factories; these returned objects are not Eidolon's controllers.
+The initial-controller archive also records unsupported embed/modal segue
+templates, event connections, and the `storyboard`/`countdownManager`
+outlets. The view archive records missing ActionButton, two named fonts,
+outlet-collection wiring, and view/constraint keys.
+
+This closes the uncertainty about the port's runtime boundary without
+claiming an Eidolon screen or a simulator comparison. The process also
+prints the existing duplicate `CAFilter` registration diagnostic from
+Apple QuartzCore and the linked port; it does not abort this probe.

@@ -175,9 +175,11 @@
     "Kiosk/App/CreditCardValidation.h",
     "Kiosk/App/KioskDateFormatter.h",
     "Kiosk/App/StubResponses.h",
-    "Kiosk/Supporting Files/BridgingHeader.h"
+    "Kiosk/Supporting Files/BridgingHeader.h",
+    "Kiosk/Supporting Files/PodsBridgingHeader.h"
   ],
   "bridging_header": "Kiosk/Supporting Files/BridgingHeader.h",
+  "swift_language_version": "4.0",
   "swift_header_consumers": [],
   "resources": {
     "xcassets": [
@@ -240,9 +242,12 @@
     },
     {
       "name": "RxSwift",
-      "kind": "spm",
+      "kind": "apple_framework",
       "class": "UIKit-bound",
-      "port": null,
+      "port": "RxSwift",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 58
     },
     {
@@ -254,23 +259,32 @@
     },
     {
       "name": "Moya",
-      "kind": "spm",
+      "kind": "apple_framework",
       "class": "networking-bound",
-      "port": null,
+      "port": "Moya",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 18
     },
     {
       "name": "Action",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Action",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 17
     },
     {
       "name": "SwiftyJSON",
-      "kind": "spm",
+      "kind": "apple_framework",
       "class": "Foundation-heavy",
-      "port": null,
+      "port": "SwiftyJSON",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 14
     },
     {
@@ -282,9 +296,12 @@
     },
     {
       "name": "RxOptional",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "RxOptional",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 9
     },
     {
@@ -296,16 +313,22 @@
     },
     {
       "name": "RxCocoa",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "RxCocoa",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 7
     },
     {
       "name": "ARAnalytics",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "ARAnalytics",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 6
     },
     {
@@ -317,16 +340,22 @@
     },
     {
       "name": "Keys",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Keys",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 5
     },
     {
       "name": "Stripe",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Stripe",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 5
     },
     {
@@ -345,9 +374,12 @@
     },
     {
       "name": "Alamofire",
-      "kind": "spm",
+      "kind": "apple_framework",
       "class": "networking-bound",
-      "port": null,
+      "port": "Alamofire",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 2
     },
     {
@@ -359,9 +391,12 @@
     },
     {
       "name": "NSObject_Rx",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "NSObject_Rx",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 2
     },
     {
@@ -408,16 +443,22 @@
     },
     {
       "name": "Reachability",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Reachability",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 1
     },
     {
       "name": "Result",
-      "kind": "unknown",
-      "class": "unmeasured",
-      "port": null,
+      "kind": "apple_framework",
+      "class": "UIKit-bound",
+      "port": "Result",
+      "port_platforms": [
+        "macOS"
+      ],
       "files": 1
     },
     {
@@ -464,40 +505,10 @@
       "reason": "Pods_Kiosk has no OpenUIKit package product (ladder class unmeasured)"
     },
     {
-      "name": "RxSwift",
-      "kind": "spm",
-      "class": "UIKit-bound",
-      "reason": "RxSwift has no OpenUIKit package product (ladder class UIKit-bound)"
-    },
-    {
-      "name": "Moya",
-      "kind": "spm",
-      "class": "networking-bound",
-      "reason": "Moya has no OpenUIKit package product (ladder class networking-bound)"
-    },
-    {
-      "name": "Action",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "Action is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "SwiftyJSON",
-      "kind": "spm",
-      "class": "Foundation-heavy",
-      "reason": "SwiftyJSON has no OpenUIKit package product (ladder class Foundation-heavy)"
-    },
-    {
       "name": "Artsy_UILabels",
       "kind": "import",
       "class": "unmeasured",
       "reason": "Artsy_UILabels is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "RxOptional",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "RxOptional is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
     },
     {
       "name": "Artsy_UIButtons",
@@ -506,34 +517,10 @@
       "reason": "Artsy_UIButtons is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
     },
     {
-      "name": "RxCocoa",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "RxCocoa is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "ARAnalytics",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "ARAnalytics is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
       "name": "ORStackView",
       "kind": "import",
       "class": "unmeasured",
       "reason": "ORStackView is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "Keys",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "Keys is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "Stripe",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "Stripe is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
     },
     {
       "name": "Artsy_UIFonts",
@@ -548,22 +535,10 @@
       "reason": "ARTiledImageView is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
     },
     {
-      "name": "Alamofire",
-      "kind": "spm",
-      "class": "networking-bound",
-      "reason": "Alamofire has no OpenUIKit package product (ladder class networking-bound)"
-    },
-    {
       "name": "FLKAutoLayout",
       "kind": "import",
       "class": "unmeasured",
       "reason": "FLKAutoLayout is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "NSObject_Rx",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "NSObject_Rx is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
     },
     {
       "name": "QuartzCore",
@@ -602,18 +577,6 @@
       "reason": "ECPhoneNumberFormatter is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
     },
     {
-      "name": "Reachability",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "Reachability is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
-      "name": "Result",
-      "kind": "import",
-      "class": "unmeasured",
-      "reason": "Result is imported by the app target but is not a local Swift package product, not a sibling PBX target, and has no OpenUIKit package product (not one of the 30 ladder-classified deps)"
-    },
-    {
       "name": "SVProgressHUD",
       "kind": "spm",
       "class": "ObjC",
@@ -643,14 +606,14 @@
     "present_swift_sources": 109,
     "objc_sources": 3,
     "c_sources": 0,
-    "header_sources": 4,
+    "header_sources": 5,
     "xcassets": 1,
     "nibs": 3,
     "strings": 0,
     "json": 24,
     "spm": 0,
     "imports": 31,
-    "no_port": 30,
+    "no_port": 17,
     "gaps": 1
   },
   "generated": {

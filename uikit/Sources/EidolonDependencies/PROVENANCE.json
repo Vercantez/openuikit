@@ -1,0 +1,1627 @@
+[
+  {
+    "repository": "RxSwift",
+    "url": "https://github.com/ReactiveX/RxSwift.git",
+    "revision": "3e848781c7756accced855a6317a4c2ff5e8588b",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "4.1.2",
+    "swift_sources": 270,
+    "licenses": [
+      "LICENSE.md"
+    ],
+    "files": [
+      {
+        "path": "LICENSE.md",
+        "sha256": "d0dc53828698ad55944b83808a2c28c920716a077bd5325e859a80219043873c"
+      },
+      {
+        "path": "Platform/DataStructures/Bag.swift",
+        "sha256": "f3ec0cb6bae7105c42c60ccfef6fd85abf5960257ff7c1eb7e6642ced2e7195d"
+      },
+      {
+        "path": "Platform/DataStructures/InfiniteSequence.swift",
+        "sha256": "5d6de0f50276771660d0504338adb89b071c21866e26b5ee1fbbd3915f7e97e7"
+      },
+      {
+        "path": "Platform/DataStructures/PriorityQueue.swift",
+        "sha256": "f61a38f88dbbd37728cecedee701245a01cf0bb091759007a6d99042f9be1153"
+      },
+      {
+        "path": "Platform/DataStructures/Queue.swift",
+        "sha256": "5571966518546bbaa11c4767b7e2be741f6647e8af1b5ee87099aaebdae145ea"
+      },
+      {
+        "path": "Platform/DeprecationWarner.swift",
+        "sha256": "390e4f731bf7757b463bd7443443550d765e244aec26b243c58f9304fb108d5f"
+      },
+      {
+        "path": "Platform/DispatchQueue+Extensions.swift",
+        "sha256": "2514bc97d8cdcb7511639d25f40b680a4d6801ea74fee14d8f4ae03cb9384c79"
+      },
+      {
+        "path": "Platform/Platform.Darwin.swift",
+        "sha256": "b7e7ce229b07176e9e7eaa49b50f9f9692eeefbdfc8d91a8059fbddd04abe1fc"
+      },
+      {
+        "path": "Platform/Platform.Linux.swift",
+        "sha256": "f7b1aee632d0d8c0a06f3b82143cd393322d9fd70a8a1cc4570a6fb287d902d6"
+      },
+      {
+        "path": "Platform/RecursiveLock.swift",
+        "sha256": "6f03fa49513b7b1b2da3a5cc564a339cc3a9c4ae5e3ed153f9517552ce1d0a7b"
+      },
+      {
+        "path": "RxBlocking.podspec",
+        "sha256": "d8cdd8625a1f6cd0a5ff47867416083bdce62d796656ab67d2f3eb1b654310ea"
+      },
+      {
+        "path": "RxCocoa.podspec",
+        "sha256": "2817d769cf942f12a79f9bc10215a5c24e624fc272a825562b90048180342e39"
+      },
+      {
+        "path": "RxCocoa/Common/Binder.swift",
+        "sha256": "29fe0d5e48b79d4925aec29825ef2e8d2f4508497424fc07bbefd3c78a2252d6"
+      },
+      {
+        "path": "RxCocoa/Common/ControlTarget.swift",
+        "sha256": "c35b479ef5038492daa8cc78feef59db74ebb73826280e71193ec919b26c0f7f"
+      },
+      {
+        "path": "RxCocoa/Common/DelegateProxy.swift",
+        "sha256": "77175c77de282d45c251950518e70c41d8e6b93a6dbe6516b73e27225f74129f"
+      },
+      {
+        "path": "RxCocoa/Common/DelegateProxyType.swift",
+        "sha256": "961beb0f07f39dc684d97f5077892b06a773a64e9cea2d1ea5014d1ae86d4905"
+      },
+      {
+        "path": "RxCocoa/Common/NSLayoutConstraint+Rx.swift",
+        "sha256": "e34f68f45b334cc5690fdcf47a277721f7f40d9853b411621faf1ce145bad5a3"
+      },
+      {
+        "path": "RxCocoa/Common/Observable+Bind.swift",
+        "sha256": "261ffb1e474b66b65b8a44808887e66e0503d61df80a777414b27919c501a5fb"
+      },
+      {
+        "path": "RxCocoa/Common/RxCocoaObjCRuntimeError+Extensions.swift",
+        "sha256": "4e498ee5367e147bf25570259d436436732d4c46e8d60867ed7eedd1356bd13d"
+      },
+      {
+        "path": "RxCocoa/Common/RxTarget.swift",
+        "sha256": "6409d5c6f1b82d4a6693a62c18b434ed43782f4cc76adfdf1eca6a691c6583b4"
+      },
+      {
+        "path": "RxCocoa/Common/SectionedViewDataSourceType.swift",
+        "sha256": "7e6d592bbabc1a01e2dcb84165c06ccae2055556b8a1afb2a7de26c39993f978"
+      },
+      {
+        "path": "RxCocoa/Common/TextInput.swift",
+        "sha256": "7f2479de2585c197a242244a202d847e268f62994b44ba12c3409e4648619a2c"
+      },
+      {
+        "path": "RxCocoa/Deprecated.swift",
+        "sha256": "213537032b342d0caf71882b4ff047df9792fb3ef6cdd73fdf2caac2e8c6a8b1"
+      },
+      {
+        "path": "RxCocoa/Foundation/KVORepresentable+CoreGraphics.swift",
+        "sha256": "09224545951eb211f3a1195bd0f5e63e196eea834c2b2c06416ef284037c0a0d"
+      },
+      {
+        "path": "RxCocoa/Foundation/KVORepresentable+Swift.swift",
+        "sha256": "69167409d5ddd86a2d891b3e7cf27dcb99ece7c636e3756d5c6719ae1a43f20e"
+      },
+      {
+        "path": "RxCocoa/Foundation/KVORepresentable.swift",
+        "sha256": "76d983925163fd23c3ba752fdd5b3761dd5cad57e1259f40d22317d08312e0a2"
+      },
+      {
+        "path": "RxCocoa/Foundation/Logging.swift",
+        "sha256": "99031ce5c84dfd012f73c31bd0ce72ffa66a7d52902508b9e7e52812ae95a34c"
+      },
+      {
+        "path": "RxCocoa/Foundation/NSObject+Rx+KVORepresentable.swift",
+        "sha256": "dccca424edc7c81151f1b4b48b56b3c71d987a24d06de2b167b8169017ddfc86"
+      },
+      {
+        "path": "RxCocoa/Foundation/NSObject+Rx+RawRepresentable.swift",
+        "sha256": "dd116c9d4ce573113d57f8a6a5e74df291beb151ae015bb88bf46cd83c1340fa"
+      },
+      {
+        "path": "RxCocoa/Foundation/NSObject+Rx.swift",
+        "sha256": "b50c7448208d6a10cea7bd05a6a35a0002938d070975315454a0d44e69d7565b"
+      },
+      {
+        "path": "RxCocoa/Foundation/NotificationCenter+Rx.swift",
+        "sha256": "36fb89fcb5f274f951b684d088b80b561cec59c435582e62d1ba44359e87c5b0"
+      },
+      {
+        "path": "RxCocoa/Foundation/URLSession+Rx.swift",
+        "sha256": "fc524ad1e1ac9c1af932e911d080cbb41dce904552bd7f4a226215e9c028a235"
+      },
+      {
+        "path": "RxCocoa/Platform/DataStructures/Bag.swift",
+        "upstream_path": "Platform/DataStructures/Bag.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "f3ec0cb6bae7105c42c60ccfef6fd85abf5960257ff7c1eb7e6642ced2e7195d"
+      },
+      {
+        "path": "RxCocoa/Platform/DataStructures/InfiniteSequence.swift",
+        "upstream_path": "Platform/DataStructures/InfiniteSequence.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "5d6de0f50276771660d0504338adb89b071c21866e26b5ee1fbbd3915f7e97e7"
+      },
+      {
+        "path": "RxCocoa/Platform/DataStructures/PriorityQueue.swift",
+        "upstream_path": "Platform/DataStructures/PriorityQueue.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "f61a38f88dbbd37728cecedee701245a01cf0bb091759007a6d99042f9be1153"
+      },
+      {
+        "path": "RxCocoa/Platform/DataStructures/Queue.swift",
+        "upstream_path": "Platform/DataStructures/Queue.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "5571966518546bbaa11c4767b7e2be741f6647e8af1b5ee87099aaebdae145ea"
+      },
+      {
+        "path": "RxCocoa/Platform/DeprecationWarner.swift",
+        "upstream_path": "Platform/DeprecationWarner.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "390e4f731bf7757b463bd7443443550d765e244aec26b243c58f9304fb108d5f"
+      },
+      {
+        "path": "RxCocoa/Platform/DispatchQueue+Extensions.swift",
+        "upstream_path": "Platform/DispatchQueue+Extensions.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "2514bc97d8cdcb7511639d25f40b680a4d6801ea74fee14d8f4ae03cb9384c79"
+      },
+      {
+        "path": "RxCocoa/Platform/Platform.Darwin.swift",
+        "upstream_path": "Platform/Platform.Darwin.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "b7e7ce229b07176e9e7eaa49b50f9f9692eeefbdfc8d91a8059fbddd04abe1fc"
+      },
+      {
+        "path": "RxCocoa/Platform/Platform.Linux.swift",
+        "upstream_path": "Platform/Platform.Linux.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "f7b1aee632d0d8c0a06f3b82143cd393322d9fd70a8a1cc4570a6fb287d902d6"
+      },
+      {
+        "path": "RxCocoa/Platform/RecursiveLock.swift",
+        "upstream_path": "Platform/RecursiveLock.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "6f03fa49513b7b1b2da3a5cc564a339cc3a9c4ae5e3ed153f9517552ce1d0a7b"
+      },
+      {
+        "path": "RxCocoa/Runtime/_RX.m",
+        "sha256": "f4bb7ddeb1870545f6f3f23042a47bb80e9d69e25c481661ad13ccfe2cdb5b0c"
+      },
+      {
+        "path": "RxCocoa/Runtime/_RXDelegateProxy.m",
+        "sha256": "438e492376e66e8b213693f410b5c5b64b74dc189860d07fe51b8c7ac0948ce5"
+      },
+      {
+        "path": "RxCocoa/Runtime/_RXKVOObserver.m",
+        "sha256": "db153f026e3e71e6347b3bb002703592cbe9fbd790711921bf8e3061fc0c62fa"
+      },
+      {
+        "path": "RxCocoa/Runtime/_RXObjCRuntime.m",
+        "sha256": "344cee88d36c07d0567a3b348b004a628ae3c2d45c796267b13d04c2e9bdf0ec"
+      },
+      {
+        "path": "RxCocoa/Runtime/include/RxCocoaRuntime.h",
+        "sha256": "8901d76c5fb71271702d771f0d78972dabb04e270a5b93fdca4e8ac131d9b3e9"
+      },
+      {
+        "path": "RxCocoa/Runtime/include/_RX.h",
+        "sha256": "afd14db9243be00438fd4289dc9252c54a173d83e45d8229319d3c82f89b1e7e"
+      },
+      {
+        "path": "RxCocoa/Runtime/include/_RXDelegateProxy.h",
+        "sha256": "be26f2b498f47599acefba6314000b0909e5fd8d7525adf15f95171bf61df64e"
+      },
+      {
+        "path": "RxCocoa/Runtime/include/_RXKVOObserver.h",
+        "sha256": "f22c6ed13366b0d8b439b3c8b44311fd2ebc35434d529487d67e884992c37b7e"
+      },
+      {
+        "path": "RxCocoa/Runtime/include/_RXObjCRuntime.h",
+        "sha256": "8c13bef349db28519f02a95cc2a21099d8630ad6d146fa9d4213c487b1e664bb"
+      },
+      {
+        "path": "RxCocoa/RxCocoa.h",
+        "sha256": "52eb1a1ebd606806b208eb1209dda64b3a8f4fd005af5ed3944d91f11aef3978"
+      },
+      {
+        "path": "RxCocoa/RxCocoa.swift",
+        "sha256": "7b1cc970d66a4a04ee05bda426d19dd3b49e0afb04444b6b9836c24fafc8e532"
+      },
+      {
+        "path": "RxCocoa/Traits/BehaviorRelay.swift",
+        "sha256": "00082409a621ffb598c5052690927ddf5f15cb91f3f8ce543fc6e90316575172"
+      },
+      {
+        "path": "RxCocoa/Traits/ControlEvent.swift",
+        "sha256": "000b318852b3c425e2f6341f39958067534d83d311abe047d132383c31fe47c8"
+      },
+      {
+        "path": "RxCocoa/Traits/ControlProperty.swift",
+        "sha256": "4b5c148669d10b790348efa7d7620934aa1b851281a866e1108d0041e7512650"
+      },
+      {
+        "path": "RxCocoa/Traits/Driver/BehaviorRelay+Driver.swift",
+        "sha256": "c0cd2b87846796b5c1b90d6ede6539a6af83dacef0fa87b6e292a8aec01c3cee"
+      },
+      {
+        "path": "RxCocoa/Traits/Driver/ControlEvent+Driver.swift",
+        "sha256": "2ff48e0a358fc00cbe9834b7bdb8690869105862dace24f26c8282da0ebebae9"
+      },
+      {
+        "path": "RxCocoa/Traits/Driver/ControlProperty+Driver.swift",
+        "sha256": "b15cc29de1da7bf96145a65378ee22846823b43de83a5af40bd8df1ee00ed411"
+      },
+      {
+        "path": "RxCocoa/Traits/Driver/Driver+Subscription.swift",
+        "sha256": "02c991e5a9419e6496d58b0e996ea8ba64e21ddfad6ab1d867e7219ad28c05df"
+      },
+      {
+        "path": "RxCocoa/Traits/Driver/Driver.swift",
+        "sha256": "96bbe252880c24afac77c2ab0f6e8e734881ccbfee560d417c9fae2ed87b50a5"
+      },
+      {
+        "path": "RxCocoa/Traits/Driver/ObservableConvertibleType+Driver.swift",
+        "sha256": "568e31f4dfd581fd59fd8c22f1edafb0ce09ad8f49604cc34a19d9ebd1a4cb7f"
+      },
+      {
+        "path": "RxCocoa/Traits/PublishRelay.swift",
+        "sha256": "3f9eab8bfa9adc1f1d6f72a9e388c6a4c0218d8d6a29333262d70b39cf0efbe0"
+      },
+      {
+        "path": "RxCocoa/Traits/SharedSequence/ObservableConvertibleType+SharedSequence.swift",
+        "sha256": "57a3876cd7df87a40d7355081a8e739194cbfcb429bfc7a9183ce74c0c5ff70a"
+      },
+      {
+        "path": "RxCocoa/Traits/SharedSequence/SchedulerType+SharedSequence.swift",
+        "sha256": "d4ff7dc3ec081bbcd752452c72594c7cacabb24ac715e8291912985925dea7a2"
+      },
+      {
+        "path": "RxCocoa/Traits/SharedSequence/SharedSequence+Operators+arity.swift",
+        "sha256": "a99889747af0336854a1875eed5374820c71c8c8dcc3b68f1f44b1d5cfee30d1"
+      },
+      {
+        "path": "RxCocoa/Traits/SharedSequence/SharedSequence+Operators.swift",
+        "sha256": "54c7a7e82b746315c97d05862d44205e6a266994eec94ae3e49d751bcb0df537"
+      },
+      {
+        "path": "RxCocoa/Traits/SharedSequence/SharedSequence.swift",
+        "sha256": "bf25faa43513c73177143a580165ec8b8c92a356e9c8515f0e7bee1db45bb881"
+      },
+      {
+        "path": "RxCocoa/Traits/Signal/ControlEvent+Signal.swift",
+        "sha256": "ebc515c4c6cb5a0f85b4abb2df1ce05cc47f5f5277c17265571add849465a27e"
+      },
+      {
+        "path": "RxCocoa/Traits/Signal/ObservableConvertibleType+Signal.swift",
+        "sha256": "69e4df005b74fcbaf755977c819b74d56c2aee9f947b917f302c4c7d25490fa4"
+      },
+      {
+        "path": "RxCocoa/Traits/Signal/PublishRelay+Signal.swift",
+        "sha256": "2e06e5d82fa6bd111709bba8afc492c34ed7ac9d9a1889bcd31a386cd5f8dc32"
+      },
+      {
+        "path": "RxCocoa/Traits/Signal/Signal+Subscription.swift",
+        "sha256": "a4aef60ad15e373b8277eb54b5570ce3dc7d45155dfbaee16a5b1f26c9a10f29"
+      },
+      {
+        "path": "RxCocoa/Traits/Signal/Signal.swift",
+        "sha256": "dbccecf82a5d11b04066c34fcc6aac4d6d50193e607a5a2105c9e2b9912d81c0"
+      },
+      {
+        "path": "RxCocoa/iOS/DataSources/RxCollectionViewReactiveArrayDataSource.swift",
+        "sha256": "0bacd4c9277b5e41b357069b635f2426a4dd52fd707b7edcd11115ad9dfe7b34"
+      },
+      {
+        "path": "RxCocoa/iOS/DataSources/RxPickerViewAdapter.swift",
+        "sha256": "2e6be73970ff5c4056950521b9c546ae76f06bc4b0ddb3a0532704ac65cc86e8"
+      },
+      {
+        "path": "RxCocoa/iOS/DataSources/RxTableViewReactiveArrayDataSource.swift",
+        "sha256": "438233b0d75f54cc0a32da4521245e2b0ce19236fe37f961e5b12834df13388d"
+      },
+      {
+        "path": "RxCocoa/iOS/Events/ItemEvents.swift",
+        "sha256": "6109a34c89436be0fb39921f8eb2a4b7a41e41408c46ba4196d44298419e0c7b"
+      },
+      {
+        "path": "RxCocoa/iOS/NSTextStorage+Rx.swift",
+        "sha256": "ef3fe42d3b31fc4283e30b4fe2fd41caca9936e2031b2db19586b66ae136d7dc"
+      },
+      {
+        "path": "RxCocoa/iOS/Protocols/RxCollectionViewDataSourceType.swift",
+        "sha256": "92bdff690a955f4115d9f2b2e55bf5916116b7b4ddccff99a262ceb3a66121f1"
+      },
+      {
+        "path": "RxCocoa/iOS/Protocols/RxPickerViewDataSourceType.swift",
+        "sha256": "e64d0dbbed19be540b61618ae66e362d3c32140db347da5b30cd0cc972f5a4bd"
+      },
+      {
+        "path": "RxCocoa/iOS/Protocols/RxTableViewDataSourceType.swift",
+        "sha256": "f26a0c7f922944fc977fe4ee9f92f49f5245a3a8b0d253fec0d20b61c3210da6"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxCollectionViewDataSourceProxy.swift",
+        "sha256": "164b871d297453a4ff9b61e0f375153d97f77986baf4377292af24e58fd51e39"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxCollectionViewDelegateProxy.swift",
+        "sha256": "bd592019a3a989ca0b49519dcce5d3eb8a72374ed318cf00dcddc0284902b6bd"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxNavigationControllerDelegateProxy.swift",
+        "sha256": "0f912d52883bc11c6809b0e5f8b67e72621e70105eb52fb08a235885826a65b1"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxPickerViewDataSourceProxy.swift",
+        "sha256": "760a158fb1b446d497ab9c3992f4622f5d56c1eccd69a4a9de4b1afde54cc8b3"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxPickerViewDelegateProxy.swift",
+        "sha256": "55e6c63be0ad46621f96cd6f6d051bc77e06c04eeba2e90d417f843ad6cd113a"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxScrollViewDelegateProxy.swift",
+        "sha256": "e3460a9c2028a76e0439785737139ccc5259321c1ca46c9775c6bdb26e32c067"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxSearchBarDelegateProxy.swift",
+        "sha256": "47e5397de5c9370f857f8c8df5961208f13285d4bd071aaf83a94e7843b22e7f"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxSearchControllerDelegateProxy.swift",
+        "sha256": "6d2ef03512eea5cd19337fb67da3ebeb759ab87da28ee25ddd5f10a6e307e8e2"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxTabBarControllerDelegateProxy.swift",
+        "sha256": "4295c56b7bf3f0c91e4ad59445fe3104f17cf02b7188eb0b15636eb9b641dcdb"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxTabBarDelegateProxy.swift",
+        "sha256": "f29e43b8c7f85f2630abb1ca5033bf6d237686d4e1fc189ab1ece3968c62b285"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxTableViewDataSourceProxy.swift",
+        "sha256": "753e34a7fc734167a82900c374f59d0c93266e6ca1b151ee4b633371beeab175"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxTableViewDelegateProxy.swift",
+        "sha256": "89b1fed88807d21706e7202daf8bc7016d47e58fbf3ddd35a20c837ff6b05672"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxTextStorageDelegateProxy.swift",
+        "sha256": "eb7c417dccefe27b63fffafbf30112346595b92456049d683d87c08735612305"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxTextViewDelegateProxy.swift",
+        "sha256": "5f4b450512743e4e015ae4c3bd016c098d0af615009cfe183410b34e1724c5cf"
+      },
+      {
+        "path": "RxCocoa/iOS/Proxies/RxWebViewDelegateProxy.swift",
+        "sha256": "3982a9e29c326f292ac91a44f14b7c22917d0596a0f564899171b7396573b236"
+      },
+      {
+        "path": "RxCocoa/iOS/UIActivityIndicatorView+Rx.swift",
+        "sha256": "25c40c4cd4456bdffc15760e8a8f46f66043c64908eb0a7589d717ea260c4432"
+      },
+      {
+        "path": "RxCocoa/iOS/UIAlertAction+Rx.swift",
+        "sha256": "79059f18422618e1f8dc7410d3bef50e9bbf50238e0eeedd9f2d9a7c88bebadb"
+      },
+      {
+        "path": "RxCocoa/iOS/UIApplication+Rx.swift",
+        "sha256": "b656709785eca0faa8d782b555a0eb79077c3730d275e9cf0907e8be5c1fd1fa"
+      },
+      {
+        "path": "RxCocoa/iOS/UIBarButtonItem+Rx.swift",
+        "sha256": "0989952653b1270f448fd7ec6a87605d64656bf72a74cf2efa93c836c5f1ce2e"
+      },
+      {
+        "path": "RxCocoa/iOS/UIButton+Rx.swift",
+        "sha256": "98c3eebff94a2e94183bbdc36c4fa134e6a685dbcbe3db499f30f28389e832d1"
+      },
+      {
+        "path": "RxCocoa/iOS/UICollectionView+Rx.swift",
+        "sha256": "c510d5e5170a0d38990bd6aa653878617583d889d80a7db85a2984a1abb0c045"
+      },
+      {
+        "path": "RxCocoa/iOS/UIControl+Rx.swift",
+        "sha256": "056112c800263ac4726a1eb5fc3591d860194a8e1a70498a8f2a1483375bdf23"
+      },
+      {
+        "path": "RxCocoa/iOS/UIDatePicker+Rx.swift",
+        "sha256": "6ae6b86d499fd2c8a7a0f601d27b8179f957a1ae5e37e81e0158fdaa04de2c84"
+      },
+      {
+        "path": "RxCocoa/iOS/UIGestureRecognizer+Rx.swift",
+        "sha256": "4dce6ab55d7624d223330372112a2360433e05a9d9cf3c11baa206a315b1a82f"
+      },
+      {
+        "path": "RxCocoa/iOS/UIImageView+Rx.swift",
+        "sha256": "cacf3c6dc372e85a263d0f22b8284a2a98061d1dcc168e1daeba1252caf56abe"
+      },
+      {
+        "path": "RxCocoa/iOS/UILabel+Rx.swift",
+        "sha256": "4f4202363e96ed7ac8b3f55245293126d5149315e28889462a70fc7cbd07e097"
+      },
+      {
+        "path": "RxCocoa/iOS/UINavigationController+Rx.swift",
+        "sha256": "cc03b0d68601b8ecb7bd177dfde89e56ac97112fd3a2debee86aab75a15db12d"
+      },
+      {
+        "path": "RxCocoa/iOS/UINavigationItem+Rx.swift",
+        "sha256": "e2aa7fb02b438d091d9f732f817289fcd3e44f19962fa765672927fb52c6838f"
+      },
+      {
+        "path": "RxCocoa/iOS/UIPageControl+Rx.swift",
+        "sha256": "6c92cd89f97998fb79140641c218967884b23e516dcc8e8aab36915621e109df"
+      },
+      {
+        "path": "RxCocoa/iOS/UIPickerView+Rx.swift",
+        "sha256": "101d79aa37dd5dad94b7bdf0027b521db49cf2fc2f9a09fd379b17f41b7e6fd7"
+      },
+      {
+        "path": "RxCocoa/iOS/UIProgressView+Rx.swift",
+        "sha256": "dfebe5260fbb2c72e05cac159faa0806b51a33448307d688bcac04d036544e97"
+      },
+      {
+        "path": "RxCocoa/iOS/UIRefreshControl+Rx.swift",
+        "sha256": "90db3f476d548cd726ac443ce2852f48dde78036a423229a72288c1f64a1d91c"
+      },
+      {
+        "path": "RxCocoa/iOS/UIScrollView+Rx.swift",
+        "sha256": "0429ed3405936d5779b3dc22cb102fab0b2a99faf88cffae38ed729648de6966"
+      },
+      {
+        "path": "RxCocoa/iOS/UISearchBar+Rx.swift",
+        "sha256": "35c4b8bb914a76d17e9dc525d982ee7b8b68f3d3eda673aec21a9251a1b4168c"
+      },
+      {
+        "path": "RxCocoa/iOS/UISearchController+Rx.swift",
+        "sha256": "a0f5a0aa478877af4800b56c0bc47ed9900ba22ce8890874c849bc8203649858"
+      },
+      {
+        "path": "RxCocoa/iOS/UISegmentedControl+Rx.swift",
+        "sha256": "8089b4255a3af884b234f1b8df138b021be0d77a1aad23eeb50ed83474546550"
+      },
+      {
+        "path": "RxCocoa/iOS/UISlider+Rx.swift",
+        "sha256": "2e352c04f267b4a03fbd9266840417851e153419baf9a314a771aa99d09031e4"
+      },
+      {
+        "path": "RxCocoa/iOS/UIStepper+Rx.swift",
+        "sha256": "d6295aa30b3964d3ecdad703f719f353e62fb27189396271d872066086b3660e"
+      },
+      {
+        "path": "RxCocoa/iOS/UISwitch+Rx.swift",
+        "sha256": "122e6f5b7c5eaa76126ec9da4654c7e46fa7fcfaab6460b0428c8fe89c688abe"
+      },
+      {
+        "path": "RxCocoa/iOS/UITabBar+Rx.swift",
+        "sha256": "e8bf23da6629aac7f6293f3dbdf24a6d5bc7af48722780025ad8f1f458bba446"
+      },
+      {
+        "path": "RxCocoa/iOS/UITabBarController+Rx.swift",
+        "sha256": "f96be13e15a832aeb2b14969050d3e91544b5e48e2ef2b75aa5bfedae2dd7763"
+      },
+      {
+        "path": "RxCocoa/iOS/UITabBarItem+Rx.swift",
+        "sha256": "8d73565f49fdee241f84f584f4e917855842a7188a9bc307b86ad422d10f6023"
+      },
+      {
+        "path": "RxCocoa/iOS/UITableView+Rx.swift",
+        "sha256": "7ae48e1f73af1c5b1ff0b381710d3c62a5dbabf5fbd8f0d0150bd2cd3ebc49ba"
+      },
+      {
+        "path": "RxCocoa/iOS/UITextField+Rx.swift",
+        "sha256": "ce2bf90b910f8d99900b45f8eb6ee051e9f398d20146b34828aba5cb41ffee93"
+      },
+      {
+        "path": "RxCocoa/iOS/UITextView+Rx.swift",
+        "sha256": "ed579cfd9a21dd6423ca0adf72555afff0a3d2e11cce90cd37a236565043f832"
+      },
+      {
+        "path": "RxCocoa/iOS/UIView+Rx.swift",
+        "sha256": "4e7e9a61499957cb7d146b8ab669e54e9e45418da9b6ee808a7081f3b2b06dc9"
+      },
+      {
+        "path": "RxCocoa/iOS/UIViewController+Rx.swift",
+        "sha256": "bde4487f97c07b31b81716670596c49126e1ce407d55d6645980dd33269f9629"
+      },
+      {
+        "path": "RxCocoa/iOS/UIWebView+Rx.swift",
+        "sha256": "4b37b796d7b9cf3e8a7337e4e544dea1a7dde345da2d00db817111fae91f1483"
+      },
+      {
+        "path": "RxCocoa/macOS/NSButton+Rx.swift",
+        "sha256": "14004a5b25aa5a8e92b4d55eda533067a0ec35e29364191f54ecfb4dfb76975e"
+      },
+      {
+        "path": "RxCocoa/macOS/NSControl+Rx.swift",
+        "sha256": "4c8fee03334d46ab7c806253bef327f85a2f8103a091c96a895ede429ad2bb0e"
+      },
+      {
+        "path": "RxCocoa/macOS/NSImageView+Rx.swift",
+        "sha256": "238823c90e3ea3855fda1f3d889b4e90d3623ed934c9c82a6147a30065bb8ba3"
+      },
+      {
+        "path": "RxCocoa/macOS/NSSlider+Rx.swift",
+        "sha256": "99bf9a573c55a955838d48443be9b3914d2eda044ccbb31082da697efce7fcc8"
+      },
+      {
+        "path": "RxCocoa/macOS/NSTextField+Rx.swift",
+        "sha256": "319b3f9643c0fb7ed0d940b717e61e3ff7ef563f9d4032b052775a2f9e349921"
+      },
+      {
+        "path": "RxCocoa/macOS/NSView+Rx.swift",
+        "sha256": "c99d71b2396e506c2e10ebf707cebd784c5fd6731c3f1541c2b2c0396e6cddc8"
+      },
+      {
+        "path": "RxSwift.podspec",
+        "sha256": "fb8a6adf3cbcbaeca1f33da077de758072478f141bc2271f28eaecc8e72f704c"
+      },
+      {
+        "path": "RxSwift/AnyObserver.swift",
+        "sha256": "076c3ad4cc685494a12db227b90945c92675810a5d352288fdaae3978e538018"
+      },
+      {
+        "path": "RxSwift/Cancelable.swift",
+        "sha256": "e0475b76c35c06a47a8c973899ccde21c34222066081449d324b65481e722103"
+      },
+      {
+        "path": "RxSwift/Concurrency/AsyncLock.swift",
+        "sha256": "37bdcf9c648633437a875b94ea0d8c1f0fc4d929428131bfd76d1ed1ecaba5f3"
+      },
+      {
+        "path": "RxSwift/Concurrency/Lock.swift",
+        "sha256": "42dc24e81b0e3f6f1f2fdee17819461ae0ed48fec16d7eb82d0226f76019b387"
+      },
+      {
+        "path": "RxSwift/Concurrency/LockOwnerType.swift",
+        "sha256": "8b77ef7096771c20b72cf37ec9fdc8083968f264191e16d9341867a1816b3520"
+      },
+      {
+        "path": "RxSwift/Concurrency/SynchronizedDisposeType.swift",
+        "sha256": "616a3229c2edfb8af870327bcac446d2294aa3c5034a61612690cf4979b45693"
+      },
+      {
+        "path": "RxSwift/Concurrency/SynchronizedOnType.swift",
+        "sha256": "e1a3c894ef6c8ce89c7d7ff695f409b64236bf48ecb2b83f935aff54d9e2b68c"
+      },
+      {
+        "path": "RxSwift/Concurrency/SynchronizedUnsubscribeType.swift",
+        "sha256": "96e19166e573c6abba57849cd1bcd9072553542429461fb9fa4bf604e8a04b31"
+      },
+      {
+        "path": "RxSwift/ConnectableObservableType.swift",
+        "sha256": "6c9936bf8dcb74e82ef7d241fda35fe99fd13c6f26430000a8c0f87613a60662"
+      },
+      {
+        "path": "RxSwift/Deprecated.swift",
+        "sha256": "7efd09b7c7d6dda461192fa18ba66475fa2f144285d2348c3ef7a45fd6001e1d"
+      },
+      {
+        "path": "RxSwift/Disposable.swift",
+        "sha256": "158b1151819d6e6849bed997fb4f8d2453c4e5ed310bf71af66c1c406c20f064"
+      },
+      {
+        "path": "RxSwift/Disposables/AnonymousDisposable.swift",
+        "sha256": "18816b14f0e20d7e32e4db8450b6329d2439d11430c87d1d57b06016facef58b"
+      },
+      {
+        "path": "RxSwift/Disposables/BinaryDisposable.swift",
+        "sha256": "5b0b4023be5614de3251d6678a3d145761bf717dab969212f49bbcdd56ca99ec"
+      },
+      {
+        "path": "RxSwift/Disposables/BooleanDisposable.swift",
+        "sha256": "c0420485cf624fac14623ec3625dd442a128ff463f09b4b5ff5e398e954dce92"
+      },
+      {
+        "path": "RxSwift/Disposables/CompositeDisposable.swift",
+        "sha256": "7a1e5f86129e8e26037333b1bc32288f5ff743594d096ae9dedf8415f1a03934"
+      },
+      {
+        "path": "RxSwift/Disposables/Disposables.swift",
+        "sha256": "1f5ea34101194201ee450c964fa6fbc26671c20a610b1f15db7dad40367ee917"
+      },
+      {
+        "path": "RxSwift/Disposables/DisposeBag.swift",
+        "sha256": "6312a64b7e2b9cb879d9234b6620bcb99e4a21036129433125f5ac71c6d688b6"
+      },
+      {
+        "path": "RxSwift/Disposables/DisposeBase.swift",
+        "sha256": "b8149c4fd3e39858e28500b8215ebe9f374754c2d61e721fbc6a695e435fa661"
+      },
+      {
+        "path": "RxSwift/Disposables/NopDisposable.swift",
+        "sha256": "d952f1087bab8d278cb34f0592490b277349ff6996323066c68ceff600ca54a5"
+      },
+      {
+        "path": "RxSwift/Disposables/RefCountDisposable.swift",
+        "sha256": "73479da6f412e0e6fe54dcb9fd4144207e0683bd537a6ace0256b7b330b3f7f3"
+      },
+      {
+        "path": "RxSwift/Disposables/ScheduledDisposable.swift",
+        "sha256": "736639323c448b57b18fec9d62613f19819114ec8fd8ddc20bc0f0bfd99d609f"
+      },
+      {
+        "path": "RxSwift/Disposables/SerialDisposable.swift",
+        "sha256": "436320804837db330f070c9f437c2ca3575d43ac98e2754a3a6a3e4f7bae3181"
+      },
+      {
+        "path": "RxSwift/Disposables/SingleAssignmentDisposable.swift",
+        "sha256": "5ad11a83169ab0591c436b925d9d5c037109856a6f8143e70b8d585242543739"
+      },
+      {
+        "path": "RxSwift/Disposables/SubscriptionDisposable.swift",
+        "sha256": "5a8a90626e429b265698dd58130eb1b194a1eb7f917fea40cae63de925adc888"
+      },
+      {
+        "path": "RxSwift/Errors.swift",
+        "sha256": "116e91f20b42aa42563d6481405d4863e6ee6a667b868d0e1857f4bec13b0f9e"
+      },
+      {
+        "path": "RxSwift/Event.swift",
+        "sha256": "a7ce4e1f897f1b367e62d4fccb9a2e846418b329fe6bf2a0ccd6177f509fb89f"
+      },
+      {
+        "path": "RxSwift/Extensions/Bag+Rx.swift",
+        "sha256": "bfc88fe60e8d00ea97907b05d0071ec300a1ef5217e8f7ad6ba4359c41c5a899"
+      },
+      {
+        "path": "RxSwift/Extensions/String+Rx.swift",
+        "sha256": "1439468f8fd89edbdc4248c7069897a07a03786dadb91b25f55e558dcdf83995"
+      },
+      {
+        "path": "RxSwift/GroupedObservable.swift",
+        "sha256": "afb0e95164c0a526dbd0c7472a21632040605672f0dbd72c973af444e9d590fd"
+      },
+      {
+        "path": "RxSwift/ImmediateSchedulerType.swift",
+        "sha256": "9fb10fea3866dc8f0e600a3c10c3fb15e6cc362cb6661f5eed7ceb104138e12a"
+      },
+      {
+        "path": "RxSwift/Observable.swift",
+        "sha256": "902263d0e1b8e8be9933ec76fb34cc0d07cf9df525b84627ecd082afce20720f"
+      },
+      {
+        "path": "RxSwift/ObservableConvertibleType.swift",
+        "sha256": "27f97901c1dac8b6b197cd1e2aebf9b0c8a80bed611f436d2dbb5065281c49c5"
+      },
+      {
+        "path": "RxSwift/ObservableType+Extensions.swift",
+        "sha256": "7de1991b0e56923d5bf8b1584633165fed1c6500de419127f9458a91e2921cca"
+      },
+      {
+        "path": "RxSwift/ObservableType.swift",
+        "sha256": "62c026c9f215f93a363888c5f21a6453728f7e9d9206eb95e98149955d0fa2f4"
+      },
+      {
+        "path": "RxSwift/Observables/AddRef.swift",
+        "sha256": "9df8170da01912d1754b73f377bf4f3151c1ec96184e6c5decfa887d20dd8373"
+      },
+      {
+        "path": "RxSwift/Observables/Amb.swift",
+        "sha256": "53c1c264600a7bce6d6a676b636c53bc54944ec7cf24e3aee97519dc493c47da"
+      },
+      {
+        "path": "RxSwift/Observables/AsMaybe.swift",
+        "sha256": "679dc860e424a335ffc7b2f08ae50667cfeb6f3ae9a03363ff72556e8b7c18f6"
+      },
+      {
+        "path": "RxSwift/Observables/AsSingle.swift",
+        "sha256": "f5f9ab40c5d5031e668461e305c127acc2586414534f987d3a0025e74ced7c20"
+      },
+      {
+        "path": "RxSwift/Observables/Buffer.swift",
+        "sha256": "bc1ecd0a8a367f1d635e8485b9159808c6ba7b67803a5165c459e9fad0a71524"
+      },
+      {
+        "path": "RxSwift/Observables/Catch.swift",
+        "sha256": "ba5d73b9141f0d68a4601a0e2845cb84921c6aff5d97233c3320a1f54b7475d9"
+      },
+      {
+        "path": "RxSwift/Observables/CombineLatest+Collection.swift",
+        "sha256": "379a3e2ffc3ee61dd37d5fa68cb07d08f4cd20ad2a388f0194491f456a8db60d"
+      },
+      {
+        "path": "RxSwift/Observables/CombineLatest+arity.swift",
+        "sha256": "10664e185090e7cb6ae55314551c79d22c1b1f7bb858ab1d0567f62839df0b97"
+      },
+      {
+        "path": "RxSwift/Observables/CombineLatest.swift",
+        "sha256": "4ae573406acc1c23dffea21896fb7906dd9b25ae9a274786efd7395be8a0a112"
+      },
+      {
+        "path": "RxSwift/Observables/Concat.swift",
+        "sha256": "3792014d0627240ab8a9209a7657ff3845dc3da9d570bfd6e718f6c08633b792"
+      },
+      {
+        "path": "RxSwift/Observables/Create.swift",
+        "sha256": "6694d0a2a0cd9a2c4b00451dad8d1706688b33a2ea85e7463687466308d0d21c"
+      },
+      {
+        "path": "RxSwift/Observables/Debounce.swift",
+        "sha256": "8107e56bfc2f85e856e284bc1c1389d370ccfb4480098f124bc125918c2f3e95"
+      },
+      {
+        "path": "RxSwift/Observables/Debug.swift",
+        "sha256": "4f4fcba1111f8a35d3bd4ffc10210560c8e361dfb3aa6ec0b5e9250dbae1aaa7"
+      },
+      {
+        "path": "RxSwift/Observables/DefaultIfEmpty.swift",
+        "sha256": "7e517bd8e92eb888ac6daff3ca67f13156c734e05d02afc0e6593d4512b9ada0"
+      },
+      {
+        "path": "RxSwift/Observables/Deferred.swift",
+        "sha256": "dadb6aba4d3c1a77d12a949d634aa3e0a9d0f5fce6b3910c6fbace8bc4b1b581"
+      },
+      {
+        "path": "RxSwift/Observables/Delay.swift",
+        "sha256": "b85eab5a3e3e703dca098ec130bc19722791378f44ccee4b96afdc73e5016d51"
+      },
+      {
+        "path": "RxSwift/Observables/DelaySubscription.swift",
+        "sha256": "855b9f09d16df7dfc233c7fe725346d57c2ef7dd71277e4cdfa99c51de788d58"
+      },
+      {
+        "path": "RxSwift/Observables/Dematerialize.swift",
+        "sha256": "b78beebb99b81802858e72e5c4d882fe2e1ec95d70257eec4dbae5d8975ecbde"
+      },
+      {
+        "path": "RxSwift/Observables/DistinctUntilChanged.swift",
+        "sha256": "e8dcc6efbcf6eb4e97e92e4cc0a59460f21ab2897c3cab23c508809e28f24eae"
+      },
+      {
+        "path": "RxSwift/Observables/Do.swift",
+        "sha256": "ab43fbe7b95fbe544d697105c44f4a81585ff3baf52c91536fd1942732b27d27"
+      },
+      {
+        "path": "RxSwift/Observables/ElementAt.swift",
+        "sha256": "515877b76959d675d5402aec7baeb2de341df63bb195f1f2a8ecde686c18157a"
+      },
+      {
+        "path": "RxSwift/Observables/Empty.swift",
+        "sha256": "29b6cb42a3bff32a152e98460fb334e5da7488100797037bf29aac8b91c9a40b"
+      },
+      {
+        "path": "RxSwift/Observables/Enumerated.swift",
+        "sha256": "edec8bb472f16a5b4a432725efbb19f49d00f304b150a027ad585f568f37c0e9"
+      },
+      {
+        "path": "RxSwift/Observables/Error.swift",
+        "sha256": "0436758f8b8ed5abd35213e09c28a165723596cb325355fe49ca3501d5b33d4a"
+      },
+      {
+        "path": "RxSwift/Observables/Filter.swift",
+        "sha256": "d2c5ced581fd6a0ab80eeecdc01c941dd9f6f308bc99ec0f7a104b0eb2fb4c18"
+      },
+      {
+        "path": "RxSwift/Observables/First.swift",
+        "sha256": "255fcf930d18e1a036bc8aeff4a8108eedd0a4034527ae1804150f21045ad933"
+      },
+      {
+        "path": "RxSwift/Observables/Generate.swift",
+        "sha256": "f445bcde1f3d265ee9ff2f41c2f0b3a423439c4d1539c929964920edb8ff2693"
+      },
+      {
+        "path": "RxSwift/Observables/GroupBy.swift",
+        "sha256": "d36b365c22f473348770adcdb16131a465cf41ec87571b4aca5d661c6029da4d"
+      },
+      {
+        "path": "RxSwift/Observables/Just.swift",
+        "sha256": "00dc2eb24c5536e0e439ff45db3cd06a1383f74d3cbeb2f52fed9a118e4aaae4"
+      },
+      {
+        "path": "RxSwift/Observables/Map.swift",
+        "sha256": "1a75e72736974852c84287a50936a77fabf3cc30ca68d732450881ad61b7eb5c"
+      },
+      {
+        "path": "RxSwift/Observables/Materialize.swift",
+        "sha256": "ffc1618b9a8e152b744f87220dfeedd42e5e30517dc497fd851f0a16dadcbd19"
+      },
+      {
+        "path": "RxSwift/Observables/Merge.swift",
+        "sha256": "330ea6fdb1be10db31e477afeb18e7b6453cca01d38c010099ee5b24a436e822"
+      },
+      {
+        "path": "RxSwift/Observables/Multicast.swift",
+        "sha256": "4d6fce3e8357a34b6dde20273f74c782fc3b714779442071ede0ce9edc82bc6f"
+      },
+      {
+        "path": "RxSwift/Observables/Never.swift",
+        "sha256": "6be00565eef409a945393cf2dd2a78360b2d738cd684275c18c95f7bfb43ecce"
+      },
+      {
+        "path": "RxSwift/Observables/ObserveOn.swift",
+        "sha256": "947a20cd1682a56c8b7f3e4d3a228d42bc6d9cb305459f5aa99120c0724e9841"
+      },
+      {
+        "path": "RxSwift/Observables/Optional.swift",
+        "sha256": "9385771b18ea3322d9a53cbeeadaa60abf30fc321ad9c45f76bb2bdbbd1fc5e1"
+      },
+      {
+        "path": "RxSwift/Observables/Producer.swift",
+        "sha256": "c5cac80f1b0acdef70c081f05a790ecb1a7b4c4a996c8750cd7f0a269342f006"
+      },
+      {
+        "path": "RxSwift/Observables/Range.swift",
+        "sha256": "7b53a0c8b9a4130cfec49d13a8cb9d5c3e705ceadf3595e3e79ccf00845783e1"
+      },
+      {
+        "path": "RxSwift/Observables/Reduce.swift",
+        "sha256": "a51d01e4feec84d6df378cddac70e512f11b22ff3bfdd7f6bce504f62b218cb3"
+      },
+      {
+        "path": "RxSwift/Observables/Repeat.swift",
+        "sha256": "4696b0bbcd93de02b770196433e79e668e8dff517a453b10ad3ce82cf5f05ab6"
+      },
+      {
+        "path": "RxSwift/Observables/RetryWhen.swift",
+        "sha256": "7968d1873b0338e160a886fc819222d8ba2387046e35eab1be980d225dbf5236"
+      },
+      {
+        "path": "RxSwift/Observables/Sample.swift",
+        "sha256": "33dfdcd7a54e26253b714b041d79f2ae7f581028fc90cdaa1801c9b538bf58e5"
+      },
+      {
+        "path": "RxSwift/Observables/Scan.swift",
+        "sha256": "ae48c579687d4deaeab43757d0c6447f94c448166f3142c88e97bfe0da2a9478"
+      },
+      {
+        "path": "RxSwift/Observables/Sequence.swift",
+        "sha256": "29c90a6ead8dbd30fc8e25742c77d34d1230457afac4648fc9117c8cb5a3cff4"
+      },
+      {
+        "path": "RxSwift/Observables/ShareReplayScope.swift",
+        "sha256": "81347252d4fdf932d0b6c0434abf3c171586a297997300ea5f03dffb062981c8"
+      },
+      {
+        "path": "RxSwift/Observables/SingleAsync.swift",
+        "sha256": "795b4bc6feef5cfaaa6e17bc2a83fbc681a9dbf2fdefbe455237f9f8a2edcc93"
+      },
+      {
+        "path": "RxSwift/Observables/Sink.swift",
+        "sha256": "6cb760a1c43b7dd736eeba563150a1007c72c3cab475c01528110a8510090d95"
+      },
+      {
+        "path": "RxSwift/Observables/Skip.swift",
+        "sha256": "f47fef3d7209a20fc740d622a78bc2059f8925d336619e7a14a6f8dac940cdaa"
+      },
+      {
+        "path": "RxSwift/Observables/SkipUntil.swift",
+        "sha256": "49ec3edc8ec598118f132233fe492729b2c6e54aaf677a564dfa3d988371b901"
+      },
+      {
+        "path": "RxSwift/Observables/SkipWhile.swift",
+        "sha256": "94885011284e668a9d93f664f9384bca90b27020b853eea1298cd828574c4ae6"
+      },
+      {
+        "path": "RxSwift/Observables/StartWith.swift",
+        "sha256": "23c59bc9573c6b06e1fd3dcc8b2feff683f1fb0c83f222cd3639b7ebe17d6795"
+      },
+      {
+        "path": "RxSwift/Observables/SubscribeOn.swift",
+        "sha256": "6ddbdc7c5a9b261027920c5ff1d514aba39b3f62113c42c5f978d446010eb7e4"
+      },
+      {
+        "path": "RxSwift/Observables/Switch.swift",
+        "sha256": "0337a28f9120cbc94cccdb79d0474f38594f91480ba8d8ef5ddcdf511869019c"
+      },
+      {
+        "path": "RxSwift/Observables/SwitchIfEmpty.swift",
+        "sha256": "3864bcf661ea9895cbe7953586059374b01325a89c68d34b0f9d6c2992f6b19f"
+      },
+      {
+        "path": "RxSwift/Observables/Take.swift",
+        "sha256": "7f447ea8c6df55775d43dd12fa3c76fdba0246dc6f6aba0e94c4115198c3b789"
+      },
+      {
+        "path": "RxSwift/Observables/TakeLast.swift",
+        "sha256": "87d186da886a69e37049e3b22e4e97e39a2d860cb11186325e62fe84ca6fe13f"
+      },
+      {
+        "path": "RxSwift/Observables/TakeUntil.swift",
+        "sha256": "9a7963f227517b40e0574947fffc4530b396420343ca8d99bf5dded0079b7a39"
+      },
+      {
+        "path": "RxSwift/Observables/TakeWhile.swift",
+        "sha256": "b3c65bef3dfb6dd80fcc61ed5c927c5fefd3c24cf87ecf9b0af305de47bc4311"
+      },
+      {
+        "path": "RxSwift/Observables/Throttle.swift",
+        "sha256": "8b1ba225f076d04b4747aa8cee51a8dc9620ca761d4bd387736a11b7e8b44168"
+      },
+      {
+        "path": "RxSwift/Observables/Timeout.swift",
+        "sha256": "392d2698836087d95cfec464b4f25d0b1b8478da16d61dec893a3b856c068bda"
+      },
+      {
+        "path": "RxSwift/Observables/Timer.swift",
+        "sha256": "71b32285573fa0aa9fb7f9786df61e805ba33351fa6ba0ea17983e66f9ca02f2"
+      },
+      {
+        "path": "RxSwift/Observables/ToArray.swift",
+        "sha256": "b6629a5309c6bbf1d5e8ff798f937f914c089ef6619d1418d6748d6fc1eef7ff"
+      },
+      {
+        "path": "RxSwift/Observables/Using.swift",
+        "sha256": "a8d358a0d16eb292bdeb8a30e3201b584a00a1dc257652547f208786e9d15840"
+      },
+      {
+        "path": "RxSwift/Observables/Window.swift",
+        "sha256": "ce997296588cf6805f58c40e6ae4e82ac2b4dfd4694ae234b50273d68e60aa70"
+      },
+      {
+        "path": "RxSwift/Observables/WithLatestFrom.swift",
+        "sha256": "8212262477585cee1dbd833fd3fe7635aa5b912210ef5411b3da5eeefa35fa78"
+      },
+      {
+        "path": "RxSwift/Observables/Zip+Collection.swift",
+        "sha256": "c4b7d06392acdfc42dc1a639599150baac4f7b986f74b09fc7706e4a74719955"
+      },
+      {
+        "path": "RxSwift/Observables/Zip+arity.swift",
+        "sha256": "45b25ce4b95d33ef716062f3fe316669a61e39eedb81edf73b833af7ea4041f7"
+      },
+      {
+        "path": "RxSwift/Observables/Zip.swift",
+        "sha256": "36e78643c4ea2e8204eaa04c1f1679e92eb65a24a73e61df12f6f7b7397bbe50"
+      },
+      {
+        "path": "RxSwift/ObserverType.swift",
+        "sha256": "f2f9d5d6c13939d3e467181d83dc9dfffdd45972c86d6c27698753cf401d30e4"
+      },
+      {
+        "path": "RxSwift/Observers/AnonymousObserver.swift",
+        "sha256": "0ef2bdf5cf2cc6c4a4cf3a0a280128fda8b410602fbfa581b84a68d5c27fb97b"
+      },
+      {
+        "path": "RxSwift/Observers/ObserverBase.swift",
+        "sha256": "d9055a738bf1136bf8fc097d912560f2eec5d55854eae6c4ae04cba03519cca5"
+      },
+      {
+        "path": "RxSwift/Observers/TailRecursiveSink.swift",
+        "sha256": "66f5a495f969277affb50962aee2a0d169a3e11427b91a8bdbfe9ca79b3bac96"
+      },
+      {
+        "path": "RxSwift/Platform/DataStructures/Bag.swift",
+        "upstream_path": "Platform/DataStructures/Bag.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "f3ec0cb6bae7105c42c60ccfef6fd85abf5960257ff7c1eb7e6642ced2e7195d"
+      },
+      {
+        "path": "RxSwift/Platform/DataStructures/InfiniteSequence.swift",
+        "upstream_path": "Platform/DataStructures/InfiniteSequence.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "5d6de0f50276771660d0504338adb89b071c21866e26b5ee1fbbd3915f7e97e7"
+      },
+      {
+        "path": "RxSwift/Platform/DataStructures/PriorityQueue.swift",
+        "upstream_path": "Platform/DataStructures/PriorityQueue.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "f61a38f88dbbd37728cecedee701245a01cf0bb091759007a6d99042f9be1153"
+      },
+      {
+        "path": "RxSwift/Platform/DataStructures/Queue.swift",
+        "upstream_path": "Platform/DataStructures/Queue.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "5571966518546bbaa11c4767b7e2be741f6647e8af1b5ee87099aaebdae145ea"
+      },
+      {
+        "path": "RxSwift/Platform/DeprecationWarner.swift",
+        "upstream_path": "Platform/DeprecationWarner.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "390e4f731bf7757b463bd7443443550d765e244aec26b243c58f9304fb108d5f"
+      },
+      {
+        "path": "RxSwift/Platform/DispatchQueue+Extensions.swift",
+        "upstream_path": "Platform/DispatchQueue+Extensions.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "2514bc97d8cdcb7511639d25f40b680a4d6801ea74fee14d8f4ae03cb9384c79"
+      },
+      {
+        "path": "RxSwift/Platform/Platform.Darwin.swift",
+        "upstream_path": "Platform/Platform.Darwin.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "b7e7ce229b07176e9e7eaa49b50f9f9692eeefbdfc8d91a8059fbddd04abe1fc"
+      },
+      {
+        "path": "RxSwift/Platform/Platform.Linux.swift",
+        "upstream_path": "Platform/Platform.Linux.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "f7b1aee632d0d8c0a06f3b82143cd393322d9fd70a8a1cc4570a6fb287d902d6"
+      },
+      {
+        "path": "RxSwift/Platform/RecursiveLock.swift",
+        "upstream_path": "Platform/RecursiveLock.swift",
+        "purpose": "materialized shared Platform source for disjoint SwiftPM targets",
+        "sha256": "6f03fa49513b7b1b2da3a5cc564a339cc3a9c4ae5e3ed153f9517552ce1d0a7b"
+      },
+      {
+        "path": "RxSwift/Reactive.swift",
+        "sha256": "ffbdd266af09a147bf962589cb30da34a459d8a82cb0f5d24236092e6d324588"
+      },
+      {
+        "path": "RxSwift/Rx.swift",
+        "sha256": "bb2e1de9ce5dbf8ad83be07e1f3b13f905fe1ca5b979b0d18ad58c8361fd5000"
+      },
+      {
+        "path": "RxSwift/RxMutableBox.swift",
+        "sha256": "b09bcf4d158da5c584c8af102a28b6c11d15fc91f0e8630579a97004ba8df00c"
+      },
+      {
+        "path": "RxSwift/SchedulerType.swift",
+        "sha256": "e96f3819c143a094bdc2ad5a04a9b561c0ad9d9a2dd4bc26e853084b5b61396d"
+      },
+      {
+        "path": "RxSwift/Schedulers/ConcurrentDispatchQueueScheduler.swift",
+        "sha256": "ce548051af9afc67da150e78a09fffdd155af7b5b4edf833d8fa72e134c63b4b"
+      },
+      {
+        "path": "RxSwift/Schedulers/ConcurrentMainScheduler.swift",
+        "sha256": "e30a05503104db43ca48230d9b16690b8d09a0ee5859bbafaa51f91a47d204ab"
+      },
+      {
+        "path": "RxSwift/Schedulers/CurrentThreadScheduler.swift",
+        "sha256": "7c82bd23c7209d7a15b34b2ff76678fdced46fb73306afed045526884cc6e426"
+      },
+      {
+        "path": "RxSwift/Schedulers/HistoricalScheduler.swift",
+        "sha256": "b0e06b8350fb2609b767efc294a02ca5040597a1d40ddb4e2744dfe5ac30ab43"
+      },
+      {
+        "path": "RxSwift/Schedulers/HistoricalSchedulerTimeConverter.swift",
+        "sha256": "abdabe446dd7c63bb186b115129c0306e62cd3f4b3e518d4f7be854fc64ba796"
+      },
+      {
+        "path": "RxSwift/Schedulers/Internal/DispatchQueueConfiguration.swift",
+        "sha256": "2b526c042e90b5b72b8e4519e2bc6d9db26e615790faf702178adedaebbfde8e"
+      },
+      {
+        "path": "RxSwift/Schedulers/Internal/InvocableScheduledItem.swift",
+        "sha256": "4709e9b202ec973e6d1ffe0f63384feee3c9d3ed9d970627063db2446b389b51"
+      },
+      {
+        "path": "RxSwift/Schedulers/Internal/InvocableType.swift",
+        "sha256": "3a5d3f70049ca13f601941e7eeef271919d6eb772a00bda804a8871858a321fe"
+      },
+      {
+        "path": "RxSwift/Schedulers/Internal/ScheduledItem.swift",
+        "sha256": "fdd8bd5a6a8c2566f1b318c8aa87a79bb2f0a20cc39ac1a7348a9048b50dfec0"
+      },
+      {
+        "path": "RxSwift/Schedulers/Internal/ScheduledItemType.swift",
+        "sha256": "70d0910752ff37927aa5130d8ca5044e5910b8d446a7bf3679af06a8f4486e96"
+      },
+      {
+        "path": "RxSwift/Schedulers/MainScheduler.swift",
+        "sha256": "7c3e25db755d8414687c5c2b7bd51620e78e638838969e2a2e6a5c6e5ae97043"
+      },
+      {
+        "path": "RxSwift/Schedulers/OperationQueueScheduler.swift",
+        "sha256": "0c991f94a33dc017bd5b01ce99c3b7505ca9cc72745e25e18e1f3934c9895c5d"
+      },
+      {
+        "path": "RxSwift/Schedulers/RecursiveScheduler.swift",
+        "sha256": "d110638c1a9f173a5e4e1dcabb4ff3fb62434e78e53b2f84f632cdf7cba34daa"
+      },
+      {
+        "path": "RxSwift/Schedulers/SchedulerServices+Emulation.swift",
+        "sha256": "e599d73ee23cd741b974e24073d9d2710f3bd14074599fa3f6e826e610cfc143"
+      },
+      {
+        "path": "RxSwift/Schedulers/SerialDispatchQueueScheduler.swift",
+        "sha256": "fd81e8d02c85aa43114f4cd10bbb93762d70527bd85404d367bc07e3f61fd76c"
+      },
+      {
+        "path": "RxSwift/Schedulers/VirtualTimeConverterType.swift",
+        "sha256": "a694e980820da7d272fcd724bbaf896502ed1823b0e1165b5e2dd0ef63e6ec36"
+      },
+      {
+        "path": "RxSwift/Schedulers/VirtualTimeScheduler.swift",
+        "sha256": "d4a57f6a440cd37d187c300eda76865be24015bd72ea6d2170e613c2d2251c14"
+      },
+      {
+        "path": "RxSwift/Subjects/AsyncSubject.swift",
+        "sha256": "18159fb45294cbbdfb1e4afa5e220c380e42f4a1d91bc995bb627232910a82f2"
+      },
+      {
+        "path": "RxSwift/Subjects/BehaviorSubject.swift",
+        "sha256": "78690fc3a064011281058c48b6a38be80c344d417407ed62b2e156c437b1f032"
+      },
+      {
+        "path": "RxSwift/Subjects/PublishSubject.swift",
+        "sha256": "fc865dc990147681478645346633916be87cb703ac23a1f9fbe41e228c9ee9a4"
+      },
+      {
+        "path": "RxSwift/Subjects/ReplaySubject.swift",
+        "sha256": "b53b5088a72e044a85e99e3fe66cec351f878d5670861f8f2f58d061ef38e151"
+      },
+      {
+        "path": "RxSwift/Subjects/SubjectType.swift",
+        "sha256": "e50842273578c8ec1f7e69c3d4971d698f151b105cb0cf0d5c6a6ed37e78f80d"
+      },
+      {
+        "path": "RxSwift/SwiftSupport/SwiftSupport.swift",
+        "sha256": "8d86b916f4bea8602db2249fed67cbf58e49558ac301545599932d12917c96f9"
+      },
+      {
+        "path": "RxSwift/Traits/Completable+AndThen.swift",
+        "sha256": "f7fc1c0cc6ee3f8d01ac7b23cd50067b01c62cc28f0159588d7e9e243d5bcd55"
+      },
+      {
+        "path": "RxSwift/Traits/Completable.swift",
+        "sha256": "f379f10791f6a9f7d3179890fb7afc73bc07edaf265671199e9ec8b4b680f7f9"
+      },
+      {
+        "path": "RxSwift/Traits/Maybe.swift",
+        "sha256": "5e70b3c24c93a0bd3887954e0010619dc1696cff81bf1d50b616b1899ce13a93"
+      },
+      {
+        "path": "RxSwift/Traits/ObservableType+PrimitiveSequence.swift",
+        "sha256": "431bc3ccae353db96e8caa0d870208b5b6f13b7b9d8a5e1407c6e460b6b0c4cd"
+      },
+      {
+        "path": "RxSwift/Traits/PrimitiveSequence+Zip+arity.swift",
+        "sha256": "36cabb7dee7b2d10c37d9c06f70ee4d8bb8f00eee2e88c44254ef6894f3affa3"
+      },
+      {
+        "path": "RxSwift/Traits/PrimitiveSequence.swift",
+        "sha256": "b40ef5fb284e955358e1d04ce00b83d37d3a996be49b48e4aee96216ec237f06"
+      },
+      {
+        "path": "RxSwift/Traits/Single.swift",
+        "sha256": "cd68fa2bd2fd01a736cf2ccf394045b240bf1243b848bea197f07fc6443046e3"
+      },
+      {
+        "path": "RxTest.podspec",
+        "sha256": "fa376dc129e757c8fcaf41cd404ef1e5e3729dae754b3ee6fe317b29b9c4823c"
+      }
+    ]
+  },
+  {
+    "repository": "Moya",
+    "url": "https://github.com/Moya/Moya.git",
+    "revision": "0b90f7ee8dcc378fe48db18c8b281e8792244de9",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "11.0.0",
+    "swift_sources": 25,
+    "licenses": [
+      "License.md"
+    ],
+    "files": [
+      {
+        "path": "License.md",
+        "sha256": "86dc0a20227b30f9bb6026f8759639d9aa0250c858ec787935e72bcc7915cbad"
+      },
+      {
+        "path": "Moya.podspec",
+        "sha256": "a1754e86abc4ff13a7a2a131ec6da88bb246fc516a41f5b42792b8bdf6ec92ba"
+      },
+      {
+        "path": "Sources/Moya/AnyEncodable.swift",
+        "sha256": "5f5eec5f07b99b4316ee2098f58be9f52d1dcf8677d402cef899421c45c3554d"
+      },
+      {
+        "path": "Sources/Moya/Cancellable.swift",
+        "sha256": "94270d98ebac182a002ee6eff75c121fcd754beebfaa0773e55495e8c5f76a45"
+      },
+      {
+        "path": "Sources/Moya/Endpoint.swift",
+        "sha256": "bef5326f2a223dc64626964078df48e35573f079625b622b47549049908c90fc"
+      },
+      {
+        "path": "Sources/Moya/Image.swift",
+        "sha256": "2f24df12100597161608887630c0ca672dfb4bcdb935977d966d740690691fea"
+      },
+      {
+        "path": "Sources/Moya/Moya+Alamofire.swift",
+        "sha256": "6813fd4a12d310c297b4bdd06369475ea8f3729230603d4b7124f821de3c56cb"
+      },
+      {
+        "path": "Sources/Moya/MoyaError.swift",
+        "sha256": "abd892b2e24e939475771000acbb9c44211c9068bc601cbc5389d770c4a5e96f"
+      },
+      {
+        "path": "Sources/Moya/MoyaProvider+Defaults.swift",
+        "sha256": "3a492c775995969470882cf8ab564c36b3f433931edcd50ad4223efe22bba524"
+      },
+      {
+        "path": "Sources/Moya/MoyaProvider+Internal.swift",
+        "sha256": "8edc1dd01ec2412ddb2e398209098f5cc374bf271bce9aec336dd65b46e9d91d"
+      },
+      {
+        "path": "Sources/Moya/MoyaProvider.swift",
+        "sha256": "3992094c6ca435695604abe3c0b3f82192951da42812b16720b61cb0e5cef503"
+      },
+      {
+        "path": "Sources/Moya/MultiTarget.swift",
+        "sha256": "9d83b07c07ddd9293119575abd74d5668d83c36396e58a95aca184845755cef0"
+      },
+      {
+        "path": "Sources/Moya/MultipartFormData.swift",
+        "sha256": "d4f1b4358db72896911eab6c5967d4056473b39589ffa3cbf2d83ef1bd80277b"
+      },
+      {
+        "path": "Sources/Moya/Plugin.swift",
+        "sha256": "4a4c528113404f36c58af1369abdbf2f1f0672bd8c0714d97bb54914f2307eaa"
+      },
+      {
+        "path": "Sources/Moya/Plugins/AccessTokenPlugin.swift",
+        "sha256": "e9487ab9139903fe17a98c59527e73bc7b9759d35a2068ca832a871400d5d638"
+      },
+      {
+        "path": "Sources/Moya/Plugins/CredentialsPlugin.swift",
+        "sha256": "8cf4628a0f2e2ada70d8006ec60bc763b5265d0eb79a61e83c1e1ff7ccf25d12"
+      },
+      {
+        "path": "Sources/Moya/Plugins/NetworkActivityPlugin.swift",
+        "sha256": "5496e8189a09613dd459ec81994c4d3c5b117a11d01d1423d3cf316b322934f6"
+      },
+      {
+        "path": "Sources/Moya/Plugins/NetworkLoggerPlugin.swift",
+        "sha256": "37d3398df1568d0debd6afc12fed72ef92fdd02ef4ea7566e96404277d30b06c"
+      },
+      {
+        "path": "Sources/Moya/Response.swift",
+        "sha256": "792c4c3bafc946f4fd17744b10ade39bda038e81a8ca7f0d00c44ada55433b02"
+      },
+      {
+        "path": "Sources/Moya/TargetType.swift",
+        "sha256": "9bbc4f33a449c519ff573af58f369d50115df142e125577c637e115c5b9611fe"
+      },
+      {
+        "path": "Sources/Moya/Task.swift",
+        "sha256": "ba1e13c22dc6a0a2e9b3133640dd00f3c591be5c6778721dd3b48c662edad5dc"
+      },
+      {
+        "path": "Sources/Moya/URL+Moya.swift",
+        "sha256": "7ca1ada2739508cd1a6800c021dca26955b9f7f8e4c9eab922b75983dce7049a"
+      },
+      {
+        "path": "Sources/Moya/URLRequest+Encoding.swift",
+        "sha256": "c7616676701cb5bd893949db63b97885b0e8120f8c7b46d29657785231f13662"
+      },
+      {
+        "path": "Sources/Moya/ValidationType.swift",
+        "sha256": "176c0568f6161543a2a5d122f3a43bf0999cfc49869eef6182372e82e14461af"
+      },
+      {
+        "path": "Sources/RxMoya/MoyaProvider+Rx.swift",
+        "sha256": "70744783223b247f0c8d3002a85e37c987869247a35579f5ad5c76729c6a8ea5"
+      },
+      {
+        "path": "Sources/RxMoya/Observable+Response.swift",
+        "sha256": "1a9b50c0872a8dad024fd8b283c46b7e3061f4e7cd691a14a206fc4e1def25dc"
+      },
+      {
+        "path": "Sources/RxMoya/Single+Response.swift",
+        "sha256": "674834625bb8582ef82a4d71c39f011edd49f2c049fb688ca55d26aea004b508"
+      }
+    ]
+  },
+  {
+    "repository": "SwiftyJSON",
+    "url": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+    "revision": "de309166a48a9dfc51d5bc4c55c0664d981de311",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "4.0.0",
+    "swift_sources": 1,
+    "licenses": [
+      "LICENSE"
+    ],
+    "files": [
+      {
+        "path": "LICENSE",
+        "sha256": "b56aaa95c548a2c07a2d5b358e8adda2f8a8f4e7794a8d7f7d541cfde7d04162"
+      },
+      {
+        "path": "Source/SwiftyJSON.h",
+        "sha256": "560561ce1da33596bdcad1edbc431d14cbff9c5474dc9154e13bcd7c04834529"
+      },
+      {
+        "path": "Source/SwiftyJSON.swift",
+        "sha256": "0a64d5faff1ae4b5d1e292a84881123e6c247f6be917cebbdbd77a2ffa91764b"
+      },
+      {
+        "path": "SwiftyJSON.podspec",
+        "sha256": "de2a2e9679e96bd9c6b288d912eb93d81bc61aefb158cbb3f84865985527dd83"
+      }
+    ]
+  },
+  {
+    "repository": "Alamofire",
+    "url": "https://github.com/Alamofire/Alamofire.git",
+    "revision": "bc973c5311ce3db3f01a9fcde027fb11fa2254bf",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "4.6.0",
+    "swift_sources": 17,
+    "licenses": [
+      "LICENSE"
+    ],
+    "files": [
+      {
+        "path": "Alamofire.podspec",
+        "sha256": "6b0101dd47aae50f617d462f9e783752c79d5eedda1b679a3e2f427d97bea9f3"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "34af11c6fbc438a7ed497d5fe514c34996d3ed1eefb15d1f20d57cdf9bdb2a65"
+      },
+      {
+        "path": "Source/AFError.swift",
+        "sha256": "bae51ba9b7b74be8b479debc0965e65d04e9db003e273754da096aa1c98a587b"
+      },
+      {
+        "path": "Source/Alamofire.h",
+        "sha256": "02508cc1d654aa8a9cf581c23b9f90d21a3463146bdcb15e993d3cb89525dd45"
+      },
+      {
+        "path": "Source/Alamofire.swift",
+        "sha256": "0ff498efd2c5e1b1d423a9847e11135fc6c3c2445e430ff9189f49f80a859d1a"
+      },
+      {
+        "path": "Source/DispatchQueue+Alamofire.swift",
+        "sha256": "ff0791b3e2a54d149394ad5201d501fc3385cce5bdedf7d0dc67793de311583e"
+      },
+      {
+        "path": "Source/MultipartFormData.swift",
+        "sha256": "2766757f279f8fe200db5984538bbd529e598bceae261f965e290e5418cb24a3"
+      },
+      {
+        "path": "Source/NetworkReachabilityManager.swift",
+        "sha256": "7a30cabdcfc215f7126b8f1869c6646cc14b84b7f8c6e133c7933f0b43d031c5"
+      },
+      {
+        "path": "Source/Notifications.swift",
+        "sha256": "58a501349d5bc331342e9ca05e4d4d50fe55f0c5f45fdf65335cf0602d66e34e"
+      },
+      {
+        "path": "Source/ParameterEncoding.swift",
+        "sha256": "e1ecb5c6dcb0fc9b97c0eb9675f21ac0d11a94f66fba13167c915fd8da932a5f"
+      },
+      {
+        "path": "Source/Request.swift",
+        "sha256": "c5d9613e2039049ede3839575e6113dec4436e807d64eeb71d81596eaab33528"
+      },
+      {
+        "path": "Source/Response.swift",
+        "sha256": "0be82ba16cfa40df623b43183c276806cae665fbe3102095d17420623bdb7ade"
+      },
+      {
+        "path": "Source/ResponseSerialization.swift",
+        "sha256": "a814ffa4b4372362d0a8f6574ec608d7f7872e6270418f3a40eae4d1038c3598"
+      },
+      {
+        "path": "Source/Result.swift",
+        "sha256": "a8b66e34882a9ffcdbbe4f5663a205ab6912dbe476a04dcb1b4da61859072ceb"
+      },
+      {
+        "path": "Source/ServerTrustPolicy.swift",
+        "sha256": "82f1ca56d85db817c05a738a85a67d7d75ef6971162a975474c45105a751d746"
+      },
+      {
+        "path": "Source/SessionDelegate.swift",
+        "sha256": "0466356023ab898ce59f8d9e97653cb6fca5fd14a39b8aef8a7bc26e41c41daf"
+      },
+      {
+        "path": "Source/SessionManager.swift",
+        "sha256": "4e5de8cebd6774c2f6dd2b37f577e717d5f15fba6e3c3d8cc59d3d484629d928"
+      },
+      {
+        "path": "Source/TaskDelegate.swift",
+        "sha256": "96d3430dbbedf8b72afc5ec098f3a1811ff93349658058720b9f0014a057d9a4"
+      },
+      {
+        "path": "Source/Timeline.swift",
+        "sha256": "95eeea611da0da080aa8b0de41a894ff2686699e2abea2bd3dc6970faa12f3b0"
+      },
+      {
+        "path": "Source/Validation.swift",
+        "sha256": "4c63f90ee31508ed171f4a92bb57d9b5419e470f3d4e15d583621092ddcc51cc"
+      }
+    ]
+  },
+  {
+    "repository": "Result",
+    "url": "https://github.com/antitypical/Result.git",
+    "revision": "7477584259bfce2560a19e06ad9f71db441fff11",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "3.2.4",
+    "swift_sources": 2,
+    "licenses": [
+      "LICENSE"
+    ],
+    "files": [
+      {
+        "path": "LICENSE",
+        "sha256": "977b92c50dbd0ccb7f987d02ab6c1d58a042db788b07a24b0abecfabecd09e47"
+      },
+      {
+        "path": "Result/Result.h",
+        "sha256": "409bb350288f883aa3e2e5d48debb281d4186ad54ceee11a6809e7033984b40c"
+      },
+      {
+        "path": "Result/Result.swift",
+        "sha256": "0680ef7f67e148d841ae79e5c6b1600da67ca40a3479abea2f816841fc038655"
+      },
+      {
+        "path": "Result/ResultProtocol.swift",
+        "sha256": "adcc89fad6d7e87685d96f3ac7fcf410fc1fd0c5b3e0a3f52515919e5d7e1ee0"
+      },
+      {
+        "path": "Result.podspec",
+        "sha256": "032f666a8a68d108ead192b67cc6c6a597bd5d89a25c85c1ad5a48a8ce40fe51"
+      }
+    ]
+  },
+  {
+    "repository": "Action",
+    "url": "https://github.com/RxSwiftCommunity/Action.git",
+    "revision": "9c413d35c3b0f14dd2a817c866415afd9a40e4db",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "3.5.0",
+    "swift_sources": 7,
+    "licenses": [
+      "License.md"
+    ],
+    "files": [
+      {
+        "path": "Action.podspec",
+        "sha256": "1640185d7cb697501aee716518cfeceaa283ee7d1f0165e83c752274ca9a724c"
+      },
+      {
+        "path": "License.md",
+        "sha256": "a216e0bd42a676a35a24dfb878aac0b5ff632081dc8c29112abbdcaac77a9bbc"
+      },
+      {
+        "path": "Sources/Action/Action+Internal.swift",
+        "sha256": "13ef000a1acf588438247107964145ce126959c133625da5b825c4854b15899c"
+      },
+      {
+        "path": "Sources/Action/Action.h",
+        "sha256": "e4b27c0ae6789717e6ef387e0c6e49267ea8d24b1c50e04a6665b78cb7b3185f"
+      },
+      {
+        "path": "Sources/Action/Action.swift",
+        "sha256": "02465fd247dbc2602f22ba0500a7174ee7cd2b4394219d06950b04137396ee04"
+      },
+      {
+        "path": "Sources/Action/CommonUI/Button+Action.swift",
+        "sha256": "0215f2f94ed8c4279c8e1cfabfe65689b14589332618adba7654afa4e06b29b1"
+      },
+      {
+        "path": "Sources/Action/CommonUI/Control+Action.swift",
+        "sha256": "71427ee82621e8eaa91568de21387ed74558c9227871e0b4b778d07562b2d097"
+      },
+      {
+        "path": "Sources/Action/InputSubject.swift",
+        "sha256": "104d5378918f51d89168539d4bbbb987072f3d91a551b9762534d53697aaa468"
+      },
+      {
+        "path": "Sources/Action/UIKitExtensions/UIAlertAction+Action.swift",
+        "sha256": "39eb30c2b59bff9e28fb0337b98badc5b6e18d8b00d144102908503ec830cc18"
+      },
+      {
+        "path": "Sources/Action/UIKitExtensions/UIBarButtonItem+Action.swift",
+        "sha256": "059b0dc776c678308549dd9892e5365ad00a05db342853cd10e5af9cd57d0e0c"
+      }
+    ]
+  },
+  {
+    "repository": "RxOptional",
+    "url": "https://github.com/RxSwiftCommunity/RxOptional.git",
+    "revision": "2ae1c01d2a725ebbc7b75c8c1fc3623a54084b94",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "3.3.0",
+    "swift_sources": 7,
+    "licenses": [
+      "LICENSE"
+    ],
+    "files": [
+      {
+        "path": "LICENSE",
+        "sha256": "955305ad4e64c6b9bd29a11d97cde19c6988ef197492d09d49112cc4118e8f39"
+      },
+      {
+        "path": "RxOptional.podspec",
+        "sha256": "a185240319d4463be52ddd29891d753fe59891cb27d49cf7b3a216f0748e5fe8"
+      },
+      {
+        "path": "Source/Driver+Occupiable.swift",
+        "sha256": "dcf60d94c8d292a7a431ad9b4603be74a26deec89f781fd3266143c084a8996a"
+      },
+      {
+        "path": "Source/Driver+Optional.swift",
+        "sha256": "32a80f6c383905e7ca5c95ec7940d2b49859bde7ee0911a1f78ecdf101ff9059"
+      },
+      {
+        "path": "Source/Observable+Occupiable.swift",
+        "sha256": "cc42861f1e3888be1b059e01ba23247f4a3741efc395c54054aa5d4a667051ff"
+      },
+      {
+        "path": "Source/Observable+Optional.swift",
+        "sha256": "da740b6b8ea9c1992093580b45551d3569a8d502402db68c4222176b5b8f2cbd"
+      },
+      {
+        "path": "Source/Occupiable.swift",
+        "sha256": "403dc33365b3d0498151ddb06b7c063af1c5175d2ea4db4514c0b5f694fdef92"
+      },
+      {
+        "path": "Source/OptionalType.swift",
+        "sha256": "3f85845f8bc9eff92854fee895a9ef752639f1070824e2c32af4280cf2cf5760"
+      },
+      {
+        "path": "Source/RxOptionalError.swift",
+        "sha256": "307fbd788c045162dd56b2868a6eda8f29bf3e9968c61e83787af956117d0c7e"
+      },
+      {
+        "path": "Source/Supporting Files/RxOptional.h",
+        "sha256": "d3dfaf21be39d211fdacedc7d2f8330a58a4c3662e83eac8b93d0d4ce1922a56"
+      }
+    ]
+  },
+  {
+    "repository": "NSObjectRx",
+    "url": "https://github.com/RxSwiftCommunity/NSObject-Rx.git",
+    "revision": "772b9c70cb59c51e9664f82037660fb97bfa621d",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "4.2.0",
+    "swift_sources": 2,
+    "licenses": [
+      "LICENSE"
+    ],
+    "files": [
+      {
+        "path": "HasDisposeBag.swift",
+        "sha256": "daf138a9a500562a5cd7debafdd9bf57d82c88f842fa7269c29402a9d04026b3"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "a216e0bd42a676a35a24dfb878aac0b5ff632081dc8c29112abbdcaac77a9bbc"
+      },
+      {
+        "path": "NSObject+Rx.podspec",
+        "sha256": "e6909e555e2e6b7d4125b9f7898071e5eea016425db55469bd1275167b3a9bc8"
+      },
+      {
+        "path": "NSObject+Rx.swift",
+        "sha256": "069b6ea0748eb7361e2605d71e5f197cb5c507c3fefc291634658c0a4d9b6319"
+      }
+    ]
+  },
+  {
+    "repository": "Reachability",
+    "url": "https://github.com/ashleymills/Reachability.swift.git",
+    "revision": "06beeead15401a312622959654a2e9ec8cfa2cb9",
+    "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+    "version": "4.1.0",
+    "swift_sources": 1,
+    "licenses": [
+      "LICENSE"
+    ],
+    "files": [
+      {
+        "path": "LICENSE",
+        "sha256": "2b44bc6f4a9b9305c6906c2a6ee0e5606993787440fb4a5a7905629ea0d6c386"
+      },
+      {
+        "path": "Reachability/Reachability.swift",
+        "sha256": "876eb2d7dc501a426b6212712c335ce80f51149c68fc4e89d0e6f030ecab1705"
+      },
+      {
+        "path": "ReachabilitySwift.podspec",
+        "sha256": "830e2a652c023b980dfadfd13e8bb3abe06d207d444a370469986b8a6f7205c9"
+      }
+    ]
+  }
+]

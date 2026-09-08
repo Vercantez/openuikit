@@ -371,6 +371,11 @@ DARWIN_SOURCE_PRODUCTS = {
     "SimplenoteFoundation", "SimplenoteEndpoints", "SimplenoteInterlinks",
     "SimplenoteSearch", "Gridicons", "Simperium", "AutomatticTracks",
     "AutomatticTracksModelObjC",
+    # Eidolon 44486ed: ten host modules compile in Swift 4. RxCocoa selects
+    # AppKit on route (b); a product is not proof of its inactive UIKit APIs.
+    "RxSwift", "RxCocoa", "Moya", "Action", "RxOptional", "NSObject_Rx",
+    "SwiftyJSON", "Result", "Alamofire", "Reachability",
+    "Keys", "ARAnalytics", "Stripe", "EidolonLaunchCompat",
 }
 PORTED_PRODUCTS.update({name: name for name in DARWIN_SOURCE_PRODUCTS})
 
@@ -1466,6 +1471,26 @@ def build_manifest(
                 header_sources.append(expanded)
                 header_sources.sort()
     swift_header_consumers: list[str] = []
+    # Eidolon 44486ed BridgingHeader.h imports sibling PodsBridgingHeader.h,
+    # which is not a PBX source. Follow existing local quoted includes rather
+    # than emitting a library with a header we silently failed to copy.
+    pending_headers = list(header_sources)
+    while pending_headers:
+        header = graph.source_root / pending_headers.pop()
+        if not header.is_file():
+            continue
+        for name in re.findall(r'^\s*#\s*(?:import|include)\s*"([^"]+)"',
+                               header.read_text(encoding="utf-8", errors="replace"),
+                               flags=re.MULTILINE):
+            candidate = (header.parent / name).resolve()
+            if (not candidate.is_file() or candidate.suffix.lower() not in HEADER_EXT
+                    or not candidate.is_relative_to(graph.source_root.resolve())):
+                continue
+            rel = candidate.relative_to(graph.source_root.resolve()).as_posix()
+            if rel not in header_sources:
+                header_sources.append(rel)
+                pending_headers.append(rel)
+    header_sources.sort()
     for path in objc_sources + c_sources + header_sources:
         source = graph.source_root / path
         if source.is_file():
@@ -1577,6 +1602,7 @@ def build_manifest(
         "c_sources": c_sources,
         "header_sources": header_sources,
         "bridging_header": bridging_header,
+        "swift_language_version": settings.get("SWIFT_VERSION"),
         "swift_header_consumers": swift_header_consumers,
         "resources": resources,
         "other_resources": other_resources,
@@ -1645,6 +1671,13 @@ def emit_package_swift(
         '                .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
         '                .product(name: "StoreKit", package: "OpenUIKit", condition: .when(platforms: [.linux]))',
     ]
+    # Eidolon generated-library build: SwiftPM resolves product names before
+    # evaluating dependency platform conditions. Darwin exports OpenUIKitLibkern
+    # and OpenUIKitStoreKit instead; a .when(linux) cannot hide an absent product.
+    linux_products = [p for p in products if any(f'name: "{name}"' in p
+                      for name in ("libkern", "StoreKit"))]
+    products = [p for p in products if p not in linux_products]
+    linux_product_deps = ",\n".join(linux_products)
     demanded = {r["name"] for r in manifest["spm"] + manifest["imports"]}
     for name in sorted(DARWIN_SOURCE_PRODUCTS & demanded):
         products.append(
@@ -1670,22 +1703,45 @@ def emit_package_swift(
     mixed = bool(manifest.get("objc_sources") or manifest.get("c_sources"))
     clang_name = f"{target_name}ObjC"
     if mixed:
+        # Original .m files include their adjacent headers by basename. The
+        # generated public-header tree preserves directories, so expose each
+        # carried directory to Clang (Eidolon Kiosk/App/*.m, three inputs).
+        header_dirs = sorted({posixpath.dirname(p) for p in manifest.get("header_sources", [])})
+        header_settings = ", ".join(
+            f'.headerSearchPath({_swift_string("include/" + directory)})'
+            for directory in header_dirs
+        )
         clang_target = f'''        .target(
             name: {_swift_string(clang_name)},
             dependencies: [.product(name: "OpenUIKit", package: "OpenUIKit")],
             path: "Sources/{clang_name}",
-            publicHeadersPath: "include"
+            publicHeadersPath: "include",
+            cSettings: [{header_settings}]
         ),
 '''
         target_deps = product_deps + f',\n                "{clang_name}"'
     else:
         clang_target = ""
         target_deps = product_deps
+    # Swift 4.0 is a source rule at Eidolon's pin: the same native UIKit
+    # UIApplicationLaunchOptionsKey probe fails in Swift 5 and passes in 4.
+    language = manifest.get("swift_language_version")
+    language = {"4.0": "4", "5.0": "5", "6.0": "6"}.get(language, language)
+    language_setting = (f',\n    swiftLanguageVersions: [.version({_swift_string(language)})]'
+                        if language in {"4", "4.2", "5", "6"} else "")
     return f"""// swift-tools-version:5.9
 // Generated by Tools/ingest/xcodeproj_to_package.py — do not edit by hand.
 // Source project: {manifest["project"]}
 // Target: {manifest["target"]["name"]}
 import PackageDescription
+
+#if os(Linux)
+let linuxCompatibilityProducts: [Target.Dependency] = [
+{linux_product_deps},
+]
+#else
+let linuxCompatibilityProducts: [Target.Dependency] = []
+#endif
 
 let package = Package(
     name: {_swift_string(target_name)},
@@ -1701,7 +1757,7 @@ let package = Package(
             name: {_swift_string(target_name)},
             dependencies: [
 {target_deps},
-            ]{resources_block},
+            ] + linuxCompatibilityProducts{resources_block},
             swiftSettings: [
                 .unsafeFlags([
                     "-default-isolation", "MainActor",
@@ -1709,7 +1765,7 @@ let package = Package(
                 ]),
             ]
         ),
-    ]
+    ]{language_setting}
 )
 """
 

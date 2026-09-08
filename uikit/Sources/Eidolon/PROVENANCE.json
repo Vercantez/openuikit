@@ -583,6 +583,11 @@
       "source": "Kiosk/Supporting Files/BridgingHeader.h",
       "vendored": "Sources/EidolonObjC/include/Kiosk/Supporting Files/BridgingHeader.h",
       "sha256": "1d20000bf4ec8a60587932d0a5e244e2f72ba3e279b298a25a0acfea2725ea04"
+    },
+    {
+      "source": "Kiosk/Supporting Files/PodsBridgingHeader.h",
+      "vendored": "Sources/EidolonObjC/include/Kiosk/Supporting Files/PodsBridgingHeader.h",
+      "sha256": "4f974d243323f4266e8aca5616c881668e2ada0dce6b4319cec07b8624bbd7d5"
     }
   ]
 }

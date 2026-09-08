@@ -5,4 +5,5 @@
 #include "Kiosk/App/KioskDateFormatter.h"
 #include "Kiosk/App/StubResponses.h"
 #include "Kiosk/Supporting Files/BridgingHeader.h"
+#include "Kiosk/Supporting Files/PodsBridgingHeader.h"
 #endif

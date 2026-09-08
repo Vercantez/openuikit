@@ -576,5 +576,113 @@
     "podspec_source": "https://raw.githubusercontent.com/CocoaPods/Specs/master/Specs/0/9/9/CardFlight-v4/4.3.1/CardFlight-v4.podspec.json",
     "locked_version": "4.3.1",
     "source_tag": "v4.3.1"
+  },
+  "port_runtime": {
+    "command": [
+      "/tmp/eidolon-launch-nib-runtime/probe",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/fixtures/realapp/eidolon/nibs"
+    ],
+    "exit_code": 0,
+    "output": "objc[67018]: Class CAFilter is implemented in both /System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore (0x1f3581dc8) and /private/tmp/eidolon-launch-nib-runtime/probe (0x1006b6750). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.\nstoryboard.initial.isNil=true\nfactory.AppViewController=false\nfactory.ActionButton=false\nfactory.ListingsCountdownManager=false\nnib.AppViewController.loaded=true\nnib.AppViewController.types=[\"OpenUIKit.UIViewController\"]\nnib.AppViewController.unhandled=[\"unregistered-class:_TtC5Kiosk24ListingsCountdownManager\", \"class:_TtC5Kiosk24ListingsCountdownManager\", \"class:UILongPressGestureRecognizer\", \"unregistered-class:_TtC5Kiosk17AppViewController\", \"class:UIStoryboardEmbedSegueTemplate\", \"class:UIStoryboardModalSegueTemplate\", \"class:UIRuntimeEventConnection\", \"outlet:UIViewController.storyboard\", \"outlet:UIViewController.countdownManager\", \"outlet:NibProxyPlaceholder.sceneViewController\"]\nnib.KCM-cT-BEX-view-jGy-SO-AWq.loaded=true\nnib.KCM-cT-BEX-view-jGy-SO-AWq.types=[\"OpenUIKit.UIView\"]\nnib.KCM-cT-BEX-view-jGy-SO-AWq.unhandled=[\"unregistered-class:_TtC5Kiosk12ActionButton\", \"UIButton.UIButtonStatefulContent\", \"UIButton.UIAdjustsImageWhenHighlighted\", \"UIButton.UIAdjustsImageWhenDisabled\", \"UIButton.UIFont\", \"UIButton.UIButtonConfiguration\", \"UIFontName:ITCAvantGardeDemiTrack03\", \"UIFontName:AGaramondPro-Regular\", \"class:_UILayoutGuide\", \"NSLayoutConstraint:NSFirstItem\", \"class:UIRuntimeOutletCollectionConnection\", \"outlet:NibProxyPlaceholder.containerView\", \"outlet:NibProxyPlaceholder.countdownContainerView\", \"outlet:NibProxyPlaceholder.countdownLabel\", \"outlet:NibProxyPlaceholder.offlineBlockingView\", \"outlet:NibProxyPlaceholder.registerToBidButton\", \"outlet:NibProxyPlaceholder.view\"]\nnib.KeypadView.loaded=true\nnib.KeypadView.types=[\"OpenUIKit.UIView\"]\nnib.KeypadView.unhandled=[\"unregistered-class:_TtC5Kiosk10KeypadView\", \"unregistered-class:_TtC5Kiosk17LargeKeypadButton\", \"UIButton.UIButtonStatefulContent\", \"UIButton.UIAdjustsImageWhenHighlighted\", \"UIButton.UIAdjustsImageWhenDisabled\", \"UIButton.UIFont\", \"UIButton.UIButtonConfiguration\", \"unregistered-class:_TtC5Kiosk12KeypadButton\", \"class:UIRuntimeOutletCollectionConnection\", \"class:UIRuntimeEventConnection\", \"outlet:UIView.leftButton\", \"outlet:UIView.rightButton\"]\n",
+    "probe_source": "import Foundation\nimport OpenUIKit\n\n@main struct EidolonNibBoundaryProbe {\n    @MainActor static func main() throws {\n        let resource = CommandLine.arguments[1]\n        OpenUIKitRuntime.nibSearchPaths = [resource + \"/Auction.storyboardc\", resource]\n        let initial = UIStoryboard(name: \"Auction\", bundle: nil).instantiateInitialViewController()\n        print(\"storyboard.initial.isNil=\\(initial == nil)\")\n        for name in [\"AppViewController\", \"ActionButton\", \"ListingsCountdownManager\"] {\n            print(\"factory.\\(name)=\\(UINibClassRegistry.canMake(name))\")\n        }\n        for name in [\"AppViewController\", \"KCM-cT-BEX-view-jGy-SO-AWq\", \"KeypadView\"] {\n            UINib.unhandledKeys = []\n            let nib = UINib(nibName: name, bundle: nil)\n            print(\"nib.\\(name).loaded=\\(nib.isLoaded)\")\n            guard nib.isLoaded else { continue }\n            let objects = nib.instantiate(withOwner: nil, options: nil)\n            print(\"nib.\\(name).types=\\(objects.map { String(reflecting: type(of: $0)) })\")\n            print(\"nib.\\(name).unhandled=\\(UINib.unhandledKeys)\")\n        }\n    }\n}\n",
+    "compile_exit_code": 0,
+    "compile_command_without_object_expansion": [
+      "xcrun",
+      "swiftc",
+      "-I",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/.build/arm64-apple-macosx/release/CSTBTrueType.build",
+      "-I",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/.build/arm64-apple-macosx/release/CPortableIO.build",
+      "-swift-version",
+      "5",
+      "-parse-as-library",
+      "-I",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/.build/arm64-apple-macosx/release/Modules",
+      "-I",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/Sources/CSTBTrueType/include",
+      "-I",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/Sources/CPortableIO/include",
+      "-I",
+      "/Users/miguelsalinas/.codex-worktrees/openuikit/eidolon-launch/uikit/Sources/CQuartz/include",
+      "/tmp/eidolon-launch-nib-runtime/probe.swift",
+      "-lc++",
+      "-o",
+      "/tmp/eidolon-launch-nib-runtime/probe"
+    ],
+    "object_directories": [
+      "OpenUIKit.build",
+      "OpenCoreGraphics.build",
+      "CSTBTrueType.build",
+      "CPortableIO.build",
+      "CQuartz.build"
+    ],
+    "object_count": 190,
+    "port_sources": {
+      "Sources/OpenUIKit/UINib.swift": "14bc20dbf42c32b5ca7f4ec9331e9664b8a8421b01f19f469dd5af8019ad790f",
+      "Sources/OpenUIKit/UIApplication.swift": "85a6e8b2c042582f31b30ce32850b243c8d371942d555ee029737d93800b59f5"
+    },
+    "results": {
+      "storyboard.initial.isNil": true,
+      "factory.AppViewController": false,
+      "factory.ActionButton": false,
+      "factory.ListingsCountdownManager": false,
+      "nib.AppViewController.loaded": true,
+      "nib.AppViewController.types": [
+        "OpenUIKit.UIViewController"
+      ],
+      "nib.AppViewController.unhandled": [
+        "unregistered-class:_TtC5Kiosk24ListingsCountdownManager",
+        "class:_TtC5Kiosk24ListingsCountdownManager",
+        "class:UILongPressGestureRecognizer",
+        "unregistered-class:_TtC5Kiosk17AppViewController",
+        "class:UIStoryboardEmbedSegueTemplate",
+        "class:UIStoryboardModalSegueTemplate",
+        "class:UIRuntimeEventConnection",
+        "outlet:UIViewController.storyboard",
+        "outlet:UIViewController.countdownManager",
+        "outlet:NibProxyPlaceholder.sceneViewController"
+      ],
+      "nib.KCM-cT-BEX-view-jGy-SO-AWq.loaded": true,
+      "nib.KCM-cT-BEX-view-jGy-SO-AWq.types": [
+        "OpenUIKit.UIView"
+      ],
+      "nib.KCM-cT-BEX-view-jGy-SO-AWq.unhandled": [
+        "unregistered-class:_TtC5Kiosk12ActionButton",
+        "UIButton.UIButtonStatefulContent",
+        "UIButton.UIAdjustsImageWhenHighlighted",
+        "UIButton.UIAdjustsImageWhenDisabled",
+        "UIButton.UIFont",
+        "UIButton.UIButtonConfiguration",
+        "UIFontName:ITCAvantGardeDemiTrack03",
+        "UIFontName:AGaramondPro-Regular",
+        "class:_UILayoutGuide",
+        "NSLayoutConstraint:NSFirstItem",
+        "class:UIRuntimeOutletCollectionConnection",
+        "outlet:NibProxyPlaceholder.containerView",
+        "outlet:NibProxyPlaceholder.countdownContainerView",
+        "outlet:NibProxyPlaceholder.countdownLabel",
+        "outlet:NibProxyPlaceholder.offlineBlockingView",
+        "outlet:NibProxyPlaceholder.registerToBidButton",
+        "outlet:NibProxyPlaceholder.view"
+      ],
+      "nib.KeypadView.loaded": true,
+      "nib.KeypadView.types": [
+        "OpenUIKit.UIView"
+      ],
+      "nib.KeypadView.unhandled": [
+        "unregistered-class:_TtC5Kiosk10KeypadView",
+        "unregistered-class:_TtC5Kiosk17LargeKeypadButton",
+        "UIButton.UIButtonStatefulContent",
+        "UIButton.UIAdjustsImageWhenHighlighted",
+        "UIButton.UIAdjustsImageWhenDisabled",
+        "UIButton.UIFont",
+        "UIButton.UIButtonConfiguration",
+        "unregistered-class:_TtC5Kiosk12KeypadButton",
+        "class:UIRuntimeOutletCollectionConnection",
+        "class:UIRuntimeEventConnection",
+        "outlet:UIView.leftButton",
+        "outlet:UIView.rightButton"
+      ]
+    }
   }
 }

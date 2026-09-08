@@ -4,6 +4,15 @@
 // Target: Kiosk
 import PackageDescription
 
+#if os(Linux)
+let linuxCompatibilityProducts: [Target.Dependency] = [
+                .product(name: "libkern", package: "OpenUIKit", condition: .when(platforms: [.linux])),
+                .product(name: "StoreKit", package: "OpenUIKit", condition: .when(platforms: [.linux])),
+]
+#else
+let linuxCompatibilityProducts: [Target.Dependency] = []
+#endif
+
 let package = Package(
     name: "Eidolon",
     platforms: [.macOS(.v11)],
@@ -18,7 +27,8 @@ let package = Package(
             name: "EidolonObjC",
             dependencies: [.product(name: "OpenUIKit", package: "OpenUIKit")],
             path: "Sources/EidolonObjC",
-            publicHeadersPath: "include"
+            publicHeadersPath: "include",
+            cSettings: [.headerSearchPath("include/Kiosk/App"), .headerSearchPath("include/Kiosk/Supporting Files")]
         ),
         .target(
             name: "Eidolon",
@@ -39,7 +49,6 @@ let package = Package(
                 .product(name: "SnapKit", package: "OpenUIKit", condition: .when(platforms: [.linux])),
                 .product(name: "Sentry", package: "OpenUIKit", condition: .when(platforms: [.linux])),
                 .product(name: "Fuzi", package: "OpenUIKit", condition: .when(platforms: [.linux])),
-                .product(name: "libkern", package: "OpenUIKit", condition: .when(platforms: [.linux])),
                 .product(name: "WebKit", package: "OpenUIKit"),
                 .product(name: "FocusAppServices", package: "OpenUIKit"),
                 .product(name: "UIHelpers", package: "OpenUIKit"),
@@ -49,9 +58,21 @@ let package = Package(
                 .product(name: "PassKit", package: "OpenUIKit", condition: .when(platforms: [.linux])),
                 .product(name: "Network", package: "OpenUIKit", condition: .when(platforms: [.linux])),
                 .product(name: "SafariServices", package: "OpenUIKit", condition: .when(platforms: [.linux])),
-                .product(name: "StoreKit", package: "OpenUIKit", condition: .when(platforms: [.linux])),
+                .product(name: "ARAnalytics", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Action", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Alamofire", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Keys", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Moya", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "NSObject_Rx", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Reachability", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Result", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "RxCocoa", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "RxOptional", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "RxSwift", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "Stripe", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
+                .product(name: "SwiftyJSON", package: "OpenUIKit", condition: .when(platforms: [.macOS])),
                 "EidolonObjC",
-            ],
+            ] + linuxCompatibilityProducts,
             resources: [
                 .copy("Resources"),
             ],
@@ -62,5 +83,6 @@ let package = Package(
                 ]),
             ]
         ),
-    ]
+    ],
+    swiftLanguageVersions: [.version("4")]
 )
