@@ -641,6 +641,17 @@ open class UIViewController: UIResponder, UIContentContainer {
         return nil
     }
 
+    /// Split-view detail routing; standalone controllers use presentation.
+    /// The split-specific delegate and column behavior is measured in
+    /// Tools/oracle2/splitviewprobe (iOS 26.1, iPad A16 and SE).
+    open func showDetailViewController(_ vc: UIViewController, sender: Any?) {
+        if let split = splitViewController {
+            split.showDetailViewController(vc, sender: sender)
+        } else {
+            present(vc, animated: true)
+        }
+    }
+
     /// Display a controller using the receiver's containing navigation stack
     /// when one exists, otherwise use the ordinary modal presentation path.
     open func show(_ vc: UIViewController, sender: Any?) {
