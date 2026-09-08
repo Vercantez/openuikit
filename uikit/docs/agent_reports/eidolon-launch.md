@@ -41,7 +41,7 @@ Nine repositories supply ten runtime Swift modules under `Sources/EidolonDepende
 | Alamofire | 4.6.0 | 17 | module emitted |
 | Reachability | 4.1.0 | 1 | module emitted |
 
-These are Darwin products, not claimed guest ports. The unchanged RxCocoa source selects `NSButton+Rx` on the macOS target used by route (b). An actual OpenUIKit `UIButton.rx.tap` type-check fails with **“property 'tap' requires that 'UIButton' inherit from 'NSButton'”**. Eidolon calls it in `ChooseAuctionViewController.swift:34`, `ListingsCollectionViewCell.swift:141`, and `SaleArtworkDetailsViewController.swift:241`. The upstream UIButton extension is inside `#if os(iOS)`. No fake reactive implementation or source-condition rewrite was substituted.
+These are Darwin products, not claimed guest ports. The unchanged RxCocoa source selects `NSButton+Rx` on the macOS target used by route (b). At this first rung, an actual OpenUIKit `UIButton.rx.tap` type-check failed with **“property 'tap' requires that 'UIButton' inherit from 'NSButton'”**. Eidolon calls it in `ChooseAuctionViewController.swift:34`, `ListingsCollectionViewCell.swift:141`, and `SaleArtworkDetailsViewController.swift:241`. The upstream UIButton extension is inside `#if os(iOS)`. No fake reactive implementation or source-condition rewrite was substituted.
 
 ## Services and launch harness
 
@@ -65,12 +65,19 @@ An executed port probe against those artifacts measures:
 
 The original Xcode workspace build in an unchanged temporary copy exits **65** at missing `Pods-Kiosk.debug.xcconfig`. The initial missing CocoaPods-keys tooling was repaired under `/tmp` at the app's Gemfile.lock versions. CocoaPods' own compatibility check confirms the Stripe mismatch and private-locked versus OSS-selected font mismatch. The locked CardFlight-v4 **4.3.1** podspec source repository independently returns **exit 128, “Repository not found.”** Its availability cannot be repaired by a build flag. No new font or Stripe version was silently selected. See [oracle evidence](eidolon-launch-oracle.md).
 
+## Follow-up
+
+[Pass 2: eidolon-launch2](eidolon-launch2.md) addresses the specific
+UIButton.rx.tap platform wall with a measured adapter and the weak-superview
+ownership needed for stream completion. The original measurements below
+remain historical; the full app launch and other blocker classes stay open.
+
 ## Remaining blockers by class
 
 | blocker | measured state after this rung |
 |---|---|
 | NIB | 3/3 resources compile; actual initial-storyboard API returns nil; required app factories are absent; direct nib fallback has 10/17/12 unhandled entries. |
-| DEP platform branches | All ten host modules emit, but UIButton.rx.tap requires NSButton on the macOS route. Full app import census still lacks 14 modules. |
+| DEP platform branches | **UIButton.rx.tap closed in [pass 2](eidolon-launch2.md)**: 3 representative errors → 0, 16/16 iOS oracle cases. Other reactive UIKit surfaces remain unclaimed; the first-rung full app import census still lacks 14 modules. |
 | DEP native source access | Locked CardFlight-v4 4.3.1 repository returns 128 / Repository not found. Exact unavailable callback signature remains unmeasured. |
 | Build metadata | Stripe 14.0.1 request vs 12.1.0 lock; default OSS fonts vs locked private Artsy+UIFonts. Original workspace has no Pods configuration. |
 | MOD dialect | Swift 4 retained without app edits. Native iOS UIKit probe passes in Swift 4; Swift 5 obsoletes UIApplicationLaunchOptionsKey. |

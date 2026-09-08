@@ -582,7 +582,7 @@ let conformanceTargets: [Target] = [
     // scripts/conformance_probe_sim.sh), not a bundled resource.
     .target(name: "ConformanceApps",
             dependencies: ["OpenUIKit", "UIKit", "SafariServices", "MessageUI", "LinkPresentation"],
-            exclude: conformanceScriptExcludes,
+            exclude: conformanceScriptExcludes + ["EidolonTap"],
             swiftSettings: [.unsafeFlags(["-default-isolation", "MainActor"])]),
     // CLI: renders scene JSON (docs/SCENE_SPEC.md) to PNG + layout dump.
     // May use Foundation (it is a tool, not the library).
@@ -929,8 +929,11 @@ let eidolonServiceTargets: [Target] = [
                 path: "Sources/EidolonServiceShims/Tests/EidolonServiceShimTests"),
 ]
 
-// All source below is byte-identical to the Podfile.lock revisions in
-// Sources/EidolonDependencies/PROVENANCE.json. Apple Swift 6.2.1 emits all
+// Upstream source below is byte-identical to the Podfile.lock revisions in
+// Sources/EidolonDependencies/PROVENANCE.json. The separately authored
+// RxCocoa/OpenUIKit adapter exposes the measured UIKit control event surface
+// on the macOS toolchain; it does not patch the upstream platform branches.
+// Apple Swift 6.2.1 emits all
 // ten runtime modules in Swift 4 mode; this is host evidence, not guest support.
 #if os(Linux)
 let eidolonDependencyProducts: [Product] = []
@@ -946,7 +949,7 @@ let eidolonDependencyTargets: [Target] = [
             swiftSettings: eidolonDependencySwiftSettings),
     .target(name: "RxCocoaRuntime", path: "Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime",
             publicHeadersPath: "include", cSettings: [.unsafeFlags(["-fobjc-arc"])]),
-    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime"],
+    .target(name: "RxCocoa", dependencies: ["RxSwift", "RxCocoaRuntime", "OpenUIKit"],
             path: "Sources/EidolonDependencies/RxSwift/RxCocoa",
             exclude: ["Runtime", "iOS", "RxCocoa.h"],
             swiftSettings: eidolonDependencySwiftSettings),
@@ -968,6 +971,8 @@ let eidolonDependencyTargets: [Target] = [
     .target(name: "NSObject_Rx", dependencies: ["RxSwift"],
             path: "Sources/EidolonDependencies/NSObjectRx",
             exclude: ["LICENSE", "NSObject+Rx.podspec"], swiftSettings: eidolonDependencySwiftSettings),
+    .testTarget(name: "EidolonRxCocoaTests", dependencies: ["UIKit", "RxSwift", "RxCocoa"],
+                path: "Sources/ConformanceApps/EidolonTap", exclude: ["OracleMain.swift"]),
 ]
 #endif
 
