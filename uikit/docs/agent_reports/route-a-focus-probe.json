@@ -1,0 +1,88 @@
+{
+  "source_sha256": {
+    "Sources/Blockzilla/Blockzilla/Theme/ThemeCells/ThemeTableViewToggleCell.swift": "e777016ba647573335a09fe81a5f5101564ceb6acad303fd1140c6339cd904dc",
+    "Sources/Blockzilla/Blockzilla/Tracking Protection/Views/SwitchTableViewCell.swift": "29abf53e7320da753b3b9e4689f5b1d3e42078bbd00f87c686d6865e5b47e6de",
+    "Sources/Blockzilla/Blockzilla/Lib/PaddedSwitch.swift": "325787a717b1de74c87261bf6885af835918439a99bd8821557de0f505e9d668",
+    "Sources/Blockzilla/Blockzilla/Theme/SystemThemeDelegate.swift": "a214f059b6cfce9c272d20677e7b7c71e49ebe9e0cc8fce0c7564ba2df3b65ec",
+    "Sources/Blockzilla/Blockzilla/Tracking Protection/Model/ToggleItem.swift": "23b95c78ee515ffa2c5c314b82a5107675cd3cb68424c9b97df4f6dcc8d3f93e"
+  },
+  "commands": [
+    {
+      "name": "original-build",
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "RouteASelectorProbe"
+      ],
+      "exit": 1
+    },
+    {
+      "name": "lower-ThemeTableViewToggleCell",
+      "command": [
+        "python3",
+        "Tools/ingest/route_a_selectors.py",
+        "rewrite",
+        "--route-a",
+        "/work-route-a/uikit/Sources/Blockzilla/Blockzilla/Theme/ThemeCells/ThemeTableViewToggleCell.swift",
+        "--output",
+        "/work-route-a/uikit/RouteASelectorProbeScratch/ThemeTableViewToggleCell.swift",
+        "--report",
+        "/work-route-a/focus-probe/ThemeTableViewToggleCell.json"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "lower-SwitchTableViewCell",
+      "command": [
+        "python3",
+        "Tools/ingest/route_a_selectors.py",
+        "rewrite",
+        "--route-a",
+        "/work-route-a/uikit/Sources/Blockzilla/Blockzilla/Tracking Protection/Views/SwitchTableViewCell.swift",
+        "--output",
+        "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift",
+        "--report",
+        "/work-route-a/focus-probe/SwitchTableViewCell.json"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "lowered-build",
+      "command": [
+        "swift",
+        "build",
+        "-c",
+        "release",
+        "--product",
+        "RouteASelectorProbe"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "execution",
+      "command": [
+        "/work-route-a/uikit/.build/release/RouteASelectorProbe"
+      ],
+      "exit": 0
+    }
+  ],
+  "original_diagnostics": [
+    "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:13:40: error: '#selector' can only be used with the Objective-C runtime",
+    "|                                        `- error: '#selector' can only be used with the Objective-C runtime",
+    "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:13:40: error: '#selector' can only be used with the Objective-C runtime",
+    "|                                        `- error: '#selector' can only be used with the Objective-C runtime",
+    "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:9:41: error: type of expression is ambiguous without a type annotation",
+    "|                                         `- error: type of expression is ambiguous without a type annotation",
+    "/work-route-a/uikit/RouteASelectorProbeScratch/SwitchTableViewCell.swift:45:6: error: Objective-C interoperability is disabled",
+    "|      `- error: Objective-C interoperability is disabled",
+    "/work-route-a/uikit/RouteASelectorProbeScratch/ThemeTableViewToggleCell.swift:30:6: error: Objective-C interoperability is disabled",
+    "|      `- error: Objective-C interoperability is disabled",
+    "/work-route-a/uikit/RouteASelectorProbeScratch/ThemeTableViewToggleCell.swift:21:40: error: '#selector' can only be used with the Objective-C runtime",
+    "|                                        `- error: '#selector' can only be used with the Objective-C runtime"
+  ],
+  "execution": "ThemeTableViewToggleCell: valueChanged -> private toggleSwitched(_:) -> delegate = [true, false, true]\nSwitchTableViewCell: valueChanged -> private toggle(sender:) -> Combine = [true, false, true]\nROUTE_A_SELECTOR_PASS cells=2 deliveries=6 unresolved=0\n",
+  "original_sources_unchanged": true
+}
