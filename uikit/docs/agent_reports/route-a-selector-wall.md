@@ -204,4 +204,109 @@ export ALLOW_PATHS='^full/ladder/APP_LADDER[.]md$'
 CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/route-a-selector-wall
 ```
 
-Final operator measurements will be appended before the branch is pushed.
+The operator stopped that run; the final CHECK_ONLY result was not carried in this historical section. The resumed branch records its own proof below.
+
+
+## Resumed 2026-09-07: one generic publisher blocker closed
+
+Branch `agent/route-a-selector-wall3`, based on carried `46f92fe9`. This run
+handles only the **Combine+UIControl generic-class blocker** above. Its publisher
+is used at **10** Focus call sites: BrowserToolbar lines 106/115/124/138 and
+URLBar lines 462/471/480/489/504/518. This makes one complete dependency usable;
+it does not establish compilation or execution of those ten UI call sites.
+
+The [measurement record](route-a-generic-control.json) carries input hashes,
+commands, original diagnostics, oracle output, Linux output, and coverage.
+Both platforms compile the **same complete upstream file**
+`Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift`
+(SHA-256 `cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa`).
+Only the Linux generated copy is lowered. There are no app dependency stubs,
+substitute actions, mock publishers, ObjC flags, or production-library changes.
+
+**Oracle:** private iPhone 16 `OpenUIKit-GenericControl-route-a-selector-wall3`,
+iOS **26.1 (23B86)**, **3x**, Apple Swift **6.2.1**, Swift language mode 5.
+The original file compiles and registers exactly **`eventHandler`**.
+`Probe.swift` exercises three concrete subscriptions: Sink/UIControl,
+Sink/UISwitch, and LimitedSubscriber/UIButton. Linux uses the actual
+OpenCombine-backed `Combine` module and stock Swift **6.2.4**, native
+`aarch64-unknown-linux-gnu`, in the operator container's `/work-route-a/uikit`
+scratch copy. The copied package manifest is restored and the original
+source hash is unchanged after execution.
+
+| Measurement | iOS 26.1 original | Linux before | Linux lowered |
+|---|---:|---:|---:|
+| Complete publisher file compiles | yes | **no: 2 diagnostics** | **yes: 0 errors** |
+| Sink/UIControl matching event deliveries | 3 | unavailable | 3 |
+| Sink/UIControl wrong-event deliveries | 0 | unavailable | 0 |
+| Sink/UIControl total after cancellation | 3 | unavailable | 3 |
+| Sink/UISwitch values, including wrong event and cancellation | `[true, false]` | unavailable | `[true, false]` |
+| LimitedSubscriber/UIButton deliveries after requesting one | 2 | unavailable | 2 |
+| LimitedSubscriber/UIButton wrong-event deliveries | 0 | unavailable | 0 |
+| LimitedSubscriber/UIButton total after cancellation | 2 | unavailable | 2 |
+| Delivered input is the exact original control | **7/7** | unavailable | **7/7** |
+
+All **10 JSON result fields match exactly**, including all seven identity
+checks. The upstream `request(_:)` intentionally ignores demand; this run
+preserves its measured behavior. The initial native introspection attempt
+using `allTargets` trapped in Swift's Set-to-NSObject bridge. Querying
+`actions(forTarget:forControlEvent:)` with the known generic subscription
+measures the name without that harness failure; no upstream source was edited.
+
+Exact original Linux errors (no other target errors):
+
+```text
+Combine+UIControl.swift:56:6: error: Objective-C interoperability is disabled
+Combine+UIControl.swift:44:41: error: '#selector' can only be used with the Objective-C runtime
+```
+
+Before this change, the adapter independently refused the file with
+`generic class requires separate dispatch evidence`. It now supports a bounded
+**final generic class**, simple named parameters/constraints, simple inherited
+type names, optional same-type requirements between generic parameters, and
+**zero-argument synchronous Void actions**. The generated table and unapplied
+method reference explicitly use `UIControlSubscription<SubscriberType, Control>`;
+`SelectorDispatching` is inserted before the `where` clause. Non-final/nested
+generic classes, parameter packs, generic superclass applications, other
+requirements, parameterized actions, and references from outside the enclosing
+specialization remain refused. This is opt-in route-(a) source generation;
+route-(b) and original Focus sources remain unchanged.
+
+Re-auditing the same 77 selectors / 85 attributes gives:
+
+| Coverage | Before | After |
+|---|---:|---:|
+| Recognized selector candidates | 75/77 | **76/77** |
+| Recognized attribute candidates | 81/85 | **82/85** |
+| Selectors in emittable whole files | 67/77 | **68/77** |
+| Attributes in emittable whole files | 74/85 | **75/85** |
+| Emittable selector-bearing files | 29 | **30** |
+| Selectors / attributes still in blocked files | 10 / 11 | **9 / 10** |
+
+Remaining incomplete files are WebViewController (1 selector / 2 attributes),
+AutocompleteCustomUrlViewController (2 / 2), AutocompleteTextField (6 / 5),
+and InsetButton (0 / 1); exact rejected sites are in the record. All **4 dynamic
+perform calls** remain outside this bridge. Whole-app route-(a) compilation,
+KVC, inherited/protocol exposure, and timer/notification bridges remain open.
+No other blocker was attempted in this resumed run.
+
+Reproduction, from `uikit/`:
+
+```sh
+python3 Tools/ingest/route_a_generic_control_probe.py oracle --out /tmp/generic-oracle
+# Copy this tree into uikit-linux:/work-route-a/uikit and oracle.json into /work-route-a/.
+docker exec uikit-linux bash -c 'cd /work-route-a/uikit && python3 Tools/ingest/route_a_generic_control_probe.py linux --out /work-route-a/generic-proof --oracle /work-route-a/oracle.json'
+python3 -m unittest discover -s Tools/ingest -p 'test_route_a_*.py'
+```
+
+Focused verification: **22/22 Python tests**, including the actual generic file
+and fail-closed grammar boundaries. Linux's generated full-file build succeeds
+in **2.67 s**, and execution prints
+`ROUTE_A_GENERIC_CONTROL_PASS specializations=3 deliveries=7 oracle_fields=10`.
+The original Linux build also rebuilt production UIKit/OpenUIKit successfully
+before reporting the two expected errors in the unmodified app file. Re-running
+the existing two-cell Linux proof also passes **6/6 deliveries, 0 unresolved**,
+with both original source hashes preserved.
+
+The branch3 CHECK_ONLY gate will be recorded here after completion. No pixel
+rule, scene, golden, app source, package manifest, vendor pin, or file outside
+`uikit/` was changed by this resumed step.
