@@ -159,6 +159,7 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
     where Value: _IntentValue, Value: Sendable {
     private var stored: Value?
     private var storedGetter: (() -> Value)?
+    private var storedAsyncGetter: (@Sendable (Any) async throws -> Value)?
     private var storedTitle: String = ""
     private var storedIdentifier: String?
 
@@ -178,6 +179,7 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
     public var indexingKeyName: String?
     public var customIndexingKey: CSCustomAttributeKey?
     public var indexingKeyPath: PartialKeyPath<CSSearchableItemAttributeSet>?
+    public var hasAsyncGetter: Bool { storedAsyncGetter != nil }
 
     public var wrappedValue: Value {
         get {
@@ -446,7 +448,42 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
         storedIdentifier = customIndexingKey.keyName
     }
 
-    public convenience init<T0, T1>(identifier p0: T0? = nil, asyncGetter p1: T1? = nil) { self.init() }
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        asyncGetter: @escaping @Sendable (Entity) async throws -> Value
+    ) {
+        self.init(identifier: identifier)
+        storedAsyncGetter = { value in
+            guard let entity = value as? Entity else {
+                throw AppIntentError.Unrecoverable.entityNotFound
+            }
+            return try await asyncGetter(entity)
+        }
+    }
+
+    public convenience init<Entity: AppEntity>(
+        identifier: String,
+        title: LocalizedStringResource,
+        asyncGetter: @escaping @Sendable (Entity) async throws -> Value
+    ) {
+        self.init(identifier: identifier, title: title)
+        storedAsyncGetter = { value in
+            guard let entity = value as? Entity else {
+                throw AppIntentError.Unrecoverable.entityNotFound
+            }
+            return try await asyncGetter(entity)
+        }
+    }
+
+    /// Resolves an attached asynchronous entity getter without involving an
+    /// Apple metadata daemon. A missing getter fails closed.
+    public func resolveAsyncGetter<Entity: AppEntity>(for entity: Entity) async throws -> Value {
+        guard let storedAsyncGetter else {
+            throw AppIntentError.Unrecoverable.unsupportedOnDevice
+        }
+        return try await storedAsyncGetter(entity)
+    }
+
     public convenience init<T0, T1, T2>(identifier p0: T0? = nil, indexingKey p1: T1? = nil, getter p2: T2? = nil) { self.init() }
     public convenience init<T0, T1, T2>(identifier p0: T0? = nil, indexingKey p1: T1? = nil, getSetter p2: T2? = nil) { self.init() }
     public convenience init<T0, T1>(identifier p0: T0? = nil, indexingKey p1: T1? = nil) { self.init() }
@@ -474,4 +511,3 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
     public convenience init<T0>(from p0: T0? = nil) { self.init() }
 }
 public typealias Property = EntityProperty
-

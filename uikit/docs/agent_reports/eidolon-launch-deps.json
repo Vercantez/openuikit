@@ -1,0 +1,1848 @@
+{
+  "date": "2026-09-07",
+  "corpus_revision": "44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+  "compiler": "Apple Swift 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+  "target": "arm64-apple-macosx26.0; host SDK Foundation/AppKit/SystemConfiguration, not guest Foundation",
+  "swift_language_mode": "4 (app project SWIFT_VERSION=4.0)",
+  "canonical_swift_sources": 314,
+  "materialized_shared_platform_sources": 18,
+  "vendored_swift_files": 332,
+  "repository_count": 9,
+  "runtime_swift_modules": 10,
+  "objc_runtime_sources": 4,
+  "imports": {
+    "Kiosk": {
+      "UIKit": 62,
+      "RxSwift": 58,
+      "Foundation": 39,
+      "Moya": 18,
+      "Action": 17,
+      "SwiftyJSON": 14,
+      "Artsy_UILabels": 10,
+      "RxOptional": 9,
+      "Artsy_UIButtons": 7,
+      "RxCocoa": 7,
+      "ARAnalytics": 6,
+      "ORStackView": 6,
+      "Keys": 5,
+      "Stripe": 5,
+      "Artsy_UIFonts": 4,
+      "ARTiledImageView": 2,
+      "Alamofire": 2,
+      "FLKAutoLayout": 2,
+      "NSObject_Rx": 2,
+      "QuartzCore": 2,
+      "SDWebImage": 2,
+      "ARCollectionViewMasonryLayout": 1,
+      "CardFlight": 1,
+      "DZNWebViewController": 1,
+      "ECPhoneNumberFormatter": 1,
+      "Reachability": 1,
+      "Result": 1,
+      "SVProgressHUD": 1,
+      "SystemConfiguration": 1,
+      "UIImageViewAligned": 1,
+      "XNGMarkdownParser": 1
+    },
+    "KioskTests": {
+      "Kiosk": 49,
+      "Nimble": 49,
+      "Quick": 49,
+      "RxSwift": 29,
+      "Nimble_Snapshots": 19,
+      "Moya": 14,
+      "RxNimble": 8,
+      "RxBlocking": 5,
+      "Action": 3,
+      "Foundation": 2,
+      "Keys": 2,
+      "RxOptional": 2,
+      "Stripe": 2,
+      "CardFlight": 1,
+      "Forgeries": 1,
+      "ObjectiveC": 1,
+      "SDWebImage": 1,
+      "UIKit": 1
+    }
+  },
+  "dependencies": [
+    {
+      "repository": "RxSwift",
+      "url": "https://github.com/ReactiveX/RxSwift.git",
+      "revision": "3e848781c7756accced855a6317a4c2ff5e8588b",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "4.1.2",
+      "swift_sources": 270,
+      "licenses": [
+        "LICENSE.md"
+      ]
+    },
+    {
+      "repository": "Moya",
+      "url": "https://github.com/Moya/Moya.git",
+      "revision": "0b90f7ee8dcc378fe48db18c8b281e8792244de9",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "11.0.0",
+      "swift_sources": 25,
+      "licenses": [
+        "License.md"
+      ]
+    },
+    {
+      "repository": "SwiftyJSON",
+      "url": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+      "revision": "de309166a48a9dfc51d5bc4c55c0664d981de311",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "4.0.0",
+      "swift_sources": 1,
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "Alamofire",
+      "url": "https://github.com/Alamofire/Alamofire.git",
+      "revision": "bc973c5311ce3db3f01a9fcde027fb11fa2254bf",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "4.6.0",
+      "swift_sources": 17,
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "Result",
+      "url": "https://github.com/antitypical/Result.git",
+      "revision": "7477584259bfce2560a19e06ad9f71db441fff11",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "3.2.4",
+      "swift_sources": 2,
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "Action",
+      "url": "https://github.com/RxSwiftCommunity/Action.git",
+      "revision": "9c413d35c3b0f14dd2a817c866415afd9a40e4db",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "3.5.0",
+      "swift_sources": 7,
+      "licenses": [
+        "License.md"
+      ]
+    },
+    {
+      "repository": "RxOptional",
+      "url": "https://github.com/RxSwiftCommunity/RxOptional.git",
+      "revision": "2ae1c01d2a725ebbc7b75c8c1fc3623a54084b94",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "3.3.0",
+      "swift_sources": 7,
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "NSObjectRx",
+      "url": "https://github.com/RxSwiftCommunity/NSObject-Rx.git",
+      "revision": "772b9c70cb59c51e9664f82037660fb97bfa621d",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "4.2.0",
+      "swift_sources": 2,
+      "licenses": [
+        "LICENSE"
+      ]
+    },
+    {
+      "repository": "Reachability",
+      "url": "https://github.com/ashleymills/Reachability.swift.git",
+      "revision": "06beeead15401a312622959654a2e9ec8cfa2cb9",
+      "pin_authority": "Eidolon Podfile.lock at 44486ed9149f16b3eb3a5e687f99ae078309f4fe",
+      "version": "4.1.0",
+      "swift_sources": 1,
+      "licenses": [
+        "LICENSE"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "module": "Action",
+      "exit": 0,
+      "source_count": 7,
+      "seconds": 9.021,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-I",
+        "${PROBE_BUILD}/RxCocoaRuntime",
+        "-module-name",
+        "Action",
+        "-emit-module-path",
+        "${PROBE_BUILD}/Action.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/Action+Internal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/Action.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/CommonUI/Button+Action.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/CommonUI/Control+Action.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/InputSubject.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/UIKitExtensions/UIAlertAction+Action.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Action/Sources/Action/UIKitExtensions/UIBarButtonItem+Action.swift"
+      ],
+      "warning_count": 21
+    },
+    {
+      "module": "Alamofire",
+      "exit": 0,
+      "source_count": 17,
+      "seconds": 6.271,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-module-name",
+        "Alamofire",
+        "-emit-module-path",
+        "${PROBE_BUILD}/Alamofire.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/AFError.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Alamofire.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/DispatchQueue+Alamofire.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/MultipartFormData.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/NetworkReachabilityManager.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Notifications.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/ParameterEncoding.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Request.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Response.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/ResponseSerialization.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Result.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/ServerTrustPolicy.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/SessionDelegate.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/SessionManager.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/TaskDelegate.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Timeline.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Alamofire/Source/Validation.swift"
+      ],
+      "warning_count": 45
+    },
+    {
+      "module": "EidolonRxTapProbe",
+      "exit": 1,
+      "source_count": 1,
+      "seconds": 7.858,
+      "errors": [
+        "${PROBE_BUILD}/EidolonRxTapProbe.swift:6:19: error: property 'tap' requires that 'UIButton' inherit from 'NSButton'"
+      ],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-typecheck",
+        "-I",
+        "${UIKIT}/.build/arm64-apple-macosx/release/Modules",
+        "-I",
+        "${PROBE_BUILD}",
+        "-I",
+        "${PROBE_BUILD}/RxCocoaRuntime",
+        "-Xcc",
+        "-fmodule-map-file=${UIKIT}/.build/arm64-apple-macosx/release/CSTBTrueType.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "${UIKIT}/Sources/CSTBTrueType/include",
+        "-Xcc",
+        "-fmodule-map-file=${UIKIT}/.build/arm64-apple-macosx/release/CPortableIO.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "${UIKIT}/Sources/CPortableIO/include",
+        "-Xcc",
+        "-fmodule-map-file=${UIKIT}/Sources/CQuartz/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "${UIKIT}/Sources/CQuartz/include",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "${PROBE_BUILD}/EidolonRxTapProbe.swift"
+      ],
+      "warning_count": 0
+    },
+    {
+      "module": "MoyaCore",
+      "exit": 0,
+      "source_count": 22,
+      "seconds": 36.048,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-module-name",
+        "Moya",
+        "-emit-module-path",
+        "${PROBE_BUILD}/Moya.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/AnyEncodable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Cancellable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Endpoint.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Image.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Moya+Alamofire.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaError.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaProvider+Defaults.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaProvider+Internal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaProvider.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MultiTarget.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MultipartFormData.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/AccessTokenPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/CredentialsPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/NetworkActivityPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/NetworkLoggerPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Response.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/TargetType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Task.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/URL+Moya.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/URLRequest+Encoding.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/ValidationType.swift"
+      ],
+      "warning_count": 60
+    },
+    {
+      "module": "MoyaRxSwift",
+      "exit": 0,
+      "source_count": 25,
+      "seconds": 15.132,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-module-name",
+        "Moya",
+        "-emit-module-path",
+        "${PROBE_BUILD}/Moya.swiftmodule",
+        "-D",
+        "COCOAPODS",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/AnyEncodable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Cancellable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Endpoint.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Image.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Moya+Alamofire.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaError.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaProvider+Defaults.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaProvider+Internal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MoyaProvider.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MultiTarget.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/MultipartFormData.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/AccessTokenPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/CredentialsPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/NetworkActivityPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Plugins/NetworkLoggerPlugin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Response.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/TargetType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/Task.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/URL+Moya.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/URLRequest+Encoding.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/Moya/ValidationType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/RxMoya/MoyaProvider+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/RxMoya/Observable+Response.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Moya/Sources/RxMoya/Single+Response.swift"
+      ],
+      "warning_count": 64
+    },
+    {
+      "module": "NSObjectRx",
+      "exit": 0,
+      "source_count": 2,
+      "seconds": 3.07,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-module-name",
+        "NSObject_Rx",
+        "-emit-module-path",
+        "${PROBE_BUILD}/NSObject_Rx.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/NSObjectRx/HasDisposeBag.swift",
+        "${UIKIT}/Sources/EidolonDependencies/NSObjectRx/NSObject+Rx.swift"
+      ],
+      "warning_count": 2
+    },
+    {
+      "module": "Reachability",
+      "exit": 0,
+      "source_count": 1,
+      "seconds": 0.478,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-module-name",
+        "Reachability",
+        "-emit-module-path",
+        "${PROBE_BUILD}/Reachability.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/Reachability/Reachability/Reachability.swift"
+      ],
+      "warning_count": 19
+    },
+    {
+      "module": "Result",
+      "exit": 0,
+      "source_count": 2,
+      "seconds": 0.504,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-module-name",
+        "Result",
+        "-emit-module-path",
+        "${PROBE_BUILD}/Result.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/Result/Result/Result.swift",
+        "${UIKIT}/Sources/EidolonDependencies/Result/Result/ResultProtocol.swift"
+      ],
+      "warning_count": 23
+    },
+    {
+      "module": "RxCocoa",
+      "exit": 0,
+      "source_count": 56,
+      "seconds": 54.45,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-module-name",
+        "RxCocoa",
+        "-emit-module-path",
+        "${PROBE_BUILD}/RxCocoa.swiftmodule",
+        "-D",
+        "SWIFT_PACKAGE",
+        "-I",
+        "${PROBE_BUILD}/RxCocoaRuntime",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/Bag.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/InfiniteSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/PriorityQueue.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/Queue.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DeprecationWarner.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DispatchQueue+Extensions.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/Platform.Darwin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/Platform.Linux.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/RecursiveLock.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/Binder.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/ControlTarget.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/DelegateProxy.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/DelegateProxyType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/NSLayoutConstraint+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/Observable+Bind.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/RxCocoaObjCRuntimeError+Extensions.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/RxTarget.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/SectionedViewDataSourceType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Common/TextInput.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/KVORepresentable+CoreGraphics.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/KVORepresentable+Swift.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/KVORepresentable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/Logging.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/NSObject+Rx+KVORepresentable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/NSObject+Rx+RawRepresentable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/NSObject+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/NotificationCenter+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Foundation/URLSession+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/BehaviorRelay.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/ControlEvent.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/ControlProperty.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Driver/BehaviorRelay+Driver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Driver/ControlEvent+Driver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Driver/ControlProperty+Driver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Driver/Driver+Subscription.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Driver/Driver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Driver/ObservableConvertibleType+Driver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/PublishRelay.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/SharedSequence/ObservableConvertibleType+SharedSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/SharedSequence/SchedulerType+SharedSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/SharedSequence/SharedSequence+Operators+arity.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/SharedSequence/SharedSequence+Operators.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/SharedSequence/SharedSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Signal/ControlEvent+Signal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Signal/ObservableConvertibleType+Signal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Signal/PublishRelay+Signal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Signal/Signal+Subscription.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Traits/Signal/Signal.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/macOS/NSButton+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/macOS/NSControl+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/macOS/NSImageView+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/macOS/NSSlider+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/macOS/NSTextField+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/macOS/NSView+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Deprecated.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/RxCocoa.swift"
+      ],
+      "warning_count": 11
+    },
+    {
+      "module": "RxCocoaRuntime",
+      "exit": 0,
+      "source_count": 4,
+      "seconds": 13.492,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "clang",
+        "-fsyntax-only",
+        "-fobjc-arc",
+        "-fmodules",
+        "-I",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime/include",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime/_RX.m",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime/_RXDelegateProxy.m",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime/_RXKVOObserver.m",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxCocoa/Runtime/_RXObjCRuntime.m"
+      ],
+      "warning_count": 0
+    },
+    {
+      "module": "RxOptional",
+      "exit": 0,
+      "source_count": 7,
+      "seconds": 7.635,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-I",
+        "${PROBE_BUILD}/RxCocoaRuntime",
+        "-module-name",
+        "RxOptional",
+        "-emit-module-path",
+        "${PROBE_BUILD}/RxOptional.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/Driver+Occupiable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/Driver+Optional.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/Observable+Occupiable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/Observable+Optional.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/Occupiable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/OptionalType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxOptional/Source/RxOptionalError.swift"
+      ],
+      "warning_count": 58
+    },
+    {
+      "module": "RxSwift",
+      "exit": 0,
+      "source_count": 149,
+      "seconds": 93.911,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-module-name",
+        "RxSwift",
+        "-emit-module-path",
+        "${PROBE_BUILD}/RxSwift.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/Bag.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/InfiniteSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/PriorityQueue.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DataStructures/Queue.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DeprecationWarner.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/DispatchQueue+Extensions.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/Platform.Darwin.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/Platform.Linux.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/Platform/RecursiveLock.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/AnyObserver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Cancelable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Concurrency/AsyncLock.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Concurrency/Lock.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Concurrency/LockOwnerType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Concurrency/SynchronizedDisposeType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Concurrency/SynchronizedOnType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Concurrency/SynchronizedUnsubscribeType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/ConnectableObservableType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Deprecated.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/AnonymousDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/BinaryDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/BooleanDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/CompositeDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/Disposables.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/DisposeBag.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/DisposeBase.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/NopDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/RefCountDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/ScheduledDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/SerialDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/SingleAssignmentDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Disposables/SubscriptionDisposable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Errors.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Event.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Extensions/Bag+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Extensions/String+Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/GroupedObservable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/ImmediateSchedulerType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/ObservableConvertibleType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/ObservableType+Extensions.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/ObservableType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/AddRef.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Amb.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/AsMaybe.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/AsSingle.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Buffer.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Catch.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/CombineLatest+Collection.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/CombineLatest+arity.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/CombineLatest.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Concat.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Create.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Debounce.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Debug.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/DefaultIfEmpty.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Deferred.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Delay.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/DelaySubscription.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Dematerialize.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/DistinctUntilChanged.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Do.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/ElementAt.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Empty.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Enumerated.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Error.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Filter.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/First.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Generate.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/GroupBy.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Just.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Map.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Materialize.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Merge.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Multicast.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Never.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/ObserveOn.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Optional.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Producer.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Range.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Reduce.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Repeat.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/RetryWhen.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Sample.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Scan.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Sequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/ShareReplayScope.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/SingleAsync.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Sink.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Skip.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/SkipUntil.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/SkipWhile.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/StartWith.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/SubscribeOn.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Switch.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/SwitchIfEmpty.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Take.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/TakeLast.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/TakeUntil.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/TakeWhile.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Throttle.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Timeout.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Timer.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/ToArray.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Using.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Window.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/WithLatestFrom.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Zip+Collection.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Zip+arity.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observables/Zip.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/ObserverType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observers/AnonymousObserver.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observers/ObserverBase.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Observers/TailRecursiveSink.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Reactive.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Rx.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/RxMutableBox.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/SchedulerType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/ConcurrentDispatchQueueScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/ConcurrentMainScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/CurrentThreadScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/HistoricalScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/HistoricalSchedulerTimeConverter.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/Internal/DispatchQueueConfiguration.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/Internal/InvocableScheduledItem.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/Internal/InvocableType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/Internal/ScheduledItem.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/Internal/ScheduledItemType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/MainScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/OperationQueueScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/RecursiveScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/SchedulerServices+Emulation.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/SerialDispatchQueueScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/VirtualTimeConverterType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Schedulers/VirtualTimeScheduler.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Subjects/AsyncSubject.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Subjects/BehaviorSubject.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Subjects/PublishSubject.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Subjects/ReplaySubject.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Subjects/SubjectType.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/SwiftSupport/SwiftSupport.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/Completable+AndThen.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/Completable.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/Maybe.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/ObservableType+PrimitiveSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/PrimitiveSequence+Zip+arity.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/PrimitiveSequence.swift",
+        "${UIKIT}/Sources/EidolonDependencies/RxSwift/RxSwift/Traits/Single.swift"
+      ],
+      "warning_count": 66
+    },
+    {
+      "module": "SwiftyJSON",
+      "exit": 0,
+      "source_count": 1,
+      "seconds": 2.779,
+      "errors": [],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-parse-as-library",
+        "-emit-module",
+        "-module-name",
+        "SwiftyJSON",
+        "-emit-module-path",
+        "${PROBE_BUILD}/SwiftyJSON.swiftmodule",
+        "${UIKIT}/Sources/EidolonDependencies/SwiftyJSON/Source/SwiftyJSON.swift"
+      ],
+      "warning_count": 2
+    }
+  ],
+  "blockers": [
+    {
+      "axis": "DEP",
+      "question": "Do unmodified CocoaPods-version Swift sources compile using the Apple compiler?",
+      "result": "All 10 runtime Swift modules emit on the host; 4 Objective-C runtime units pass syntax checking."
+    },
+    {
+      "axis": "MOD",
+      "question": "Does the macOS route provide the app-called RxCocoa UIKit tap operator?",
+      "result": "No. OpenUIKit UIButton.rx.tap typecheck exits 1: tap requires UIButton inherit from NSButton. iOS operator is enclosed in #if os(iOS).",
+      "app_samples": [
+        "Kiosk/ListingsCollectionViewCell.swift:141",
+        "Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift:241",
+        "Kiosk/Admin/ChooseAuctionViewController.swift:34"
+      ]
+    },
+    {
+      "axis": "guest",
+      "question": "Do emitted modules use only the guest-supported ABI and load list?",
+      "result": "N/A. Host emission does not establish guest Foundation, AppKit replacement, SystemConfiguration, Objective-C dynamic runtime, or load-list compatibility."
+    }
+  ],
+  "score": "N/A; dependency module emission and a compile failure are not a screen capture",
+  "app_import_census": {
+    "date": "2026-09-07",
+    "target": "arm64-apple-macosx26.0",
+    "swift_version": "4",
+    "unique_imports": 31,
+    "resolved_imports": 17,
+    "unresolved_imports": 14,
+    "resolved_origins": {
+      "vendored": 10,
+      "service-shim": 3,
+      "OpenUIKit-package": 1,
+      "Apple SDK": 3
+    },
+    "probes": [
+      {
+        "module": "ARAnalytics",
+        "probe_module_name": "EidolonImportProbe_ARAnalytics",
+        "import_sites": 6,
+        "exit": 0,
+        "seconds": 0.397,
+        "origin": {
+          "kind": "service-shim",
+          "path": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/ARAnalytics.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIViewController+Bidding.swift"
+        ]
+      },
+      {
+        "module": "ARCollectionViewMasonryLayout",
+        "probe_module_name": "EidolonImportProbe_ARCollectionViewMasonryLayout",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.248,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/ARCollectionViewMasonryLayout.swift:1:8: error: no such module 'ARCollectionViewMasonryLayout'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift"
+        ]
+      },
+      {
+        "module": "ARTiledImageView",
+        "probe_module_name": "EidolonImportProbe_ARTiledImageView",
+        "import_sites": 2,
+        "exit": 1,
+        "seconds": 0.293,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/ARTiledImageView.swift:1:8: error: no such module 'ARTiledImageView'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/ImageTiledDataSource.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkZoomViewController.swift"
+        ]
+      },
+      {
+        "module": "Action",
+        "probe_module_name": "EidolonImportProbe_Action",
+        "import_sites": 17,
+        "exit": 0,
+        "seconds": 0.651,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/Action.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/BidderDetailsRetrieval.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift"
+        ]
+      },
+      {
+        "module": "Alamofire",
+        "probe_module_name": "EidolonImportProbe_Alamofire",
+        "import_sites": 2,
+        "exit": 0,
+        "seconds": 0.394,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/Alamofire.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/ArtsyAPI.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/Networking.swift"
+        ]
+      },
+      {
+        "module": "Artsy_UIButtons",
+        "probe_module_name": "EidolonImportProbe_Artsy_UIButtons",
+        "import_sites": 7,
+        "exit": 1,
+        "seconds": 0.282,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/Artsy_UIButtons.swift:1:8: error: no such module 'Artsy_UIButtons'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Button Subclasses/Button.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift"
+        ]
+      },
+      {
+        "module": "Artsy_UIFonts",
+        "probe_module_name": "EidolonImportProbe_Artsy_UIFonts",
+        "import_sites": 4,
+        "exit": 1,
+        "seconds": 0.241,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/Artsy_UIFonts.swift:1:8: error: no such module 'Artsy_UIFonts'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/MarkdownParser.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/OfflineViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift"
+        ]
+      },
+      {
+        "module": "Artsy_UILabels",
+        "probe_module_name": "EidolonImportProbe_Artsy_UILabels",
+        "import_sites": 10,
+        "exit": 1,
+        "seconds": 0.277,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/Artsy_UILabels.swift:1:8: error: no such module 'Artsy_UILabels'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminPanelViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift"
+        ]
+      },
+      {
+        "module": "CardFlight",
+        "probe_module_name": "EidolonImportProbe_CardFlight",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.243,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/CardFlight.swift:1:8: error: no such module 'CardFlight'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/CardHandler.swift"
+        ]
+      },
+      {
+        "module": "DZNWebViewController",
+        "probe_module_name": "EidolonImportProbe_DZNWebViewController",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.255,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/DZNWebViewController.swift:1:8: error: no such module 'DZNWebViewController'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/WebViewController.swift"
+        ]
+      },
+      {
+        "module": "ECPhoneNumberFormatter",
+        "probe_module_name": "EidolonImportProbe_ECPhoneNumberFormatter",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.217,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/ECPhoneNumberFormatter.swift:1:8: error: no such module 'ECPhoneNumberFormatter'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift"
+        ]
+      },
+      {
+        "module": "FLKAutoLayout",
+        "probe_module_name": "EidolonImportProbe_FLKAutoLayout",
+        "import_sites": 2,
+        "exit": 1,
+        "seconds": 0.272,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/FLKAutoLayout.swift:1:8: error: no such module 'FLKAutoLayout'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift"
+        ]
+      },
+      {
+        "module": "Foundation",
+        "probe_module_name": "EidolonImportProbe_Foundation",
+        "import_sites": 39,
+        "exit": 0,
+        "seconds": 0.292,
+        "origin": {
+          "kind": "Apple SDK",
+          "path": null
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminCardTestingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/APIPingManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Constants.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Logger.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/MarkdownParser.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Artist.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Artwork.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Bid.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/BidderPosition.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Card.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/CreditCard.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/GenericError.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Image.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SaleArtworkViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SystemTime.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/User.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/NSErrorExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/APIKeys.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/ArtsyAPI.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/NetworkLogger.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/Networking.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/UserCredentials.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/XAppToken.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/StripeManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/HelperFunctions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+JSONAble.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/ImageTiledDataSource.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkZoomViewController.swift"
+        ]
+      },
+      {
+        "module": "Keys",
+        "probe_module_name": "EidolonImportProbe_Keys",
+        "import_sites": 5,
+        "exit": 0,
+        "seconds": 0.248,
+        "origin": {
+          "kind": "service-shim",
+          "path": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/Keys.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminCardTestingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/APIKeys.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift"
+        ]
+      },
+      {
+        "module": "Moya",
+        "probe_module_name": "EidolonImportProbe_Moya",
+        "import_sites": 18,
+        "exit": 0,
+        "seconds": 0.45,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/Moya.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/APIPingManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/GlobalFunctions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/NSErrorExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/ArtsyAPI.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/NetworkLogger.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/Networking.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+JSONAble.swift"
+        ]
+      },
+      {
+        "module": "NSObject_Rx",
+        "probe_module_name": "EidolonImportProbe_NSObject_Rx",
+        "import_sites": 2,
+        "exit": 0,
+        "seconds": 0.445,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/NSObject_Rx.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift"
+        ]
+      },
+      {
+        "module": "ORStackView",
+        "probe_module_name": "EidolonImportProbe_ORStackView",
+        "import_sites": 6,
+        "exit": 1,
+        "seconds": 0.278,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/ORStackView.swift:1:8: error: no such module 'ORStackView'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/RegisterFlowView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift"
+        ]
+      },
+      {
+        "module": "QuartzCore",
+        "probe_module_name": "EidolonImportProbe_QuartzCore",
+        "import_sites": 2,
+        "exit": 0,
+        "seconds": 0.339,
+        "origin": {
+          "kind": "Apple SDK",
+          "path": null
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Button Subclasses/Button.swift"
+        ]
+      },
+      {
+        "module": "Reachability",
+        "probe_module_name": "EidolonImportProbe_Reachability",
+        "import_sites": 1,
+        "exit": 0,
+        "seconds": 0.315,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/Reachability.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/GlobalFunctions.swift"
+        ]
+      },
+      {
+        "module": "Result",
+        "probe_module_name": "EidolonImportProbe_Result",
+        "import_sites": 1,
+        "exit": 0,
+        "seconds": 0.306,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/Result.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/NetworkLogger.swift"
+        ]
+      },
+      {
+        "module": "RxCocoa",
+        "probe_module_name": "EidolonImportProbe_RxCocoa",
+        "import_sites": 7,
+        "exit": 0,
+        "seconds": 0.35,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/RxCocoa.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/TableCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIKit+Rx.swift"
+        ]
+      },
+      {
+        "module": "RxOptional",
+        "probe_module_name": "EidolonImportProbe_RxOptional",
+        "import_sites": 9,
+        "exit": 0,
+        "seconds": 0.387,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/RxOptional.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/SwiftExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPostalZipViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift"
+        ]
+      },
+      {
+        "module": "RxSwift",
+        "probe_module_name": "EidolonImportProbe_RxSwift",
+        "import_sites": 58,
+        "exit": 0,
+        "seconds": 0.307,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/RxSwift.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminCardTestingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/APIPingManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/BidderDetailsRetrieval.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/CardHandler.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/GlobalFunctions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SaleArtworkViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SystemTime.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/ArtsyAPI.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/Networking.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/RegisterFlowView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/SwitchView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsCountdownManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/NewUser.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/RegistrationCoordinator.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegisterViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPostalZipViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/StripeManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpAnimator.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+JSONAble.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+Logging.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+Operators.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIKit+Rx.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIView+LongPressDisplayMessage.swift"
+        ]
+      },
+      {
+        "module": "SDWebImage",
+        "probe_module_name": "EidolonImportProbe_SDWebImage",
+        "import_sites": 2,
+        "exit": 1,
+        "seconds": 0.274,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/SDWebImage.swift:1:8: error: no such module 'SDWebImage'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift"
+        ]
+      },
+      {
+        "module": "SVProgressHUD",
+        "probe_module_name": "EidolonImportProbe_SVProgressHUD",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.252,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/SVProgressHUD.swift:1:8: error: no such module 'SVProgressHUD'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/BidderDetailsRetrieval.swift"
+        ]
+      },
+      {
+        "module": "Stripe",
+        "probe_module_name": "EidolonImportProbe_Stripe",
+        "import_sites": 5,
+        "exit": 0,
+        "seconds": 0.335,
+        "origin": {
+          "kind": "service-shim",
+          "path": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/Stripe.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/CreditCard.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/StripeManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift"
+        ]
+      },
+      {
+        "module": "SwiftyJSON",
+        "probe_module_name": "EidolonImportProbe_SwiftyJSON",
+        "import_sites": 14,
+        "exit": 0,
+        "seconds": 0.322,
+        "origin": {
+          "kind": "vendored",
+          "path": "${PROBE_BUILD}/SwiftyJSON.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Artist.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Artwork.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Bid.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Bidder.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/BidderPosition.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/BuyersPremium.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Card.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/GenericError.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Image.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Location.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Sale.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SaleArtwork.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/User.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift"
+        ]
+      },
+      {
+        "module": "SystemConfiguration",
+        "probe_module_name": "EidolonImportProbe_SystemConfiguration",
+        "import_sites": 1,
+        "exit": 0,
+        "seconds": 0.26,
+        "origin": {
+          "kind": "Apple SDK",
+          "path": null
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift"
+        ]
+      },
+      {
+        "module": "UIImageViewAligned",
+        "probe_module_name": "EidolonImportProbe_UIImageViewAligned",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.244,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/UIImageViewAligned.swift:1:8: error: no such module 'UIImageViewAligned'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift"
+        ]
+      },
+      {
+        "module": "UIKit",
+        "probe_module_name": "EidolonImportProbe_UIKit",
+        "import_sites": 62,
+        "exit": 0,
+        "seconds": 0.331,
+        "origin": {
+          "kind": "OpenUIKit-package",
+          "path": "${UIKIT}/.build/arm64-apple-macosx/release/Modules/UIKit.swiftmodule"
+        },
+        "errors": [],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminLogViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminPanelViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AuctionWebViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/PasswordAlertViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppSetup.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/BidderDetailsRetrieval.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/CardHandler.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Bidder.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/BuyersPremium.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Location.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Sale.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SaleArtwork.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/OfflineViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/UIStoryboardSegueExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/UIViewControllerExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/UIViewSubclassesErrorExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Button Subclasses/Button.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/RegisterFlowView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/SimulatorOnlyView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Spinner.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/SwitchView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Text Fields/CursorView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Text Fields/TextField.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsCountdownManager.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/TableCollectionViewCell.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPasswordViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentContainerViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadView.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/RegistrationCoordinator.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegisterViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpAnimator.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/WhitespaceGobbler.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/Storyboards/UIStoryboardExtensions.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIKit+Rx.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UILabel+Fonts.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIView+LongPressDisplayMessage.swift",
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/UIViewController+Bidding.swift"
+        ]
+      },
+      {
+        "module": "XNGMarkdownParser",
+        "probe_module_name": "EidolonImportProbe_XNGMarkdownParser",
+        "import_sites": 1,
+        "exit": 1,
+        "seconds": 0.229,
+        "origin": {
+          "kind": "unresolved",
+          "path": null
+        },
+        "errors": [
+          "${IMPORT_PROBES}/XNGMarkdownParser.swift:1:8: error: no such module 'XNGMarkdownParser'"
+        ],
+        "source_sites": [
+          "Sources/Eidolon/Sources/Eidolon/Kiosk/App/MarkdownParser.swift"
+        ]
+      }
+    ],
+    "full_app": {
+      "source_count": 109,
+      "exit": 1,
+      "seconds": 0.614,
+      "errors": [
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminPanelViewController.swift:2:8: error: no such module 'Artsy_UILabels'"
+      ],
+      "command": [
+        "xcrun",
+        "swiftc",
+        "-swift-version",
+        "4",
+        "-typecheck",
+        "-num-threads",
+        "2",
+        "-I",
+        "${PROBE_BUILD}",
+        "-I",
+        "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules",
+        "-I",
+        "${UIKIT}/.build/arm64-apple-macosx/release/Modules",
+        "-I",
+        "${PROBE_BUILD}/RxCocoaRuntime",
+        "-Xcc",
+        "-fmodule-map-file=${UIKIT}/.build/arm64-apple-macosx/release/CSTBTrueType.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "${UIKIT}/Sources/CSTBTrueType/include",
+        "-Xcc",
+        "-fmodule-map-file=${UIKIT}/.build/arm64-apple-macosx/release/CPortableIO.build/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "${UIKIT}/Sources/CPortableIO/include",
+        "-Xcc",
+        "-fmodule-map-file=${UIKIT}/Sources/CQuartz/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "${UIKIT}/Sources/CQuartz/include",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-parse-as-library",
+        "-module-name",
+        "EidolonWholeAppProbe",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminCardTestingViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminLogViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AdminPanelViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/AuctionWebViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/ChooseAuctionViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Admin/PasswordAlertViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/APIPingManager.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate+GlobalActions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppDelegate.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppSetup.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/AppViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/BidderDetailsRetrieval.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/CardHandler.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Constants.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/GlobalFunctions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Logger.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/MarkdownParser.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Artist.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Artwork.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Bid.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Bidder.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/BidderPosition.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/BuyersPremium.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Card.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/CreditCard.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/GenericError.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Image.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/JSONAble.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Location.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/Sale.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SaleArtwork.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SaleArtworkViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/SystemTime.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Models/User.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/NSErrorExtensions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/APIKeys.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/ArtsyAPI.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/NetworkLogger.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/Networking.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/UserCredentials.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Networking/XAppToken.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/OfflineViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/SwiftExtensions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/UIStoryboardSegueExtensions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/UIViewControllerExtensions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/UIViewSubclassesErrorExtensions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Button Subclasses/Button.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/RegisterFlowView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/SimulatorOnlyView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Spinner.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/SwitchView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Text Fields/CursorView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/App/Views/Text Fields/TextField.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsCountdownManager.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/ListingsViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/MasonryCollectionViewCell.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/TableCollectionViewCell.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Auction Listings/WebViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/AdminCCBypassNetworkModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidCheckingNetworkModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidDetailsPreviewView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/BidderNetworkModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidArtsyLoginViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidEnterYourEmailViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPINViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidPasswordViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ConfirmYourBidViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentContainerViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/FulfillmentNavigationController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/GenericFormValidationViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadContainerView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadView.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/KeypadViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/LoadingViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/ManualCreditCardInputViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/BidDetails.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/NewUser.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/Models/RegistrationCoordinator.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidNetworkModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/PlaceBidViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegisterViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationEmailViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationMobileViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPasswordViewModel.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/RegistrationPostalZipViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/StripeManager.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/SwipeCreditCardViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Bid Fulfillment/YourBiddingDetailsViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpAnimator.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Help/HelpViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/HelperFunctions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/ListingsCollectionViewCell.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+JSONAble.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+Logging.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Observable+Operators.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/ImageTiledDataSource.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkDetailsViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/SaleArtworkZoomViewController.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Sale Artwork Details/WhitespaceGobbler.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Storyboards/StoryboardIdentifiers.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/Storyboards/UIStoryboardExtensions.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/UIKit+Rx.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/UILabel+Fonts.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/UIView+LongPressDisplayMessage.swift",
+        "${UIKIT}/Sources/Eidolon/Sources/Eidolon/Kiosk/UIViewController+Bidding.swift"
+      ]
+    },
+    "limitation": "No bridging-header substitution or missing-module placeholder was supplied. Import failure prevents an honest semantic typecheck denominator for the 109 app sources.",
+    "module_origin_trace": {
+      "exit": 0,
+      "compiler_flags": [
+        "-Rmodule-loading",
+        "-emit-loaded-module-trace",
+        "-emit-loaded-module-trace-path",
+        "${IMPORT_PROBES}/loaded-modules.json"
+      ],
+      "probe_module_name": "EidolonResolvedOriginProbe",
+      "resolved_count": 17,
+      "origins": {
+        "Foundation": {
+          "source": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk/System/Library/Frameworks/Foundation.framework/Modules/Foundation.swiftmodule/arm64e-apple-macos.swiftinterface",
+          "loaded": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/prebuilt-modules/26.1/Foundation.swiftmodule/arm64e-apple-macos.swiftmodule"
+        },
+        "ARAnalytics": {
+          "source": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/ARAnalytics.swiftmodule",
+          "loaded": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/ARAnalytics.swiftmodule"
+        },
+        "QuartzCore": {
+          "source": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk/usr/lib/swift/QuartzCore.swiftmodule/arm64e-apple-macos.swiftinterface",
+          "loaded": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/macosx/prebuilt-modules/26.1/QuartzCore.swiftmodule/arm64e-apple-macos.swiftmodule"
+        },
+        "RxSwift": {
+          "source": "${PROBE_BUILD}/RxSwift.swiftmodule",
+          "loaded": "${PROBE_BUILD}/RxSwift.swiftmodule"
+        },
+        "RxCocoa": {
+          "source": "${PROBE_BUILD}/RxCocoa.swiftmodule",
+          "loaded": "${PROBE_BUILD}/RxCocoa.swiftmodule"
+        },
+        "Action": {
+          "source": "${PROBE_BUILD}/Action.swiftmodule",
+          "loaded": "${PROBE_BUILD}/Action.swiftmodule"
+        },
+        "SystemConfiguration": {
+          "source": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.1.sdk/System/Library/Frameworks/SystemConfiguration.framework/Modules/module.modulemap",
+          "loaded": "/var/folders/2w/ghgmsg856n52r27w6r4slplw0000gn/C/clang/ModuleCache/2TU4NFZ7LN9ZJ/SystemConfiguration-2TP6GKLRXUO9R.pcm"
+        },
+        "Alamofire": {
+          "source": "${PROBE_BUILD}/Alamofire.swiftmodule",
+          "loaded": "${PROBE_BUILD}/Alamofire.swiftmodule"
+        },
+        "Keys": {
+          "source": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/Keys.swiftmodule",
+          "loaded": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/Keys.swiftmodule"
+        },
+        "Result": {
+          "source": "${PROBE_BUILD}/Result.swiftmodule",
+          "loaded": "${PROBE_BUILD}/Result.swiftmodule"
+        },
+        "Moya": {
+          "source": "${PROBE_BUILD}/Moya.swiftmodule",
+          "loaded": "${PROBE_BUILD}/Moya.swiftmodule"
+        },
+        "NSObject_Rx": {
+          "source": "${PROBE_BUILD}/NSObject_Rx.swiftmodule",
+          "loaded": "${PROBE_BUILD}/NSObject_Rx.swiftmodule"
+        },
+        "Reachability": {
+          "source": "${PROBE_BUILD}/Reachability.swiftmodule",
+          "loaded": "${PROBE_BUILD}/Reachability.swiftmodule"
+        },
+        "RxOptional": {
+          "source": "${PROBE_BUILD}/RxOptional.swiftmodule",
+          "loaded": "${PROBE_BUILD}/RxOptional.swiftmodule"
+        },
+        "Stripe": {
+          "source": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/Stripe.swiftmodule",
+          "loaded": "${SERVICE_BUILD}/arm64-apple-macosx/debug/Modules/Stripe.swiftmodule"
+        },
+        "SwiftyJSON": {
+          "source": "${PROBE_BUILD}/SwiftyJSON.swiftmodule",
+          "loaded": "${PROBE_BUILD}/SwiftyJSON.swiftmodule"
+        },
+        "UIKit": {
+          "source": "${UIKIT}/.build/arm64-apple-macosx/release/Modules/UIKit.swiftmodule",
+          "loaded": "${UIKIT}/.build/arm64-apple-macosx/release/Modules/UIKit.swiftmodule"
+        }
+      }
+    }
+  }
+}

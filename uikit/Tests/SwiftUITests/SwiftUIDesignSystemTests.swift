@@ -1076,8 +1076,9 @@ final class SwiftUIDesignSystemTests: XCTestCase {
         XCTAssertEqual(trailing.count, 2)
         XCTAssertEqual(trailing[0].systemItem, .search)
         XCTAssertTrue(trailing[0]._isolatesPlatter)
-        XCTAssertNotNil(trailing[1].customView)
-        XCTAssertTrue(trailing[1]._showsPlatterWithCustomView)
+        XCTAssertNotNil(trailing[1].image)
+        XCTAssertTrue(trailing[1].image?.isSymbolImage == true)
+        XCTAssertTrue(trailing[1]._isolatesPlatter)
 
         nav.navigationBar.layoutIfNeeded()
         XCTAssertEqual(nav.navigationBar.rightItemViews.count, 2)

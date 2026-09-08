@@ -579,6 +579,12 @@ open class UIViewController: UIResponder, UIContentContainer {
             _appearanceAnimated = animated
             loadViewIfNeeded()
             viewWillAppear(animated)
+            // Collection lifecycle oracle (iPhone16/iOS26.1): nonanimated
+            // selection clearing occurs after willAppear, before the next
+            // appearance phase. Other controller families are unaffected.
+            if !animated {
+                (self as? UICollectionViewController)?._clearSelectionForAppearance()
+            }
         } else {
             guard _appearanceState != .disappeared,
                   _appearanceState != .disappearing else { return }
@@ -593,6 +599,11 @@ open class UIViewController: UIResponder, UIContentContainer {
     public func endAppearanceTransition() {
         switch _appearanceState {
         case .appearing:
+            // Animated collection returns retain selection during appearance,
+            // then clear it before entering the subclass's didAppear callback.
+            if _appearanceAnimated {
+                (self as? UICollectionViewController)?._clearSelectionForAppearance()
+            }
             _appearanceState = .appeared
             viewDidAppear(_appearanceAnimated)
         case .disappearing:
@@ -639,6 +650,17 @@ open class UIViewController: UIResponder, UIContentContainer {
             p = cur.parent
         }
         return nil
+    }
+
+    /// Split-view detail routing; standalone controllers use presentation.
+    /// The split-specific delegate and column behavior is measured in
+    /// Tools/oracle2/splitviewprobe (iOS 26.1, iPad A16 and SE).
+    open func showDetailViewController(_ vc: UIViewController, sender: Any?) {
+        if let split = splitViewController {
+            split.showDetailViewController(vc, sender: sender)
+        } else {
+            present(vc, animated: true)
+        }
     }
 
     /// Display a controller using the receiver's containing navigation stack

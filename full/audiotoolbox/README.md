@@ -458,15 +458,26 @@ verify that borrowed mutable storage is used rather than copied. `AUPresetEvent`
 preserves an unmanaged Core Foundation property-list reference and does not
 invent preset loading behavior.
 
+The depth follow-up adds `AudioUnitMeterClipping` and the fixed prefix of
+`MusicEventUserData`. Tests cover nonzero and zero construction, byte-valued
+clipping flags, and the flexible-array leading byte without claiming ownership
+of a trailing allocation. It also promotes the public scalar, opaque-handle,
+callback, and `AUParameter` class aliases only after synchronous invocation or
+typed value tests. Format records containing dependency-owned
+`AudioStreamBasicDescription`, `AudioChannelLayout`, and
+`AudioClassDescription` remain deferred because the sealed isolated compile
+does not provide those modules; no framework-local substitutes were created.
+
 | status | before | after |
 | --- | ---: | ---: |
-| implemented | 2932 | 2980 |
-| declared | 39 | 39 |
-| deferred | 262 | 214 |
+| implemented | 2980 | 3028 |
+| declared | 39 | 0 |
+| deferred | 214 | 205 |
 | unavailable | 1 | 1 |
 | not-applicable | 0 | 0 |
 
-This wave gains **48 implemented rows** across nine focused, synchronous tests.
+This follow-up gains **48 implemented rows** across five focused, synchronous
+tests while preserving the earlier wave's tests.
 The remaining CoreAudioTypes/CoreMIDI records are deferred rather than shadowing
 dependency-owned types, and device, daemon, MIDI-CI, dispatch-timing, and
 hardware behavior remains fail-closed or deferred.
@@ -481,6 +492,6 @@ Top-five implemented evidence distribution after this wave:
 | 163 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioFileFamily` |
 | 146 | `AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog` |
 
-The largest anchor covers 6.71% of the 2,980 implemented rows and is a permitted
+The largest anchor covers 6.61% of the 3,028 implemented rows and is a permitted
 table-driven enum/option-set value test. No SwiftUI overlay rows or other rows
 were reclassified as `not-applicable`.

@@ -1,0 +1,4543 @@
+{
+  "schema": 1,
+  "route": "a",
+  "scope": "bounded source adaptation, not whole-app compilation",
+  "limitations": [
+    "Lowered counts are candidates; rewrite emits only complete selector/objc files.",
+    "Whole-file emission does not establish whole-file compilation or API compatibility.",
+    "NSObject.perform, KVC, implicit exposure, protocol dispatch and timer/notification runtime bridges are not implemented here.",
+    "Removing an unreferenced @objc attribute does not register that method for dynamic invocation.",
+    "App inheritance and conformance outside each input file require compiler validation."
+  ],
+  "totals": {
+    "selectors": 77,
+    "lowered_selectors": 75,
+    "objc_attributes": 85,
+    "lowered_objc_attributes": 81,
+    "dispatch_classes": 33,
+    "remaining_selectors": 2,
+    "remaining_objc_attributes": 4,
+    "emittable_selectors": 67,
+    "emittable_objc_attributes": 74,
+    "not_emittable_selectors": 10,
+    "not_emittable_objc_attributes": 11,
+    "emittable_files_with_selectors": 29
+  },
+  "files": [
+    {
+      "path": "Sources/Blockzilla/Blockzilla/AppDelegate.swift",
+      "source_sha256": "c8f42c2e55832c2dcde6ab25edebe8adfe6c01812fa94996c80a1dad1f0f25de",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/BrowserViewController.swift",
+      "source_sha256": "e5593a1879452d4a34ede38148481e52201fee6c556eaa441a74250d1a90fc1f",
+      "selectors": [
+        {
+          "line": 172,
+          "expression": "orientationChanged",
+          "status": "lowered",
+          "selector": "orientationChanged",
+          "method": "BrowserViewController.orientationChanged"
+        },
+        {
+          "line": 1048,
+          "expression": "BrowserViewController.selectLocationBar",
+          "status": "lowered",
+          "selector": "selectLocationBar",
+          "method": "BrowserViewController.selectLocationBar"
+        },
+        {
+          "line": 1054,
+          "expression": "BrowserViewController.reload",
+          "status": "lowered",
+          "selector": "reload",
+          "method": "BrowserViewController.reload"
+        },
+        {
+          "line": 1060,
+          "expression": "BrowserViewController.goBack",
+          "status": "lowered",
+          "selector": "goBack",
+          "method": "BrowserViewController.goBack"
+        },
+        {
+          "line": 1066,
+          "expression": "BrowserViewController.goForward",
+          "status": "lowered",
+          "selector": "goForward",
+          "method": "BrowserViewController.goForward"
+        },
+        {
+          "line": 1072,
+          "expression": "BrowserViewController.showFindInPage",
+          "status": "lowered",
+          "selector": "showFindInPage",
+          "method": "BrowserViewController.showFindInPage"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 540,
+          "status": "lowered",
+          "method": "BrowserViewController.orientationChanged",
+          "selector": "orientationChanged"
+        },
+        {
+          "line": 1018,
+          "status": "lowered",
+          "method": "BrowserViewController.selectLocationBar",
+          "selector": "selectLocationBar"
+        },
+        {
+          "line": 1024,
+          "status": "lowered",
+          "method": "BrowserViewController.reload",
+          "selector": "reload"
+        },
+        {
+          "line": 1028,
+          "status": "lowered",
+          "method": "BrowserViewController.goBack",
+          "selector": "goBack"
+        },
+        {
+          "line": 1032,
+          "status": "lowered",
+          "method": "BrowserViewController.goForward",
+          "selector": "goForward"
+        },
+        {
+          "line": 1036,
+          "status": "lowered",
+          "method": "BrowserViewController.showFindInPage",
+          "selector": "showFindInPage"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 6,
+        "lowered_selectors": 6,
+        "objc_attributes": 6,
+        "lowered_objc_attributes": 6,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Declarative DataSource/DataSource.swift",
+      "source_sha256": "37aae0b4949bb0af5e6b0bfe8334d707574a4dbceff36e17b4cb87ea29cc05e8",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Declarative DataSource/SectionItem.swift",
+      "source_sha256": "912ef03c976f3c713de7f63039f581937a88b5fc614ba7407bebf4d97a4c2cfd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Extensions/CharacterSetExtensions.swift",
+      "source_sha256": "54efbe6d7a8ecd1ba5d357a7a8ba144077b0d9ab0bcb36ddd886544c21011e41",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Extensions/ClosedRangeExtensions.swift",
+      "source_sha256": "b2b5e633641a3841f487815e71acdecad3d5dd0c3baeac3363e318b8c240213a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Extensions/FileManagerExtensions.swift",
+      "source_sha256": "7384c776f1948e243ce19bf70cdcf1ee1aef85d297554d52f3826ddaa65c65bf",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Extensions/StringExtensions.swift",
+      "source_sha256": "de6db54939fa48d78aead2a0de5a3397c76320e0a644fe50a9ed60992fddf188",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Extensions/UIPasteBoardExtensions.swift",
+      "source_sha256": "bc32fac1028c850967419d28be91e3ac1710658fc5f5d1c43c9ec341b7be3d0a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Extensions/URLExtensions.swift",
+      "source_sha256": "86216594832b71da0c91cd61e1b29966a461eeb27ee94aa00fe641abcf140f0d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/HomeViewController.swift",
+      "source_sha256": "11a23b1aa8dd973d43d99f6810bd438c6ff82536e2af73705a5f6c4521d3b43a",
+      "selectors": [
+        {
+          "line": 61,
+          "expression": "rotated",
+          "status": "lowered",
+          "selector": "rotated",
+          "method": "HomeViewController.rotated"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 108,
+          "status": "lowered",
+          "method": "HomeViewController.rotated",
+          "selector": "rotated"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalCrashReportingSettingsView.swift",
+      "source_sha256": "a496d9777ddcef942598ba5e49b01a63b4478749f08837abca40c6483e93ecf8",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalExperimentDetailView.swift",
+      "source_sha256": "91263c0b731dd815b692737764d47f329e1aa75bac469bf7f7a1c5da526861d5",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalExperimentsSettingsView.swift",
+      "source_sha256": "84845854da7b6015859ae088734994e9008211d973d6faa26e9b04e2148327da",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalOnboardingSettingsView.swift",
+      "source_sha256": "e3d3dea9026a1c0a885dc02319fda6fb4ba2b57b8835cf4d12100b221feafb8c",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalSettings.swift",
+      "source_sha256": "d56d81cefce466851831d70fa1b9e402cc190a38f7da1470926f62d0fd1b22ef",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalSettingsView.swift",
+      "source_sha256": "263b9c34b558b461166efe634fc07d6f1c81ada38e05e98159a7f3c0f8bfb858",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/InternalSettings/InternalTelemetrySettingsView.swift",
+      "source_sha256": "b1e374f8ffb8032268a4800170f5a822a0c98b9c14b5a962c4d13132367358ca",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Lib/DomainCompletion/DomainCompletion+ErrorMessage.swift",
+      "source_sha256": "c0b9418967251edfcb056e7f98c79f641a03fcfc57e992a58bd0a893fb98f9ab",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Lib/DomainCompletion/DomainCompletion.swift",
+      "source_sha256": "f3a3c0ccd9381ee72aaca31d34e35750ab0afa83fb15c465265e83ee0de4d36b",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Lib/InsetTextField.swift",
+      "source_sha256": "9e095e1e87cefb801a2c44114f8a9b8ef9e1f35c4b5b352adb360e602102aea4",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Lib/PaddedSwitch.swift",
+      "source_sha256": "325787a717b1de74c87261bf6885af835918439a99bd8821557de0f505e9d668",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Lib/RequestHandler/RequestHandler.swift",
+      "source_sha256": "e0bb694e2492559db172891f5387dfaefd2e6a5b98ea6c5ac75664462614890d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Lib/TrackingProtection/TrackingProtection.swift",
+      "source_sha256": "b89227391978eb6756e0b8a85a36540d16ff50eb760ea8c7b11835ed89ee3d79",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Menu Extensions/MenuAction.swift",
+      "source_sha256": "6dadf00f9ff2ed2cfb97ef553017bedeab33c90201e9b1431eafab8687f2a914",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Menu Extensions/PhotonActionSheetItem+MenuAction.swift",
+      "source_sha256": "2f84b57bf3ac4b78e48b9c0bad089ab30960ab7e629f9d19aacda37a6103804a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Menu Extensions/UIAction+MenuAction.swift",
+      "source_sha256": "7108b303504304f45c101ea817ccdce8c3effbbef4e9c52bf8dea40446dfe0b3",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Old/PhotonActionSheet.swift",
+      "source_sha256": "609e1972227029f2f3058812cde9d6fce3f67cf8b3a5e267072f4ca38d9735f5",
+      "selectors": [
+        {
+          "line": 62,
+          "expression": "dismiss",
+          "status": "lowered",
+          "selector": "dismiss:",
+          "method": "PhotonActionSheet.dismiss(_:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 132,
+          "status": "lowered",
+          "method": "PhotonActionSheet.dismiss",
+          "selector": "dismiss:"
+        },
+        {
+          "line": 142,
+          "status": "lowered",
+          "method": "PhotonActionSheet.didToggle",
+          "selector": "didToggleWithEnabled:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Old/PhotonActionSheetCell.swift",
+      "source_sha256": "bbf98c95c1f7d44d09080c535df3548179f77bb506138872c64ccfa619d33661",
+      "selectors": [
+        {
+          "line": 155,
+          "expression": "valueChanged(sender:)",
+          "status": "lowered",
+          "selector": "valueChangedWithSender:",
+          "method": "PhotonActionSheetCell.valueChanged(sender:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 162,
+          "status": "lowered",
+          "method": "PhotonActionSheetCell.valueChanged",
+          "selector": "valueChangedWithSender:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Protocol/MenuActionable.swift",
+      "source_sha256": "dd2c0d814970a5f9bf95f75687cb4347eed21f4a139b2d26a17b1ded02ed11c5",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Protocol/MenuItemProvider.swift",
+      "source_sha256": "a65eef79ed0fdd6097634721e2645482a9ab5e937c535fc8dbef64374e094780",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Menu/Protocol/WebMenuAction.swift",
+      "source_sha256": "1b94f2a8c8ecd3e15dd4d9faef2ad740ca7ac4e4f74dc134be5b1a49d5f1aace",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Modules/WebView/WebViewController.swift",
+      "source_sha256": "1d8aa958b5a9fe5da4c0f32ca2a3c3d2f005f8abbba4b59055a576c2fda0242d",
+      "selectors": [
+        {
+          "line": 214,
+          "expression": "reloadPage",
+          "status": "lowered",
+          "selector": "reloadPage",
+          "method": "WebViewController.reloadPage"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 198,
+          "status": "unsupported",
+          "reason": "only zero arguments or one simply typed sender is supported"
+        },
+        {
+          "line": 217,
+          "status": "lowered",
+          "method": "WebViewController.reloadPage",
+          "selector": "reloadPage"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/NavigationPath.swift",
+      "source_sha256": "cb7f3ddc820a3a07b21fac61d85405a10a94859ff0200dab13e626126603ca0c",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Nimbus/NimbusExtensions.swift",
+      "source_sha256": "bb24df0721ed360aaba676dfeed79d802dfa8a5a9521eb353c6472a1da834e14",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Nimbus/NimbusWrapper.swift",
+      "source_sha256": "1e89b81a5a5b32d8cf921687a68d4f57ad5fc57a17dc13b2deb07be742034674",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Onboarding/OnboardingConstants.swift",
+      "source_sha256": "51112389caed596908a8c32c7fd11f2df157e82bcc97816509041bf1a7e872d5",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Onboarding/OnboardingFactory.swift",
+      "source_sha256": "53016321a0870300d74d0f921efd6b54a33e0f6cf92c20d4b3b858d5050cbff9",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Pro Tips/ShareTrackersViewController.swift",
+      "source_sha256": "6da8944cd35d6011afd6334abfdfb2c8c73b8f25fbc4c41be4267dd93b77d21f",
+      "selectors": [
+        {
+          "line": 47,
+          "expression": "shareTapped",
+          "status": "lowered",
+          "selector": "shareTappedWithSender:",
+          "method": "ShareTrackersViewController.shareTapped(sender:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 86,
+          "status": "lowered",
+          "method": "ShareTrackersViewController.shareTapped",
+          "selector": "shareTappedWithSender:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Pro Tips/TipManager.swift",
+      "source_sha256": "b96849675f7d6a37dcc40b8686358992ffddf9586b6108e55eb519792428a1ce",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Pro Tips/TipViewController.swift",
+      "source_sha256": "4295e98ba3b8b8e4e31e30f98d52fa19b37c68865049ce19d98e45cb07e607e6",
+      "selectors": [
+        {
+          "line": 63,
+          "expression": "tapOutside",
+          "status": "lowered",
+          "selector": "tapOutside",
+          "method": "TipViewController.tapOutside"
+        },
+        {
+          "line": 69,
+          "expression": "tapTip",
+          "status": "lowered",
+          "selector": "tapTip",
+          "method": "TipViewController.tapTip"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 77,
+          "status": "lowered",
+          "method": "TipViewController.tapTip",
+          "selector": "tapTip"
+        },
+        {
+          "line": 81,
+          "status": "lowered",
+          "method": "TipViewController.tapOutside",
+          "selector": "tapOutside"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 2,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Pro Tips/TipsPageViewController.swift",
+      "source_sha256": "2cac9b8f379a7e14dc76451cc24ce083b5bd5cc7a6b0db45a2b683878241b2a7",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Search/OpenSearchParser.swift",
+      "source_sha256": "aadf23bb8b36b5bcd3aed86c8086a159a90a622d52921b286420bc353c6bebe7",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Search/SearchEngine.swift",
+      "source_sha256": "597100ef0813091c9dfed16a76b2172e9347a73a933f6a887f13b6b3df195f24",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Search/SearchEngineManager.swift",
+      "source_sha256": "ca5691ef4883ffb0835fc4fecae8c2973e11993f3d890b38003b8b96f66bb4bd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/SearchSuggestions/OverlayView.swift",
+      "source_sha256": "20d6c5352a435c5a652e1421a290cb517b2052373eb78c94b91339bbdd83e90d",
+      "selectors": [
+        {
+          "line": 88,
+          "expression": "didPressAddToAutocomplete",
+          "status": "lowered",
+          "selector": "didPressAddToAutocomplete",
+          "method": "OverlayView.didPressAddToAutocomplete"
+        },
+        {
+          "line": 103,
+          "expression": "didPressFindOnPage",
+          "status": "lowered",
+          "selector": "didPressFindOnPage",
+          "method": "OverlayView.didPressFindOnPage"
+        },
+        {
+          "line": 125,
+          "expression": "didPressCopy",
+          "status": "lowered",
+          "selector": "didPressCopy",
+          "method": "OverlayView.didPressCopy"
+        },
+        {
+          "line": 205,
+          "expression": "didPressSearch(sender:)",
+          "status": "lowered",
+          "selector": "didPressSearchWithSender:",
+          "method": "OverlayView.didPressSearch(sender:)"
+        },
+        {
+          "line": 217,
+          "expression": "didPressArrowButton(sender:)",
+          "status": "lowered",
+          "selector": "didPressArrowButtonWithSender:",
+          "method": "OverlayView.didPressArrowButton(sender:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 445,
+          "status": "lowered",
+          "method": "OverlayView.didPressArrowButton",
+          "selector": "didPressArrowButtonWithSender:"
+        },
+        {
+          "line": 455,
+          "status": "lowered",
+          "method": "OverlayView.didPressSearch",
+          "selector": "didPressSearchWithSender:"
+        },
+        {
+          "line": 483,
+          "status": "lowered",
+          "method": "OverlayView.didPressCopy",
+          "selector": "didPressCopy"
+        },
+        {
+          "line": 486,
+          "status": "lowered",
+          "method": "OverlayView.didPressFindOnPage",
+          "selector": "didPressFindOnPage"
+        },
+        {
+          "line": 489,
+          "status": "lowered",
+          "method": "OverlayView.didPressAddToAutocomplete",
+          "selector": "didPressAddToAutocomplete"
+        },
+        {
+          "line": 492,
+          "status": "lowered",
+          "method": "OverlayView.didPressSettings",
+          "selector": "didPressSettings"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 5,
+        "lowered_selectors": 5,
+        "objc_attributes": 6,
+        "lowered_objc_attributes": 6,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/SearchSuggestions/SearchSuggestionsPromptView.swift",
+      "source_sha256": "495c3673e0231e940837ca2328bbade5518dc71dc86e2a376fbfb8e77c034669",
+      "selectors": [
+        {
+          "line": 29,
+          "expression": "didPressEnable",
+          "status": "lowered",
+          "selector": "didPressEnable",
+          "method": "SearchSuggestionsPromptView.didPressEnable"
+        },
+        {
+          "line": 42,
+          "expression": "didPressDisable",
+          "status": "lowered",
+          "selector": "didPressDisable",
+          "method": "SearchSuggestionsPromptView.didPressDisable"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 156,
+          "status": "lowered",
+          "method": "SearchSuggestionsPromptView.didPressDisable",
+          "selector": "didPressDisable"
+        },
+        {
+          "line": 161,
+          "status": "lowered",
+          "method": "SearchSuggestionsPromptView.didPressEnable",
+          "selector": "didPressEnable"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 2,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Cells/SettingsTableViewAccessoryCell.swift",
+      "source_sha256": "513a8dad8c1ae6e85cb7e51df5f7fada79c3fe6f169aef24efbddc84205d0e17",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Cells/SettingsTableViewCell.swift",
+      "source_sha256": "d2146e3dd00e9b211165eea614116c5919a2e965a9d6be07bc3802de6f1d7bb4",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Cells/SettingsTableViewToggleCell.swift",
+      "source_sha256": "52b3ddf4c9f6e271d91d37d08138eae10dfd41e70877acbe7e7dcd484e3aafff",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/AboutViewController.swift",
+      "source_sha256": "89ff5c263b146549ebdda1f3321a0759f486fdb3efefcf3d0d5df3c82866f028",
+      "selectors": [
+        {
+          "line": 246,
+          "expression": "didPressLearnMore",
+          "status": "lowered",
+          "selector": "didPressLearnMore",
+          "method": "AboutHeaderView.didPressLearnMore"
+        },
+        {
+          "line": 295,
+          "expression": "handleSecretMenuActivation(sender:)",
+          "status": "lowered",
+          "selector": "handleSecretMenuActivationWithSender:",
+          "method": "AboutHeaderView.handleSecretMenuActivation(sender:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 258,
+          "status": "lowered",
+          "method": "AboutHeaderView.didPressLearnMore",
+          "selector": "didPressLearnMore"
+        },
+        {
+          "line": 301,
+          "status": "lowered",
+          "method": "AboutHeaderView.handleSecretMenuActivation",
+          "selector": "handleSecretMenuActivationWithSender:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 2,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/AddCustomDomainViewController.swift",
+      "source_sha256": "12f0a076f4d4b8e96ef78194affbe2e3011ef8c5358c54a3af1008a884f8d751",
+      "selectors": [
+        {
+          "line": 65,
+          "expression": "AddCustomDomainViewController.cancelTapped",
+          "status": "lowered",
+          "selector": "cancelTapped",
+          "method": "AddCustomDomainViewController.cancelTapped"
+        },
+        {
+          "line": 66,
+          "expression": "AddCustomDomainViewController.doneTapped",
+          "status": "lowered",
+          "selector": "doneTapped",
+          "method": "AddCustomDomainViewController.doneTapped"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 94,
+          "status": "lowered",
+          "method": "AddCustomDomainViewController.cancelTapped",
+          "selector": "cancelTapped"
+        },
+        {
+          "line": 103,
+          "status": "lowered",
+          "method": "AddCustomDomainViewController.doneTapped",
+          "selector": "doneTapped"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 2,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/AddSearchEngineViewController.swift",
+      "source_sha256": "5830d23d0faa6e22af15500e8f9d3cf4261db6364fc1e261ab806b8c29a1a9e3",
+      "selectors": [
+        {
+          "line": 119,
+          "expression": "learnMoreTapped",
+          "status": "lowered",
+          "selector": "learnMoreTapped",
+          "method": "AddSearchEngineViewController.learnMoreTapped"
+        },
+        {
+          "line": 217,
+          "expression": "AddSearchEngineViewController.saveTapped",
+          "status": "lowered",
+          "selector": "saveTapped",
+          "method": "AddSearchEngineViewController.saveTapped"
+        },
+        {
+          "line": 220,
+          "expression": "AddSearchEngineViewController.cancelTapped",
+          "status": "lowered",
+          "selector": "cancelTapped",
+          "method": "AddSearchEngineViewController.cancelTapped"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 211,
+          "status": "lowered",
+          "method": "AddSearchEngineViewController.learnMoreTapped",
+          "selector": "learnMoreTapped"
+        },
+        {
+          "line": 227,
+          "status": "lowered",
+          "method": "AddSearchEngineViewController.cancelTapped",
+          "selector": "cancelTapped"
+        },
+        {
+          "line": 232,
+          "status": "lowered",
+          "method": "AddSearchEngineViewController.saveTapped",
+          "selector": "saveTapped"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 3,
+        "lowered_selectors": 3,
+        "objc_attributes": 3,
+        "lowered_objc_attributes": 3,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/AutocompleteCustomUrlViewController.swift",
+      "source_sha256": "577eecd80287c4d89b2eaa821c008109acab55a190759ce73ae1367a30e47c41",
+      "selectors": [
+        {
+          "line": 38,
+          "expression": "AutocompleteCustomUrlViewController.toggleEditing",
+          "status": "lowered",
+          "selector": "toggleEditing",
+          "method": "AutocompleteCustomUrlViewController.toggleEditing"
+        },
+        {
+          "line": 178,
+          "expression": "updateEmptyStateView",
+          "status": "unsupported",
+          "reason": "no unique supported explicitly @objc method declaration"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 73,
+          "status": "lowered",
+          "method": "AutocompleteCustomUrlViewController.toggleEditing",
+          "selector": "toggleEditing"
+        },
+        {
+          "line": 90,
+          "status": "lowered",
+          "method": "AutocompleteCustomUrlViewController.updateEmptyStateView",
+          "selector": "updateEmptyStateView"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 1,
+        "objc_attributes": 2,
+        "lowered_objc_attributes": 2,
+        "dispatch_classes": 1
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/AutocompleteSettingViewController.swift",
+      "source_sha256": "74dbfb3f1ec82a64ec797816f56d6be77a52dddee2f66fe5b17d3eb6e9dddf99",
+      "selectors": [
+        {
+          "line": 60,
+          "expression": "defaultToggleSwitched(_:)",
+          "status": "lowered",
+          "selector": "defaultToggleSwitched:",
+          "method": "AutocompleteSettingViewController.defaultToggleSwitched(_:)"
+        },
+        {
+          "line": 72,
+          "expression": "customToggleSwitched(_:)",
+          "status": "lowered",
+          "selector": "customToggleSwitched:",
+          "method": "AutocompleteSettingViewController.customToggleSwitched(_:)"
+        },
+        {
+          "line": 113,
+          "expression": "learnMoreDefaultTapped",
+          "status": "lowered",
+          "selector": "learnMoreDefaultTapped",
+          "method": "AutocompleteSettingViewController.learnMoreDefaultTapped"
+        },
+        {
+          "line": 123,
+          "expression": "learnMoreCustomapped",
+          "status": "lowered",
+          "selector": "learnMoreCustomapped",
+          "method": "AutocompleteSettingViewController.learnMoreCustomapped"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 131,
+          "status": "lowered",
+          "method": "AutocompleteSettingViewController.defaultToggleSwitched",
+          "selector": "defaultToggleSwitched:"
+        },
+        {
+          "line": 136,
+          "status": "lowered",
+          "method": "AutocompleteSettingViewController.customToggleSwitched",
+          "selector": "customToggleSwitched:"
+        },
+        {
+          "line": 141,
+          "status": "lowered",
+          "method": "AutocompleteSettingViewController.learnMoreDefaultTapped",
+          "selector": "learnMoreDefaultTapped"
+        },
+        {
+          "line": 146,
+          "status": "lowered",
+          "method": "AutocompleteSettingViewController.learnMoreCustomapped",
+          "selector": "learnMoreCustomapped"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 4,
+        "lowered_selectors": 4,
+        "objc_attributes": 4,
+        "lowered_objc_attributes": 4,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/SafariInstructionsViewController.swift",
+      "source_sha256": "c4c599bf17d70176dca3c1d192e3122bbf5674d8b5746c2cf4209765d8984754",
+      "selectors": [
+        {
+          "line": 28,
+          "expression": "updateEnabledState",
+          "status": "lowered",
+          "selector": "updateEnabledState",
+          "method": "SafariInstructionsViewController.updateEnabledState"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 31,
+          "status": "lowered",
+          "method": "SafariInstructionsViewController.updateEnabledState",
+          "selector": "updateEnabledState"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/SearchSettingsViewController.swift",
+      "source_sha256": "e999a7454ca919f050f32812d1c713f7f8b3f35c0d7157d1bbc9b251dfd6e482",
+      "selectors": [
+        {
+          "line": 53,
+          "expression": "SearchSettingsViewController.toggleEditing",
+          "status": "lowered",
+          "selector": "toggleEditing",
+          "method": "SearchSettingsViewController.toggleEditing"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 209,
+          "status": "lowered",
+          "method": "SearchSettingsViewController.toggleEditing",
+          "selector": "toggleEditing"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/SettingsContentViewController.swift",
+      "source_sha256": "752ce92ffca807a1d2bb650527ec4940f3840026b9dbf4fa4a0892a6fb409df6",
+      "selectors": [
+        {
+          "line": 95,
+          "expression": "SettingsContentViewController.SELdidTimeOut",
+          "status": "lowered",
+          "selector": "SELdidTimeOut",
+          "method": "SettingsContentViewController.SELdidTimeOut"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 151,
+          "status": "lowered",
+          "method": "SettingsContentViewController.SELdidTimeOut",
+          "selector": "SELdidTimeOut"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Controller/SettingsViewController.swift",
+      "source_sha256": "0a1d8380f50508658dc30fb167264e7f2e682182817277cdd803680ab577032f",
+      "selectors": [
+        {
+          "line": 58,
+          "expression": "dismissSettings",
+          "status": "lowered",
+          "selector": "dismissSettings",
+          "method": "SettingsViewController.dismissSettings"
+        },
+        {
+          "line": 186,
+          "expression": "toggleSwitched(_:)",
+          "status": "lowered",
+          "selector": "toggleSwitched:",
+          "method": "SettingsViewController.toggleSwitched(_:)"
+        },
+        {
+          "line": 192,
+          "expression": "applicationDidBecomeActive",
+          "status": "lowered",
+          "selector": "applicationDidBecomeActive",
+          "method": "SettingsViewController.applicationDidBecomeActive"
+        },
+        {
+          "line": 402,
+          "expression": "tappedLearnMoreFooter",
+          "status": "lowered",
+          "selector": "tappedLearnMoreFooterWithGestureRecognizer:",
+          "method": "SettingsViewController.tappedLearnMoreFooter(gestureRecognizer:)"
+        },
+        {
+          "line": 404,
+          "expression": "tappedLearnMoreSearchSuggestionsFooter",
+          "status": "lowered",
+          "selector": "tappedLearnMoreSearchSuggestionsFooterWithGestureRecognizer:",
+          "method": "SettingsViewController.tappedLearnMoreSearchSuggestionsFooter(gestureRecognizer:)"
+        },
+        {
+          "line": 406,
+          "expression": "tappedLearnMoreStudies",
+          "status": "lowered",
+          "selector": "tappedLearnMoreStudiesWithGestureRecognizer:",
+          "method": "SettingsViewController.tappedLearnMoreStudies(gestureRecognizer:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 219,
+          "status": "lowered",
+          "method": "SettingsViewController.applicationDidBecomeActive",
+          "selector": "applicationDidBecomeActive"
+        },
+        {
+          "line": 504,
+          "status": "lowered",
+          "method": "SettingsViewController.tappedLearnMoreFooter",
+          "selector": "tappedLearnMoreFooterWithGestureRecognizer:"
+        },
+        {
+          "line": 508,
+          "status": "lowered",
+          "method": "SettingsViewController.tappedLearnMoreSearchSuggestionsFooter",
+          "selector": "tappedLearnMoreSearchSuggestionsFooterWithGestureRecognizer:"
+        },
+        {
+          "line": 512,
+          "status": "lowered",
+          "method": "SettingsViewController.tappedLearnMoreStudies",
+          "selector": "tappedLearnMoreStudiesWithGestureRecognizer:"
+        },
+        {
+          "line": 516,
+          "status": "lowered",
+          "method": "SettingsViewController.dismissSettings",
+          "selector": "dismissSettings"
+        },
+        {
+          "line": 525,
+          "status": "lowered",
+          "method": "SettingsViewController.aboutClicked",
+          "selector": "aboutClicked"
+        },
+        {
+          "line": 529,
+          "status": "lowered",
+          "method": "SettingsViewController.toggleSwitched",
+          "selector": "toggleSwitched:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 6,
+        "lowered_selectors": 6,
+        "objc_attributes": 7,
+        "lowered_objc_attributes": 7,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Helpers/BlockerEnabledDetector.swift",
+      "source_sha256": "f5db734e48a9e5a54001770d9ce7ebc22796f27bb11de3db97e642eb618a1f08",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/Helpers/BlockerToggle.swift",
+      "source_sha256": "8b6590745b7b4d6584c1b78a1b99cafa06312367c09425a2bd000c7374f676b8",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/View/ActionFooterView.swift",
+      "source_sha256": "ee2371f430149fc6b048ff097137d97c03f39c24ebdc137d2ce9a65976350aca",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Settings/View/InstructionsView.swift",
+      "source_sha256": "1902b053dbcb4c77ee40b10e767f8360d436dd4f9056bd4938c4f09e09ca5e75",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/ShortcutsPresenter.swift",
+      "source_sha256": "a01f996cff58611f9547dee0ad7a25400aa22c028bd27ff2da7f27f53333f76b",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Siri/SiriFavoriteViewController.swift",
+      "source_sha256": "2263385b0a83250e5f7c75121fb3528ed8ea8b51b4fe83feb52338ba861cc0de",
+      "selectors": [
+        {
+          "line": 12,
+          "expression": "SiriFavoriteViewController.cancelTapped",
+          "status": "lowered",
+          "selector": "cancelTapped",
+          "method": "SiriFavoriteViewController.cancelTapped"
+        },
+        {
+          "line": 18,
+          "expression": "SiriFavoriteViewController.nextTapped",
+          "status": "lowered",
+          "selector": "nextTapped",
+          "method": "SiriFavoriteViewController.nextTapped"
+        },
+        {
+          "line": 25,
+          "expression": "SiriFavoriteViewController.doneTapped",
+          "status": "lowered",
+          "selector": "doneTapped",
+          "method": "SiriFavoriteViewController.doneTapped"
+        },
+        {
+          "line": 156,
+          "expression": "SiriFavoriteViewController.editTapped",
+          "status": "lowered",
+          "selector": "editTapped",
+          "method": "SiriFavoriteViewController.editTapped"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 182,
+          "status": "lowered",
+          "method": "SiriFavoriteViewController.cancelTapped",
+          "selector": "cancelTapped"
+        },
+        {
+          "line": 187,
+          "status": "lowered",
+          "method": "SiriFavoriteViewController.doneTapped",
+          "selector": "doneTapped"
+        },
+        {
+          "line": 194,
+          "status": "lowered",
+          "method": "SiriFavoriteViewController.nextTapped",
+          "selector": "nextTapped"
+        },
+        {
+          "line": 200,
+          "status": "lowered",
+          "method": "SiriFavoriteViewController.editTapped",
+          "selector": "editTapped"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 4,
+        "lowered_selectors": 4,
+        "objc_attributes": 4,
+        "lowered_objc_attributes": 4,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Siri/SiriShortcuts.swift",
+      "source_sha256": "2d9356b76854b45d563ba81c89412a8c4b40b817df7c0704ed4f8733a3440000",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Theme/SystemThemeDelegate.swift",
+      "source_sha256": "a214f059b6cfce9c272d20677e7b7c71e49ebe9e0cc8fce0c7564ba2df3b65ec",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Theme/Theme.swift",
+      "source_sha256": "adbf4a7952fad12f45df233674d50509ab768e6f5f9a38f1ab054b52c3285cbd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Theme/ThemeCells/ThemeTableViewAccessoryCell.swift",
+      "source_sha256": "a076d3d0eb2240e1f425104c7eb7901191297b425d40ef59b848f52674bcd38e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Theme/ThemeCells/ThemeTableViewToggleCell.swift",
+      "source_sha256": "e777016ba647573335a09fe81a5f5101564ceb6acad303fd1140c6339cd904dc",
+      "selectors": [
+        {
+          "line": 21,
+          "expression": "toggleSwitched(_:)",
+          "status": "lowered",
+          "selector": "toggleSwitched:",
+          "method": "ThemeTableViewToggleCell.toggleSwitched(_:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 30,
+          "status": "lowered",
+          "method": "ThemeTableViewToggleCell.toggleSwitched",
+          "selector": "toggleSwitched:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Theme/ThemeViewController.swift",
+      "source_sha256": "db5beacc042b834f0797ca8dbc3990ffff675d1eadf11a93bc6d99062061c53a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Model/SecureConnectionStatus.swift",
+      "source_sha256": "276833a7784f7759708e57e55733ee75c00fde2db2afc3a95444efe4f6c22643",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Model/ToggleItem.swift",
+      "source_sha256": "23b95c78ee515ffa2c5c314b82a5107675cd3cb68424c9b97df4f6dcc8d3f93e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Model/TrackingProtectionManager.swift",
+      "source_sha256": "3b1056496d29fd85e27c32e1a89dcbb346701578b4198ca07967d88c8a4871a5",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Model/TrackingProtectionState.swift",
+      "source_sha256": "fb9a5d0cfbbd137a846bc15322c94099abe31d60d829435bcd34264f3e0054fe",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Presentation/SheetMetrics.swift",
+      "source_sha256": "5ebc83c1701cbf446900e2fb633c4d26539708fc0301fb60400836acd99f1757",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Presentation/SheetModalViewController.swift",
+      "source_sha256": "d89fb4e29febe2a12a9fc001a97b3530a4161bf39aa0da15fd2c44ca6c368b17",
+      "selectors": [
+        {
+          "line": 27,
+          "expression": "animateDismissView",
+          "status": "lowered",
+          "selector": "animateDismissView",
+          "method": "SheetModalViewController.animateDismissView"
+        },
+        {
+          "line": 36,
+          "expression": "animateDismissView",
+          "status": "lowered",
+          "selector": "animateDismissView",
+          "method": "SheetModalViewController.animateDismissView"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 137,
+          "status": "lowered",
+          "method": "SheetModalViewController.animateDismissView",
+          "selector": "animateDismissView"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 2,
+        "lowered_selectors": 2,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/TrackingProtectionDelegate.swift",
+      "source_sha256": "f0d70385495a364c90ea84dadbd3efdf9219a21dcbd573ac8777cb3060fa8137",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/TrackingProtectionPageStats.swift",
+      "source_sha256": "e479ba95b651bfd1bcb7f3fe708f3d161cc639930eb9662e0b0140b0c195d629",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/TrackingProtectionViewController.swift",
+      "source_sha256": "9ffbd0d7d32eed2def9f2411914ee1a980f1f6a0a2bc12eb6b2221cee6c33fa7",
+      "selectors": [
+        {
+          "line": 271,
+          "expression": "doneTapped",
+          "status": "lowered",
+          "selector": "doneTapped",
+          "method": "TrackingProtectionViewController.doneTapped"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 346,
+          "status": "lowered",
+          "method": "TrackingProtectionViewController.doneTapped",
+          "selector": "doneTapped"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Views/ImageCell.swift",
+      "source_sha256": "f0313d93457df61c11f0fc6b3d0889e7232b5eda3d625a1695474f9dd1c2b0f4",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Views/SubtitleCell.swift",
+      "source_sha256": "1b448a202c0e326519fa17cbaaeb17bd3575ccd38df5a62ba5d5808d66799e22",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Views/SwitchTableViewCell.swift",
+      "source_sha256": "29abf53e7320da753b3b9e4689f5b1d3e42078bbd00f87c686d6865e5b47e6de",
+      "selectors": [
+        {
+          "line": 13,
+          "expression": "toggle(sender:)",
+          "status": "lowered",
+          "selector": "toggleWithSender:",
+          "method": "SwitchTableViewCell.toggle(sender:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 45,
+          "status": "lowered",
+          "method": "SwitchTableViewCell.toggle",
+          "selector": "toggleWithSender:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Tracking Protection/Views/TrackingHeaderView.swift",
+      "source_sha256": "10732d1b00a2ba7601cffc4ad18dda10c34755d3a83a9a560b5c0ece5068141c",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/AutocompleteTextField.swift",
+      "source_sha256": "5ebf0057037392a64f15b7e9c2730bdbde2beabd09057ea8ab0a5b454af09dfb",
+      "selectors": [
+        {
+          "line": 72,
+          "expression": "AutocompleteTextField.textDidChange",
+          "status": "lowered",
+          "selector": "textDidChange:",
+          "method": "AutocompleteTextField.textDidChange(_:)"
+        },
+        {
+          "line": 83,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 87,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 88,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 89,
+          "expression": "self.handleKeyCommand(sender:)",
+          "status": "lowered",
+          "selector": "handleKeyCommandWithSender:",
+          "method": "AutocompleteTextField.handleKeyCommand(sender:)"
+        },
+        {
+          "line": 342,
+          "expression": "Callback.go",
+          "status": "lowered",
+          "selector": "go",
+          "method": "Callback.go"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 100,
+          "status": "lowered",
+          "method": "AutocompleteTextField.handleKeyCommand",
+          "selector": "handleKeyCommandWithSender:"
+        },
+        {
+          "line": 173,
+          "status": "unsupported",
+          "reason": "only instance methods directly declared in a class are supported"
+        },
+        {
+          "line": 180,
+          "status": "lowered",
+          "method": "AutocompleteTextField.clear",
+          "selector": "clear"
+        },
+        {
+          "line": 290,
+          "status": "lowered",
+          "method": "AutocompleteTextField.textDidChange",
+          "selector": "textDidChange:"
+        },
+        {
+          "line": 355,
+          "status": "lowered",
+          "method": "Callback.go",
+          "selector": "go"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 6,
+        "lowered_selectors": 6,
+        "objc_attributes": 5,
+        "lowered_objc_attributes": 4,
+        "dispatch_classes": 2
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/BrowserToolbar.swift",
+      "source_sha256": "eb8c90e479d4daebf43fe07e3885bc9cfaf52b6f948d09644bd816ee7513812a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/EditView.swift",
+      "source_sha256": "9511f1a10d931e59fcca10c2e72b84466cf31fff8796d5f35efd3b533a68787e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/ErrorPage/ErrorPage.swift",
+      "source_sha256": "3620118b098c05f3e0c227ec5fec424353261ddb450e675ad4fe7c752fbecbdd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/GradientBackgroundView.swift",
+      "source_sha256": "bf7e49429525aa1039f296c906b5cc2e2cb7549e482cce6d5161c77421698714",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/GradientProgressBar.swift",
+      "source_sha256": "d97b5320266d1da27d9f05a53ca478a00a289aee76965ca646b51ccae57c7877",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/HomeViewToolbar.swift",
+      "source_sha256": "bf477c493d279a2a54fa55049afdad0ac94bb3eb2e5f87a28dcbceb2b473291d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/InsetButton.swift",
+      "source_sha256": "04c92da2475226f26f931b6f539400d3de512ecf796a786cd49c4de944a669b0",
+      "selectors": [],
+      "objc_attributes": [
+        {
+          "line": 28,
+          "status": "unsupported",
+          "reason": "only instance methods directly declared in a class are supported"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/ShortcutView+UIContextMenuInteractionDelegate.swift",
+      "source_sha256": "1f35a002aa3f02be8c99f0423b02f1314c3ad48428630be64d30f0edfdb02b06",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/SmartLabel.swift",
+      "source_sha256": "88c4e3eb8697a1c97d806174e8105042e195f8653aa1c61e7b9e475626d47e1a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/SplashViewController.swift",
+      "source_sha256": "fe727ae96171858763ceda47444b30d701b46b0274120d4fa8f53e4643285362",
+      "selectors": [
+        {
+          "line": 48,
+          "expression": "self.showAuth",
+          "status": "lowered",
+          "selector": "showAuth",
+          "method": "SplashViewController.showAuth"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 96,
+          "status": "lowered",
+          "method": "SplashViewController.showAuth",
+          "selector": "showAuth"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/Toast.swift",
+      "source_sha256": "995142d2eafa83724fc9a6684d3615e4dabe82f0152230945db2ca7327d2c6e1",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/UIAlertController+Rename.swift",
+      "source_sha256": "4c5013bc3065106eecd0ba6443e2dbb7c92bfb921a3233df4a2da993f2ad088c",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/UIConstants.swift",
+      "source_sha256": "74db2d7e7f68f6cfed00f1f3f15fdb3444c131c68dc6929b8da38f03bf73213f",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/Combine+UIControl.swift",
+      "source_sha256": "cc7ebea3216547a308dbbe0954eedd0d3f73530e00e467525ad9e28594d937fa",
+      "selectors": [
+        {
+          "line": 44,
+          "expression": "eventHandler",
+          "status": "unsupported",
+          "reason": "no unique supported explicitly @objc method declaration"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 56,
+          "status": "unsupported",
+          "reason": "generic class requires separate dispatch evidence"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 0,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": false
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/URLBar.swift",
+      "source_sha256": "26c76c45e77878b6c00ca5fd0d39ffea92a12312131e0b2a57e55309657204d9",
+      "selectors": [
+        {
+          "line": 24,
+          "expression": "cancelPressed",
+          "status": "lowered",
+          "selector": "cancelPressed",
+          "method": "URLBar.cancelPressed"
+        },
+        {
+          "line": 83,
+          "expression": "didPressClear",
+          "status": "lowered",
+          "selector": "didPressClear",
+          "method": "URLBar.didPressClear"
+        },
+        {
+          "line": 163,
+          "expression": "didSingleTap(sender:)",
+          "status": "lowered",
+          "selector": "didSingleTapWithSender:",
+          "method": "URLBar.didSingleTap(sender:)"
+        },
+        {
+          "line": 167,
+          "expression": "displayURLContextMenu",
+          "status": "lowered",
+          "selector": "displayURLContextMenuWithSender:",
+          "method": "URLBar.displayURLContextMenu(sender:)"
+        },
+        {
+          "line": 690,
+          "expression": "copyLink",
+          "status": "lowered",
+          "selector": "copyLink",
+          "method": "URLBar.copyLink"
+        },
+        {
+          "line": 695,
+          "expression": "pasteAndGoFromContextMenu",
+          "status": "lowered",
+          "selector": "pasteAndGoFromContextMenu",
+          "method": "URLBar.pasteAndGoFromContextMenu"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 634,
+          "status": "lowered",
+          "method": "URLBar.activateTextField",
+          "selector": "activateTextField"
+        },
+        {
+          "line": 651,
+          "status": "lowered",
+          "method": "URLBar.addCustomURL",
+          "selector": "addCustomURL"
+        },
+        {
+          "line": 656,
+          "status": "lowered",
+          "method": "URLBar.copyToClipboard",
+          "selector": "copyToClipboard"
+        },
+        {
+          "line": 660,
+          "status": "lowered",
+          "method": "URLBar.paste",
+          "selector": "pasteWithClipboardString:"
+        },
+        {
+          "line": 666,
+          "status": "lowered",
+          "method": "URLBar.pasteAndGo",
+          "selector": "pasteAndGoWithClipboardString:"
+        },
+        {
+          "line": 674,
+          "status": "lowered",
+          "method": "URLBar.pasteAndGoFromContextMenu",
+          "selector": "pasteAndGoFromContextMenu"
+        },
+        {
+          "line": 679,
+          "status": "lowered",
+          "method": "URLBar.copyLink",
+          "selector": "copyLink"
+        },
+        {
+          "line": 887,
+          "status": "lowered",
+          "method": "URLBar.cancelPressed",
+          "selector": "cancelPressed"
+        },
+        {
+          "line": 901,
+          "status": "lowered",
+          "method": "URLBar.didSingleTap",
+          "selector": "didSingleTapWithSender:"
+        },
+        {
+          "line": 971,
+          "status": "lowered",
+          "method": "URLBar.didPressClear",
+          "selector": "didPressClear"
+        },
+        {
+          "line": 978,
+          "status": "lowered",
+          "method": "URLBar.displayURLContextMenu",
+          "selector": "displayURLContextMenuWithSender:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 6,
+        "lowered_selectors": 6,
+        "objc_attributes": 11,
+        "lowered_objc_attributes": 11,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/URLBarDelegate.swift",
+      "source_sha256": "05a4b9922f47df1cc5cebde0211126fe1744ebcfaca1a93cacecc64d68dbd1e8",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/UIComponents/URLBar/URLBarViewModel.swift",
+      "source_sha256": "9db9b5eb5c8f1e232fb9c9b1c44d30489348a8253073fb08d492423a42f962bb",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/AdsTelemetryHelper.swift",
+      "source_sha256": "2f731855095bc4a3702dacd9309fa5179f9734ef6a0e3ef98546df3802f4306d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/AuthenticationManager.swift",
+      "source_sha256": "4b7d51de6e9e3ae1cb320fdc48125b049eb1af55597e084c6c51fea45fc98a25",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/Debouncer.swift",
+      "source_sha256": "d6fa599e58b7a9d0d2cc12cf9a0da1db881454bac7e85bdf603597a78f20a3f7",
+      "selectors": [
+        {
+          "line": 19,
+          "expression": "triggerCompletion",
+          "status": "lowered",
+          "selector": "triggerCompletion",
+          "method": "Debouncer.triggerCompletion"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 22,
+          "status": "lowered",
+          "method": "Debouncer.triggerCompletion",
+          "selector": "triggerCompletion"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/FindInPageBar.swift",
+      "source_sha256": "12c3a25119ba44232fae14f42fa3e412ab532c314197787c90388169ec99ceb1",
+      "selectors": [
+        {
+          "line": 60,
+          "expression": "didTextChange",
+          "status": "lowered",
+          "selector": "didTextChange:",
+          "method": "FindInPageBar.didTextChange(_:)"
+        },
+        {
+          "line": 83,
+          "expression": "didFindPrevious",
+          "status": "lowered",
+          "selector": "didFindPrevious:",
+          "method": "FindInPageBar.didFindPrevious(_:)"
+        },
+        {
+          "line": 91,
+          "expression": "didFindNext",
+          "status": "lowered",
+          "selector": "didFindNext:",
+          "method": "FindInPageBar.didFindNext(_:)"
+        },
+        {
+          "line": 100,
+          "expression": "didPressClose",
+          "status": "lowered",
+          "selector": "didPressClose:",
+          "method": "FindInPageBar.didPressClose(_:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 165,
+          "status": "lowered",
+          "method": "FindInPageBar.didFindPrevious",
+          "selector": "didFindPrevious:"
+        },
+        {
+          "line": 169,
+          "status": "lowered",
+          "method": "FindInPageBar.didFindNext",
+          "selector": "didFindNext:"
+        },
+        {
+          "line": 173,
+          "status": "lowered",
+          "method": "FindInPageBar.didTextChange",
+          "selector": "didTextChange:"
+        },
+        {
+          "line": 178,
+          "status": "lowered",
+          "method": "FindInPageBar.didPressClose",
+          "selector": "didPressClose:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 4,
+        "lowered_selectors": 4,
+        "objc_attributes": 4,
+        "lowered_objc_attributes": 4,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/InternalURL.swift",
+      "source_sha256": "ee862598ff66d9b68ecb69c3225486c2b8ff3c1a14e35db74f791654acb48ecd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/KeyboardHelper.swift",
+      "source_sha256": "ea69b7d55c8589ddb250f0d215c4bf798a9b20c77de94cb31a13bb2489d685e6",
+      "selectors": [
+        {
+          "line": 69,
+          "expression": "keyboardWillShow",
+          "status": "lowered",
+          "selector": "keyboardWillShowWithNotification:",
+          "method": "KeyboardHelper.keyboardWillShow(notification:)"
+        },
+        {
+          "line": 70,
+          "expression": "keyboardDidShow",
+          "status": "lowered",
+          "selector": "keyboardDidShowWithNotification:",
+          "method": "KeyboardHelper.keyboardDidShow(notification:)"
+        },
+        {
+          "line": 71,
+          "expression": "keyboardWillHide",
+          "status": "lowered",
+          "selector": "keyboardWillHideWithNotification:",
+          "method": "KeyboardHelper.keyboardWillHide(notification:)"
+        },
+        {
+          "line": 72,
+          "expression": "keyboardDidHide",
+          "status": "lowered",
+          "selector": "keyboardDidHideWithNotification:",
+          "method": "KeyboardHelper.keyboardDidHide(notification:)"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 95,
+          "status": "lowered",
+          "method": "KeyboardHelper.keyboardWillShow",
+          "selector": "keyboardWillShowWithNotification:"
+        },
+        {
+          "line": 104,
+          "status": "lowered",
+          "method": "KeyboardHelper.keyboardDidShow",
+          "selector": "keyboardDidShowWithNotification:"
+        },
+        {
+          "line": 113,
+          "status": "lowered",
+          "method": "KeyboardHelper.keyboardWillHide",
+          "selector": "keyboardWillHideWithNotification:"
+        },
+        {
+          "line": 122,
+          "status": "lowered",
+          "method": "KeyboardHelper.keyboardDidHide",
+          "selector": "keyboardDidHideWithNotification:"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 4,
+        "lowered_selectors": 4,
+        "objc_attributes": 4,
+        "lowered_objc_attributes": 4,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/KeyboardType.swift",
+      "source_sha256": "9c23a83b34cf55a8ee390411bfa52767c93748769d8cc73368589c012d64cde7",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/LocalContentBlocker.swift",
+      "source_sha256": "ac07a22b23e52ba46a111665b508f86a643ebf62e9917edd7200da51e1427e3c",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/Metadata.swift",
+      "source_sha256": "7c4ec75f88c16a4298efadf7ed33a3c5a1d7b45a29aec0997eab908b632677ee",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/OnboardingTelemetryHelper.swift",
+      "source_sha256": "5a913b7b4b3c7f6075f6c97d129bd4bed77d01e887a10c56203afc47217182f6",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/OpenUtils.swift",
+      "source_sha256": "2d4c57f55c7cf78a6a8d586f04b03b2079d50d2b3a60964b41e4ea45cf35a18a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/SearchHistoryUtils.swift",
+      "source_sha256": "b2b9e4195be84143c1a55596d4571fb1921f3f7b10e2a2cd8ad2a32476c3182a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/SearchInContentTelemetry.swift",
+      "source_sha256": "26831ff621e67a4d5de938da3498ea3ea169b2d5526d88c0638158b5b072ff1f",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/SearchSuggestClient.swift",
+      "source_sha256": "549363c2467243149787463a72d096c2ba4cb80758b4cd26cb526d19f2d32a24",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/SupportUtils.swift",
+      "source_sha256": "7b2552f83ba8a07f379a225dc2d448fe0dfb92235cfabed3765e725829b31e61",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/TelemetryIntegration.swift",
+      "source_sha256": "c2b2cbdfe9c4a4fbb4f404cc0f289750a8e0644956fc6fd30dab3d0a1ef51e36",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/TitleActivityItemProvider.swift",
+      "source_sha256": "528ec58d9112d2e0af300a5208cd507419d0213f62f0e5629b18fd94d8d27099",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/URIFixup.swift",
+      "source_sha256": "e0595235c1e620bac7362314679b8db050703161609ecb9aa75cbba77c89c40d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/UserDefault.swift",
+      "source_sha256": "4b8f74d68d543e574f54ea9ef00da95e1e6d01384228f1e20541f5f688c35779",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Blockzilla/Utilities/WebCacheUtils.swift",
+      "source_sha256": "470797af4da54da1034784606bca2ae3a026534952054b772c1b7ce08467d13d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Deferred/Deferred.swift",
+      "source_sha256": "b7784da5e06f6cd973f31aca3acef6db84060905d6fca316e42ad6f514d413db",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Deferred/LockProtected.swift",
+      "source_sha256": "3c7f8d572402bd0541a142577407198f0dfd2bda313d4125a400ce476fdbedf5",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Deferred/ReadWriteLock.swift",
+      "source_sha256": "8d43ba1a9dbf7a02c3bb334e232e0d31e352edf37c076959be5eb67b8c4202cb",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/OpenUIKitGenerated.swift",
+      "source_sha256": "9537a5c0955341d3dea6e6c7f42c9a88ffab862637b9e5e4dd03acbc74a76610",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/OpenUIKitLaunch.swift",
+      "source_sha256": "3275e6692b27114ecb8f03955c760157167e5d227c5850ae9f5ac4836968933e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Shared/AppConfig.swift",
+      "source_sha256": "e2c47e357114188bef028e20d09a5d1a7d6decb9e7ae42417a55a884c13921d0",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Shared/AppInfo.swift",
+      "source_sha256": "0a867d5279e36ff4fc07815396de86ba66ea1c7b498773331c714f44b93b53cb",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Shared/Settings.swift",
+      "source_sha256": "25858596400ea5222b10f2da3d4f78c50103e0f6e4d2ac61e9e9b224c083581f",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Blockzilla/Shared/Utils.swift",
+      "source_sha256": "05d3a611e8efbffe3928b695d561db1c160c5f4d65a3220ad47bac182a0c4230",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/AppShortcuts/Shortcut.swift",
+      "source_sha256": "b7f1501bd41bad472012008bc35a20883de651b6d787070c6b7ce4ed2174120a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/AppShortcuts/ShortcutView.swift",
+      "source_sha256": "a5cfad552e9552bb5afdec662ec05583e1deee5826bfbd6beb4a629867ede8f1",
+      "selectors": [
+        {
+          "line": 103,
+          "expression": "didTap",
+          "status": "lowered",
+          "selector": "didTap",
+          "method": "ShortcutView.didTap"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 137,
+          "status": "lowered",
+          "method": "ShortcutView.didTap",
+          "selector": "didTap"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/AppShortcuts/ShortcutViewModel.swift",
+      "source_sha256": "2d34847cb586ecb53508d52883cc494e90912c21f76c98c4ee17e4f67f4e7b41",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/AppShortcuts/ShortcutsManager.swift",
+      "source_sha256": "67a979250e07a5d97abf7ebb8a4f59d1810c564c8ce5641071e1e880b3c4cce3",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/AppShortcuts/ShortcutsPersister.swift",
+      "source_sha256": "82edccb54c639e035d82f186c26dc1e6d20d84a9a00cd9bee85bab894307f44e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/Bundle+CurrentBundle.swift",
+      "source_sha256": "725315f04ecbbe4bdeceb73bdf07550e2c3f38307696d0fa7035600e018ca3af",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/Preview Files/AppColorsView.swift",
+      "source_sha256": "0bcfbf1b672fdd82d305a8fd0fbbc319e59285b43b7aa7d4566cf445e5ecd2f1",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/Preview Files/AppFontsView.swift",
+      "source_sha256": "99da3374150876e5212adc7f9baca7f1cd4c62afea40919a64ac31a700e7e00a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/Preview Files/AppImagesView.swift",
+      "source_sha256": "59f55ca617ce706cb7abe85b3d44f192261fb8690ba05b8eab4fde02f1664508",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/UIColor+AppColors.swift",
+      "source_sha256": "4078f76f180d37f6d560dd63d59ef161302a73b7f416933533663700c314224f",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/UIFont+AppFonts.swift",
+      "source_sha256": "ac4895febb0ad6c588ada61420b0b271afb33092d76e1dbed828ee8b337c83e6",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/DesignSystem/UIImage+AppImages.swift",
+      "source_sha256": "ba5720a57aa90406b95a66ea62433557b666c1558d59781018de050585797734",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Licenses/LicenseList.swift",
+      "source_sha256": "6f3d90217325a02ddf5178c0018c511846fb21e3e6dac73986e02cbd7f004825",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Licenses/LicenseListView.swift",
+      "source_sha256": "0a12bcaf8132a4b07f66dcdc7865537de9b0f5d2e4b0bf6601165ee060582a86",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/DesignSystem/Color+AppColors.swift",
+      "source_sha256": "d64850a384db3bfc2961cad6f7b1d9d3522f081fa19709462c11f41893615e81",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/DesignSystem/Font+AppFonts.swift",
+      "source_sha256": "845f9756402af21481e34275d2cc294d602fa4df5d90e69548ea37c8e47a3300",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/DesignSystem/Image+AppImages.swift",
+      "source_sha256": "d6731252dc45289bc513b17cf1b4ba78e7c56b399e1b6a5942c8d1352b35ae54",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Handler/Action.swift",
+      "source_sha256": "f2a097668ce7af1b2841160888b0742fa854ff79cadb4ebb1143ed99f0a9d452",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Handler/OnboardingEventsHandlerV1.swift",
+      "source_sha256": "1decab96dad2babe549d70985c3ce682ed08a7934eae86757ebfc108b176ff5e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Handler/OnboardingEventsHandlerV2.swift",
+      "source_sha256": "e71c56ec07fc0eaa7e603c63506dc49494c327abe6ae61ff34fe970cf82de3f7",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Handler/OnboardingEventsHandling.swift",
+      "source_sha256": "960587095cf787af822e1e532e1e2d15839fce7b7c9934d8f1cd142a28ca8b9e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Handler/OnboardingVersion.swift",
+      "source_sha256": "cefb37cb3082c6046b1da8afd1dc34180ce25027ab7446b829dcd07d4c66c4b3",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Handler/ToolTipRoute.swift",
+      "source_sha256": "3110384c6a2be26b6250fe12f6c589b177e8a9b49380c8497f31aae6c6ae71f4",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/OnboardingViewController.swift",
+      "source_sha256": "3f9b569bf251378ae0cf4f52acfd06f67411403a2bbd86fca4f7f025887ef2ad",
+      "selectors": [
+        {
+          "line": 110,
+          "expression": "OnboardingViewController.didTapStartButton",
+          "status": "lowered",
+          "selector": "didTapStartButton",
+          "method": "OnboardingViewController.didTapStartButton"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 251,
+          "status": "lowered",
+          "method": "OnboardingViewController.didTapStartButton",
+          "selector": "didTapStartButton"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/OpenUIKitBundleModule.swift",
+      "source_sha256": "6dcedb692a328f2111671bb2152261c3e41966b681e86a837a3cb720b7e39bf9",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/PortraitHostingController.swift",
+      "source_sha256": "efd238b2b4b3481a7a6f0f1fd63f6d458d43731e70c9cc172a8a15aa9271dd77",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Preview Files/OnboardingPreview.swift",
+      "source_sha256": "449dcbfb79b4a4f1b4ba856c59f172d20e93bce63e55c944cdfd2a2951213a5b",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/SwiftUI Onboarding/CardBannerView.swift",
+      "source_sha256": "f74fe3774be86ed3ea54bb7c36b89db115eb3da72736c3366aba5b11a700c5aa",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/SwiftUI Onboarding/DefaultBrowserOnboardingView.swift",
+      "source_sha256": "0eebbfa3d4736fdd1e4caadd4c1806618cc18f85f54523b37898037c8ff800c6",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/SwiftUI Onboarding/GetStartedOnboardingView.swift",
+      "source_sha256": "ef92bd5b89c44805b3177189ad5b3d3ad88be16f8d5e1f3307faf4c6500a87ef",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/SwiftUI Onboarding/OnboardingView.swift",
+      "source_sha256": "65cb54ccf6bc12863b8b1b026a825f826d850a71157f961c992ed6d6220b7952",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/SwiftUI Onboarding/OnboardingViewModel.swift",
+      "source_sha256": "ae5c6d4c49d0a81fd1e7552051658c5bb116dd6b7f0d212044c3d1e33b3c24ff",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/SwiftUI Onboarding/ShowMeHowOnboardingView.swift",
+      "source_sha256": "2ff75ad07ee409f05a61f7fe036e27b34a25142ccd464bbfc63642c35efe5291",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Tooltip/TooltipTableViewCell.swift",
+      "source_sha256": "48220f0a4d2b409a19cf45819bc58561adf45fb436d264cec2de6c3936db6173",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Tooltip/TooltipView.swift",
+      "source_sha256": "7835e504e1062dc0ddfefcec5b4efaf8fae2d41fbe165653d7edf1d0a7ebf0ae",
+      "selectors": [
+        {
+          "line": 71,
+          "expression": "didTapTooltipDismissButton",
+          "status": "lowered",
+          "selector": "didTapTooltipDismissButton",
+          "method": "TooltipView.didTapTooltipDismissButton"
+        }
+      ],
+      "objc_attributes": [
+        {
+          "line": 118,
+          "status": "lowered",
+          "method": "TooltipView.didTapTooltipDismissButton",
+          "selector": "didTapTooltipDismissButton"
+        }
+      ],
+      "errors": [],
+      "counts": {
+        "selectors": 1,
+        "lowered_selectors": 1,
+        "objc_attributes": 1,
+        "lowered_objc_attributes": 1,
+        "dispatch_classes": 1
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Onboarding/Tooltip/TooltipViewController.swift",
+      "source_sha256": "0e2fa127a2584d178e893714faa4606c4f11469271617c2a10acf30038604c7a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIComponents/AsyncImageView.swift",
+      "source_sha256": "5fbda4ebce61254c8b0099f3f50892947beab6654af168885b6cac00240abdaa",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/FaviIconGenerator.swift",
+      "source_sha256": "061714d90475de0320a2498b22c75d2a430625c7f49636902f0c8304d151fc93",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/ImageLoader.swift",
+      "source_sha256": "ef3ceee801c0fb7e63d0a78185f5956c56c4fde976f9ef909eac5065132e0bcb",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIApplication+Orientation.swift",
+      "source_sha256": "c47e83212c074d34bd0f793065faba5e0691a7612eec6f8cbd59691a7907a309",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIButton+Background.swift",
+      "source_sha256": "2f5dcc1c57b951a86d54d4f41dcbc415a9d08c92bba9c7c6295fe4040f582382",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIDeviceExtensions.swift",
+      "source_sha256": "2167de4be7bfd70659bd2c786a7a9a463d266316660d04eb83cdd668f9cfde40",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIImageExtensions.swift",
+      "source_sha256": "13e31d863f387bc493d5ef2761ca46c7edc62c744e11ff396e85b2bfe0512319",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UILabelExtensions.swift",
+      "source_sha256": "ca9be28a9998bbf4c93ad1fb33df0e1a6dfea4e0a475ce617ad481fd862102bf",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIScreenExtensions.swift",
+      "source_sha256": "959f976a3b34bba81d59cee67f97a188d2114ab175c11eccd2397db42907b443",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UITableView+Dequeue.swift",
+      "source_sha256": "dceb0ac806f6faf634aed350d69edaf304414b374404f2af46bc2fbd7a108de7",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIViewController+Child.swift",
+      "source_sha256": "06dd18d432add4ca3a8c70bbfb455d007bef75df6388e3a5dbdb7b541f3760f0",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/UIHelpers/UIViewExtensions.swift",
+      "source_sha256": "72c10b8c6849ad412bacd5f7b6ddb3cb8662d49f8af2998abd0ffdc946fa5f37",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Widget/Assets.swift",
+      "source_sha256": "efac8d1c98b562374e54eea7540b4201523db670a6353eff8f0a0273d294526e",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Widget/OpenUIKitBundleModule.swift",
+      "source_sha256": "9c65f5e51ac4eedd61aafbddf06601a8aa67b6b23cfd3ee102a077d929026b4b",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/BlockzillaPackage/Widget/SearchWidgetView.swift",
+      "source_sha256": "721669388a4556e1609f580ed87d6065b63981770e71b0f77db292767b05f6c2",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/Document.swift",
+      "source_sha256": "10a2c912b45d8c89e68f1fbdefcedde85cbf2fc99a05b62c0903da60018d1662",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/Element.swift",
+      "source_sha256": "ddc192c06b37785c8eb70c04d0ec31d0b77e6a1a298f748c8dce8f206f9f3893",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/Error.swift",
+      "source_sha256": "ca0340d266e2d52ce52838d59e143ba5f298b4ad0bf46b401766499d329b6215",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/Helpers.swift",
+      "source_sha256": "70296e9caa7d6fe5335b60eba0a3ea0c8d237f64042c0bd0bfc0ab8c022dce7d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/LinuxCFString.swift",
+      "source_sha256": "aba20bb9afc1f6114aaf985495e834405c567287651fee2b6f67f621b4e28d28",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/Node.swift",
+      "source_sha256": "f3fda4a38005da678051ad0a31e7513a347a6b1dcaab3d04eef0a8f59ce46ec3",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/NodeSet.swift",
+      "source_sha256": "c781d68f2b690dc7c343959b4cb26c94d8fb6f72d331cd4c2b6e601f4aaa32e4",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/Fuzi/Queryable.swift",
+      "source_sha256": "16ad127b7735270f54affebef735240129afbe096cfe5644facaad10ec681dd8",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/Constraint.swift",
+      "source_sha256": "cf3009403fec7e18de48cdf3d8972d3688e950ba5ba902e0e71781963a2d7a83",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintAttributes.swift",
+      "source_sha256": "d0a271011a62d9c21e37e5ce258588a35522d7604ecfe850b4d6ec1e1b50b396",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintConfig.swift",
+      "source_sha256": "6c664ce32e2ddbccf3b7f79eaf19864ff32b2453276be3fd91511bf4627be478",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintConstantTarget.swift",
+      "source_sha256": "5bd36517813b642027d91802cb98d35d5f2b5bfa3682df43c17eef3968b868be",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintDSL.swift",
+      "source_sha256": "a89f5aa2cd128f58e387cc27640c5b6f220cf767921e4a2867bd0d9264a15091",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintDescription.swift",
+      "source_sha256": "41551842a0e217b040e34d6d72c79e49affbbb7a6dab79f772753b0aa43ddf23",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintDirectionalInsetTarget.swift",
+      "source_sha256": "099d20ccd5f121e4ed3ea2ab2e98060ee3b5c3bb50d666a12a848261237c2383",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintDirectionalInsets.swift",
+      "source_sha256": "d5e6828dbcf1a0d27b742f4524331f73df95ecde47c125211fdb37260842c0ff",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintInsetTarget.swift",
+      "source_sha256": "d312f8a65039377b81dd0f584c462052ea4b6088f5946fbbb529e216a0cca1fc",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintInsets.swift",
+      "source_sha256": "bf25444ae6b4af9453c6e2dfa444319289cc52c4c5be7450466f58c695fb9a50",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintItem.swift",
+      "source_sha256": "7c226483cf7d69012df791d8e561a8eb02eeadcd855bfd1abc89fe92e87e9c81",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintLayoutGuide+Extensions.swift",
+      "source_sha256": "741d20cea7b8592a74a68e1be1324eda03fe408fc42281eb179281dfb854f313",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintLayoutGuide.swift",
+      "source_sha256": "d5df907be46382469ed7ba480493f9f02a7aa04005185b4d51f32a36e47331cc",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintLayoutGuideDSL.swift",
+      "source_sha256": "af106543803c3042455a24a976364bf6b9770d358670bfd2b5bc81fe55c3e0b4",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintLayoutSupport.swift",
+      "source_sha256": "7d0260ed48d116352071d77810ab66b86308aa13ff3c80b5ad407e5d11c7fc43",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintLayoutSupportDSL.swift",
+      "source_sha256": "e20a3c50d3dca32059fe229daec4dd19d1762e493c38e0824b62de164deb1514",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMaker.swift",
+      "source_sha256": "c420b4a866559cbfafcbc4db23f73f6165f9dba71e09664ca3043c4eae063b6d",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMakerEditable.swift",
+      "source_sha256": "e64bfeffc8b30d5209b10238cde846f20ef50b0c7d8aea1220b95d9d8dc7d7e2",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMakerExtendable.swift",
+      "source_sha256": "53b074fc10abf54ce7252943b15b0c1c1655074f68e8331a94a5f0debcfeff11",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMakerFinalizable.swift",
+      "source_sha256": "17edf48556a140d600b8c60b7a15025ee4d5e5345dbea4aa28288e012fafaa58",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMakerPrioritizable.swift",
+      "source_sha256": "5893f7487057d536137983215b496a972a45f08671d80c2241ca96b32aef4932",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMakerRelatable+Extensions.swift",
+      "source_sha256": "f6ff6ceee695390b1a9a816461a5c995190eb7980cc5bca89c3ec30cfe4e954b",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMakerRelatable.swift",
+      "source_sha256": "ef0a1291555fe45c80055253227880c143f09db2b0fc287761e5ea34fd86fa9b",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintMultiplierTarget.swift",
+      "source_sha256": "13ce5e8b45fd1326393ee1afe7227624defd31c61c482800471454db9ae1cb36",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintOffsetTarget.swift",
+      "source_sha256": "19f461917686451d7b1409f6eeb8027e22fecd74ff65bd7614c2e4d755cc86fd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintPriority.swift",
+      "source_sha256": "501062765bc2d7a0ebf7ba7b19e2c24fc95c0d279f511a17bb9aaa809d4b5e78",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintPriorityTarget.swift",
+      "source_sha256": "b88c3bc0064ffe5db81ec3471935e16e593b445f5ef4bdfe674acfbd9189e94f",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintRelatableTarget.swift",
+      "source_sha256": "c585528958a8fa33db1e288e6f7a56773f9cbd50bb024f41f62cdb20a3fb3824",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintRelation.swift",
+      "source_sha256": "a820ce810d10cfc8b694d681d12c481f79ba018ea8f7339e56643b2a0aaa8fc1",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintView+Extensions.swift",
+      "source_sha256": "d5f837486b12352cac31db4401bd89e41be25a87352d098b365f116dc49796fd",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintView.swift",
+      "source_sha256": "2e59df783a8ef4375265cbef3f0c32d6005b1babc48abc267f701d001a27aecc",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/ConstraintViewDSL.swift",
+      "source_sha256": "0cb74ae3f0b7391e52b832ea480c2e362a26729a1c153828041b6a53c34c0cc6",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/Debugging.swift",
+      "source_sha256": "6af70d54a6e6fb112d87f8adb93caead0bc2afc472e4bbb04347bf591be3b3e3",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/LayoutConstraint.swift",
+      "source_sha256": "273be375ffd78140cdc70d74a11e83d85a988737cbce83ef6445383618f0c83f",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/LayoutConstraintItem.swift",
+      "source_sha256": "49478c0de64e2c7152b076f441f2563a49893fafc6b3107a81461667ede6817a",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/Typealiases.swift",
+      "source_sha256": "d5368acd6349cdae45164c60f6a865d278a27f41a55d852654cb0787e7e02fd8",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    },
+    {
+      "path": "Sources/SnapKit/UILayoutSupport+Extensions.swift",
+      "source_sha256": "93e61b4c168bc89bb8a32a862bb03d3947f05e5cb1cdb00bdf0c835457d1a153",
+      "selectors": [],
+      "objc_attributes": [],
+      "errors": [],
+      "counts": {
+        "selectors": 0,
+        "lowered_selectors": 0,
+        "objc_attributes": 0,
+        "lowered_objc_attributes": 0,
+        "dispatch_classes": 0
+      },
+      "complete": true
+    }
+  ]
+}

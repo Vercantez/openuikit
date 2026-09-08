@@ -23,6 +23,7 @@ full/audiotoolbox/AudioToolboxParameters.swift
 full/audiotoolbox/AudioToolboxStatus.swift
 full/audiotoolbox/AudioToolboxSupport.swift
 full/audiotoolbox/AudioToolboxWave8.swift
+full/audiotoolbox/AudioToolboxWave9.swift
 full/audiotoolbox/AudioUnitConstants.swift
 full/audiotoolbox/AudioUnitProperties.swift
 full/audiotoolbox/CAFConstants.swift

@@ -1,0 +1,781 @@
+{
+  "device" : "iPhone",
+  "records" : [
+    {
+      "arrow" : 0,
+      "arrows" : [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "identifier" : "sample",
+      "nilIdentifierEqualsDescription" : false,
+      "nilIdentifierHasUUIDDescription" : true,
+      "nilIdentifierType" : "_Boxed",
+      "nilIdentifierUnique" : true,
+      "nilIdentifierUUID" : false,
+      "nilSource" : [
+        -2.25,
+        3.5
+      ],
+      "source" : [
+        70,
+        90
+      ],
+      "stage" : "configuration"
+    },
+    {
+      "stage" : "copyIdentifier",
+      "value" : "before"
+    },
+    {
+      "released" : true,
+      "stage" : "weakDelegate"
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        0,
+        0
+      ],
+      "locationWindow" : [
+        0,
+        0
+      ],
+      "stage" : "detached.initial",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationWindow" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "stage" : "unwindowed.attached",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+        "menu:sample"
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "unwindowed.present.immediate",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "unwindowed.removed",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+        "menu:sample"
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "unwindowed.removed.idleMethods",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        0,
+        0
+      ],
+      "locationWindow" : [
+        0,
+        0
+      ],
+      "stage" : "detached.idleMethods",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        0,
+        0
+      ],
+      "locationWindow" : [
+        0,
+        0
+      ],
+      "stage" : "detached.present.immediate",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        0,
+        0
+      ],
+      "locationWindow" : [
+        0,
+        0
+      ],
+      "stage" : "detached.present.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationWindow" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "stage" : "attached.initial",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "menu:sample",
+        "target:sample",
+        "willPresent:sample",
+        "willPresent.return",
+        "present.animations"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.present.immediate",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+        [
+          70,
+          90,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "present.completion"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.present.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "target:sample"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.update.immediate",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+        [
+          70,
+          90,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.update.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "menu:sample",
+        "target:sample"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.reload.immediate",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+        [
+          70,
+          90,
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.reload.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "willDismiss:sample",
+        "willDismiss.return",
+        "dismiss.animations"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "attached.dismiss.immediate",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "dismiss.completion"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationWindow" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "stage" : "attached.dismiss.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationSource" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "locationWindow" : [
+        1.7976931348623157e+308,
+        1.7976931348623157e+308
+      ],
+      "stage" : "attached.idleMethods",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "menu:sample"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "empty.present.immediate",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "empty.present.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "menu:sample"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "nil.present.immediate",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "nil.present.settled",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "nil.dismiss",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : true,
+      "events" : [
+        "menu:sample"
+      ],
+      "gestures" : 3,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "nil.idleMethods",
+      "suggestions" : [
+        [
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Format",
+          "UIMenu:",
+          "UIMenu:",
+          "UIMenu:Speech",
+          "UIMenu:"
+        ]
+      ],
+      "targets" : [
+
+      ]
+    },
+    {
+      "attached" : false,
+      "events" : [
+
+      ],
+      "gestures" : 0,
+      "locationNil" : [
+        70,
+        90
+      ],
+      "locationSource" : [
+        70,
+        90
+      ],
+      "locationWindow" : [
+        70,
+        90
+      ],
+      "stage" : "removed",
+      "suggestions" : [
+
+      ],
+      "targets" : [
+
+      ]
+    }
+  ],
+  "scale" : 3,
+  "screen" : [
+    0,
+    0,
+    393,
+    852
+  ],
+  "systemVersion" : "26.1"
+}

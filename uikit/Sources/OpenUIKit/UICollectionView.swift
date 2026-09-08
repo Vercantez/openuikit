@@ -442,6 +442,26 @@ open class UICollectionView: UIScrollView {
     public func deleteItems(at indexPaths: [IndexPath]) { reloadData() }
     public func moveItem(at indexPath: IndexPath, to newIndexPath: IndexPath) { reloadData() }
 
+    // collectionblockingprobe base.populated*, iPhone 16 / iOS 26.1:
+    // offset (20,30)+(3,4) becomes (23,34); size (500,1200)+(10,20)
+    // becomes (510,1220) immediately, then returns to the layout's size on
+    // the next pass. With content height 600 < viewport 852, y clamps to 0.
+    func _applyInvalidationAdjustments(_ context: UICollectionViewLayoutInvalidationContext) {
+        let previousTiling = inTile
+        inTile = true
+        defer { inTile = previousTiling }
+        if context.contentSizeAdjustment != .zero {
+            contentSize = CGSize(width: contentSize.width + context.contentSizeAdjustment.width,
+                                 height: contentSize.height + context.contentSizeAdjustment.height)
+        }
+        if context.contentOffsetAdjustment != .zero {
+            let x = contentOffset.x + context.contentOffsetAdjustment.x
+            let y = contentOffset.y + context.contentOffsetAdjustment.y
+            contentOffset = CGPoint(x: max(minContentOffset.x, min(maxContentOffset.x, x)),
+                                    y: max(minContentOffset.y, min(maxContentOffset.y, y)))
+        }
+    }
+
     /// The layout told us its cache is stale.
     func _layoutInvalidated() {
         setNeedsLayout()

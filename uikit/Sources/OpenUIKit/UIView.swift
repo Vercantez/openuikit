@@ -584,7 +584,12 @@ open class UIView: UIResponder, CALayerDelegate {
         }
     }
 
-    public internal(set) var superview: UIView?
+    // MEASURED EidolonTap (iPhone 16 / iOS 26.1) and UIKit Mac Catalyst
+    // (26.1 SDK, macOS 26.5.2): a child does not retain its parent (released,
+    // child.superview nil). A bare UIButton also releases with its label.
+    // A strong back-reference leaked buttons and prevented RxCocoa's
+    // deallocated stream from completing: 0 completions vs the oracle's 1.
+    public internal(set) weak var superview: UIView?
     public internal(set) var subviews: [UIView] = []
     /// UIKit's `+layerClass`. GradientBackgroundView (Focus a2832521) returns
     /// CAGradientLayer.self; the lazy backing layer is that class.

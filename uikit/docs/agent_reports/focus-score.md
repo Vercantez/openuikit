@@ -148,3 +148,35 @@ The checker printed no `REFUSED` line. Its final output was:
 Build of product 'openrender' complete! (161.30s)
 checks passed (CHECK_ONLY)
 ```
+
+## Guest rescore at main a1de4166 (2026-09-07, operator)
+
+machorun `render_full realapp` at scale 3 in `uikit-linux` (the driver now
+honours `OPENUIKIT_REALAPP_SCALE`/`OPENUIKIT_INK_LOG`, af5f2cdd), scored with
+`Tools/compare/compare_realapp.py --scale 3 --golden-straight-alpha`, bar 97.5.
+Landed since the first score: BSD sockets in the guest libSystem (Ledger's
+loopback row, 24ad5183), the 3x ink harvests (table 850 → 1276; ink misses
+238 → 1), the inset-grouped content margin and separator rules (f803cd09,
+c43cb6ab, a1de4166) and the Focus settings/AX1 fixes (a1bf3e22).
+
+| screen | score | result |
+|---|---:|---|
+| `realapp_focus_browser_light` | size-mismatch | n/a (2x golden) |
+| `realapp_focus_home_light` | 99.287 | PASS |
+| `realapp_focus_settings_light` | 98.823 | PASS |
+| `realapp_hackers_feed_light` | 85.536 | FAIL |
+| `realapp_history_light` | 99.137 | PASS |
+| `realapp_history_light_ipad` | 99.86 | PASS |
+| `realapp_ledger_light` | 98.61 | PASS |
+| `realapp_settings_dark` | 98.548 | PASS |
+| `realapp_settings_light` | 98.535 | PASS |
+| `realapp_settings_light_ax1` | 97.549 | PASS |
+| `realapp_settings_light_ipad` | 99.65 | PASS |
+| `realapp_settings_light_xs` | 98.72 | PASS |
+| `realapp_settings_light_xxxl` | 98.334 | PASS |
+| `realapp_storage_light` | 99.74 | PASS |
+| `realapp_storage_light_ipad` | 99.734 | PASS |
+
+13 of 14 scorable screens pass; `realapp_hackers_feed_light` is the open wall
+(row heights +2 pt, missing 23×23 view; agent hackers-feed-rows in flight);
+`realapp_focus_browser_light` has a 2x golden and is scored separately.
