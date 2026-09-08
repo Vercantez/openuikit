@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="KCM-cT-BEX">
+    <device id="ipad9_7" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="AGaramondPro-Italic.otf">
+            <string>AGaramondPro-Italic</string>
+        </array>
+        <array key="AGaramondPro-Regular.otf">
+            <string>AGaramondPro-Regular</string>
+        </array>
+        <array key="ITCAvantGardeDemi_Track03.ttf">
+            <string>ITCAvantGardeDemiTrack03</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--App View Controller-->
+        <scene sceneID="JwR-1f-phG">
+            <objects>
+                <viewController storyboardIdentifier="AppViewController" id="KCM-cT-BEX" customClass="AppViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="t8P-M5-wvq"/>
+                        <viewControllerLayoutGuide type="bottom" id="GPr-5c-DY0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="jGy-SO-AWq">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Jq-GZ-FGh" userLabel="App Nav">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                                <connections>
+                                    <segue destination="2lC-Vc-1XS" kind="embed" id="MSf-Lh-MkW"/>
+                                </connections>
+                            </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ode-hT-0UE" customClass="ActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="783" y="20" width="176" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="REGISTER TO BID">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" red="0.64313725489999995" green="0.64313725489999995" blue="0.64313725489999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V25-VZ-0aj">
+                                <rect key="frame" x="352" y="-9" width="320" height="107"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <view hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QgH-uE-F8q">
+                                        <rect key="frame" x="20" y="20" width="280" height="67"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="88 : 88 : 88" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D2G-TN-B6K">
+                                                <rect key="frame" x="67" y="17" width="148" height="21"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="20"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="HRS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m1E-mI-ph0">
+                                                <rect key="frame" x="72" y="41" width="39" height="26"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="15"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SEC" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Ra-x4-hLr">
+                                                <rect key="frame" x="170" y="41" width="39" height="26"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="15"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MIN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aZJ-ZE-7u5">
+                                                <rect key="frame" x="121" y="41" width="39" height="26"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="15"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <gestureRecognizers/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Xfk-BI-Vbe" appends="YES" id="UCy-r4-bUK"/>
+                                </connections>
+                            </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Sn-II-uSf" userLabel="Offline Container View">
+                                <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <segue destination="8YY-cB-YpC" kind="embed" id="53N-ZC-LfJ"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="1Jq-GZ-FGh" firstAttribute="leading" secondItem="jGy-SO-AWq" secondAttribute="leading" id="30p-XC-Dgq"/>
+                            <constraint firstItem="1Jq-GZ-FGh" firstAttribute="bottom" secondItem="GPr-5c-DY0" secondAttribute="top" id="3cX-Bj-2Bm"/>
+                            <constraint firstItem="1Jq-GZ-FGh" firstAttribute="top" secondItem="jGy-SO-AWq" secondAttribute="top" id="LgQ-Oq-tqy"/>
+                            <constraint firstAttribute="trailing" secondItem="1Jq-GZ-FGh" secondAttribute="trailing" id="Vge-6b-xVA"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="t4w-dF-0WD"/>
+                    <connections>
+                        <outlet property="countdownManager" destination="nNP-QM-m8k" id="CDT-Kz-O6F"/>
+                        <outlet property="offlineBlockingView" destination="4Sn-II-uSf" id="Ypw-XK-yiO"/>
+                        <outlet property="registerToBidButton" destination="Ode-hT-0UE" id="zwL-Wv-l6U"/>
+                        <segue destination="WE8-fs-xzH" kind="modal" identifier="Show Admin Options" id="phx-JW-UFE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PST-th-Drd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="nNP-QM-m8k" customClass="ListingsCountdownManager" customModule="Kiosk" customModuleProvider="target">
+                    <connections>
+                        <outlet property="countdownContainerView" destination="QgH-uE-F8q" id="asE-Tn-1vw"/>
+                        <outlet property="countdownLabel" destination="D2G-TN-B6K" id="IBv-Th-Uy2"/>
+                    </connections>
+                </customObject>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="Xfk-BI-Vbe">
+                    <connections>
+                        <action selector="longPressForAdmin:" destination="KCM-cT-BEX" id="7mW-a5-ghB"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-1540" y="820"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="gwf-cv-uMQ">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="2lC-Vc-1XS" sceneMemberID="viewController">
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="I8d-rj-Xv9">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="anX-QX-ldh" kind="relationship" relationship="rootViewController" id="Gt6-2K-KPK"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jf2-OQ-MFU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-330" y="825"/>
+        </scene>
+        <!--Listings View Controller-->
+        <scene sceneID="rIz-bx-XAe">
+            <objects>
+                <viewController storyboardIdentifier="AuctionListings" id="anX-QX-ldh" customClass="ListingsViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OV1-Ns-Xor"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Js-OQ-BFj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gf1-MR-Qcf">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="StagingFlag" translatesAutoresizingMaskIntoConstraints="NO" id="kTY-2b-qfu">
+                                <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wlF-zV-70o" customClass="Spinner" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="497" y="369" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.61744341488538246" green="0.84611775919469612" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="FwK-Gc-fEW"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="loadingSpinner" destination="wlF-zV-70o" id="dcE-xD-9b1"/>
+                        <outlet property="stagingFlag" destination="kTY-2b-qfu" id="Hci-gl-lEv"/>
+                        <segue destination="Jj5-n3-bv0" kind="push" identifier="Show Sale Artwork Details" id="KbB-fC-FOM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Xon-LV-uZa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="947" y="825"/>
+        </scene>
+        <!--Sale Artwork Details View Controller-->
+        <scene sceneID="YCn-HC-vE3">
+            <objects>
+                <viewController storyboardIdentifier="SaleArtworkDetail" id="Jj5-n3-bv0" customClass="SaleArtworkDetailsViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="MIW-uT-gtC"/>
+                        <viewControllerLayoutGuide type="bottom" id="2rk-ah-JGC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="nu4-re-HAA">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZNW-S0-kgd">
+                                <rect key="frame" x="20" y="20" width="120" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="1en-lq-iXz"/>
+                                    <constraint firstAttribute="width" constant="120" id="4xX-DI-bdx"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="d5n-gV-yif"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="BACK" backgroundImage="BackButtonBackground">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="backWasPressed:" destination="Jj5-n3-bv0" eventType="touchUpInside" id="HrC-Hp-x4l"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="NDO-I9-Fbb" customClass="ORTagBasedAutoStackView">
+                                <rect key="frame" x="683" y="90" width="276" height="658"/>
+                                <color key="backgroundColor" red="1" green="0.99997437000274658" blue="0.99999129772186279" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="276" id="03a-vM-xA5"/>
+                                    <constraint firstAttribute="height" constant="658" id="8Bg-fK-uEF"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ecj-6U-eYB" userLabel="Divider">
+                                <rect key="frame" x="643" y="90" width="1" height="678"/>
+                                <color key="backgroundColor" red="0.75559091567993164" green="0.75556838512420654" blue="0.75558114051818848" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="1" id="78f-fD-Z5a"/>
+                                </constraints>
+                            </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9gg-U8-vQw" customClass="ORStackScrollView">
+                                <rect key="frame" x="20" y="90" width="615" height="678"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="615" id="N3f-Zo-Ppq"/>
+                                    <constraint firstAttribute="height" constant="678" id="ila-iK-bR8"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="NDO-I9-Fbb" secondAttribute="trailing" constant="65" id="2rj-Vs-QfH"/>
+                            <constraint firstItem="9gg-U8-vQw" firstAttribute="leading" secondItem="nu4-re-HAA" secondAttribute="leadingMargin" id="9lX-i8-awI"/>
+                            <constraint firstItem="ZNW-S0-kgd" firstAttribute="leading" secondItem="nu4-re-HAA" secondAttribute="leadingMargin" id="H0r-rk-0wl"/>
+                            <constraint firstItem="ZNW-S0-kgd" firstAttribute="top" secondItem="nu4-re-HAA" secondAttribute="top" constant="20" symbolic="YES" id="HMC-OH-Hy1"/>
+                            <constraint firstItem="ZNW-S0-kgd" firstAttribute="top" secondItem="MIW-uT-gtC" secondAttribute="bottom" constant="20" id="Nld-Qh-maR"/>
+                            <constraint firstItem="2rk-ah-JGC" firstAttribute="top" secondItem="ecj-6U-eYB" secondAttribute="bottom" id="fQC-8n-e04"/>
+                            <constraint firstItem="2rk-ah-JGC" firstAttribute="top" secondItem="9gg-U8-vQw" secondAttribute="bottom" id="lAs-Yr-aTM"/>
+                            <constraint firstItem="ecj-6U-eYB" firstAttribute="top" secondItem="nu4-re-HAA" secondAttribute="topMargin" constant="90" id="nSz-hX-ws3"/>
+                            <constraint firstItem="ecj-6U-eYB" firstAttribute="leading" secondItem="9gg-U8-vQw" secondAttribute="trailing" constant="8" id="wAe-XU-TUk"/>
+                            <constraint firstItem="2rk-ah-JGC" firstAttribute="top" secondItem="NDO-I9-Fbb" secondAttribute="bottom" constant="20" id="xvD-zR-ORV"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="TTV-yT-d9F"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="additionalDetailScrollView" destination="9gg-U8-vQw" id="ehK-FT-Nkd"/>
+                        <outlet property="metadataStackView" destination="NDO-I9-Fbb" id="IGq-Z4-yN9"/>
+                        <segue destination="Sb3-CP-VQj" kind="push" identifier="Zoom Into Artwork" id="rC8-vG-Rjb"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8Y0-e9-1p2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2180" y="825"/>
+        </scene>
+        <!--Sale Artwork Zoom View Controller-->
+        <scene sceneID="Nb3-h2-chT">
+            <objects>
+                <viewController id="Sb3-CP-VQj" customClass="SaleArtworkZoomViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="rBc-NA-SkB"/>
+                        <viewControllerLayoutGuide type="bottom" id="usv-XT-p1E"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="eXy-cL-60c">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mW4-AX-GmJ">
+                                <rect key="frame" x="20" y="20" width="120" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="MVc-Cx-uX5"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="jht-Gg-nsy"/>
+                                    <constraint firstAttribute="height" constant="44" id="koV-jS-Ppm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="BACK" backgroundImage="BackButtonBackground">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="Sb3-CP-VQj" eventType="touchUpInside" id="ufm-am-JVv"/>
+                                    <action selector="backWasPressed:" destination="Jj5-n3-bv0" eventType="touchUpInside" id="kzz-Wx-uNZ"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="mW4-AX-GmJ" firstAttribute="leading" secondItem="eXy-cL-60c" secondAttribute="leadingMargin" id="eQk-BL-dys"/>
+                            <constraint firstItem="mW4-AX-GmJ" firstAttribute="top" secondItem="eXy-cL-60c" secondAttribute="top" constant="20" symbolic="YES" id="gfD-kq-n2E"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="TvO-cz-Wad"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5s4-VX-JdU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3481" y="825"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="GeE-xH-04T">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="WE8-fs-xzH" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1Rz-le-5kW">
+                        <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="MKI-if-fbr" kind="relationship" relationship="rootViewController" id="JEv-hn-2oz"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yN0-rU-TeP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2083.8400000000001" y="2432"/>
+        </scene>
+        <!--Admin Panel View Controller-->
+        <scene sceneID="LR3-le-vW3">
+            <objects>
+                <viewController id="MKI-if-fbr" customClass="AdminPanelViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="umI-Qp-x7X"/>
+                        <viewControllerLayoutGuide type="bottom" id="olo-iC-RI6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Kmy-Hx-K8l">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZVt-Ye-GEZ">
+                                <rect key="frame" x="65" y="79" width="894" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.8862745098" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="csZ-iE-Non" customClass="ActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="800" y="658" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="CLOSE APP">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeAppTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="BCX-qM-sXX"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Switch to website" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="GKU-O4-HTn" customClass="ARSerifLabel">
+                                <rect key="frame" x="55" y="126" width="187" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nx7-vm-pEo" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="322" y="120" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="WEBSITE">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="wIW-NU-4pH" kind="push" identifier="Load Admin Web View Controller" id="M3D-IU-Gi7"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Change  Auction" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="03x-ZK-6Vh" customClass="ARSerifLabel">
+                                <rect key="frame" x="558" y="127" width="187" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pN3-Y5-Sw8" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="795" y="120" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="CHANGE">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="xVq-Ix-pQs" kind="push" id="awg-oY-DNC"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Admin Panel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y9K-AG-n81" customClass="ARSerifLabel">
+                                <rect key="frame" x="164" y="23" width="277" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="38"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XDF-GF-0TU" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="748" y="260" width="211" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="SWITCH TO PROD">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="switchStagingProductionTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="hhn-s5-vg9"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Admin Buttons" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="39C-W8-1Zq" customClass="ARSerifLabel">
+                                <rect key="frame" x="558" y="197" width="187" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Xf-pm-Hh1" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="795" y="190" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="SHOW">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleAdminButtons:" destination="MKI-if-fbr" eventType="touchUpInside" id="Npn-IJ-tA5"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Admin Logs" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="KnN-bO-pCd" customClass="ARSerifLabel">
+                                <rect key="frame" x="55" y="197" width="187" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vQR-BL-JhX" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="322" y="190" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="LOG ME">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="yff-WV-ozf" kind="push" id="3KC-Yd-RlS"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Note: changing any of these will restart the app" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="qAM-xm-dnO" customClass="ARSerifLabel">
+                                <rect key="frame" x="558" y="391" width="493" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Italic" family="Adobe Garamond Pro" pointSize="20"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Card Testing" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="VzN-3W-jRm" customClass="ARSerifLabel">
+                                <rect key="frame" x="60" y="267" width="187" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nf8-qD-O0d" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="322" y="260" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="TEST ME">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="ADb-HQ-Xrv" kind="push" id="dpI-nh-UQ2"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="auction-id" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="BNh-5l-i6d" customClass="ARSerifLabel">
+                                <rect key="frame" x="492" y="25" width="467" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Italic" family="Adobe Garamond Pro" pointSize="20"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M7X-wm-Z3T">
+                                <rect key="frame" x="20" y="19" width="120" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT" backgroundImage="BackButtonBackground">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="backTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="Geo-Zy-vpu"/>
+                                    <action selector="backWasPressed:" destination="Jj5-n3-bv0" eventType="touchUpInside" id="Eba-rQ-rk0"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Server" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="jZ4-1p-KIf" customClass="ARSerifLabel">
+                                <rect key="frame" x="558" y="267" width="170" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yuk-n5-E2l" customClass="SecondaryActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="795" y="327" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="SHOW">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="toggleCardReaderTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="3Ey-PQ-BfI"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Card Reader Status" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="TH7-e9-ua4" customClass="ARSerifLabel">
+                                <rect key="frame" x="558" y="334" width="200" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="25"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="4ID-hS-aUx"/>
+                    <connections>
+                        <outlet property="auctionIDLabel" destination="BNh-5l-i6d" id="bAa-Qc-KWz"/>
+                        <outlet property="cardReaderLabel" destination="TH7-e9-ua4" id="DkH-Uc-otO"/>
+                        <outlet property="environmentChangeButton" destination="XDF-GF-0TU" id="J4T-9h-Lix"/>
+                        <outlet property="showAdminButtonsButton" destination="2Xf-pm-Hh1" id="zeG-MT-gUB"/>
+                        <outlet property="toggleCardReaderButton" destination="Yuk-n5-E2l" id="DDG-ih-avB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0RU-yz-eYz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3663" y="2432"/>
+        </scene>
+        <!--Choose Auction View Controller-->
+        <scene sceneID="lHe-EK-cKn">
+            <objects>
+                <viewController id="xVq-Ix-pQs" customClass="ChooseAuctionViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2Ir-RB-zzo"/>
+                        <viewControllerLayoutGuide type="bottom" id="GyA-Bn-ZFV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fiB-0O-nhZ">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Note: selecting an Auction will restart the app" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="298" translatesAutoresizingMaskIntoConstraints="NO" id="SoG-T5-yIm" customClass="ARSerifLabel">
+                                <rect key="frame" x="252" y="691" width="232" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Italic" family="Adobe Garamond Pro" pointSize="20"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dEl-EN-uRx" customClass="ORStackScrollView">
+                                <rect key="frame" x="251" y="98" width="522" height="563"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.94264843532343234" blue="0.52602781247862018" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lge-y1-hu2">
+                                <rect key="frame" x="16" y="15" width="120" height="45"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="BACK" backgroundImage="BackButtonBackground">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="xVq-Ix-pQs" eventType="touchUpInside" id="Usx-eh-yhc"/>
+                                    <action selector="backTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="YnH-dG-L1T"/>
+                                    <action selector="backWasPressed:" destination="Jj5-n3-bv0" eventType="touchUpInside" id="zMo-9H-wXu"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8T1-BX-IGx">
+                                <rect key="frame" x="60" y="73" width="894" height="2"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.8862745098" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Switch auctions" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IcT-2o-2Py" customClass="ARSerifLabel">
+                                <rect key="frame" x="159" y="17" width="277" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="38"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="heC-yA-osv"/>
+                    <connections>
+                        <outlet property="stackScrollView" destination="dEl-EN-uRx" id="erB-SR-fFr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fgp-u0-Jbk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5196" y="2088"/>
+        </scene>
+        <!--Admin Card Testing View Controller-->
+        <scene sceneID="nVx-Uo-fsP">
+            <objects>
+                <viewController storyboardIdentifier="Card Tester" id="ADb-HQ-Xrv" customClass="AdminCardTestingViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="71F-Xw-FfU"/>
+                        <viewControllerLayoutGuide type="bottom" id="dlt-OK-kls"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="FO4-2G-EgI">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KHb-zd-See">
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.8862745098" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Card Tester" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgT-Cj-KWb" customClass="ARSerifLabel">
+                                <rect key="frame" x="164" y="27" width="168.5" height="38"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="38"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r24-zo-ysc">
+                                <rect key="frame" x="20" y="20" width="120" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="EGe-Dj-aRZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT" backgroundImage="BackButtonBackground">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="backTapped:" destination="ADb-HQ-Xrv" eventType="touchUpInside" id="Q5v-cc-CXm"/>
+                                    <action selector="backTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="Uor-hi-KEd"/>
+                                    <action selector="backWasPressed:" destination="Jj5-n3-bv0" eventType="touchUpInside" id="C4e-DG-sHH"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="card number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vZn-yE-v8l">
+                                <rect key="frame" x="596" y="124" width="262" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="1" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="8rc-GL-S7r">
+                                <rect key="frame" x="596" y="194" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="2017" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gwD-26-Ys0">
+                                <rect key="frame" x="722" y="194" width="70" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VvI-8X-1yW" customClass="ActionButton" customModule="Kiosk" customModuleProvider="target">
+                                <rect key="frame" x="596" y="290" width="164" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.95686274510000002" green="0.95686274510000002" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="TEST INPUT">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeAppTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="jWA-gu-Z6Q"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-A9-UBV">
+                                <rect key="frame" x="24" y="161" width="510" height="559"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="559" id="equ-IK-855"/>
+                                    <constraint firstAttribute="width" constant="510" id="uJL-Dg-nLG"/>
+                                </constraints>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Sfd-A9-UBV" firstAttribute="leading" secondItem="FO4-2G-EgI" secondAttribute="leadingMargin" constant="4" id="Jbp-Ww-HGF"/>
+                            <constraint firstItem="tgT-Cj-KWb" firstAttribute="leading" secondItem="r24-zo-ysc" secondAttribute="trailing" constant="24" id="LnY-uA-VAp"/>
+                            <constraint firstItem="r24-zo-ysc" firstAttribute="bottom" secondItem="tgT-Cj-KWb" secondAttribute="bottom" id="b2T-fG-7g5"/>
+                            <constraint firstItem="r24-zo-ysc" firstAttribute="leading" secondItem="FO4-2G-EgI" secondAttribute="leadingMargin" id="b5f-7I-EaF"/>
+                            <constraint firstItem="r24-zo-ysc" firstAttribute="top" secondItem="71F-Xw-FfU" secondAttribute="bottom" id="hhz-Qk-0mW"/>
+                            <constraint firstItem="Sfd-A9-UBV" firstAttribute="top" secondItem="r24-zo-ysc" secondAttribute="bottom" constant="96" id="i8B-Ry-ady"/>
+                            <constraint firstItem="dlt-OK-kls" firstAttribute="top" secondItem="Sfd-A9-UBV" secondAttribute="bottom" constant="48" id="jPC-2F-DgO"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="kdT-Hj-5ys"/>
+                    <connections>
+                        <outlet property="logTextView" destination="Sfd-A9-UBV" id="aEg-Yr-rm5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="C80-iN-3Aa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5180" y="3145"/>
+        </scene>
+        <!--Admin Log View Controller-->
+        <scene sceneID="BLv-US-QIE">
+            <objects>
+                <viewController id="yff-WV-ozf" customClass="AdminLogViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0Mh-QW-t2c"/>
+                        <viewControllerLayoutGuide type="bottom" id="eAS-Ua-xue"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="F6N-AU-wHA">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8uE-be-wKG">
+                                <rect key="frame" x="251" y="134" width="522" height="529"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="522" id="xtd-B4-R6t"/>
+                                </constraints>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UF5-ed-jli">
+                                <rect key="frame" x="65" y="80" width="894" height="2"/>
+                                <color key="backgroundColor" red="0.8862745098" green="0.8862745098" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Admin logs" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7Q-o1-h2E" customClass="ARSerifLabel">
+                                <rect key="frame" x="164" y="27" width="169" height="38"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="38"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XhT-kc-pON">
+                                <rect key="frame" x="20" y="20" width="120" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="Fnl-My-WYy"/>
+                                    <constraint firstAttribute="height" constant="45" id="ooZ-qV-ifm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="ITCAvantGardeDemiTrack03" family="ITCAvantGardeDemiTrack03" pointSize="15"/>
+                                <inset key="contentEdgeInsets" minX="19" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="EXIT" backgroundImage="BackButtonBackground">
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="yff-WV-ozf" eventType="touchUpInside" id="OqX-FL-pN5"/>
+                                    <action selector="backTapped:" destination="MKI-if-fbr" eventType="touchUpInside" id="Fa3-NP-4BI"/>
+                                    <action selector="backWasPressed:" destination="Jj5-n3-bv0" eventType="touchUpInside" id="dAC-r5-N37"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qaV-qR-857">
+                                <rect key="frame" x="781" y="134" width="178" height="30"/>
+                                <state key="normal" title="Scroll to Bottom"/>
+                                <connections>
+                                    <action selector="scrollTapped:" destination="yff-WV-ozf" eventType="touchUpInside" id="3ts-Rt-qaO"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="qaV-qR-857" firstAttribute="trailing" secondItem="UF5-ed-jli" secondAttribute="trailing" id="1nI-bw-AHA"/>
+                            <constraint firstItem="UF5-ed-jli" firstAttribute="leading" secondItem="F6N-AU-wHA" secondAttribute="leadingMargin" constant="45" id="8RA-5Z-LKs"/>
+                            <constraint firstItem="8uE-be-wKG" firstAttribute="top" secondItem="UF5-ed-jli" secondAttribute="bottom" constant="52" id="AJw-Nq-prk"/>
+                            <constraint firstItem="XhT-kc-pON" firstAttribute="leading" secondItem="F6N-AU-wHA" secondAttribute="leadingMargin" id="CLd-KA-slJ"/>
+                            <constraint firstItem="UF5-ed-jli" firstAttribute="centerX" secondItem="8uE-be-wKG" secondAttribute="centerX" id="DuF-9W-Qve"/>
+                            <constraint firstItem="qaV-qR-857" firstAttribute="leading" secondItem="8uE-be-wKG" secondAttribute="trailing" constant="8" symbolic="YES" id="ITT-gW-pg3"/>
+                            <constraint firstItem="eAS-Ua-xue" firstAttribute="top" secondItem="8uE-be-wKG" secondAttribute="bottom" constant="105" id="N4h-1K-0Wp"/>
+                            <constraint firstItem="UF5-ed-jli" firstAttribute="centerX" secondItem="F6N-AU-wHA" secondAttribute="centerX" id="RBt-w1-vVt"/>
+                            <constraint firstItem="UF5-ed-jli" firstAttribute="top" secondItem="XhT-kc-pON" secondAttribute="bottom" constant="15" id="TDw-uO-FqT"/>
+                            <constraint firstItem="qaV-qR-857" firstAttribute="top" secondItem="8uE-be-wKG" secondAttribute="top" id="Ta8-Qg-tQU"/>
+                            <constraint firstItem="a7Q-o1-h2E" firstAttribute="leading" secondItem="XhT-kc-pON" secondAttribute="trailing" constant="24" id="Xn3-Af-Bvd"/>
+                            <constraint firstItem="XhT-kc-pON" firstAttribute="bottom" secondItem="a7Q-o1-h2E" secondAttribute="bottom" id="hAc-zb-1Ns"/>
+                            <constraint firstAttribute="bottom" secondItem="UF5-ed-jli" secondAttribute="bottom" constant="686" id="k5g-rx-9dF"/>
+                            <constraint firstItem="XhT-kc-pON" firstAttribute="top" secondItem="0Mh-QW-t2c" secondAttribute="bottom" id="lnN-G5-NFj"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="QpR-Sk-0ru"/>
+                    <connections>
+                        <outlet property="textView" destination="8uE-be-wKG" id="wxO-n4-um5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sj7-kp-utt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4384" y="4043"/>
+        </scene>
+        <!--Auction Web View Controller-->
+        <scene sceneID="Ghd-pU-aPw">
+            <objects>
+                <viewController id="wIW-NU-4pH" customClass="AuctionWebViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OSW-q7-2MZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="rvC-Bk-QAi"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="b5a-hg-oLU">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GOl-8v-Rbe">
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="9Zc-ig-Hl0"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="YO6-5S-695"/>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics" barStyle="black"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vEf-Aa-pPc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2845" y="4043"/>
+        </scene>
+        <!--Offline View Controller-->
+        <scene sceneID="rEE-fV-srO">
+            <objects>
+                <viewController storyboardIdentifier="No Internet Connection" automaticallyAdjustsScrollViewInsets="NO" id="8YY-cB-YpC" customClass="OfflineViewController" customModule="Kiosk" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XIs-VM-2lT"/>
+                        <viewControllerLayoutGuide type="bottom" id="qpD-Vb-slh"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="7KS-Qt-fFc">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Internet Connection" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rMt-83-jhR">
+                                <rect key="frame" x="218" y="287" width="588" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Regular" family="Adobe Garamond Pro" pointSize="49"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Please notify an Artsy representative" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rkr-Gi-wuZ">
+                                <rect key="frame" x="196" y="361" width="632" height="56"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="AGaramondPro-Italic" family="Adobe Garamond Pro" pointSize="32"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <toolbarItems/>
+                    <connections>
+                        <outlet property="offlineLabel" destination="rMt-83-jhR" id="s63-Zw-bKF"/>
+                        <outlet property="subtitleLabel" destination="Rkr-Gi-wuZ" id="XLz-B9-iFC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mmz-aB-M8K" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1548" y="1821"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="BackButtonBackground" width="26" height="44"/>
+        <image name="StagingFlag" width="80" height="80"/>
+    </resources>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation" orientation="landscapeRight"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>

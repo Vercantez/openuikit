@@ -652,6 +652,26 @@ open class HKClinicalRecord: HKSample, @unchecked Sendable {
     public var fhirIdentifier: String = ""
     public var fhirSourceURL: URL?
     public var displayName: String?
+    public var clinicalType: HKClinicalType { sampleType as! HKClinicalType }
+    public var FHIRResource: HKFHIRResource? {
+        guard !fhirIdentifier.isEmpty else { return nil }
+        let resource = HKFHIRResource()
+        resource.resourceType = fhirResourceType
+        resource.identifier = fhirIdentifier
+        resource.sourceURL = fhirSourceURL
+        return resource
+    }
+    public override init(
+        type: HKSampleType,
+        start startDate: Date,
+        end endDate: Date,
+        uuid: UUID = UUID(),
+        sourceRevision: HKSourceRevision = HKSourceRevision(source: .default(), version: nil),
+        device: HKDevice? = nil,
+        metadata: [String: Any]? = nil
+    ) {
+        super.init(type: type, start: startDate, end: endDate, uuid: uuid, sourceRevision: sourceRevision, device: device, metadata: metadata)
+    }
     public required init?(coder: NSCoder) { super.init(coder: coder) }
 }
 
@@ -976,6 +996,10 @@ open class HKHealthConceptIdentifier: NSObject, @unchecked Sendable {
 }
 
 open class HKHeartbeatSeriesSample: HKSeriesSample, @unchecked Sendable {
+    public override var count: Int {
+        HKHealthStorePortable.heartbeatPoints(for: uuid).count
+    }
+
     public convenience init(start startDate: Date, end endDate: Date) {
         self.init(type: HKSeriesType.heartbeat(), start: startDate, end: endDate)
     }

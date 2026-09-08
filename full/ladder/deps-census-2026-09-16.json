@@ -1,7 +1,7 @@
 {
  "_meta": {
   "sdk_types": 737,
-  "ours": 411
+  "ours": 427
  },
  "apps": {
   "Alamofire": {
@@ -6263,10 +6263,10 @@
     "swift_files": 545,
     "uses": 875,
     "distinct_types": 56,
-    "implemented_types": 49,
-    "implemented_uses": 507,
-    "missing_types": 7,
-    "missing_uses": 368,
+    "implemented_types": 50,
+    "implemented_uses": 510,
+    "missing_types": 6,
+    "missing_uses": 365,
     "missing": [
      [
       "NSObject",
@@ -6282,10 +6282,6 @@
      ],
      [
       "NSIndexPath",
-      3
-     ],
-     [
-      "UISplitViewController",
       3
      ],
      [

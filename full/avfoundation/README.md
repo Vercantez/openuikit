@@ -398,3 +398,36 @@ implemented rows. The unresolved behavioral questions remain recorded in
 `oracle-questions.tsv`; in particular, this pass does not infer callback
 timing, queue selection, service success, coding round trips, or device state
 from static API evidence.
+
+### Depth pass 2026-09 (wave 9)
+
+Wave 9 extends the coverage audit across 315 additional concrete Objective-C
+surface rows. Its synchronous family audit re-runs focused local ISO BMFF
+asset/track and composition probes, player and observer state-machine probes,
+writer/reader/content-key/capture fail-closed probes, instruction models, and
+the permitted metadata/enum/option-set tables. It uses neither reflection nor
+declaration-only identity checks. No hardware, daemon, entitlement, network,
+decoder, encoder, or Apple UI success is fabricated.
+
+| status | before | after |
+|---|---:|---:|
+| `implemented` | 3996 | 4311 |
+| `declared` | 1392 | 1077 |
+| `deferred` | 244 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after wave 9:
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The fail-closed boundary is unchanged: Apple media services, capture devices,
+FairPlay/content-key services, codecs, and UI rendering never report invented
+success. Questions about callback queues/timing, service policy, and native
+coding behavior remain in `oracle-questions.tsv` for an Apple-oracle run.
