@@ -70,7 +70,7 @@ open class UISplitViewController: UIViewController {
                 }
             }
             guard _installed else { return }
-            _updateDisplayMode()
+            _updateDisplayMode(explicitRequest: true)
             _layoutColumns()
         }
     }
@@ -126,6 +126,7 @@ open class UISplitViewController: UIViewController {
     private var _columns: [Column: UIViewController] = [:]
     private var _containers: [Column: UIViewController] = [:]
     private var _installed = false
+    private var _resolvedWidth: CGFloat?
     private var _collapsedColumn: Column = .primary
     private var _orderedColumns: [Column] {
         style == .tripleColumn ? [.primary, .supplementary, .secondary] : [.primary, .secondary]
@@ -180,13 +181,19 @@ open class UISplitViewController: UIViewController {
         super.viewWillAppear(animated)
         let firstAppearance = !_installed
         _installed = true
-        _updateDisplayMode()
+        _updateDisplayMode(initialAppearance: firstAppearance)
         _installColumns()
         if firstAppearance, isCollapsed { delegate?.splitViewControllerDidCollapse(self) }
     }
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if _installed { _layoutColumns() }
+        if _installed {
+            if OpenUIKitRuntime.systemFontCut == .iOS, style == .tripleColumn,
+               _resolvedWidth != view.bounds.width {
+                _updateDisplayMode()
+            }
+            _layoutColumns()
+        }
     }
     private func _installColumns() {
         // MEASURED pre-window setPrimary/setSecondary: children=[], parent=nil;
@@ -218,16 +225,41 @@ open class UISplitViewController: UIViewController {
         }
         _layoutColumns()
     }
-    private func _updateDisplayMode() {
+    private func _updateDisplayMode(initialAppearance: Bool = false,
+                                    explicitRequest: Bool = false) {
+        let widthChanged = _resolvedWidth != view.bounds.width
+        _resolvedWidth = view.bounds.width
         let next: DisplayMode
         isCollapsed = traitCollection.horizontalSizeClass == .compact
         // MEASURED SE mode sweep: every requested mode still reports mode 2.
         if isCollapsed { next = .oneBesideSecondary }
-        else {
+        else if OpenUIKitRuntime.systemFontCut == .iOS, style == .tripleColumn {
+            // splitwidthprobe, iPad A16 / iOS 26.1 @2x, main and resize:
+            // before appearance requests 3/5 resolve to 1, while a mounted
+            // request shows 3/5. Narrow requests 4/6 resolve to 5; narrowing
+            // an existing tiled layout resolves to 2. Wide 0/4/6 resolve to 4.
+            // An ordinary same-width layout must not replay a mode request.
+            if !initialAppearance && !explicitRequest && !widthChanged {
+                next = displayMode
+            } else {
+                switch preferredDisplayMode {
+                case .automatic:
+                    next = _canTileThreeColumns ? .twoBesideSecondary : .oneBesideSecondary
+                case .twoBesideSecondary, .twoDisplaceSecondary:
+                    next = _canTileThreeColumns ? .twoBesideSecondary
+                        : explicitRequest ? .twoOverSecondary : .oneBesideSecondary
+                case .oneOverSecondary, .twoOverSecondary:
+                    next = initialAppearance ? .secondaryOnly
+                        : explicitRequest ? preferredDisplayMode : displayMode
+                default:
+                    next = preferredDisplayMode
+                }
+            }
+        } else {
             switch preferredDisplayMode {
             case .automatic: next = .oneBesideSecondary
-            // iPad A16 triple requests 4 and 6 resolve to mode 5 at 820 pt.
-            // Wider bucket boundaries remain an open oracle question.
+            // Retain the previous non-iOS behavior. The iOS triple-column
+            // resolver above replaces the original 820 pt probe special case.
             case .twoBesideSecondary, .twoDisplaceSecondary:
                 next = view.bounds.width == 820 ? .twoOverSecondary : preferredDisplayMode
             default: next = preferredDisplayMode
@@ -240,6 +272,27 @@ open class UISplitViewController: UIViewController {
             displayMode = next
         }
     }
+    private var _canTileThreeColumns: Bool {
+        // splitwidthprobe boundary, primary, supplementary, secondary profiles:
+        // iPad A16 / iOS 26.1 @2x first tiled frames are primary [10,32,240,658],
+        // supplementary [0,0,490,700] with safe-left 250, secondary
+        // [490.5,0,464,700]. Thus minimum width = 240+240+10+0.5+464.
+        // 954.249 fails, 954.25 fits after nearest-pixel rounding. Raising
+        // either side minimum to 300 moves the boundary +60; secondary 500
+        // moves it +36. These are frame/minimum measurements, not score fits.
+        let primary = minimumPrimaryColumnWidth == Self.automaticDimension
+            ? 240 : minimumPrimaryColumnWidth
+        let supplementary = minimumSupplementaryColumnWidth == Self.automaticDimension
+            ? 240 : minimumSupplementaryColumnWidth
+        let secondary = minimumSecondaryColumnWidth == Self.automaticDimension
+            ? 464 : minimumSecondaryColumnWidth
+        let scale = traitCollection.displayScale > 0
+            ? traitCollection.displayScale : UIScreen.main.scale
+        let available = (view.bounds.width * scale).rounded() / scale
+        let required = primary + supplementary + 10 + 1 / scale + secondary
+        return available >= required
+    }
+
     private func _layoutColumns() {
         // Only the measured public containment/state contract is reproduced.
         // Floating iOS 26 sidebar insets and chrome require a separate pixel
