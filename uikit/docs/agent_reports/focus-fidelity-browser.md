@@ -4,8 +4,14 @@ Branch `agent/focus-fidelity-browser`, base `f0e0382f` (origin/main).
 Screen `realapp_focus_browser_light`, golden iPhone SE (3rd gen) 2x, iOS 26.1
 (focus-golden.md). Focus source unchanged (`a2832521`).
 
-Before: **96.694 FAIL** (focus-score.md). After: ****not scored on the guest** — the SE-geometry re-render trapped on an unharvested 2x ink key (measured wall below); the layout fix itself is proved by the oracle probes, the unit test and the Darwin route** on the
-same guest route, same scorer call, same golden.
+Before: **96.694 FAIL** (focus-score.md). After: **99.288 PASS** (bar 97.5) on
+the same guest route, same scorer call, same golden — scored 2026-09-09 by the
+operator after harvesting the one 2x ink key the first re-render trapped on
+(`system-regular|15|light|F0.25|44`, agent/ink2x-comma): `machorun render_full
+realapp` at the SE geometry, 15 screens rendered, 0 ink misses; mae 1.104,
+largest remaining blob 22.5 px² at `[57.0, 43.5, 7.5, 10.5]` (2x pixels).
+The SE geometry is now registered for the screen (agent/focus-browser-se), so
+the score needs no scoring-time patch.
 
 ## Measurement
 
