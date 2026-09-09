@@ -52,7 +52,7 @@ assert {p.name for p in out.glob('*.png')} == set(expected) | {browser}, 'expect
 for name, digest in expected.items():
     assert hashlib.sha256((out/name).read_bytes()).hexdigest() == digest, 'existing screen changed: ' + name
 layout = json.loads((out / browser.replace('.png', '.layout.json')).read_text())
-assert layout['screen'] == {'bounds': [393, 852], 'scale': 2}
+assert layout['screen'] == {'bounds': [375, 667], 'scale': 2}
 classes = {v['class'] for v in layout['views']}
 assert 'URLBar' in classes and 'HomeViewToolbar' in classes, 'missing real browser URL bar/home'
 log = (work / 'guest.log').read_text()
@@ -62,6 +62,6 @@ fixture = uikit / 'fixtures/realapp' / browser
 assert fixture.is_file(), 'missing committed Linux browser fixture'
 assert fixture.read_bytes() == (out/browser).read_bytes(), 'Linux browser fixture differs from this guest run'
 print('rendered 15 screens; existing screens byte-identical 14/14 (including Ledger)')
-print('realapp_focus_browser_light: real AppDelegate URL bar + home, 393x852 @2x')
+print('realapp_focus_browser_light: real AppDelegate URL bar + home, 375x667 @2x (iPhone SE 3rd gen golden geometry)')
 PY
 echo 'REAL-APP SCREEN VERIFIED ON LINUX'
