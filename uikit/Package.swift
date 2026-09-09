@@ -152,6 +152,50 @@ let swiftUITestTarget: Target = .testTarget(
 )
 #endif
 
+// Darwin only: the Objective-C DECLARATIONS of OpenUIKit's implementation
+// classes (UIResponder / UIView / UIWindow) — SE-0436 `@objc @implementation`,
+// measured in docs/agent_reports/objc-implementation-spike.md and ported in
+// docs/agent_reports/objc-impl-chain1.md. The Swift sources compile the same
+// class bodies as ordinary `open class`es when OPENUIKIT_OBJC_IMPLEMENTATION
+// is not defined (native Linux, and the Foundation-hidden guest route, which
+// is a raw swiftc invocation that never sees this manifest). `.define` is
+// not an unsafe flag, so the package stays usable as an SPM dependency.
+// The Clang target itself needs <Foundation/Foundation.h>, which only an
+// Apple SDK has, so it is not even in the graph when the manifest is
+// evaluated on Linux.
+#if os(Linux)
+let objcImplementationTargets: [Target] = []
+let objcImplementationTestTargets: [Target] = []
+let objcImplementationDependencies: [Target.Dependency] = []
+let objcImplementationSettings: [SwiftSetting] = []
+#else
+let darwinPlatforms: [Platform] = [.macOS, .macCatalyst, .iOS, .tvOS, .watchOS, .visionOS]
+let objcImplementationTargets: [Target] = [
+    .target(name: "OpenUIKitObjC", path: "Sources/OpenUIKitObjC", publicHeadersPath: "include"),
+]
+let objcImplementationDependencies: [Target.Dependency] = [
+    .target(name: "OpenUIKitObjC", condition: .when(platforms: darwinPlatforms)),
+]
+let objcImplementationSettings: [SwiftSetting] = [
+    .define("OPENUIKIT_OBJC_IMPLEMENTATION", .when(platforms: darwinPlatforms)),
+]
+// The chain-rule gate (spike, "chain A"): nothing at compile time catches a
+// Swift class left in the middle of an ObjC-subclassable chain, so every
+// converted class gets an Objective-C subclass that inits / overrides /
+// calls super, exercised by an XCTest on the host and by a driver the
+// simulator can spawn.
+let objcImplementationTestTargets: [Target] = [
+    .target(name: "OpenUIKitObjCSubclassProbe", dependencies: ["OpenUIKit"],
+            path: "Tests/OpenUIKitObjCSubclassProbe", publicHeadersPath: "include"),
+    .testTarget(name: "OpenUIKitObjCSubclassTests",
+                dependencies: ["OpenUIKit", "OpenUIKitObjCSubclassProbe"],
+                path: "Tests/OpenUIKitObjCSubclassTests"),
+    .executableTarget(name: "objcsubclassprobe",
+                      dependencies: ["OpenUIKit", "OpenUIKitObjCSubclassProbe"],
+                      path: "Tools/objc_impl_chain1/objcsubclassprobe"),
+]
+#endif
+
 // Literal Apple framework names on Linux so ladder apps keep `import ImageIO`
 // / `import CoreImage` / `import StoreKit`. The same target names on Darwin
 // shadow the SDK modules and break XCTest (XCUIAutomation then fails looking
@@ -331,9 +375,14 @@ let coreTargets: [Target] = [
     // source anywhere in the render or layout path, enforced by
     // Tests/OpenUIKitTests/FoundationCoexistenceTests.swift. No other
     // Apple framework is imported for its types.
-    .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"]),
+    // OPENUIKIT_OBJC_IMPLEMENTATION (Darwin): `Canvas` derives from NSObject
+    // so `UIView.drawContent(in:bounds:)` stays an overridable @objc member.
+    .target(name: "OpenCoreGraphics", dependencies: ["CQuartz"],
+            swiftSettings: objcImplementationSettings),
     // The UIKit reimplementation. Same rule as above.
-    .target(name: "OpenUIKit", dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"]),
+    .target(name: "OpenUIKit",
+            dependencies: ["OpenCoreGraphics", "CSTBTrueType", "CPortableIO", "CQuartz"] + objcImplementationDependencies,
+            swiftSettings: objcImplementationSettings),
     .target(name: "MobileCoreServices", dependencies: ["OpenUIKit"]),
     // The declaration macro executes on the build host even when UIKit is
     // being emitted for a different target triple.
@@ -897,7 +946,8 @@ let simplenoteTargets: [Target] = [
     // (enums, structs, protocols, typed strings). Pure declarations; values
     // read off the iOS 26.1 SDK and OpenUIKit's Swift raw values
     // (simplenote-launch3).
-    .target(name: "OpenUIKitObjCSupport", path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
+    .target(name: "OpenUIKitObjCSupport", dependencies: ["OpenUIKitObjC"],
+            path: "Sources/OpenUIKitObjCSupport", publicHeadersPath: "include",
             cSettings: [.define("OPENUIKIT_OBJC_SIDE", to: "1")]),
     // Route (b) `@objc(selector)` twins of existing OpenUIKit members; the
     // generated OpenUIKitObjCBridge-Swift.h adds them as categories. Chosen
@@ -999,6 +1049,6 @@ let package = Package(
     platforms: [.macOS(.v11)],
     products: coreProducts + frameworkProducts + blockzillaProducts + simplenoteProducts + eidolonServiceProducts + eidolonDependencyProducts,
     dependencies: platformCombinePackages + previewMacroPackages,
-    targets: coreTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets + eidolonServiceTargets + eidolonDependencyTargets,
+    targets: coreTargets + objcImplementationTargets + objcImplementationTestTargets + frameworkTargets + conformanceTargets + testTargets + platformCombineTargets + linuxXCTestSupportTargets + blockzillaTargets + simplenoteTargets + eidolonServiceTargets + eidolonDependencyTargets,
     cxxLanguageStandard: .cxx17
 )

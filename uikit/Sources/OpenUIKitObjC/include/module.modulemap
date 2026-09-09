@@ -1,0 +1,9 @@
+// No `export *`: a Swift importer of this module must NOT see Foundation /
+// CoreGraphics declarations through it. OpenUIKit re-exports this module to
+// every client, and OpenCoreGraphics defines its own CGAffineTransform /
+// CGColor that would otherwise become ambiguous with CoreGraphics' in every
+// file (measured: 1,500+ "ambiguous for type lookup" errors with SwiftPM's
+// default `export *` map).
+module OpenUIKitObjC {
+    umbrella header "OpenUIKitObjC.h"
+}
