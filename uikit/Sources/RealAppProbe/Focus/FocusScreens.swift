@@ -78,9 +78,16 @@ extension RealAppScreen {
     static let focusBrowserTable: [Screen] = {
         #if canImport(Blockzilla)
         return [
+            // MEASURED geometry of the carried golden (focus-golden.md): iPhone SE
+            // (3rd generation), iOS 26.1 — 375x667 points at 2x, safe-area top 20,
+            // no bottom inset. The default phone geometry (393x852 @3x) matches no
+            // real capture of this screen and was only ever a scoring-time patch
+            // (focus-score.md, focus-fidelity-browser.md).
             Screen(name: "realapp_focus_browser_light", variant: .focusBrowser,
                    theme: .light, style: .light, contentSizeCategory: .large,
-                   presentsSheet: false),
+                   presentsSheet: false,
+                   windowSize: CGSize(width: 375, height: 667), nativeScale: 2,
+                   safeAreaInsets: UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)),
         ]
         #else
         return []
