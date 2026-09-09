@@ -1091,6 +1091,16 @@ open class UIScrollView: UIView {
             : UIColor(red: 0, green: 0, blue: 0, alpha: 0.35)
     }
 
+    /// UIKit's public momentary reveal (ios-oss RewardsCollectionViewController
+    /// calls it after a reload). It exposes no readable state, so this
+    /// reuses the settle-time show/fade pair: bars appear only for a
+    /// scrollable axis and fade over `indicatorFadeDuration`. The hold time
+    /// before UIKit's fade is not measured; nothing observable depends on it.
+    public func flashScrollIndicators() {
+        flashIndicators()
+        fadeIndicators()
+    }
+
     func flashIndicators() {
         indicatorsVisible = true
         if showsVerticalScrollIndicator, canScrollY, verticalIndicator == nil {

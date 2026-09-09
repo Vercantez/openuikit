@@ -1,0 +1,277 @@
+{
+  "bare" : {
+    "background" : "<UIDynamicSystemColor: 0x6000017306c0; name = systemBackgroundColor>",
+    "bounceV" : false,
+    "gestures" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer"
+    ],
+    "insetAdjustment" : 0,
+    "translates" : true
+  },
+  "bareView.background" : "nil",
+  "coder.empty" : {
+    "clear" : true,
+    "install" : true,
+    "layoutNil" : true,
+    "loaded" : false,
+    "nonNil" : true,
+    "transitions" : false
+  },
+  "coder.empty.base" : {
+    "loaded" : false,
+    "nibName" : "nil",
+    "nonNil" : true
+  },
+  "coder.roundTrip" : {
+    "bytes" : 548,
+    "clear" : false,
+    "install" : false,
+    "layoutType" : "nil",
+    "loaded" : false,
+    "nonNil" : true,
+    "transitions" : false
+  },
+  "gesture.detached" : {
+    "fixed" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer"
+    ],
+    "movable" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer"
+    ],
+    "movableOff" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer"
+    ]
+  },
+  "gesture.window.fixed" : [
+    "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+    "UIScrollViewPanGestureRecognizer",
+    "UIScrollViewKnobLongPressGestureRecognizer",
+    "UIScrollViewKnobLongPressGestureRecognizer",
+    "UIHoverGestureRecognizer",
+    "_UIDragAutoScrollGestureRecognizer",
+    "_UIPressGestureRecognizer",
+    "_UIMultiSelectOneFingerPanGesture",
+    "UITapGestureRecognizer",
+    "UIPanGestureRecognizer",
+    "_UISingleFingerTapExtensionGesture",
+    "UIHoverGestureRecognizer",
+    "UILongPressGestureRecognizer",
+    "UITapGestureRecognizer",
+    "_UIFocusSelectObserverGestureRecognizer"
+  ],
+  "gesture.window.movable" : {
+    "collectionBackground" : "<UIDynamicSystemColor: 0x6000017306c0; name = systemBackgroundColor>",
+    "gestures" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer",
+      "_UICollectionViewLegacyReorderingGestureRecognizer"
+    ],
+    "viewBackground" : "nil"
+  },
+  "gesture.window.toggle" : {
+    "off" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer"
+    ],
+    "onAfterLoad" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer",
+      "_UICollectionViewLegacyReorderingGestureRecognizer"
+    ]
+  },
+  "lazy" : {
+    "afterFlagSetters" : false,
+    "afterLayoutGetter" : false
+  },
+  "loadView.collection" : {
+    "autoresize" : 0,
+    "background" : "<UIDynamicSystemColor: 0x6000017306c0; name = systemBackgroundColor>",
+    "collectionNil" : true,
+    "datasource" : false,
+    "delegate" : false,
+    "layoutIsOwn" : false,
+    "sameView" : false,
+    "viewFrame" : [
+      0,
+      0,
+      70,
+      80
+    ],
+    "viewType" : "UICollectionView"
+  },
+  "loadView.plain" : {
+    "collectionNil" : true,
+    "loaded" : true,
+    "subviews" : [
+
+    ],
+    "viewFrame" : [
+      0,
+      0,
+      50,
+      60
+    ]
+  },
+  "loadView.subview" : {
+    "collectionNil" : true,
+    "datasource" : false,
+    "subviews" : [
+      "UICollectionView"
+    ]
+  },
+  "os" : "26.1",
+  "viewDidLoad" : {
+    "background" : "<UIDynamicSystemColor: 0x6000017306c0; name = systemBackgroundColor>",
+    "collectionNil" : false,
+    "frame" : [
+      0,
+      0,
+      393,
+      852
+    ],
+    "loaded" : true,
+    "superviewIsView" : true,
+    "viewFrame" : [
+      0,
+      0,
+      393,
+      852
+    ]
+  },
+  "viewFirst" : {
+    "collectionBackground" : "<UIDynamicSystemColor: 0x6000017306c0; name = systemBackgroundColor>",
+    "collectionFrame" : [
+      0,
+      0,
+      393,
+      852
+    ],
+    "collectionTranslates" : true,
+    "gestures" : [
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIMultiSelectOneFingerPanGesture",
+      "UITapGestureRecognizer",
+      "UIPanGestureRecognizer",
+      "_UISingleFingerTapExtensionGesture",
+      "UIHoverGestureRecognizer",
+      "UILongPressGestureRecognizer",
+      "UITapGestureRecognizer",
+      "_UIFocusSelectObserverGestureRecognizer"
+    ],
+    "insetAdjustment" : 0,
+    "loaded" : true,
+    "subviews" : [
+      "UICollectionView"
+    ],
+    "viewAutoresize" : 18,
+    "viewFrame" : [
+      0,
+      0,
+      393,
+      852
+    ],
+    "wrapperBackground" : "nil",
+    "wrapperTranslates" : true
+  }
+}
