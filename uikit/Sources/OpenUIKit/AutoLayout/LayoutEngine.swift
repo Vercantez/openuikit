@@ -202,19 +202,39 @@ enum LayoutEngine {
                     }
                     continue
                 }
-                guard let f = g.systemFrame(),
-                      let owner = g.owningView,
-                      let ov = vars[ObjectIdentifier(owner)] else { continue }
-                var ex = Cassowary.Expression(vv.left, constant: -Double(f.origin.x))
+                guard let owner = g.owningView,
+                      let ov = vars[ObjectIdentifier(owner)],
+                      let ins = systemGuideInsets(g) else { continue }
+                // The guide is FOUR EDGE RELATIONS to its owner, not a frozen
+                // rect: `guide.bottom = owner.bottom - inset.bottom` must hold
+                // for whatever size the solver gives the owner. Pinning the
+                // guide to the owner's CURRENT bounds (the previous model)
+                // froze a zero-height guide for a constraint-sized owner that
+                // had never been laid out, so an app's
+                // `sub.top = owner.top; sub.height = 44;
+                //  sub.bottom = owner.safeAreaLayoutGuide.bottom` was
+                // unsatisfiable, the height dropped and the owner stretched.
+                // MEASURED probe_toolbar_guide_bottom{0,34} (iPhone SE 3rd
+                // gen 2x / iOS 26.1, forced safe area [20,0,B,0]): the owner
+                // is [0,623,375,44] at B=0 and [0,589,375,78] at B=34 — its
+                // height is 44 + B — where the frozen model gave
+                // [0,0,375,667]. Same rule in Focus' HomeViewToolbar:
+                // golden realapp_focus_browser_light has it at [0,603,375,44]
+                // (parent-relative) against our [0,122,375,525].
+                var ex = Cassowary.Expression(vv.left, constant: -Double(ins.left))
                 ex.add(ov.left, -1)
                 addRequired(ex, .equal)
-                var ey = Cassowary.Expression(vv.top, constant: -Double(f.origin.y))
+                var ey = Cassowary.Expression(vv.top, constant: -Double(ins.top))
                 ey.add(ov.top, -1)
                 addRequired(ey, .equal)
-                addRequired(Cassowary.Expression(vv.width,
-                                                 constant: -Double(f.width)), .equal)
-                addRequired(Cassowary.Expression(vv.height,
-                                                 constant: -Double(f.height)), .equal)
+                var ew = Cassowary.Expression(vv.width,
+                                              constant: Double(ins.left + ins.right))
+                ew.add(ov.width, -1)
+                addRequired(ew, .equal)
+                var eh = Cassowary.Expression(vv.height,
+                                              constant: Double(ins.top + ins.bottom))
+                eh.add(ov.height, -1)
+                addRequired(eh, .equal)
                 continue
             }
             let v = vv.view!
@@ -467,6 +487,37 @@ enum LayoutEngine {
                            width: roundSize(CGFloat(exactW)),
                            height: roundSize(CGFloat(exactH)))
             if v.frame != f { v.frame = f }
+        }
+    }
+
+    /// How far a SYSTEM guide sits inside each edge of its owning view, from
+    /// the measured rules in AutoLayout/UILayoutGuide.swift. The solver pins
+    /// the guide to the owner's edge VARIABLES by these insets, so the guide
+    /// follows a size the solve itself decides. `nil` for a custom guide (it
+    /// is free) and for `contentLayoutGuide` (origin-only, handled inline).
+    private static func systemGuideInsets(_ g: UILayoutGuide) -> UIEdgeInsets? {
+        guard let v = g.owningView else { return nil }
+        switch g.kind {
+        case .custom, .scrollContent:
+            return nil
+        case .safeArea:
+            return v.safeAreaInsets
+        case .layoutMargins:
+            return v.layoutMargins
+        case .readableContent where g.systemFrame() == v.bounds.inset(by: v.layoutMargins):
+            // Below the 920 pt cap the readable guide IS the margins guide.
+            return v.layoutMargins
+        case .scrollFrame, .readableContent:
+            // `frameLayoutGuide` is the scroll view's bounds in CONTENT space
+            // (origin = content offset); the readable band, once its width
+            // cap engages, is centred on the CURRENT bounds. Both are the
+            // bounds-derived rect expressed as insets of that same bounds
+            // rect, which is exactly the previous frozen anchoring for these
+            // two kinds.
+            guard let f = g.systemFrame() else { return nil }
+            let b = v.bounds
+            return UIEdgeInsets(top: f.minY - b.minY, left: f.minX - b.minX,
+                                bottom: b.maxY - f.maxY, right: b.maxX - f.maxX)
         }
     }
 

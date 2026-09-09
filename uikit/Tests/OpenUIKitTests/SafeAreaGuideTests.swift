@@ -76,6 +76,56 @@ final class SafeAreaPropagationTests: XCTestCase {
         XCTAssertEqual(box.frame, CGRect(x: 10, y: 44, width: 298, height: 402))
     }
 
+    /// A constraint-SIZED owner whose height comes only from a subview
+    /// pinned `top = owner.top`, `height = 44`,
+    /// `bottom = owner.safeAreaLayoutGuide.bottom` (Focus' HomeViewToolbar,
+    /// SnapKit spelling). MEASURED probe_toolbar_guide_bottom{0,34},
+    /// iPhone SE 3rd gen 2x / iOS 26.1, root 375x667 with a forced safe
+    /// area [20, 0, B, 0]: owner [0, 623, 375, 44] at B = 0 and
+    /// [0, 589, 375, 78] at B = 34, the subview [10, 0, 355, 44] in both;
+    /// a sibling `bottom = owner.top + 6, height 148` sits at y 481 / 447.
+    /// Golden realapp_focus_browser_light (same device, B = 0) has the real
+    /// toolbar at [0, 603, 375, 44] in its 647 pt parent. Before the fix
+    /// the guide was frozen to the owner's never-laid-out zero bounds and
+    /// the owner came out [0, 0, 375, 667].
+    func testGuideFollowsConstraintSizedOwner() {
+        for (bottomInset, ownerY, ownerH, bandY): (CGFloat, CGFloat, CGFloat, CGFloat)
+            in [(0, 623, 44, 481), (34, 589, 78, 447)] {
+            let root = UIView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+            root._setSafeAreaInsets(UIEdgeInsets(top: 20, left: 0, bottom: bottomInset, right: 0))
+            let toolbar = UIView()
+            toolbar.translatesAutoresizingMaskIntoConstraints = false
+            let stack = UIView()
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            let band = UIView()
+            band.translatesAutoresizingMaskIntoConstraints = false
+            root.addSubview(toolbar)
+            toolbar.addSubview(stack)
+            root.addSubview(band)
+            NSLayoutConstraint.activate([
+                toolbar.bottomAnchor.constraint(equalTo: root.bottomAnchor),
+                toolbar.leadingAnchor.constraint(equalTo: root.safeAreaLayoutGuide.leadingAnchor),
+                toolbar.trailingAnchor.constraint(equalTo: root.safeAreaLayoutGuide.trailingAnchor),
+                stack.topAnchor.constraint(equalTo: toolbar.topAnchor),
+                stack.leftAnchor.constraint(equalTo: toolbar.leftAnchor, constant: 10),
+                stack.rightAnchor.constraint(equalTo: toolbar.rightAnchor, constant: -10),
+                stack.heightAnchor.constraint(equalToConstant: 44),
+                stack.bottomAnchor.constraint(equalTo: toolbar.safeAreaLayoutGuide.bottomAnchor),
+                band.bottomAnchor.constraint(equalTo: toolbar.topAnchor, constant: 6),
+                band.leadingAnchor.constraint(equalTo: root.leadingAnchor),
+                band.trailingAnchor.constraint(equalTo: root.trailingAnchor),
+                band.heightAnchor.constraint(equalToConstant: 148),
+            ])
+            root.layoutIfNeeded()
+            XCTAssertEqual(toolbar.frame, CGRect(x: 0, y: ownerY, width: 375, height: ownerH),
+                           "bottom inset \(bottomInset)")
+            XCTAssertEqual(stack.frame, CGRect(x: 10, y: 0, width: 355, height: 44),
+                           "bottom inset \(bottomInset)")
+            XCTAssertEqual(band.frame, CGRect(x: 0, y: bandY, width: 375, height: 148),
+                           "bottom inset \(bottomInset)")
+        }
+    }
+
     func testSafeAreaInsetsDidChangeFires() {
         #if !os(Linux)
         @MainActor
