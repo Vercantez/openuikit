@@ -18,6 +18,11 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 
 
 public enum UIUserInterfaceStyle: Sendable {
@@ -33,9 +38,17 @@ public enum UIUserInterfaceSizeClass: Int, Sendable {
 
 /// Raw values are Darwin's `UIUserInterfaceLayoutDirection` (UIApplication.h).
 /// `.leading` / `.trailing` follow this via `effectiveUserInterfaceLayoutDirection`.
+/// `@objc` on the Objective-C implementation route so the layout-direction
+/// members of UIView stay overridable `@objc` members.
+#if OPENUIKIT_OBJC_IMPLEMENTATION
+@objc public enum UIUserInterfaceLayoutDirection: Int, Sendable {
+    case leftToRight = 0, rightToLeft = 1
+}
+#else
 public enum UIUserInterfaceLayoutDirection: Int, Sendable {
     case leftToRight = 0, rightToLeft = 1
 }
+#endif
 
 public struct UITraitCollection: Equatable, Sendable {
     public var userInterfaceStyle: UIUserInterfaceStyle
@@ -184,7 +197,12 @@ public final class UITraitOverrides {
     public init() {}
 }
 
-public class UIColor: Hashable, @unchecked Sendable {
+// NSObject-derived (objc-impl-chain1) so that `UIView.tintColor` /
+// `backgroundColor` stay overridable `@objc` members on the Objective-C
+// implementation route (pocket-casts' TintableImageView overrides tintColor).
+// One shape on every route: value equality goes through `isEqual:` / `hash`,
+// which is what Hashable's static `==` did.
+public class UIColor: NSObject, @unchecked Sendable {
     /// Static color, or a named semantic color resolved via traits.
     enum Storage {
         case fixed(CGColor)
@@ -391,16 +409,19 @@ public class UIColor: Hashable, @unchecked Sendable {
         }
     }
 
-    public static func == (lhs: UIColor, rhs: UIColor) -> Bool {
-        lhs.resolvedCGColor(with: .current) == rhs.resolvedCGColor(with: .current)
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let rhs = object as? UIColor else { return false }
+        return resolvedCGColor(with: .current) == rhs.resolvedCGColor(with: .current)
     }
 
-    public func hash(into hasher: inout Hasher) {
+    public override var hash: Int {
         let color = resolvedCGColor(with: .current)
+        var hasher = Hasher()
         hasher.combine(color.red)
         hasher.combine(color.green)
         hasher.combine(color.blue)
         hasher.combine(color.alpha)
+        return hasher.finalize()
     }
 
     // Fixed palette colors (values match UIKit's fixed colors).

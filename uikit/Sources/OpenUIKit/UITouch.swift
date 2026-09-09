@@ -9,8 +9,19 @@
 // `TimeInterval` used to be declared here as `= Double`. It is Foundation's
 // now (M15, FoundationTypes.swift) — same underlying type, one name.
 
+// NSObject-derived (objc-impl-chain1): on the Objective-C implementation
+// route `UIResponder.touchesBegan(_:with:)` and friends are overridable
+// `@objc` members and `Set<UITouch>` bridges to `NSSet<UITouch *>`, which
+// needs an NSObject element. One shape on every route; NSObject's identity
+// `isEqual:` / `hash` are exactly the Hashable conformance this had.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
+
 @preconcurrency @MainActor
-public final class UITouch: Hashable {
+public final class UITouch: NSObject {
     public enum Phase: Sendable {
         case began, moved, stationary, ended, cancelled
     }
@@ -69,12 +80,4 @@ public final class UITouch: Hashable {
         return view.convert(previousLocationInWindow, from: window)
     }
 
-    // MARK: Hashable (identity)
-
-    // `nonisolated`: identity only, and Hashable is a nonisolated protocol
-    // (see the note in UIViewCompat.swift).
-    nonisolated public static func == (lhs: UITouch, rhs: UITouch) -> Bool { lhs === rhs }
-    nonisolated public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
-    }
 }

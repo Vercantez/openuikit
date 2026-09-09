@@ -30,7 +30,7 @@ public enum NSLineBreakMode: Sendable {
 }
 
 @preconcurrency @MainActor
-open class UILabel: UIView {
+open class UILabel: UIView, _UIConstraintBaselineProviding {
     /// Plain text. Real UIKit keeps one storage: setting `text` drops any
     /// attributed string, and setting `attributedText` makes `text` report
     /// the attributed string's characters.
@@ -150,7 +150,10 @@ open class UILabel: UIView {
     /// rounding the draw path uses (`baselineInLine` in drawContent); the
     /// last baseline of a single-line label is measured back from the
     /// line-box bottom. Verified against golden/constraints_baseline.
-    override func _constraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
+    // A conformance rather than an override: the base member is `final` on
+    // the Objective-C implementation route (a tuple is not representable in
+    // a header) and reads this hook through `_UIConstraintBaselineProviding`.
+    func _providedConstraintBaselines() -> (firstFromTop: CGFloat, lastFromBottom: CGFloat)? {
         let ascender = FontEngine.metrics(for: font).ascender
         var first: CGFloat = (ascender + 0.5).rounded(.down)
         if let s = LayoutEngine.iOSPixelScale {

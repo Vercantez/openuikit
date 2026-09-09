@@ -40,6 +40,17 @@
 // forwards it to `next`, like UIKit, instead of swallowing it. Controls,
 // table cells and the scroll pipeline all override without calling super,
 // so their behavior is untouched.
+//
+// OPENUIKIT_OBJC_IMPLEMENTATION (Darwin, set by Package.swift): the class is
+// DECLARED in Objective-C (Sources/OpenUIKitObjC/include/UIResponder.h) and
+// this file is its `@objc @implementation` (SE-0436), so an Objective-C app
+// class can subclass it. Members not in the header are `final`; overridable
+// members typed with Swift-defined classes are `@objc open` in a plain
+// extension. The `#else` block is the plain-Swift shape (native Linux, the
+// guest route): ONE `open class` body with the same members, GENERATED from
+// the Darwin block by scripts/objc_impl_shell_check.py and byte-compared —
+// Swift's `#if` cannot split a declaration's braces, so the copy is derived,
+// never edited (docs/agent_reports/objc-impl-chain1.md).
 
 // UIKit's responder graph is an Objective-C object graph.  Use Foundation's
 // NSObject on ordinary native builds (including native ELF Linux, where
@@ -65,8 +76,13 @@ import class ObjectiveC.NSObject
 /// HID stack — the host synthesizes presses from its own key events, the
 /// same way it synthesizes touches (see `UIWindow.sendKey`, which stays the
 /// text-input path and is deliberately NOT routed through presses).
+///
+/// NSObject-derived (objc-impl-chain1) so `UIResponder.pressesBegan(_:with:)`
+/// can be an overridable `@objc` member (`Set<UIPress>` bridges to
+/// `NSSet<UIPress *>`); NSObject's identity `isEqual:` / `hash` are exactly
+/// the Hashable conformance this had.
 @preconcurrency @MainActor
-public final class UIPress {
+public final class UIPress: NSObject {
     public enum Phase: Sendable { case began, changed, ended, cancelled }
     public let phase: Phase
     /// The editing key this press carries, when it maps to one.
@@ -84,18 +100,9 @@ public final class UIPress {
     }
 }
 
-// `nonisolated` for the same reason as UIView's below: identity only, and
-// Hashable is a nonisolated protocol (see UIViewCompat.swift).
-extension UIPress: Hashable {
-    nonisolated public static func == (a: UIPress, b: UIPress) -> Bool { a === b }
-    nonisolated public func hash(into hasher: inout Hasher) {
-        hasher.combine(ObjectIdentifier(self))
-    }
-}
-
 /// Event carrying a set of `UIPress`es (UIKit's UIPressesEvent).
 @preconcurrency @MainActor
-public final class UIPressesEvent {
+public final class UIPressesEvent: NSObject {
     public let timestamp: TimeInterval
     public let allPresses: Set<UIPress>
     public init(presses: Set<UIPress>, timestamp: TimeInterval = 0) {
@@ -109,10 +116,9 @@ public final class UIPressesEvent {
 
 // MARK: - UIResponder
 
-@preconcurrency @MainActor
-open class UIResponder: NSObject {
-    public override init() { super.init() }
-
+#if OPENUIKIT_OBJC_IMPLEMENTATION
+// objc-impl-shell: open class UIResponder: NSObject
+@objc @implementation extension UIResponder {
     /// Called once a nib-loaded object's outlets are all connected.
     ///
     /// UIKit declares this on NSObject (NSNibAwaking) and calls it on every
@@ -145,13 +151,12 @@ open class UIResponder: NSObject {
 
     /// Accessibility attributes (storage only — see UIViewCompat.swift for
     /// the accessors and for why nothing consults them).
-    var _accessibility = AccessibilityState()
+    final var _accessibility = AccessibilityState()
     private var _inputAssistantItemStorage: UITextInputAssistantItem?
 
-    /// Stable keyboard-shortcut-bar configuration for this responder.
-    /// OpenUIKit hosts do not draw that bar; the object and its mutations are
-    /// nevertheless observable with UIKit's lifetime semantics.
-    open var inputAssistantItem: UITextInputAssistantItem {
+    /// `inputAssistantItem`'s lazily created value (the overridable property
+    /// is in the extension below).
+    final var _resolvedInputAssistantItem: UITextInputAssistantItem {
         if let item = _inputAssistantItemStorage { return item }
         let item = UITextInputAssistantItem()
         _inputAssistantItemStorage = item
@@ -163,13 +168,14 @@ open class UIResponder: NSObject {
     /// The next responder, or nil at the end of the chain. Overridden by
     /// UIView / UIViewController / UIWindow / UIApplication (see the file
     /// header for the exact rules).
+    @objc(nextResponder)
     open var next: UIResponder? { nil }
 
     /// This responder followed by every responder after it, in chain order.
     /// Not UIKit API (UIKit makes you walk `next`); provided because the
     /// walk is needed by `sendAction` and is the natural thing to assert in
     /// a test. Cycle-guarded, so a malformed hierarchy cannot hang a host.
-    public var _responderChain: [UIResponder] {
+    public final var _responderChain: [UIResponder] {
         var chain: [UIResponder] = []
         var r: UIResponder? = self
         while let cur = r {
@@ -181,11 +187,6 @@ open class UIResponder: NSObject {
     }
 
     // MARK: First responder
-
-    /// The window this responder takes first-responder status in, or nil if
-    /// it is not currently attached to one. UIView returns its `window`,
-    /// UIViewController its view's window, UIApplication its key window.
-    var _firstResponderWindow: UIWindow? { nil }
 
     /// Whether this responder can take focus. Default false, like UIKit;
     /// UITextField/UITextView override.
@@ -212,7 +213,7 @@ open class UIResponder: NSObject {
             guard cur.canResignFirstResponder else { return false }
             _ = cur.resignFirstResponder()
         }
-        w.firstResponder = self
+        w._firstResponder = self
         _UIKeyboardChrome.sync(from: w)
         return true
     }
@@ -221,7 +222,7 @@ open class UIResponder: NSObject {
     @discardableResult
     open func resignFirstResponder() -> Bool {
         if let w = _firstResponderWindow, w.firstResponder === self {
-            w.firstResponder = nil
+            w._firstResponder = nil
             _UIKeyboardChrome.sync(from: w)
         }
         return true
@@ -232,6 +233,283 @@ open class UIResponder: NSObject {
     /// Default standard-edit action. Text editors override this; ordinary
     /// responders ignore it, matching UIKit's responder-chain surface.
     open func selectAll(_ sender: Any?) {}
+
+    /// UIKit's `userActivity` on every responder (UIResponder.h). Focus
+    /// BrowserViewController assigns Siri NSUserActivity here
+    /// (a2832521 BrowserViewController.swift:805).
+    open var userActivity: NSUserActivity?
+
+    /// UIKit's `canPerformAction:withSender:` (UIResponderStandardEditActions).
+    /// URLBar.swift:701 overrides it for the paste-and-go menu.
+    open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        _ = (action, sender)
+        return next?.canPerformAction(action, withSender: sender) ?? false
+    }
+
+    /// Moved out of the UIViewCompat extension so AutocompleteTextField can
+    /// `override` it from another module. MEASURED Blockzilla
+    /// AutocompleteTextField.swift:51: "non-@objc property declared in
+    /// extension of UIResponder and cannot be overridden".
+    /// `@objc` is Darwin host only: Linux Swift 6.2.4 has no ObjC interop
+    /// (`swift build --product openrender` on swift:6.2-noble). The
+    /// Foundation-hidden guest has ObjectiveC but `String?` is not
+    /// `@objc`-representable without NSString. MEASURED
+    /// scripts/guest_route_check.sh: `property cannot be marked '@objc'
+    /// because its type cannot be represented in Objective-C`.
+    /// On the implementation route it is a header property (UIResponder.h).
+#if OPENUIKIT_OBJC_IMPLEMENTATION
+    open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#elseif canImport(ObjectiveC) && canImport(Foundation)
+    @objc open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#else
+    open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#endif
+}
+
+/// Internal override points declared in OpenUIKitInternal.h.
+@objc(OpenUIKitInternal) @implementation extension UIResponder {
+    /// The window this responder takes first-responder status in, or nil if
+    /// it is not currently attached to one. UIView returns its `window`,
+    /// UIViewController its view's window, UIApplication its key window.
+    /// (`public` on every route: an override of an imported category member
+    /// must be at least as accessible as the declaration it overrides.)
+    public var _firstResponderWindow: UIWindow? { nil }
+}
+
+/// Overridable members whose types are Swift-defined classes. They cannot be
+/// declared in UIResponder.h (a forward-declared `@class UITouch` does not
+/// unify with the Swift class — measured), and a member of the
+/// implementation extension that is not in the header must be `final`. As
+/// `@objc open` members of a plain extension they are dispatched through
+/// the runtime, so Swift subclasses override them exactly as before and an
+/// Objective-C subclass can too (the generated OpenUIKit-Swift.h carries
+/// them as a category with UIKit's selectors).
+extension UIResponder {
+    /// Stable keyboard-shortcut-bar configuration for this responder.
+    /// OpenUIKit hosts do not draw that bar; the object and its mutations are
+    /// nevertheless observable with UIKit's lifetime semantics.
+    @objc open var inputAssistantItem: UITextInputAssistantItem { _resolvedInputAssistantItem }
+
+    // MARK: Touch entry points
+
+    /// UIKit's default: forward the touches to the next responder. A
+    /// responder that handles a phase overrides WITHOUT calling super
+    /// (UIControl, UITableViewCell, …) so the touch stops there.
+    @objc(touchesBegan:withEvent:)
+    open func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        next?.touchesBegan(touches, with: event)
+    }
+    @objc(touchesMoved:withEvent:)
+    open func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        next?.touchesMoved(touches, with: event)
+    }
+    @objc(touchesEnded:withEvent:)
+    open func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        next?.touchesEnded(touches, with: event)
+    }
+    @objc(touchesCancelled:withEvent:)
+    open func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        next?.touchesCancelled(touches, with: event)
+    }
+
+    // MARK: Key commands (M13 — see UIMenu.swift for the routing)
+
+    /// UIKit's `keyCommands`: the key commands this responder contributes
+    /// while it is in the responder chain. Default nil, like UIKit. The
+    /// window walks the chain collecting these in
+    /// `UIWindow.performKeyCommand(input:modifierFlags:)`.
+    @objc open var keyCommands: [UIKeyCommand]? { nil }
+
+    // MARK: Press entry points
+
+    @objc(pressesBegan:withEvent:)
+    open func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        next?.pressesBegan(presses, with: event)
+    }
+    @objc(pressesChanged:withEvent:)
+    open func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        next?.pressesChanged(presses, with: event)
+    }
+    @objc(pressesEnded:withEvent:)
+    open func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        next?.pressesEnded(presses, with: event)
+    }
+    @objc(pressesCancelled:withEvent:)
+    open func pressesCancelled(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        next?.pressesCancelled(presses, with: event)
+    }
+}
+#else
+// GENERATED from the block above by scripts/objc_impl_shell_check.py --fix; do not edit by hand.
+@preconcurrency @MainActor
+open class UIResponder: NSObject {
+    /// Called once a nib-loaded object's outlets are all connected.
+    ///
+    /// UIKit declares this on NSObject (NSNibAwaking) and calls it on every
+    /// object an archive produced; a real app's `UITableViewCell` subclass
+    /// does most of its setup there (pocket-casts' `SwitchCell.awakeFromNib`
+    /// installs the switch as the accessory view). Declared on UIResponder
+    /// because that is the widest OpenUIKit base a nib can instantiate — see
+    /// UINib.swift for the loader that calls it.
+    ///
+    /// On an Objective-C platform the method already exists on NSObject (the
+    /// `NSNibAwaking` category), so this is an override there and a fresh
+    /// declaration everywhere else — either way app source spells it
+    /// `override func awakeFromNib()`.
+    // The NSObject declaration comes from AppKit's NSNibAwaking category,
+    // not from Foundation: the Linux-hosted arm64-apple-macos GUEST route
+    // can import ObjectiveC but has no AppKit, and there `override` does not
+    // compile (x86 authority, fc0b97d8). Key on AppKit, not ObjectiveC.
+#if canImport(AppKit)
+    open override func awakeFromNib() {}
+#else
+    open func awakeFromNib() {}
+#endif
+
+    /// UIKit's `UIAccessibilityAction` hook (declared on NSObject there).
+    /// Storage-only accessibility means nothing calls it — see
+    /// docs/REAL_APP_TEST.md blocker 10 — but a real cell overrides it
+    /// (pocket-casts' `SwitchCell` returns its locked state), so the
+    /// declaration has to exist for that source to compile.
+    open func accessibilityActivate() -> Bool { false }
+
+    /// Accessibility attributes (storage only — see UIViewCompat.swift for
+    /// the accessors and for why nothing consults them).
+    final var _accessibility = AccessibilityState()
+    private var _inputAssistantItemStorage: UITextInputAssistantItem?
+
+    /// `inputAssistantItem`'s lazily created value (the overridable property
+    /// is in the extension below).
+    final var _resolvedInputAssistantItem: UITextInputAssistantItem {
+        if let item = _inputAssistantItemStorage { return item }
+        let item = UITextInputAssistantItem()
+        _inputAssistantItemStorage = item
+        return item
+    }
+
+    // MARK: The chain
+
+    /// The next responder, or nil at the end of the chain. Overridden by
+    /// UIView / UIViewController / UIWindow / UIApplication (see the file
+    /// header for the exact rules).
+    open var next: UIResponder? { nil }
+
+    /// This responder followed by every responder after it, in chain order.
+    /// Not UIKit API (UIKit makes you walk `next`); provided because the
+    /// walk is needed by `sendAction` and is the natural thing to assert in
+    /// a test. Cycle-guarded, so a malformed hierarchy cannot hang a host.
+    public final var _responderChain: [UIResponder] {
+        var chain: [UIResponder] = []
+        var r: UIResponder? = self
+        while let cur = r {
+            if chain.contains(where: { $0 === cur }) { break }
+            chain.append(cur)
+            r = cur.next
+        }
+        return chain
+    }
+
+    // MARK: First responder
+
+    /// Whether this responder can take focus. Default false, like UIKit;
+    /// UITextField/UITextView override.
+    open var canBecomeFirstResponder: Bool { false }
+
+    /// Whether this responder will give focus up. Default true, like UIKit.
+    open var canResignFirstResponder: Bool { true }
+
+    public var isFirstResponder: Bool {
+        _firstResponderWindow?.firstResponder === self
+    }
+
+    /// Take first-responder status. UIKit semantics: fails when
+    /// `canBecomeFirstResponder` is false, when the responder is not in a
+    /// window, or when the current first responder refuses to resign. The
+    /// previous first responder resigns first.
+    @discardableResult
+    open func becomeFirstResponder() -> Bool {
+        guard canBecomeFirstResponder, let w = _firstResponderWindow else {
+            return false
+        }
+        if w.firstResponder === self { return true }
+        if let cur = w.firstResponder {
+            guard cur.canResignFirstResponder else { return false }
+            _ = cur.resignFirstResponder()
+        }
+        w._firstResponder = self
+        _UIKeyboardChrome.sync(from: w)
+        return true
+    }
+
+    /// Give up first-responder status. Returns true (UIKit's default).
+    @discardableResult
+    open func resignFirstResponder() -> Bool {
+        if let w = _firstResponderWindow, w.firstResponder === self {
+            w._firstResponder = nil
+            _UIKeyboardChrome.sync(from: w)
+        }
+        return true
+    }
+
+    // MARK: Standard editing actions
+
+    /// Default standard-edit action. Text editors override this; ordinary
+    /// responders ignore it, matching UIKit's responder-chain surface.
+    open func selectAll(_ sender: Any?) {}
+
+    /// UIKit's `userActivity` on every responder (UIResponder.h). Focus
+    /// BrowserViewController assigns Siri NSUserActivity here
+    /// (a2832521 BrowserViewController.swift:805).
+    open var userActivity: NSUserActivity?
+
+    /// UIKit's `canPerformAction:withSender:` (UIResponderStandardEditActions).
+    /// URLBar.swift:701 overrides it for the paste-and-go menu.
+    open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        _ = (action, sender)
+        return next?.canPerformAction(action, withSender: sender) ?? false
+    }
+
+    /// Moved out of the UIViewCompat extension so AutocompleteTextField can
+    /// `override` it from another module. MEASURED Blockzilla
+    /// AutocompleteTextField.swift:51: "non-property declared in
+    /// extension of UIResponder and cannot be overridden".
+    /// `` is Darwin host only: Linux Swift 6.2.4 has no ObjC interop
+    /// (`swift build --product openrender` on swift:6.2-noble). The
+    /// Foundation-hidden guest has ObjectiveC but `String?` is not
+    /// ``-representable without NSString. MEASURED
+    /// scripts/guest_route_check.sh: `property cannot be marked ''
+    /// because its type cannot be represented in Objective-C`.
+    /// On the implementation route it is a header property (UIResponder.h).
+#if canImport(ObjectiveC) && canImport(Foundation)
+    @objc open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#else
+    open var accessibilityValue: String? {
+        get { _accessibility.value }
+        set { _accessibility.value = newValue }
+    }
+#endif
+    /// The window this responder takes first-responder status in, or nil if
+    /// it is not currently attached to one. UIView returns its `window`,
+    /// UIViewController its view's window, UIApplication its key window.
+    /// (`public` on every route: an override of an imported category member
+    /// must be at least as accessible as the declaration it overrides.)
+    public var _firstResponderWindow: UIWindow? { nil }
+    /// Stable keyboard-shortcut-bar configuration for this responder.
+    /// OpenUIKit hosts do not draw that bar; the object and its mutations are
+    /// nevertheless observable with UIKit's lifetime semantics.
+    open var inputAssistantItem: UITextInputAssistantItem { _resolvedInputAssistantItem }
 
     // MARK: Touch entry points
 
@@ -259,40 +537,6 @@ open class UIResponder: NSObject {
     /// `UIWindow.performKeyCommand(input:modifierFlags:)`.
     open var keyCommands: [UIKeyCommand]? { nil }
 
-    /// UIKit's `userActivity` on every responder (UIResponder.h). Focus
-    /// BrowserViewController assigns Siri NSUserActivity here
-    /// (a2832521 BrowserViewController.swift:805).
-    open var userActivity: NSUserActivity?
-
-    /// UIKit's `canPerformAction:withSender:` (UIResponderStandardEditActions).
-    /// URLBar.swift:701 overrides it for the paste-and-go menu.
-    open func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        _ = (action, sender)
-        return next?.canPerformAction(action, withSender: sender) ?? false
-    }
-
-    /// Moved out of the UIViewCompat extension so AutocompleteTextField can
-    /// `override` it from another module. MEASURED Blockzilla
-    /// AutocompleteTextField.swift:51: "non-@objc property declared in
-    /// extension of UIResponder and cannot be overridden".
-    /// `@objc` is Darwin host only: Linux Swift 6.2.4 has no ObjC interop
-    /// (`swift build --product openrender` on swift:6.2-noble). The
-    /// Foundation-hidden guest has ObjectiveC but `String?` is not
-    /// `@objc`-representable without NSString. MEASURED
-    /// scripts/guest_route_check.sh: `property cannot be marked '@objc'
-    /// because its type cannot be represented in Objective-C`.
-#if canImport(ObjectiveC) && canImport(Foundation)
-    @objc open var accessibilityValue: String? {
-        get { _accessibility.value }
-        set { _accessibility.value = newValue }
-    }
-#else
-    open var accessibilityValue: String? {
-        get { _accessibility.value }
-        set { _accessibility.value = newValue }
-    }
-#endif
-
     // MARK: Press entry points
 
     open func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -308,3 +552,4 @@ open class UIResponder: NSObject {
         next?.pressesCancelled(presses, with: event)
     }
 }
+#endif

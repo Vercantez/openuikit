@@ -199,7 +199,10 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// A controller takes focus in the window its view is installed in
     /// (UIKit: a controller whose view is not in a window cannot become
     /// first responder either).
-    override var _firstResponderWindow: UIWindow? { viewIfLoaded?.window }
+    // `public`: on the Objective-C implementation route the base declaration
+    // is a category-header member (OpenUIKitInternal.h) and an override of
+    // an imported member must be at least as accessible.
+    public override var _firstResponderWindow: UIWindow? { viewIfLoaded?.window }
 
     /// Create `self.view`. Default: a plain UIView with a portrait-phone
     /// frame and nil (transparent) background — the same as a programmatic

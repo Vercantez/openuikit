@@ -384,6 +384,11 @@ extension UIApplicationDelegate {
 
 @preconcurrency @MainActor
 open class UIApplication: UIResponder {
+    // Explicit: with UIResponder an `@objc @implementation` class, the
+    // compiler otherwise offers two `init()` candidates for `UIApplication()`
+    // (the implicit one and the inherited NSObject one) — "ambiguous use".
+    public override init() { super.init() }
+
     /// The application object. Apps use this; constructing another
     /// UIApplication is meaningless (UIKit traps on it — we merely ignore
     /// the extra instance, since it is never wired to anything).
@@ -585,7 +590,7 @@ open class UIApplication: UIResponder {
     /// UIApplicationDelegate` shape, where UIKit forwards to it.
     open override var next: UIResponder? { delegate as? UIResponder }
 
-    override var _firstResponderWindow: UIWindow? { keyWindow }
+    public override var _firstResponderWindow: UIWindow? { keyWindow }
 
     // MARK: Event dispatch
 

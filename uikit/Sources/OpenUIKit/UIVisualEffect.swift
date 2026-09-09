@@ -775,7 +775,7 @@ open class UIVisualEffectView: UIView, _UIViewSubviewAdmission {
 #if canImport(Foundation)
     open class var supportsSecureCoding: Bool { true }
 
-    open func encode(with coder: NSCoder) {
+    open override func encode(with coder: NSCoder) {
         coder.encode(effect,
                      forKey: "OpenUIKit.UIVisualEffectView.effect")
         coder.encode(Double(frame.minX),

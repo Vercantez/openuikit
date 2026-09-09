@@ -606,7 +606,7 @@ final class _UIPageSheetAnimator: UIViewControllerAnimatedTransitioning {
 /// shape. The presented view sits on top with a clear background — the
 /// platter provides the background color so the corners stay rounded.
 @preconcurrency @MainActor
-final class _UIPageSheetView: UIView {
+final class _UIPageSheetView: UIView, _UIGlassPathProviding {
     /// iPhone 16 large-detent top inset. MEASURED detentprobe / modal_sheet
     /// (iPhone 16 / iOS 26.1): equals that device's `window.safeAreaInsets.top`
     /// (59) on a 393×852 window. Catalyst and every non-compact iOS surface
@@ -810,7 +810,10 @@ final class _UIPageSheetView: UIView {
         _usesIOSDarkGlass = traitCollection.userInterfaceStyle == .dark
     }
 
-    override func _iosGlassPath(in bounds: CGRect) -> Path {
+    // A conformance rather than an override (`_UIGlassPathProviding`): the
+    // base member is `final` on the Objective-C implementation route, where
+    // an OpenCoreGraphics `Path` cannot appear in a header.
+    func _providedGlassPath(in bounds: CGRect) -> Path {
         let top: CGFloat
         let bottom: CGFloat
         if padFormSheet {

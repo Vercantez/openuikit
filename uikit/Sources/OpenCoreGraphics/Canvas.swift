@@ -20,6 +20,11 @@ import struct CoreGraphics.CGSize
 #elseif canImport(Foundation)
 import Foundation
 #endif
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#endif
 
 
 /// Straight (non-premultiplied) sRGB color with 0–1 components.
@@ -177,7 +182,10 @@ public struct Path: Sendable {
 /// - Transparency layers: drawing between begin/end goes to an offscreen
 ///   buffer composited on end with the given alpha (this is how UIView
 ///   alpha groups its subviews).
-public final class Canvas {
+// NSObject-derived (OpenUIKit objc-impl-chain1) so `UIView.drawContent(in:bounds:)`
+// — 35 overrides — can stay an overridable `@objc` member on the Objective-C
+// implementation route; one shape on every route, nothing else changes.
+public final class Canvas: NSObject {
     public let bitmap: Bitmap
     public let scale: CGFloat
 
@@ -199,6 +207,7 @@ public final class Canvas {
         self.bitmap = bitmap
         self.scale = scale
         self.state = CanvasState(ctm: CGAffineTransform(scaleX: scale, y: scale))
+        super.init()
         switch CanvasBackendSelection.current {
         case .quartz:
             // Falls back to the Swift rasterizer for degenerate (empty)

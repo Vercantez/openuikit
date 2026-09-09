@@ -77,7 +77,9 @@ final class UITableViewCellContentView: UIView {
     /// same 8 pt on a disclosure title `[16, 15, 292.5, 20.5]` (LTR) /
     /// `[8, 15, 292.5]` (RTL, physical left is trailing) in a 316.5
     /// content view.
-    override var _defaultBaseLayoutMargins: UIEdgeInsets {
+    // `public`: the base declaration is a category-header member on the
+    // Objective-C implementation route (OpenUIKitInternal.h).
+    public override var _defaultBaseLayoutMargins: UIEdgeInsets {
         guard let cell else { return super._defaultBaseLayoutMargins }
         var m = cell.layoutMargins
         if cell.accessoryView != nil || cell.accessoryType != .none {
@@ -571,7 +573,7 @@ open class UITableViewCell: UIView, ReusableView {
     /// flipping this default to 20 dropped `realapp_storage_light_ipad`
     /// 99.689 → 99.554. Two samples disagree; the xib oracle wins and
     /// Forms-ipad x=20 stays OPEN.
-    override var _defaultBaseLayoutMargins: UIEdgeInsets {
+    public override var _defaultBaseLayoutMargins: UIEdgeInsets {
         UIEdgeInsets(top: 15, left: contentMargin, bottom: 15, right: contentMargin)
     }
     /// The horizontal layout margin of the cell and its content view. MEASURED

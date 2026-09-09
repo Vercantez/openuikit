@@ -214,6 +214,17 @@ extension UIView {
 // MARK: - Semantic content direction
 
 /// Raw values match UIKit's `UISemanticContentAttribute`.
+/// `@objc` on the Objective-C implementation route so
+/// `UIView.semanticContentAttribute` stays an overridable `@objc` member.
+#if OPENUIKIT_OBJC_IMPLEMENTATION
+@objc public enum UISemanticContentAttribute: Int, Sendable {
+    case unspecified = 0
+    case playback = 1
+    case spatial = 2
+    case forceLeftToRight = 3
+    case forceRightToLeft = 4
+}
+#else
 public enum UISemanticContentAttribute: Int, Sendable {
     case unspecified = 0
     case playback = 1
@@ -221,6 +232,7 @@ public enum UISemanticContentAttribute: Int, Sendable {
     case forceLeftToRight = 3
     case forceRightToLeft = 4
 }
+#endif
 
 // MARK: - Trait change registration (iOS 17's replacement for
 // traitCollectionDidChange)

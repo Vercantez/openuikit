@@ -64,61 +64,17 @@ private func gestureStateRaw(_ state: UIGestureRecognizer.State) -> Int {
     @unknown default: return 0
     }
 }
-private func edgeInsets(_ insets: OpenUIKit.UIEdgeInsets) -> OpenUIKitObjCSupport.UIEdgeInsets {
-    OpenUIKitObjCSupport.UIEdgeInsets(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
-}
-private func edgeInsets(_ insets: OpenUIKitObjCSupport.UIEdgeInsets) -> OpenUIKit.UIEdgeInsets {
-    OpenUIKit.UIEdgeInsets(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
-}
 
 // MARK: - UIResponder
 
-extension UIResponder {
-    @objc(becomeFirstResponder) @discardableResult public func __objc_becomeFirstResponder() -> Bool { becomeFirstResponder() }
-    @objc(resignFirstResponder) @discardableResult public func __objc_resignFirstResponder() -> Bool { resignFirstResponder() }
-    @objc(isFirstResponder) public var __objc_isFirstResponder: Bool { isFirstResponder }
-}
 
 // MARK: - UIView
 
 extension UIView {
-    @objc(initWithFrame:) public convenience init(__objcFrame frame: CGRect) { self.init(frame: frame) }
-    @objc(frame) public var __objc_frame: CGRect { get { frame } set { frame = newValue } }
-    @objc(bounds) public var __objc_bounds: CGRect { get { bounds } set { bounds = newValue } }
-    @objc(center) public var __objc_center: CGPoint { get { center } set { center = newValue } }
-    @objc(alpha) public var __objc_alpha: CGFloat { get { alpha } set { alpha = newValue } }
-    @objc(isHidden) public var __objc_hidden: Bool { get { isHidden } set { isHidden = newValue } }
-    @objc(hidden) public var __objc_hiddenPlain: Bool { get { isHidden } set { isHidden = newValue } }
-    @objc(clipsToBounds) public var __objc_clipsToBounds: Bool { get { clipsToBounds } set { clipsToBounds = newValue } }
-    @objc(tag) public var __objc_tag: Int { get { tag } set { tag = newValue } }
-    @objc(isUserInteractionEnabled) public var __objc_userInteractionEnabled: Bool {
-        get { isUserInteractionEnabled } set { isUserInteractionEnabled = newValue }
-    }
-    @objc(userInteractionEnabled) public var __objc_userInteractionEnabledPlain: Bool {
-        get { isUserInteractionEnabled } set { isUserInteractionEnabled = newValue }
-    }
     @objc(autoresizingMask) public var __objc_autoresizingMask: UInt {
         get { autoresizingMask.rawValue } set { autoresizingMask = UIView.AutoresizingMask(rawValue: newValue) }
     }
-    @objc(superview) public var __objc_superview: UIView? { superview }
-    @objc(subviews) public var __objc_subviews: [UIView] { subviews }
-    @objc(addSubview:) public func __objc_addSubview(_ view: UIView) { addSubview(view) }
-    @objc(insertSubview:atIndex:) public func __objc_insertSubview(_ view: UIView, at index: Int) { insertSubview(view, at: index) }
-    @objc(insertSubview:aboveSubview:) public func __objc_insertSubview(_ view: UIView, above sibling: UIView) { insertSubview(view, aboveSubview: sibling) }
-    @objc(sendSubviewToBack:) public func __objc_sendSubviewToBack(_ view: UIView) { sendSubviewToBack(view) }
-    @objc(bringSubviewToFront:) public func __objc_bringSubviewToFront(_ view: UIView) { bringSubviewToFront(view) }
-    @objc(removeFromSuperview) public func __objc_removeFromSuperview() { removeFromSuperview() }
-    @objc(setNeedsLayout) public func __objc_setNeedsLayout() { setNeedsLayout() }
-    @objc(layoutIfNeeded) public func __objc_layoutIfNeeded() { layoutIfNeeded() }
-    @objc(layoutSubviews) public func __objc_layoutSubviews() { layoutSubviews() }
-    @objc(setNeedsDisplay) public func __objc_setNeedsDisplay() { setNeedsDisplay() }
-    @objc(sizeToFit) public func __objc_sizeToFit() { sizeToFit() }
-    @objc(sizeThatFits:) public func __objc_sizeThatFits(_ size: CGSize) -> CGSize { sizeThatFits(size) }
-    @objc(safeAreaInsets) public var __objc_safeAreaInsets: OpenUIKitObjCSupport.UIEdgeInsets { edgeInsets(safeAreaInsets) }
-    @objc(addGestureRecognizer:) public func __objc_addGestureRecognizer(_ recognizer: UIGestureRecognizer) { addGestureRecognizer(recognizer) }
-    @objc(removeGestureRecognizer:) public func __objc_removeGestureRecognizer(_ recognizer: UIGestureRecognizer) { removeGestureRecognizer(recognizer) }
-    @objc(convertRect:toView:) public func __objc_convert(_ rect: CGRect, to view: UIView?) -> CGRect { convert(rect, to: view) }
-    @objc(convertPoint:toView:) public func __objc_convert(_ point: CGPoint, to view: UIView?) -> CGPoint { convert(point, to: view) }
+    @objc(safeAreaInsets) public var __objc_safeAreaInsets: OpenUIKitObjCSupport.UIEdgeInsets { safeAreaInsets }
 }
 
 // MARK: - UIControl
@@ -141,7 +97,7 @@ extension UIScrollView {
     @objc(contentOffset) public var __objc_contentOffset: CGPoint { get { contentOffset } set { contentOffset = newValue } }
     @objc(contentSize) public var __objc_contentSize: CGSize { get { contentSize } set { contentSize = newValue } }
     @objc(contentInset) public var __objc_contentInset: OpenUIKitObjCSupport.UIEdgeInsets {
-        get { edgeInsets(contentInset) } set { contentInset = edgeInsets(newValue) }
+        get { contentInset } set { contentInset = newValue }
     }
     @objc(isScrollEnabled) public var __objc_scrollEnabled: Bool { get { isScrollEnabled } set { isScrollEnabled = newValue } }
     @objc(scrollEnabled) public var __objc_scrollEnabledPlain: Bool { get { isScrollEnabled } set { isScrollEnabled = newValue } }
@@ -233,13 +189,6 @@ extension UINavigationController {
 
 // MARK: - UIWindow / UIApplication
 
-extension UIWindow {
-    @objc(rootViewController) public var __objc_rootViewController: UIViewController? {
-        get { rootViewController } set { rootViewController = newValue }
-    }
-    @objc(makeKeyAndVisible) public func __objc_makeKeyAndVisible() { makeKeyAndVisible() }
-    @objc(isKeyWindow) public var __objc_isKeyWindow: Bool { isKeyWindow }
-}
 
 extension UIApplication {
     @objc(sharedApplication) public class var __objc_shared: UIApplication { UIApplication.shared }

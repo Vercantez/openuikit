@@ -66,6 +66,11 @@ import Foundation
 #endif
 
 
+// On the Objective-C implementation route (Darwin) `UIEdgeInsets` is the C
+// struct declared in Sources/OpenUIKitObjC/include/UIGeometry.h, so that a
+// header can declare `-_defaultBaseLayoutMargins`; ObjCImplementation.swift
+// adds the same `.zero`, Equatable and defaulted initializer as extensions.
+#if !OPENUIKIT_OBJC_IMPLEMENTATION
 public struct UIEdgeInsets: Equatable, Sendable {
     public var top: CGFloat
     public var left: CGFloat
@@ -80,6 +85,7 @@ public struct UIEdgeInsets: Equatable, Sendable {
     }
     public static let zero = UIEdgeInsets()
 }
+#endif
 
 // MARK: - Delegate
 

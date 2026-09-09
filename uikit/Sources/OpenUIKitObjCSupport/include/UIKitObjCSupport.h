@@ -43,10 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 #pragma mark - Geometry (UIGeometry.h)
 
-typedef struct UIEdgeInsets { CGFloat top, left, bottom, right; } UIEdgeInsets;
-static inline UIEdgeInsets UIEdgeInsetsMake(CGFloat top, CGFloat left, CGFloat bottom, CGFloat right) {
-    UIEdgeInsets i = {top, left, bottom, right}; return i;
-}
+/* UIEdgeInsets / UIEdgeInsetsMake now come from the OpenUIKitObjC declaration
+ * module (objc-impl-chain1): on Darwin that C struct IS OpenUIKit's Swift
+ * `UIEdgeInsets`, so this header must not define a second one. */
+#import <UIGeometry.h>
 /* AppKit declares NSDirectionalEdgeInsets(Make/Zero) too. Any Swift module
  * that imports this one has AppKit loaded (OpenUIKit imports it on macOS) and
  * reports `different definitions in different modules` (MEASURED
@@ -180,9 +180,8 @@ typedef NS_ENUM(NSInteger, UIButtonType) {
 typedef NS_ENUM(NSInteger, UIActivityIndicatorViewStyle) {
     UIActivityIndicatorViewStyleMedium = 100, UIActivityIndicatorViewStyleLarge = 101,
 } NS_SWIFT_NAME(UIActivityIndicatorViewStyleObjC);
-typedef NS_ENUM(NSInteger, UIUserInterfaceLayoutDirection) {
-    UIUserInterfaceLayoutDirectionLeftToRight, UIUserInterfaceLayoutDirectionRightToLeft,
-} NS_SWIFT_NAME(UIUserInterfaceLayoutDirectionObjC);
+/* UIUserInterfaceLayoutDirection: exported by OpenUIKit-Swift.h itself since
+ * objc-impl-chain1 (the Swift enum is `@objc`), same name and raw values. */
 typedef NS_ENUM(NSInteger, UIAccessibilityContrast) {
     UIAccessibilityContrastUnspecified = -1, UIAccessibilityContrastNormal, UIAccessibilityContrastHigh,
 } NS_SWIFT_NAME(UIAccessibilityContrastObjC);
