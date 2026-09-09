@@ -1201,9 +1201,21 @@ final class TableViewIOSEditChromeTests: XCTestCase {
     }
 
     /// MEASURED rowprobe grouped_classic vs grouped_config, iPhone SE 2x /
-    /// iOS 26.1: classic grouped is also 52, but `defaultContentConfiguration()`
-    /// (tableview_grouped / Focus) is 53. Grouped automaticDimension stays 53.
-    func testGroupedDefaultRowStays53OnIOS() {
+    /// iOS 26.1: classic grouped is 52, `defaultContentConfiguration()` is 53.
+    ///
+    /// Until 2026-09-07 this test pinned the grouped classic row at 53 as a
+    /// deliberate compromise (cbd603e5: "grouped stays 53 so tableview_grouped
+    /// and Focus do not drop") even though rowprobe had already read 52.
+    /// MEASURED 2026-09-07 tableprobe (agent/focus-fidelity-tables,
+    /// docs/agent_reports/focus-fidelity-tables.md, rule table rows
+    /// "Untitled section" and "Classic row"), iPhone 16 3x AND SE 2x /
+    /// iOS 26.1, insetGrouped: every classic automaticDimension row is **52**
+    /// and an untitled FIRST section's rows start at **35**
+    /// (`rectForHeader(0)` = `[35, 0]`; golden `SettingsTableViewCell`
+    /// `[0, 35, 353, 52]`). 8540d66f moved the code to those numbers and the
+    /// fixture scenes pin 53 through `heightForRowAt`, so this test follows
+    /// the oracle: row 0 at 35 × 52, row 1 at 87.
+    func testInsetGroupedClassicRowIs52AndStartsAt35OnIOS() {
         let source = DefaultListSource()
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
         let table = UITableView(frame: window.bounds, style: .insetGrouped)
@@ -1212,9 +1224,12 @@ final class TableViewIOSEditChromeTests: XCTestCase {
         window.layoutIfNeeded()
 
         let cell = table.cellForRow(at: IndexPath(row: 0, section: 0))!
-        XCTAssertEqual(cell.frame.height, 53, accuracy: 0.001)
+        XCTAssertEqual(cell.frame.minY, UITableView.untitledGroupedFirstSectionTop,
+                       accuracy: 0.001)
+        XCTAssertEqual(cell.frame.minY, 35, accuracy: 0.001)
+        XCTAssertEqual(cell.frame.height, 52, accuracy: 0.001)
         XCTAssertEqual(table.cellForRow(at: IndexPath(row: 1, section: 0))!.frame.minY,
-                       53, accuracy: 0.001)
+                       87, accuracy: 0.001)
     }
 
     /// MEASURED Tabs t200, iPhone SE 2x / iOS 26.1: a plain table under a
