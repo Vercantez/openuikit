@@ -174,7 +174,7 @@ Other things the port touched: the `OpenUIKitObjCBridge` `@objc(selector)` twins
 | (2) unit tests (Responder / View / Window / Layout / Hit-testing / SafeArea) | not run: blocked by (1). Planned filter: `OpenUIKitTests.(ResponderLifecycleTests|ViewGeometryTests|GeometryTests|EventSystemTests|AutoLayoutTests|SafeAreaGuideTests|TraitCollectionTests|ViewControllerLayoutTests|LayoutTieBreakTests|UIViewCoderCompatibilityTests)` |
 | (3) Objective-C subclass test | written (`Tests/OpenUIKitObjCSubclassTests`, 22 runtime checks + a driver for `simctl spawn`); not run: blocked by (1). The same checks passed on the spike-shaped probe (see rules above). |
 | (4) Catalyst 124/124, iOS 112/113 | not run: blocked by (1) |
-| (5) `CHECK_ONLY=1 scripts/agent_merge.sh agent/objc-impl-chain1` | not run: blocked by (1); the branch touches only `uikit/` and no pin files |
+| (5) `CHECK_ONLY=1 scripts/agent_merge.sh agent/objc-impl-chain1` | run (after merging `origin/main` into the branch): no REFUSED line — scope, pin-file, Foundation-import and merge checks pass — then the "macOS build + Catalyst gate" step fails on the wall (`'required' initializer 'init(coder:)' must be provided by subclass of 'UIView'`, no `openrender` binary to render with) and the script aborts before a verdict line. One new warning in that log worth carrying: UIResponder.swift `awakeFromNib()` "conflicts with previous declaration with the same Objective-C selector; this will become an error after adopting '@implementation'" (AppKit's NSObject category vs UIResponder.h). |
 
 ## Follow-ups
 
