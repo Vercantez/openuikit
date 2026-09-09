@@ -10,7 +10,9 @@
 // files, SwiftUI hosting, the real-app screens — has always used.
 #if OPENUIKIT_OBJC_IMPLEMENTATION
 @_exported import OpenUIKitObjC
-import Foundation
+// Scoped, like every sibling: the guest-route gate refuses a bare
+// `import Foundation` in a library source even under this route's flag.
+import class Foundation.NSObject
 
 // MARK: - UITraitCollection in Objective-C signatures
 
