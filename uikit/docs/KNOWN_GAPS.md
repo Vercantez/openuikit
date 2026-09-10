@@ -1866,6 +1866,16 @@ What is NOT faithful:
   iOS 26's default bar is transparent at rest and gets its material from the
   scroll-edge effect once content passes under it; that effect is modelled
   only in the large-title path (`UINavigationBar.updatePocket`).
+- **`UIScrollEdgeElementContainerInteraction` draws the scrim, not the
+  blur.** MEASURED 2026-09-09 (`Tools/oracle2/signalrowsprobe`, iPhone 16 /
+  iOS 26.1): with content under an element-holding container the pocket is
+  a black 24.7 % scrim fading 20 pt past the container's inner edge plus a
+  ~6 pt content blur. The port paints the measured scrim profile in a
+  `_UITouchPassthroughView` pocket and has no blur. The LIGHT material
+  that `.hard`, a later `.automatic`, or attaching before adding elements
+  produces is recorded in `edge-ios-26.1-iphone16.json` and not modelled;
+  `UIScrollEdgeEffect` (`topEdgeEffect.style/isHidden`) does not exist, so
+  an app hiding the effect keeps the scrim.
 - **`UINavigationBar`'s default appearance is OPAQUE, not iOS 26's default.**
   A deliberate compatibility choice: it keeps the inline bar looking like it
   did before M13 for hosts and demos. Set `standardAppearance` explicitly for

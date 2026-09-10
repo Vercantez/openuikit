@@ -74,7 +74,14 @@ open class UICollectionViewFlowLayout: UICollectionViewLayout {
         if let flow = context as? UICollectionViewFlowLayoutInvalidationContext {
             // collectionblockingprobe flow.bounds.{same,origin,width}, iOS
             // 26.1 iPhone 16: attributes false/true/true; metrics always false.
-            flow.invalidateFlowLayoutAttributes = collectionView?.bounds != newBounds
+            // signalrowsprobe invalidate.flow.*: a scroll along the layout
+            // axis ((0,-59) -> (0,40)) gives attributes FALSE; a cross-axis
+            // move ((0,-59) -> (5,6)) or a size change gives true.
+            let current = collectionView?.bounds ?? .zero
+            let crossAxisMoved = isVertical
+                ? current.origin.x != newBounds.origin.x
+                : current.origin.y != newBounds.origin.y
+            flow.invalidateFlowLayoutAttributes = current.size != newBounds.size || crossAxisMoved
             flow.invalidateFlowLayoutDelegateMetrics = false
         }
         return context
