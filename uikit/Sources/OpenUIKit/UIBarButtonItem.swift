@@ -214,6 +214,9 @@ public class UIBarButtonItem {
 @preconcurrency @MainActor
 protocol _UIBarItemContainer: AnyObject {
     func _barItemsChanged()
+    /// The on-screen view laid out for `item`, if this bar currently shows
+    /// it (`UIBarButtonItem.frame(in:)`, popover anchoring).
+    func _view(for item: UIBarButtonItem) -> UIView?
 }
 
 // MARK: - Measured metrics
