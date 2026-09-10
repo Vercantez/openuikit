@@ -1,0 +1,7298 @@
+{
+  "cold.intrinsic" : [
+    -1,
+    44
+  ],
+  "cold.items.intrinsic" : [
+    -1,
+    44
+  ],
+  "cold.items.sizeThatFits.393x0" : [
+    393,
+    44
+  ],
+  "cold.sizeThatFits.393x0" : [
+    393,
+    44
+  ],
+  "device" : "iPad",
+  "idiom" : 1,
+  "landscape" : {
+    "autoLayout" : {
+      "black.items" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      },
+      "black.noItems" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      },
+      "default.items" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                1140,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      },
+      "default.noItems" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            751,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            776,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                1180,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      }
+    },
+    "autoLayout.later" : {
+      "black.items.safeAreaBottom" : {
+        "frame" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.items.viewBottom" : {
+        "frame" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.noItems.safeAreaBottom" : {
+        "frame" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.noItems.viewBottom" : {
+        "frame" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.items.safeAreaBottom" : {
+        "frame" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.items.viewBottom" : {
+        "frame" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.noItems.safeAreaBottom" : {
+        "frame" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          751,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.noItems.viewBottom" : {
+        "frame" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          776,
+          1180,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          1180,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          1180,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          1180,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      }
+    },
+    "frame" : {
+      "black.items" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      },
+      "black.noItems" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      },
+      "default.items" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              1140,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      },
+      "default.noItems" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            1180,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              1180,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            1180,
+            44
+          ],
+          "systemLayout.compressed" : [
+            1180,
+            44
+          ],
+          "systemLayout.expanded" : [
+            1180,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      }
+    },
+    "hostSafeArea" : [
+      32,
+      0,
+      25,
+      0
+    ],
+    "interfaceOrientation" : 4,
+    "navigation" : {
+      "black.items" : {
+        "bottomViews" : [
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frameInWindow" : [
+              0,
+              741,
+              1180,
+              79
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frameInWindow" : [
+              10,
+              751,
+              1160,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 4,
+            "frameInWindow" : [
+              10,
+              751,
+              1160,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              10,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              10,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              14.000000000000002,
+              755,
+              36,
+              36
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              1126,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              1126,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              1130,
+              755,
+              36,
+              36
+            ],
+            "hidden" : false
+          }
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          1180,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          79,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          1180,
+          655
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : 3,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.noItems" : {
+        "bottomViews" : [
+
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          1180,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          25,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          1180,
+          709
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : -1,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.items" : {
+        "bottomViews" : [
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frameInWindow" : [
+              0,
+              741,
+              1180,
+              79
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frameInWindow" : [
+              10,
+              751,
+              1160,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 4,
+            "frameInWindow" : [
+              10,
+              751,
+              1160,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              10,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              10,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              14.000000000000002,
+              755,
+              36,
+              36
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              1126,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              1126,
+              751,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              1130,
+              755,
+              36,
+              36
+            ],
+            "hidden" : false
+          }
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          1180,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          79,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          1180,
+          655
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : 3,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.noItems" : {
+        "bottomViews" : [
+
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          1180,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          25,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          1180,
+          709
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            1180,
+            820
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            1180,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            1180,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          1180,
+          820
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : -1,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      }
+    },
+    "traits" : {
+      "horizontal" : 2,
+      "idiom" : 1,
+      "scale" : 2,
+      "vertical" : 2
+    },
+    "window" : [
+      0,
+      0,
+      1180,
+      820
+    ],
+    "windowSafeArea" : [
+      32,
+      0,
+      25,
+      0
+    ]
+  },
+  "os" : "26.1",
+  "portrait" : {
+    "autoLayout" : {
+      "black.items" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      },
+      "black.noItems" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      },
+      "default.items" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 1,
+              "frame" : [
+                20,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 2,
+              "frame" : [
+                0,
+                0,
+                780,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIInheritedView",
+              "depth" : 3,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      },
+      "default.noItems" : {
+        "safeAreaBottom" : {
+          "frame" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1111,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        },
+        "viewBottom" : {
+          "frame" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "frameInWindow" : [
+            0,
+            1136,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          },
+          "tree" : [
+            {
+              "class" : "UICoreHostingView<RootView>",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                820,
+                44
+              ],
+              "hidden" : false
+            },
+            {
+              "class" : "_UIPointerInteractionAssistantEffectContainerView",
+              "depth" : 0,
+              "frame" : [
+                0,
+                0,
+                0,
+                0
+              ],
+              "hidden" : false
+            }
+          ],
+          "viewBounds" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "viewSafeArea" : [
+            32,
+            0,
+            25,
+            0
+          ]
+        }
+      }
+    },
+    "autoLayout.later" : {
+      "black.items.safeAreaBottom" : {
+        "frame" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.items.viewBottom" : {
+        "frame" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.noItems.safeAreaBottom" : {
+        "frame" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.noItems.viewBottom" : {
+        "frame" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.items.safeAreaBottom" : {
+        "frame" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.items.viewBottom" : {
+        "frame" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.noItems.safeAreaBottom" : {
+        "frame" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1111,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.noItems.viewBottom" : {
+        "frame" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "frameInWindow" : [
+          0,
+          1136,
+          820,
+          44
+        ],
+        "intrinsic" : [
+          -1,
+          44
+        ],
+        "sizeThatFits.w0" : [
+          820,
+          44
+        ],
+        "sizeThatFits.w100" : [
+          820,
+          44
+        ],
+        "sizeThatFits.zero" : [
+          820,
+          44
+        ],
+        "systemLayout.compressed" : [
+          0,
+          44
+        ],
+        "systemLayout.expanded" : [
+          10000,
+          44
+        ],
+        "systemLayout.wRequired" : [
+          820,
+          44
+        ],
+        "traits" : {
+          "horizontal" : 2,
+          "idiom" : 1,
+          "scale" : 2,
+          "vertical" : 2
+        },
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      }
+    },
+    "frame" : {
+      "black.items" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      },
+      "black.noItems" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      },
+      "default.items" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 1,
+            "frame" : [
+              20,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frame" : [
+              0,
+              0,
+              780,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            0
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            10000
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            0
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      },
+      "default.noItems" : {
+        "detached" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted44.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted54" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            54
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted54.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              54
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "hosted64" : {
+          "frame" : [
+            0,
+            100,
+            820,
+            64
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "hosted64.tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              820,
+              64
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ],
+        "zeroFrame.sizeToFit" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            44
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            820,
+            44
+          ],
+          "systemLayout.compressed" : [
+            820,
+            44
+          ],
+          "systemLayout.expanded" : [
+            820,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        }
+      }
+    },
+    "hostSafeArea" : [
+      32,
+      0,
+      25,
+      0
+    ],
+    "interfaceOrientation" : 1,
+    "navigation" : {
+      "black.items" : {
+        "bottomViews" : [
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frameInWindow" : [
+              0,
+              1101,
+              820,
+              79
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frameInWindow" : [
+              10,
+              1111,
+              800,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 4,
+            "frameInWindow" : [
+              10,
+              1111,
+              800,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              10,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              10,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              14.000000000000002,
+              1115,
+              36,
+              36
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              766,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              766,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              770,
+              1115,
+              36,
+              36
+            ],
+            "hidden" : false
+          }
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          820,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          79,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          820,
+          1015
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : 3,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "black.noItems" : {
+        "bottomViews" : [
+
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          820,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          25,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          820,
+          1069
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : -1,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.items" : {
+        "bottomViews" : [
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 2,
+            "frameInWindow" : [
+              0,
+              1101,
+              820,
+              79
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 3,
+            "frameInWindow" : [
+              10,
+              1111,
+              800,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 4,
+            "frameInWindow" : [
+              10,
+              1111,
+              800,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              10,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              10,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              14.000000000000002,
+              1115,
+              36,
+              36
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UIPlatformGlassInteractionView",
+            "depth" : 6,
+            "frameInWindow" : [
+              766,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "_UIInheritedView",
+            "depth" : 7,
+            "frameInWindow" : [
+              766,
+              1111,
+              44,
+              44
+            ],
+            "hidden" : false
+          },
+          {
+            "alpha" : 1,
+            "class" : "UICorePlatformViewHost<PlatformViewRepresentableAdaptor<ButtonRepresentation>>",
+            "depth" : 8,
+            "frameInWindow" : [
+              770,
+              1115,
+              36,
+              36
+            ],
+            "hidden" : false
+          }
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          820,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          79,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          820,
+          1015
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : 3,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      },
+      "default.noItems" : {
+        "bottomViews" : [
+
+        ],
+        "isToolbarHidden" : false,
+        "items" : -1,
+        "navBarFrame" : [
+          0,
+          32,
+          820,
+          54
+        ],
+        "navSafeArea" : [
+          32,
+          0,
+          25,
+          0
+        ],
+        "navViewBounds" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootSafeArea" : [
+          86,
+          0,
+          25,
+          0
+        ],
+        "rootSafeAreaLayoutFrame" : [
+          0,
+          86,
+          820,
+          1069
+        ],
+        "rootViewFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "rootViewFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "sizes" : {
+          "frame" : [
+            0,
+            0,
+            820,
+            1180
+          ],
+          "intrinsic" : [
+            -1,
+            44
+          ],
+          "sizeThatFits.w0" : [
+            820,
+            44
+          ],
+          "sizeThatFits.w100" : [
+            820,
+            44
+          ],
+          "sizeThatFits.zero" : [
+            0,
+            44
+          ],
+          "systemLayout.compressed" : [
+            0,
+            44
+          ],
+          "systemLayout.expanded" : [
+            10000,
+            44
+          ],
+          "systemLayout.wRequired" : [
+            820,
+            44
+          ],
+          "traits" : {
+            "horizontal" : 2,
+            "idiom" : 1,
+            "scale" : 2,
+            "vertical" : 2
+          }
+        },
+        "toolbarFrame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarFrameInWindow" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "toolbarHidden" : false,
+        "toolbarItemsOnRoot" : -1,
+        "toolbarSuperview" : "nil",
+        "toolbarSuperviewFrame" : [
+
+        ],
+        "tree" : [
+          {
+            "class" : "UICoreHostingView<RootView>",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          },
+          {
+            "class" : "_UIPointerInteractionAssistantEffectContainerView",
+            "depth" : 0,
+            "frame" : [
+              0,
+              0,
+              0,
+              0
+            ],
+            "hidden" : false
+          }
+        ]
+      }
+    },
+    "traits" : {
+      "horizontal" : 2,
+      "idiom" : 1,
+      "scale" : 2,
+      "vertical" : 2
+    },
+    "window" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "windowSafeArea" : [
+      32,
+      0,
+      25,
+      0
+    ]
+  },
+  "scale" : 2,
+  "screen" : [
+    0,
+    0,
+    820,
+    1180
+  ]
+}
