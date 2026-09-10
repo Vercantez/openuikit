@@ -37,12 +37,13 @@
 //           edges (stored only), engagement between 0 and 100 pt of
 //           penetration (measured off at 0, on at 100), hidden elements.
 
+// NSCoder: Foundation's on Darwin; the module's own (FoundationTypes.swift)
+// on the Foundation-hidden guest route, where ObjectiveC has no NSCoder.
 #if canImport(Foundation)
 import class Foundation.NSObject
 import class Foundation.NSCoder
 #elseif canImport(ObjectiveC)
 import class ObjectiveC.NSObject
-import class ObjectiveC.NSCoder
 #else
 #error("UIScrollEdgeElementContainerInteraction requires NSObject")
 #endif
