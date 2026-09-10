@@ -385,8 +385,18 @@ open class UICollectionView: UIScrollView {
 
     public func supplementaryView(forElementKind elementKind: String,
                                   at indexPath: IndexPath) -> UICollectionReusableView? {
-        visibleViews[ElementKey(kind: elementKind,
-                                indexPath: IndexPath(item: 0, section: indexPath.section))]
+        // A per-item supplementary (compositional badge) lives at its own
+        // index path; a section header at item 0 of the section.
+        visibleViews[ElementKey(kind: elementKind, indexPath: indexPath)]
+            ?? visibleViews[ElementKey(kind: elementKind,
+                                       indexPath: IndexPath(item: 0, section: indexPath.section))]
+    }
+
+    public func visibleSupplementaryViews(ofKind elementKind: String) -> [UICollectionReusableView] {
+        visibleViews.views
+            .filter { $0.key.kind == elementKind }
+            .sorted { $0.key.indexPath < $1.key.indexPath }
+            .map(\.value)
     }
 
     // MARK: Geometry queries (forwarded to the layout)
@@ -395,6 +405,14 @@ open class UICollectionView: UIScrollView {
         -> UICollectionViewLayoutAttributes? {
         ensureCounts()
         return collectionViewLayout.layoutAttributesForItem(at: indexPath)
+    }
+
+    public func layoutAttributesForSupplementaryElement(ofKind elementKind: String,
+                                                        at indexPath: IndexPath)
+        -> UICollectionViewLayoutAttributes? {
+        ensureCounts()
+        return collectionViewLayout.layoutAttributesForSupplementaryView(ofKind: elementKind,
+                                                                         at: indexPath)
     }
 
     public func indexPathForItem(at point: CGPoint) -> IndexPath? {
