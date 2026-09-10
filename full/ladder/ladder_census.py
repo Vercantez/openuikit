@@ -47,6 +47,19 @@ TWO WALKS, TWO DENOMINATORS, ON PURPOSE. The UIKit census walk excludes
 Tests/ (apicensus's SKIP_DIRS) so its numbers are comparable to the recorded
 census; the model/SwiftUI walk does not (those scripts' skip set). Every count
 below names which walk produced it.
+
+TARGET SCOPE (optional, `--target-scope=FILE`). The default walk is the WHOLE
+repository, which for a repo shipping a Mac app and an iOS app from one tree
+counts AppKit demand as phone demand (NetNewsWire: `NSToolbarItem` 48 uses,
+all under Mac/ or `#if os(macOS)`). A scope file -- written by
+`target_scope.py` from the .xcodeproj -- lists, per app name, the source files
+ONE target compiles plus its local packages. For an app named in the file,
+every per-file walk here (UIKit, model/SwiftUI/selector, language mix) is
+restricted to that list; `build` (repo shape) is not, because it is a
+property of the repository. Apps NOT named in the file are walked exactly as
+before -- the control is that their output is byte-identical with and without
+the flag. The census records the scope's provenance under `_scope` so a scoped
+JSON cannot be mistaken for a whole-repo one.
 """
 import json, os, re, sys
 from collections import defaultdict
@@ -60,12 +73,18 @@ SKIP_UIKIT = {".git", "Pods", "Carthage", "build", ".build", "DerivedData",
 SKIP_MODEL = {".git", "Carthage", "Pods", ".build"}
 
 
-def walk(root, skip, exts):
+def walk(root, skip, exts, scope=None):
+    """Yield files under root. `scope` (a set of POSIX relpaths) restricts the
+    walk to exactly those files; the skip set still applies on top of it."""
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in skip]
         for f in filenames:
             if os.path.splitext(f)[1] in exts:
-                yield os.path.join(dirpath, f)
+                path = os.path.join(dirpath, f)
+                if scope is not None and \
+                        os.path.relpath(path, root).replace(os.sep, "/") not in scope:
+                    continue
+                yield path
 
 
 def read(path):
@@ -81,10 +100,10 @@ SYMBOL_RE = re.compile(r'\b((?:UI|NS|CA)[A-Z][A-Za-z0-9_]*)\b')
 MEMBER_RE = re.compile(r'\b(UI[A-Z][A-Za-z0-9_]*)\s*\.\s*([a-z][A-Za-z0-9_]*)')
 
 
-def uikit_census(root, sdk_types):
+def uikit_census(root, sdk_types, scope=None):
     types, members = defaultdict(int), defaultdict(int)
     nfiles = 0
-    for path in walk(root, SKIP_UIKIT, {".swift"}):
+    for path in walk(root, SKIP_UIKIT, {".swift"}, scope):
         nfiles += 1
         src = re.sub(r'//[^\n]*', '', read(path))
         for m in SYMBOL_RE.finditer(src):
@@ -265,11 +284,11 @@ def build_shape(root):
 
 # ---------------------------------------------------------------- driver
 
-def census_app(root, sdk_types, ours):
+def census_app(root, sdk_types, ours, scope=None):
     r = {}
 
     # --- walk 1: apicensus's, Tests excluded ---
-    types, members, uikit_files = uikit_census(root, sdk_types)
+    types, members, uikit_files = uikit_census(root, sdk_types, scope)
     missing = {t: c for t, c in types.items() if t not in ours}
     have = {t: c for t, c in types.items() if t in ours}
     r["uikit"] = {
@@ -292,7 +311,7 @@ def census_app(root, sdk_types, ours):
     model_uses, model_apps_syms = defaultdict(int), set()
     imports = defaultdict(int)
     swift_lines = 0
-    for path in walk(root, SKIP_MODEL, {".swift"}):
+    for path in walk(root, SKIP_MODEL, {".swift"}, scope):
         rel = os.path.relpath(path, root)
         src = read(path)
         m["files"] += 1
@@ -385,20 +404,34 @@ def census_app(root, sdk_types, ours):
     # --- ObjC / other language mix ---
     lang = defaultdict(int)
     langlines = defaultdict(int)
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if d not in SKIP_MODEL]
-        for f in filenames:
-            ext = os.path.splitext(f)[1]
-            if ext in (".m", ".mm", ".h", ".swift", ".c", ".cpp", ".cc", ".kt", ".java"):
-                lang[ext] += 1
-                langlines[ext] += read(os.path.join(dirpath, f)).count("\n") + 1
+    for path in walk(root, SKIP_MODEL,
+                     {".m", ".mm", ".h", ".swift", ".c", ".cpp", ".cc", ".kt", ".java"}, scope):
+        ext = os.path.splitext(path)[1]
+        lang[ext] += 1
+        langlines[ext] += read(path).count("\n") + 1
     r["languages"] = {"files": dict(lang), "lines": dict(langlines)}
 
     r["build"] = build_shape(root)
+    if scope is not None:
+        r["_scope"] = {"files": len(scope),
+                       "note": "per-file walks restricted to target_scope.py's list; "
+                               "`build` is repo-wide"}
     return r
 
 
 def main():
+    # `--target-scope=FILE` may appear anywhere; it is removed before the
+    # positional arguments are read, so every existing invocation is unchanged.
+    scopes, argv = {}, []
+    for a in sys.argv[1:]:
+        if a.startswith("--target-scope="):
+            doc = json.load(open(a.split("=", 1)[1]))
+            for app, s in doc["apps"].items():
+                scopes[app] = {"files": set(s["files"]), "source": a.split("=", 1)[1],
+                               "target": s.get("target"), "rule": s.get("rule")}
+        else:
+            argv.append(a)
+    sys.argv = [sys.argv[0]] + argv
     corpus, sdk_file, ours_file, out_file = sys.argv[1:5]
     # Optional 5th arg: extra directory names to skip, in BOTH walks.
     #
@@ -421,12 +454,17 @@ def main():
     print(f"UIKit SDK types: {len(sdk_types)}   OpenUIKit types: {len(ours)}", file=sys.stderr)
 
     out = {"_meta": {"sdk_types": len(sdk_types), "ours": len(ours)}, "apps": {}}
+    if scopes:
+        out["_scope"] = {app: {k: v for k, v in s.items() if k != "files"} | {"files": len(s["files"])}
+                         for app, s in scopes.items()}
     for app in sorted(os.listdir(corpus)):
         adir = os.path.join(corpus, app)
         if not os.path.isdir(adir) or not os.path.isdir(os.path.join(adir, ".git")):
             continue
-        print(f"  {app} ...", file=sys.stderr, flush=True)
-        out["apps"][app] = census_app(adir, sdk_types, ours)
+        scope = scopes.get(app, {}).get("files")
+        print(f"  {app} ..." + (f" [scope: {len(scope)} files]" if scope else ""),
+              file=sys.stderr, flush=True)
+        out["apps"][app] = census_app(adir, sdk_types, ours, scope)
     json.dump(out, open(out_file, "w"), indent=1)
     print(f"wrote {out_file}", file=sys.stderr)
 
