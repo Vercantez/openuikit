@@ -13,17 +13,30 @@ import XCTest
 #endif
 final class UIButtonConfigurationTests: XCTestCase {
     private var savedCut: FontEngine.SystemFontCut = .macOS
+    private var savedScale: CGFloat = 2
+    private var savedBounds: CGRect = .zero
 
     override func setUp() {
         super.setUp()
         savedCut = OpenUIKitRuntime.systemFontCut
+        savedScale = UIScreen.main.scale
+        savedBounds = UIScreen.main.bounds
         // The oracle is iOS, not Catalyst; the port's font metrics differ.
         OpenUIKitRuntime.systemFontCut = .iOS
         UITraitCollection.current = UITraitCollection(userInterfaceStyle: .light,
                                                       displayScale: 3)
+        // `UITraitCollection.current` is NOT enough. A label's line box comes
+        // from `FontEngine.labelLineHeight`, which reads `UIScreen.main.scale`
+        // directly — so with a 2x screen left behind by an earlier suite, the
+        // 17 pt title box measures Catalyst's 20.5 instead of the iPhone 16's
+        // 20.33333 and every size assertion here drifts by a sixth of a point.
+        // These tests passed alone and failed in a full run until this line.
+        UIScreen.main._hostConfigure(bounds: CGRect(x: 0, y: 0, width: 393, height: 852),
+                                     scale: 3)
     }
 
     override func tearDown() {
+        UIScreen.main._hostConfigure(bounds: savedBounds, scale: savedScale)
         OpenUIKitRuntime.systemFontCut = savedCut
         super.tearDown()
     }
