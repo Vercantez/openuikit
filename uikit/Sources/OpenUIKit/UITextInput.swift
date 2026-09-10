@@ -76,6 +76,14 @@ public enum UITextAutocorrectionType: Int, Sendable {
     case yes = 2
 }
 
+/// Spell-checking policy requested from the keyboard. MEASURED iPhone 16 /
+/// iOS 26.1: raw values 0...2, a fresh field reads `.default`.
+public enum UITextSpellCheckingType: Int, Sendable {
+    case `default` = 0
+    case no = 1
+    case yes = 2
+}
+
 /// Semantic purpose supplied to the platform input service.  UIKit models
 /// these values as extensible string constants rather than a closed enum;
 /// keeping the raw value preserves unknown future values for embedding hosts.

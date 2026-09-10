@@ -53,6 +53,10 @@ extension UIResponder {
         get { _accessibility.elementsHidden }
         set { _accessibility.elementsHidden = newValue }
     }
+    public var accessibilityNavigationStyle: UIAccessibilityNavigationStyle {
+        get { _accessibility.navigationStyle }
+        set { _accessibility.navigationStyle = newValue }
+    }
     public var accessibilityLabel: String? {
         get { _accessibility.label }
         set { _accessibility.label = newValue }
@@ -87,7 +91,16 @@ extension UIResponder {
     }
 }
 
+/// MEASURED iPhone 16 / iOS 26.1: raw values 0...2, a fresh view reads
+/// `.automatic` (ios-oss-launch.md probe).
+public enum UIAccessibilityNavigationStyle: Int, Sendable {
+    case automatic = 0
+    case separate = 1
+    case combined = 2
+}
+
 struct AccessibilityState {
+    var navigationStyle: UIAccessibilityNavigationStyle = .automatic
     var isElement = false
     var elementsHidden = false
     var label: String?

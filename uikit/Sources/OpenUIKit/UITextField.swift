@@ -63,8 +63,15 @@ import struct Foundation.Notification
 #endif
 
 
-public enum UITextFieldBorderStyle: Sendable {
-    case none, line, bezel, roundedRect
+/// MEASURED iPhone 16 / iOS 26.1: raw values 0...3, a fresh field reads
+/// `.none` (ios-oss-launch.md probe).
+public enum UITextFieldBorderStyle: Int, Sendable {
+    case none = 0, line = 1, bezel = 2, roundedRect = 3
+}
+
+extension UITextField {
+    /// Swift's nested spelling of `UITextBorderStyle`.
+    public typealias BorderStyle = UITextFieldBorderStyle
 }
 
 // MARK: - UITextFieldDelegate (M13 delegate-protocols cluster)
@@ -215,6 +222,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
     // software keyboard. A host can inspect them when choosing an input UI.
     open var autocapitalizationType: UITextAutocapitalizationType = .sentences
     open var autocorrectionType: UITextAutocorrectionType = .default
+    open var spellCheckingType: UITextSpellCheckingType = .default
     /// The semantic credential/contact purpose is retained for the embedding
     /// keyboard or password-manager service.  OpenUIKit does not inspect or
     /// persist the entered value itself.
@@ -266,7 +274,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
             if let a = _attributed { return a }
             guard _hasText || !_text.isEmpty else { return nil }
             return NSAttributedString(string: _text,
-                                      attributes: [.font: font, .foregroundColor: textColor])
+                                      attributes: [.font: font, .foregroundColor: _textColor])
         }
         set {
             _attributed = newValue
@@ -323,7 +331,15 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
         }
     }
 
-    public var textColor: UIColor = .label {
+    /// UIKit declares `textColor` nullable. MEASURED iPhone 16 / iOS 26.1: a
+    /// fresh field reads `labelColor`, and assigning nil reads `labelColor`
+    /// again (ios-oss-launch.md probe) — nil resets to the default, it is
+    /// never observed.
+    public var textColor: UIColor? {
+        get { _textColor }
+        set { _textColor = newValue ?? .label }
+    }
+    private var _textColor: UIColor = .label {
         didSet { refreshContent() }
     }
 
@@ -799,7 +815,7 @@ open class UITextField: UIControl, UITextInput, UITextKeyHandling, UITextCaretHo
 
     func refreshContent() {
         textLabel.font = font
-        textLabel.textColor = textColor
+        textLabel.textColor = _textColor
         if isSecureTextEntry {
             textLabel.text = secureDisplayText
         } else if let a = _attributed {
