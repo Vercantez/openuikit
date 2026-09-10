@@ -104,8 +104,69 @@ open class UIButton: UIControl {
     private var attributedTitles: [UInt: NSAttributedString] = [:]
     private var titleColors: [UInt: UIColor] = [:]
     private var images: [UInt: UIImage] = [:]
+
+    /// MEASURED (Tools/oracle2/buttonconfigprobe, `updateHandler` section):
+    /// assigning `configuration` does NOT request a configuration update —
+    /// the handler fires zero times for `configuration = newValue`. That is
+    /// what makes KDS's handler safe: it assigns `self.configuration` from
+    /// inside `configurationUpdateHandler` and the oracle never re-enters
+    /// (the reentrancy probe logs `depth=1` both times).
     open var configuration: Configuration? {
         didSet { applyConfiguration() }
+    }
+
+    /// UIKit's per-state configuration hook. MEASURED firing:
+    ///
+    /// | trigger | handler calls |
+    /// |---|---|
+    /// | assigning the handler, then a layout | 1 |
+    /// | `setNeedsUpdateConfiguration()` then layout | 1 |
+    /// | two `setNeedsUpdateConfiguration()` then layout | 1 (coalesced) |
+    /// | a layout with nothing dirty | 0 |
+    /// | `isHighlighted` / `isEnabled` / `isSelected` change | 1 each |
+    /// | `tintColor` change | 1 |
+    /// | `configuration = newValue` | 0 |
+    /// | a frame change | 0 |
+    ///
+    /// and it is asynchronous: `setNeedsUpdateConfiguration()` fires nothing
+    /// before the next layout pass (the probe's `syncCheck/immediate` row
+    /// reads 0).
+    open var configurationUpdateHandler: ((UIButton) -> Void)? {
+        didSet { setNeedsUpdateConfiguration() }
+    }
+
+    private var needsConfigurationUpdate = false
+
+    /// Marks the configuration dirty. The handler runs at the next layout.
+    open func setNeedsUpdateConfiguration() {
+        needsConfigurationUpdate = true
+        setNeedsLayout()
+    }
+
+    /// UIKit's overridable update point. The base implementation calls
+    /// `configurationUpdateHandler`.
+    open func updateConfiguration() {
+        configurationUpdateHandler?(self)
+    }
+
+    private func performConfigurationUpdateIfNeeded() {
+        guard needsConfigurationUpdate else { return }
+        // Cleared BEFORE the handler runs: the handler assigns `configuration`
+        // (KDS's `updateColors`), and clearing afterwards would leave the
+        // button permanently dirty and relayout forever.
+        needsConfigurationUpdate = false
+        updateConfiguration()
+    }
+
+    /// A tint change re-runs the configuration update (measured: 1 call).
+    open override var tintColor: UIColor! {
+        get { super.tintColor }
+        set {
+            super.tintColor = newValue
+            if configuration != nil || configurationUpdateHandler != nil {
+                setNeedsUpdateConfiguration()
+            }
+        }
     }
 
     /// Legacy layout insets. They are physical left/right values, as on
@@ -177,6 +238,71 @@ open class UIButton: UIControl {
         buttonType = type
     }
 
+    /// `UIButton(configuration:)` — Kickstarter's `AlertBanner` writes
+    /// `UIButton(configuration: .plain())`.
+    public convenience init(configuration: Configuration) {
+        self.init(frame: .zero)
+        buttonType = .system
+        self.configuration = configuration
+    }
+
+    /// `UIButton(configuration:primaryAction:)`. MEASURED: the action's title
+    /// lands in `configuration.title` (the probe reads back "Action Title"
+    /// from `configuration.title`, `currentTitle` AND the label), and the
+    /// action fires on `.touchUpInside`.
+    public convenience init(configuration: Configuration, primaryAction: UIAction?) {
+        self.init(frame: .zero)
+        buttonType = .system
+        var configuration = configuration
+        if let primaryAction {
+            configuration.title = primaryAction.title
+        }
+        self.configuration = configuration
+        if let primaryAction {
+            addAction(primaryAction, for: .touchUpInside)
+        }
+    }
+
+    // MARK: - Configuration subviews
+
+    /// The subtitle label, installed only when a configuration carries a
+    /// subtitle — UIKit adds no second label otherwise, and the port's
+    /// layout dumps are scored against the oracle's subview list.
+    private var _subtitleLabel: UIButtonLabel?
+
+    /// The spinner `showsActivityIndicator` installs, in the leading slot.
+    private var _activityIndicator: UIActivityIndicatorView?
+
+    private func installSubtitleLabelIfNeeded() -> UIButtonLabel {
+        if let existing = _subtitleLabel { return existing }
+        let label = UIButtonLabel()
+        // Measured: 13 pt regular (transcript `titles.titleAndSubtitle`).
+        label.font = .systemFont(ofSize: Configuration.subtitleFontSize)
+        _subtitleLabel = label
+        addSubview(label)
+        return label
+    }
+
+    private func removeSubtitleLabelIfPresent() {
+        _subtitleLabel?.removeFromSuperview()
+        _subtitleLabel = nil
+    }
+
+    private func installActivityIndicatorIfNeeded() -> UIActivityIndicatorView {
+        if let existing = _activityIndicator { return existing }
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.hidesWhenStopped = false
+        indicator.startAnimating()
+        _activityIndicator = indicator
+        insertSubview(indicator, at: 0)
+        return indicator
+    }
+
+    private func removeActivityIndicatorIfPresent() {
+        _activityIndicator?.removeFromSuperview()
+        _activityIndicator = nil
+    }
+
     // MARK: - Menus & primary action (M13)
 
     /// UIKit's `UIButton(primaryAction:)`: the action's title becomes the
@@ -241,7 +367,16 @@ open class UIButton: UIControl {
         titles[state.rawValue] ?? titles[State.normal.rawValue]
     }
 
-    public var currentTitle: String? { title(for: state) }
+    /// MEASURED: a configuration's title drives `currentTitle` and the label
+    /// (`UIButton(configuration:primaryAction:)` reads back "Action Title"
+    /// from all three), while a legacy `setTitle(_:for:)` on a configured
+    /// button leaves `configuration.title` nil and still shows — so the
+    /// configuration wins when it has a title and the legacy store is the
+    /// fallback, not a merge.
+    public var currentTitle: String? {
+        if let configured = configuration?.title { return configured }
+        return title(for: state)
+    }
 
     open func setAttributedTitle(_ title: NSAttributedString?, for state: State) {
         attributedTitles[state.rawValue] = title
@@ -286,14 +421,8 @@ open class UIButton: UIControl {
     }
 
     public var currentTitleColor: UIColor {
-        if configuration != nil {
-            if let c = titleColor(for: state) { return c }
-            let base = configurationBaseTitleColor()
-            if !isEnabled { return base.withMultipliedAlpha(0.4) }
-            if state.contains(.highlighted) {
-                return base.withMultipliedAlpha(UIButton.configurationHighlightedAlpha)
-            }
-            return base
+        if let configuration {
+            return resolvedConfigurationTitleColor(configuration)
         }
         // Explicit color for the exact highlighted state wins outright.
         if state.contains(.highlighted),
@@ -327,76 +456,354 @@ open class UIButton: UIControl {
     static let systemHighlightedTitleAlpha: CGFloat = 0.2
     static let configurationHighlightedAlpha: CGFloat = 0.75
 
+    // MARK: - Configuration resolution
+    //
+    // Every rule below is a row of Tools/oracle2/buttonconfigprobe's
+    // ios-26.1-iphone16.json, measured on an iPhone 16 / iOS 26.1.
+
+    /// The fill a `.bordered()` / `.gray()` button draws: (120, 120, 128) at
+    /// alpha 0.16 light / 0.32 dark. Both halves are confirmed by the port's
+    /// own golden — button_configurations_2x's bordered row samples
+    /// (233, 233, 235) over white and the dark golden (38, 38, 41) over
+    /// black, which are exactly those two alphas.
+    static func configurationGrayFill(dark: Bool) -> UIColor {
+        UIColor(red: 120.0 / 255.0, green: 120.0 / 255.0, blue: 128.0 / 255.0,
+                alpha: dark ? 0.32 : 0.16)
+    }
+
+    /// The fill EVERY configured button takes when disabled, whatever its
+    /// style and whatever its `baseBackgroundColor`: (120, 120, 128) at alpha
+    /// 0.12. Measured for `.filled()`, `.filled()` with a red
+    /// `baseBackgroundColor`, and `.bordered()` alike. Styles with no fill at
+    /// all (`.plain`, `.borderless`) stay clear when disabled.
+    static let configurationDisabledFillAlpha: CGFloat = 0.12
+
+    /// A selected button whose configuration opts into selection takes a tint
+    /// fill at alpha 0.18 (measured for `.plain`, `.borderless`, `.bordered`;
+    /// `.filled` has `automaticallyUpdateForSelection` false and keeps its
+    /// own fill).
+    static let configurationSelectedFillAlpha: CGFloat = 0.18
+
+    /// Tint alpha of a `.tinted()` / `.borderedTinted()` fill: 0.18 light,
+    /// 0.25 dark (golden-confirmed the same way as the gray fill).
+    static func configurationTintedFillAlpha(dark: Bool) -> CGFloat {
+        dark ? 0.25 : 0.18
+    }
+
+    /// The foreground a style uses when the configuration names none.
+    /// MEASURED title colours for a fresh factory, light / dark:
+    ///   filled, borderedProminent  white / white
+    ///   plain, borderless, tinted, borderedTinted  tint / tint
+    ///   bordered, gray, glass  black / white — i.e. `.label`
+    /// The `.bordered` row is the one that corrects earlier port behaviour:
+    /// the port resolved it to tint, while its OWN golden
+    /// (button_configurations_2x) draws black ink in light and white in dark.
+    private func configurationBaseTitleColor(_ configuration: Configuration) -> UIColor {
+        switch configuration.style {
+        case .filled, .borderedProminent:
+            return .white
+        case .plain, .borderless, .tinted, .borderedTinted:
+            return tintColor
+        case .bordered, .gray, .glass:
+            return .label
+        }
+    }
+
+    /// The fill a style derives when `background.backgroundColor` is nil.
+    private func configurationStyleFill(_ configuration: Configuration) -> UIColor? {
+        let dark = traitCollection.userInterfaceStyle == .dark
+        let base: UIColor = configuration.baseBackgroundColor ?? tintColor
+        switch configuration.style {
+        case .filled, .borderedProminent:
+            return base
+        case .tinted, .borderedTinted:
+            return base.withMultipliedAlpha(UIButton.configurationTintedFillAlpha(dark: dark))
+        case .bordered, .gray:
+            // The gray fill is the style's own; `baseBackgroundColor`, when
+            // named, replaces the hue and keeps the measured alpha.
+            guard let named = configuration.baseBackgroundColor else {
+                return UIButton.configurationGrayFill(dark: dark)
+            }
+            return named.withMultipliedAlpha(dark ? 0.32 : 0.16)
+        case .plain, .borderless, .glass:
+            // No fill unless the app names one.
+            return configuration.baseBackgroundColor
+        }
+    }
+
+    /// The fill actually drawn, for the button's current state. This is also
+    /// what `UIButton.Configuration.updated(for:)` writes into
+    /// `background.backgroundColor`.
+    func resolvedConfigurationBackgroundColor(_ configuration: Configuration) -> UIColor? {
+        // MEASURED: an explicit `background.backgroundColor` is used VERBATIM
+        // in every state — no highlight dim, no disabled substitution. A
+        // `.filled()` with an explicit red renders that red when normal,
+        // highlighted AND disabled. That is exactly why KDS's
+        // `updateColors(with:)` and AlertBanner's handler assign a different
+        // colour per state themselves.
+        if let explicit = configuration.background.backgroundColor {
+            return explicit
+        }
+        guard let base = configurationStyleFill(configuration) else {
+            // A style with no fill still gains one when selected.
+            if state.contains(.selected), configuration.automaticallyUpdateForSelection {
+                return tintColor.withMultipliedAlpha(UIButton.configurationSelectedFillAlpha)
+            }
+            return nil
+        }
+        if !isEnabled {
+            let dark = traitCollection.userInterfaceStyle == .dark
+            _ = dark
+            return UIColor(red: 120.0 / 255.0, green: 120.0 / 255.0, blue: 128.0 / 255.0,
+                           alpha: UIButton.configurationDisabledFillAlpha)
+        }
+        if state.contains(.selected), configuration.automaticallyUpdateForSelection {
+            return tintColor.withMultipliedAlpha(UIButton.configurationSelectedFillAlpha)
+        }
+        if state.contains(.highlighted) {
+            // MEASURED: the pressed fill is the normal fill with alpha times
+            // 0.75 — filled 1.00 -> 0.75, bordered 0.16 -> 0.12.
+            return base.withMultipliedAlpha(UIButton.configurationHighlightedAlpha)
+        }
+        return base
+    }
+
+    /// The title font a configuration resolves to. Measured: 15 pt for
+    /// `.mini` / `.small`, 17 pt for `.medium` / `.large`; an attributed
+    /// title's own font wins over that; and a `titleTextAttributesTransformer`
+    /// that returns a font wins over both.
+    private func resolvedConfigurationTitleFont(_ configuration: Configuration) -> UIFont {
+        var font = UIFont.systemFont(
+            ofSize: Configuration.titleFontSize(for: configuration.buttonSize))
+        if let named = configurationAttributedFont(configuration) { font = named }
+        let transformed = configurationTransformedTextAttributes(
+            configuration, font: font,
+            color: configurationUntreatedTitleColor(configuration))
+        if let named = transformed.font { font = named }
+        return font
+    }
+
+    /// The base colour before any state treatment: what the oracle hands a
+    /// title transformer, and the starting point of the state rules.
+    private func configurationUntreatedTitleColor(_ configuration: Configuration) -> UIColor {
+        if let named = configuration.baseForegroundColor { return named }
+        if let named = configurationAttributedColor(configuration) { return named }
+        return configurationBaseTitleColor(configuration)
+    }
+
+    private func resolvedConfigurationTitleColor(_ configuration: Configuration) -> UIColor {
+        // A legacy `setTitleColor` still wins outright, as it does without a
+        // configuration (the port's established rule; not re-measured here).
+        if let named = titleColor(for: state) { return named }
+
+        let base = configurationUntreatedTitleColor(configuration)
+
+        do {
+            let transformed = configurationTransformedTextAttributes(
+                configuration,
+                font: UIFont.systemFont(
+                    ofSize: Configuration.titleFontSize(for: configuration.buttonSize)),
+                color: base)
+            if let forced = transformed.color {
+                    // MEASURED: a transformer's colour is final, in every
+                    // state and at full alpha. A `.filled()` whose
+                    // transformer forces systemGreen renders systemGreen when
+                    // normal, highlighted AND disabled — where the same
+                    // configuration without one renders systemGreen, then
+                    // systemGreen at 0.75, then tertiaryLabel. KDS relies on
+                    // exactly this to colour its disabled buttons; its source
+                    // comment says the base colour "does not actually get
+                    // used when determining text color for disabled buttons".
+                    return forced
+            }
+        }
+
+        // MEASURED: disabled ignores `baseForegroundColor` and every style
+        // default, and draws `tertiaryLabel` — (60, 60, 67) at alpha 0.298,
+        // identical across `.filled`, `.bordered`, `.borderless` and
+        // `.plain`, and unchanged by an explicit green base colour.
+        if !isEnabled { return .tertiaryLabel }
+        if state.contains(.highlighted) {
+            return base.withMultipliedAlpha(UIButton.configurationHighlightedAlpha)
+        }
+        return base
+    }
+
     private func applyConfiguration() {
         guard let configuration else {
             configurationImagePadding = 0
             layer.borderWidth = 0
             layer.borderColor = nil
+            layer.cornerRadius = 0
             backgroundColor = nil
             contentEdgeInsets = .zero
+            // MEASURED: clearing a configuration returns the button to the
+            // legacy path — a titleless button reports intrinsic 30 x 30, the
+            // port's own legacy floor for the 15 pt default.
             _titleLabel.font = .systemFont(ofSize: 15)
+            _titleLabel.lineBreakMode = .byTruncatingMiddle
+            _titleLabel.numberOfLines = 1
+            removeSubtitleLabelIfPresent()
+            removeActivityIndicatorIfPresent()
+            updateTitleView()
+            updateImageView()
             setNeedsLayout()
             return
         }
-        if let title = configuration.title { titles[State.normal.rawValue] = title }
+        // A configuration title does NOT become a legacy `.normal` title:
+        // measured, `setTitle(_:for:)` on a configured button leaves
+        // `configuration.title` nil while still driving the label, so the two
+        // stores stay separate and the configuration wins when it has a title.
         if let image = configuration.image {
             images[State.normal.rawValue] = image.withRenderingMode(.alwaysTemplate)
         }
-        // Measured (oracle_flow button_configurations_2x, iPhone SE 2x):
-        // configuration titles use 17 pt regular and size to 75 x 20.5.
-        _titleLabel.font = .systemFont(ofSize: 17)
+        _titleLabel.font = resolvedConfigurationTitleFont(configuration)
+        // MEASURED: the default `.byWordWrapping` gives the label
+        // `numberOfLines = 0`; a truncating mode gives it 1. In a 140 pt wide
+        // button a long title wraps to three lines (60.33333 tall) under
+        // `.byWordWrapping` and stays on one (20.33333) under
+        // `.byTruncatingTail`.
+        _titleLabel.lineBreakMode = configuration.titleLineBreakMode
+        _titleLabel.numberOfLines =
+            UIButton.isWrapping(configuration.titleLineBreakMode) ? 0 : 1
+        _titleLabel.textAlignment = UIButton.textAlignment(for: configuration.titleAlignment)
         configurationImagePadding = configuration.imagePadding
-        // Same measurement: all four styles resolve to intrinsic 99 x 34.5
-        // for "Configure" (75 x 20.5 title plus 12/12 horizontal, 7/7 vertical insets).
-        contentEdgeInsets = UIEdgeInsets(top: 7, left: 12, bottom: 7, right: 12)
-        updateConfigurationAppearance()
+        contentEdgeInsets = physicalInsets(configuration.contentInsets)
+
+        if configurationSubtitleIsPresent(configuration) {
+            let label = installSubtitleLabelIfNeeded()
+            label.font = .systemFont(ofSize: Configuration.subtitleFontSize)
+            label.lineBreakMode = configuration.subtitleLineBreakMode
+            label.numberOfLines =
+                UIButton.isWrapping(configuration.subtitleLineBreakMode) ? 0 : 1
+            label.textAlignment = UIButton.textAlignment(for: configuration.titleAlignment)
+        } else {
+            removeSubtitleLabelIfPresent()
+        }
+
+        if configuration.showsActivityIndicator {
+            _ = installActivityIndicatorIfNeeded()
+        } else {
+            removeActivityIndicatorIfPresent()
+        }
+
         updateTitleView()
         updateImageView()
         setNeedsLayout()
     }
 
-    private func configurationBaseTitleColor() -> UIColor {
-        switch configuration?.style ?? .plain {
-        case .filled:
-            return .white
-        case .plain, .bordered, .tinted:
-            return tintColor
+    private func configurationSubtitleIsPresent(_ configuration: Configuration) -> Bool {
+        if let subtitle = configuration.subtitle, !subtitle.isEmpty { return true }
+        return false
+    }
+
+    /// `NSDirectionalEdgeInsets` are leading/trailing; the port's legacy
+    /// layout stores physical left/right, so resolve once here.
+    private func physicalInsets(_ insets: NSDirectionalEdgeInsets) -> UIEdgeInsets {
+        let rtl = effectiveUserInterfaceLayoutDirection == .rightToLeft
+        return UIEdgeInsets(top: insets.top,
+                            left: rtl ? insets.trailing : insets.leading,
+                            bottom: insets.bottom,
+                            right: rtl ? insets.leading : insets.trailing)
+    }
+
+    static func isWrapping(_ mode: NSLineBreakMode) -> Bool {
+        switch mode {
+        case .byWordWrapping, .byCharWrapping: return true
+        case .byClipping, .byTruncatingHead, .byTruncatingTail, .byTruncatingMiddle:
+            return false
+        }
+    }
+
+    /// MEASURED label `textAlignment` per title alignment, on a 260 pt wide
+    /// title+subtitle button: `.automatic` gives natural, `.leading` left,
+    /// `.center` centre, `.trailing` right — and the subtitle's x moves with
+    /// it inside the title block while the title's own x does not.
+    static func textAlignment(for alignment: Configuration.TitleAlignment)
+        -> NSTextAlignment {
+        switch alignment {
+        case .automatic: return .natural
+        case .leading: return .left
+        case .center: return .center
+        case .trailing: return .right
         }
     }
 
     private func updateConfigurationAppearance() {
         guard let configuration else { return }
         let traits = traitCollection
-        let tint = tintColor.resolvedColor(with: traits)
-        layer.borderWidth = 0
-        layer.borderColor = nil
-        switch configuration.style {
-        case .plain:
-            backgroundColor = .clear
-        case .filled:
-            backgroundColor = isEnabled ? tint : tint.withMultipliedAlpha(0.35)
-        case .tinted:
-            // Measured background alpha (button_configurations_2x family):
-            // light 0.18, dark 0.25.
-            let a: CGFloat = traits.userInterfaceStyle == .dark ? 0.25 : 0.18
-            backgroundColor = isEnabled ? tint.withMultipliedAlpha(a)
-                : tint.withMultipliedAlpha(a * 0.5)
-        case .bordered:
-            // Measured fill (button_configurations_2x family): rgba
-            // (120,120,128) at alpha 0.16 (light) / 0.32 (dark).
-            let alpha: CGFloat = traits.userInterfaceStyle == .dark ? 0.32 : 0.16
-            backgroundColor = UIColor(red: 120.0 / 255.0, green: 120.0 / 255.0,
-                                      blue: 128.0 / 255.0, alpha: alpha)
+        backgroundColor = resolvedConfigurationBackgroundColor(configuration)?
+            .resolvedColor(with: traits)
+        // MEASURED: UIKit inserts a `_UISystemBackgroundStrokeView` whose
+        // layer carries `borderWidth = background.strokeWidth` and
+        // `borderColor = background.strokeColor`, drawn INSIDE the bounds (a
+        // 2 pt red stroke paints rows 0-1 and the last two rows of a 44 pt
+        // button). The port draws the same border on the button's own layer;
+        // the extra view is not modelled.
+        if let stroke = configuration.background.strokeColor,
+           configuration.background.strokeWidth > 0 {
+            layer.borderWidth = configuration.background.strokeWidth
+            layer.borderColor = stroke.resolvedCGColor(with: traits)
+        } else {
+            layer.borderWidth = 0
+            layer.borderColor = nil
         }
-        if state.contains(.highlighted), isEnabled, configuration.style != .plain {
-            backgroundColor = backgroundColor?.withMultipliedAlpha(
-                UIButton.configurationHighlightedAlpha
-            )
+        _activityIndicator?.color = resolvedConfigurationTitleColor(configuration)
+        if let transformer = configuration.imageColorTransformer {
+            _imageView.tintColor = transformer(resolvedConfigurationTitleColor(configuration))
+        }
+    }
+
+    /// The corner radius a configuration resolves to at a given height.
+    /// MEASURED across heights 20 / 28 / 34 / 44 / 60 at width 160:
+    ///
+    /// | style | radius |
+    /// |---|---|
+    /// | `.fixed` | `background.cornerRadius` |
+    /// | `.dynamic` | `min(height / 2, background.cornerRadius)` |
+    /// | `.small` | `height * 0.125` |
+    /// | `.medium` | `height * 0.175` |
+    /// | `.large` | `height * 0.25` |
+    /// | `.capsule` | `height / 2` |
+    ///
+    /// The four proportional styles ignore `background.cornerRadius`: with it
+    /// set to 6, a 44 pt button still measures 5.5 / 7.7 / 11.
+    static func configurationCornerRadius(_ configuration: Configuration,
+                                          height: CGFloat) -> CGFloat {
+        let height = Swift.max(0, height)
+        switch configuration.cornerStyle {
+        case .fixed:
+            return configuration.background.cornerRadius
+        case .dynamic:
+            return Swift.min(height / 2, configuration.background.cornerRadius)
+        case .small:
+            return height * 0.125
+        case .medium:
+            return height * 0.175
+        case .large:
+            return height * 0.25
+        case .capsule:
+            return height / 2
         }
     }
 
     private func updateTitleView() {
         _titleLabel.textColor = currentTitleColor
+        if let configuration {
+            _titleLabel.font = resolvedConfigurationTitleFont(configuration)
+            if let attributed = configurationAttributedText(
+                configuration, defaultFont: _titleLabel.font,
+                defaultColor: currentTitleColor) {
+                _titleLabel.attributedText = attributed
+            } else {
+                _titleLabel.text = currentTitle
+            }
+            if let subtitleLabel = _subtitleLabel {
+                subtitleLabel.text = configuration.subtitle
+                subtitleLabel.textColor = currentTitleColor
+            }
+            return
+        }
         if let title = currentAttributedTitle {
             _titleLabel.attributedText = title
         } else {
@@ -412,10 +819,17 @@ open class UIButton: UIControl {
 
     open override func stateDidChange() {
         super.stateDidChange()
+        // MEASURED: every state change requests a configuration update, and
+        // the handler runs at the next layout — 1 call each for
+        // `isHighlighted`, `isEnabled` and `isSelected`.
+        if configuration != nil || configurationUpdateHandler != nil {
+            setNeedsUpdateConfiguration()
+        }
         updateConfigurationAppearance()
         updateTitleView()
         updateImageView()
     }
+
 
 
     // MARK: - Sizing
@@ -423,6 +837,9 @@ open class UIButton: UIControl {
     /// Legacy plain buttons ignore the constraint entirely (oracle:
     /// sizeThatFits(200) of a 211pt title reports 211).
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        if let configuration {
+            return configurationSizeThatFits(configuration)
+        }
         var title = _titleLabel.intrinsicContentSize
         // iOS cut, MEASURED 2026-09-04 (scripts/ios_suite.sh button_states,
         // iOS 26.1): a legacy button's title box is the font's lineHeight
@@ -485,7 +902,74 @@ open class UIButton: UIControl {
                 + pixelRound(contentEdgeInsets.bottom))
     }
 
+    // MARK: Configuration sizing
+
+    /// The title block: title, plus `titlePadding` and the subtitle when one
+    /// is present. MEASURED: a `.filled()` with title "Configure" and
+    /// subtitle "Subtitle" is 51 pt tall — 7 + 20.33333 + 1 + 15.66667 + 7 —
+    /// and the subtitle sits at y 28.33333, i.e. directly under the title
+    /// plus the 1 pt default `titlePadding`.
+    private func configurationTitleBlockSize(_ configuration: Configuration) -> CGSize {
+        var size = (currentTitle?.isEmpty == false
+                        || _titleLabel.attributedText != nil)
+            ? _titleLabel.intrinsicContentSize : .zero
+        if let subtitleLabel = _subtitleLabel, subtitleLabel.text?.isEmpty == false {
+            let subtitle = subtitleLabel.intrinsicContentSize
+            size.width = Swift.max(size.width, subtitle.width)
+            size.height += configuration.titlePadding + subtitle.height
+        }
+        return size
+    }
+
+    /// The leading/trailing/top/bottom companion: the image, or the activity
+    /// indicator when `showsActivityIndicator` is set. MEASURED for the
+    /// indicator: a `.filled()` with title "Configure" and the spinner on is
+    /// 119.33333 wide = 12 + 20.33333 + 75 + 12, so the spinner is a square
+    /// of the title's own line height and `imagePadding` (0 by default) is
+    /// what separates it from the title.
+    private func configurationCompanionSize(_ configuration: Configuration) -> CGSize {
+        if configuration.showsActivityIndicator {
+            let side = _titleLabel.intrinsicContentSize.height
+            return CGSize(width: side, height: side)
+        }
+        return currentImage?.size ?? .zero
+    }
+
+    private func configurationSizeThatFits(_ configuration: Configuration) -> CGSize {
+        let title = configurationTitleBlockSize(configuration)
+        let companion = configurationCompanionSize(configuration)
+        let hasCompanion = companion.width > 0 || companion.height > 0
+        let hasTitle = title.width > 0 || title.height > 0
+        let padding = (hasCompanion && hasTitle) ? configuration.imagePadding : 0
+
+        var content = CGSize.zero
+        switch configuration.imagePlacement {
+        case .top, .bottom:
+            // MEASURED (title "Go" + `star.fill`, top/bottom): the box is
+            // 52 pt wide and 54.66667 / 60.66667 / 74.66667 tall at padding
+            // 0 / 6 / 20 — the two blocks stack and the padding adds once.
+            content.width = Swift.max(title.width, companion.width)
+            content.height = title.height + companion.height + padding
+        default:
+            // `.leading` / `.trailing`: 74 / 80 / 94 pt wide at padding
+            // 0 / 6 / 20, height unchanged at 34.33333.
+            content.width = title.width + companion.width + padding
+            content.height = Swift.max(title.height, companion.height)
+        }
+
+        let insets = configuration.contentInsets
+        return CGSize(width: content.width + insets.leading + insets.trailing,
+                      height: content.height + insets.top + insets.bottom)
+    }
+
     open override var intrinsicContentSize: CGSize {
+        if let configuration {
+            // MEASURED: a configured button's intrinsic size and its
+            // unbounded `sizeThatFits` agree exactly, in every factory, and
+            // neither collapses to `noIntrinsicMetric` — a zero-inset
+            // configuration reports the bare title box, 75 x 20.33333.
+            return configurationSizeThatFits(configuration)
+        }
         var fitted = sizeThatFits(
             CGSize(width: CGFloat.greatestFiniteMagnitude,
                    height: CGFloat.greatestFiniteMagnitude))
@@ -520,20 +1004,121 @@ open class UIButton: UIControl {
 
     open override func layoutSubviews() {
         super.layoutSubviews()
+        performConfigurationUpdateIfNeeded()
         updateTitleView()
         updateImageView()
-        let content = contentRect(forBounds: bounds)
-        if configuration != nil {
-            // Measured (oracle_flow button_configurations_2x, iPhone SE 2x):
-            // every 170 x 36 configured button resolves to cornerRadius 17.
-            layer.cornerRadius = Swift.max(0, (bounds.height - 2) / 2)
+        if let configuration {
+            updateConfigurationAppearance()
+            layer.cornerRadius = Swift.max(
+                0, UIButton.configurationCornerRadius(configuration, height: bounds.height))
+            layoutConfigurationSubviews(configuration)
+            return
         }
+        let content = contentRect(forBounds: bounds)
         // The public rect hooks expose UIKit's raw signed `.fill` geometry.
         // UIView frame assignment standardizes it before the subviews observe
         // their frames (the local UIView implementation does not do that for
         // us).
         _imageView.frame = imageRect(forContentRect: content).standardized
         _titleLabel.frame = titleRect(forContentRect: content).standardized
+    }
+
+    /// Lays out a configured button's title, subtitle and companion.
+    ///
+    /// MEASURED anchors: with title "Configure" the label sits at the inset
+    /// origin (12, 7) in a 99 x 34.33333 button, and in a 260 x 60 button the
+    /// title block is CENTRED — x 92.33333, which is (260 - 75) / 2 = 92.5
+    /// rounded down to the 3x pixel grid. Vertically the block is centred the
+    /// same way. `titleAlignment` moves the SUBTITLE inside the block, not
+    /// the title: at `.center` the 23.66667 pt subtitle sits at 118
+    /// (92.33333 + (75 - 23.66667) / 2), at `.trailing` at 143.66667
+    /// (92.33333 + 75 - 23.66667), and at `.leading` / `.automatic` at
+    /// 92.33333.
+    private func layoutConfigurationSubviews(_ configuration: Configuration) {
+        let content = inset(bounds, by: contentEdgeInsets)
+        let scale = _titleLabel.layoutScale
+        func pixelRound(_ value: CGFloat) -> CGFloat {
+            (value * scale + 0.5).rounded(.down) / scale
+        }
+
+        let titleBlock = configurationTitleBlockSize(configuration)
+        let companion = configurationCompanionSize(configuration)
+        let hasCompanion = companion.width > 0 || companion.height > 0
+        let hasTitle = titleBlock.width > 0 || titleBlock.height > 0
+        let padding = (hasCompanion && hasTitle) ? configuration.imagePadding : 0
+
+        var titleOrigin = CGPoint.zero
+        var companionOrigin = CGPoint.zero
+        let rtl = effectiveUserInterfaceLayoutDirection == .rightToLeft
+        // `.leading` / `.trailing` are semantic; resolve to physical here.
+        var placement = configuration.imagePlacement
+        if rtl {
+            if placement == .leading { placement = .trailing }
+            else if placement == .trailing { placement = .leading }
+        }
+
+        switch placement {
+        case .top, .bottom:
+            let total = titleBlock.height + companion.height + padding
+            let top = pixelRound(content.midY - total / 2)
+            let (first, second): (CGSize, CGSize) = placement == .top
+                ? (companion, titleBlock) : (titleBlock, companion)
+            let firstY = top
+            let secondY = top + first.height + padding
+            let firstX = pixelRound(content.midX - first.width / 2)
+            let secondX = pixelRound(content.midX - second.width / 2)
+            if placement == .top {
+                companionOrigin = CGPoint(x: firstX, y: firstY)
+                titleOrigin = CGPoint(x: secondX, y: secondY)
+            } else {
+                titleOrigin = CGPoint(x: firstX, y: firstY)
+                companionOrigin = CGPoint(x: secondX, y: secondY)
+            }
+            _ = second
+        default:
+            let total = titleBlock.width + companion.width + padding
+            let left = pixelRound(content.midX - total / 2)
+            let titleY = pixelRound(content.midY - titleBlock.height / 2)
+            let companionY = pixelRound(content.midY - companion.height / 2)
+            if placement == .trailing {
+                titleOrigin = CGPoint(x: left, y: titleY)
+                companionOrigin = CGPoint(x: left + titleBlock.width + padding,
+                                          y: companionY)
+            } else {
+                companionOrigin = CGPoint(x: left, y: companionY)
+                titleOrigin = CGPoint(x: left + companion.width + padding, y: titleY)
+            }
+        }
+
+        let titleSize = (currentTitle?.isEmpty == false || _titleLabel.attributedText != nil)
+            ? _titleLabel.intrinsicContentSize : .zero
+        _titleLabel.frame = CGRect(x: titleOrigin.x, y: titleOrigin.y,
+                                   width: Swift.min(titleSize.width, titleBlock.width),
+                                   height: titleSize.height).standardized
+
+        if let subtitleLabel = _subtitleLabel, subtitleLabel.text?.isEmpty == false {
+            let subtitle = subtitleLabel.intrinsicContentSize
+            let slack = titleBlock.width - subtitle.width
+            let offset: CGFloat
+            switch configuration.titleAlignment {
+            case .center: offset = slack / 2
+            case .trailing: offset = slack
+            case .leading, .automatic: offset = 0
+            }
+            subtitleLabel.frame = CGRect(
+                x: pixelRound(titleOrigin.x + offset),
+                y: titleOrigin.y + titleSize.height + configuration.titlePadding,
+                width: subtitle.width, height: subtitle.height).standardized
+        }
+
+        if configuration.showsActivityIndicator, let indicator = _activityIndicator {
+            indicator.frame = CGRect(origin: companionOrigin, size: companion).standardized
+            _imageView.frame = .zero
+        } else if currentImage != nil {
+            _imageView.frame = CGRect(origin: companionOrigin, size: companion).standardized
+        } else {
+            _imageView.frame = .zero
+        }
     }
 
     private func layoutRects(in content: CGRect) -> (title: CGRect, image: CGRect) {
