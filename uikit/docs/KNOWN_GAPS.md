@@ -1,5 +1,22 @@
 # Known gaps (living document — fixers: read this)
 
+## Scroll edge effects: what `UIScrollEdgeEffect` paints and what it only stores (2026-09-10)
+
+MEASURED `Tools/oracle2/scrolledgeeffectprobe` (iPhone 16 / iOS 26.1),
+report `docs/agent_reports/scroll-edge-effect.md`. The object surface is
+complete (four distinct effects per scroll view, style singletons,
+`isHidden`), `isHidden` removes every band the port paints (container scrim,
+large-title pocket, tab-bar gradient), and `.hard` is the measured flat
+white plate (α 0.902, hard cut at the bar's glass edge / the container's
+inner edge − 30). NOT painted: the `.soft` white wash (black reads 213 flat
+then eases to 0 at safe top + 36 — a variable blur under it), the untouched
+`.automatic` material under an inline bar (luminance-adaptive and not even
+stable in the oracle between two visits of one offset), the ~6 pt blur at
+band edges inside the plate, the `.hard` dividing line (not visible on the
+sampled columns), dark-mode `.hard` (light only measured), left / right
+edges (store-only). A second container interaction on the same edge paints
+its own plate; Apple has one painter per edge.
+
 ## Large-title push: what `Tools/oracle2/navprobe` did NOT measure (2026-09-04)
 
 The bar transition is now the measured iOS 26 one — both sides translate with
