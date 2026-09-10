@@ -135,7 +135,7 @@ full/ladder: type list regenerated from uikit/Sources/OpenUIKit with the
   stub-able unchanged at UILocalizedIndexedCollation 1 / 4.
 ```
 
-Merge check: see the REAL_APP_TEST.md row (filled after the run).
+Merge check (`CHECK_ONLY=1 agent_merge.sh agent/signal-last-rows` on `1a4e1476`, merged with `origin/main`): macOS build + Catalyst gate, guest library route (`GUEST_ROUTE_CHECK_OK`), test bundle, real-app screens, conformance apps, Linux build — `checks passed (CHECK_ONLY)`, no REFUSED. The four new suites pass again on the merged tree (20/20).
 
 ## 5. Walls left
 
