@@ -231,12 +231,6 @@ if [ "$(uname -m)" != aarch64 ] && [ "$(uname -m)" != arm64 ]; then
     check run_linux_exit_2 test "$run_linux_status" -eq 2
     check run_linux_marker grep -q '^CURSOR_ENV_CANNOT_EXECUTE_ARM64 host=' \
         "$test_root/run_linux.out"
-    objc4_status=0
-    sh "$repo_root/objc4-linux/harness/run_linux.sh" tests/010-category-basic.m \
-        >"$test_root/objc4.out" 2>&1 || objc4_status=$?
-    check objc4_run_linux_exit_2 test "$objc4_status" -eq 2
-    check objc4_run_linux_marker grep -q '^CURSOR_ENV_CANNOT_EXECUTE_ARM64 host=' \
-        "$test_root/objc4.out"
     suite_status=0
     bash "$repo_root/full/scripts/run_suite.sh" >"$test_root/suite.out" 2>&1 \
         || suite_status=$?

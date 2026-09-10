@@ -1779,7 +1779,13 @@ public final class UINavigationBar: UIView, _UIBarItemContainer, UIBarPositionin
 
     func updatePocket() {
         guard displaysLargeTitles, let scroll = trackedScrollView,
-              let content = scroll.superview, bounds.width > 0 else {
+              let content = scroll.superview, bounds.width > 0,
+              // MEASURED 2026-09-10, scrolledgeeffectprobe large.topHidden /
+              // large.topHard (iPhone 16 / iOS 26.1): the collapsed
+              // large-title pocket follows `scroll.topEdgeEffect` — hidden
+              // shows raw content; `.hard` replaces the blur with the white
+              // plate the scroll view paints (UIScrollEdgeEffect.swift).
+              !scroll._edgeEffectSuppressesAutomaticPainter(.top) else {
             pocketView.isHidden = true
             pocketKey = nil
             return

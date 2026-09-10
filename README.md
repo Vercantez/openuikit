@@ -13,11 +13,10 @@ golden names.
 ```
    iOS app source (unmodified)
               │
-              ├── native route ──►  Linux ELF binary  ─────────────┐
-              │                     (Swift-only apps)              │
-              │                                                    ├──►  rendered
-              └── guest route  ──►  Mach-O binary  ──► machorun ───┘      screen,
-                                    (apps needing ObjC interop)           scored vs iOS
+              ▼
+      Mach-O binary  ──►  machorun on Linux  ──►  rendered screen,
+   (Linux cross-toolchain                          scored against a
+      or Xcode on a Mac)                           real iOS capture
 ```
 
 ---
@@ -76,23 +75,74 @@ The passing bar for a real-app screen is **97.5**.
 
 ---
 
-## The two routes, and which one an app needs
+## Build and run your own app
 
-**Native route (Linux ELF).** The app's Swift is recompiled by the Linux Swift
-compiler against OpenUIKit and linked as an ordinary Linux binary. Fastest and
-simplest. It works for apps whose code and dependencies avoid Objective-C
-dynamism, because the Linux compiler rejects `#selector` and `@objc` before
-OpenUIKit is ever consulted. Verified by `uikit/scripts/linux_realapp_verify.sh`.
+This is the point of the project. The path for an app you did not write:
 
-**Guest route (Mach-O under machorun).** The app is built as an `arm64-apple-*`
-Mach-O — on Linux by the cross-toolchain, or on a Mac by Xcode — and executed on
-Linux by `machorun`, our Mach-O loader, on top of Apple's own Swift runtime
-rebuilt as Mach-O plus a Darwin-to-glibc `libSystem`. This route keeps full
-Objective-C interop, so `#selector`, KVO, nib-shaped code and the ObjC runtime
-all work. Verified by `uikit/scripts/linux_guest_realapp_verify.sh`.
+**1. Ingest the Xcode project into a Swift package graph.** No app source is
+edited; the generated package symlinks the unmodified files.
 
-`full/ladder/APP_LADDER.md` scores 20 real apps under both routes and says, per
-app, exactly which types and how many call sites stand between it and running.
+```bash
+# an app that is one Xcode target
+python3 uikit/Tools/ingest/xcodeproj_to_package.py /path/to/YourApp.xcodeproj \
+        --target YourAppTarget --out /tmp/yourapp-pkg
+
+# an app that is really a stack of local Swift packages
+python3 uikit/Tools/ingest/spm_app_chain.py SPEC \
+        --out /tmp/yourapp-pkg --corpus /path/to/YourApp --checkouts /path/to/checkouts
+```
+
+**2. Compile the whole chain and get a census of what is missing.** This is the
+step that matters. It does not stop at the first error: it builds target by
+target, separates the app's own errors from its dependencies', and prints every
+UIKit and Foundation member the app needs and the port does not have.
+
+```bash
+python3 uikit/Tools/ingest/chain_census.py SPEC --package /tmp/yourapp-pkg --out /tmp/census.json
+```
+
+That census is the work list, and it is usually shorter than it looks — most
+entries are one property or one initializer. `uikit/docs/agent_reports/ios-oss-launch.md`
+walks the whole loop on Kickstarter's app, from `.xcodeproj` to a named list of
+walls, and is the best worked example to copy.
+
+**3. Render a screen** by running the app's Mach-O under `machorun`, then score
+it against a capture from a real device.
+
+When an app does not run yet, the reason is almost never "UIKit is missing".
+Across the twenty apps measured so far, effective UIKit coverage is 87.5–100 %
+and the blockers concentrate in a handful of types. `full/ladder/` is the
+diagnostic that names them per app before you spend a day on the wrong thing:
+`ladder_census.py` records what an app uses, `classify_gaps.py` splits that into
+*blocking* rows (a stub would draw a wrong screen, so it must be implemented
+against a measurement) and *stub-able* rows (an empty implementation leaves the
+screen and the app's state correct), and `target_scope.py` restricts the walk to
+one Xcode target so a macOS target in the same repo does not count against the
+iOS app. Read `full/ladder/APP_LADDER.md` for the twenty apps already measured.
+
+---
+
+## How an app actually runs
+
+**The app is built as an `arm64-apple-*` Mach-O and executed on Linux by
+`machorun`**, this project's Mach-O loader, on top of Apple's Swift runtime
+rebuilt as Mach-O plus a Darwin-to-glibc `libSystem`. The Mach-O can be produced
+on Linux by the cross-toolchain or on a Mac by Xcode; either way it runs on
+Linux unchanged. This route keeps full Objective-C interop, so `#selector`, KVO,
+nib-shaped code and the ObjC runtime all work — which is why it is the route
+real apps take. Verified by `uikit/scripts/linux_guest_realapp_verify.sh`.
+
+There is a second, narrower path: recompiling the app's Swift as an ordinary
+Linux ELF binary. It is cheaper to build and it proves the port is portable
+Swift rather than Darwin-shaped, so it stays as a verification device and as a
+fast path for the rare app with no Objective-C anywhere. It is not the way to
+run an app you did not write: the Linux compiler rejects `#selector` and `@objc`
+before OpenUIKit is ever consulted, and of the twenty apps measured, exactly one
+clears that bar. `uikit/scripts/linux_realapp_verify.sh` runs the guest route
+when a guest build is present and falls back to this one otherwise.
+
+`full/ladder/APP_LADDER.md` scores 20 real apps and says, per app, exactly which
+types and how many call sites stand between it and running.
 
 Building a guest tree from scratch:
 
@@ -108,22 +158,13 @@ cd .. && bash full/scripts/build_full.sh          # the app guest itself
 
 ---
 
-## Bringing your own app
+## How a gap gets closed
 
-1. **Measure it first.** `full/ladder/` is the instrument: it walks an app's
-   real file set, resolves its dependency closure, and reports which UIKit and
-   Foundation types are *blocking* (a stub would draw a wrong screen) versus
-   *stub-able*. `full/ladder/target_scope.py` restricts the walk to one Xcode
-   target, so macOS-only code in a shared repo does not count against an iOS app.
-2. **Ingest it.** `uikit/Tools/ingest/` turns an `.xcodeproj` into a Swift
-   package graph — `xcodeproj_to_package.py` for a single target,
-   `spm_app_chain.py` for an app that is really a stack of local packages —
-   without editing a line of app source.
-3. **Close the rows it names.** Every closed row in this repo has the same
-   shape: measure the behaviour on a real device or simulator with a probe under
-   `uikit/Tools/oracle2/`, commit the transcript, implement against the measured
-   numbers, and add a test that fails before and passes after. There are roughly
-   a hundred worked examples in `uikit/docs/agent_reports/`.
+Every closed row in this repo has the same shape: measure the behaviour on a
+real device or simulator with a probe under `uikit/Tools/oracle2/`, commit the
+transcript, implement against the measured numbers, and add a test that fails
+before the change and passes after. There are 128 worked examples in
+`uikit/docs/agent_reports/`.
 
 **The rule this project runs on: an oracle is a real Apple capture.** Not
 documentation, not another reimplementation, not our own previous output.
@@ -143,7 +184,6 @@ learned the hard way.
 | `quartz/` | Portable CoreGraphics + CoreAnimation (the CQuartz backend) |
 | `full/` | Platform integration: the app guest build, the SDK framework ports, and `full/ladder/` (the 20-app measurement) |
 | `scripts/`, `harness/`, `docs/` | Platform lineage, runtime notes, and the original spike write-up in `docs/SPIKE.md` |
-| `objc4-linux/` | Retired: objc4 on Linux/ELF, superseded by the Mach-O build under `machorun/` |
 
 Each imported directory keeps its complete git history through subtree merges.
 Everything under `scratch/` and `build/` is generated and gitignored.

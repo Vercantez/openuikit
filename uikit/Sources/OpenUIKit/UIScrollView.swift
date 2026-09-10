@@ -1194,6 +1194,51 @@ open class UIScrollView: UIView {
     /// Position the bars for the current offset. Bars are subviews living in
     /// the scrolled coordinate space, so their frames are pinned to the
     /// VISIBLE rect (bounds.origin + viewport-relative position).
+    // MARK: Scroll edge effects (iOS 26, UIScrollEdgeEffect.swift)
+
+    /// Four distinct, stable effect objects, created on first access so an
+    /// untouched scroll view carries none (MEASURED: distinct per edge, never
+    /// shared across scroll views, `.automatic` / shown by default).
+    var _topEdgeEffect: UIScrollEdgeEffect?
+    var _bottomEdgeEffect: UIScrollEdgeEffect?
+    var _leftEdgeEffect: UIScrollEdgeEffect?
+    var _rightEdgeEffect: UIScrollEdgeEffect?
+    /// The `.hard` plate under a navigation bar / toolbar / tab bar.
+    var _topEdgePocket: _UIScrollEdgeEffectView?
+    var _bottomEdgePocket: _UIScrollEdgeEffectView?
+
+    /// The effect for the top edge of the scroll view.
+    public var topEdgeEffect: UIScrollEdgeEffect {
+        if let e = _topEdgeEffect { return e }
+        let e = UIScrollEdgeEffect(edge: .top, scrollView: self)
+        _topEdgeEffect = e
+        return e
+    }
+
+    /// The effect for the left edge of the scroll view (store-only).
+    public var leftEdgeEffect: UIScrollEdgeEffect {
+        if let e = _leftEdgeEffect { return e }
+        let e = UIScrollEdgeEffect(edge: .left, scrollView: self)
+        _leftEdgeEffect = e
+        return e
+    }
+
+    /// The effect for the bottom edge of the scroll view.
+    public var bottomEdgeEffect: UIScrollEdgeEffect {
+        if let e = _bottomEdgeEffect { return e }
+        let e = UIScrollEdgeEffect(edge: .bottom, scrollView: self)
+        _bottomEdgeEffect = e
+        return e
+    }
+
+    /// The effect for the right edge of the scroll view (store-only).
+    public var rightEdgeEffect: UIScrollEdgeEffect {
+        if let e = _rightEdgeEffect { return e }
+        let e = UIScrollEdgeEffect(edge: .right, scrollView: self)
+        _rightEdgeEffect = e
+        return e
+    }
+
     // MARK: Scroll-edge container pockets (UIScrollEdgeElementContainerInteraction)
 
     /// Interactions whose `scrollView` is this view. Weak: the interaction
@@ -1227,6 +1272,11 @@ open class UIScrollView: UIView {
     /// Table and collection views add cells after the scroll step ran; they
     /// call this after tiling so the pockets stay above the new cells.
     func _frontScrollEdgePockets() {
+        for pocket in [_topEdgePocket, _bottomEdgePocket] {
+            if let pocket, pocket.superview === self, !pocket.isHidden {
+                bringSubviewToFront(pocket)
+            }
+        }
         guard !_scrollEdgeInteractions.isEmpty else { return }
         for ref in _scrollEdgeInteractions {
             if let pocket = ref.interaction?.pocket, pocket.superview === self {
@@ -1236,6 +1286,7 @@ open class UIScrollView: UIView {
     }
 
     func updateIndicators() {
+        _updateScrollEdgeEffects()
         _updateScrollEdgeInteractions()
         let inset = UIScrollView.indicatorInset
         let thick = UIScrollView.indicatorThickness

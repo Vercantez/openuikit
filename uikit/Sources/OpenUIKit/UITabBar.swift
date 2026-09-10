@@ -623,7 +623,16 @@ public final class UITabBar: UIView {
     /// nothing (Notes t5000 / t200.landscape). Dark paints the
     /// measured black multiply (t2000.dark x=30, α plateau 0.598).
     func layoutBottomEdgeEffect() {
-        guard UITabBar.isIOS, !UITabBar.isPad, bounds.width > 0 else {
+        guard UITabBar.isIOS, !UITabBar.isPad, bounds.width > 0,
+              // MEASURED 2026-09-10, scrolledgeeffectprobe scroll.bottomHidden
+              // / scroll.bottomHard (iPhone 16 / iOS 26.1): the bar's effect
+              // is the content scroll view's `bottomEdgeEffect` — hidden
+              // shows raw bands up to the bottom of the screen; `.hard` is
+              // the white plate over the bar frame, painted by the scroll
+              // view (UIScrollEdgeEffect.swift), not this gradient.
+              !((delegate as? UITabBarController)?
+                  ._resolvedContentScrollView(for: .bottom)?
+                  ._edgeEffectSuppressesAutomaticPainter(.bottom) ?? false) else {
             bottomEdgeEffect?.isHidden = true
             return
         }
