@@ -1987,6 +1987,7 @@ open class UITableView: UIScrollView {
                 if let h = headerViews[s] { bringSubviewToFront(h) }
             }
         }
+        _frontScrollEdgePockets()
         if let bar = verticalIndicator { bringSubviewToFront(bar) }
         if let bar = horizontalIndicator { bringSubviewToFront(bar) }
 

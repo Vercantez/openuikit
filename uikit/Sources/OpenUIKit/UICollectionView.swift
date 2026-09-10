@@ -489,16 +489,52 @@ open class UICollectionView: UIScrollView {
 
     private var inTile = false
 
+    /// Context produced by `invalidationContext(forBoundsChange:)` while the
+    /// bounds were still the old value; consumed by `didSet`.
+    private var pendingBoundsContext: UICollectionViewLayoutInvalidationContext?
+
+    // MEASURED signalrowsprobe invalidate.*, iPhone 16 / iOS 26.1: EVERY
+    // bounds change (frame resize, bounds origin, contentOffset, and
+    // setContentOffset(animated: false)) asks
+    // shouldInvalidateLayout(forBoundsChange: new) while `bounds` is still
+    // OLD; a true answer fetches invalidationContext(forBoundsChange:) (still
+    // old bounds); then, with the new bounds in place, invalidateLayout()
+    // runs and invalidateLayout(with:) receives that SAME context object
+    // (flags false, adjustments zero; flow: attributes true only for a size
+    // or cross-axis change, metrics false). A false answer stops after the
+    // question. prepare() follows synchronously for a size change and on
+    // the next layout pass for an origin change. A frame set to the same
+    // rect asks nothing.
     open override var bounds: CGRect {
+        willSet {
+            guard newValue != bounds, !inTile else { return }
+            pendingBoundsContext = nil
+            if collectionViewLayout.shouldInvalidateLayout(forBoundsChange: newValue) {
+                pendingBoundsContext = collectionViewLayout.invalidationContext(forBoundsChange: newValue)
+            }
+        }
         didSet {
-            if bounds.size != oldValue.size,
-               collectionViewLayout.shouldInvalidateLayout(forBoundsChange: bounds) {
-                collectionViewLayout.invalidateLayout()
+            var invalidatedForBounds = false
+            if let context = pendingBoundsContext {
+                pendingBoundsContext = nil
+                invalidatedForBounds = true
+                let layout = collectionViewLayout
+                layout._pendingBoundsContext = context
+                layout.invalidateLayout()
+                layout._pendingBoundsContext = nil
+                if bounds.size != oldValue.size, dataSource != nil,
+                   bounds.width > 0, bounds.height > 0 {
+                    ensureCounts()
+                    layout.prepareIfNeeded()
+                }
             }
             // Scrolling IS a bounds-origin change: re-tile immediately so
             // drags and deceleration steps bring elements in without waiting
-            // for a layout pass (same rule as UITableView).
-            if bounds.origin != oldValue.origin, !inTile {
+            // for a layout pass (same rule as UITableView). After a
+            // bounds-driven invalidation the measured prepare() waits for
+            // the layout pass the invalidation already queued, so tiling
+            // waits with it.
+            if bounds.origin != oldValue.origin, !inTile, !invalidatedForBounds {
                 retile()
             }
         }
@@ -578,6 +614,7 @@ open class UICollectionView: UIScrollView {
             if let v = visibleViews[a.elementKey] { bringSubviewToFront(v) }
         }
         if let bg = backgroundView { sendSubviewToBack(bg) }
+        _frontScrollEdgePockets()
         if let bar = verticalIndicator { bringSubviewToFront(bar) }
         if let bar = horizontalIndicator { bringSubviewToFront(bar) }
 

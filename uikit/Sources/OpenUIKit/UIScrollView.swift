@@ -1134,7 +1134,49 @@ open class UIScrollView: UIView {
     /// Position the bars for the current offset. Bars are subviews living in
     /// the scrolled coordinate space, so their frames are pinned to the
     /// VISIBLE rect (bounds.origin + viewport-relative position).
+    // MARK: Scroll-edge container pockets (UIScrollEdgeElementContainerInteraction)
+
+    /// Interactions whose `scrollView` is this view. Weak: the interaction
+    /// is owned by its container view, like UIKit's.
+    var _scrollEdgeInteractions: [_UIScrollEdgeInteractionRef] = []
+
+    func _addScrollEdgeInteraction(_ interaction: UIScrollEdgeElementContainerInteraction) {
+        _scrollEdgeInteractions.removeAll { $0.interaction == nil || $0.interaction === interaction }
+        _scrollEdgeInteractions.append(_UIScrollEdgeInteractionRef(interaction))
+    }
+
+    func _removeScrollEdgeInteraction(_ interaction: UIScrollEdgeElementContainerInteraction) {
+        _scrollEdgeInteractions.removeAll { $0.interaction == nil || $0.interaction === interaction }
+    }
+
+    /// Every scroll step and layout pass re-evaluates pocket engagement
+    /// (measured: off at rest, on once content passes under the container).
+    func _updateScrollEdgeInteractions() {
+        guard !_scrollEdgeInteractions.isEmpty else { return }
+        _scrollEdgeInteractions.removeAll { $0.interaction == nil }
+        for ref in _scrollEdgeInteractions { ref.interaction?._update() }
+    }
+
+    /// Pockets sit above content and below the indicators, like Apple's
+    /// `_UITouchPassthroughView`s ahead of `_UIScrollViewScrollIndicator`.
+    func _frontIndicatorsOverPockets() {
+        if let bar = verticalIndicator { bringSubviewToFront(bar) }
+        if let bar = horizontalIndicator { bringSubviewToFront(bar) }
+    }
+
+    /// Table and collection views add cells after the scroll step ran; they
+    /// call this after tiling so the pockets stay above the new cells.
+    func _frontScrollEdgePockets() {
+        guard !_scrollEdgeInteractions.isEmpty else { return }
+        for ref in _scrollEdgeInteractions {
+            if let pocket = ref.interaction?.pocket, pocket.superview === self {
+                bringSubviewToFront(pocket)
+            }
+        }
+    }
+
     func updateIndicators() {
+        _updateScrollEdgeInteractions()
         let inset = UIScrollView.indicatorInset
         let thick = UIScrollView.indicatorThickness
         let off = contentOffset
