@@ -121,6 +121,7 @@ private final class CustomTransitioningDelegate: UIViewControllerTransitioningDe
 @MainActor
 #endif
 private final class TraceVC: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let name: String
     let trace: Trace
     init(name: String, trace: Trace) {

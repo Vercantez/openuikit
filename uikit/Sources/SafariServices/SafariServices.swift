@@ -202,6 +202,13 @@ open class SFSafariViewController: UIViewController {
         self.init(url: url, configuration: Configuration())
     }
 
+    /// SafariServices marks `initWithCoder:` NS_UNAVAILABLE; the required
+    /// initializer exists for the class hierarchy and is not callable.
+    @available(*, unavailable)
+    public required init?(coder: NSCoder) {
+        fatalError("SFSafariViewController(coder:) is unavailable")
+    }
+
     public init(url: URL, configuration: Configuration) {
         initialURL = url
         self.configuration = configuration.copy()

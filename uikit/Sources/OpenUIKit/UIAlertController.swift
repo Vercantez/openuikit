@@ -483,6 +483,21 @@ open class UIAlertController: UIViewController {
 
     var actionViews: [_UIAlertActionView] = []
 
+    /// MEASURED `alert.coder` (viewcontrollercoderprobe, iPhone 16 / iOS
+    /// 26.1): an empty archive decodes as an unloaded alert controller with
+    /// nil title / message, no actions and `preferredStyle` 0 (actionSheet),
+    /// not the stored-property default this class keeps for `init()`.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        preferredStyle = .actionSheet
+    }
+
+    /// Declaring the coder initializer stops the nib initializer from being
+    /// inherited; `init()` / `self.init()` still resolve to it.
+    public override init(nibName nibNameOrNil: String? = nil, bundle nibBundleOrNil: Bundle? = nil) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
     public convenience init(title: String?, message: String?, preferredStyle: Style) {
         self.init()
         self.title = title

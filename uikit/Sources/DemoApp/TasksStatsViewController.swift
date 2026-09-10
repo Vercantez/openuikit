@@ -41,6 +41,7 @@ public final class TasksStatsViewController: UIViewController {
         super.init()
         title = "Statistics"
     }
+    public required init?(coder: NSCoder) { fatalError() }
 
     func counts(for priority: TaskPriority) -> (done: Int, total: Int) {
         var done = 0, total = 0

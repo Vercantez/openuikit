@@ -51,6 +51,13 @@ open class UIFontPickerViewController: UIViewController {
         modalPresentationStyle = .pageSheet
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors `init()`.
+    public required init?(coder: NSCoder) {
+        self.configuration = Configuration()
+        super.init(coder: coder)
+        modalPresentationStyle = .pageSheet
+    }
+
     open override func loadView() {
         let body = _UIUnavailableSystemUIView(
             message: "Font picker is unavailable.",

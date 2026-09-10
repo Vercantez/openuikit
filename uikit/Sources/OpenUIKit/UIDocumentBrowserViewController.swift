@@ -100,6 +100,15 @@ open class UIDocumentBrowserViewController: UIViewController {
         modalPresentationStyle = .fullScreen
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors
+    /// `init(forOpening: nil)`.
+    public required init?(coder: NSCoder) {
+        self.contentTypesForRecentDocuments = []
+        self.allowedContentTypes = []
+        super.init(coder: coder)
+        modalPresentationStyle = .fullScreen
+    }
+
     public convenience init(forOpeningFilesWithContentTypes allowedContentTypes: [String]?) {
         self.init(forOpening: allowedContentTypes?.map { UTType(importedAs: $0) })
     }

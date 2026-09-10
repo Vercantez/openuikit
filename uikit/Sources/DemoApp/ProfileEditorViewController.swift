@@ -47,6 +47,7 @@ public final class ProfileEditorViewController: UIViewController {
         initialEmail = email
         super.init()
     }
+    public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {
         title = "Profile"

@@ -137,6 +137,13 @@ open class UIImagePickerController: UINavigationController {
         modalPresentationStyle = .pageSheet
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors
+    /// `init(rootViewController:)` with no root.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        modalPresentationStyle = .pageSheet
+    }
+
     private func installPlaceholder(on root: UIViewController) {
         let body = _UIUnavailableSystemUIView(
             message: "Image picker is unavailable.",

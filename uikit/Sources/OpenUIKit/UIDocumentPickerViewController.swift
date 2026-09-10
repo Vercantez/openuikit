@@ -133,6 +133,17 @@ open class UIDocumentPickerViewController: UIViewController {
         modalPresentationStyle = .pageSheet
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors
+    /// `init(forOpeningContentTypes: [], asCopy: false)`.
+    public required init?(coder: NSCoder) {
+        self.allowedContentTypes = []
+        self.asCopy = false
+        self.exportedURLs = []
+        self.documentPickerMode = .open
+        super.init(coder: coder)
+        modalPresentationStyle = .pageSheet
+    }
+
     open override func loadView() {
         let body = _UIUnavailableSystemUIView(
             message: "Document picker is unavailable.",

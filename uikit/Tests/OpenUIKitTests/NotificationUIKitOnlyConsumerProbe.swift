@@ -33,6 +33,7 @@ func makeNotificationUIKitOnlySurfaceProbe() -> NotificationCenter {
 @MainActor
 #endif
 final class NotificationUIKitOnlyConsumerProbe: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let center: NotificationCenter
     var runtimeNotifications: [Notification] = []
     var objectNotifications: [NSNotification] = []

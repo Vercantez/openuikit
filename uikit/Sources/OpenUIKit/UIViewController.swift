@@ -106,6 +106,26 @@ open class UIViewController: UIResponder, UIContentContainer {
         super.init()
     }
 
+    /// UIKit's required keyed-archive initializer, the base every
+    /// storyboard/nib-backed subclass's `required init?(coder:)` chains to.
+    /// MEASURED (Tools/oracle2/viewcontrollercoderprobe, iPhone 16 / iOS
+    /// 26.1, `base.coder`): on an empty keyed archive the result is non-nil,
+    /// unloaded, `nibName` nil, `nibBundle` `Bundle.main`, `title` nil, and
+    /// the first `view` access builds the same plain view as `init()` does
+    /// (autoresizing 18, nil background). OpenUIKit has no archive reader:
+    /// the coder is not consulted (a bare `NSCoder()` is abstract on Darwin
+    /// Foundation and every decode call on it raises), so the archive keys
+    /// Apple round-trips (`UITitle`, `UIRestorationIdentifier`,
+    /// `base.roundTrip`) are not read and this path is exactly the nil/nil
+    /// programmatic initializer with a different spelling.
+    public required init?(coder: NSCoder) {
+        _ = coder
+        _nibName = nil
+        _nibBundle = .main
+        _hasExplicitNibRequest = false
+        super.init()
+    }
+
     /// The requested nib name, retained even though the portable core cannot
     /// decode nib archives.
     open var nibName: String? { _nibName }

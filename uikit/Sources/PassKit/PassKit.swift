@@ -43,4 +43,8 @@ open class PKAddPassesViewController: UIViewController {
         _ = pass
         return nil
     }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
 }

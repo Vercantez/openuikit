@@ -116,6 +116,7 @@ public final class TasksDetailViewController: UIViewController,
         super.init()
         title = "Task"
     }
+    public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {
         view.backgroundColor = .systemGroupedBackground
