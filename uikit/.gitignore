@@ -34,6 +34,7 @@ out_realapp/
 out_host_realapp/
 Tools/oracle2/RealAppProbe.app/
 Tools/oracle2/LayoutProbe.app/
+Tools/oracle2/ToolbarHeightProbe.app/
 Tools/oracle2/ColorProbe.app/
 Tools/oracle2/InkProbe.app/
 Tools/oracle2/SymbolInkProbe.app/

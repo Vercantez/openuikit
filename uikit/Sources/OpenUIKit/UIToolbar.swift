@@ -9,6 +9,25 @@
 //   * the platters are **48 pt** tall (radius 24), not 44,
 //   * and they are TOP-ALIGNED at the bar's own y = 0, not centred.
 //
+// MEASURED 2026-09-10, Tools/oracle2/toolbarheightprobe (iPhone 16, iPhone
+// SE 3rd gen, iPad A16 / iOS 26.1, both orientations, `.default` and
+// `.black`, with and without items — none of which changes a number):
+//
+//   * intrinsicContentSize.height == sizeThatFits.height == the platter
+//     height: **48** on a phone, **44** on a pad. A bar pinned to a
+//     controller's bottom by Auto Layout with no height constraint lays
+//     out 48 (phone) / 44 (pad) high. The port used to carry 54, which was
+//     never a measurement: fixtures/scenes/toolbar_basic.json HANDS each
+//     bar a 54 pt frame and the golden echoes it back.
+//   * Compact height (phone landscape): a hosted bar answers 44 to a
+//     direct intrinsicContentSize / sizeThatFits read, but Auto Layout
+//     keeps the 48 it cached when the bar entered the hierarchy (before
+//     traits arrived) — even from viewDidLoad — until the app calls
+//     invalidateIntrinsicContentSize. The port reports the laid-out 48.
+//   * Platters: top-aligned at y = 0 once the bar is at least platter-high
+//     (54 and 64 pt frames both read y 0); a SHORTER bar centres them
+//     (44 pt frame → `[16, -2, 361, 48]`).
+//
 // The bar itself paints nothing unless its appearance was configured with a
 // background (iOS 26 default = transparent, like every other bar).
 //
@@ -35,8 +54,17 @@ import Foundation
 
 @preconcurrency @MainActor
 public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
-    /// Measured intrinsic bar height (the platter plus its vertical margins).
-    public static let defaultHeight: CGFloat = 54
+    /// Measured intrinsic bar height (see the file header): the platter
+    /// height, 48 on a phone and 44 on a pad. NOT trait-driven at compact
+    /// height on purpose — that is the frame iOS lays out.
+    public static var defaultHeight: CGFloat { UINavigationBar.isPad ? 44 : 48 }
+
+    /// Where the platter row sits inside the bar; a UINavigationController
+    /// sets these for the bottom slot it manages (platters 10 pt below the
+    /// slot's top, 28 pt from its side on a phone). A free-standing bar
+    /// keeps 0 / the trait side margin.
+    var _platterTopInset: CGFloat = 0 { didSet { setNeedsLayout() } }
+    var _platterSideInset: CGFloat? { didSet { setNeedsLayout() } }
 
     public var items: [UIBarButtonItem]? {
         didSet { rebuildItemViews() }
@@ -112,7 +140,7 @@ public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
         itemViews = (items ?? []).map { item in
             item._bar = self
             let v = _UIBarButtonItemView(item: item)
-            v.platterHeight = _UIBarMetrics.toolbarPlatterHeight
+            v.platterHeight = _UIBarMetrics.toolbarPlatterHeightForCurrentTraits
             v.appliesRefraction = false     // measured: toolbars have no band
             v.barTintColor = barTintColor ?? tintColor ?? .systemBlue
             v.addTarget(for: .touchUpInside) { [weak item] control, event in
@@ -144,11 +172,17 @@ public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
         background.frame = bounds
         hairline.frame = CGRect(x: 0, y: bounds.height - UIBarAppearance.shadowHeight,
                                 width: bounds.width, height: UIBarAppearance.shadowHeight)
-        // Measured: the toolbar's glass platters are TOP-aligned at the
-        // bar's own y = 0 (not centred), 48 pt tall.
-        let h = _UIBarMetrics.toolbarPlatterHeight
-        _UIBarItemLayout.layout(itemViews, in: bounds.width, y: 0, height: h,
-                                sideMargin: _UIBarMetrics.sideMargin)
+        // MEASURED (file header): platters 48 tall on a phone at regular
+        // height, 44 on a pad or at compact height; top-aligned at y = 0
+        // when the bar is at least platter-high, centred when it is shorter
+        // (a 44 pt frame puts the 48 pt row at y −2). A nav-managed slot
+        // adds its own top / side insets.
+        let h = _UIBarMetrics.toolbarPlatterHeightForCurrentTraits
+        for v in itemViews { v.platterHeight = h }
+        let y = _platterTopInset + min(0, (bounds.height - h) / 2)
+        _UIBarItemLayout.layout(itemViews, in: bounds.width, y: y, height: h,
+                                sideMargin: _platterSideInset
+                                    ?? _UIBarMetrics.toolbarSideMarginForCurrentTraits)
     }
 
     public override var intrinsicContentSize: CGSize {

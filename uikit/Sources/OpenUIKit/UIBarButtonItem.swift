@@ -230,6 +230,41 @@ public enum _UIBarMetrics {
     /// from the chord a red-backdrop probe shows at x = 24 pt
     /// (y 6.1 … 41.9 for a 48/24 capsule; a 44/22 one would give 1.5 … 42.5).
     public static let toolbarPlatterHeight: CGFloat = 48
+    /// MEASURED Tools/oracle2/toolbarheightprobe (iPhone 16, iPhone SE 3rd
+    /// gen, iPad A16 / iOS 26.1, both orientations, with and without items,
+    /// `.default` and `.black`): the toolbar platter row is **48** tall on a
+    /// phone at regular height and **44** on a pad (`[20, 0, 780, 44]`,
+    /// either orientation) or at compact height (SE landscape
+    /// `[20, 0, 627, 44]`). The Tabs-ipad golden carries the same 44.
+    public static var toolbarPlatterHeightForCurrentTraits: CGFloat {
+        UINavigationBar.isPad || UINavigationBar.isCompactHeight ? 44 : toolbarPlatterHeight
+    }
+    /// Free-standing toolbar side margin. MEASURED toolbarheightprobe: 16
+    /// on a phone at regular height (`[16, 0, 361, 48]`), **20** on a pad
+    /// (`[20, 0, 780, 44]`) and at compact height (SE `[20, 0, 627, 44]`).
+    /// (iPhone 16 landscape packs a 600 pt row at x 126 — a readable-width
+    /// cap this port does not model; recorded in the probe transcript.)
+    public static var toolbarSideMarginForCurrentTraits: CGFloat {
+        UINavigationBar.isPad || UINavigationBar.isCompactHeight ? 20 : sideMargin
+    }
+    /// The bar UIKit itself shows for a UINavigationController's
+    /// `toolbarItems` on iOS 26 is a hosted bottom slot, not the `toolbar`
+    /// object (which stays detached with nil items). MEASURED
+    /// toolbarheightprobe, window points, top controller with three items:
+    /// iPhone 16 portrait `[0, 766, 393, 86]`, platters `[28, 776, 337, 48]`;
+    /// landscape `[59, 311, 734, 82]`, platters `[87, 321, 678, 44]`;
+    /// SE portrait `[0, 581, 375, 86]` / landscape `[0, 293, 667, 82]`;
+    /// iPad A16 `[0, 1101, 820, 79]`, platters `[10, 1111, 800, 44]`.
+    /// Slot = 10 + platter + 28 on a phone whatever the home-indicator inset
+    /// (0, 20 or 34); 10 + 44 + 25 on the pad. The child's safeAreaInsets
+    /// .bottom is the whole slot. No items → no slot (safe area stays the
+    /// window's). Same slot as `UISearchBar.BottomDock` (86 / 82).
+    public static let toolbarSlotTopPadding: CGFloat = 10
+    public static var toolbarSlotBottomPadding: CGFloat { UINavigationBar.isPad ? 25 : 28 }
+    public static var toolbarSlotSideInset: CGFloat { UINavigationBar.isPad ? 10 : 28 }
+    public static var toolbarSlotHeight: CGFloat {
+        toolbarSlotTopPadding + toolbarPlatterHeightForCurrentTraits + toolbarSlotBottomPadding
+    }
     public static var platterRadius: CGFloat { platterHeight / 2 }
     /// Leading / trailing margin from the bar's edge. Portrait / Catalyst:
     /// 16. Compact-height iOS uses ``itemSideMargin`` (38).
@@ -240,7 +275,7 @@ public enum _UIBarMetrics {
     /// t200.landscape trash `[585, 0, 44, 44]`. TableEditor-landscape Edit
     /// abs.x **582.24** vs 16-pt packing 604.5 is the same 22 pt (= 38 − 16).
     /// Portrait t200 stays 16 (375 − 279.5 − 79.5; Ledger `[275.5, 0, 83.5]`).
-    /// Toolbar packing is unmeasured at compact height and keeps ``sideMargin``.
+    /// Toolbar packing at compact height: ``toolbarSideMarginForCurrentTraits`` (20).
     public static let compactHeightSideMargin: CGFloat = 38
     /// Nav-bar item packing. Toolbar keeps ``sideMargin`` 16.
     public static var itemSideMargin: CGFloat {
@@ -494,9 +529,14 @@ final class _UIBarButtonItemView: UIControl {
         }
         if item.title == nil, item.image != nil || item._symbol != nil {
             // Image / symbol items: see `_UIBarMetrics.imageContentMinWidth`.
+            // Never narrower than the platter is tall: 22 + 2×11 = 44 is
+            // the nav-bar circle, but a TOOLBAR platter is 48 and its
+            // image items are 48 × 48 (MEASURED toolbarheightprobe nav slot
+            // `[28, 776, 48, 48]`; Tabs t2000 golden `[210, 0, 48, 48]`,
+            // Tabs-ipad `[651, 0, 44, 44]` where the pad platter is 44).
             let w = max(_UIBarMetrics.imageContentMinWidth, contentSize.width)
                 + 2 * _UIBarMetrics.imageContentInset
-            return CGSize(width: w, height: platterHeight)
+            return CGSize(width: max(w, platterHeight), height: platterHeight)
         }
         let w = max(contentSize.width + 2 * _UIBarMetrics.contentInset,
                     platterHeight)
