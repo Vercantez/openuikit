@@ -32,7 +32,10 @@
 //           83 %, flat to the inner edge for `.hard`); so does attaching to
 //           an EMPTY container and adding elements later. Those variants are
 //           recorded, not modelled: Signal attaches once, with content,
-//           and never touches the style.
+//           and never touches the style. 2026-09-10: `.hard` and
+//           `isHidden` ARE modelled through `scroll.topEdgeEffect` /
+//           `bottomEdgeEffect` (UIScrollEdgeEffect.swift, measured by
+//           Tools/oracle2/scrolledgeeffectprobe); `.soft` stays recorded.
 //   UNMEASURED  dark interface style with the dark variant, `.left/.right`
 //           edges (stored only), engagement between 0 and 100 pt of
 //           penetration (measured off at 0, on at 100), hidden elements.
@@ -144,13 +147,37 @@ open class UIScrollEdgeElementContainerInteraction: NSObject, UIInteraction {
             pocket = pocketView
         }
         pocketView.edge = edge
+        // MEASURED 2026-09-10, scrolledgeeffectprobe interaction.* (iPhone 16
+        // / iOS 26.1, UIScrollEdgeEffect.swift): the band is the scroll
+        // view's own edge effect — `topEdgeEffect.isHidden` shows raw
+        // content under the container, and `.hard` is a flat white plate
+        // (α 0.902) from the visible edge to the container's inner edge
+        // minus 30, with a hard cut (effect view [0, 0, 393, 183] for a
+        // container whose inner edge is at 213).
+        let effect = scroll._edgeEffectIfPresent(edge)
+        if effect?.paintsNothing == true {
+            pocketView.isHidden = true
+            return
+        }
+        let hard = effect?.isHard == true
         let band = container.convert(container.bounds, to: scroll)
         let overshoot = UIScrollEdgeElementContainerInteraction.fadeOvershoot
-        let frame = edge == .top
-            ? CGRect(x: band.minX, y: band.minY, width: band.width, height: band.height + overshoot)
-            : CGRect(x: band.minX, y: band.minY - overshoot, width: band.width, height: band.height + overshoot)
-        if pocketView.frame != frame {
+        let inset = UIScrollEdgeEffect.containerHardInset
+        let frame: CGRect
+        if hard {
+            frame = edge == .top
+                ? CGRect(x: band.minX, y: scroll.bounds.minY, width: band.width,
+                         height: max(0, band.maxY - inset - scroll.bounds.minY))
+                : CGRect(x: band.minX, y: band.minY + inset, width: band.width,
+                         height: max(0, scroll.bounds.maxY - (band.minY + inset)))
+        } else {
+            frame = edge == .top
+                ? CGRect(x: band.minX, y: band.minY, width: band.width, height: band.height + overshoot)
+                : CGRect(x: band.minX, y: band.minY - overshoot, width: band.width, height: band.height + overshoot)
+        }
+        if pocketView.frame != frame || pocketView.isHard != hard {
             pocketView.frame = frame
+            pocketView.isHard = hard
             pocketView.setNeedsDisplay()
         }
         let offset = scroll.contentOffset
@@ -176,6 +203,9 @@ final class _UIScrollEdgeInteractionRef {
 @preconcurrency @MainActor
 final class _UITouchPassthroughView: UIView {
     var edge: UIRectEdge
+    /// `.hard` on the scroll view's edge effect: the flat plate instead of
+    /// the scrim (UIScrollEdgeEffect.swift).
+    var isHard = false
 
     init(edge: UIRectEdge) {
         self.edge = edge
@@ -193,6 +223,10 @@ final class _UITouchPassthroughView: UIView {
 
     override func drawContent(in canvas: Canvas, bounds: CGRect) {
         guard bounds.width > 0, bounds.height > 0 else { return }
+        if isHard {
+            canvas.fill(rect: bounds, color: UIScrollEdgeEffect.hardPlateColor(for: traitCollection))
+            return
+        }
         let overshoot = UIScrollEdgeElementContainerInteraction.fadeOvershoot
         let inner = edge == .top ? bounds.height - overshoot : overshoot
         let black = UIColor.black.cgColor
