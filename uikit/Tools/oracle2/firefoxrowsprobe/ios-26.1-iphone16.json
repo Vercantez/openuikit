@@ -1,0 +1,3088 @@
+{
+  "anchor.absolute" : {
+    "edges" : 9,
+    "isAbsolute" : true,
+    "isFractional" : false,
+    "offset" : [
+      10,
+      -10
+    ]
+  },
+  "anchor.edgesOnly" : {
+    "edges" : 9,
+    "isAbsolute" : true,
+    "isFractional" : false,
+    "offset" : [
+      0,
+      0
+    ]
+  },
+  "anchor.fractional" : {
+    "edges" : 4,
+    "isAbsolute" : false,
+    "isFractional" : true,
+    "offset" : [
+      0.5,
+      -0.5
+    ]
+  },
+  "anchors.ltr" : {
+    "all" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1460,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1460,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          1500,
+          20,
+          20
+        ],
+        "indexPath" : [
+          8,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          1500,
+          20,
+          20
+        ],
+        "indexPath" : [
+          8,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "bottom.fractional0_5" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1100,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1100,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          1190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          6,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          1190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          6,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "bottom.fullwidth" : {
+      "item0" : {
+        "frame" : [
+          30,
+          20,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          20,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          30,
+          90,
+          125,
+          30
+        ],
+        "indexPath" : [
+          0,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          175,
+          90,
+          125,
+          30
+        ],
+        "indexPath" : [
+          0,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "bottomTrailing.fractionalSize" : {
+      "item0" : {
+        "frame" : [
+          30,
+          2360,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          2360,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          92.666666666666671,
+          2435,
+          62.333333333333336,
+          25
+        ],
+        "indexPath" : [
+          13,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          237.66666666666666,
+          2435,
+          62.333333333333336,
+          25
+        ],
+        "indexPath" : [
+          13,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "contentSize" : [
+      300,
+      2660
+    ],
+    "elementsIn200" : [
+      {
+        "frame" : [
+          30,
+          90,
+          125,
+          30
+        ],
+        "ip" : [
+          0,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      {
+        "frame" : [
+          30,
+          20,
+          125,
+          100
+        ],
+        "ip" : [
+          0,
+          0
+        ],
+        "kind" : "cell",
+        "z" : 0
+      },
+      {
+        "frame" : [
+          175,
+          90,
+          125,
+          30
+        ],
+        "ip" : [
+          0,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      {
+        "frame" : [
+          175,
+          20,
+          125,
+          100
+        ],
+        "ip" : [
+          0,
+          1
+        ],
+        "kind" : "cell",
+        "z" : 0
+      }
+    ],
+    "leading.absolute5" : {
+      "item0" : {
+        "frame" : [
+          30,
+          920,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          920,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          35,
+          965,
+          20,
+          20
+        ],
+        "indexPath" : [
+          5,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          180,
+          965,
+          20,
+          20
+        ],
+        "indexPath" : [
+          5,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "leadingTrailing" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1280,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1280,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          1320,
+          20,
+          20
+        ],
+        "indexPath" : [
+          7,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          1320,
+          20,
+          20
+        ],
+        "indexPath" : [
+          7,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "none" : {
+      "item0" : {
+        "frame" : [
+          30,
+          740,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          740,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          780,
+          20,
+          20
+        ],
+        "indexPath" : [
+          4,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          780,
+          20,
+          20
+        ],
+        "indexPath" : [
+          4,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "top.absoluteY-7" : {
+      "item0" : {
+        "frame" : [
+          30,
+          2540,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          2540,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          2533,
+          20,
+          20
+        ],
+        "indexPath" : [
+          14,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          2533,
+          20,
+          20
+        ],
+        "indexPath" : [
+          14,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing" : {
+      "item0" : {
+        "frame" : [
+          30,
+          200,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          200,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          135,
+          200,
+          20,
+          20
+        ],
+        "indexPath" : [
+          1,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          280,
+          200,
+          20,
+          20
+        ],
+        "indexPath" : [
+          1,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.absolute10" : {
+      "item0" : {
+        "frame" : [
+          30,
+          560,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          560,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          145,
+          550,
+          20,
+          20
+        ],
+        "indexPath" : [
+          3,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          290,
+          550,
+          20,
+          20
+        ],
+        "indexPath" : [
+          3,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.fractional.5" : {
+      "item0" : {
+        "frame" : [
+          30,
+          380,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          380,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          145,
+          370,
+          20,
+          20
+        ],
+        "indexPath" : [
+          2,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          290,
+          370,
+          20,
+          20
+        ],
+        "indexPath" : [
+          2,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.insets10" : {
+      "item0" : {
+        "frame" : [
+          40,
+          2190,
+          105,
+          80
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          185,
+          2190,
+          105,
+          80
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          125,
+          2190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          12,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          270,
+          2190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          12,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.itemBottomLeading" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1640,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1640,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          155,
+          1620,
+          20,
+          20
+        ],
+        "indexPath" : [
+          9,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          300,
+          1620,
+          20,
+          20
+        ],
+        "indexPath" : [
+          9,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.itemBottomLeading.itemAbs3_4" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1820,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1820,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          158,
+          1804,
+          20,
+          20
+        ],
+        "indexPath" : [
+          10,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          303,
+          1804,
+          20,
+          20
+        ],
+        "indexPath" : [
+          10,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.itemNone.fractional" : {
+      "item0" : {
+        "frame" : [
+          30,
+          2000,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          2000,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          155,
+          2000,
+          20,
+          20
+        ],
+        "indexPath" : [
+          11,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          300,
+          2000,
+          20,
+          20
+        ],
+        "indexPath" : [
+          11,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "visibleBadges" : [
+      [
+        30,
+        90,
+        125,
+        30
+      ],
+      [
+        175,
+        90,
+        125,
+        30
+      ],
+      [
+        135,
+        200,
+        20,
+        20
+      ],
+      [
+        280,
+        200,
+        20,
+        20
+      ],
+      [
+        145,
+        370,
+        20,
+        20
+      ],
+      [
+        290,
+        370,
+        20,
+        20
+      ],
+      [
+        145,
+        550,
+        20,
+        20
+      ],
+      [
+        290,
+        550,
+        20,
+        20
+      ]
+    ],
+    "visibleCells" : [
+      [
+        30,
+        20,
+        125,
+        100
+      ],
+      [
+        175,
+        20,
+        125,
+        100
+      ],
+      [
+        30,
+        200,
+        125,
+        100
+      ],
+      [
+        175,
+        200,
+        125,
+        100
+      ],
+      [
+        30,
+        380,
+        125,
+        100
+      ],
+      [
+        175,
+        380,
+        125,
+        100
+      ],
+      [
+        30,
+        560,
+        125,
+        100
+      ],
+      [
+        175,
+        560,
+        125,
+        100
+      ]
+    ]
+  },
+  "anchors.rtl" : {
+    "all" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1460,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1460,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          1500,
+          20,
+          20
+        ],
+        "indexPath" : [
+          8,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          1500,
+          20,
+          20
+        ],
+        "indexPath" : [
+          8,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "bottom.fractional0_5" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1100,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1100,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          1190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          6,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          1190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          6,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "bottom.fullwidth" : {
+      "item0" : {
+        "frame" : [
+          30,
+          20,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          20,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          30,
+          90,
+          125,
+          30
+        ],
+        "indexPath" : [
+          0,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          175,
+          90,
+          125,
+          30
+        ],
+        "indexPath" : [
+          0,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "bottomTrailing.fractionalSize" : {
+      "item0" : {
+        "frame" : [
+          30,
+          2360,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          2360,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          92.666666666666671,
+          2435,
+          62.333333333333336,
+          25
+        ],
+        "indexPath" : [
+          13,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          237.66666666666666,
+          2435,
+          62.333333333333336,
+          25
+        ],
+        "indexPath" : [
+          13,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "contentSize" : [
+      300,
+      2660
+    ],
+    "elementsIn200" : [
+      {
+        "frame" : [
+          30,
+          90,
+          125,
+          30
+        ],
+        "ip" : [
+          0,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      {
+        "frame" : [
+          30,
+          20,
+          125,
+          100
+        ],
+        "ip" : [
+          0,
+          0
+        ],
+        "kind" : "cell",
+        "z" : 0
+      },
+      {
+        "frame" : [
+          175,
+          90,
+          125,
+          30
+        ],
+        "ip" : [
+          0,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      {
+        "frame" : [
+          175,
+          20,
+          125,
+          100
+        ],
+        "ip" : [
+          0,
+          1
+        ],
+        "kind" : "cell",
+        "z" : 0
+      }
+    ],
+    "leading.absolute5" : {
+      "item0" : {
+        "frame" : [
+          30,
+          920,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          920,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          35,
+          965,
+          20,
+          20
+        ],
+        "indexPath" : [
+          5,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          180,
+          965,
+          20,
+          20
+        ],
+        "indexPath" : [
+          5,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "leadingTrailing" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1280,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1280,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          1320,
+          20,
+          20
+        ],
+        "indexPath" : [
+          7,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          1320,
+          20,
+          20
+        ],
+        "indexPath" : [
+          7,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "none" : {
+      "item0" : {
+        "frame" : [
+          30,
+          740,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          740,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          780,
+          20,
+          20
+        ],
+        "indexPath" : [
+          4,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          780,
+          20,
+          20
+        ],
+        "indexPath" : [
+          4,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "top.absoluteY-7" : {
+      "item0" : {
+        "frame" : [
+          30,
+          2540,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          2540,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          82.666666666666671,
+          2533,
+          20,
+          20
+        ],
+        "indexPath" : [
+          14,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          227.66666666666666,
+          2533,
+          20,
+          20
+        ],
+        "indexPath" : [
+          14,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing" : {
+      "item0" : {
+        "frame" : [
+          30,
+          200,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          200,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          135,
+          200,
+          20,
+          20
+        ],
+        "indexPath" : [
+          1,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          280,
+          200,
+          20,
+          20
+        ],
+        "indexPath" : [
+          1,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.absolute10" : {
+      "item0" : {
+        "frame" : [
+          30,
+          560,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          560,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          145,
+          550,
+          20,
+          20
+        ],
+        "indexPath" : [
+          3,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          290,
+          550,
+          20,
+          20
+        ],
+        "indexPath" : [
+          3,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.fractional.5" : {
+      "item0" : {
+        "frame" : [
+          30,
+          380,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          380,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          145,
+          370,
+          20,
+          20
+        ],
+        "indexPath" : [
+          2,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          290,
+          370,
+          20,
+          20
+        ],
+        "indexPath" : [
+          2,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.insets10" : {
+      "item0" : {
+        "frame" : [
+          40,
+          2190,
+          105,
+          80
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          185,
+          2190,
+          105,
+          80
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          125,
+          2190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          12,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          270,
+          2190,
+          20,
+          20
+        ],
+        "indexPath" : [
+          12,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.itemBottomLeading" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1640,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1640,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          155,
+          1620,
+          20,
+          20
+        ],
+        "indexPath" : [
+          9,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          300,
+          1620,
+          20,
+          20
+        ],
+        "indexPath" : [
+          9,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.itemBottomLeading.itemAbs3_4" : {
+      "item0" : {
+        "frame" : [
+          30,
+          1820,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          1820,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          158,
+          1804,
+          20,
+          20
+        ],
+        "indexPath" : [
+          10,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          303,
+          1804,
+          20,
+          20
+        ],
+        "indexPath" : [
+          10,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "topTrailing.itemNone.fractional" : {
+      "item0" : {
+        "frame" : [
+          30,
+          2000,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "item1" : {
+        "frame" : [
+          175,
+          2000,
+          125,
+          100
+        ],
+        "z" : 0
+      },
+      "supp0" : {
+        "frame" : [
+          155,
+          2000,
+          20,
+          20
+        ],
+        "indexPath" : [
+          11,
+          0
+        ],
+        "kind" : "badge",
+        "z" : 1
+      },
+      "supp1" : {
+        "frame" : [
+          300,
+          2000,
+          20,
+          20
+        ],
+        "indexPath" : [
+          11,
+          1
+        ],
+        "kind" : "badge",
+        "z" : 1
+      }
+    },
+    "visibleBadges" : [
+      [
+        30,
+        90,
+        125,
+        30
+      ],
+      [
+        175,
+        90,
+        125,
+        30
+      ],
+      [
+        135,
+        200,
+        20,
+        20
+      ],
+      [
+        280,
+        200,
+        20,
+        20
+      ],
+      [
+        145,
+        370,
+        20,
+        20
+      ],
+      [
+        290,
+        370,
+        20,
+        20
+      ],
+      [
+        145,
+        550,
+        20,
+        20
+      ],
+      [
+        290,
+        550,
+        20,
+        20
+      ]
+    ],
+    "visibleCells" : [
+      [
+        30,
+        20,
+        125,
+        100
+      ],
+      [
+        175,
+        20,
+        125,
+        100
+      ],
+      [
+        30,
+        200,
+        125,
+        100
+      ],
+      [
+        175,
+        200,
+        125,
+        100
+      ],
+      [
+        30,
+        380,
+        125,
+        100
+      ],
+      [
+        175,
+        380,
+        125,
+        100
+      ],
+      [
+        30,
+        560,
+        125,
+        100
+      ],
+      [
+        175,
+        560,
+        125,
+        100
+      ]
+    ]
+  },
+  "barPosition.raw" : {
+    "any" : 0,
+    "bottom" : 1,
+    "top" : 2,
+    "topAttached" : 3
+  },
+  "item.supplementaryItems" : {
+    "count" : 2,
+    "plainCount" : 0
+  },
+  "navbar.pos" : 2,
+  "os" : "26.1",
+  "rectEdge.raw" : {
+    "all" : 15,
+    "bottom" : 4,
+    "leading" : 2,
+    "top" : 1,
+    "trailing" : 8
+  },
+  "screen" : [
+    0,
+    0,
+    393,
+    852
+  ],
+  "supp.defaults" : {
+    "containerIsSame" : true,
+    "elementKind" : "badge",
+    "insets" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "itemAnchorNil" : true,
+    "s2ItemIsSame" : true,
+    "zIndex" : 1
+  },
+  "toolbar.defaultAppearance.none" : {
+    "pos" : 1,
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.defaultAppearance.top" : {
+    "calls" : 1,
+    "pos" : 2,
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.delegate.any" : {
+    "callsAfterAdd" : 1,
+    "callsAfterDetachedRead" : 0,
+    "callsAfterInWindowRead" : 1,
+    "callsAfterLayout" : 1,
+    "callsAfterSecondLayout" : 1,
+    "callsAfterSet" : 0,
+    "column" : [
+      {
+        "px" : "f83bf83b",
+        "y0" : 90,
+        "y1" : 98
+      },
+      {
+        "px" : "f53bf53b",
+        "y0" : 99,
+        "y1" : 99
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 100,
+        "y1" : 106
+      },
+      {
+        "px" : "ed3bed3b",
+        "y0" : 107,
+        "y1" : 107
+      },
+      {
+        "px" : "e93be93b",
+        "y0" : 108,
+        "y1" : 108
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 109,
+        "y1" : 114
+      },
+      {
+        "px" : "e63be63b",
+        "y0" : 115,
+        "y1" : 115
+      },
+      {
+        "px" : "e33be33b",
+        "y0" : 116,
+        "y1" : 116
+      },
+      {
+        "px" : "e13be13b",
+        "y0" : 117,
+        "y1" : 117
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 118,
+        "y1" : 126
+      },
+      {
+        "px" : "df3bdf3b",
+        "y0" : 127,
+        "y1" : 133
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 134,
+        "y1" : 142
+      },
+      {
+        "px" : "e23be23b",
+        "y0" : 143,
+        "y1" : 143
+      },
+      {
+        "px" : "e53be53b",
+        "y0" : 144,
+        "y1" : 144
+      },
+      {
+        "px" : "e73be73b",
+        "y0" : 145,
+        "y1" : 145
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 146,
+        "y1" : 151
+      },
+      {
+        "px" : "eb3beb3b",
+        "y0" : 152,
+        "y1" : 152
+      },
+      {
+        "px" : "ef3bef3b",
+        "y0" : 153,
+        "y1" : 153
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 154,
+        "y1" : 159
+      },
+      {
+        "px" : "f23bf23b",
+        "y0" : 160,
+        "y1" : 160
+      }
+    ],
+    "columnMid" : [
+      {
+        "px" : "003c003c",
+        "y0" : 90,
+        "y1" : 160
+      }
+    ],
+    "delegateNilBefore" : true,
+    "frame" : [
+      0,
+      100,
+      393,
+      44
+    ],
+    "intrinsic" : [
+      -1,
+      48
+    ],
+    "posDetachedNoDelegate" : 1,
+    "posDetachedWithDelegate" : 1,
+    "posInWindow" : 1,
+    "sizeThatFits" : [
+      393,
+      48
+    ],
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 1,
+        "frame" : [
+          16,
+          -2,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.delegate.any.seenBar" : [
+    "UIToolbar"
+  ],
+  "toolbar.delegate.bottom" : {
+    "callsAfterAdd" : 1,
+    "callsAfterDetachedRead" : 0,
+    "callsAfterInWindowRead" : 1,
+    "callsAfterLayout" : 1,
+    "callsAfterSecondLayout" : 1,
+    "callsAfterSet" : 0,
+    "column" : [
+      {
+        "px" : "f83bf83b",
+        "y0" : 90,
+        "y1" : 98
+      },
+      {
+        "px" : "f53bf53b",
+        "y0" : 99,
+        "y1" : 99
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 100,
+        "y1" : 106
+      },
+      {
+        "px" : "ed3bed3b",
+        "y0" : 107,
+        "y1" : 107
+      },
+      {
+        "px" : "e93be93b",
+        "y0" : 108,
+        "y1" : 108
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 109,
+        "y1" : 114
+      },
+      {
+        "px" : "e63be63b",
+        "y0" : 115,
+        "y1" : 115
+      },
+      {
+        "px" : "e33be33b",
+        "y0" : 116,
+        "y1" : 116
+      },
+      {
+        "px" : "e13be13b",
+        "y0" : 117,
+        "y1" : 117
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 118,
+        "y1" : 126
+      },
+      {
+        "px" : "df3bdf3b",
+        "y0" : 127,
+        "y1" : 133
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 134,
+        "y1" : 142
+      },
+      {
+        "px" : "e23be23b",
+        "y0" : 143,
+        "y1" : 143
+      },
+      {
+        "px" : "e53be53b",
+        "y0" : 144,
+        "y1" : 144
+      },
+      {
+        "px" : "e73be73b",
+        "y0" : 145,
+        "y1" : 145
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 146,
+        "y1" : 151
+      },
+      {
+        "px" : "eb3beb3b",
+        "y0" : 152,
+        "y1" : 152
+      },
+      {
+        "px" : "ef3bef3b",
+        "y0" : 153,
+        "y1" : 153
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 154,
+        "y1" : 159
+      },
+      {
+        "px" : "f23bf23b",
+        "y0" : 160,
+        "y1" : 160
+      }
+    ],
+    "columnMid" : [
+      {
+        "px" : "003c003c",
+        "y0" : 90,
+        "y1" : 160
+      }
+    ],
+    "delegateNilBefore" : true,
+    "frame" : [
+      0,
+      100,
+      393,
+      44
+    ],
+    "intrinsic" : [
+      -1,
+      48
+    ],
+    "posDetachedNoDelegate" : 1,
+    "posDetachedWithDelegate" : 1,
+    "posInWindow" : 1,
+    "sizeThatFits" : [
+      393,
+      48
+    ],
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 1,
+        "frame" : [
+          16,
+          -2,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.delegate.bottom.seenBar" : [
+    "UIToolbar"
+  ],
+  "toolbar.delegate.top" : {
+    "callsAfterAdd" : 1,
+    "callsAfterDetachedRead" : 0,
+    "callsAfterInWindowRead" : 1,
+    "callsAfterLayout" : 1,
+    "callsAfterSecondLayout" : 1,
+    "callsAfterSet" : 0,
+    "column" : [
+      {
+        "px" : "f83bf83b",
+        "y0" : 90,
+        "y1" : 98
+      },
+      {
+        "px" : "f53bf53b",
+        "y0" : 99,
+        "y1" : 99
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 100,
+        "y1" : 106
+      },
+      {
+        "px" : "ed3bed3b",
+        "y0" : 107,
+        "y1" : 107
+      },
+      {
+        "px" : "e93be93b",
+        "y0" : 108,
+        "y1" : 108
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 109,
+        "y1" : 114
+      },
+      {
+        "px" : "e63be63b",
+        "y0" : 115,
+        "y1" : 115
+      },
+      {
+        "px" : "e33be33b",
+        "y0" : 116,
+        "y1" : 116
+      },
+      {
+        "px" : "e13be13b",
+        "y0" : 117,
+        "y1" : 117
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 118,
+        "y1" : 126
+      },
+      {
+        "px" : "df3bdf3b",
+        "y0" : 127,
+        "y1" : 133
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 134,
+        "y1" : 142
+      },
+      {
+        "px" : "e23be23b",
+        "y0" : 143,
+        "y1" : 143
+      },
+      {
+        "px" : "e53be53b",
+        "y0" : 144,
+        "y1" : 144
+      },
+      {
+        "px" : "e73be73b",
+        "y0" : 145,
+        "y1" : 145
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 146,
+        "y1" : 151
+      },
+      {
+        "px" : "eb3beb3b",
+        "y0" : 152,
+        "y1" : 152
+      },
+      {
+        "px" : "ef3bef3b",
+        "y0" : 153,
+        "y1" : 153
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 154,
+        "y1" : 159
+      },
+      {
+        "px" : "f23bf23b",
+        "y0" : 160,
+        "y1" : 160
+      }
+    ],
+    "columnMid" : [
+      {
+        "px" : "003c003c",
+        "y0" : 90,
+        "y1" : 160
+      }
+    ],
+    "delegateNilBefore" : true,
+    "frame" : [
+      0,
+      100,
+      393,
+      44
+    ],
+    "intrinsic" : [
+      -1,
+      48
+    ],
+    "posDetachedNoDelegate" : 1,
+    "posDetachedWithDelegate" : 1,
+    "posInWindow" : 2,
+    "sizeThatFits" : [
+      393,
+      48
+    ],
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 1,
+        "frame" : [
+          16,
+          -2,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.delegate.top.seenBar" : [
+    "UIToolbar"
+  ],
+  "toolbar.delegate.topAttached" : {
+    "callsAfterAdd" : 1,
+    "callsAfterDetachedRead" : 0,
+    "callsAfterInWindowRead" : 1,
+    "callsAfterLayout" : 1,
+    "callsAfterSecondLayout" : 1,
+    "callsAfterSet" : 0,
+    "column" : [
+      {
+        "px" : "f83bf83b",
+        "y0" : 90,
+        "y1" : 98
+      },
+      {
+        "px" : "f53bf53b",
+        "y0" : 99,
+        "y1" : 99
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 100,
+        "y1" : 106
+      },
+      {
+        "px" : "ed3bed3b",
+        "y0" : 107,
+        "y1" : 107
+      },
+      {
+        "px" : "e93be93b",
+        "y0" : 108,
+        "y1" : 108
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 109,
+        "y1" : 114
+      },
+      {
+        "px" : "e63be63b",
+        "y0" : 115,
+        "y1" : 115
+      },
+      {
+        "px" : "e33be33b",
+        "y0" : 116,
+        "y1" : 116
+      },
+      {
+        "px" : "e13be13b",
+        "y0" : 117,
+        "y1" : 117
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 118,
+        "y1" : 126
+      },
+      {
+        "px" : "df3bdf3b",
+        "y0" : 127,
+        "y1" : 133
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 134,
+        "y1" : 142
+      },
+      {
+        "px" : "e23be23b",
+        "y0" : 143,
+        "y1" : 143
+      },
+      {
+        "px" : "e53be53b",
+        "y0" : 144,
+        "y1" : 144
+      },
+      {
+        "px" : "e73be73b",
+        "y0" : 145,
+        "y1" : 145
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 146,
+        "y1" : 151
+      },
+      {
+        "px" : "eb3beb3b",
+        "y0" : 152,
+        "y1" : 152
+      },
+      {
+        "px" : "ef3bef3b",
+        "y0" : 153,
+        "y1" : 153
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 154,
+        "y1" : 159
+      },
+      {
+        "px" : "f23bf23b",
+        "y0" : 160,
+        "y1" : 160
+      }
+    ],
+    "columnMid" : [
+      {
+        "px" : "003c003c",
+        "y0" : 90,
+        "y1" : 160
+      }
+    ],
+    "delegateNilBefore" : true,
+    "frame" : [
+      0,
+      100,
+      393,
+      44
+    ],
+    "intrinsic" : [
+      -1,
+      48
+    ],
+    "posDetachedNoDelegate" : 1,
+    "posDetachedWithDelegate" : 1,
+    "posInWindow" : 3,
+    "sizeThatFits" : [
+      393,
+      48
+    ],
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 1,
+        "frame" : [
+          16,
+          -2,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.delegate.topAttached.seenBar" : [
+    "UIToolbar"
+  ],
+  "toolbar.delegateNoImpl" : {
+    "callsAfterAdd" : 0,
+    "callsAfterDetachedRead" : 0,
+    "callsAfterInWindowRead" : 0,
+    "callsAfterLayout" : 0,
+    "callsAfterSecondLayout" : 0,
+    "callsAfterSet" : 0,
+    "column" : [
+      {
+        "px" : "f83bf83b",
+        "y0" : 90,
+        "y1" : 98
+      },
+      {
+        "px" : "f53bf53b",
+        "y0" : 99,
+        "y1" : 99
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 100,
+        "y1" : 106
+      },
+      {
+        "px" : "ed3bed3b",
+        "y0" : 107,
+        "y1" : 107
+      },
+      {
+        "px" : "e93be93b",
+        "y0" : 108,
+        "y1" : 108
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 109,
+        "y1" : 114
+      },
+      {
+        "px" : "e63be63b",
+        "y0" : 115,
+        "y1" : 115
+      },
+      {
+        "px" : "e33be33b",
+        "y0" : 116,
+        "y1" : 116
+      },
+      {
+        "px" : "e13be13b",
+        "y0" : 117,
+        "y1" : 117
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 118,
+        "y1" : 126
+      },
+      {
+        "px" : "df3bdf3b",
+        "y0" : 127,
+        "y1" : 133
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 134,
+        "y1" : 142
+      },
+      {
+        "px" : "e23be23b",
+        "y0" : 143,
+        "y1" : 143
+      },
+      {
+        "px" : "e53be53b",
+        "y0" : 144,
+        "y1" : 144
+      },
+      {
+        "px" : "e73be73b",
+        "y0" : 145,
+        "y1" : 145
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 146,
+        "y1" : 151
+      },
+      {
+        "px" : "eb3beb3b",
+        "y0" : 152,
+        "y1" : 152
+      },
+      {
+        "px" : "ef3bef3b",
+        "y0" : 153,
+        "y1" : 153
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 154,
+        "y1" : 159
+      },
+      {
+        "px" : "f23bf23b",
+        "y0" : 160,
+        "y1" : 160
+      }
+    ],
+    "columnMid" : [
+      {
+        "px" : "003c003c",
+        "y0" : 90,
+        "y1" : 160
+      }
+    ],
+    "delegateNilBefore" : true,
+    "frame" : [
+      0,
+      100,
+      393,
+      44
+    ],
+    "intrinsic" : [
+      -1,
+      48
+    ],
+    "posDetachedNoDelegate" : 1,
+    "posDetachedWithDelegate" : 1,
+    "posInWindow" : 1,
+    "sizeThatFits" : [
+      393,
+      48
+    ],
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 1,
+        "frame" : [
+          16,
+          -2,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  },
+  "toolbar.noDelegate" : {
+    "callsAfterAdd" : 0,
+    "callsAfterDetachedRead" : 0,
+    "callsAfterInWindowRead" : 0,
+    "callsAfterLayout" : 0,
+    "callsAfterSecondLayout" : 0,
+    "callsAfterSet" : 0,
+    "column" : [
+      {
+        "px" : "f83bf83b",
+        "y0" : 90,
+        "y1" : 98
+      },
+      {
+        "px" : "f53bf53b",
+        "y0" : 99,
+        "y1" : 99
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 100,
+        "y1" : 106
+      },
+      {
+        "px" : "ed3bed3b",
+        "y0" : 107,
+        "y1" : 107
+      },
+      {
+        "px" : "e93be93b",
+        "y0" : 108,
+        "y1" : 108
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 109,
+        "y1" : 114
+      },
+      {
+        "px" : "e63be63b",
+        "y0" : 115,
+        "y1" : 115
+      },
+      {
+        "px" : "e33be33b",
+        "y0" : 116,
+        "y1" : 116
+      },
+      {
+        "px" : "e13be13b",
+        "y0" : 117,
+        "y1" : 117
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 118,
+        "y1" : 126
+      },
+      {
+        "px" : "df3bdf3b",
+        "y0" : 127,
+        "y1" : 133
+      },
+      {
+        "px" : "e03be03b",
+        "y0" : 134,
+        "y1" : 142
+      },
+      {
+        "px" : "e23be23b",
+        "y0" : 143,
+        "y1" : 143
+      },
+      {
+        "px" : "e53be53b",
+        "y0" : 144,
+        "y1" : 144
+      },
+      {
+        "px" : "e73be73b",
+        "y0" : 145,
+        "y1" : 145
+      },
+      {
+        "px" : "e83be83b",
+        "y0" : 146,
+        "y1" : 151
+      },
+      {
+        "px" : "eb3beb3b",
+        "y0" : 152,
+        "y1" : 152
+      },
+      {
+        "px" : "ef3bef3b",
+        "y0" : 153,
+        "y1" : 153
+      },
+      {
+        "px" : "f03bf03b",
+        "y0" : 154,
+        "y1" : 159
+      },
+      {
+        "px" : "f23bf23b",
+        "y0" : 160,
+        "y1" : 160
+      }
+    ],
+    "columnMid" : [
+      {
+        "px" : "003c003c",
+        "y0" : 90,
+        "y1" : 160
+      }
+    ],
+    "delegateNilBefore" : true,
+    "frame" : [
+      0,
+      100,
+      393,
+      44
+    ],
+    "intrinsic" : [
+      -1,
+      48
+    ],
+    "posDetachedNoDelegate" : 1,
+    "posDetachedWithDelegate" : 1,
+    "posInWindow" : 1,
+    "sizeThatFits" : [
+      393,
+      48
+    ],
+    "tree" : [
+      {
+        "alpha" : 1,
+        "class" : "UICoreHostingView<RootView>",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          393,
+          44
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 1,
+        "frame" : [
+          16,
+          -2,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          361,
+          48
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIInheritedView",
+        "depth" : 3,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      },
+      {
+        "alpha" : 1,
+        "class" : "_UIPointerInteractionAssistantEffectContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          0,
+          0
+        ],
+        "hidden" : false
+      }
+    ]
+  }
+}
