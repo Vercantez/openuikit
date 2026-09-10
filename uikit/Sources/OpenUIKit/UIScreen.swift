@@ -17,8 +17,16 @@
 // keeps `UIScreen.main.bounds` sane for code that reads it before a host
 // exists.
 
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("UIScreen requires NSObject")
+#endif
+
 @preconcurrency @MainActor
-public final class UIScreen {
+public final class UIScreen: NSObject {
     /// The screen the app renders into.
     public static let main = UIScreen(bounds: CGRect(x: 0, y: 0, width: 390, height: 844),
                                       scale: 3)
@@ -71,7 +79,27 @@ public final class UIScreen {
     init(bounds: CGRect, scale: CGFloat) {
         self.bounds = CGRect(x: 0, y: 0, width: bounds.width, height: bounds.height)
         self.scale = scale
+        super.init()
     }
+
+    // MEASURED signalrowsprobe screen.*, iPhone 16 / iOS 26.1: `coordinateSpace`
+    // IS the screen object (type UIScreen, same object on every read, not a
+    // view, not the window); `fixedCoordinateSpace` is a distinct
+    // `_UIScreenFixedCoordinateSpace` with the same bounds. Both report the
+    // screen bounds (0, 0, 393, 852). Conversions are the window-hierarchy
+    // conversions plus the window's frame origin: an offset window at
+    // (10, 20) puts its subview's (8, 9) at (23, 35) in screen space, and
+    // a screen-space point converts back through the same offset. Screen
+    // space to fixed space is the identity (no orientation in this port).
+
+    /// The screen's own coordinate space: this object.
+    public var coordinateSpace: UICoordinateSpace { self }
+
+    /// The orientation-independent space. Identity with `coordinateSpace`
+    /// here (OpenUIKit has no interface rotation), a distinct object as
+    /// measured.
+    public private(set) lazy var fixedCoordinateSpace: UICoordinateSpace =
+        _UIScreenFixedCoordinateSpace(screen: self)
 
     /// HOST HOOK (not UIKit API — hence the underscore): point the screen at
     /// the surface the host is really rendering. openhost calls this with

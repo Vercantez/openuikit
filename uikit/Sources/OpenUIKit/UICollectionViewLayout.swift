@@ -121,9 +121,20 @@ open class UICollectionViewLayout {
         makeInvalidationContext()
     }
 
+    /// Set by the collection view between `invalidationContext(forBoundsChange:)`
+    /// and the `invalidateLayout()` it then issues, so that call reaches
+    /// `invalidateLayout(with:)` with the SAME context object (measured
+    /// signalrowsprobe invalidate.*: `fromBoundsContext` true on every
+    /// bounds-driven invalidation). An app's `invalidateLayout()` override
+    /// that calls super (Signal's ConversationViewLayout) sees the chain
+    /// UIKit gives it.
+    var _pendingBoundsContext: UICollectionViewLayoutInvalidationContext?
+
     /// Marks the cached geometry stale; the next query re-runs `prepare()`.
     open func invalidateLayout() {
-        invalidateLayout(with: makeInvalidationContext())
+        let context = _pendingBoundsContext ?? makeInvalidationContext()
+        _pendingBoundsContext = nil
+        invalidateLayout(with: context)
     }
 
     open func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
