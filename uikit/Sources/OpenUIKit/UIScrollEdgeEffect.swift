@@ -87,7 +87,7 @@ public final class UIScrollEdgeEffect: NSObject {
         /// A scroll edge effect with a hard cutoff and dividing line.
         public static let hard = Style(name: "hard")
 
-        public override var description: String { "<UIScrollEdgeEffectStyle: \(name)>" }
+        nonisolated public override var description: String { "<UIScrollEdgeEffectStyle: \(name)>" }
     }
 
     /// The edge this effect describes (one of `.top/.left/.bottom/.right`).
