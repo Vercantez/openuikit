@@ -22,6 +22,13 @@ open class UITableViewController: UIViewController, UITableViewDataSource,
         super.init()
     }
 
+    /// MEASURED `table.coder` (viewcontrollercoderprobe): an empty archive
+    /// yields a plain-style, unloaded controller; the coder is not read.
+    public required init?(coder: NSCoder) {
+        style = .plain
+        super.init(coder: coder)
+    }
+
     open override func loadView() {
         let tv = UITableView(frame: CGRect(x: 0, y: 0, width: 390, height: 844),
                              style: style)

@@ -303,6 +303,8 @@ public final class BackdropViewController: UIViewController {
         super.init()
     }
 
+    public required init?(coder: NSCoder) { fatalError() }
+
     public override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = theme == .dark ? UIColor(white: 0.08, alpha: 1)

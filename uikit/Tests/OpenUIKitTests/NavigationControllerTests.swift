@@ -22,6 +22,7 @@ private final class Log {
 @MainActor
 #endif
 private class LifecycleVC: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let name: String
     let log: Log
     init(name: String, log: Log) {

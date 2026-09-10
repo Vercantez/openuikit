@@ -32,6 +32,11 @@ open class UITabBarController: UIViewController, UITabBarDelegate {
         super.init()
     }
 
+    /// MEASURED `tab.coder`: non-nil, unloaded, `viewControllers` nil.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     // MARK: Children
 
     public var viewControllers: [UIViewController]? {

@@ -74,6 +74,15 @@ open class MFMailComposeViewController: UINavigationController {
         form.composer = self
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors `init()`.
+    public required init?(coder: NSCoder) {
+        let form = _MFMailComposeFormController()
+        super.init(coder: coder)
+        pushViewController(form, animated: false)
+        self.form = form
+        form.composer = self
+    }
+
     open func setToRecipients(_ toRecipients: [String]?) {
         self.toRecipients = toRecipients
         form?.reloadFields()
@@ -195,6 +204,11 @@ open class MFMessageComposeViewController: UIViewController {
 
     public init() {
         super.init()
+    }
+
+    /// Required by the base coder initializer; unmeasured, mirrors `init()`.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 
     private let cancelButton = UIButton(type: .system)

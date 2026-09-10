@@ -62,6 +62,12 @@ open class UIColorPickerViewController: UIViewController {
         modalPresentationStyle = .pageSheet
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors `init()`.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        modalPresentationStyle = .pageSheet
+    }
+
     open override func loadView() {
         let v = UIView(frame: CGRect(x: 0, y: 0, width: 393, height: 852))
         v.backgroundColor = .systemGroupedBackground

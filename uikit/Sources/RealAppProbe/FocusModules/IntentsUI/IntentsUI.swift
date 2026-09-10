@@ -13,6 +13,9 @@ open class INUIAddVoiceShortcutViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         _ = shortcut
     }
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
 }
 
 open class INUIEditVoiceShortcutViewController: UIViewController {
@@ -20,6 +23,9 @@ open class INUIEditVoiceShortcutViewController: UIViewController {
     public init(voiceShortcut: INVoiceShortcut) {
         super.init(nibName: nil, bundle: nil)
         _ = voiceShortcut
+    }
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
 }
 
