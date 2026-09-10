@@ -1,0 +1,2953 @@
+{
+ "date": "2026-09-09",
+ "app": "kickstarter/ios-oss",
+ "corpus_revision": "2f2dabb40b74dd1e7a7511a0dedb47d967ab08a0",
+ "corpus_commit_date": "2026-08-27",
+ "xcode": "26.1 (17B55)",
+ "swift": "Apple Swift 6.2.1 (swiftlang-6.2.1.4.8 clang-1700.4.4.1)",
+ "oracle": {
+  "device": "iPhone 16",
+  "runtime": "iOS 26.1 (23B86)",
+  "simulator_name": "OpenUIKit-Launch-ios-oss-launch (deleted)",
+  "scale": 3,
+  "status_bar_override": "time 9:41, charged 100%, wifi 3, cellular 4"
+ },
+ "app_target": {
+  "pbx_target": "Kickstarter-iOS",
+  "product": "Kickstarter",
+  "bundle_id_debug": "com.kickstarter.kickstarter.debug",
+  "scheme": "Kickstarter iOS",
+  "entry": "Kickstarter-iOS/AppDelegate.swift (@UIApplicationMain, UIApplicationDelegate)",
+  "main_storyboard": "Main.storyboard -> RootTabBarViewController (Kickstarter-Framework)",
+  "launch_storyboard": "LaunchScreen.storyboard"
+ },
+ "modules": {
+  "Kickstarter-iOS (PBX app target)": {
+   "path": "Kickstarter-iOS",
+   "swift": 2,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 2,
+   "import_uikit_files": 1,
+   "imports": {
+    "KsApi": 3,
+    "Kickstarter_Framework": 2,
+    "Library": 2,
+    "Prelude": 2,
+    "BrazeKit": 1,
+    "BrazeUI": 1,
+    "Firebase": 1,
+    "Foundation": 1,
+    "KDS": 1,
+    "Experimentation": 1,
+    "ReactiveExtensions": 1,
+    "ReactiveSwift": 1,
+    "SafariServices": 1,
+    "Segment": 1,
+    "SegmentBrazeUI": 1,
+    "SwiftUI": 1,
+    "UIKit": 1,
+    "UserNotifications": 1,
+    "XCTest": 1
+   }
+  },
+  "Kickstarter-Framework": {
+   "path": "Kickstarter-Framework/Sources/Kickstarter-Framework",
+   "swift": 353,
+   "objc": 0,
+   "headers": 0,
+   "xib": 21,
+   "storyboard": 20,
+   "import_uikit_files": 284,
+   "imports": {
+    "Library": 328,
+    "UIKit": 284,
+    "KDS": 224,
+    "Prelude": 221,
+    "KsApi": 197,
+    "Foundation": 63,
+    "SwiftUI": 63,
+    "ReactiveSwift": 47,
+    "Prelude_UIKit": 20,
+    "ReactiveExtensions": 14,
+    "Combine": 10,
+    "Kingfisher": 10,
+    "GraphAPI": 8,
+    "PassKit": 7,
+    "WebKit": 7,
+    "AVFoundation": 7,
+    "MessageUI": 6,
+    "SafariServices": 5,
+    "Experimentation": 4,
+    "AlamofireImage": 4,
+    "FirebaseCrashlytics": 3,
+    "StripePaymentSheet": 3,
+    "Stripe": 3,
+    "AVKit": 3,
+    "Lottie": 3,
+    "UserNotifications": 2,
+    "ServerDrivenUI": 2,
+    "FacebookLogin": 2,
+    "Observation": 1,
+    "MediaPlayer": 1,
+    "StoreKit": 1,
+    "CoreImage": 1,
+    "AuthenticationServices": 1,
+    "ObjectiveC": 1,
+    "KingfisherWebP": 1
+   }
+  },
+  "Library": {
+   "path": "Library/Sources/Library",
+   "swift": 372,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 0,
+   "import_uikit_files": 127,
+   "imports": {
+    "KsApi": 218,
+    "Foundation": 178,
+    "ReactiveSwift": 174,
+    "Prelude": 150,
+    "UIKit": 135,
+    "KDS": 61,
+    "ReactiveExtensions": 41,
+    "GraphAPI": 19,
+    "Prelude_UIKit": 13,
+    "SwiftUI": 11,
+    "Combine": 9,
+    "Experimentation": 8,
+    "PassKit": 7,
+    "AVFoundation": 5,
+    "UserNotifications": 4,
+    "AuthenticationServices": 4,
+    "WebKit": 4,
+    "FacebookLogin": 3,
+    "Library": 3,
+    "FacebookCore": 3,
+    "FirebaseCrashlytics": 3,
+    "FirebaseRemoteConfig": 3,
+    "AppTrackingTransparency": 3,
+    "Kingfisher": 3,
+    "CoreTelephony": 2,
+    "ObjectiveC": 2,
+    "MessageUI": 2,
+    "StripePaymentSheet": 2,
+    "Segment": 2,
+    "SafariServices": 1,
+    "SwiftSoup": 1,
+    "SystemConfiguration": 1,
+    "Security": 1,
+    "Lottie": 1,
+    "ServerDrivenUI": 1,
+    "Stripe": 1,
+    "AdSupport": 1,
+    "SegmentBrazeUI": 1
+   }
+  },
+  "KsApi": {
+   "path": "KsApi/Sources/KsApi",
+   "swift": 325,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 0,
+   "import_uikit_files": 2,
+   "imports": {
+    "Foundation": 182,
+    "Prelude": 85,
+    "GraphAPI": 76,
+    "ReactiveSwift": 39,
+    "Apollo": 10,
+    "Combine": 9,
+    "ApolloAPI": 6,
+    "SwiftSoup": 4,
+    "ReactiveExtensions": 3,
+    "UIKit": 2,
+    "CryptoKit": 1,
+    "Security": 1,
+    "MobileCoreServices": 1,
+    "CoreMedia": 1
+   }
+  },
+  "GraphAPI": {
+   "path": "GraphAPI/Sources",
+   "swift": 294,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 0,
+   "import_uikit_files": 0,
+   "imports": {
+    "ApolloAPI": 294
+   }
+  },
+  "KDS": {
+   "path": "KDS/Sources/KDS",
+   "swift": 19,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 0,
+   "import_uikit_files": 13,
+   "imports": {
+    "UIKit": 14,
+    "SwiftUI": 5,
+    "CoreFoundation": 2,
+    "CoreGraphics": 1,
+    "Darwin": 1,
+    "Foundation": 1
+   }
+  },
+  "ServerDrivenUI": {
+   "path": "ServerDrivenUI/Sources/ServerDrivenUI",
+   "swift": 13,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 0,
+   "import_uikit_files": 1,
+   "imports": {
+    "SwiftUI": 9,
+    "KDS": 8,
+    "Foundation": 3,
+    "GraphAPI": 2,
+    "AVFoundation": 1,
+    "AVKit": 1,
+    "WebKit": 1,
+    "Kingfisher": 1,
+    "UIKit": 1
+   }
+  },
+  "Experimentation": {
+   "path": "Experimentation/Sources/Experimentation",
+   "swift": 10,
+   "objc": 0,
+   "headers": 0,
+   "xib": 0,
+   "storyboard": 0,
+   "import_uikit_files": 0,
+   "imports": {
+    "Foundation": 3,
+    "Statsig": 1
+   }
+  }
+ },
+ "counts": {
+  "repo_swift_files_total": 2072,
+  "test_swift_files": 508
+ },
+ "generated_inputs": {
+  "KsApi/Sources/KsApi/Secrets.swift": "absent in the clone; emitted from Configs/Secrets.swift.example with isOSS=true (README: mock data), only in the scratch copy used for the Xcode build"
+ },
+ "package_resolved_pins": [
+  {
+   "identity": "abseil-cpp-binary",
+   "revision": "bbe8b69694d7873315fd3a4ad41efe043e1c07c5",
+   "version": "1.2024072200.0"
+  },
+  {
+   "identity": "alamofire",
+   "revision": "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+   "version": "5.10.2"
+  },
+  {
+   "identity": "alamofireimage",
+   "revision": "1eaf3b6c6882bed10f6e7b119665599dd2329aa1",
+   "version": "4.3.0"
+  },
+  {
+   "identity": "analytics-swift",
+   "revision": "5d3a762da5412d324205a58358b95e1da334c21e",
+   "version": "1.8.0"
+  },
+  {
+   "identity": "apollo-ios",
+   "revision": "eedde2151859011a44bb7cb05388deb2bf532644",
+   "version": "1.9.3"
+  },
+  {
+   "identity": "app-check",
+   "revision": "61b85103a1aeed8218f17c794687781505fbbef5",
+   "version": "11.2.0"
+  },
+  {
+   "identity": "braze-segment-swift",
+   "revision": "6579644caad51c099a3067f5516e7b70f496282e",
+   "version": "6.0.0"
+  },
+  {
+   "identity": "braze-swift-sdk",
+   "revision": "c630122e490fb156be2971b1f24d790488d33ac5",
+   "version": "12.1.0"
+  },
+  {
+   "identity": "facebook-ios-sdk",
+   "revision": "e14f349945ba3f9516e3292107f42be19fe9fbe5",
+   "version": "12.3.2"
+  },
+  {
+   "identity": "firebase-ios-sdk",
+   "revision": "fdc352fabaf5916e7faa1f96ad02b1957e93e5a5",
+   "version": "11.15.0"
+  },
+  {
+   "identity": "google-ads-on-device-conversion-ios-sdk",
+   "revision": "a2d0f1f1666de591eb1a811f40b1706f5c63a2ed",
+   "version": "2.3.0"
+  },
+  {
+   "identity": "googleappmeasurement",
+   "revision": "45ce435e9406d3c674dd249a042b932bee006f60",
+   "version": "11.15.0"
+  },
+  {
+   "identity": "googledatatransport",
+   "revision": "617af071af9aa1d6a091d59a202910ac482128f9",
+   "version": "10.1.0"
+  },
+  {
+   "identity": "googleutilities",
+   "revision": "60da361632d0de02786f709bdc0c4df340f7613e",
+   "version": "8.1.0"
+  },
+  {
+   "identity": "grpc-binary",
+   "revision": "75b31c842f664a0f46a2e590a570e370249fd8f6",
+   "version": "1.69.1"
+  },
+  {
+   "identity": "gtm-session-fetcher",
+   "revision": "5cfe5f090c982de9c58605d2a82a4fc77b774fbd",
+   "version": "4.1.0"
+  },
+  {
+   "identity": "interop-ios-for-google-sdks",
+   "revision": "040d087ac2267d2ddd4cca36c757d1c6a05fdbfe",
+   "version": "101.0.0"
+  },
+  {
+   "identity": "jsonsafeencoding-swift",
+   "revision": "af6a8b360984085e36c6341b21ecb35c12f47ebd",
+   "version": "2.0.0"
+  },
+  {
+   "identity": "kickstarter-prelude",
+   "revision": "f3a2dc432e8d5fea7acddb90d57adb2e9d421f7e",
+   "version": "1.0.0"
+  },
+  {
+   "identity": "kickstarter-reactiveextensions",
+   "revision": "36984ccbdbf1874728f801f29bc0e41706efdd0a",
+   "version": "2.0.0"
+  },
+  {
+   "identity": "kingfisher",
+   "revision": "2015fda791daa72c8058619545a593bf8c1dd59f",
+   "version": "8.5.0"
+  },
+  {
+   "identity": "kingfisherwebp",
+   "revision": "dccea7e92e77b0aa9ae5955c0d8f78c88ac0a950",
+   "version": "1.7.0"
+  },
+  {
+   "identity": "leveldb",
+   "revision": "0706abcc6b0bd9cedfbb015ba840e4a780b5159b",
+   "version": "1.22.2"
+  },
+  {
+   "identity": "libwebp-xcode",
+   "revision": "b2b1d20a90b14d11f6ef4241da6b81c1d3f171e4",
+   "version": "1.3.2"
+  },
+  {
+   "identity": "lottie-ios",
+   "revision": "047aa81b77adcbf583a966dfef620d17650cc656",
+   "version": "4.5.1"
+  },
+  {
+   "identity": "nanopb",
+   "revision": "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
+   "version": "2.30910.0"
+  },
+  {
+   "identity": "promises",
+   "revision": "540318ecedd63d883069ae7f1ed811a2df00b6ac",
+   "version": "2.4.0"
+  },
+  {
+   "identity": "reactiveswift",
+   "revision": "40c465af19b993344e84355c00669ba2022ca3cd",
+   "version": "7.1.1"
+  },
+  {
+   "identity": "sdwebimage",
+   "revision": "34cf2423a2c4088d06a3b08655603b5bc3eeeb3a",
+   "version": "5.21.2"
+  },
+  {
+   "identity": "sovran-swift",
+   "revision": "24867f3e4ac62027db9827112135e6531b6f4051",
+   "version": "1.1.2"
+  },
+  {
+   "identity": "sqlite.swift",
+   "revision": "392dd6058624d9f6c5b4c769d165ddd8c7293394",
+   "version": "0.15.4"
+  },
+  {
+   "identity": "statsig-kit",
+   "revision": "8c28267e3fecb07ea5dba9893bbbf001483203d4",
+   "version": "1.61.0"
+  },
+  {
+   "identity": "stripe-ios-spm",
+   "revision": "653fc8cfc40b33740401f9bd9faa8588f9a53e5f",
+   "version": "23.32.0"
+  },
+  {
+   "identity": "swift-custom-dump",
+   "revision": "82645ec760917961cfa08c9c0c7104a57a0fa4b1",
+   "version": "1.3.3"
+  },
+  {
+   "identity": "swift-protobuf",
+   "revision": "f25867a208f459d3c5a06935dceb9083b11cd539",
+   "version": "1.22.0"
+  },
+  {
+   "identity": "swift-snapshot-testing",
+   "revision": "d7e40607dcd6bc26543f5d9433103f06e0b28f8f",
+   "version": "1.18.6"
+  },
+  {
+   "identity": "swift-syntax",
+   "revision": "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+   "version": "601.0.1"
+  },
+  {
+   "identity": "swift-toolchain-sqlite",
+   "revision": "b626d3002773b1a1304166643e7f118f724b2132",
+   "version": "1.0.4"
+  },
+  {
+   "identity": "swiftsoup",
+   "revision": "0e96a20ffd37a515c5c963952d4335c89bed50a6",
+   "version": "2.6.0"
+  },
+  {
+   "identity": "viewinspector",
+   "revision": "e9a06346499a3a889165647e3f23f8a7b2609a1c",
+   "version": "0.10.3"
+  },
+  {
+   "identity": "xctest-dynamic-overlay",
+   "revision": "b2ed9eabefe56202ee4939dd9fc46b6241c88317",
+   "version": "1.6.1"
+  }
+ ],
+ "pins_verified": "xcodebuild -resolvePackageDependencies resolved all 41 identities to the same revisions as the corpus Package.resolved (workspace-state.json compared)",
+ "first_screen_imports": {
+  "AVFoundation": {
+   "files": 12,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "AVKit": {
+   "files": 3,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "AdSupport": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "AlamofireImage": {
+   "files": 4,
+   "class": "no port"
+  },
+  "AppTrackingTransparency": {
+   "files": 3,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "AuthenticationServices": {
+   "files": 5,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "BrazeKit": {
+   "files": 1,
+   "class": "no port"
+  },
+  "BrazeUI": {
+   "files": 1,
+   "class": "no port"
+  },
+  "Combine": {
+   "files": 19,
+   "class": "OpenUIKit product"
+  },
+  "CoreImage": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "CoreTelephony": {
+   "files": 2,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "Experimentation": {
+   "files": 13,
+   "class": "chain target: passed"
+  },
+  "FacebookCore": {
+   "files": 3,
+   "class": "no port"
+  },
+  "FacebookLogin": {
+   "files": 5,
+   "class": "no port"
+  },
+  "Firebase": {
+   "files": 1,
+   "class": "no port"
+  },
+  "FirebaseCrashlytics": {
+   "files": 6,
+   "class": "no port"
+  },
+  "FirebaseRemoteConfig": {
+   "files": 3,
+   "class": "no port"
+  },
+  "Foundation": {
+   "files": 242,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "GraphAPI": {
+   "files": 27,
+   "class": "chain target: passed"
+  },
+  "KDS": {
+   "files": 286,
+   "class": "chain target: failed"
+  },
+  "Kickstarter_Framework": {
+   "files": 2,
+   "class": "chain target: blocked by dependency"
+  },
+  "Kingfisher": {
+   "files": 13,
+   "class": "chain target: failed"
+  },
+  "KingfisherWebP": {
+   "files": 1,
+   "class": "no port"
+  },
+  "KsApi": {
+   "files": 418,
+   "class": "chain target: blocked by dependency"
+  },
+  "Library": {
+   "files": 333,
+   "class": "chain target: blocked by dependency"
+  },
+  "Lottie": {
+   "files": 4,
+   "class": "no port"
+  },
+  "MediaPlayer": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "MessageUI": {
+   "files": 8,
+   "class": "OpenUIKit product"
+  },
+  "ObjectiveC": {
+   "files": 3,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "Observation": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "PassKit": {
+   "files": 14,
+   "class": "OpenUIKit product"
+  },
+  "Prelude": {
+   "files": 373,
+   "class": "chain target: passed"
+  },
+  "Prelude_UIKit": {
+   "files": 33,
+   "class": "chain target: failed"
+  },
+  "ReactiveExtensions": {
+   "files": 56,
+   "class": "chain target: failed"
+  },
+  "ReactiveSwift": {
+   "files": 222,
+   "class": "chain target: passed"
+  },
+  "SafariServices": {
+   "files": 7,
+   "class": "OpenUIKit product"
+  },
+  "Security": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "Segment": {
+   "files": 3,
+   "class": "no port"
+  },
+  "SegmentBrazeUI": {
+   "files": 2,
+   "class": "no port"
+  },
+  "ServerDrivenUI": {
+   "files": 3,
+   "class": "chain target: blocked by dependency"
+  },
+  "StoreKit": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "Stripe": {
+   "files": 4,
+   "class": "no port"
+  },
+  "StripePaymentSheet": {
+   "files": 5,
+   "class": "no port"
+  },
+  "SwiftSoup": {
+   "files": 1,
+   "class": "chain target: passed"
+  },
+  "SwiftUI": {
+   "files": 75,
+   "class": "OpenUIKit product"
+  },
+  "SystemConfiguration": {
+   "files": 1,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "UIKit": {
+   "files": 420,
+   "class": "OpenUIKit product"
+  },
+  "UserNotifications": {
+   "files": 7,
+   "class": "macOS SDK / toolchain (not guest credit)"
+  },
+  "WebKit": {
+   "files": 11,
+   "class": "OpenUIKit product"
+  }
+ },
+ "chain_census": {
+  "spec": "docs/agent_reports/ios-oss-launch-chain.json",
+  "tool": "Tools/ingest/spm_app_chain.py + chain_census.py",
+  "targets": [
+   {
+    "target": "Statsig",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 1.9,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "Prelude",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 1.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "ReactiveSwift",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 0.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "SwiftSoup",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 0.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "ApolloAPI",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 0.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "Apollo",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 0.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "GraphAPI",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 0.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "ReactiveExtensions",
+    "status": "failed",
+    "exit": 1,
+    "seconds": 13.5,
+    "unique_errors": 12,
+    "own_errors": 12,
+    "dependency_errors": 0,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "reference to member 'accessibilityElementsHidden' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityHint' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityLabel' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityTraits' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityValue' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'isAccessibilityElement' cannot be resolved without a contextual type",
+      2
+     ]
+    ],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [
+     [
+      "NSObject.swift",
+      12
+     ]
+    ],
+    "other_errors": []
+   },
+   {
+    "target": "Prelude_UIKit",
+    "status": "failed",
+    "exit": 1,
+    "seconds": 1.1,
+    "unique_errors": 49,
+    "own_errors": 49,
+    "dependency_errors": 0,
+    "files_with_errors": 23,
+    "errors_by_message": [
+     [
+      "type 'CALayer' has no member 'lens'",
+      9
+     ],
+     [
+      "cannot declare conformance to 'NSObjectProtocol' in Swift",
+      5
+     ],
+     [
+      "type 'UIButton' does not conform to protocol 'UIButtonProtocol'",
+      2
+     ],
+     [
+      "cannot find type 'UIBarItem' in scope",
+      2
+     ],
+     [
+      "value of type 'Object' has no member 'accessibilityElements'",
+      2
+     ],
+     [
+      "value of type 'UIButton' has no member 'setBackgroundImage'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'pixel'",
+      1
+     ],
+     [
+      "cannot find 'UIGraphicsBeginImageContext' in scope",
+      1
+     ],
+     [
+      "value of type 'Canvas' has no member 'setFillColor'",
+      1
+     ],
+     [
+      "missing argument for parameter 'color' in call",
+      1
+     ],
+     [
+      "cannot convert value of type 'CGRect' to expected argument type 'Path'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'CALayerProtocol'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'NSTextContainer' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIActivityIndicatorView' does not conform to protocol 'UIActivityIndicatorViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIBarButtonItem' does not conform to protocol 'UIBarButtonItemProtocol'",
+      1
+     ],
+     [
+      "type 'UIBarButtonItem' does not conform to protocol 'UIBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UIBarButtonItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIControl' does not conform to protocol 'UIControlProtocol'",
+      1
+     ],
+     [
+      "type 'UILabel' does not conform to protocol 'UILabelProtocol'",
+      1
+     ],
+     [
+      "setter for property 'viewControllers' must be declared public because it matches a requirement in public protocol 'UINavigationControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UINavigationItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIProgressView' does not conform to protocol 'UIProgressViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIScrollView' does not conform to protocol 'UIScrollViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIStackView' does not conform to protocol 'UIStackViewProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UITabBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UIBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBar' does not conform to protocol 'UITabBarProtocol'",
+      1
+     ],
+     [
+      "type 'UITableViewController' does not conform to protocol 'UITableViewControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UITextField' does not conform to protocol 'UITextFieldProtocol'",
+      1
+     ],
+     [
+      "type 'UITextView' does not conform to protocol 'UITextViewProtocol'",
+      1
+     ],
+     [
+      "type 'UITextView' does not conform to protocol 'UITextInputTraitsProtocol'",
+      1
+     ],
+     [
+      "type 'UIView' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "lens",
+      9
+     ],
+     [
+      "UIBarItem",
+      2
+     ],
+     [
+      "accessibilityElements",
+      2
+     ],
+     [
+      "setBackgroundImage",
+      1
+     ],
+     [
+      "UIGraphicsBeginImageContext",
+      1
+     ],
+     [
+      "setFillColor",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [
+     [
+      "candidate is not settable, but protocol requires it",
+      2
+     ],
+     [
+      "protocol requires property 'accessibilityElementsHidden' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'imageInsets' with type 'UIEdgeInsets'",
+      1
+     ],
+     [
+      "protocol requires property 'isEnabled' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'isSecureTextEntry' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'accessibilityElements' with type '[Any]?'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "UIViewLenses.swift",
+      10
+     ],
+     [
+      "UIImage.swift",
+      4
+     ],
+     [
+      "UIBarButtonItemLenses.swift",
+      4
+     ],
+     [
+      "UITabBarItemLenses.swift",
+      4
+     ],
+     [
+      "UIButton.swift",
+      3
+     ],
+     [
+      "CALayerLenses.swift",
+      3
+     ],
+     [
+      "UIBarItemLenses.swift",
+      2
+     ],
+     [
+      "UINavigationItemLenses.swift",
+      2
+     ],
+     [
+      "UITextViewLenses.swift",
+      2
+     ],
+     [
+      "UIAccessibilityLenses.swift",
+      2
+     ],
+     [
+      "NSMutableParagraphStyleLenses.swift",
+      1
+     ],
+     [
+      "NSTextContainerLenses.swift",
+      1
+     ],
+     [
+      "UIActivityIndicatorViewLenses.swift",
+      1
+     ],
+     [
+      "UIButtonLenses.swift",
+      1
+     ],
+     [
+      "UIControlLenses.swift",
+      1
+     ],
+     [
+      "UILabelLenses.swift",
+      1
+     ],
+     [
+      "UINavigationControllerLenses.swift",
+      1
+     ],
+     [
+      "UIProgressViewLenses.swift",
+      1
+     ],
+     [
+      "UIScrollViewLenses.swift",
+      1
+     ],
+     [
+      "UIStackViewLenses.swift",
+      1
+     ],
+     [
+      "UITabBarLenses.swift",
+      1
+     ],
+     [
+      "UITableViewControllerLenses.swift",
+      1
+     ],
+     [
+      "UITextFieldLenses.swift",
+      1
+     ]
+    ],
+    "other_errors": [
+     "error: emit-module command failed with exit code 1 (use -v to see invocation)"
+    ]
+   },
+   {
+    "target": "Experimentation",
+    "status": "passed",
+    "exit": 0,
+    "seconds": 0.7,
+    "unique_errors": 0,
+    "own_errors": 0,
+    "dependency_errors": 0,
+    "files_with_errors": 0,
+    "errors_by_message": [],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [],
+    "other_errors": []
+   },
+   {
+    "target": "KDS",
+    "status": "failed",
+    "exit": 1,
+    "seconds": 3.3,
+    "unique_errors": 65,
+    "own_errors": 65,
+    "dependency_errors": 0,
+    "files_with_errors": 7,
+    "errors_by_message": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ],
+     [
+      "cannot find 'kStylisticAlternativesType' in scope",
+      2
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'AttributeName'",
+      2
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'contentInsets'",
+      2
+     ],
+     [
+      "cannot infer type of closure parameter '_' without a type annotation",
+      2
+     ],
+     [
+      "'Preview(_:body:)' is only available in macOS 14.0 or newer",
+      1
+     ],
+     [
+      "type '_OpenView' has no member 'white'",
+      1
+     ],
+     [
+      "cannot find 'CTFontManagerRegisterFontsForURL' in scope",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'process'",
+      1
+     ],
+     [
+      "cannot find 'UIAccessibility' in scope",
+      1
+     ],
+     [
+      "incorrect argument label in call (have 'name:size:', expected 'descriptor:size:')",
+      1
+     ],
+     [
+      "reference to member 'traits' cannot be resolved without a contextual type",
+      1
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'TraitKey'",
+      1
+     ],
+     [
+      "cannot find 'kStylisticAltTwoOnSelector' in scope",
+      1
+     ],
+     [
+      "cannot find 'kStylisticAltOneOnSelector' in scope",
+      1
+     ],
+     [
+      "type 'UIButton.Configuration' has no member 'borderless'",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'imagePlacement'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'leading'",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'titleLineBreakMode'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'byWordWrapping'",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'titleAlignment'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'center'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'configurationUpdateHandler'",
+      1
+     ],
+     [
+      "cannot find 'UIConfigurationTextAttributesTransformer' in scope",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'titleTextAttributesTransformer'",
+      1
+     ],
+     [
+      "cannot infer type of closure parameter 'config' without a type annotation",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'imageColorTransformer'",
+      1
+     ],
+     [
+      "type 'UIConfigurationColorTransformer' (aka '@Sendable (UIColor) -> UIColor') has no member 'init'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'setNeedsUpdateConfiguration'",
+      1
+     ],
+     [
+      "value of type 'CGColor' has no member 'components'",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "background",
+      10
+     ],
+     [
+      "FeatureKey",
+      8
+     ],
+     [
+      "setNeedsUpdateConfiguration",
+      4
+     ],
+     [
+      "baseForegroundColor",
+      4
+     ],
+     [
+      "addingAttributes",
+      3
+     ],
+     [
+      "kNumberSpacingType",
+      2
+     ],
+     [
+      "kMonospacedNumbersSelector",
+      2
+     ],
+     [
+      "kStylisticAlternativesType",
+      2
+     ],
+     [
+      "AttributeName",
+      2
+     ],
+     [
+      "contentInsets",
+      2
+     ],
+     [
+      "white",
+      1
+     ],
+     [
+      "CTFontManagerRegisterFontsForURL",
+      1
+     ],
+     [
+      "UIAccessibility",
+      1
+     ],
+     [
+      "TraitKey",
+      1
+     ],
+     [
+      "kStylisticAltTwoOnSelector",
+      1
+     ],
+     [
+      "kStylisticAltOneOnSelector",
+      1
+     ],
+     [
+      "borderless",
+      1
+     ],
+     [
+      "imagePlacement",
+      1
+     ],
+     [
+      "titleLineBreakMode",
+      1
+     ],
+     [
+      "titleAlignment",
+      1
+     ],
+     [
+      "configurationUpdateHandler",
+      1
+     ],
+     [
+      "UIConfigurationTextAttributesTransformer",
+      1
+     ],
+     [
+      "titleTextAttributesTransformer",
+      1
+     ],
+     [
+      "imageColorTransformer",
+      1
+     ],
+     [
+      "init",
+      1
+     ],
+     [
+      "components",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [
+     [
+      "KSRButtonStyleConfiguration.swift",
+      31
+     ],
+     [
+      "Fonts.swift",
+      23
+     ],
+     [
+      "CustomFont.swift",
+      4
+     ],
+     [
+      "KSRButton.swift",
+      3
+     ],
+     [
+      "ColorsView.swift",
+      2
+     ],
+     [
+      "KSRButtonStyle.swift",
+      1
+     ],
+     [
+      "UIColor+Hex.swift",
+      1
+     ]
+    ],
+    "other_errors": [
+     "error: emit-module command failed with exit code 1 (use -v to see invocation)"
+    ]
+   },
+   {
+    "target": "KsApi",
+    "status": "blocked by dependency",
+    "exit": 1,
+    "seconds": 1.2,
+    "unique_errors": 12,
+    "own_errors": 0,
+    "dependency_errors": 12,
+    "files_with_errors": 1,
+    "errors_by_message": [
+     [
+      "reference to member 'accessibilityElementsHidden' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityHint' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityLabel' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityTraits' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityValue' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'isAccessibilityElement' cannot be resolved without a contextual type",
+      2
+     ]
+    ],
+    "missing_members": [],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [
+     [
+      "NSObject.swift",
+      12
+     ]
+    ],
+    "other_errors": []
+   },
+   {
+    "target": "Kingfisher",
+    "status": "failed",
+    "exit": 1,
+    "seconds": 4.2,
+    "unique_errors": 69,
+    "own_errors": 69,
+    "dependency_errors": 0,
+    "files_with_errors": 12,
+    "errors_by_message": [
+     [
+      "'RunLoop' is ambiguous for type lookup in this context",
+      9
+     ],
+     [
+      "cannot find type 'Context' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CADisplayLink' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CVDisplayLink' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CVTimeStamp' in scope",
+      2
+     ],
+     [
+      "cannot find type 'CVOptionFlags' in scope",
+      2
+     ],
+     [
+      "cannot find 'CVDisplayLinkIsRunning' in scope",
+      2
+     ],
+     [
+      "cannot convert value of type 'UIImage?' to expected argument type 'KFCrossPlatformImage?' (aka 'Optional<NSImage>')",
+      2
+     ],
+     [
+      "value of type 'UIButton' has no member 'kf'",
+      2
+     ],
+     [
+      "cannot find 'CVDisplayLinkSetOutputHandler' in scope",
+      2
+     ],
+     [
+      "cannot infer contextual base in reference to member 'main'",
+      2
+     ],
+     [
+      "type 'UIAction' does not conform to protocol 'KingfisherHasImageComponent'",
+      1
+     ],
+     [
+      "type 'UICommand' does not conform to protocol 'KingfisherHasImageComponent'",
+      1
+     ],
+     [
+      "cannot find type 'UIBarItem' in scope",
+      1
+     ],
+     [
+      "'NSTextAttachment' is ambiguous for type lookup in this context",
+      1
+     ],
+     [
+      "cannot find type 'NSViewRepresentable' in scope",
+      1
+     ],
+     [
+      "'ResizingMode' is not a member type of struct 'SwiftUI.Image' (aka 'SwiftUI._OpenImage')",
+      1
+     ],
+     [
+      "'TemplateRenderingMode' is not a member type of struct 'SwiftUI.Image' (aka 'SwiftUI._OpenImage')",
+      1
+     ],
+     [
+      "'Interpolation' is not a member type of struct 'SwiftUI.Image' (aka 'SwiftUI._OpenImage')",
+      1
+     ],
+     [
+      "cannot find type 'Transition' in scope",
+      1
+     ],
+     [
+      "'Orientation' is not a member type of class 'OpenUIKit.UIImage'",
+      1
+     ],
+     [
+      "cannot find type 'NSView' in scope",
+      1
+     ],
+     [
+      "cannot find type 'CVReturn' in scope",
+      1
+     ],
+     [
+      "cannot find 'CVDisplayLinkStop' in scope",
+      1
+     ],
+     [
+      "cannot find 'CVDisplayLinkStart' in scope",
+      1
+     ],
+     [
+      "ambiguous use of 'common'",
+      1
+     ],
+     [
+      "value of type 'AnimatedImageView' has no member 'compatibleDisplayLink'",
+      1
+     ],
+     [
+      "cannot find type 'CALayerContentsGravity' in scope",
+      1
+     ],
+     [
+      "cannot find type 'NSImage' in scope",
+      1
+     ],
+     [
+      "cannot find 'NSImageScaling' in scope",
+      1
+     ],
+     [
+      "cannot find type 'UIActivityIndicatorView' in scope",
+      1
+     ],
+     [
+      "missing argument for parameter #1 in call",
+      1
+     ],
+     [
+      "cannot convert value of type '@Sendable () -> UIImage?' to expected argument type '@MainActor @Sendable () -> KFCrossPlatformImage?' (aka '@MainActor @Sendable () -> Optional<NSImage>')",
+      1
+     ],
+     [
+      "cannot convert value of type 'KFCrossPlatformImage?' (aka 'Optional<NSImage>') to expected argument type 'UIImage?'",
+      1
+     ],
+     [
+      "value of type 'Base' has no member 'setBackgroundImage'",
+      1
+     ],
+     [
+      "value of type 'Base' has no member 'backgroundImage'",
+      1
+     ],
+     [
+      "ambiguous use of 'premultipliedLast'",
+      1
+     ],
+     [
+      "cannot convert value of type 'some _OpenView' to closure result type 'Image' (aka '_OpenImage')",
+      1
+     ],
+     [
+      "argument passed to call that takes no arguments",
+      1
+     ],
+     [
+      "value of type 'Image' (aka '_OpenImage') has no member 'renderingMode'",
+      1
+     ],
+     [
+      "value of type 'Image' (aka '_OpenImage') has no member 'interpolation'",
+      1
+     ],
+     [
+      "value of type 'Image' (aka '_OpenImage') has no member 'antialiased'",
+      1
+     ],
+     [
+      "cannot convert value of type 'Progress' to expected argument type 'String'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'fit'",
+      1
+     ],
+     [
+      "'_OpenAnyTransition' initializer is inaccessible due to 'private' protection level",
+      1
+     ],
+     [
+      "cannot convert value of type 'T' to expected argument type '_OpenAnyTransition.Storage'",
+      1
+     ],
+     [
+      "missing argument for parameter 'perform' in call",
+      1
+     ],
+     [
+      "conflicting arguments to generic parameter 'T' ('KFCrossPlatformImage' vs. 'NSObject')",
+      1
+     ],
+     [
+      "cannot find 'CVDisplayLinkCreateWithActiveCGDisplays' in scope",
+      1
+     ],
+     [
+      "cannot find 'kCVReturnSuccess' in scope",
+      1
+     ],
+     [
+      "cannot convert value of type 'NSImageScaling' to expected argument type 'KFCrossPlatformContentMode' (aka 'UIViewContentMode')",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "Context",
+      2
+     ],
+     [
+      "CADisplayLink",
+      2
+     ],
+     [
+      "CVDisplayLink",
+      2
+     ],
+     [
+      "CVTimeStamp",
+      2
+     ],
+     [
+      "CVOptionFlags",
+      2
+     ],
+     [
+      "CVDisplayLinkIsRunning",
+      2
+     ],
+     [
+      "kf",
+      2
+     ],
+     [
+      "CVDisplayLinkSetOutputHandler",
+      2
+     ],
+     [
+      "UIBarItem",
+      1
+     ],
+     [
+      "NSViewRepresentable",
+      1
+     ],
+     [
+      "Transition",
+      1
+     ],
+     [
+      "NSView",
+      1
+     ],
+     [
+      "CVReturn",
+      1
+     ],
+     [
+      "CVDisplayLinkStop",
+      1
+     ],
+     [
+      "CVDisplayLinkStart",
+      1
+     ],
+     [
+      "compatibleDisplayLink",
+      1
+     ],
+     [
+      "CALayerContentsGravity",
+      1
+     ],
+     [
+      "NSImage",
+      1
+     ],
+     [
+      "NSImageScaling",
+      1
+     ],
+     [
+      "UIActivityIndicatorView",
+      1
+     ],
+     [
+      "setBackgroundImage",
+      1
+     ],
+     [
+      "backgroundImage",
+      1
+     ],
+     [
+      "renderingMode",
+      1
+     ],
+     [
+      "interpolation",
+      1
+     ],
+     [
+      "antialiased",
+      1
+     ],
+     [
+      "CVDisplayLinkCreateWithActiveCGDisplays",
+      1
+     ],
+     [
+      "kCVReturnSuccess",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [
+     [
+      "DisplayLink.swift",
+      27
+     ],
+     [
+      "KFImage.swift",
+      10
+     ],
+     [
+      "AnimatedImageView.swift",
+      8
+     ],
+     [
+      "UIButton+Kingfisher.swift",
+      6
+     ],
+     [
+      "HasImageComponent+Kingfisher.swift",
+      3
+     ],
+     [
+      "KF.swift",
+      3
+     ],
+     [
+      "KFAnimatedImage.swift",
+      3
+     ],
+     [
+      "KFImageOptions.swift",
+      3
+     ],
+     [
+      "KFImageRenderer.swift",
+      3
+     ],
+     [
+      "Indicator.swift",
+      1
+     ],
+     [
+      "NSTextAttachment+Kingfisher.swift",
+      1
+     ],
+     [
+      "ImageDrawing.swift",
+      1
+     ]
+    ],
+    "other_errors": [
+     "error: emit-module command failed with exit code 1 (use -v to see invocation)"
+    ]
+   },
+   {
+    "target": "ServerDrivenUI",
+    "status": "blocked by dependency",
+    "exit": 1,
+    "seconds": 1.2,
+    "unique_errors": 80,
+    "own_errors": 0,
+    "dependency_errors": 80,
+    "files_with_errors": 9,
+    "errors_by_message": [
+     [
+      "value of type 'UIButton.Configuration' has no member 'background'",
+      10
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'FeatureKey'",
+      8
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'baseForegroundColor'",
+      4
+     ],
+     [
+      "value of type 'UIFontDescriptor' has no member 'addingAttributes'",
+      3
+     ],
+     [
+      "value of type 'KSRButton' has no member 'setNeedsUpdateConfiguration'",
+      3
+     ],
+     [
+      "reference to member 'accessibilityElementsHidden' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityHint' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityLabel' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityTraits' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityValue' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'isAccessibilityElement' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "cannot find 'kNumberSpacingType' in scope",
+      2
+     ],
+     [
+      "cannot find 'kMonospacedNumbersSelector' in scope",
+      2
+     ],
+     [
+      "cannot find 'kStylisticAlternativesType' in scope",
+      2
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'AttributeName'",
+      2
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'contentInsets'",
+      2
+     ],
+     [
+      "cannot infer type of closure parameter '_' without a type annotation",
+      2
+     ],
+     [
+      "cannot find 'CTFontManagerRegisterFontsForURL' in scope",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'process'",
+      1
+     ],
+     [
+      "cannot find 'UIAccessibility' in scope",
+      1
+     ],
+     [
+      "incorrect argument label in call (have 'name:size:', expected 'descriptor:size:')",
+      1
+     ],
+     [
+      "reference to member 'traits' cannot be resolved without a contextual type",
+      1
+     ],
+     [
+      "type 'UIFontDescriptor' has no member 'TraitKey'",
+      1
+     ],
+     [
+      "cannot find 'kStylisticAltTwoOnSelector' in scope",
+      1
+     ],
+     [
+      "cannot find 'kStylisticAltOneOnSelector' in scope",
+      1
+     ],
+     [
+      "type 'UIButton.Configuration' has no member 'borderless'",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'imagePlacement'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'leading'",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'titleLineBreakMode'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'byWordWrapping'",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'titleAlignment'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'center'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'configurationUpdateHandler'",
+      1
+     ],
+     [
+      "cannot find 'UIConfigurationTextAttributesTransformer' in scope",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'titleTextAttributesTransformer'",
+      1
+     ],
+     [
+      "cannot infer type of closure parameter 'config' without a type annotation",
+      1
+     ],
+     [
+      "value of type 'UIButton.Configuration' has no member 'imageColorTransformer'",
+      1
+     ],
+     [
+      "type 'UIConfigurationColorTransformer' (aka '@Sendable (UIColor) -> UIColor') has no member 'init'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'setNeedsUpdateConfiguration'",
+      1
+     ],
+     [
+      "'Preview(_:body:)' is only available in macOS 14.0 or newer",
+      1
+     ],
+     [
+      "type '_OpenView' has no member 'white'",
+      1
+     ],
+     [
+      "value of type 'CGColor' has no member 'components'",
+      1
+     ],
+     [
+      "type 'UIAction' does not conform to protocol 'KingfisherHasImageComponent'",
+      1
+     ],
+     [
+      "type 'UICommand' does not conform to protocol 'KingfisherHasImageComponent'",
+      1
+     ],
+     [
+      "cannot find type 'UIBarItem' in scope",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "background",
+      10
+     ],
+     [
+      "FeatureKey",
+      8
+     ],
+     [
+      "setNeedsUpdateConfiguration",
+      4
+     ],
+     [
+      "baseForegroundColor",
+      4
+     ],
+     [
+      "addingAttributes",
+      3
+     ],
+     [
+      "kNumberSpacingType",
+      2
+     ],
+     [
+      "kMonospacedNumbersSelector",
+      2
+     ],
+     [
+      "kStylisticAlternativesType",
+      2
+     ],
+     [
+      "AttributeName",
+      2
+     ],
+     [
+      "contentInsets",
+      2
+     ],
+     [
+      "CTFontManagerRegisterFontsForURL",
+      1
+     ],
+     [
+      "UIAccessibility",
+      1
+     ],
+     [
+      "TraitKey",
+      1
+     ],
+     [
+      "kStylisticAltTwoOnSelector",
+      1
+     ],
+     [
+      "kStylisticAltOneOnSelector",
+      1
+     ],
+     [
+      "borderless",
+      1
+     ],
+     [
+      "imagePlacement",
+      1
+     ],
+     [
+      "titleLineBreakMode",
+      1
+     ],
+     [
+      "titleAlignment",
+      1
+     ],
+     [
+      "configurationUpdateHandler",
+      1
+     ],
+     [
+      "UIConfigurationTextAttributesTransformer",
+      1
+     ],
+     [
+      "titleTextAttributesTransformer",
+      1
+     ],
+     [
+      "imageColorTransformer",
+      1
+     ],
+     [
+      "init",
+      1
+     ],
+     [
+      "white",
+      1
+     ],
+     [
+      "components",
+      1
+     ],
+     [
+      "UIBarItem",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [],
+    "errors_by_file": [
+     [
+      "KSRButtonStyleConfiguration.swift",
+      31
+     ],
+     [
+      "Fonts.swift",
+      23
+     ],
+     [
+      "NSObject.swift",
+      12
+     ],
+     [
+      "CustomFont.swift",
+      4
+     ],
+     [
+      "KSRButton.swift",
+      3
+     ],
+     [
+      "HasImageComponent+Kingfisher.swift",
+      3
+     ],
+     [
+      "ColorsView.swift",
+      2
+     ],
+     [
+      "KSRButtonStyle.swift",
+      1
+     ],
+     [
+      "UIColor+Hex.swift",
+      1
+     ]
+    ],
+    "other_errors": [
+     "error: emit-module command failed with exit code 1 (use -v to see invocation)"
+    ]
+   },
+   {
+    "target": "Library",
+    "status": "blocked by dependency",
+    "exit": 1,
+    "seconds": 1.0,
+    "unique_errors": 42,
+    "own_errors": 0,
+    "dependency_errors": 42,
+    "files_with_errors": 21,
+    "errors_by_message": [
+     [
+      "cannot declare conformance to 'NSObjectProtocol' in Swift",
+      5
+     ],
+     [
+      "reference to member 'accessibilityElementsHidden' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityHint' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityLabel' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityTraits' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityValue' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'isAccessibilityElement' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'CALayerProtocol'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'NSTextContainer' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIActivityIndicatorView' does not conform to protocol 'UIActivityIndicatorViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIBarButtonItem' does not conform to protocol 'UIBarButtonItemProtocol'",
+      1
+     ],
+     [
+      "type 'UIBarButtonItem' does not conform to protocol 'UIBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UIBarButtonItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "cannot find type 'UIBarItem' in scope",
+      1
+     ],
+     [
+      "type 'UIButton' does not conform to protocol 'UIButtonProtocol'",
+      1
+     ],
+     [
+      "type 'UIControl' does not conform to protocol 'UIControlProtocol'",
+      1
+     ],
+     [
+      "type 'UILabel' does not conform to protocol 'UILabelProtocol'",
+      1
+     ],
+     [
+      "setter for property 'viewControllers' must be declared public because it matches a requirement in public protocol 'UINavigationControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UINavigationItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIProgressView' does not conform to protocol 'UIProgressViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIScrollView' does not conform to protocol 'UIScrollViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIStackView' does not conform to protocol 'UIStackViewProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UITabBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UIBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBar' does not conform to protocol 'UITabBarProtocol'",
+      1
+     ],
+     [
+      "type 'UITableViewController' does not conform to protocol 'UITableViewControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UITextField' does not conform to protocol 'UITextFieldProtocol'",
+      1
+     ],
+     [
+      "type 'UITextView' does not conform to protocol 'UITextViewProtocol'",
+      1
+     ],
+     [
+      "type 'UITextView' does not conform to protocol 'UITextInputTraitsProtocol'",
+      1
+     ],
+     [
+      "type 'UIView' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "UIBarItem",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [
+     [
+      "candidate is not settable, but protocol requires it",
+      2
+     ],
+     [
+      "protocol requires property 'accessibilityElementsHidden' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'imageInsets' with type 'UIEdgeInsets'",
+      1
+     ],
+     [
+      "protocol requires property 'isEnabled' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'isSecureTextEntry' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'accessibilityElements' with type '[Any]?'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "NSObject.swift",
+      12
+     ],
+     [
+      "UIBarButtonItemLenses.swift",
+      4
+     ],
+     [
+      "UITabBarItemLenses.swift",
+      4
+     ],
+     [
+      "CALayerLenses.swift",
+      3
+     ],
+     [
+      "UINavigationItemLenses.swift",
+      2
+     ],
+     [
+      "UITextViewLenses.swift",
+      2
+     ],
+     [
+      "NSMutableParagraphStyleLenses.swift",
+      1
+     ],
+     [
+      "NSTextContainerLenses.swift",
+      1
+     ],
+     [
+      "UIActivityIndicatorViewLenses.swift",
+      1
+     ],
+     [
+      "UIBarItemLenses.swift",
+      1
+     ],
+     [
+      "UIButtonLenses.swift",
+      1
+     ],
+     [
+      "UIControlLenses.swift",
+      1
+     ],
+     [
+      "UILabelLenses.swift",
+      1
+     ],
+     [
+      "UINavigationControllerLenses.swift",
+      1
+     ],
+     [
+      "UIProgressViewLenses.swift",
+      1
+     ],
+     [
+      "UIScrollViewLenses.swift",
+      1
+     ],
+     [
+      "UIStackViewLenses.swift",
+      1
+     ],
+     [
+      "UITabBarLenses.swift",
+      1
+     ],
+     [
+      "UITableViewControllerLenses.swift",
+      1
+     ],
+     [
+      "UITextFieldLenses.swift",
+      1
+     ],
+     [
+      "UIViewLenses.swift",
+      1
+     ]
+    ],
+    "other_errors": [
+     "error: emit-module command failed with exit code 1 (use -v to see invocation)"
+    ]
+   },
+   {
+    "target": "Kickstarter_Framework",
+    "status": "blocked by dependency",
+    "exit": 1,
+    "seconds": 1.8,
+    "unique_errors": 34,
+    "own_errors": 0,
+    "dependency_errors": 34,
+    "files_with_errors": 12,
+    "errors_by_message": [
+     [
+      "cannot declare conformance to 'NSObjectProtocol' in Swift",
+      4
+     ],
+     [
+      "reference to member 'accessibilityElementsHidden' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityHint' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityLabel' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityTraits' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityValue' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'isAccessibilityElement' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "setter for property 'viewControllers' must be declared public because it matches a requirement in public protocol 'UINavigationControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UINavigationItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIProgressView' does not conform to protocol 'UIProgressViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIScrollView' does not conform to protocol 'UIScrollViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIStackView' does not conform to protocol 'UIStackViewProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UITabBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UIBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBar' does not conform to protocol 'UITabBarProtocol'",
+      1
+     ],
+     [
+      "type 'UIButton' does not conform to protocol 'UIButtonProtocol'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'setBackgroundImage'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'pixel'",
+      1
+     ],
+     [
+      "cannot find 'UIGraphicsBeginImageContext' in scope",
+      1
+     ],
+     [
+      "value of type 'Canvas' has no member 'setFillColor'",
+      1
+     ],
+     [
+      "missing argument for parameter 'color' in call",
+      1
+     ],
+     [
+      "cannot convert value of type 'CGRect' to expected argument type 'Path'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'CALayerProtocol'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "setBackgroundImage",
+      1
+     ],
+     [
+      "UIGraphicsBeginImageContext",
+      1
+     ],
+     [
+      "setFillColor",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [
+     [
+      "protocol requires property 'accessibilityElementsHidden' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'isEnabled' with type 'Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "NSObject.swift",
+      12
+     ],
+     [
+      "UITabBarItemLenses.swift",
+      4
+     ],
+     [
+      "UIImage.swift",
+      4
+     ],
+     [
+      "UIButton.swift",
+      3
+     ],
+     [
+      "CALayerLenses.swift",
+      3
+     ],
+     [
+      "UINavigationItemLenses.swift",
+      2
+     ],
+     [
+      "UINavigationControllerLenses.swift",
+      1
+     ],
+     [
+      "UIProgressViewLenses.swift",
+      1
+     ],
+     [
+      "UIScrollViewLenses.swift",
+      1
+     ],
+     [
+      "UIStackViewLenses.swift",
+      1
+     ],
+     [
+      "UITabBarLenses.swift",
+      1
+     ],
+     [
+      "NSMutableParagraphStyleLenses.swift",
+      1
+     ]
+    ],
+    "other_errors": []
+   },
+   {
+    "target": "KickstarterApp",
+    "status": "blocked by dependency",
+    "exit": 1,
+    "seconds": 1.0,
+    "unique_errors": 34,
+    "own_errors": 0,
+    "dependency_errors": 34,
+    "files_with_errors": 12,
+    "errors_by_message": [
+     [
+      "cannot declare conformance to 'NSObjectProtocol' in Swift",
+      4
+     ],
+     [
+      "reference to member 'accessibilityElementsHidden' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityHint' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityLabel' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityTraits' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'accessibilityValue' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "reference to member 'isAccessibilityElement' cannot be resolved without a contextual type",
+      2
+     ],
+     [
+      "setter for property 'viewControllers' must be declared public because it matches a requirement in public protocol 'UINavigationControllerProtocol'",
+      1
+     ],
+     [
+      "type 'UINavigationItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UIProgressView' does not conform to protocol 'UIProgressViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIScrollView' does not conform to protocol 'UIScrollViewProtocol'",
+      1
+     ],
+     [
+      "type 'UIStackView' does not conform to protocol 'UIStackViewProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UITabBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'UIBarItemProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBarItem' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ],
+     [
+      "type 'UITabBar' does not conform to protocol 'UITabBarProtocol'",
+      1
+     ],
+     [
+      "type 'UIButton' does not conform to protocol 'UIButtonProtocol'",
+      1
+     ],
+     [
+      "value of type 'UIButton' has no member 'setBackgroundImage'",
+      1
+     ],
+     [
+      "cannot infer contextual base in reference to member 'pixel'",
+      1
+     ],
+     [
+      "cannot find 'UIGraphicsBeginImageContext' in scope",
+      1
+     ],
+     [
+      "value of type 'Canvas' has no member 'setFillColor'",
+      1
+     ],
+     [
+      "missing argument for parameter 'color' in call",
+      1
+     ],
+     [
+      "cannot convert value of type 'CGRect' to expected argument type 'Path'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'CALayerProtocol'",
+      1
+     ],
+     [
+      "type 'CALayer' does not conform to protocol 'KSObjectProtocol'",
+      1
+     ]
+    ],
+    "missing_members": [
+     [
+      "setBackgroundImage",
+      1
+     ],
+     [
+      "UIGraphicsBeginImageContext",
+      1
+     ],
+     [
+      "setFillColor",
+      1
+     ]
+    ],
+    "unmet_protocol_requirements": [
+     [
+      "protocol requires property 'accessibilityElementsHidden' with type 'Bool'",
+      1
+     ],
+     [
+      "protocol requires property 'isEnabled' with type 'Bool'",
+      1
+     ]
+    ],
+    "errors_by_file": [
+     [
+      "NSObject.swift",
+      12
+     ],
+     [
+      "UITabBarItemLenses.swift",
+      4
+     ],
+     [
+      "UIImage.swift",
+      4
+     ],
+     [
+      "UIButton.swift",
+      3
+     ],
+     [
+      "CALayerLenses.swift",
+      3
+     ],
+     [
+      "UINavigationItemLenses.swift",
+      2
+     ],
+     [
+      "UINavigationControllerLenses.swift",
+      1
+     ],
+     [
+      "UIProgressViewLenses.swift",
+      1
+     ],
+     [
+      "UIScrollViewLenses.swift",
+      1
+     ],
+     [
+      "UIStackViewLenses.swift",
+      1
+     ],
+     [
+      "UITabBarLenses.swift",
+      1
+     ],
+     [
+      "NSMutableParagraphStyleLenses.swift",
+      1
+     ]
+    ],
+    "other_errors": []
+   }
+  ]
+ },
+ "oracle_probe_lines": [
+  "decel.normal=0.998",
+  "decel.fast=0.99",
+  "decel.default=0.998",
+  "textfield.textColor=<UIDynamicCatalogSystemColor: 0x6000017204c0; name = labelColor>",
+  "textfield.textColor.isNil=false",
+  "textfield.textColor.afterNil=<UIDynamicCatalogSystemColor: 0x6000017204c0; name = labelColor>",
+  "textfield.borderStyle.raws=[0, 1, 2, 3]",
+  "textfield.borderStyle.default=0",
+  "spellChecking.raws=[0, 1, 2]",
+  "textfield.spellChecking.default=0",
+  "navStyle.raws=[0, 1, 2]",
+  "view.navStyle.default=0",
+  "nsobject.a11y label=nil hint=nil isElement=false traits=0 hidden=false value=nil",
+  "cgcolor.red n=4 comps=[\"1\", \"0\", \"0\", \"1\"] space=kCGColorSpaceExtendedSRGB",
+  "cgcolor.white n=2 comps=[\"1\", \"1\"] space=kCGColorSpaceExtendedGray",
+  "cgcolor.black n=2 comps=[\"0\", \"1\"] space=kCGColorSpaceExtendedGray",
+  "cgcolor.clear n=2 comps=[\"0\", \"0\"] space=kCGColorSpaceExtendedGray",
+  "cgcolor.gray0.5 n=2 comps=[\"0.5\", \"1\"] space=kCGColorSpaceExtendedGray",
+  "cgcolor.rgb n=4 comps=[\"0.2\", \"0.4\", \"0.6\", \"0.8\"] space=kCGColorSpaceExtendedSRGB",
+  "cgcolor.p3 n=4 comps=[\"1.09309\", \"-0.22684\", \"-0.15008\", \"1\"] space=kCGColorSpaceExtendedSRGB",
+  "cgcolor.hsb n=4 comps=[\"0\", \"1\", \"1\", \"1\"] space=kCGColorSpaceExtendedSRGB",
+  "cgcolor.label n=2 comps=[\"0\", \"1\"] space=kCGColorSpaceGenericGrayGamma2_2",
+  "cgcolor.systemBackground n=2 comps=[\"1\", \"1\"] space=kCGColorSpaceExtendedGray",
+  "cgcolor.cgblack n=2 comps=[0.0, 1.0]",
+  "font[Helvetica] fontName=Helvetica family=Helvetica size=12.0",
+  "font[Helvetica-Bold] fontName=Helvetica-Bold family=Helvetica size=12.0",
+  "font[NoSuchFont] nil",
+  "font[Inter] nil",
+  "font[HelveticaNeue-Light] fontName=HelveticaNeue-Light family=Helvetica Neue size=12.0",
+  "font[.SFUI-Regular] fontName=TimesNewRomanPSMT family=Times New Roman size=12.0",
+  "font[SFProText-Regular] nil",
+  "font[Courier] fontName=Courier family=Courier size=12.0",
+  "font.system fontName=.SFUI-Regular family=.AppleSystemUIFont",
+  "label.textColor.default=Optional(<UIDynamicCatalogSystemColor: 0x6000017204c0; name = labelColor>)",
+  "label.textColor.afterNil=Optional(<UIDynamicCatalogSystemColor: 0x6000017204c0; name = labelColor>)"
+ ],
+ "golden": {
+  "file": "docs/agent_reports/ios-oss-launch-first-screen-ios26.1.png",
+  "size_px": [
+   1179,
+   2556
+  ],
+  "screen": "OnboardingView (SwiftUI, UIHostingController, .fullScreen modal over RootTabBarViewController)",
+  "animated_band_px": {
+   "x": [
+    27,
+    1152
+   ],
+   "y": [
+    992,
+    1953
+   ]
+  },
+  "frames_pt": {
+   "background": "rgb(6,229,132)",
+   "progress_track": {
+    "x": [
+     20,
+     334
+    ],
+    "y": [
+     106.7,
+     114.7
+    ]
+   },
+   "progress_fill": {
+    "x": [
+     20,
+     83
+    ],
+    "y": [
+     106.7,
+     114.7
+    ],
+    "color": "rgb(3,113,65)"
+   },
+   "close_x": {
+    "x": [
+     350,
+     365
+    ],
+    "y": [
+     103,
+     118
+    ]
+   },
+   "title_ink": {
+    "x": [
+     73.7,
+     319.7
+    ],
+    "y": [
+     142.7,
+     159.7
+    ]
+   },
+   "body_ink": {
+    "x": [
+     28.7,
+     364.7
+    ],
+    "y": [
+     180.3,
+     253.3
+    ]
+   },
+   "next_button": {
+    "x": [
+     40,
+     353
+    ],
+    "y": [
+     708.3,
+     760
+    ],
+    "fill": "rgb(30,30,30)"
+   },
+   "next_label_ink": {
+    "x": [
+     179.7,
+     214.3
+    ],
+    "y": [
+     728.7,
+     740
+    ]
+   }
+  }
+ },
+ "explore_capture": {
+  "file": "docs/agent_reports/ios-oss-launch-explore-att-ios26.1.png",
+  "note": "hasSeenOnboarding default set true; RootTabBarViewController Explore tab with MockService data behind the system App Tracking Transparency alert; two captures 5 s apart byte-identical"
+ }
+}
