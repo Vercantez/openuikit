@@ -124,8 +124,15 @@ open class UIEditMenuInteraction: NSObject, UIInteraction {
         // view, even without a window, stores the source point and queries
         // menuFor once (`unwindowed.present.immediate`). Presentation is not
         // supported on Catalyst; keep this path under the iOS cut.
-        guard OpenUIKitRuntime.systemFontCut == .iOS, view != nil else { return }
+        guard OpenUIKitRuntime.systemFontCut == .iOS, let view else { return }
         self.configuration = configuration
+        // MEASURED (Tools/oracle2/firefoxlastrowsprobe, iPhone 16 + iPad A16):
+        // presenting builds the CONTEXT menu system first — `buildMenu(with:)`
+        // reaches the source view, its controller, the window, the
+        // application and the app delegate, in that order, before the
+        // delegate's `menuFor` is asked. The built tree is not consulted
+        // here (the platter passes no system actions, see below).
+        UIMenuSystem.context._rebuild(startingAt: view)
         resolveRequestedMenu()
     }
 
