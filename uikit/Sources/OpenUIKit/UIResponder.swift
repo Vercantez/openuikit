@@ -143,9 +143,14 @@ open class UIResponder: NSObject {
     /// declaration has to exist for that source to compile.
     open func accessibilityActivate() -> Bool { false }
 
-    /// Accessibility attributes (storage only — see UIViewCompat.swift for
-    /// the accessors and for why nothing consults them).
-    var _accessibility = AccessibilityState()
+    // Accessibility attributes are NOT stored here any more. The iOS 26.1 SDK
+    // declares them on NSObject (`@interface NSObject (UIAccessibility)`,
+    // UIAccessibility.h:44) — which is what Kickstarter-ReactiveExtensions'
+    // `Rac where Object: NSObject` setters and Kickstarter-Prelude's
+    // `KSObjectProtocol: NSObjectProtocol` require. The accessors and their
+    // side-table storage live in NSObjectAccessibility.swift; `_accessibility`
+    // below resolves to the computed property on `extension NSObject` there,
+    // so this file's spelling is unchanged and one object has one state.
     private var _inputAssistantItemStorage: UITextInputAssistantItem?
 
     /// Stable keyboard-shortcut-bar configuration for this responder.

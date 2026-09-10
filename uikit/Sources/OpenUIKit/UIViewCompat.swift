@@ -44,50 +44,18 @@ public struct UIAccessibilityTraits: OptionSet, Sendable {
     public static let tabBar = UIAccessibilityTraits(rawValue: 1 << 16)
 }
 
+// The nine NSObject-level attributes moved to NSObjectAccessibility.swift,
+// which is where the iOS 26.1 SDK puts them (`@interface NSObject
+// (UIAccessibility)`); `AccessibilityState` moved with them. What stays here
+// is `accessibilityIdentifier`, which Apple keeps OFF NSObject — it rides
+// the `UIAccessibilityIdentification` protocol on UIView / UIBarItem /
+// UIAlertAction / UIMenuElement (UIAccessibilityIdentification.h:19-39). The
+// port declares it one level up, on UIResponder, so a view controller can
+// carry one too; UIView satisfies the protocol by inheritance.
 extension UIResponder {
-    public var isAccessibilityElement: Bool {
-        get { _accessibility.isElement }
-        set { _accessibility.isElement = newValue }
-    }
-    public var accessibilityElementsHidden: Bool {
-        get { _accessibility.elementsHidden }
-        set { _accessibility.elementsHidden = newValue }
-    }
-    public var accessibilityNavigationStyle: UIAccessibilityNavigationStyle {
-        get { _accessibility.navigationStyle }
-        set { _accessibility.navigationStyle = newValue }
-    }
-    public var accessibilityLabel: String? {
-        get { _accessibility.label }
-        set { _accessibility.label = newValue }
-    }
-    public var accessibilityHint: String? {
-        get { _accessibility.hint }
-        set { _accessibility.hint = newValue }
-    }
     public var accessibilityIdentifier: String? {
         get { _accessibility.identifier }
         set { _accessibility.identifier = newValue }
-    }
-    public var accessibilityTraits: UIAccessibilityTraits {
-        get { _accessibility.traits }
-        set { _accessibility.traits = newValue }
-    }
-    public var accessibilityCustomActions: [UIAccessibilityCustomAction]? {
-        get { _accessibility.customActions }
-        set { _accessibility.customActions = newValue }
-    }
-    public var accessibilityCustomActionsBlock: (() -> [UIAccessibilityCustomAction]?)? {
-        get { _accessibility.customActionsBlock }
-        set { _accessibility.customActionsBlock = newValue }
-    }
-    public var accessibilityCustomRotors: [UIAccessibilityCustomRotor]? {
-        get { _accessibility.customRotors }
-        set { _accessibility.customRotors = newValue }
-    }
-    public var accessibilityCustomRotorsBlock: (() -> [UIAccessibilityCustomRotor]?)? {
-        get { _accessibility.customRotorsBlock }
-        set { _accessibility.customRotorsBlock = newValue }
     }
 }
 
@@ -97,21 +65,6 @@ public enum UIAccessibilityNavigationStyle: Int, Sendable {
     case automatic = 0
     case separate = 1
     case combined = 2
-}
-
-struct AccessibilityState {
-    var navigationStyle: UIAccessibilityNavigationStyle = .automatic
-    var isElement = false
-    var elementsHidden = false
-    var label: String?
-    var value: String?
-    var hint: String?
-    var identifier: String?
-    var traits: UIAccessibilityTraits = .none
-    var customActions: [UIAccessibilityCustomAction]?
-    var customActionsBlock: (() -> [UIAccessibilityCustomAction]?)?
-    var customRotors: [UIAccessibilityCustomRotor]?
-    var customRotorsBlock: (() -> [UIAccessibilityCustomRotor]?)?
 }
 
 // MARK: - Fitting sizes
