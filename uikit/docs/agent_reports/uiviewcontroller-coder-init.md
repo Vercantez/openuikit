@@ -142,8 +142,12 @@ swift test (whole package, Darwin)
   did not fail on the branch run. None touch a controller initializer.
 ```
 
-`swift build` (whole package, Darwin): complete. Linux: the merge check
-(`CHECK_ONLY=1 agent_merge.sh`), verdict in the REAL_APP_TEST row.
+`swift build` (whole package, Darwin): complete. Merge check
+(`CHECK_ONLY=1 agent_merge.sh`, macOS build + Catalyst gate + real-app
+floors + conformance apps + Linux `openrender` build): `checks passed
+(CHECK_ONLY)`, no REFUSED. The first run hit a `REAL_APP_TEST.md` row
+conflict with the two landings that arrived meanwhile; main (668bf00c) was
+merged in, the controller suites re-ran 144/144, and the check was rerun.
 
 ## Limits, stated
 
