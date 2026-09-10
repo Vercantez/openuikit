@@ -8,7 +8,9 @@ import XCTest
 // reader, so the coder handed in here is a bare `NSCoder()` and is never
 // consulted. Rows that Apple round-trips (title, restorationIdentifier)
 // are documented as limits, not asserted.
+#if !os(Linux)
 @MainActor
+#endif
 final class ViewControllerCoderTests: XCTestCase {
 
     // base.coder: nonNil, loadedBefore false, viewIfLoadedNil true,

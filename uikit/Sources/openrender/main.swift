@@ -63,6 +63,16 @@ if let v = ProcessInfo.processInfo.environment["OPENUIKIT_LAYER_CACHE"] {
 // table miss ("W|<key>" / "O|<key>", one per line) after rendering.
 let inkLogPath = ProcessInfo.processInfo.environment["OPENUIKIT_INK_LOG"]
 if inkLogPath != nil { GlyphInkTable.logMisses = true }
+/// One key per line, each line newline-terminated; an EMPTY miss set writes
+/// an EMPTY file. MEASURED 2026-09-09: the previous `lines + "\n"` wrote a
+/// lone newline for zero misses, which `wc -l` counts as ONE miss — the
+/// "ink misses 238 → 1" in the 2026-09-07 guest rescore and the "one
+/// remaining 3x miss" on realapp_hackers_feed_light were that byte, not a key.
+@MainActor func writeInkLog(_ path: String) {
+    let keys = GlyphInkTable.missedKeys.sorted()
+    let text = keys.map { $0 + "\n" }.joined()
+    try? text.write(toFile: path, atomically: true, encoding: .utf8)
+}
 
 // Font directory override: OPENUIKIT_FONT_DIR=<dir>. The library's built-in
 // search list points at macOS system paths; off Darwin there is no system SF
@@ -145,10 +155,7 @@ try MainActor.assumeIsolated {
             try writeJSONFile(result.layout, path: "\(outdir)/\(result.name).layout.json")
             print("rendered \(result.name)")
         }
-        if let inkLogPath {
-            let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n")
-            try? (lines + "\n").write(toFile: inkLogPath, atomically: true, encoding: .utf8)
-        }
+        if let inkLogPath { writeInkLog(inkLogPath) }
         exit(0)
     case "render":
         let outdir = args[2]
@@ -158,10 +165,7 @@ try MainActor.assumeIsolated {
             do { try renderScene(file: file, outdir: outdir) }
             catch { print("FAIL \(file): \(error)"); failures += 1 }
         }
-        if let inkLogPath {
-            let lines = GlyphInkTable.missedKeys.sorted().joined(separator: "\n")
-            try? (lines + "\n").write(toFile: inkLogPath, atomically: true, encoding: .utf8)
-        }
+        if let inkLogPath { writeInkLog(inkLogPath) }
         exit(failures == 0 ? 0 : 1)
     default:
         print("unknown command \(args[1])")
