@@ -243,8 +243,14 @@ open class UINavigationController: UIViewController {
 
         navigationBar.autoresizingMask = [.flexibleWidth]
         navigationBar._controller = self
+        // MEASURED (signallastrowsprobe `nav`): the managed bar's delegate
+        // is the controller itself; a subclass conforming to
+        // UINavigationBarDelegate receives the calls (Signal's
+        // OWSNavigationController). UINavigationController does not declare
+        // the conformance — a subclass extension adding it must compile.
+        navigationBar.delegate = self as? UINavigationBarDelegate
         navigationBar.onBackTapped = { [weak self] in
-            self?.popViewController(animated: true)
+            self?._backButtonTapped()
         }
         v.addSubview(navigationBar)
 
@@ -747,6 +753,11 @@ open class UINavigationController: UIViewController {
         let from = topViewController
         addChild(vc)
         viewControllers.append(vc)
+        // MEASURED: `shouldPush(item)` reaches the bar delegate with
+        // `viewControllers` already holding the new controller and the bar
+        // items not yet; no `didPush` follows on the controller path. The
+        // answer's effect was not measured and is not acted on.
+        _ = navigationBar.delegate?.navigationBar(navigationBar, shouldPush: vc.navigationItem)
 
         guard isViewLoaded else {
             vc.didMove(toParent: self) // view installed by loadView later
@@ -787,6 +798,25 @@ open class UINavigationController: UIViewController {
     }
 
     // MARK: Pop
+
+    /// Back-button tap. MEASURED (signallastrowsprobe `nav`, controller
+    /// path, iOS 26.1): `shouldPop(item)` is asked with the stack intact
+    /// (`viewControllers` and `navigationBar.items` both still hold the top,
+    /// `item === topViewController.navigationItem`); `false` leaves
+    /// everything; `true` pops the controller and then `didPop(item)`
+    /// arrives with both stacks already shortened. A programmatic
+    /// `popViewController` asks nothing. Calling `popItem` on a managed bar
+    /// raises in UIKit (crash report in the probe source) and is not a path
+    /// here.
+    func _backButtonTapped() {
+        guard let item = navigationBar.topItem ?? topViewController?.navigationItem else {
+            popViewController(animated: true)
+            return
+        }
+        if let d = navigationBar.delegate, !d.navigationBar(navigationBar, shouldPop: item) { return }
+        popViewController(animated: true)
+        navigationBar.delegate?.navigationBar(navigationBar, didPop: item)
+    }
 
     @discardableResult
     public func popViewController(animated: Bool) -> UIViewController? {

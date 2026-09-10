@@ -458,6 +458,12 @@ open class UIViewController: UIResponder, UIContentContainer {
     /// controller without one.
     public var tabBarItem: UITabBarItem?
 
+    /// iOS 18: the `UITab` whose provider produced this controller. MEASURED
+    /// (signallastrowsprobe) set as soon as the provider returns, before the
+    /// tab joins a controller; nil for legacy `viewControllers` children.
+    public var tab: UITab? { _tab }
+    weak var _tab: UITab?
+
     /// Nearest ancestor tab bar controller (UIKit semantics).
     public var tabBarController: UITabBarController? {
         var p = parent
