@@ -1,0 +1,457 @@
+{
+ "_note": "JUDGEMENT column -- see classify_gaps.py docstring",
+ "apps": {
+  "NetNewsWire": {},
+  "Signal-iOS": {
+   "stub-able": {
+    "types": 1,
+    "uses": 4,
+    "list": [
+     [
+      "UILocalizedIndexedCollation",
+      4
+     ]
+    ]
+   },
+   "blocking": {
+    "types": 4,
+    "uses": 8,
+    "list": [
+     [
+      "UITab",
+      3
+     ],
+     [
+      "UINavigationBarDelegate",
+      2
+     ],
+     [
+      "NSIndexPath",
+      2
+     ],
+     [
+      "UICornerConfiguration",
+      1
+     ]
+    ]
+   }
+  },
+  "Telegram-iOS": {
+   "stub-able": {
+    "types": 14,
+    "uses": 41,
+    "list": [
+     [
+      "UIFindSession",
+      10
+     ],
+     [
+      "UIReferenceLibraryViewController",
+      6
+     ],
+     [
+      "UIPencilInteraction",
+      4
+     ],
+     [
+      "UIInterpolatingMotionEffect",
+      4
+     ],
+     [
+      "UIFindInteractionDelegate",
+      2
+     ],
+     [
+      "UITextSearchOptions",
+      2
+     ],
+     [
+      "UIPointerInteractionAnimating",
+      2
+     ],
+     [
+      "UIAccessibilityElement",
+      2
+     ],
+     [
+      "UIScrollViewAccessibilityDelegate",
+      2
+     ],
+     [
+      "UIMotionEffectGroup",
+      2
+     ],
+     [
+      "UITextChecker",
+      2
+     ],
+     [
+      "UIPencilInteractionDelegate",
+      1
+     ],
+     [
+      "UITextInputPasswordRules",
+      1
+     ],
+     [
+      "UILocalNotification",
+      1
+     ]
+    ]
+   },
+   "blocking": {
+    "types": 19,
+    "uses": 56,
+    "list": [
+     [
+      "NSTextLocation",
+      6
+     ],
+     [
+      "NSTextLayoutFragment",
+      6
+     ],
+     [
+      "NSIndexPath",
+      5
+     ],
+     [
+      "NSTextLayoutManager",
+      5
+     ],
+     [
+      "NSTextRange",
+      4
+     ],
+     [
+      "UITextSelectionDisplayInteraction",
+      4
+     ],
+     [
+      "UICornerRadius",
+      4
+     ],
+     [
+      "NSTextContentStorage",
+      3
+     ],
+     [
+      "UITextInputTokenizer",
+      3
+     ],
+     [
+      "UITextLoupeSession",
+      3
+     ],
+     [
+      "NSDataAsset",
+      3
+     ],
+     [
+      "NSTextList",
+      2
+     ],
+     [
+      "UITextInputDelegate",
+      2
+     ],
+     [
+      "NSTextParagraph",
+      1
+     ],
+     [
+      "NSTextContentStorageDelegate",
+      1
+     ],
+     [
+      "NSTextLayoutManagerDelegate",
+      1
+     ],
+     [
+      "NSTextElement",
+      1
+     ],
+     [
+      "UITextCursorView",
+      1
+     ],
+     [
+      "UITextSelectionDisplayInteractionDelegate",
+      1
+     ]
+    ]
+   }
+  },
+  "WordPress-iOS": {
+   "stub-able": {
+    "types": 11,
+    "uses": 18,
+    "list": [
+     [
+      "UIAttachmentBehavior",
+      3
+     ],
+     [
+      "UIInterpolatingMotionEffect",
+      2
+     ],
+     [
+      "UISearchToken",
+      2
+     ],
+     [
+      "UIDynamicAnimator",
+      2
+     ],
+     [
+      "UISnapBehavior",
+      2
+     ],
+     [
+      "UIPushBehavior",
+      2
+     ],
+     [
+      "UIMotionEffectGroup",
+      1
+     ],
+     [
+      "UITableViewDataSourcePrefetching",
+      1
+     ],
+     [
+      "UIDocumentMenuViewController",
+      1
+     ],
+     [
+      "UIAccessibilityElement",
+      1
+     ],
+     [
+      "UICollectionViewDataSourcePrefetching",
+      1
+     ]
+    ]
+   },
+   "blocking": {
+    "types": 3,
+    "uses": 4,
+    "list": [
+     [
+      "NSTextTab",
+      2
+     ],
+     [
+      "NSTextLayoutManager",
+      1
+     ],
+     [
+      "NSTextLocation",
+      1
+     ]
+    ]
+   }
+  },
+  "eidolon": {},
+  "firefox-ios": {
+   "stub-able": {
+    "types": 9,
+    "uses": 24,
+    "list": [
+     [
+      "UILargeContentViewerInteraction",
+      11
+     ],
+     [
+      "UIPasteControl",
+      3
+     ],
+     [
+      "UIDocumentInteractionControllerDelegate",
+      2
+     ],
+     [
+      "UIScreenshotServiceDelegate",
+      2
+     ],
+     [
+      "UIViewPrintFormatter",
+      2
+     ],
+     [
+      "UIScreenshotService",
+      1
+     ],
+     [
+      "UITableViewDataSourcePrefetching",
+      1
+     ],
+     [
+      "UICollectionViewDataSourcePrefetching",
+      1
+     ],
+     [
+      "UIFindInteraction",
+      1
+     ]
+    ]
+   },
+   "blocking": {
+    "types": 2,
+    "uses": 3,
+    "list": [
+     [
+      "UIMenuBuilder",
+      2
+     ],
+     [
+      "UICommandAlternate",
+      1
+     ]
+    ]
+   }
+  },
+  "focus-ios": {},
+  "ios-oss": {
+   "stub-able": {
+    "types": 1,
+    "uses": 1,
+    "list": [
+     [
+      "UITableViewDataSourcePrefetching",
+      1
+     ]
+    ]
+   }
+  },
+  "simplenote-ios": {
+   "stub-able": {
+    "types": 3,
+    "uses": 6,
+    "list": [
+     [
+      "UITextInputPasswordRules",
+      3
+     ],
+     [
+      "UIViewControllerRestoration",
+      2
+     ],
+     [
+      "UISimpleTextPrintFormatter",
+      1
+     ]
+    ]
+   }
+  }
+ },
+ "_union": {
+  "blocking": {
+   "types": [
+    "NSCollectionLayoutAnchor",
+    "NSCollectionLayoutEdgeSpacing",
+    "NSDataAsset",
+    "NSIndexPath",
+    "NSMenuToolbarItem",
+    "NSTextContentStorage",
+    "NSTextContentStorageDelegate",
+    "NSTextElement",
+    "NSTextLayoutFragment",
+    "NSTextLayoutManager",
+    "NSTextLayoutManagerDelegate",
+    "NSTextList",
+    "NSTextLocation",
+    "NSTextParagraph",
+    "NSTextRange",
+    "NSTextTab",
+    "NSToolbarItem",
+    "UIActionSheetDelegate",
+    "UIBackgroundExtensionView",
+    "UIBarItem",
+    "UIBarPositioning",
+    "UICalendarSelectionSingleDate",
+    "UICalendarSelectionSingleDateDelegate",
+    "UICalendarView",
+    "UICalendarViewDelegate",
+    "UICollectionViewUpdateItem",
+    "UICommandAlternate",
+    "UIContentSizeCategoryAdjusting",
+    "UICornerConfiguration",
+    "UICornerRadius",
+    "UIImageAsset",
+    "UIMenuBuilder",
+    "UIMenuSystem",
+    "UINavigationBarDelegate",
+    "UIPopoverPresentationControllerSourceItem",
+    "UIResponderStandardEditActions",
+    "UIScrollEdgeEffect",
+    "UIScrollEdgeElementContainerInteraction",
+    "UITab",
+    "UITabAccessory",
+    "UITabBarItemAppearance",
+    "UITableViewRowAction",
+    "UITextCursorView",
+    "UITextInputDelegate",
+    "UITextInputTokenizer",
+    "UITextItem",
+    "UITextLoupeSession",
+    "UITextSelectionDisplayInteraction",
+    "UITextSelectionDisplayInteractionDelegate",
+    "UITitlebar",
+    "UIToolbarDelegate",
+    "UITraitLayoutDirection",
+    "UITraitLegibilityWeight",
+    "UITraitTabAccessoryEnvironment"
+   ],
+   "uses": 280
+  },
+  "stub-able": {
+   "types": [
+    "UIAccessibilityElement",
+    "UIAttachmentBehavior",
+    "UICollectionViewDataSourcePrefetching",
+    "UICollectionViewFocusUpdateContext",
+    "UIDocumentInteractionControllerDelegate",
+    "UIDocumentMenuViewController",
+    "UIDynamicAnimator",
+    "UIFindInteraction",
+    "UIFindInteractionDelegate",
+    "UIFindSession",
+    "UIFocusAnimationCoordinator",
+    "UIFocusGuide",
+    "UIFocusUpdateContext",
+    "UIInterpolatingMotionEffect",
+    "UILargeContentViewerInteraction",
+    "UILocalNotification",
+    "UILocalizedIndexedCollation",
+    "UIMotionEffectGroup",
+    "UIPasteControl",
+    "UIPencilInteraction",
+    "UIPencilInteractionDelegate",
+    "UIPointerInteractionAnimating",
+    "UIPushBehavior",
+    "UIReferenceLibraryViewController",
+    "UIScreenshotService",
+    "UIScreenshotServiceDelegate",
+    "UIScribbleInteraction",
+    "UIScribbleInteractionDelegate",
+    "UIScrollViewAccessibilityDelegate",
+    "UISearchToken",
+    "UISimpleTextPrintFormatter",
+    "UISnapBehavior",
+    "UITableViewDataSourcePrefetching",
+    "UITextChecker",
+    "UITextInputPasswordRules",
+    "UITextSearchOptions",
+    "UIViewControllerRestoration",
+    "UIViewPrintFormatter",
+    "UIWindowSceneDestructionRequestOptions"
+   ],
+   "uses": 138
+  },
+  "unclassified": {
+   "types": [],
+   "uses": 0
+  }
+ }
+}
