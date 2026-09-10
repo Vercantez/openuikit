@@ -184,7 +184,6 @@ learned the hard way.
 | `quartz/` | Portable CoreGraphics + CoreAnimation (the CQuartz backend) |
 | `full/` | Platform integration: the app guest build, the SDK framework ports, and `full/ladder/` (the 20-app measurement) |
 | `scripts/`, `harness/`, `docs/` | Platform lineage, runtime notes, and the original spike write-up in `docs/SPIKE.md` |
-| `objc4-linux/` | Retired: objc4 on Linux/ELF, superseded by the Mach-O build under `machorun/` |
 
 Each imported directory keeps its complete git history through subtree merges.
 Everything under `scratch/` and `build/` is generated and gitignored.
