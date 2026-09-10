@@ -74,3 +74,12 @@ OPENUIKIT_FORCE_IOS=1 OPENUIKIT_REALAPP_SCALE=3 OPENUIKIT_BACKEND=quartz \
   ./.build/debug/openrender realapp /tmp/out fixtures/realapp/assets
 wc -c /tmp/zero.log                              # 0
 ```
+
+## Merge check
+
+`CHECK_ONLY=1 scripts/agent_merge.sh agent/hackers-ink-miss` at `03d598aa`
+(rebased onto main `5b2a7364`; the REAL_APP_TEST.md row conflict was a
+keep-both, this row on top): macOS build + Catalyst gate, guest library
+route, test bundle builds, real-app screens (`realapp_hackers_feed_light`
+98.235, unchanged), conformance apps, Linux build (openrender 164.6 s) —
+**checks passed (CHECK_ONLY)**. Full log: `/tmp/agent_merge_hackers-ink-miss.log`.
