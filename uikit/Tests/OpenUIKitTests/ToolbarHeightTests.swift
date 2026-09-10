@@ -10,7 +10,9 @@ import XCTest
 
 /// Run `body` under the iOS cut with the given device traits; restores
 /// everything afterwards (the neighbouring bar suites' spelling).
+#if !os(Linux)
 @MainActor
+#endif
 private func withIOSDevice(idiom: UIUserInterfaceIdiom = .phone,
                            vertical: UIUserInterfaceSizeClass = .regular,
                            screen: CGSize = CGSize(width: 393, height: 852),
@@ -36,7 +38,9 @@ private func withIOSDevice(idiom: UIUserInterfaceIdiom = .phone,
     body()
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 private func threeItems() -> [UIBarButtonItem] {
     [UIBarButtonItem(barButtonSystemItem: .add),
      UIBarButtonItem(barButtonSystemItem: .flexibleSpace),
