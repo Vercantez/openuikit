@@ -118,6 +118,7 @@ public final class SelectorDemoViewController: UIViewController, SelectorDispatc
     let panelLabel = UILabel()
 
     public init() { super.init() }
+    public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {
         title = "Target-Action"

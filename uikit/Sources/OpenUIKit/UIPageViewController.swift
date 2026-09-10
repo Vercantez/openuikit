@@ -265,16 +265,18 @@ open class UIPageViewController: UIViewController {
         super.init()
     }
 
-    /// OpenUIKit has no storyboard/nib decoder. Keep the initializer surface
-    /// and choose UIKit's ordinary scroll/horizontal programmatic shape.
+    /// MEASURED `page.coder` (viewcontrollercoderprobe, iPhone 16 / iOS
+    /// 26.1): an empty archive decodes as transitionStyle 0 (pageCurl),
+    /// navigationOrientation 0 (horizontal), unloaded, with a non-nil empty
+    /// `viewControllers`. The spine is the programmatic page-curl default;
+    /// OpenUIKit has no archive reader, so no option key is decoded.
     public required init?(coder: NSCoder) {
-        _transitionStyle = .scroll
+        _transitionStyle = .pageCurl
         _navigationOrientation = .horizontal
-        _spineLocation = .none
+        _spineLocation = .min
         _isDoubleSided = false
         interPageSpacing = 0
-        _ = coder
-        super.init()
+        super.init(coder: coder)
     }
 
     private static func integerOption(_ value: Any?) -> Int? {

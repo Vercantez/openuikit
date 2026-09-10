@@ -15,6 +15,7 @@ private final class PageLog {
 @MainActor
 #endif
 private final class PageChild: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let name: String
     let log: PageLog
 

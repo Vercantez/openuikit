@@ -56,6 +56,11 @@ open class UISplitViewController: UIViewController {
         self.style = style
         super.init(nibName: nil, bundle: nil)
     }
+    /// MEASURED `split.coder`: style unspecified (0), no view controllers.
+    public required init?(coder: NSCoder) {
+        style = .unspecified
+        super.init(coder: coder)
+    }
 
     // MEASURED all three defaults rows: unloaded, not collapsed, secondaryOnly;
     // config rows: gesture=true, leading edge, sidebar background, no shortcut.

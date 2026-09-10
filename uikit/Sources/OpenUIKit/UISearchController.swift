@@ -158,6 +158,15 @@ open class UISearchController: UIViewController, UISearchBarDelegate,
         searchBar._owningSearchController = self
     }
 
+    /// MEASURED `search.coder`: non-nil, unloaded, nil results controller.
+    public required init?(coder: NSCoder) {
+        self.searchResultsController = nil
+        self.searchBar = UISearchBar()
+        super.init(coder: coder)
+        searchBar.delegate = self
+        searchBar._owningSearchController = self
+    }
+
     func applyActiveState() {
         if isActive {
             delegate?.willPresentSearchController(self)

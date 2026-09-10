@@ -177,6 +177,14 @@ public final class PHPickerViewController: UIViewController {
         modalPresentationStyle = .pageSheet
     }
 
+    /// Required by the base coder initializer; unmeasured, mirrors
+    /// `init(configuration: PHPickerConfiguration())`.
+    public required init?(coder: NSCoder) {
+        self.configuration = PHPickerConfiguration()
+        super.init(coder: coder)
+        modalPresentationStyle = .pageSheet
+    }
+
     public func updatePicker(using configuration: PHPickerConfiguration.Update) {
         _ = configuration
     }

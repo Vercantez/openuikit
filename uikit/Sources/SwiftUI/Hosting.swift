@@ -1355,6 +1355,28 @@ open class _OpenUIHostingController<Content: _OpenView>: UIViewController {
         }
     }
 
+    /// SwiftUI's `UIHostingController.init?(coder:rootView:)`: the archive
+    /// initializer a storyboard-backed subclass chains to with its own root.
+    public init?(coder: NSCoder, rootView: Content) {
+        self.rootView = rootView
+        super.init(coder: coder)
+        graph.invalidate = { [weak self] animation in
+            guard let self,
+                  self.viewIfLoaded is _SwiftUIHostingView else { return }
+            let node = self.evaluateRoot()
+            self.install(
+                node,
+                animation: animation ?? self.graph.evaluationAnimation
+            )
+        }
+    }
+
+    /// SwiftUI's plain `init?(coder:)` traps unless a subclass overrides it
+    /// to call `init?(coder:rootView:)`; there is no root view to host.
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError("UIHostingController(coder:) must be overridden to call init?(coder:rootView:)")
+    }
+
     open override func loadView() {
         let node = evaluateRoot()
         let host = _SwiftUIHostingView(node: node)

@@ -217,6 +217,11 @@ open class UINavigationController: UIViewController {
         super.init()
     }
 
+    /// MEASURED `navigation.coder`: non-nil, unloaded, no view controllers.
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
     // MARK: Container view
 
     open override func loadView() {

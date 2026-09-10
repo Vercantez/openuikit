@@ -63,6 +63,7 @@ public final class TasksRootViewController: UIViewController,
     public var extraBottomInset: CGFloat = 0
 
     public init() { super.init() }
+    public required init?(coder: NSCoder) { fatalError() }
 
     // MARK: Load
 

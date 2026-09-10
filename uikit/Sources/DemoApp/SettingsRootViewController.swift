@@ -149,6 +149,7 @@ public final class SettingsRootViewController: UIViewController,
     public var extraBottomInset: CGFloat = 0
 
     public init() { super.init() }
+    public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {
         title = "Settings"

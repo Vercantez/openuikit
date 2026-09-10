@@ -45,6 +45,7 @@ private final class LayoutProbeView: UIView {
 @MainActor
 #endif
 private final class LayoutProbeController: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let callbackLog: CallbackLog
     let rootProbe: LayoutProbeView
     let childProbe: LayoutProbeView
@@ -81,6 +82,7 @@ private final class LayoutProbeController: UIViewController {
 @MainActor
 #endif
 private final class ContentProbeController: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let name: String
     let callbackLog: CallbackLog
 
@@ -183,6 +185,7 @@ private final class TransitionCoordinatorProbe: UIViewControllerTransitionCoordi
 @MainActor
 #endif
 private final class CoordinatorVendingController: UIViewController {
+    required init?(coder: NSCoder) { fatalError() }
     let coordinator: UIViewControllerTransitionCoordinator
 
     init(coordinator: UIViewControllerTransitionCoordinator) {

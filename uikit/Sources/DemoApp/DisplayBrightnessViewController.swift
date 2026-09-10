@@ -131,6 +131,7 @@ public final class DisplayBrightnessViewController: UIViewController {
     let footer = makeFootnote("Brightness: 72%")
 
     public init() { super.init() }
+    public required init?(coder: NSCoder) { fatalError() }
 
     public override func viewDidLoad() {
         if title == nil { title = "Display & Brightness" }
