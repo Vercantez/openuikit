@@ -1,0 +1,309 @@
+{
+  "CALayer.defaults" : {
+    "borderColor.isNil" : false,
+    "borderWidth" : 0,
+    "cornerRadius" : 0,
+    "masksToBounds" : false,
+    "rasterizationScale" : 1,
+    "shadowColor.isNil" : false,
+    "shadowOffset" : [
+      0,
+      -3
+    ],
+    "shadowOpacity" : 0,
+    "shadowRadius" : 3,
+    "shouldRasterize" : false
+  },
+  "device" : "iPhone",
+  "hierarchy" : {
+    "CALayer" : {
+      "chain" : [
+        "CALayer",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : true,
+        "NSCoding" : true,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : true,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : false
+      }
+    },
+    "NSMutableParagraphStyle" : {
+      "chain" : [
+        "NSMutableParagraphStyle",
+        "NSParagraphStyle",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : true,
+        "NSMutableCopying" : true,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : true,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : false
+      }
+    },
+    "NSParagraphStyle" : {
+      "chain" : [
+        "NSParagraphStyle",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : true,
+        "NSMutableCopying" : true,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : true,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : false
+      }
+    },
+    "UIBarButtonItem" : {
+      "chain" : [
+        "UIBarButtonItem",
+        "UIBarItem",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : false,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : true
+      }
+    },
+    "UIBarItem" : {
+      "chain" : [
+        "UIBarItem",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : false,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : true
+      }
+    },
+    "UINavigationItem" : {
+      "chain" : [
+        "UINavigationItem",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : false,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : false
+      }
+    },
+    "UIResponder" : {
+      "chain" : [
+        "UIResponder",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : false,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : false,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : false
+      }
+    },
+    "UITabBarItem" : {
+      "chain" : [
+        "UITabBarItem",
+        "UIBarItem",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : false,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : true
+      }
+    },
+    "UIView" : {
+      "chain" : [
+        "UIView",
+        "UIResponder",
+        "NSObject"
+      ],
+      "conforms" : {
+        "CAMediaTiming" : false,
+        "NSCoding" : true,
+        "NSCopying" : false,
+        "NSMutableCopying" : false,
+        "NSObjectProtocol" : true,
+        "NSSecureCoding" : false,
+        "UIAccessibilityIdentification" : false,
+        "UIAppearance" : true
+      }
+    }
+  },
+  "nonview.roundtrip" : {
+    "CALayer.accessibilityLabel" : "layer",
+    "NSMutableParagraphStyle.accessibilityValue" : "para",
+    "UIBarButtonItem.accessibilityIdentifier" : "nav.back",
+    "UIBarButtonItem.accessibilityLabel" : "back-button",
+    "UINavigationItem.accessibilityLabel" : "root-item"
+  },
+  "nsobject.defaults" : {
+    "accessibilityElements.isNil" : true,
+    "accessibilityElementsHidden" : false,
+    "accessibilityHint" : null,
+    "accessibilityLabel" : null,
+    "accessibilityNavigationStyle" : 0,
+    "accessibilityTraits" : "0",
+    "accessibilityValue" : null,
+    "accessibilityViewIsModal" : false,
+    "isAccessibilityElement" : false,
+    "shouldGroupAccessibilityChildren" : false
+  },
+  "nsobject.roundtrip" : {
+    "a.elementsHidden" : true,
+    "a.groupsChildren" : true,
+    "a.isElement" : true,
+    "a.label" : "alpha",
+    "a.traits" : "1",
+    "b.isElement" : false,
+    "b.label.isNil" : true
+  },
+  "NSParagraphStyle.default" : {
+    "alignment" : 4,
+    "hyphenationFactor" : 0,
+    "lineBreakMode" : 0,
+    "lineSpacing" : 0
+  },
+  "NSParagraphStyle.value" : {
+    "copy.class" : "NSParagraphStyle",
+    "hash.equal" : true,
+    "identity.p1===p2" : false,
+    "mutableCopy.class" : "NSMutableParagraphStyle",
+    "p1 == p2" : true,
+    "p1.isEqual(p2)" : true,
+    "set.count.equalValues" : 1
+  },
+  "NSParagraphStyle.value.afterMutation" : {
+    "p1 == p2" : false,
+    "p1.isEqual(p2)" : false,
+    "p1.lineSpacing" : 6,
+    "p2.lineSpacing" : 7,
+    "set.count" : 2
+  },
+  "os" : "26.1",
+  "UIBarButtonItem.appearanceDefaults" : {
+    "backButtonBackgroundImage(.normal, .default).isNil" : true,
+    "backButtonBackgroundVerticalPositionAdjustment(.default)" : 0,
+    "backButtonTitlePositionAdjustment(.default)" : [
+      0,
+      0
+    ],
+    "backgroundImage(.normal, .default).isNil" : true,
+    "backgroundImage(.normal, .plain, .default).isNil" : true,
+    "backgroundVerticalPositionAdjustment(.default)" : 0,
+    "possibleTitles.isNil" : true,
+    "titlePositionAdjustment(.default)" : [
+      0,
+      0
+    ]
+  },
+  "UIBarButtonItem.appearanceRoundtrip" : {
+    "backgroundImage(.normal, .compact).isNil" : true,
+    "backgroundImage(.normal, .default).size" : [
+      2,
+      2
+    ],
+    "backgroundVerticalPositionAdjustment(.default)" : 7,
+    "possibleTitles" : [
+      "One",
+      "Two"
+    ],
+    "titlePositionAdjustment(.compact)" : [
+      0,
+      0
+    ],
+    "titlePositionAdjustment(.default)" : [
+      3,
+      -4
+    ]
+  },
+  "UIBarButtonItem.defaults" : {
+    "accessibilityIdentifier.isNil" : true,
+    "image.isNil" : true,
+    "imageInsets" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "isEnabled" : true,
+    "landscapeImagePhone.isNil" : true,
+    "landscapeImagePhoneInsets" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "largeContentSizeImage.isNil" : true,
+    "tag" : 0,
+    "title" : null,
+    "titleTextAttributes(.normal).isNil" : true
+  },
+  "UITabBarItem.defaults" : {
+    "accessibilityIdentifier.isNil" : true,
+    "image.isNil" : true,
+    "imageInsets" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "isEnabled" : true,
+    "landscapeImagePhone.isNil" : true,
+    "landscapeImagePhoneInsets" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "largeContentSizeImage.isNil" : true,
+    "tag" : 3,
+    "title" : "Home",
+    "titleTextAttributes(.normal).isNil" : true
+  },
+  "UITabBarItem.inherited" : {
+    "isEnabled" : true,
+    "selectedImage.isNil" : true,
+    "tag" : 3,
+    "title" : "Home",
+    "titlePositionAdjustment" : [
+      0,
+      0
+    ]
+  }
+}
