@@ -7,7 +7,9 @@ import XCTest
 
 // MARK: - UIToolbarDelegate / UIBarPosition
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class PositionDelegate: UIToolbarDelegate {
     let answer: UIBarPosition
     var calls = 0
@@ -21,12 +23,16 @@ private final class PositionDelegate: UIToolbarDelegate {
 }
 
 /// firefox's TabTrayViewController shape: conforms, implements nothing.
+#if !os(Linux)
 @MainActor
+#endif
 private final class ConformingOnlyDelegate: UIToolbarDelegate {}
 
 /// firefox's TestableUIToolbar shape: a `UIToolbarDelegate?` forwarded to a
 /// real toolbar.
+#if !os(Linux)
 @MainActor
+#endif
 private final class ForwardingToolbar {
     let real = UIToolbar(frame: CGRect(x: 0, y: 0, width: 393, height: 44))
     var delegate: UIToolbarDelegate? {
@@ -35,7 +41,9 @@ private final class ForwardingToolbar {
     }
 }
 
+#if !os(Linux)
 @MainActor
+#endif
 final class ToolbarDelegateTests: XCTestCase {
 
     private func toolbar() -> UIToolbar {
@@ -129,7 +137,9 @@ final class ToolbarDelegateTests: XCTestCase {
 
 // MARK: - NSCollectionLayoutAnchor
 
+#if !os(Linux)
 @MainActor
+#endif
 private final class BadgeSource: UICollectionViewDataSource {
     let sections: Int
     init(sections: Int) { self.sections = sections }
@@ -149,7 +159,9 @@ private final class BadgeSource: UICollectionViewDataSource {
 
 private var keptBadgeSources: [BadgeSource] = []
 
+#if !os(Linux)
 @MainActor
+#endif
 final class CollectionLayoutAnchorTests: XCTestCase {
     private typealias Size = OpenUIKit.NSCollectionLayoutSize
     private typealias Dim = OpenUIKit.NSCollectionLayoutDimension
