@@ -34,12 +34,29 @@ import Foundation
 #endif
 
 @preconcurrency @MainActor
-public final class UIToolbar: UIView, _UIBarItemContainer {
+public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
     /// Measured intrinsic bar height (the platter plus its vertical margins).
     public static let defaultHeight: CGFloat = 54
 
     public var items: [UIBarButtonItem]? {
         didSet { rebuildItemViews() }
+    }
+
+    /// MEASURED (UIBarPositioning.swift): `position(for:)` is asked once,
+    /// when the bar joins a superview; setting the delegate, reading
+    /// `barPosition`, and later layout passes ask nothing. An `.any` answer
+    /// leaves the bar at `.bottom`, and the position paints nothing
+    /// different on iOS 26.
+    public weak var delegate: UIToolbarDelegate?
+
+    private var resolvedPosition: UIBarPosition = .bottom
+    public var barPosition: UIBarPosition { resolvedPosition }
+
+    public override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        guard superview != nil, let delegate else { return }
+        let answer = delegate.position(for: self)
+        resolvedPosition = answer == .any ? .bottom : answer
     }
 
     /// Bar-wide tint. Only a `.prominent` item's platter fill uses it —
