@@ -120,9 +120,97 @@ public final class NSCollectionLayoutSpacing {
 open class NSCollectionLayoutItem {
     public let layoutSize: NSCollectionLayoutSize
     public var contentInsets: NSDirectionalEdgeInsets = .zero
+    /// Per-item supplementaries (badges, firefox's tab title). MEASURED
+    /// firefoxrowsprobe: a plain item reads back 0, `supplementaryItems:`
+    /// keeps the array as given.
+    public private(set) var supplementaryItems: [NSCollectionLayoutSupplementaryItem] = []
 
     public init(layoutSize: NSCollectionLayoutSize) {
         self.layoutSize = layoutSize
+    }
+
+    public convenience init(layoutSize: NSCollectionLayoutSize,
+                            supplementaryItems: [NSCollectionLayoutSupplementaryItem]) {
+        self.init(layoutSize: layoutSize)
+        self.supplementaryItems = supplementaryItems
+    }
+}
+
+/// Where a supplementary sits relative to its container (the item's final,
+/// inset frame) — MEASURED firefoxrowsprobe, iPhone 16 / iOS 26.1, item
+/// [30, y, 125, 100], badge 20×20:
+///
+///   * edges `[.top, .trailing]` → `[135, y, 20, 20]`: the badge sits INSIDE
+///     the container, flush with the named edges;
+///   * `[]`, `.all`, `[.leading, .trailing]` → `[82.667, y+40, …]`: an axis
+///     with neither or both of its edges is centred;
+///   * `[.bottom]` full-width 30 pt (firefox) → `[30, y+70, 125, 30]`;
+///   * `fractionalOffset (0.5, −0.5)` → `[145, y−10]` and `absoluteOffset
+///     (10, −10)` → the same: a fractional offset is a fraction of the
+///     SUPPLEMENTARY's own size, not the container's;
+///   * item insets 10 → container is the inset frame (`[125, y]` for an item
+///     at `[40, y, 105, 80]`);
+///   * an `itemAnchor` picks which point of the supplementary lands on the
+///     container point: container `[.top, .trailing]` + item `[.bottom,
+///     .leading]` → `[155, y−20]`; item `[]` → the badge's centre, and the
+///     item anchor's own offset is added (`absoluteOffset (3, 4)` → `[158,
+///     y−16]`; item `fractionalOffset (0.5, 0.5)` → `[155, y]`).
+///
+/// Raw edge bits match `NSDirectionalRectEdge` (top 1, leading 2, bottom 4,
+/// trailing 8). Readback: `edges`, `offset`, `isAbsoluteOffset`,
+/// `isFractionalOffset`; the edges-only initializer reads back absolute
+/// with a zero offset.
+@preconcurrency @MainActor
+public final class NSCollectionLayoutAnchor {
+    public let edges: NSDirectionalRectEdge
+    public let offset: CGPoint
+    public let isAbsoluteOffset: Bool
+    public var isFractionalOffset: Bool { !isAbsoluteOffset }
+
+    public init(edges: NSDirectionalRectEdge) {
+        self.edges = edges
+        self.offset = .zero
+        self.isAbsoluteOffset = true
+    }
+
+    public init(edges: NSDirectionalRectEdge, absoluteOffset: CGPoint) {
+        self.edges = edges
+        self.offset = absoluteOffset
+        self.isAbsoluteOffset = true
+    }
+
+    public init(edges: NSDirectionalRectEdge, fractionalOffset: CGPoint) {
+        self.edges = edges
+        self.offset = fractionalOffset
+        self.isAbsoluteOffset = false
+    }
+
+    /// The anchor point inside `rect`. `rtl` swaps which physical side
+    /// `leading` names (unmeasured: the oracle's forced-RTL collection view
+    /// mirrored nothing, items included; see the probe README).
+    func point(in rect: CGRect, rtl: Bool) -> CGPoint {
+        let hasLeading = edges.contains(.leading)
+        let hasTrailing = edges.contains(.trailing)
+        let left = rtl ? hasTrailing : hasLeading
+        let right = rtl ? hasLeading : hasTrailing
+        let x: CGFloat
+        if left && !right { x = rect.minX }
+        else if right && !left { x = rect.maxX }
+        else { x = rect.midX }
+        let top = edges.contains(.top)
+        let bottom = edges.contains(.bottom)
+        let y: CGFloat
+        if top && !bottom { y = rect.minY }
+        else if bottom && !top { y = rect.maxY }
+        else { y = rect.midY }
+        return CGPoint(x: x, y: y)
+    }
+
+    /// The offset in points for a supplementary of `size`.
+    func resolvedOffset(for size: CGSize, rtl: Bool) -> CGPoint {
+        let dx = isAbsoluteOffset ? offset.x : offset.x * size.width
+        let dy = isAbsoluteOffset ? offset.y : offset.y * size.height
+        return CGPoint(x: rtl ? -dx : dx, y: dy)
     }
 }
 
@@ -201,10 +289,48 @@ public final class NSCollectionLayoutGroup: NSCollectionLayoutItem {
 @preconcurrency @MainActor
 open class NSCollectionLayoutSupplementaryItem: NSCollectionLayoutItem {
     public let elementKind: String
+    /// MEASURED firefoxrowsprobe: `containerAnchor` and `itemAnchor` read
+    /// back the objects given (`itemAnchor` nil without one); `zIndex` 1;
+    /// contentInsets zero. The boundary subclass keeps a centred anchor.
+    public let containerAnchor: NSCollectionLayoutAnchor
+    public let itemAnchor: NSCollectionLayoutAnchor?
+    public var zIndex: Int = 1
 
     public init(layoutSize: NSCollectionLayoutSize, elementKind: String) {
         self.elementKind = elementKind
+        self.containerAnchor = NSCollectionLayoutAnchor(edges: [])
+        self.itemAnchor = nil
         super.init(layoutSize: layoutSize)
+    }
+
+    public init(layoutSize: NSCollectionLayoutSize, elementKind: String,
+                containerAnchor: NSCollectionLayoutAnchor) {
+        self.elementKind = elementKind
+        self.containerAnchor = containerAnchor
+        self.itemAnchor = nil
+        super.init(layoutSize: layoutSize)
+    }
+
+    public init(layoutSize: NSCollectionLayoutSize, elementKind: String,
+                containerAnchor: NSCollectionLayoutAnchor,
+                itemAnchor: NSCollectionLayoutAnchor) {
+        self.elementKind = elementKind
+        self.containerAnchor = containerAnchor
+        self.itemAnchor = itemAnchor
+        super.init(layoutSize: layoutSize)
+    }
+
+    /// The supplementary's frame for a container (the item's inset frame).
+    /// Origin = container point − supplementary point + both offsets; the
+    /// supplementary point defaults to the container anchor's own edges.
+    func frame(inContainer container: CGRect, size: CGSize, rtl: Bool) -> CGRect {
+        let p = containerAnchor.point(in: container, rtl: rtl)
+        let own = itemAnchor ?? NSCollectionLayoutAnchor(edges: containerAnchor.edges)
+        let q = own.point(in: CGRect(origin: .zero, size: size), rtl: rtl)
+        let c = containerAnchor.resolvedOffset(for: size, rtl: rtl)
+        let i = itemAnchor?.resolvedOffset(for: size, rtl: rtl) ?? .zero
+        return CGRect(x: p.x - q.x + c.x + i.x, y: p.y - q.y + c.y + i.y,
+                      width: size.width, height: size.height)
     }
 }
 
@@ -334,6 +460,10 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         /// (x from 0, y from the section's local origin). Other sections:
         /// collection-view content coordinates.
         var localFrame: CGRect
+        /// A per-item supplementary (badge): scrolls and clips with its
+        /// item, unlike a boundary header. MEASURED zIndex 1 vs cell 0.
+        var perItem = false
+        var zIndex = 0
     }
 
     struct SectionCache {
@@ -485,6 +615,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
 
         let groupsY = headerHeight + insets.top
         var items: [Placed] = []
+        var itemSupplementaries: [Placed] = []
         var cursor: CGFloat = 0
         var nextItem = 0
 
@@ -525,6 +656,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                                       section: index, startItem: nextItem,
                                       itemCount: itemCount)
             items.append(contentsOf: placed.frames)
+            itemSupplementaries.append(contentsOf: placed.supplementaries)
             nextItem = placed.nextItem
             if orthogonal {
                 cursor += groupSize.width
@@ -568,6 +700,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
             }
             cache.supplementaries.append(h)
         }
+        cache.supplementaries.append(contentsOf: itemSupplementaries)
 
         if orthogonal {
             cache.items = items
@@ -580,21 +713,54 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         return cache
     }
 
+    /// Per-item supplementaries for one placed item. Sizes resolve against
+    /// the item's inset frame (MEASURED: fractionalHeight(0.25) of a 100 pt
+    /// item → 25). Origins snap to the pixel grid with the far edge kept:
+    /// MEASURED at 3x, a 20 pt badge centred in a 125 pt item reads x
+    /// 82.667 (82.5 → 248/3), and a fractionalWidth(0.5) badge trailing at
+    /// 155 reads [92.667, 62.333] — 92.5 rounds up, maxX stays 155.
+    private func placeSupplementaries(of item: NSCollectionLayoutItem,
+                                      itemFrame: CGRect, indexPath: IndexPath,
+                                      rtl: Bool) -> [Placed] {
+        item.supplementaryItems.map { supp in
+            let raw = CGSize(width: resolve(supp.layoutSize.widthDimension,
+                                            containerWidth: itemFrame.width,
+                                            containerHeight: itemFrame.height),
+                             height: resolve(supp.layoutSize.heightDimension,
+                                             containerWidth: itemFrame.width,
+                                             containerHeight: itemFrame.height))
+            let f = supp.frame(inContainer: itemFrame, size: raw, rtl: rtl)
+            let x = snap(f.minX), y = snap(f.minY)
+            return Placed(indexPath: indexPath, kind: supp.elementKind,
+                          localFrame: CGRect(x: x, y: y,
+                                             width: snap(f.maxX) - x,
+                                             height: snap(f.maxY) - y),
+                          perItem: true, zIndex: supp.zIndex)
+        }
+    }
+
     private func layoutGroup(_ group: NSCollectionLayoutGroup, origin: CGPoint,
                              groupSize: CGSize, section: Int, startItem: Int,
                              itemCount: Int)
-        -> (frames: [Placed], nextItem: Int) {
+        -> (frames: [Placed], supplementaries: [Placed], nextItem: Int) {
         let expanded = group.expandedSubitems()
         let spacing = group.interItemSpacing?.spacing ?? 0
         var frames: [Placed] = []
+        var supplementaries: [Placed] = []
         var next = startItem
         let n = expanded.count
+        let rtl = collectionView?._layoutIsRTL ?? false
 
         if group.axis == .horizontal {
             var x = origin.x
             // Equal-split when every subitem is fractional-width of the group
-            // (repeatingSubitem:count: of a 1.0-wide item).
-            let equalSplit = n > 1 && expanded.allSatisfy { $0.layoutSize.widthDimension.isFractionalWidth }
+            // (repeatingSubitem:count: of a 1.0-wide item), or when the
+            // group repeats one item `count` times: MEASURED firefoxrowsprobe,
+            // `subitem:count: 2` of an absolute-100 item in a 270 pt group
+            // with 20 pt spacing → two 125 pt items, the count overriding
+            // the item's own width.
+            let equalSplit = n > 1 && (group.repeatCount > 0 ||
+                expanded.allSatisfy { $0.layoutSize.widthDimension.isFractionalWidth })
             let itemW: CGFloat? = equalSplit
                 ? (groupSize.width - spacing * CGFloat(n - 1)) / CGFloat(n)
                 : nil
@@ -618,8 +784,10 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                     y: snap(origin.y + insets.top),
                     width: max(0, sz.width - insets.leading - insets.trailing),
                     height: max(0, sz.height - insets.top - insets.bottom))
-                frames.append(Placed(indexPath: IndexPath(item: next, section: section),
-                                      kind: nil, localFrame: frame))
+                let path = IndexPath(item: next, section: section)
+                frames.append(Placed(indexPath: path, kind: nil, localFrame: frame))
+                supplementaries.append(contentsOf: placeSupplementaries(
+                    of: item, itemFrame: frame, indexPath: path, rtl: rtl))
                 x += sz.width
                 if idx + 1 < n { x += spacing }
                 next += 1
@@ -645,19 +813,22 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                     y: snap(y + insets.top),
                     width: max(0, sz.width - insets.leading - insets.trailing),
                     height: max(0, sz.height - insets.top - insets.bottom))
-                frames.append(Placed(indexPath: IndexPath(item: next, section: section),
-                                      kind: nil, localFrame: frame))
+                let path = IndexPath(item: next, section: section)
+                frames.append(Placed(indexPath: path, kind: nil, localFrame: frame))
+                supplementaries.append(contentsOf: placeSupplementaries(
+                    of: item, itemFrame: frame, indexPath: path, rtl: rtl))
                 y += sz.height
                 if idx + 1 < n { y += spacing }
                 next += 1
             }
         }
-        return (frames, next)
+        return (frames, supplementaries, next)
     }
 
     private func parentFrame(_ placed: Placed, in cache: SectionCache) -> CGRect {
         if cache.orthogonal {
-            let shift: CGFloat = placed.kind == nil ? cache.orthogonalOffset : 0
+            let scrolls = placed.kind == nil || placed.perItem
+            let shift: CGFloat = scrolls ? cache.orthogonalOffset : 0
             // MEASURED Feed t200.rtl, iPhone SE 2x / iOS 26.1: stories A–D
             // interiors (58,154,128)/(196,101,95)/(127,92,183)/(67,118,205)
             // = palette 3,2,1,0. Item 0 ("A") sits at x 287 = 375 − 16 − 72
@@ -667,7 +838,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
             // flip; pixels are the oracle. Mirror content-space frames about
             // the section width: screenX = W − (localMaxX − offset).
             let localX: CGFloat
-            if collectionView?._layoutIsRTL == true, placed.kind == nil {
+            if collectionView?._layoutIsRTL == true, scrolls {
                 localX = cache.frame.width - (placed.localFrame.maxX - shift)
             } else {
                 localX = placed.localFrame.minX - shift
@@ -690,6 +861,7 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
             attrs = UICollectionViewLayoutAttributes(forCellWith: placed.indexPath)
         }
         attrs.frame = parentFrame(placed, in: cache)
+        attrs.zIndex = placed.zIndex
         return attrs
     }
 
@@ -703,7 +875,11 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
                          width: cache.frame.width, height: cache.frame.height)
             for p in cache.supplementaries {
                 let a = makeAttributes(p, in: cache)
-                if a.frame.intersects(rect) { out.append(a) }
+                if p.perItem, cache.orthogonal {
+                    if a.frame.intersects(rect), a.frame.intersects(clip) { out.append(a) }
+                } else if a.frame.intersects(rect) {
+                    out.append(a)
+                }
             }
             for p in cache.items {
                 let a = makeAttributes(p, in: cache)
@@ -730,9 +906,12 @@ open class UICollectionViewCompositionalLayout: UICollectionViewLayout {
         -> UICollectionViewLayoutAttributes? {
         guard indexPath.section >= 0, indexPath.section < sections.count else { return nil }
         let cache = sections[indexPath.section]
-        guard let p = cache.supplementaries.first(where: { $0.kind == elementKind }) else {
-            return nil
-        }
+        // Per-item supplementaries answer for their own index path; a
+        // boundary header answers for any item of its section (unchanged).
+        let p = cache.supplementaries.first(where: {
+            $0.kind == elementKind && $0.perItem && $0.indexPath == indexPath
+        }) ?? cache.supplementaries.first(where: { $0.kind == elementKind && !$0.perItem })
+        guard let p else { return nil }
         return makeAttributes(p, in: cache)
     }
 

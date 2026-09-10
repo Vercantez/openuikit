@@ -1314,10 +1314,21 @@ open class UIView: UIResponder, CALayerDelegate {
     /// nil = the root of this view's hierarchy (window/root coordinates),
     /// matching UIKit's nil-window behavior.
     public func convert(_ point: CGPoint, to view: UIView?) -> CGPoint {
-        let (t, _) = _transformToRoot()
-        let inRoot = point.applying(t)
+        let (t, root) = _transformToRoot()
+        var inRoot = point.applying(t)
         guard let view else { return inRoot }
-        let (t2, _) = view._transformToRoot()
+        let (t2, root2) = view._transformToRoot()
+        if root !== root2 {
+            // MEASURED signalrowsprobe screen.offsetWindow, iPhone 16 / iOS
+            // 26.1: across hierarchies the conversion passes through screen
+            // space — a window at (10, 20) converts its subview's (8, 9) to
+            // (23, 35) in the full-screen window, i.e. each window's frame
+            // origin is applied. Detached roots contribute no offset.
+            let from = (root as? UIWindow)?.frame.origin ?? .zero
+            let to = (root2 as? UIWindow)?.frame.origin ?? .zero
+            inRoot.x += from.x - to.x
+            inRoot.y += from.y - to.y
+        }
         return inRoot.applying(t2.inverted())
     }
 
