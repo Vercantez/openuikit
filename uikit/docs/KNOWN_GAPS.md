@@ -734,6 +734,15 @@ private backing-layer tree:
   OpenUIKit does not yet
   expose `isGeometryFlipped` or `init(layer:)`; the real copying initializer
   was also measured to reset `maskedCorners` to its default 15.
+- `UIView.cornerConfiguration` (iOS 26) resolves to per-corner radii that
+  the render pass draws independently and that win over `cornerRadius`
+  (measured, `Tools/oracle2/signallastrowsprobe`). Two gaps: the CQuartz
+  layer backend has one radius per layer and receives the largest of a
+  non-uniform set; and iOS 26.1 draws every configuration — and a fresh
+  layer's `cornerRadius`, whose `cornerCurve` already reads `.continuous`
+  — with the continuous curve, while OpenUIKit's corner drawing is
+  circular (max 97/255 over ~400 px at r = 8 @3x). `CALayer.cornerCurve`
+  is stored only.
 - `UIProgressView.setProgress(_:animated:)` now updates the model immediately
   and samples a reversible 0.25-second fill presentation from that clock. It
   supplies the exact superclass call used by Focus's `GradientProgressBar`;

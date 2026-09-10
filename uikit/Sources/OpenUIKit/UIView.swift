@@ -257,6 +257,12 @@ open class CALayer {
             }
         }
     }
+    /// Per-corner radii installed by `UIView.cornerConfiguration`. Non-nil
+    /// radii win over `cornerRadius` (measured: `cornerRadius = 30` after
+    /// a fixed-8 configuration still renders 8; UICornerConfiguration.swift).
+    var _cornerRadii: _CACornerRadii?
+    /// Stored only; see `CALayerCornerCurve` (CoreAnimation.swift).
+    public var cornerCurve: CALayerCornerCurve = .circular
     private var storedMaskedCorners: CACornerMask = ._allKnown
     /// Selects which corners receive `cornerRadius`. Unknown raw-value bits
     /// are discarded, matching iOS 26 Core Animation.
@@ -516,9 +522,15 @@ open class UIView: UIResponder, CALayerDelegate {
             if oldValue.size != bounds.size {
                 setNeedsLayout()
                 _autoresizeChildren(oldSize: oldValue.size)
+                // MEASURED signallastrowsprobe: a `.capsule()` view resized
+                // 100×40 → 200×60 renders radius 30, so the configuration
+                // re-resolves with the bounds (UICornerConfiguration.swift).
+                if !_cornerConfiguration.isUnspecified { _resolveCornerConfiguration() }
             }
         }
     }
+    /// Backing store for `cornerConfiguration` (UICornerConfiguration.swift).
+    var _cornerConfiguration: UICornerConfiguration = .unspecified
     public var transform: CGAffineTransform = .identity {
         didSet {
             if transform != oldValue {

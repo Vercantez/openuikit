@@ -248,6 +248,28 @@ struct _CALayerPresentationState {
     var shadowRadius: CGFloat
     var shadowOffset: CGSize
     var locations: [CGFloat]?
+    /// Per-corner radii from `UIView.cornerConfiguration`; when set they
+    /// replace `cornerRadius` (measured, UICornerConfiguration.swift).
+    var cornerRadii: _CACornerRadii? = nil
+
+    /// The single radius a uniform-radius backend (CQuartz) receives:
+    /// the configured radius when all four corners agree, else the largest
+    /// (documented approximation for that backend only).
+    var effectiveCornerRadius: CGFloat {
+        guard let radii = cornerRadii else { return cornerRadius }
+        return radii.isUniform ? radii.topLeft : radii.maxRadius
+    }
+}
+
+/// Core Animation's corner curve. MEASURED iOS 26.1 (signallastrowsprobe):
+/// a fresh `UIView().layer` reads `.continuous`; the port's corner drawing
+/// is circular for both values (the delta is a known gap of that drawing,
+/// recorded in UICornerConfiguration.swift), so the value is stored only.
+public struct CALayerCornerCurve: RawRepresentable, Hashable, Sendable {
+    public let rawValue: String
+    public init(rawValue: String) { self.rawValue = rawValue }
+    public static let circular = CALayerCornerCurve(rawValue: "circular")
+    public static let continuous = CALayerCornerCurve(rawValue: "continuous")
 }
 
 @preconcurrency @MainActor
@@ -523,7 +545,8 @@ extension CALayer {
             opacity: opacity, cornerRadius: cornerRadius,
             borderWidth: borderWidth, shadowOpacity: shadowOpacity,
             shadowRadius: shadowRadius, shadowOffset: shadowOffset,
-            locations: (self as? CAGradientLayer)?.locations)
+            locations: (self as? CAGradientLayer)?.locations,
+            cornerRadii: _cornerRadii)
         _applyExplicitPresentation(to: &result, at: time)
         return result
     }

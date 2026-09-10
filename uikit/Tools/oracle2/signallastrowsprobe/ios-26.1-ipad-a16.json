@@ -1,0 +1,2269 @@
+{
+  "corners" : {
+    "after" : {
+      "capsule.resize.100x40to200x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .capsule, topRightRadius: .capsule, bottomLeftRadius: .capsule, bottomRightRadius: .capsule)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          132,
+          556,
+          200,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003e40 00000000 00003e40 ... 00000000 00003e40 }"
+      },
+      "uniform.fixed8.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 8.0), topRightRadius: .fixed(radius: 8.0), bottomLeftRadius: .fixed(radius: 8.0), bottomRightRadius: .fixed(radius: 8.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 30,
+        "frame" : [
+          16,
+          80,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00002040 00000000 00002040 ... 00000000 00002040 }"
+      }
+    },
+    "cases" : {
+      "capsule.60x100" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .capsule, topRightRadius: .capsule, bottomLeftRadius: .capsule, bottomRightRadius: .capsule)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          248,
+          212,
+          60,
+          100
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003e40 00000000 00003e40 ... 00000000 00003e40 }"
+      },
+      "capsule.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .capsule, topRightRadius: .capsule, bottomLeftRadius: .capsule, bottomRightRadius: .capsule)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          244,
+          136,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003440 00000000 00003440 ... 00000000 00003440 }"
+      },
+      "capsule.max10.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 10.0), topRightRadius: .fixed(radius: 10.0), bottomLeftRadius: .fixed(radius: 10.0), bottomRightRadius: .fixed(radius: 10.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          16,
+          328,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00002440 00000000 00002440 ... 00000000 00002440 }"
+      },
+      "capsule.resize.100x40to200x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .capsule, topRightRadius: .capsule, bottomLeftRadius: .capsule, bottomRightRadius: .capsule)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          132,
+          556,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003440 00000000 00003440 ... 00000000 00003440 }"
+      },
+      "control.radius8.circular.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "circular",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 8,
+        "frame" : [
+          132,
+          80,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "0",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "control.radius8.continuous.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 8,
+        "frame" : [
+          248,
+          80,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "control.radius12.circular.60x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "circular",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 12,
+        "frame" : [
+          92,
+          136,
+          60,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "0",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "control.radius12.continuous.60x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 12,
+        "frame" : [
+          168,
+          136,
+          60,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "control.radius20.circular.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "circular",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 20,
+        "frame" : [
+          16,
+          212,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "0",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "control.radius20.continuous.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 20,
+        "frame" : [
+          132,
+          212,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "control.radius40.circular.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "circular",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 40,
+        "frame" : [
+          248,
+          328,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "0",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+      },
+      "corners.fixed12.60x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 12.0), topRightRadius: .fixed(radius: 12.0), bottomLeftRadius: .fixed(radius: 12.0), bottomRightRadius: .fixed(radius: 12.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          16,
+          136,
+          60,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00002840 00000000 00002840 ... 00000000 00002840 }"
+      },
+      "corners.tl10.nil.nil.nil.120x80" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 10.0), topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          152,
+          384,
+          120,
+          80
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00002440 }"
+      },
+      "corners.tl10.tr0.bl20.br30.120x80" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 10.0), topRightRadius: .fixed(radius: 0.0), bottomLeftRadius: .fixed(radius: 20.0), bottomRightRadius: .fixed(radius: 30.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          16,
+          384,
+          120,
+          80
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003440 00000000 00003440 ... 00000000 00002440 }"
+      },
+      "uniform.concentricMin8.100x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .containerConcentric(minimumRadius: 8.0), topRightRadius: .containerConcentric(minimumRadius: 8.0), bottomLeftRadius: .containerConcentric(minimumRadius: 8.0), bottomRightRadius: .containerConcentric(minimumRadius: 8.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          248,
+          480,
+          100,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003040 00000000 00003040 ... 00000000 00003040 }"
+      },
+      "uniform.fixed8.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 8.0), topRightRadius: .fixed(radius: 8.0), bottomLeftRadius: .fixed(radius: 8.0), bottomRightRadius: .fixed(radius: 8.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          16,
+          80,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00002040 00000000 00002040 ... 00000000 00002040 }"
+      },
+      "uniform.fixed8.thenLayer2.100x40" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 8.0), topRightRadius: .fixed(radius: 8.0), bottomLeftRadius: .fixed(radius: 8.0), bottomRightRadius: .fixed(radius: 8.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 2,
+        "frame" : [
+          16,
+          556,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00002040 00000000 00002040 ... 00000000 00002040 }"
+      },
+      "uniform.fixed40.100x40.oversized" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 40.0), topRightRadius: .fixed(radius: 40.0), bottomLeftRadius: .fixed(radius: 40.0), bottomRightRadius: .fixed(radius: 40.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          132,
+          328,
+          100,
+          40
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00003440 00000000 00003440 ... 00000000 00003440 }"
+      },
+      "uniformEdges.top16.bottom4.100x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 16.0), topRightRadius: .fixed(radius: 16.0), bottomLeftRadius: .fixed(radius: 4.0), bottomRightRadius: .fixed(radius: 4.0))",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          16,
+          480,
+          100,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00001040 00000000 00001040 ... 00000000 00003040 }"
+      },
+      "uniformTop16.100x60" : {
+        "class" : "CALayer",
+        "configDescription" : "UICornerConfiguration(topLeftRadius: .fixed(radius: 16.0), topRightRadius: .fixed(radius: 16.0), bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+        "cornerCurve" : "continuous",
+        "cornerProperties" : [
+          "allowsCornerContentsEdgeEffects",
+          "continuousCorners",
+          "cornerContents",
+          "cornerContentsCenter",
+          "cornerContentsMasksEdges",
+          "cornerRadii",
+          "cornerRadius",
+          "maskedCorners",
+          "cornerCurve"
+        ],
+        "cornerRadius" : 0,
+        "frame" : [
+          132,
+          480,
+          100,
+          60
+        ],
+        "maskedCorners" : 15,
+        "masksToBounds" : false,
+        "prop.allowsCornerContentsEdgeEffects" : "0",
+        "prop.continuousCorners" : "1",
+        "prop.cornerContents" : "nil",
+        "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+        "prop.cornerContentsMasksEdges" : "0",
+        "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00003040 }"
+      }
+    },
+    "default.description" : "UICornerConfiguration(topLeftRadius: .unspecified, topRightRadius: .unspecified, bottomLeftRadius: .unspecified, bottomRightRadius: .unspecified)",
+    "default.layer" : {
+      "class" : "CALayer",
+      "cornerCurve" : "continuous",
+      "cornerProperties" : [
+        "allowsCornerContentsEdgeEffects",
+        "continuousCorners",
+        "cornerContents",
+        "cornerContentsCenter",
+        "cornerContentsMasksEdges",
+        "cornerRadii",
+        "cornerRadius",
+        "maskedCorners",
+        "cornerCurve"
+      ],
+      "cornerRadius" : 0,
+      "maskedCorners" : 15,
+      "masksToBounds" : false,
+      "prop.allowsCornerContentsEdgeEffects" : "0",
+      "prop.continuousCorners" : "1",
+      "prop.cornerContents" : "nil",
+      "prop.cornerContentsCenter" : "NSRect: {{0.5, 0.5}, {0, 0}}",
+      "prop.cornerContentsMasksEdges" : "0",
+      "prop.cornerRadii" : "{length = 64, bytes = 0x00000000 00000000 00000000 00000000 ... 00000000 00000000 }"
+    },
+    "mutate.fixed8.thenLayerRadius30" : "set",
+    "scale" : 2
+  },
+  "device" : {
+    "idiom" : 1,
+    "scale" : 2,
+    "screen" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "system" : "26.1"
+  },
+  "indexPath" : {
+    "bridged.item" : [
+      1,
+      3,
+      3,
+      2
+    ],
+    "bridged.row" : [
+      2,
+      4,
+      4,
+      2
+    ],
+    "class" : "NSIndexPath",
+    "description" : "<NSIndexPath: 0x92d912e4e9e86990> {length = 2, path = 1 - 3}",
+    "equalToIndexPath" : true,
+    "isEqualNS" : true,
+    "item.index0" : 1,
+    "item.index1" : 3,
+    "item.item" : 3,
+    "item.length" : 2,
+    "item.row" : 3,
+    "item.section" : 1,
+    "layoutAttributesIndexPath" : [
+      0,
+      7
+    ],
+    "roundTrip" : [
+      6,
+      5,
+      5,
+      2
+    ],
+    "row.item" : 4,
+    "row.length" : 2,
+    "row.row" : 4,
+    "row.section" : 2
+  },
+  "nav" : {
+    "barPositionAttached" : 3,
+    "barPositionDetached" : 2,
+    "controller.backControl" : "_UIButtonBarButton",
+    "controller.backTap.allowed" : {
+      "barItems" : [
+        "Root"
+      ],
+      "log" : [
+        {
+          "barIsOwn" : true,
+          "barItems" : [
+            "Root",
+            "Second"
+          ],
+          "event" : "shouldPop",
+          "item" : "Second",
+          "itemIsTopVCItem" : true,
+          "n" : 33,
+          "vcs" : [
+            "Root",
+            "Second"
+          ]
+        },
+        {
+          "barIsOwn" : true,
+          "barItems" : [
+            "Root"
+          ],
+          "event" : "didPop",
+          "item" : "Second",
+          "itemIsTopVCItem" : false,
+          "n" : 34,
+          "vcs" : [
+            "Root"
+          ]
+        }
+      ],
+      "topVC" : "Root",
+      "vcs" : [
+        "Root"
+      ]
+    },
+    "controller.backTap.vetoed" : {
+      "barItems" : [
+        "Root",
+        "Second"
+      ],
+      "log" : [
+        {
+          "barIsOwn" : true,
+          "barItems" : [
+            "Root",
+            "Second"
+          ],
+          "event" : "shouldPop",
+          "item" : "Second",
+          "itemIsTopVCItem" : true,
+          "n" : 32,
+          "vcs" : [
+            "Root",
+            "Second"
+          ]
+        }
+      ],
+      "topVC" : "Second",
+      "vcs" : [
+        "Root",
+        "Second"
+      ]
+    },
+    "controller.barDelegateClass" : "probe.ProbeNav",
+    "controller.barDelegateIsNav" : true,
+    "controller.barPopItem" : "raises NSException (measured crash in -[UINavigationBar popNavigationItemAnimated:])",
+    "controller.controls" : [
+      "_UINavigationBarTitleControl",
+      "_UIButtonBarButton",
+      "_TtCC5UIKit29ButtonBarButtonVisualProviderP33_A98CD29F4F6ECA17AFECE41BBB264E596Button"
+    ],
+    "controller.log.afterPush" : [
+      {
+        "barIsOwn" : true,
+        "barItems" : [
+          "Root"
+        ],
+        "event" : "shouldPush",
+        "item" : "Second",
+        "itemIsTopVCItem" : true,
+        "n" : 30,
+        "vcs" : [
+          "Root",
+          "Second"
+        ]
+      }
+    ],
+    "controller.log.afterRoot" : [
+      {
+        "barIsOwn" : true,
+        "barItems" : [
+
+        ],
+        "event" : "shouldPush",
+        "item" : "Root",
+        "itemIsTopVCItem" : true,
+        "n" : 29,
+        "vcs" : [
+          "Root"
+        ]
+      }
+    ],
+    "controller.programmaticPop" : {
+      "barItems" : [
+        "Root"
+      ],
+      "log" : [
+
+      ],
+      "vcs" : [
+        "Root"
+      ]
+    },
+    "delegateDefault" : "nil",
+    "delegateIsWeakProperty" : true,
+    "items.afterPushes" : [
+      "A",
+      "B"
+    ],
+    "items.afterVetoedPush" : [
+      "A",
+      "B"
+    ],
+    "log.afterAdd" : [
+      {
+        "barPosition" : 2,
+        "event" : "position(for:)",
+        "isBar" : true,
+        "n" : 8
+      }
+    ],
+    "log.afterSetDelegate" : [
+
+    ],
+    "log.push.A" : [
+      {
+        "event" : "shouldPush",
+        "item" : "A",
+        "items" : [
+
+        ],
+        "n" : 9,
+        "top" : "nil"
+      },
+      {
+        "event" : "didPush",
+        "item" : "A",
+        "items" : [
+          "A"
+        ],
+        "n" : 10,
+        "top" : "A"
+      }
+    ],
+    "log.push.B" : [
+      {
+        "event" : "shouldPush",
+        "item" : "B",
+        "items" : [
+          "A"
+        ],
+        "n" : 11,
+        "top" : "A"
+      },
+      {
+        "event" : "didPush",
+        "item" : "B",
+        "items" : [
+          "A",
+          "B"
+        ],
+        "n" : 12,
+        "top" : "B"
+      }
+    ],
+    "log.push.C.animated.later" : [
+
+    ],
+    "log.push.C.animated.sync" : [
+      {
+        "event" : "shouldPush",
+        "item" : "C",
+        "items" : [
+          "A",
+          "B"
+        ],
+        "n" : 14,
+        "top" : "B"
+      },
+      {
+        "event" : "didPush",
+        "item" : "C",
+        "items" : [
+          "A",
+          "B",
+          "C"
+        ],
+        "n" : 15,
+        "top" : "C"
+      }
+    ],
+    "log.push.C.vetoed" : [
+      {
+        "event" : "shouldPush",
+        "item" : "C",
+        "items" : [
+          "A",
+          "B"
+        ],
+        "n" : 13,
+        "top" : "B"
+      }
+    ],
+    "pop.allowed" : {
+      "items" : [
+        "A",
+        "B"
+      ],
+      "log" : [
+        {
+          "event" : "shouldPop",
+          "item" : "C",
+          "items" : [
+            "A",
+            "B",
+            "C"
+          ],
+          "n" : 17,
+          "top" : "C"
+        },
+        {
+          "event" : "didPop",
+          "item" : "C",
+          "items" : [
+            "A",
+            "B"
+          ],
+          "n" : 18,
+          "top" : "B"
+        }
+      ],
+      "returned" : "C"
+    },
+    "pop.animated.later" : {
+      "items" : [
+        "A"
+      ],
+      "log" : [
+
+      ]
+    },
+    "pop.animated.sync" : {
+      "items" : [
+        "A"
+      ],
+      "log" : [
+        {
+          "event" : "shouldPop",
+          "item" : "B",
+          "items" : [
+            "A",
+            "B"
+          ],
+          "n" : 19,
+          "top" : "B"
+        },
+        {
+          "event" : "didPop",
+          "item" : "B",
+          "items" : [
+            "A"
+          ],
+          "n" : 20,
+          "top" : "A"
+        }
+      ],
+      "returned" : "B"
+    },
+    "pop.empty" : {
+      "log" : [
+        {
+          "event" : "shouldPop",
+          "item" : "nil",
+          "items" : [
+
+          ],
+          "n" : 23,
+          "top" : "nil"
+        },
+        {
+          "event" : "didPop",
+          "item" : "nil",
+          "items" : [
+
+          ],
+          "n" : 24,
+          "top" : "nil"
+        }
+      ],
+      "returned" : "nil"
+    },
+    "pop.lastItem" : {
+      "items" : [
+
+      ],
+      "log" : [
+        {
+          "event" : "shouldPop",
+          "item" : "A",
+          "items" : [
+            "A"
+          ],
+          "n" : 21,
+          "top" : "A"
+        },
+        {
+          "event" : "didPop",
+          "item" : "A",
+          "items" : [
+
+          ],
+          "n" : 22,
+          "top" : "nil"
+        }
+      ],
+      "returned" : "A"
+    },
+    "pop.vetoed" : {
+      "items" : [
+        "A",
+        "B",
+        "C"
+      ],
+      "log" : [
+        {
+          "event" : "shouldPop",
+          "item" : "C",
+          "items" : [
+            "A",
+            "B",
+            "C"
+          ],
+          "n" : 16,
+          "top" : "C"
+        }
+      ],
+      "returned" : "C"
+    },
+    "setItems.A.popVetoed" : {
+      "items" : [
+        "A"
+      ],
+      "log" : [
+
+      ]
+    },
+    "setItems.AB.animated.later" : [
+
+    ],
+    "setItems.AB.animated.sync" : {
+      "items" : [
+        "A",
+        "B"
+      ],
+      "log" : [
+        {
+          "event" : "didPop",
+          "item" : "C",
+          "items" : [
+            "A",
+            "B"
+          ],
+          "n" : 25,
+          "top" : "B"
+        }
+      ]
+    },
+    "setItems.ABC" : {
+      "items" : [
+        "A",
+        "B",
+        "C"
+      ],
+      "log" : [
+
+      ]
+    },
+    "setItems.ABE.animated.later" : [
+
+    ],
+    "setItems.ABE.animated.sync" : {
+      "items" : [
+        "A",
+        "B",
+        "E"
+      ],
+      "log" : [
+        {
+          "event" : "didPush",
+          "item" : "E",
+          "items" : [
+            "A",
+            "B",
+            "E"
+          ],
+          "n" : 26,
+          "top" : "E"
+        }
+      ]
+    },
+    "setItems.nil" : {
+      "items" : [
+
+      ],
+      "itemsNil" : false,
+      "log" : [
+
+      ]
+    },
+    "standalone.backControl" : "_UIButtonBarButton",
+    "standalone.backTap" : {
+      "items" : [
+        "A"
+      ],
+      "log" : [
+        {
+          "event" : "shouldPop",
+          "item" : "B",
+          "items" : [
+            "A",
+            "B"
+          ],
+          "n" : 27,
+          "top" : "B"
+        },
+        {
+          "event" : "didPop",
+          "item" : "B",
+          "items" : [
+            "A"
+          ],
+          "n" : 28,
+          "top" : "A"
+        }
+      ]
+    },
+    "standalone.controls" : [
+      "_UINavigationBarTitleControl",
+      "_UIButtonBarButton",
+      "_TtCC5UIKit29ButtonBarButtonVisualProviderP33_A98CD29F4F6ECA17AFECE41BBB264E596Button"
+    ]
+  },
+  "tabs" : {
+    "badge.itemToTab" : {
+      "tab" : "7",
+      "tabBarItem" : "9"
+    },
+    "badge.tabNilToItem" : {
+      "tabBarItem" : "nil",
+      "vcItem" : "nil"
+    },
+    "badge.tabToItem" : {
+      "tabBarItem" : "7",
+      "vcItem" : "7"
+    },
+    "fresh.tab" : {
+      "accessibilityValue" : "nil",
+      "allowsHiding" : false,
+      "badgeValue" : "nil",
+      "class" : "UITab",
+      "hasImage" : true,
+      "hasVisiblePlacement" : false,
+      "identifier" : "chats",
+      "isEnabled" : true,
+      "isHidden" : false,
+      "parent" : "nil",
+      "preferredPlacement" : 0,
+      "subtitle" : "nil",
+      "tabBarController" : "nil",
+      "title" : "Chats",
+      "vcTabIsSelf" : true,
+      "viewControllerLoaded" : "NamedNav"
+    },
+    "fresh.tab.afterBadge" : {
+      "accessibilityValue" : "3 unread",
+      "allowsHiding" : false,
+      "badgeValue" : "3",
+      "class" : "UITab",
+      "hasImage" : true,
+      "hasVisiblePlacement" : false,
+      "identifier" : "chats",
+      "isEnabled" : true,
+      "isHidden" : false,
+      "parent" : "nil",
+      "preferredPlacement" : 0,
+      "subtitle" : "nil",
+      "tabBarController" : "nil",
+      "title" : "Chats",
+      "vcTabIsSelf" : true,
+      "viewControllerLoaded" : "NamedNav"
+    },
+    "fresh.tab.callsAfterAccess" : 1,
+    "fresh.tab.vcAfterAccess" : "Chats",
+    "fresh.tab.viewControllerAccessCalledProvider" : 1,
+    "legacy.freshController.loaded.tabs" : {
+      "count" : 0,
+      "identifiers" : [
+
+      ],
+      "items" : [
+        "AA",
+        "B"
+      ],
+      "selectedTab" : "48819F3E-97FF-4A51-85D0-30F198C38862"
+    },
+    "legacy.freshController.tabs" : {
+      "aTab" : "nil",
+      "badges" : [
+
+      ],
+      "classes" : [
+
+      ],
+      "count" : 0,
+      "identifiers" : [
+
+      ],
+      "selectedTab" : "48819F3E-97FF-4A51-85D0-30F198C38862",
+      "titles" : [
+
+      ]
+    },
+    "legacy.tabsAfterViewControllers" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "fresh" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "legacy.tabsAfterViewControllers.laParent" : "nil",
+    "legacy.viewControllersAfterTabs" : {
+      "isTabBarHidden" : false,
+      "laTab" : "nil",
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "fresh" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "LA",
+      "selectedTab" : "E78CF81F-7B9D-4BA6-A332-8C145B86DE1B",
+      "selectedViewController" : "LegacyA",
+      "sidebarHidden" : true,
+      "t1TabBarController" : "nil",
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "nil",
+          "hasImage" : false,
+          "tag" : 10,
+          "title" : "LA"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : false,
+          "tag" : 0,
+          "title" : "LegacyB"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabClasses" : [
+
+      ],
+      "tabIdentifiers" : [
+
+      ],
+      "tabs" : [
+
+      ],
+      "tabsIdentity" : [
+
+      ],
+      "tabTitles" : [
+
+      ],
+      "vcTab" : [
+        "nil",
+        "nil"
+      ],
+      "vcTabBarItemIsBarItem" : [
+        true,
+        true
+      ],
+      "vcTabViewControllerIsVC" : [
+        false,
+        false
+      ],
+      "viewControllers" : [
+        "LegacyA",
+        "LegacyB"
+      ],
+      "viewControllersNil" : false
+    },
+    "legacy.viewControllersAfterTabs.log" : [
+
+    ],
+    "select.selectedIndex=2" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 2,
+      "selectedItemTitle" : "Stories",
+      "selectedTab" : "stories",
+      "selectedViewController" : "Stories",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "select.selectedIndex=2.log" : [
+      {
+        "event" : "didSelectTab",
+        "n" : 3,
+        "previous" : "calls",
+        "selectedIndex" : 2,
+        "tab" : "stories"
+      }
+    ],
+    "select.selectedTab=t2" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 1,
+      "selectedItemTitle" : "Calls",
+      "selectedTab" : "calls",
+      "selectedViewController" : "Calls",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "select.selectedTab=t2.log" : [
+      {
+        "event" : "didSelectTab",
+        "n" : 2,
+        "previous" : "chats",
+        "selectedIndex" : 1,
+        "tab" : "calls"
+      }
+    ],
+    "select.selectedViewController=chats" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "select.selectedViewController=chats.log" : [
+      {
+        "event" : "didSelectTab",
+        "n" : 4,
+        "previous" : "stories",
+        "selectedIndex" : 0,
+        "tab" : "chats"
+      }
+    ],
+    "tabs.empty" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "fresh" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 9223372036854775807,
+      "selectedItemTitle" : "nil",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+
+      ],
+      "tabsIdentity" : [
+
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tabs.freshProviderReplace" : {
+      "calls" : 1,
+      "sameVC" : true,
+      "vcTitle" : "Fresh#1"
+    },
+    "tabs.restored" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "fresh" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Fresh"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories",
+        "fresh"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2,
+        3
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tabs.restored.log" : [
+
+    ],
+    "tabs.restored.t3vcSame" : true,
+    "tabs.subset" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls"
+      ],
+      "tabsIdentity" : [
+        0,
+        1
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tabs.subset.log" : [
+      {
+        "event" : "didSelectTab",
+        "n" : 6,
+        "previous" : "stories",
+        "selectedIndex" : 0,
+        "tab" : "chats"
+      }
+    ],
+    "tabs.subset.t3" : {
+      "accessibilityValue" : "nil",
+      "allowsHiding" : false,
+      "badgeValue" : "nil",
+      "class" : "UITab",
+      "hasImage" : true,
+      "hasVisiblePlacement" : false,
+      "identifier" : "stories",
+      "isEnabled" : true,
+      "isHidden" : false,
+      "parent" : "nil",
+      "preferredPlacement" : 0,
+      "subtitle" : "nil",
+      "tabBarController" : "nil",
+      "title" : "Stories",
+      "vcTabIsSelf" : true,
+      "viewControllerLoaded" : "NamedNav"
+    },
+    "tap.legacyDelegateEntry.item1" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tap.legacyDelegateEntry.item1.log" : [
+
+    ],
+    "tap.reselect.log" : [
+
+    ],
+    "tap.trace" : {
+      "controls" : [
+
+      ],
+      "path" : "none",
+      "respondsToLegacyEntry" : false
+    },
+    "tap.vetoedByLegacyShouldSelect" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tap.vetoedByLegacyShouldSelect.log" : [
+
+    ],
+    "tap.vetoedByShouldSelectTab" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tap.vetoedByShouldSelectTab.log" : [
+
+    ],
+    "tbc.afterTabsSet.log" : [
+      {
+        "event" : "didSelectTab",
+        "n" : 1,
+        "previous" : "nil",
+        "selectedIndex" : 0,
+        "tab" : "chats"
+      }
+    ],
+    "tbc.afterTabsSet.t1" : {
+      "accessibilityValue" : "3 unread",
+      "allowsHiding" : false,
+      "badgeValue" : "3",
+      "class" : "UITab",
+      "hasImage" : true,
+      "hasVisiblePlacement" : true,
+      "identifier" : "chats",
+      "isEnabled" : true,
+      "isHidden" : false,
+      "parent" : "nil",
+      "preferredPlacement" : 0,
+      "subtitle" : "nil",
+      "tabBarController" : "tbc",
+      "title" : "Chats",
+      "vcTabIsSelf" : true,
+      "viewControllerLoaded" : "NamedNav"
+    },
+    "tbc.afterTabsSet.unloaded" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tbc.beforeTabs" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "chats" : 1
+      },
+      "selectedIndex" : 9223372036854775807,
+      "selectedItemTitle" : "nil",
+      "selectedTab" : "nil",
+      "selectedViewController" : "nil",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+
+      ],
+      "tabBarItemsNil" : true,
+      "tabs" : [
+
+      ],
+      "tabsIdentity" : [
+
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tbc.shown" : {
+      "isTabBarHidden" : false,
+      "mode" : 0,
+      "providerCalls" : {
+        "calls" : 1,
+        "chats" : 1,
+        "stories" : 1
+      },
+      "selectedIndex" : 0,
+      "selectedItemTitle" : "Chats",
+      "selectedTab" : "chats",
+      "selectedViewController" : "Chats",
+      "sidebarHidden" : true,
+      "tabBarClass" : "UITabBar",
+      "tabBarFrame" : [
+        0,
+        1116,
+        820,
+        64
+      ],
+      "tabBarItems" : [
+        {
+          "badge" : "3",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Chats"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Calls"
+        },
+        {
+          "badge" : "nil",
+          "hasImage" : true,
+          "tag" : 0,
+          "title" : "Stories"
+        }
+      ],
+      "tabBarItemsNil" : false,
+      "tabs" : [
+        "chats",
+        "calls",
+        "stories"
+      ],
+      "tabsIdentity" : [
+        0,
+        1,
+        2
+      ],
+      "viewControllers" : [
+        "nil"
+      ],
+      "viewControllersNil" : true
+    },
+    "tbc.shown.log" : [
+
+    ],
+    "tbc.shown.providerTabArgIsSelf" : {
+      "calls" : true,
+      "chats" : true,
+      "stories" : true
+    },
+    "tbc.shown.t1" : {
+      "accessibilityValue" : "3 unread",
+      "allowsHiding" : false,
+      "badgeValue" : "3",
+      "class" : "UITab",
+      "hasImage" : true,
+      "hasVisiblePlacement" : true,
+      "identifier" : "chats",
+      "isEnabled" : true,
+      "isHidden" : false,
+      "parent" : "nil",
+      "preferredPlacement" : 0,
+      "subtitle" : "nil",
+      "tabBarController" : "tbc",
+      "title" : "Chats",
+      "vcTabIsSelf" : true,
+      "viewControllerLoaded" : "NamedNav"
+    },
+    "tbc.shown.tabBarItemImageIsTabImage" : false,
+    "tbc.shown.tabBarItemTitle" : "Chats",
+    "tbc.shown.tree" : [
+      {
+        "class" : "UILayoutContainerView",
+        "depth" : 0,
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "hidden" : false
+      },
+      {
+        "class" : "UITransitionView",
+        "depth" : 1,
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "hidden" : false
+      },
+      {
+        "class" : "UIViewControllerWrapperView",
+        "depth" : 2,
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "hidden" : false
+      },
+      {
+        "class" : "_UITabContainerView",
+        "depth" : 1,
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "hidden" : false
+      },
+      {
+        "class" : "_UIFloatingTabBar",
+        "depth" : 2,
+        "frame" : [
+          0,
+          32,
+          820,
+          44
+        ],
+        "hidden" : false
+      }
+    ],
+    "tbc.shown.vc1TabBarItemBadge" : "3",
+    "title.tabToItem" : {
+      "tabBarItem" : "Calls2",
+      "vcItem" : "Calls2",
+      "vcTitle" : "Calls"
+    }
+  }
+}

@@ -183,8 +183,9 @@ open class UINavigationController: UIViewController {
         didSet {
             guard isToolbarHidden != oldValue else { return }
             toolbar.isHidden = isToolbarHidden
-            updateContainerLayout()
+            // Items first: under the iOS cut they decide whether a slot exists.
             updateToolbar()
+            updateContainerLayout()
         }
     }
     public func setToolbarHidden(_ hidden: Bool, animated: Bool) {
@@ -242,8 +243,14 @@ open class UINavigationController: UIViewController {
 
         navigationBar.autoresizingMask = [.flexibleWidth]
         navigationBar._controller = self
+        // MEASURED (signallastrowsprobe `nav`): the managed bar's delegate
+        // is the controller itself; a subclass conforming to
+        // UINavigationBarDelegate receives the calls (Signal's
+        // OWSNavigationController). UINavigationController does not declare
+        // the conformance — a subclass extension adding it must compile.
+        navigationBar.delegate = self as? UINavigationBarDelegate
         navigationBar.onBackTapped = { [weak self] in
-            self?.popViewController(animated: true)
+            self?._backButtonTapped()
         }
         v.addSubview(navigationBar)
 
@@ -347,8 +354,20 @@ open class UINavigationController: UIViewController {
                                        height: h - barH - toolbarHeight)
             navigationBar.frame = CGRect(x: 0, y: 0, width: w, height: barH)
         }
-        toolbar.frame = CGRect(x: 0, y: h - toolbarHeight,
-                               width: w, height: UIToolbar.defaultHeight)
+        // MEASURED toolbarheightprobe (see `_UIBarMetrics.toolbarSlotHeight`):
+        // the iOS 26 nav toolbar is a bottom slot 10 + platter + 28 tall on
+        // a phone (86 / 82) and 79 on a pad, its platters 10 pt below the
+        // slot's top and 28 (pad: 10) in from the side, and there is no slot
+        // at all when the top controller has no items. The classic cut
+        // keeps the bar's own intrinsic height at the bottom edge.
+        let slot = toolbarHeight
+        let managed = UINavigationBar.isIOS && slot > 0
+        toolbar._platterTopInset = managed ? _UIBarMetrics.toolbarSlotTopPadding : 0
+        toolbar._platterSideInset = managed
+            ? _UIBarMetrics.toolbarSlotSideInset + max(v.safeAreaInsets.left, v.safeAreaInsets.right)
+            : nil
+        toolbar.frame = CGRect(x: 0, y: h - slot, width: w,
+                               height: slot > 0 ? slot : UIToolbar.defaultHeight)
         updateContentSafeArea()
         layoutFloatingSearch()
     }
@@ -550,12 +569,31 @@ open class UINavigationController: UIViewController {
     }
 
     /// Height the toolbar takes out of the content area (0 when hidden).
-    var toolbarHeight: CGFloat { isToolbarHidden ? 0 : UIToolbar.defaultHeight }
+    /// iOS cut: the measured bottom slot (`_UIBarMetrics.toolbarSlotHeight`,
+    /// 86 / 82 phone, 79 pad), which the child sees as safe area, and
+    /// **0 when the top controller has no items** — MEASURED
+    /// toolbarheightprobe: `isToolbarHidden = false` with nil `toolbarItems`
+    /// shows no bar and leaves the child's safeAreaInsets.bottom at the
+    /// window's (34 / 20 / 0 / 25). Classic cut: the bar's intrinsic height.
+    var toolbarHeight: CGFloat {
+        guard !isToolbarHidden else { return 0 }
+        if UINavigationBar.isIOS {
+            return (toolbar.items?.isEmpty ?? true) ? 0 : _UIBarMetrics.toolbarSlotHeight
+        }
+        return UIToolbar.defaultHeight
+    }
 
     /// Fill the toolbar from the top controller's `toolbarItems` (M13).
+    /// Under the iOS cut the slot exists only while there are items, so a
+    /// change between none and some re-frames the container.
     func updateToolbar() {
         guard isViewLoaded else { return }
+        let hadItems = !(toolbar.items?.isEmpty ?? true)
         toolbar.items = topViewController?.toolbarItems
+        let hasItems = !(toolbar.items?.isEmpty ?? true)
+        if UINavigationBar.isIOS, !isToolbarHidden, hadItems != hasItems {
+            updateContainerLayout()
+        }
     }
 
     /// A child's `toolbarItems` changed while it is on screen.
@@ -715,6 +753,11 @@ open class UINavigationController: UIViewController {
         let from = topViewController
         addChild(vc)
         viewControllers.append(vc)
+        // MEASURED: `shouldPush(item)` reaches the bar delegate with
+        // `viewControllers` already holding the new controller and the bar
+        // items not yet; no `didPush` follows on the controller path. The
+        // answer's effect was not measured and is not acted on.
+        _ = navigationBar.delegate?.navigationBar(navigationBar, shouldPush: vc.navigationItem)
 
         guard isViewLoaded else {
             vc.didMove(toParent: self) // view installed by loadView later
@@ -755,6 +798,25 @@ open class UINavigationController: UIViewController {
     }
 
     // MARK: Pop
+
+    /// Back-button tap. MEASURED (signallastrowsprobe `nav`, controller
+    /// path, iOS 26.1): `shouldPop(item)` is asked with the stack intact
+    /// (`viewControllers` and `navigationBar.items` both still hold the top,
+    /// `item === topViewController.navigationItem`); `false` leaves
+    /// everything; `true` pops the controller and then `didPop(item)`
+    /// arrives with both stacks already shortened. A programmatic
+    /// `popViewController` asks nothing. Calling `popItem` on a managed bar
+    /// raises in UIKit (crash report in the probe source) and is not a path
+    /// here.
+    func _backButtonTapped() {
+        guard let item = navigationBar.topItem ?? topViewController?.navigationItem else {
+            popViewController(animated: true)
+            return
+        }
+        if let d = navigationBar.delegate, !d.navigationBar(navigationBar, shouldPop: item) { return }
+        popViewController(animated: true)
+        navigationBar.delegate?.navigationBar(navigationBar, didPop: item)
+    }
 
     @discardableResult
     public func popViewController(animated: Bool) -> UIViewController? {

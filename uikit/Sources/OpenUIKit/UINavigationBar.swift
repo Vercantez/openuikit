@@ -121,7 +121,7 @@ final class _UINavigationBarBackButton: UIControl {
 }
 
 @preconcurrency @MainActor
-public final class UINavigationBar: UIView, _UIBarItemContainer {
+public final class UINavigationBar: UIView, _UIBarItemContainer, UIBarPositioning {
     /// Process-wide proxy for UIKit's `UINavigationBar.appearance()` spelling.
     /// New bars inherit the proxy's objects. This is the useful subset for a
     /// single-process portable host; containment- and trait-scoped proxies are
@@ -406,6 +406,27 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         }
     }
     weak var _controller: UINavigationController?
+
+    /// UIKit's bar delegate (UINavigationBarDelegate, this file). MEASURED
+    /// (Tools/oracle2/signallastrowsprobe, section `nav`, iOS 26.1): nil on
+    /// a standalone bar; the navigation controller installs itself on the
+    /// bar it manages (`barDelegateIsNav` true — a subclass that conforms
+    /// receives the calls, UINavigationController.swift).
+    public weak var delegate: UINavigationBarDelegate?
+    private var resolvedPosition: UIBarPosition = .top
+    /// MEASURED: `.top` (2) detached, with or without a delegate; a
+    /// delegate answering `.topAttached` is read once the bar joins a
+    /// superview (3), `position(for:)` asked exactly once then, with the
+    /// bar itself as the argument. An `.any` answer keeps `.top` (the
+    /// toolbar's measured rule with the nav bar's default; not measured
+    /// for the nav bar itself).
+    public var barPosition: UIBarPosition { resolvedPosition }
+    public override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        guard superview != nil, let delegate else { return }
+        let answer = delegate.position(for: self)
+        resolvedPosition = answer == .any ? .top : answer
+    }
 
     /// The content scroll view driving expansion/collapse (bound by
     /// UINavigationController from the top VC's setContentScrollView).
@@ -766,21 +787,53 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
     /// Display `item` (a pushed controller's `navigationItem`). This is the
     /// path every real app takes; `setState(title:backTitle:)` is the
     /// title-only shorthand the M7.5 controller still uses internally.
-    public func setItems(_ newItems: [UINavigationItem], animated: Bool = false) {
+    ///
+    /// MEASURED (signallastrowsprobe `nav`, standalone bar): `setItems`
+    /// asks no `should*` question. Animated, it simulates a push or a pop:
+    /// `didPush(newTop)` when the new top was not in the old stack,
+    /// `didPop(oldTop)` when it was (both synchronous, nothing later);
+    /// non-animated it reports nothing. A vetoing `shouldPop` does not
+    /// apply to it. `setItems(nil)` leaves `items` `[]`, not nil.
+    public func setItems(_ newItems: [UINavigationItem]?, animated: Bool = false) {
+        let oldItems = items
+        let oldTop = items.last
+        _installItems(newItems ?? [])
+        guard animated, let delegate, let newTop = items.last, newTop !== oldTop else { return }
+        if let oldTop, oldItems.contains(where: { $0 === newTop }) {
+            delegate.navigationBar(self, didPop: oldTop)
+        } else {
+            delegate.navigationBar(self, didPush: newTop)
+        }
+    }
+
+    private func _installItems(_ newItems: [UINavigationItem]) {
         for i in items { i._bar = nil }
         items = newItems
         for i in items { i._bar = self }
         _rebuildItemViews()
     }
 
+    /// MEASURED: `shouldPush(item)` with the stack unchanged (`items` and
+    /// `topItem` still the old ones); `false` leaves the stack; otherwise
+    /// the item is on the stack and `didPush(item)` follows synchronously,
+    /// even when animated (nothing fires later).
     public func pushItem(_ item: UINavigationItem, animated: Bool = false) {
-        setItems(items + [item], animated: animated)
+        if let delegate, !delegate.navigationBar(self, shouldPush: item) { return }
+        _installItems(items + [item])
+        delegate?.navigationBar(self, didPush: item)
     }
 
+    /// MEASURED: `shouldPop(top)` with the stack unchanged; a `false`
+    /// keeps the stack AND still returns the top item; otherwise the item
+    /// leaves the stack and `didPop(item)` follows synchronously. UIKit
+    /// also asks with a nil item on an empty bar (ObjC); the Swift
+    /// signature cannot pass nil, so an empty bar answers nil silently.
     @discardableResult
     public func popItem(animated: Bool = false) -> UINavigationItem? {
         guard let last = items.last else { return nil }
-        setItems(Array(items.dropLast()), animated: animated)
+        if let delegate, !delegate.navigationBar(self, shouldPop: last) { return last }
+        _installItems(Array(items.dropLast()))
+        delegate?.navigationBar(self, didPop: last)
         return last
     }
 
@@ -1913,4 +1966,30 @@ func _expApprox(_ x: Double) -> Double {
 func smoothstep01(_ t: CGFloat) -> CGFloat {
     let c = clamp01(t)
     return c * c * (3 - 2 * c)
+}
+
+// MARK: - UINavigationBarDelegate
+
+/// UIKit's protocol (all members optional there; defaults here answer
+/// `true` / do nothing). Delivery order and veto semantics are measured
+/// above `UINavigationBar.pushItem` / `popItem` / `setItems`; the
+/// controller-managed bar's delivery is in UINavigationController.swift.
+///
+/// Signal-iOS demand (2 uses): `OWSNavigationController` (a
+/// `UINavigationController` subclass) implements `navigationBar(_:shouldPop:)`
+/// to cancel back presses; `MediaPageViewController` implements
+/// `shouldPop` (dismisses, returns false) and `didPop`.
+@preconcurrency @MainActor
+public protocol UINavigationBarDelegate: UIBarPositioningDelegate {
+    func navigationBar(_ navigationBar: UINavigationBar, shouldPush item: UINavigationItem) -> Bool
+    func navigationBar(_ navigationBar: UINavigationBar, didPush item: UINavigationItem)
+    func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool
+    func navigationBar(_ navigationBar: UINavigationBar, didPop item: UINavigationItem)
+}
+
+public extension UINavigationBarDelegate {
+    func navigationBar(_ navigationBar: UINavigationBar, shouldPush item: UINavigationItem) -> Bool { true }
+    func navigationBar(_ navigationBar: UINavigationBar, didPush item: UINavigationItem) {}
+    func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool { true }
+    func navigationBar(_ navigationBar: UINavigationBar, didPop item: UINavigationItem) {}
 }
