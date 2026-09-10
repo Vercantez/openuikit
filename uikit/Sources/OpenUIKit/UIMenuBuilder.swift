@@ -48,6 +48,8 @@
 
 #if canImport(Foundation)
 import Foundation
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
 #endif
 
 // MARK: - UIMenuSystem
