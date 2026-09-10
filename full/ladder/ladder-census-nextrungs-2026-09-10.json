@@ -1,9 +1,9 @@
 {
  "_meta": {
   "sdk_types": 737,
-  "ours": 435,
-  "openuikit_types_list": "openuikit_types-2026-09-10.txt",
-  "openuikit_source_commit": "a7f94380ab4b8d098ed5d83a02a829c6b0255747",
+  "ours": 437,
+  "openuikit_types_list": "openuikit_types-2026-09-10b.txt",
+  "openuikit_source_commit": "481c0f818b6c5b9bf7a572f559e307b021e4179a",
   "note": "nine route-(b) NEAR/MID apps of APP_LADDER \u00a79.6, each censused as its own bounded run from a one-symlink mini-corpus (simplenote-ios: clean detached --shared clone at its pin); NetNewsWire under its iOS target scope; concatenated here for classify_gaps.py / score_ladder.py"
  },
  "_scope": {
@@ -2508,10 +2508,10 @@
     "swift_files": 2628,
     "uses": 11071,
     "distinct_types": 180,
-    "implemented_types": 160,
-    "implemented_uses": 10635,
-    "missing_types": 20,
-    "missing_uses": 436,
+    "implemented_types": 162,
+    "implemented_uses": 10657,
+    "missing_types": 18,
+    "missing_uses": 414,
     "missing": [
      [
       "NSObject",
@@ -2524,14 +2524,6 @@
      [
       "NSValue",
       18
-     ],
-     [
-      "UITextItem",
-      12
-     ],
-     [
-      "UIPopoverPresentationControllerSourceItem",
-      10
      ],
      [
       "UIStoryboardSegue",
@@ -4023,10 +4015,10 @@
     "swift_files": 2086,
     "uses": 10006,
     "distinct_types": 200,
-    "implemented_types": 185,
-    "implemented_uses": 9866,
-    "missing_types": 15,
-    "missing_uses": 140,
+    "implemented_types": 186,
+    "implemented_uses": 9867,
+    "missing_types": 14,
+    "missing_uses": 139,
     "missing": [
      [
       "NSObject",
@@ -4082,10 +4074,6 @@
      ],
      [
       "UIFindInteraction",
-      1
-     ],
-     [
-      "UITextItem",
       1
      ]
     ],

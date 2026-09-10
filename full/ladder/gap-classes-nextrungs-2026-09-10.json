@@ -183,32 +183,6 @@
    }
   },
   "WordPress-iOS": {
-   "blocking": {
-    "types": 5,
-    "uses": 26,
-    "list": [
-     [
-      "UITextItem",
-      12
-     ],
-     [
-      "UIPopoverPresentationControllerSourceItem",
-      10
-     ],
-     [
-      "NSTextTab",
-      2
-     ],
-     [
-      "NSTextLayoutManager",
-      1
-     ],
-     [
-      "NSTextLocation",
-      1
-     ]
-    ]
-   },
    "stub-able": {
     "types": 11,
     "uses": 18,
@@ -255,6 +229,24 @@
      ],
      [
       "UICollectionViewDataSourcePrefetching",
+      1
+     ]
+    ]
+   },
+   "blocking": {
+    "types": 3,
+    "uses": 4,
+    "list": [
+     [
+      "NSTextTab",
+      2
+     ],
+     [
+      "NSTextLayoutManager",
+      1
+     ],
+     [
+      "NSTextLocation",
       1
      ]
     ]
@@ -305,8 +297,8 @@
     ]
    },
    "blocking": {
-    "types": 3,
-    "uses": 4,
+    "types": 2,
+    "uses": 3,
     "list": [
      [
       "UIMenuBuilder",
@@ -314,10 +306,6 @@
      ],
      [
       "UICommandAlternate",
-      1
-     ],
-     [
-      "UITextItem",
       1
      ]
     ]
