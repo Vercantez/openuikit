@@ -13,11 +13,10 @@ golden names.
 ```
    iOS app source (unmodified)
               │
-              ├── native route ──►  Linux ELF binary  ─────────────┐
-              │                     (Swift-only apps)              │
-              │                                                    ├──►  rendered
-              └── guest route  ──►  Mach-O binary  ──► machorun ───┘      screen,
-                                    (apps needing ObjC interop)           scored vs iOS
+              ▼
+      Mach-O binary  ──►  machorun on Linux  ──►  rendered screen,
+   (Linux cross-toolchain                          scored against a
+      or Xcode on a Mac)                           real iOS capture
 ```
 
 ---
@@ -107,8 +106,8 @@ entries are one property or one initializer. `uikit/docs/agent_reports/ios-oss-l
 walks the whole loop on Kickstarter's app, from `.xcodeproj` to a named list of
 walls, and is the best worked example to copy.
 
-**3. Render a screen** with `openrender` (native route) or `machorun`
-(guest route), then score it against a capture from a real device.
+**3. Render a screen** by running the app's Mach-O under `machorun`, then score
+it against a capture from a real device.
 
 When an app does not run yet, the reason is almost never "UIKit is missing".
 Across the twenty apps measured so far, effective UIKit coverage is 87.5–100 %
@@ -123,23 +122,27 @@ iOS app. Read `full/ladder/APP_LADDER.md` for the twenty apps already measured.
 
 ---
 
-## The two routes, and which one an app needs
+## How an app actually runs
 
-**Native route (Linux ELF).** The app's Swift is recompiled by the Linux Swift
-compiler against OpenUIKit and linked as an ordinary Linux binary. Fastest and
-simplest. It works for apps whose code and dependencies avoid Objective-C
-dynamism, because the Linux compiler rejects `#selector` and `@objc` before
-OpenUIKit is ever consulted. Verified by `uikit/scripts/linux_realapp_verify.sh`.
+**The app is built as an `arm64-apple-*` Mach-O and executed on Linux by
+`machorun`**, this project's Mach-O loader, on top of Apple's Swift runtime
+rebuilt as Mach-O plus a Darwin-to-glibc `libSystem`. The Mach-O can be produced
+on Linux by the cross-toolchain or on a Mac by Xcode; either way it runs on
+Linux unchanged. This route keeps full Objective-C interop, so `#selector`, KVO,
+nib-shaped code and the ObjC runtime all work — which is why it is the route
+real apps take. Verified by `uikit/scripts/linux_guest_realapp_verify.sh`.
 
-**Guest route (Mach-O under machorun).** The app is built as an `arm64-apple-*`
-Mach-O — on Linux by the cross-toolchain, or on a Mac by Xcode — and executed on
-Linux by `machorun`, our Mach-O loader, on top of Apple's own Swift runtime
-rebuilt as Mach-O plus a Darwin-to-glibc `libSystem`. This route keeps full
-Objective-C interop, so `#selector`, KVO, nib-shaped code and the ObjC runtime
-all work. Verified by `uikit/scripts/linux_guest_realapp_verify.sh`.
+There is a second, narrower path: recompiling the app's Swift as an ordinary
+Linux ELF binary. It is cheaper to build and it proves the port is portable
+Swift rather than Darwin-shaped, so it stays as a verification device and as a
+fast path for the rare app with no Objective-C anywhere. It is not the way to
+run an app you did not write: the Linux compiler rejects `#selector` and `@objc`
+before OpenUIKit is ever consulted, and of the twenty apps measured, exactly one
+clears that bar. `uikit/scripts/linux_realapp_verify.sh` runs the guest route
+when a guest build is present and falls back to this one otherwise.
 
-`full/ladder/APP_LADDER.md` scores 20 real apps under both routes and says, per
-app, exactly which types and how many call sites stand between it and running.
+`full/ladder/APP_LADDER.md` scores 20 real apps and says, per app, exactly which
+types and how many call sites stand between it and running.
 
 Building a guest tree from scratch:
 
