@@ -1,0 +1,7146 @@
+{
+ "_meta": {
+  "sdk_types": 737,
+  "ours": 435,
+  "openuikit_types_list": "openuikit_types-2026-09-10.txt",
+  "openuikit_source_commit": "a7f94380ab4b8d098ed5d83a02a829c6b0255747",
+  "note": "nine route-(b) NEAR/MID apps of APP_LADDER \u00a79.6, each censused as its own bounded run from a one-symlink mini-corpus (simplenote-ios: clean detached --shared clone at its pin); NetNewsWire under its iOS target scope; concatenated here for classify_gaps.py / score_ladder.py"
+ },
+ "_scope": {
+  "NetNewsWire": {
+   "source": "full/ladder/target-scope-netnewswire-ios-2026-09-10.json",
+   "target": "NetNewsWire-iOS",
+   "rule": "PBXSourcesBuildPhase + synchronized groups minus membership exceptions; + Sources/ of the transitive local-package closure; - whole-file macOS guards (target_scope.py docstring)",
+   "files": 448
+  }
+ },
+ "apps": {
+  "NetNewsWire": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 429,
+    "uses": 1333,
+    "distinct_types": 124,
+    "implemented_types": 121,
+    "implemented_uses": 1218,
+    "missing_types": 3,
+    "missing_uses": 115,
+    "missing": [
+     [
+      "NSString",
+      100
+     ],
+     [
+      "NSObject",
+      14
+     ],
+     [
+      "UIStoryboardSegue",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "NSString",
+      100
+     ],
+     [
+      "UIAction",
+      66
+     ],
+     [
+      "UITableView",
+      61
+     ],
+     [
+      "UIApplication",
+      56
+     ],
+     [
+      "UIFont",
+      55
+     ],
+     [
+      "UIView",
+      55
+     ],
+     [
+      "UIAlertAction",
+      55
+     ],
+     [
+      "UILabel",
+      46
+     ],
+     [
+      "UIBarButtonItem",
+      38
+     ],
+     [
+      "UIViewController",
+      34
+     ],
+     [
+      "UIStoryboard",
+      34
+     ],
+     [
+      "UICollectionView",
+      33
+     ],
+     [
+      "UITextField",
+      33
+     ],
+     [
+      "UIColor",
+      31
+     ],
+     [
+      "UIMenu",
+      30
+     ],
+     [
+      "UIKeyCommand",
+      29
+     ],
+     [
+      "UIImage",
+      27
+     ],
+     [
+      "UINavigationController",
+      24
+     ],
+     [
+      "UIAlertController",
+      20
+     ],
+     [
+      "UIContextMenuConfiguration",
+      19
+     ],
+     [
+      "UIScrollView",
+      18
+     ],
+     [
+      "NSAttributedString",
+      17
+     ],
+     [
+      "UISplitViewController",
+      16
+     ],
+     [
+      "NSLayoutConstraint",
+      16
+     ],
+     [
+      "UIButton",
+      16
+     ],
+     [
+      "NSObject",
+      14
+     ],
+     [
+      "UIImageView",
+      14
+     ],
+     [
+      "UITableViewController",
+      14
+     ],
+     [
+      "UIBackgroundConfiguration",
+      14
+     ],
+     [
+      "NSCoder",
+      13
+     ],
+     [
+      "UIResponder",
+      13
+     ],
+     [
+      "UITableViewCell",
+      12
+     ],
+     [
+      "UISwitch",
+      12
+     ],
+     [
+      "UIPasteboard",
+      11
+     ],
+     [
+      "UIGestureRecognizer",
+      11
+     ],
+     [
+      "UIActivityViewController",
+      10
+     ],
+     [
+      "UIContextualAction",
+      10
+     ],
+     [
+      "UIDevice",
+      9
+     ],
+     [
+      "UITextFieldDelegate",
+      9
+     ],
+     [
+      "UITapGestureRecognizer",
+      9
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 39
+     },
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 17
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 13
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 11
+     },
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 9
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "account",
+      "uses": 9
+     },
+     {
+      "type": "UITextField",
+      "member": "textDidChangeNotification",
+      "uses": 9
+     },
+     {
+      "type": "UIColor",
+      "member": "label",
+      "uses": 6
+     },
+     {
+      "type": "UIFont",
+      "member": "systemFont",
+      "uses": 6
+     },
+     {
+      "type": "UIApplication",
+      "member": "willEnterForegroundNotification",
+      "uses": 5
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "settings",
+      "uses": 5
+     },
+     {
+      "type": "UICollectionView",
+      "member": "elementKindSectionHeader",
+      "uses": 5
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "add",
+      "uses": 4
+     },
+     {
+      "type": "UIBackgroundConfiguration",
+      "member": "listCell",
+      "uses": 4
+     },
+     {
+      "type": "UIBackgroundConfiguration",
+      "member": "listGroupedCell",
+      "uses": 4
+     },
+     {
+      "type": "UIView",
+      "member": "noIntrinsicMetric",
+      "uses": 4
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "inspector",
+      "uses": 3
+     },
+     {
+      "type": "UIApplication",
+      "member": "openSettingsURLString",
+      "uses": 3
+     },
+     {
+      "type": "UIResponder",
+      "member": "currentFirstResponder",
+      "uses": 3
+     },
+     {
+      "type": "UIColor",
+      "member": "systemOrange",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputUpArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputDownArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputRightArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "main",
+      "uses": 2
+     },
+     {
+      "type": "UICollectionViewCompositionalLayout",
+      "member": "list",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "systemRed",
+      "uses": 2
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "secondaryLabel",
+      "uses": 2
+     },
+     {
+      "type": "UIView",
+      "member": "transition",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "systemGray",
+      "uses": 2
+     },
+     {
+      "type": "UIBarButtonItem",
+      "member": "flexibleSpace",
+      "uses": 2
+     },
+     {
+      "type": "UIBackgroundConfiguration",
+      "member": "listSidebarCell",
+      "uses": 2
+     },
+     {
+      "type": "UIResponder",
+      "member": "isFirstResponderTextField",
+      "uses": 1
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputLeftArrow",
+      "uses": 1
+     },
+     {
+      "type": "UIView",
+      "member": "performWithoutAnimation",
+      "uses": 1
+     },
+     {
+      "type": "UIApplication",
+      "member": "didEnterBackgroundNotification",
+      "uses": 1
+     },
+     {
+      "type": "UIFont",
+      "member": "monospacedSystemFont",
+      "uses": 1
+     },
+     {
+      "type": "UIColor",
+      "member": "gray",
+      "uses": 1
+     },
+     {
+      "type": "UILabel",
+      "member": "self",
+      "uses": 1
+     },
+     {
+      "type": "UITraitPreferredContentSizeCategory",
+      "member": "self",
+      "uses": 1
+     }
+    ]
+   },
+   "swift_lines": 65806,
+   "swiftui": {
+    "files": 429,
+    "import_uikit": 98,
+    "view_types": 11,
+    "some_view": 32,
+    "body_decls": 13,
+    "previews": 2,
+    "uikit_subclasses": 38,
+    "selector_sites": 175,
+    "objc_sites": 220,
+    "objc_dynamic": 2,
+    "objc_protocol": 1,
+    "objc_named": 0,
+    "objcmembers": 0,
+    "iboutlet": 96,
+    "ibaction": 54,
+    "selector_files": 56,
+    "selector_wiring": 160,
+    "objc_files": 58,
+    "import_swiftui": 16,
+    "selector_unclassified": 15,
+    "view_bearing_files": 11,
+    "uikit_subclass_files": 38,
+    "wrappers": {
+     "MainActor": 455,
+     "Environment": 3,
+     "Observable": 2,
+     "State": 23,
+     "ViewBuilder": 7
+    },
+    "combine": {}
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 2988,
+    "families": {
+     "files": 555,
+     "dates": 442,
+     "collections": 402,
+     "notification": 381,
+     "concurrency": 333,
+     "networking": 326,
+     "json/coding": 285,
+     "text/format": 160,
+     "persistence": 104
+    },
+    "top": [
+     [
+      "URL",
+      457
+     ],
+     [
+      "Date",
+      318
+     ],
+     [
+      "Error",
+      211
+     ],
+     [
+      "NotificationCenter",
+      198
+     ],
+     [
+      "Notification",
+      183
+     ],
+     [
+      "Task",
+      164
+     ],
+     [
+      "Data",
+      135
+     ],
+     [
+      "NSString",
+      104
+     ],
+     [
+      "URLQueryItem",
+      87
+     ],
+     [
+      "URLRequest",
+      87
+     ],
+     [
+      "UserDefaults",
+      82
+     ],
+     [
+      "DispatchQueue",
+      81
+     ],
+     [
+      "Thread",
+      74
+     ],
+     [
+      "TimeInterval",
+      69
+     ],
+     [
+      "Codable",
+      61
+     ],
+     [
+      "FileManager",
+      59
+     ],
+     [
+      "CodingKeys",
+      55
+     ],
+     [
+      "CodingKey",
+      50
+     ],
+     [
+      "DateFormatter",
+      40
+     ],
+     [
+      "Bundle",
+      38
+     ],
+     [
+      "URLComponents",
+      36
+     ],
+     [
+      "HTTPURLResponse",
+      33
+     ],
+     [
+      "Decodable",
+      32
+     ],
+     [
+      "JSONDecoder",
+      29
+     ],
+     [
+      "URLError",
+      23
+     ],
+     [
+      "URLSession",
+      21
+     ],
+     [
+      "NSAttributedString",
+      18
+     ],
+     [
+      "URLResponse",
+      18
+     ],
+     [
+      "NSError",
+      17
+     ],
+     [
+      "JSONEncoder",
+      15
+     ],
+     [
+      "CharacterSet",
+      14
+     ],
+     [
+      "UUID",
+      13
+     ],
+     [
+      "NSCoder",
+      13
+     ],
+     [
+      "Encodable",
+      12
+     ],
+     [
+      "Calendar",
+      11
+     ],
+     [
+      "Locale",
+      10
+     ],
+     [
+      "URLSessionTask",
+      8
+     ],
+     [
+      "JSONSerialization",
+      7
+     ],
+     [
+      "Timer",
+      7
+     ],
+     [
+      "PropertyListEncoder",
+      6
+     ]
+    ],
+    "all": {
+     "URL": 457,
+     "Date": 318,
+     "Error": 211,
+     "NotificationCenter": 198,
+     "Notification": 183,
+     "Task": 164,
+     "Data": 135,
+     "NSString": 104,
+     "URLQueryItem": 87,
+     "URLRequest": 87,
+     "UserDefaults": 82,
+     "DispatchQueue": 81,
+     "Thread": 74,
+     "TimeInterval": 69,
+     "Codable": 61,
+     "FileManager": 59,
+     "CodingKeys": 55,
+     "CodingKey": 50,
+     "DateFormatter": 40,
+     "Bundle": 38,
+     "URLComponents": 36,
+     "HTTPURLResponse": 33,
+     "Decodable": 32,
+     "JSONDecoder": 29,
+     "URLError": 23,
+     "URLSession": 21,
+     "NSAttributedString": 18,
+     "URLResponse": 18,
+     "NSError": 17,
+     "JSONEncoder": 15,
+     "CharacterSet": 14,
+     "UUID": 13,
+     "NSCoder": 13,
+     "Encodable": 12,
+     "Calendar": 11,
+     "Locale": 10,
+     "URLSessionTask": 8,
+     "JSONSerialization": 7,
+     "Timer": 7,
+     "PropertyListEncoder": 6,
+     "Decoder": 5,
+     "NSMutableAttributedString": 5,
+     "IndexSet": 5,
+     "URLSessionDataTask": 5,
+     "NSMutableArray": 5,
+     "NSData": 5,
+     "OperationQueue": 4,
+     "PropertyListDecoder": 4,
+     "NSNull": 4,
+     "Unicode": 4,
+     "NSPredicate": 4,
+     "DecodingError": 3,
+     "NSSortDescriptor": 3,
+     "NSNumber": 3,
+     "URLSessionConfiguration": 3,
+     "Encoder": 2,
+     "NSRegularExpression": 2,
+     "NSArray": 2,
+     "RelativeDateTimeFormatter": 2,
+     "NumberFormatter": 2,
+     "URLSessionTaskDelegate": 2,
+     "URLSessionDataDelegate": 2,
+     "PropertyListSerialization": 2,
+     "RunLoop": 1,
+     "NSMutableString": 1,
+     "DispatchGroup": 1,
+     "DateComponents": 1,
+     "NSDictionary": 1,
+     "Operation": 1,
+     "NSKeyedUnarchiver": 1,
+     "NSKeyedArchiver": 1,
+     "Decimal": 1,
+     "NSURL": 1,
+     "URLProtocol": 1,
+     "TimeZone": 1,
+     "KeyedDecodingContainer": 1,
+     "UnkeyedDecodingContainer": 1
+    }
+   },
+   "imports": {
+    "Foundation": 310,
+    "RSCore": 138,
+    "UIKit": 98,
+    "Articles": 78,
+    "os": 72,
+    "Account": 71,
+    "RSWeb": 53,
+    "RSParser": 38,
+    "Images": 30,
+    "ActivityLog": 27,
+    "RSDatabase": 27,
+    "RSDatabaseObjC": 25,
+    "Secrets": 23,
+    "SwiftUI": 16,
+    "ArticlesDatabase": 16,
+    "SafariServices": 14,
+    "ErrorLog": 13,
+    "AppKit": 12,
+    "WebKit": 12,
+    "RSTree": 10,
+    "SyncDatabase": 10,
+    "UniformTypeIdentifiers": 9,
+    "CloudKit": 9,
+    "CloudKitSync": 8,
+    "FeedFinder": 6,
+    "HTMLMetadata": 5,
+    "UserNotifications": 5,
+    "CoreServices": 3,
+    "NewsBlur": 3,
+    "WidgetKit": 2
+   },
+   "languages": {
+    "files": {
+     ".swift": 429,
+     ".m": 9,
+     ".h": 10
+    },
+    "lines": {
+     ".swift": 65806,
+     ".m": 2603,
+     ".h": 2063
+    }
+   },
+   "build": {
+    "spm_manifests": 17,
+    "xcodeproj": 1,
+    "xcworkspace": 0,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 0,
+    "spm_direct_urls": 4,
+    "submodules": 0,
+    "xcassets": 3,
+    "xib_storyboard": 39,
+    "strings_files": 0,
+    "_dep_urls": [
+     "https://github.com/brentsimmons/Tidemark",
+     "https://github.com/marmelroy/Zip.git",
+     "https://github.com/microsoft/plcrashreporter.git",
+     "https://github.com/sparkle-project/Sparkle.git"
+    ]
+   },
+   "_scope": {
+    "files": 448,
+    "note": "per-file walks restricted to target_scope.py's list; `build` is repo-wide"
+   }
+  },
+  "Signal-iOS": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 2631,
+    "uses": 15163,
+    "distinct_types": 195,
+    "implemented_types": 187,
+    "implemented_uses": 14377,
+    "missing_types": 8,
+    "missing_uses": 786,
+    "missing": [
+     [
+      "NSObject",
+      486
+     ],
+     [
+      "NSString",
+      275
+     ],
+     [
+      "NSValue",
+      13
+     ],
+     [
+      "UILocalizedIndexedCollation",
+      4
+     ],
+     [
+      "UITab",
+      3
+     ],
+     [
+      "UINavigationBarDelegate",
+      2
+     ],
+     [
+      "NSIndexPath",
+      2
+     ],
+     [
+      "UICornerConfiguration",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIView",
+      2096
+     ],
+     [
+      "UIColor",
+      1607
+     ],
+     [
+      "UIImage",
+      870
+     ],
+     [
+      "NSCoder",
+      765
+     ],
+     [
+      "NSLayoutConstraint",
+      757
+     ],
+     [
+      "UILabel",
+      754
+     ],
+     [
+      "UIButton",
+      592
+     ],
+     [
+      "UIAction",
+      558
+     ],
+     [
+      "UIStackView",
+      529
+     ],
+     [
+      "UIViewController",
+      526
+     ],
+     [
+      "NSAttributedString",
+      503
+     ],
+     [
+      "NSObject",
+      486
+     ],
+     [
+      "UIFont",
+      461
+     ],
+     [
+      "UIImageView",
+      334
+     ],
+     [
+      "NSString",
+      275
+     ],
+     [
+      "UITableViewCell",
+      273
+     ],
+     [
+      "UITableView",
+      201
+     ],
+     [
+      "UIDevice",
+      190
+     ],
+     [
+      "UIApplication",
+      160
+     ],
+     [
+      "UIVisualEffectView",
+      144
+     ],
+     [
+      "UIGestureRecognizer",
+      139
+     ],
+     [
+      "UIScrollView",
+      138
+     ],
+     [
+      "UITapGestureRecognizer",
+      130
+     ],
+     [
+      "UITextField",
+      122
+     ],
+     [
+      "UICollectionView",
+      121
+     ],
+     [
+      "NSMutableAttributedString",
+      104
+     ],
+     [
+      "UITraitCollection",
+      99
+     ],
+     [
+      "UITextView",
+      99
+     ],
+     [
+      "UIBarButtonItem",
+      98
+     ],
+     [
+      "UIViewPropertyAnimator",
+      87
+     ],
+     [
+      "UIBlurEffect",
+      82
+     ],
+     [
+      "UINavigationController",
+      79
+     ],
+     [
+      "UIWindow",
+      62
+     ],
+     [
+      "UIPanGestureRecognizer",
+      57
+     ],
+     [
+      "UICollectionViewCell",
+      54
+     ],
+     [
+      "UISwitch",
+      54
+     ],
+     [
+      "UIPasteboard",
+      45
+     ],
+     [
+      "UIGlassEffect",
+      44
+     ],
+     [
+      "UIMenu",
+      44
+     ],
+     [
+      "UIKeyCommand",
+      43
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 180
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 138
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 104
+     },
+     {
+      "type": "UIView",
+      "member": "accessibilityIdentifier",
+      "uses": 85
+     },
+     {
+      "type": "UIView",
+      "member": "container",
+      "uses": 63
+     },
+     {
+      "type": "UIView",
+      "member": "performWithoutAnimation",
+      "uses": 48
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 43
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 40
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeSubheadlineClamped",
+      "uses": 40
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeBody",
+      "uses": 30
+     },
+     {
+      "type": "UITraitCollection",
+      "member": "current",
+      "uses": 27
+     },
+     {
+      "type": "UIColor",
+      "member": "white",
+      "uses": 24
+     },
+     {
+      "type": "UIView",
+      "member": "spacer",
+      "uses": 22
+     },
+     {
+      "type": "UILabel",
+      "member": "titleLabelForRegistration",
+      "uses": 22
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeSubheadline",
+      "uses": 21
+     },
+     {
+      "type": "UILabel",
+      "member": "explanationTextLabel",
+      "uses": 21
+     },
+     {
+      "type": "UIBarButtonItem",
+      "member": "button",
+      "uses": 21
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 19
+     },
+     {
+      "type": "UIBackgroundConfiguration",
+      "member": "clear",
+      "uses": 19
+     },
+     {
+      "type": "UIColor",
+      "member": "byRGBHex",
+      "uses": 19
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 18
+     },
+     {
+      "type": "UIView",
+      "member": "hStretchingSpacer",
+      "uses": 18
+     },
+     {
+      "type": "UILabel",
+      "member": "explanationLabelForRegistration",
+      "uses": 18
+     },
+     {
+      "type": "UIView",
+      "member": "transparentSpacer",
+      "uses": 18
+     },
+     {
+      "type": "UIView",
+      "member": "noIntrinsicMetric",
+      "uses": 17
+     },
+     {
+      "type": "UIFont",
+      "member": "systemFont",
+      "uses": 17
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeFootnote",
+      "uses": 17
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 16
+     },
+     {
+      "type": "UIStackView",
+      "member": "verticalButtonStack",
+      "uses": 16
+     },
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 15
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeBodyClamped",
+      "uses": 15
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeHeadlineClamped",
+      "uses": 14
+     },
+     {
+      "type": "UIView",
+      "member": "addKeyframe",
+      "uses": 13
+     },
+     {
+      "type": "UIImage",
+      "member": "image",
+      "uses": 12
+     },
+     {
+      "type": "UICollectionView",
+      "member": "elementKindSectionHeader",
+      "uses": 12
+     },
+     {
+      "type": "UIFont",
+      "member": "regularFont",
+      "uses": 12
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeFootnoteClamped",
+      "uses": 11
+     },
+     {
+      "type": "UIColor",
+      "member": "ows_white",
+      "uses": 10
+     },
+     {
+      "type": "UIFont",
+      "member": "dynamicTypeHeadline",
+      "uses": 10
+     },
+     {
+      "type": "UIView",
+      "member": "animateKeyframes",
+      "uses": 9
+     }
+    ]
+   },
+   "swift_lines": 782846,
+   "swiftui": {
+    "files": 2631,
+    "view_types": 55,
+    "some_view": 102,
+    "body_decls": 77,
+    "previews": 175,
+    "uikit_subclasses": 335,
+    "selector_sites": 496,
+    "objc_sites": 3235,
+    "objc_dynamic": 0,
+    "objc_protocol": 8,
+    "objc_named": 109,
+    "objcmembers": 5,
+    "iboutlet": 0,
+    "ibaction": 0,
+    "objc_files": 402,
+    "selector_files": 214,
+    "selector_unclassified": 296,
+    "test_files": 346,
+    "import_uikit": 215,
+    "selector_wiring": 200,
+    "uikit_subclass_files": 246,
+    "view_bearing_files": 39,
+    "import_combine": 11,
+    "import_swiftui": 37,
+    "wrappers": {
+     "MainActor": 866,
+     "State": 18,
+     "ViewBuilder": 29,
+     "Environment": 8,
+     "Binding": 1,
+     "ObservedObject": 17,
+     "Published": 50,
+     "StateObject": 1,
+     "EnvironmentObject": 1
+    },
+    "combine": {
+     "AnyCancellable": 11,
+     "PassthroughSubject": 3,
+     "ObservableObject": 17,
+     "CurrentValueSubject": 1
+    }
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 20169,
+    "families": {
+     "collections": 8516,
+     "json/coding": 2455,
+     "dates": 2214,
+     "concurrency": 1722,
+     "files": 1673,
+     "text/format": 1208,
+     "persistence": 1076,
+     "notification": 950,
+     "networking": 355
+    },
+    "top": [
+     [
+      "Data",
+      5699
+     ],
+     [
+      "URL",
+      1413
+     ],
+     [
+      "Date",
+      1262
+     ],
+     [
+      "Error",
+      1246
+     ],
+     [
+      "Task",
+      987
+     ],
+     [
+      "NSCoder",
+      765
+     ],
+     [
+      "CodingKeys",
+      693
+     ],
+     [
+      "TimeInterval",
+      690
+     ],
+     [
+      "UUID",
+      685
+     ],
+     [
+      "Decoder",
+      594
+     ],
+     [
+      "NotificationCenter",
+      578
+     ],
+     [
+      "NSAttributedString",
+      515
+     ],
+     [
+      "Codable",
+      479
+     ],
+     [
+      "NSNumber",
+      472
+     ],
+     [
+      "DispatchQueue",
+      451
+     ],
+     [
+      "NSString",
+      282
+     ],
+     [
+      "Notification",
+      268
+     ],
+     [
+      "Encoder",
+      240
+     ],
+     [
+      "FileManager",
+      187
+     ],
+     [
+      "NSSecureCoding",
+      178
+     ],
+     [
+      "CodingKey",
+      145
+     ],
+     [
+      "Timer",
+      133
+     ],
+     [
+      "NSError",
+      112
+     ],
+     [
+      "NSMutableAttributedString",
+      105
+     ],
+     [
+      "NSNotification",
+      104
+     ],
+     [
+      "IndexSet",
+      100
+     ],
+     [
+      "JSONDecoder",
+      97
+     ],
+     [
+      "DateFormatter",
+      93
+     ],
+     [
+      "NSDate",
+      85
+     ],
+     [
+      "NSData",
+      76
+     ],
+     [
+      "Decodable",
+      74
+     ],
+     [
+      "URLRequest",
+      68
+     ],
+     [
+      "Locale",
+      65
+     ],
+     [
+      "Thread",
+      57
+     ],
+     [
+      "NSKeyedUnarchiver",
+      57
+     ],
+     [
+      "URLSession",
+      49
+     ],
+     [
+      "JSONEncoder",
+      48
+     ],
+     [
+      "URLComponents",
+      48
+     ],
+     [
+      "Measurement",
+      46
+     ],
+     [
+      "NSKeyedArchiver",
+      44
+     ]
+    ],
+    "all": {
+     "Data": 5699,
+     "URL": 1413,
+     "Date": 1262,
+     "Error": 1246,
+     "Task": 987,
+     "NSCoder": 765,
+     "CodingKeys": 693,
+     "TimeInterval": 690,
+     "UUID": 685,
+     "Decoder": 594,
+     "NotificationCenter": 578,
+     "NSAttributedString": 515,
+     "Codable": 479,
+     "NSNumber": 472,
+     "DispatchQueue": 451,
+     "NSString": 282,
+     "Notification": 268,
+     "Encoder": 240,
+     "FileManager": 187,
+     "NSSecureCoding": 178,
+     "CodingKey": 145,
+     "Timer": 133,
+     "NSError": 112,
+     "NSMutableAttributedString": 105,
+     "NSNotification": 104,
+     "IndexSet": 100,
+     "JSONDecoder": 97,
+     "DateFormatter": 93,
+     "NSDate": 85,
+     "NSData": 76,
+     "Decodable": 74,
+     "URLRequest": 68,
+     "Locale": 65,
+     "Thread": 57,
+     "NSKeyedUnarchiver": 57,
+     "URLSession": 49,
+     "JSONEncoder": 48,
+     "URLComponents": 48,
+     "Measurement": 46,
+     "NSKeyedArchiver": 44,
+     "DecodingError": 41,
+     "CharacterSet": 40,
+     "NSRegularExpression": 38,
+     "NumberFormatter": 37,
+     "Bundle": 34,
+     "Decimal": 33,
+     "Operation": 33,
+     "Unicode": 32,
+     "UserDefaults": 30,
+     "URLQueryItem": 29,
+     "URLError": 28,
+     "URLSessionConfiguration": 28,
+     "RunLoop": 27,
+     "Calendar": 27,
+     "URLSessionTask": 25,
+     "FileHandle": 24,
+     "DateComponentsFormatter": 21,
+     "HTTPURLResponse": 21,
+     "NSDictionary": 19,
+     "JSONSerialization": 19,
+     "ByteCountFormatter": 16,
+     "NSURL": 15,
+     "DateInterval": 15,
+     "Encodable": 14,
+     "URLResponse": 14,
+     "NSUUID": 13,
+     "NSValue": 13,
+     "NSNull": 13,
+     "NSLocale": 12,
+     "URLSessionDataTask": 12,
+     "NSArray": 10,
+     "TimeZone": 10,
+     "DateComponents": 9,
+     "URLSessionDownloadTask": 8,
+     "DispatchWorkItem": 7,
+     "NSDecimalNumber": 7,
+     "OperationQueue": 7,
+     "DispatchSemaphore": 7,
+     "NSTextCheckingResult": 6,
+     "NSCache": 5,
+     "PersonNameComponentsFormatter": 5,
+     "KeyedDecodingContainer": 5,
+     "URLAuthenticationChallenge": 5,
+     "DispatchGroup": 4,
+     "NSMutableString": 4,
+     "NSURLSession": 4,
+     "NSOrderedSet": 4,
+     "PropertyListSerialization": 4,
+     "NSCharacterSet": 3,
+     "NSRecursiveLock": 3,
+     "URLSessionTaskDelegate": 3,
+     "URLSessionDataDelegate": 3,
+     "URLCredential": 3,
+     "DispatchSource": 3,
+     "NSException": 3,
+     "NSMutableDictionary": 3,
+     "NSTimer": 2,
+     "ISO8601DateFormatter": 2,
+     "NSSet": 2,
+     "URLSessionDelegate": 2,
+     "NSURLRequest": 2,
+     "MeasurementFormatter": 2,
+     "NSURLComponents": 1,
+     "NSHTTPURLResponse": 1,
+     "URLSessionUploadTask": 1,
+     "NSCoding": 1,
+     "NSMutableData": 1,
+     "KeyedEncodingContainer": 1,
+     "EncodingError": 1,
+     "NSLock": 1,
+     "NSSortDescriptor": 1
+    }
+   },
+   "imports": {
+    "Foundation": 1238,
+    "SignalServiceKit": 1098,
+    "SignalUI": 513,
+    "LibSignalClient": 417,
+    "XCTest": 239,
+    "UIKit": 216,
+    "GRDB": 183,
+    "Testing": 81,
+    "SignalRingRTC": 59,
+    "Signal": 54,
+    "SwiftUI": 37,
+    "CryptoKit": 34,
+    "SafariServices": 27,
+    "AVFoundation": 26,
+    "Lottie": 25,
+    "Contacts": 15,
+    "SwiftProtobuf": 14,
+    "UniformTypeIdentifiers": 14,
+    "Photos": 14,
+    "BonMot": 13,
+    "CoreServices": 12,
+    "PassKit": 11,
+    "Combine": 11,
+    "WebRTC": 11,
+    "SDWebImage": 10,
+    "FoundationEssentials": 10,
+    "ContactsUI": 10,
+    "MobileCoin": 10,
+    "AuthenticationServices": 9,
+    "PureLayout": 9
+   },
+   "languages": {
+    "files": {
+     ".h": 41,
+     ".swift": 2631,
+     ".m": 34
+    },
+    "lines": {
+     ".h": 3776,
+     ".swift": 782846,
+     ".m": 6419
+    }
+   },
+   "build": {
+    "spm_manifests": 2,
+    "xcodeproj": 1,
+    "xcworkspace": 1,
+    "podfile": true,
+    "pods_declared": 16,
+    "pods_vendored": true,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 0,
+    "spm_direct_urls": 0,
+    "submodules": 2,
+    "xcassets": 4,
+    "xib_storyboard": 1,
+    "strings_files": 95,
+    "_dep_urls": []
+   }
+  },
+  "Telegram-iOS": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 4435,
+    "uses": 35691,
+    "distinct_types": 168,
+    "implemented_types": 131,
+    "implemented_uses": 34111,
+    "missing_types": 37,
+    "missing_uses": 1580,
+    "missing": [
+     [
+      "NSString",
+      585
+     ],
+     [
+      "NSValue",
+      530
+     ],
+     [
+      "NSObject",
+      367
+     ],
+     [
+      "UIFindSession",
+      10
+     ],
+     [
+      "UIReferenceLibraryViewController",
+      6
+     ],
+     [
+      "NSTextLocation",
+      6
+     ],
+     [
+      "NSTextLayoutFragment",
+      6
+     ],
+     [
+      "NSIndexPath",
+      5
+     ],
+     [
+      "NSTextLayoutManager",
+      5
+     ],
+     [
+      "UIPencilInteraction",
+      4
+     ],
+     [
+      "UIInterpolatingMotionEffect",
+      4
+     ],
+     [
+      "NSTextRange",
+      4
+     ],
+     [
+      "UITextSelectionDisplayInteraction",
+      4
+     ],
+     [
+      "UICornerRadius",
+      4
+     ],
+     [
+      "NSTextContentStorage",
+      3
+     ],
+     [
+      "UITextInputTokenizer",
+      3
+     ],
+     [
+      "UITextLoupeSession",
+      3
+     ],
+     [
+      "NSDataAsset",
+      3
+     ],
+     [
+      "NSTextList",
+      2
+     ],
+     [
+      "UIFindInteractionDelegate",
+      2
+     ],
+     [
+      "UITextSearchOptions",
+      2
+     ],
+     [
+      "UIPointerInteractionAnimating",
+      2
+     ],
+     [
+      "UIAccessibilityElement",
+      2
+     ],
+     [
+      "UIScrollViewAccessibilityDelegate",
+      2
+     ],
+     [
+      "UIMotionEffectGroup",
+      2
+     ],
+     [
+      "UITextInputDelegate",
+      2
+     ],
+     [
+      "UITextChecker",
+      2
+     ],
+     [
+      "UIPencilInteractionDelegate",
+      1
+     ],
+     [
+      "UITextInputPasswordRules",
+      1
+     ],
+     [
+      "UIWebView",
+      1
+     ],
+     [
+      "NSTextParagraph",
+      1
+     ],
+     [
+      "NSTextContentStorageDelegate",
+      1
+     ],
+     [
+      "NSTextLayoutManagerDelegate",
+      1
+     ],
+     [
+      "NSTextElement",
+      1
+     ],
+     [
+      "UITextCursorView",
+      1
+     ],
+     [
+      "UITextSelectionDisplayInteractionDelegate",
+      1
+     ],
+     [
+      "UILocalNotification",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIColor",
+      9517
+     ],
+     [
+      "NSAttributedString",
+      5355
+     ],
+     [
+      "UIImage",
+      5101
+     ],
+     [
+      "UIView",
+      5001
+     ],
+     [
+      "NSCoder",
+      1434
+     ],
+     [
+      "UIImageView",
+      1104
+     ],
+     [
+      "UIEvent",
+      702
+     ],
+     [
+      "UITapGestureRecognizer",
+      588
+     ],
+     [
+      "NSString",
+      585
+     ],
+     [
+      "NSMutableAttributedString",
+      566
+     ],
+     [
+      "UIScrollView",
+      560
+     ],
+     [
+      "NSValue",
+      530
+     ],
+     [
+      "UIFont",
+      450
+     ],
+     [
+      "NSObject",
+      367
+     ],
+     [
+      "UIScreen",
+      366
+     ],
+     [
+      "UIBarButtonItem",
+      352
+     ],
+     [
+      "UIGestureRecognizer",
+      322
+     ],
+     [
+      "UITouch",
+      256
+     ],
+     [
+      "UIPanGestureRecognizer",
+      241
+     ],
+     [
+      "UITextField",
+      163
+     ],
+     [
+      "UIPasteboard",
+      148
+     ],
+     [
+      "UIScrollViewDelegate",
+      108
+     ],
+     [
+      "UIApplication",
+      107
+     ],
+     [
+      "UIVisualEffectView",
+      104
+     ],
+     [
+      "UILongPressGestureRecognizer",
+      88
+     ],
+     [
+      "UIViewController",
+      87
+     ],
+     [
+      "UIBlurEffect",
+      83
+     ],
+     [
+      "UIAction",
+      81
+     ],
+     [
+      "UIKeyCommand",
+      59
+     ],
+     [
+      "UIGestureRecognizerDelegate",
+      58
+     ],
+     [
+      "UITextFieldDelegate",
+      55
+     ],
+     [
+      "UIButton",
+      49
+     ],
+     [
+      "UILabel",
+      47
+     ],
+     [
+      "UISwitch",
+      42
+     ],
+     [
+      "UIMenu",
+      42
+     ],
+     [
+      "UIDevice",
+      41
+     ],
+     [
+      "UIGraphicsImageRenderer",
+      40
+     ],
+     [
+      "UIPinchGestureRecognizer",
+      34
+     ],
+     [
+      "UITextPosition",
+      29
+     ],
+     [
+      "UIControl",
+      28
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIColor",
+      "member": "white",
+      "uses": 530
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 365
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 272
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 211
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 144
+     },
+     {
+      "type": "UIView",
+      "member": "animationDurationFactor",
+      "uses": 121
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 101
+     },
+     {
+      "type": "UIFont",
+      "member": "systemFont",
+      "uses": 75
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 52
+     },
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 40
+     },
+     {
+      "type": "UIColor",
+      "member": "init",
+      "uses": 33
+     },
+     {
+      "type": "UIView",
+      "member": "transition",
+      "uses": 29
+     },
+     {
+      "type": "UIMenuController",
+      "member": "shared",
+      "uses": 17
+     },
+     {
+      "type": "UIColor",
+      "member": "average",
+      "uses": 12
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputUpArrow",
+      "uses": 11
+     },
+     {
+      "type": "UIView",
+      "member": "perform",
+      "uses": 9
+     },
+     {
+      "type": "UIFont",
+      "member": "monospacedSystemFont",
+      "uses": 9
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputEscape",
+      "uses": 9
+     },
+     {
+      "type": "UIColor",
+      "member": "lightGray",
+      "uses": 8
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputDownArrow",
+      "uses": 8
+     },
+     {
+      "type": "UIColor",
+      "member": "red",
+      "uses": 7
+     },
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 7
+     },
+     {
+      "type": "UIImage",
+      "member": "self",
+      "uses": 7
+     },
+     {
+      "type": "UIView",
+      "member": "performWithoutAnimation",
+      "uses": 6
+     },
+     {
+      "type": "UIColor",
+      "member": "gray",
+      "uses": 5
+     },
+     {
+      "type": "UIApplication",
+      "member": "willEnterForegroundNotification",
+      "uses": 5
+     },
+     {
+      "type": "UIApplication",
+      "member": "didEnterBackgroundNotification",
+      "uses": 5
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputLeftArrow",
+      "uses": 5
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputRightArrow",
+      "uses": 5
+     },
+     {
+      "type": "UIApplication",
+      "member": "value",
+      "uses": 5
+     },
+     {
+      "type": "UIFont",
+      "member": "boldSystemFont",
+      "uses": 4
+     },
+     {
+      "type": "UIImage",
+      "member": "animatedImageFromData",
+      "uses": 3
+     },
+     {
+      "type": "UILabel",
+      "member": "setDateLabel",
+      "uses": 3
+     },
+     {
+      "type": "UIPointerShape",
+      "member": "defaultCornerRadius",
+      "uses": 3
+     },
+     {
+      "type": "UIFont",
+      "member": "italicSystemFont",
+      "uses": 3
+     },
+     {
+      "type": "UIView",
+      "member": "animateKeyframes",
+      "uses": 3
+     },
+     {
+      "type": "UIView",
+      "member": "addKeyframe",
+      "uses": 3
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillShowNotification",
+      "uses": 2
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillChangeFrameNotification",
+      "uses": 2
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillHideNotification",
+      "uses": 2
+     }
+    ]
+   },
+   "swift_lines": 1923835,
+   "swiftui": {
+    "files": 4842,
+    "test_files": 409,
+    "import_uikit": 2574,
+    "view_types": 59,
+    "some_view": 136,
+    "body_decls": 236,
+    "previews": 105,
+    "uikit_subclass_files": 648,
+    "uikit_subclass_test_files": 16,
+    "uikit_subclasses": 1066,
+    "selector_sites": 1426,
+    "objc_sites": 1719,
+    "objc_dynamic": 2,
+    "objc_protocol": 3,
+    "objc_named": 35,
+    "objcmembers": 0,
+    "iboutlet": 0,
+    "ibaction": 0,
+    "objc_files": 855,
+    "selector_files": 741,
+    "selector_unclassified": 121,
+    "selector_wiring": 1300,
+    "import_swiftui": 57,
+    "view_bearing_files": 53,
+    "import_combine": 3,
+    "selector_deep": 6,
+    "wrappers": {
+     "MainActor": 126,
+     "Environment": 42,
+     "State": 59,
+     "Observable": 13,
+     "ViewBuilder": 33,
+     "Binding": 1,
+     "FocusState": 1,
+     "ObservedObject": 1,
+     "Published": 1
+    },
+    "combine": {
+     "AnyCancellable": 2,
+     "ObservableObject": 1
+    }
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 24583,
+    "families": {
+     "text/format": 7031,
+     "collections": 6069,
+     "json/coding": 5155,
+     "files": 2140,
+     "persistence": 1499,
+     "concurrency": 1446,
+     "dates": 981,
+     "networking": 141,
+     "notification": 121
+    },
+    "top": [
+     [
+      "NSAttributedString",
+      5453
+     ],
+     [
+      "Data",
+      2945
+     ],
+     [
+      "URL",
+      1617
+     ],
+     [
+      "NSCoder",
+      1468
+     ],
+     [
+      "CodingKeys",
+      1449
+     ],
+     [
+      "NSNumber",
+      1427
+     ],
+     [
+      "Codable",
+      1423
+     ],
+     [
+      "NSString",
+      616
+     ],
+     [
+      "Timer",
+      613
+     ],
+     [
+      "Date",
+      604
+     ],
+     [
+      "Decoder",
+      599
+     ],
+     [
+      "NSMutableAttributedString",
+      577
+     ],
+     [
+      "Encoder",
+      573
+     ],
+     [
+      "NSValue",
+      530
+     ],
+     [
+      "CodingKey",
+      441
+     ],
+     [
+      "FileManager",
+      340
+     ],
+     [
+      "Error",
+      317
+     ],
+     [
+      "DispatchQueue",
+      307
+     ],
+     [
+      "Task",
+      285
+     ],
+     [
+      "UUID",
+      186
+     ],
+     [
+      "DecodingError",
+      169
+     ],
+     [
+      "Bundle",
+      164
+     ],
+     [
+      "TimeInterval",
+      157
+     ],
+     [
+      "Thread",
+      130
+     ],
+     [
+      "JSONDecoder",
+      117
+     ],
+     [
+      "NSNull",
+      117
+     ],
+     [
+      "CharacterSet",
+      117
+     ],
+     [
+      "IndexSet",
+      105
+     ],
+     [
+      "NSArray",
+      99
+     ],
+     [
+      "JSONSerialization",
+      89
+     ],
+     [
+      "NotificationCenter",
+      89
+     ],
+     [
+      "NSMutableDictionary",
+      88
+     ],
+     [
+      "JSONEncoder",
+      83
+     ],
+     [
+      "Locale",
+      81
+     ],
+     [
+      "Calendar",
+      80
+     ],
+     [
+      "NSDictionary",
+      68
+     ],
+     [
+      "NSError",
+      65
+     ],
+     [
+      "Unicode",
+      60
+     ],
+     [
+      "Decodable",
+      59
+     ],
+     [
+      "DateFormatter",
+      56
+     ]
+    ],
+    "all": {
+     "NSAttributedString": 5453,
+     "Data": 2945,
+     "URL": 1617,
+     "NSCoder": 1468,
+     "CodingKeys": 1449,
+     "NSNumber": 1427,
+     "Codable": 1423,
+     "NSString": 616,
+     "Timer": 613,
+     "Date": 604,
+     "Decoder": 599,
+     "NSMutableAttributedString": 577,
+     "Encoder": 573,
+     "NSValue": 530,
+     "CodingKey": 441,
+     "FileManager": 340,
+     "Error": 317,
+     "DispatchQueue": 307,
+     "Task": 285,
+     "UUID": 186,
+     "DecodingError": 169,
+     "Bundle": 164,
+     "TimeInterval": 157,
+     "Thread": 130,
+     "JSONDecoder": 117,
+     "NSNull": 117,
+     "CharacterSet": 117,
+     "IndexSet": 105,
+     "NSArray": 99,
+     "JSONSerialization": 89,
+     "NotificationCenter": 89,
+     "NSMutableDictionary": 88,
+     "JSONEncoder": 83,
+     "Locale": 81,
+     "Calendar": 80,
+     "NSDictionary": 68,
+     "NSError": 65,
+     "Unicode": 60,
+     "Decodable": 59,
+     "DateFormatter": 56,
+     "NSRegularExpression": 56,
+     "TimeZone": 55,
+     "RunLoop": 50,
+     "Encodable": 46,
+     "NSDecimalNumber": 41,
+     "URLQueryItem": 41,
+     "KeyedEncodingContainer": 36,
+     "KeyedDecodingContainer": 34,
+     "DispatchSemaphore": 28,
+     "URLComponents": 26,
+     "URLRequest": 25,
+     "NumberFormatter": 24,
+     "NSData": 22,
+     "UserDefaults": 21,
+     "URLSession": 20,
+     "Decimal": 19,
+     "Notification": 18,
+     "UnkeyedDecodingContainer": 17,
+     "NSURL": 17,
+     "NSNotification": 14,
+     "NSMutableData": 12,
+     "OperationQueue": 12,
+     "EncodingError": 12,
+     "NSException": 12,
+     "NSTextCheckingResult": 11,
+     "DateComponents": 10,
+     "NSMutableString": 10,
+     "ISO8601DateFormatter": 9,
+     "NSLock": 8,
+     "NSCache": 7,
+     "NSLocale": 7,
+     "SingleValueDecodingContainer": 7,
+     "Scanner": 6,
+     "Measurement": 6,
+     "NSKeyedArchiver": 6,
+     "DispatchSource": 6,
+     "NSUUID": 6,
+     "HTTPURLResponse": 6,
+     "URLSessionTask": 5,
+     "NSPredicate": 4,
+     "URLProtocol": 4,
+     "DateComponentsFormatter": 4,
+     "ByteCountFormatter": 3,
+     "MeasurementFormatter": 3,
+     "NSDate": 3,
+     "NSMutableArray": 3,
+     "Operation": 3,
+     "URLSessionDownloadTask": 3,
+     "DispatchGroup": 3,
+     "FileHandle": 2,
+     "URLResponse": 2,
+     "URLCredential": 2,
+     "URLSessionConfiguration": 2,
+     "URLSessionDataTask": 2,
+     "NSTimeZone": 2,
+     "NSCharacterSet": 1,
+     "NSRecursiveLock": 1,
+     "URLAuthenticationChallenge": 1,
+     "PropertyListSerialization": 1,
+     "NSCalendar": 1,
+     "URLSessionDelegate": 1,
+     "URLSessionTaskDelegate": 1
+    }
+   },
+   "imports": {
+    "Foundation": 3985,
+    "UIKit": 2587,
+    "Display": 1951,
+    "SwiftSignalKit": 1888,
+    "TelegramCore": 1518,
+    "TelegramPresentationData": 1465,
+    "AsyncDisplayKit": 1358,
+    "AccountContext": 1296,
+    "ComponentFlow": 816,
+    "Postbox": 755,
+    "PresentationDataUtils": 478,
+    "TelegramUIPreferences": 471,
+    "AppBundle": 366,
+    "TextFormat": 338,
+    "MultilineTextComponent": 337,
+    "TelegramApi": 330,
+    "ContextUI": 310,
+    "TelegramStringFormatting": 305,
+    "ItemListUI": 297,
+    "RichTextEditorCore": 256,
+    "BundleIconComponent": 244,
+    "UndoUI": 235,
+    "XCTest": 217,
+    "ComponentDisplayAdapters": 203,
+    "Markdown": 201,
+    "AvatarNode": 192,
+    "MtProtoKit": 191,
+    "RichTextEditorUIKit": 173,
+    "ViewControllerComponent": 170,
+    "LegacyComponents": 149
+   },
+   "languages": {
+    "files": {
+     ".cpp": 297,
+     ".swift": 4842,
+     ".m": 782,
+     ".h": 4952,
+     ".cc": 1157,
+     ".mm": 113,
+     ".c": 4542,
+     ".java": 21
+    },
+    "lines": {
+     ".cpp": 118032,
+     ".swift": 1923835,
+     ".m": 220474,
+     ".h": 1112251,
+     ".cc": 524966,
+     ".mm": 42206,
+     ".c": 2428108,
+     ".java": 6464
+    }
+   },
+   "build": {
+    "spm_manifests": 45,
+    "xcodeproj": 1,
+    "xcworkspace": 0,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 812,
+    "spm_pins": 11,
+    "spm_direct_urls": 4,
+    "submodules": 14,
+    "xcassets": 14,
+    "xib_storyboard": 8,
+    "strings_files": 34,
+    "_dep_urls": [
+     "https://github.com/Swiftgram/TDLibFramework",
+     "https://github.com/apple/swift-argument-parser.git",
+     "https://github.com/fwcd/swift-qrcode-generator",
+     "https://github.com/tuist/XcodeProj.git"
+    ]
+   }
+  },
+  "WordPress-iOS": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 2628,
+    "uses": 11071,
+    "distinct_types": 180,
+    "implemented_types": 160,
+    "implemented_uses": 10635,
+    "missing_types": 20,
+    "missing_uses": 436,
+    "missing": [
+     [
+      "NSObject",
+      231
+     ],
+     [
+      "NSString",
+      134
+     ],
+     [
+      "NSValue",
+      18
+     ],
+     [
+      "UITextItem",
+      12
+     ],
+     [
+      "UIPopoverPresentationControllerSourceItem",
+      10
+     ],
+     [
+      "UIStoryboardSegue",
+      9
+     ],
+     [
+      "UIAttachmentBehavior",
+      3
+     ],
+     [
+      "UIInterpolatingMotionEffect",
+      2
+     ],
+     [
+      "UISearchToken",
+      2
+     ],
+     [
+      "NSTextTab",
+      2
+     ],
+     [
+      "UIDynamicAnimator",
+      2
+     ],
+     [
+      "UISnapBehavior",
+      2
+     ],
+     [
+      "UIPushBehavior",
+      2
+     ],
+     [
+      "UIMotionEffectGroup",
+      1
+     ],
+     [
+      "UITableViewDataSourcePrefetching",
+      1
+     ],
+     [
+      "UIDocumentMenuViewController",
+      1
+     ],
+     [
+      "NSTextLayoutManager",
+      1
+     ],
+     [
+      "NSTextLocation",
+      1
+     ],
+     [
+      "UIAccessibilityElement",
+      1
+     ],
+     [
+      "UICollectionViewDataSourcePrefetching",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIView",
+      940
+     ],
+     [
+      "UIColor",
+      851
+     ],
+     [
+      "UIImage",
+      775
+     ],
+     [
+      "UIViewController",
+      661
+     ],
+     [
+      "UITableView",
+      648
+     ],
+     [
+      "UILabel",
+      546
+     ],
+     [
+      "UITableViewCell",
+      462
+     ],
+     [
+      "NSLayoutConstraint",
+      433
+     ],
+     [
+      "NSAttributedString",
+      428
+     ],
+     [
+      "NSCoder",
+      400
+     ],
+     [
+      "UIStackView",
+      354
+     ],
+     [
+      "UIButton",
+      347
+     ],
+     [
+      "UIFont",
+      333
+     ],
+     [
+      "UIBarButtonItem",
+      298
+     ],
+     [
+      "UINavigationController",
+      253
+     ],
+     [
+      "NSObject",
+      231
+     ],
+     [
+      "UIAction",
+      174
+     ],
+     [
+      "UIApplication",
+      166
+     ],
+     [
+      "UIImageView",
+      161
+     ],
+     [
+      "NSString",
+      134
+     ],
+     [
+      "UIAlertController",
+      127
+     ],
+     [
+      "UITraitCollection",
+      110
+     ],
+     [
+      "UIMenu",
+      106
+     ],
+     [
+      "UIScrollView",
+      100
+     ],
+     [
+      "NSMutableAttributedString",
+      91
+     ],
+     [
+      "UICollectionView",
+      83
+     ],
+     [
+      "UITextView",
+      81
+     ],
+     [
+      "UIAlertAction",
+      76
+     ],
+     [
+      "UITapGestureRecognizer",
+      71
+     ],
+     [
+      "UIActivityIndicatorView",
+      65
+     ],
+     [
+      "UIDevice",
+      60
+     ],
+     [
+      "UIResponder",
+      59
+     ],
+     [
+      "UITableViewController",
+      57
+     ],
+     [
+      "UITextField",
+      49
+     ],
+     [
+      "UITableViewDelegate",
+      46
+     ],
+     [
+      "UIFontDescriptor",
+      43
+     ],
+     [
+      "UITableViewDataSource",
+      39
+     ],
+     [
+      "NSMutableParagraphStyle",
+      38
+     ],
+     [
+      "NSTextAttachment",
+      37
+     ],
+     [
+      "UINotificationFeedbackGenerator",
+      36
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 104
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 74
+     },
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 65
+     },
+     {
+      "type": "UIColor",
+      "member": "label",
+      "uses": 53
+     },
+     {
+      "type": "UIImage",
+      "member": "gridicon",
+      "uses": 51
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 44
+     },
+     {
+      "type": "UIColor",
+      "member": "secondaryLabel",
+      "uses": 42
+     },
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 35
+     },
+     {
+      "type": "UIColor",
+      "member": "white",
+      "uses": 32
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 27
+     },
+     {
+      "type": "UIFont",
+      "member": "systemFont",
+      "uses": 26
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 25
+     },
+     {
+      "type": "UIFontDescriptor",
+      "member": "preferredFontDescriptor",
+      "uses": 24
+     },
+     {
+      "type": "UIDevice",
+      "member": "isPad",
+      "uses": 22
+     },
+     {
+      "type": "UIColor",
+      "member": "systemBackground",
+      "uses": 21
+     },
+     {
+      "type": "UIColor",
+      "member": "separator",
+      "uses": 20
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 16
+     },
+     {
+      "type": "UIDeferredMenuElement",
+      "member": "uncached",
+      "uses": 14
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardFrameEndUserInfoKey",
+      "uses": 14
+     },
+     {
+      "type": "UIFontMetrics",
+      "member": "default",
+      "uses": 12
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 12
+     },
+     {
+      "type": "UITableViewCell",
+      "member": "self",
+      "uses": 11
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillHideNotification",
+      "uses": 11
+     },
+     {
+      "type": "UIApplication",
+      "member": "willEnterForegroundNotification",
+      "uses": 11
+     },
+     {
+      "type": "UIApplication",
+      "member": "didBecomeActiveNotification",
+      "uses": 10
+     },
+     {
+      "type": "UIView",
+      "member": "embedSwiftUIView",
+      "uses": 10
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillShowNotification",
+      "uses": 10
+     },
+     {
+      "type": "UITableViewDelegate",
+      "member": "tableView",
+      "uses": 10
+     },
+     {
+      "type": "UIView",
+      "member": "performWithoutAnimation",
+      "uses": 8
+     },
+     {
+      "type": "UIImage",
+      "member": "renderBackgroundImage",
+      "uses": 8
+     },
+     {
+      "type": "UIApplication",
+      "member": "openSettingsURLString",
+      "uses": 7
+     },
+     {
+      "type": "UIViewController",
+      "member": "topViewController",
+      "uses": 7
+     },
+     {
+      "type": "UIView",
+      "member": "noIntrinsicMetric",
+      "uses": 7
+     },
+     {
+      "type": "UIColor",
+      "member": "secondarySystemBackground",
+      "uses": 7
+     },
+     {
+      "type": "UIColor",
+      "member": "tertiaryLabel",
+      "uses": 7
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardDidShowNotification",
+      "uses": 6
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardDidHideNotification",
+      "uses": 6
+     },
+     {
+      "type": "UIView",
+      "member": "layoutFittingCompressedSize",
+      "uses": 6
+     },
+     {
+      "type": "UIColor",
+      "member": "opaqueSeparator",
+      "uses": 5
+     },
+     {
+      "type": "UIFont",
+      "member": "make",
+      "uses": 5
+     }
+    ]
+   },
+   "swift_lines": 431231,
+   "swiftui": {
+    "files": 3244,
+    "view_types": 458,
+    "some_view": 1095,
+    "body_decls": 502,
+    "previews": 166,
+    "uikit_subclasses": 425,
+    "selector_sites": 458,
+    "objc_sites": 2229,
+    "objc_dynamic": 1,
+    "objc_protocol": 34,
+    "objc_named": 240,
+    "objcmembers": 17,
+    "iboutlet": 609,
+    "ibaction": 87,
+    "import_swiftui": 524,
+    "view_bearing_files": 349,
+    "objc_files": 632,
+    "import_combine": 87,
+    "import_uikit": 939,
+    "selector_files": 233,
+    "selector_wiring": 358,
+    "selector_unclassified": 82,
+    "uikit_subclass_files": 394,
+    "selector_deep": 18,
+    "test_files": 617,
+    "uikit_subclass_test_files": 7,
+    "import_swiftui_test": 4,
+    "wrappers": {
+     "Environment": 151,
+     "State": 312,
+     "StateObject": 51,
+     "Published": 280,
+     "MainActor": 461,
+     "ViewBuilder": 289,
+     "ScaledMetric": 32,
+     "ObservedObject": 87,
+     "FetchRequest": 8,
+     "Binding": 49,
+     "AppStorage": 9,
+     "FocusState": 10,
+     "EnvironmentObject": 13,
+     "Namespace": 2,
+     "GestureState": 1
+    },
+    "combine": {
+     "ObservableObject": 81,
+     "AnyCancellable": 51,
+     "PassthroughSubject": 13,
+     "AnyPublisher": 1,
+     "CurrentValueSubject": 11
+    }
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 18694,
+    "families": {
+     "collections": 4923,
+     "dates": 3607,
+     "files": 3370,
+     "persistence": 1721,
+     "json/coding": 1211,
+     "concurrency": 1066,
+     "text/format": 976,
+     "notification": 911,
+     "networking": 909
+    },
+    "top": [
+     [
+      "URL",
+      2874
+     ],
+     [
+      "Date",
+      2356
+     ],
+     [
+      "Error",
+      1954
+     ],
+     [
+      "NSNumber",
+      1119
+     ],
+     [
+      "Data",
+      704
+     ],
+     [
+      "Task",
+      613
+     ],
+     [
+      "NSError",
+      604
+     ],
+     [
+      "Notification",
+      530
+     ],
+     [
+      "NSAttributedString",
+      447
+     ],
+     [
+      "NSCoder",
+      401
+     ],
+     [
+      "NSManagedObjectContext",
+      398
+     ],
+     [
+      "Calendar",
+      326
+     ],
+     [
+      "DispatchQueue",
+      296
+     ],
+     [
+      "NotificationCenter",
+      264
+     ],
+     [
+      "Bundle",
+      254
+     ],
+     [
+      "NSPredicate",
+      225
+     ],
+     [
+      "DateFormatter",
+      220
+     ],
+     [
+      "UUID",
+      217
+     ],
+     [
+      "FileManager",
+      209
+     ],
+     [
+      "CodingKeys",
+      200
+     ],
+     [
+      "DateInterval",
+      192
+     ],
+     [
+      "JSONDecoder",
+      182
+     ],
+     [
+      "URLRequest",
+      178
+     ],
+     [
+      "Codable",
+      174
+     ],
+     [
+      "URLError",
+      170
+     ],
+     [
+      "JSONSerialization",
+      169
+     ],
+     [
+      "NSFetchRequest",
+      169
+     ],
+     [
+      "NSString",
+      167
+     ],
+     [
+      "UserDefaults",
+      164
+     ],
+     [
+      "HTTPURLResponse",
+      151
+     ],
+     [
+      "TimeInterval",
+      148
+     ],
+     [
+      "TimeZone",
+      147
+     ],
+     [
+      "NSDictionary",
+      147
+     ],
+     [
+      "Decodable",
+      142
+     ],
+     [
+      "URLSession",
+      139
+     ],
+     [
+      "CodingKey",
+      126
+     ],
+     [
+      "NSManagedObject",
+      122
+     ],
+     [
+      "NSNotification",
+      117
+     ],
+     [
+      "DateComponents",
+      108
+     ],
+     [
+      "NSMutableAttributedString",
+      95
+     ]
+    ],
+    "all": {
+     "URL": 2874,
+     "Date": 2356,
+     "Error": 1954,
+     "NSNumber": 1119,
+     "Data": 704,
+     "Task": 613,
+     "NSError": 604,
+     "Notification": 530,
+     "NSAttributedString": 447,
+     "NSCoder": 401,
+     "NSManagedObjectContext": 398,
+     "Calendar": 326,
+     "DispatchQueue": 296,
+     "NotificationCenter": 264,
+     "Bundle": 254,
+     "NSPredicate": 225,
+     "DateFormatter": 220,
+     "UUID": 217,
+     "FileManager": 209,
+     "CodingKeys": 200,
+     "DateInterval": 192,
+     "JSONDecoder": 182,
+     "URLRequest": 178,
+     "Codable": 174,
+     "URLError": 170,
+     "JSONSerialization": 169,
+     "NSFetchRequest": 169,
+     "NSString": 167,
+     "UserDefaults": 164,
+     "HTTPURLResponse": 151,
+     "TimeInterval": 148,
+     "TimeZone": 147,
+     "NSDictionary": 147,
+     "Decodable": 142,
+     "URLSession": 139,
+     "CodingKey": 126,
+     "NSManagedObject": 122,
+     "NSNotification": 117,
+     "DateComponents": 108,
+     "NSMutableAttributedString": 95,
+     "URLComponents": 91,
+     "NSEntityDescription": 89,
+     "URLQueryItem": 80,
+     "Locale": 71,
+     "Decoder": 68,
+     "NSRegularExpression": 59,
+     "NSFetchedResultsController": 59,
+     "JSONEncoder": 57,
+     "Thread": 50,
+     "NSSortDescriptor": 41,
+     "NSDate": 38,
+     "NumberFormatter": 32,
+     "Timer": 32,
+     "Encodable": 32,
+     "NSManagedObjectModel": 31,
+     "CharacterSet": 30,
+     "NSSet": 29,
+     "NSURL": 29,
+     "Decimal": 28,
+     "ISO8601DateFormatter": 27,
+     "DecodingError": 23,
+     "NSValue": 20,
+     "IndexSet": 19,
+     "OperationQueue": 19,
+     "NSOrderedSet": 19,
+     "URLSessionTask": 18,
+     "NSLock": 18,
+     "DispatchGroup": 18,
+     "ByteCountFormatter": 16,
+     "URLResponse": 16,
+     "URLSessionConfiguration": 16,
+     "Encoder": 15,
+     "NSArray": 15,
+     "RelativeDateTimeFormatter": 13,
+     "NSTextCheckingResult": 12,
+     "NSTimeZone": 12,
+     "NSData": 11,
+     "Unicode": 11,
+     "PropertyListEncoder": 9,
+     "URLAuthenticationChallenge": 9,
+     "URLCredential": 9,
+     "Measurement": 9,
+     "Scanner": 9,
+     "PropertyListDecoder": 8,
+     "NSCalendar": 8,
+     "NSSecureCoding": 8,
+     "NSCache": 8,
+     "NSMutableDictionary": 8,
+     "URLSessionDataTask": 7,
+     "Operation": 7,
+     "URLSessionTaskDelegate": 6,
+     "NSMutableString": 6,
+     "DateComponentsFormatter": 6,
+     "URLCache": 6,
+     "NSPersistentContainer": 6,
+     "URLSessionDataDelegate": 5,
+     "Formatter": 5,
+     "NSMutableData": 5,
+     "NSMutableArray": 4,
+     "RunLoop": 4,
+     "DispatchWorkItem": 4,
+     "URLSessionDelegate": 4,
+     "NSLocale": 4,
+     "NSDateComponents": 4,
+     "NSDecimalNumber": 3,
+     "NSCharacterSet": 3,
+     "BlockOperation": 3,
+     "FileWrapper": 3,
+     "NSKeyedUnarchiver": 3,
+     "NSKeyedArchiver": 3,
+     "NSIndexSet": 3,
+     "KeyedDecodingContainer": 3,
+     "NSDateFormatter": 2,
+     "NSNull": 2,
+     "NSException": 2,
+     "DispatchSemaphore": 1,
+     "URLProtocol": 1,
+     "NSCoding": 1,
+     "NSUUID": 1,
+     "NSFileManager": 1,
+     "URLProtectionSpace": 1,
+     "KeyedEncodingContainer": 1,
+     "PropertyListSerialization": 1,
+     "NSHTTPURLResponse": 1,
+     "UnkeyedDecodingContainer": 1,
+     "TaskGroup": 1,
+     "NSUserDefaults": 1,
+     "NSMutableSet": 1,
+     "NSURLSession": 1
+    }
+   },
+   "imports": {
+    "Foundation": 1520,
+    "UIKit": 939,
+    "WordPressData": 831,
+    "WordPressShared": 755,
+    "WordPressKit": 544,
+    "SwiftUI": 524,
+    "WordPressUI": 464,
+    "XCTest": 385,
+    "WordPress": 315,
+    "CoreData": 204,
+    "Testing": 170,
+    "WordPressAPI": 119,
+    "Combine": 90,
+    "WordPressCore": 82,
+    "DesignSystem": 80,
+    "WordPressFlux": 79,
+    "BuildSettingsKit": 78,
+    "AsyncImageKit": 69,
+    "OHHTTPStubs": 69,
+    "OHHTTPStubsSwift": 69,
+    "FormattableContentKit": 68,
+    "Gridicons": 66,
+    "WordPressAPIInternal": 63,
+    "WordPressSharedUI": 51,
+    "WebKit": 44,
+    "AutomatticTracks": 43,
+    "WordPressKitObjC": 40,
+    "JetpackStatsWidgetsCore": 39,
+    "JetpackStats": 37,
+    "UniformTypeIdentifiers": 36
+   },
+   "languages": {
+    "files": {
+     ".swift": 3244,
+     ".h": 147,
+     ".m": 154
+    },
+    "lines": {
+     ".swift": 431231,
+     ".h": 7507,
+     ".m": 35112
+    }
+   },
+   "build": {
+    "spm_manifests": 3,
+    "xcodeproj": 1,
+    "xcworkspace": 1,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 81,
+    "spm_direct_urls": 31,
+    "submodules": 0,
+    "xcassets": 9,
+    "xib_storyboard": 130,
+    "strings_files": 170,
+    "_dep_urls": [
+     "https://github.com/Alamofire/Alamofire",
+     "https://github.com/AliSoftware/OHHTTPStubs",
+     "https://github.com/Automattic/Automattic-Tracks-iOS",
+     "https://github.com/Automattic/AutomatticAbout-swift",
+     "https://github.com/Automattic/Gravatar-SDK-iOS",
+     "https://github.com/Automattic/Gridicons-iOS",
+     "https://github.com/Automattic/color-studio",
+     "https://github.com/ChartsOrg/Charts",
+     "https://github.com/CocoaLumberjack/CocoaLumberjack",
+     "https://github.com/SimplyDanny/SwiftLintPlugins",
+     "https://github.com/airbnb/lottie-ios",
+     "https://github.com/apple/swift-collections",
+     "https://github.com/apple/swift-log.git",
+     "https://github.com/automattic/SVProgressHUD",
+     "https://github.com/automattic/wordpress-rs",
+     "https://github.com/daltoniam/Starscream",
+     "https://github.com/erikdoe/ocmock",
+     "https://github.com/johnxnguyen/Down",
+     "https://github.com/kaishin/Gifu",
+     "https://github.com/kean/Pulse",
+     "https://github.com/scinfu/SwiftSoup",
+     "https://github.com/squarefrog/UIDeviceIdentifier",
+     "https://github.com/weichsel/ZIPFoundation",
+     "https://github.com/wordpress-mobile/AztecEditor-iOS",
+     "https://github.com/wordpress-mobile/FSInteractiveMap",
+     "https://github.com/wordpress-mobile/GutenbergKit",
+     "https://github.com/wordpress-mobile/MediaEditor-iOS",
+     "https://github.com/wordpress-mobile/NSObject-SafeExpectations",
+     "https://github.com/wordpress-mobile/NSURL-IDN",
+     "https://github.com/wordpress-mobile/wpxmlrpc",
+     "https://github.com/zendesk/support_sdk_ios"
+    ]
+   }
+  },
+  "eidolon": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 159,
+    "uses": 456,
+    "distinct_types": 44,
+    "implemented_types": 39,
+    "implemented_uses": 394,
+    "missing_types": 5,
+    "missing_uses": 62,
+    "missing": [
+     [
+      "NSObject",
+      32
+     ],
+     [
+      "NSString",
+      14
+     ],
+     [
+      "UIStoryboardSegue",
+      13
+     ],
+     [
+      "UIWebView",
+      2
+     ],
+     [
+      "NSValue",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIView",
+      49
+     ],
+     [
+      "UIViewController",
+      47
+     ],
+     [
+      "UILabel",
+      38
+     ],
+     [
+      "UIStoryboard",
+      32
+     ],
+     [
+      "NSObject",
+      32
+     ],
+     [
+      "UIFont",
+      28
+     ],
+     [
+      "UIButton",
+      26
+     ],
+     [
+      "UIImage",
+      20
+     ],
+     [
+      "NSString",
+      14
+     ],
+     [
+      "UIAlertController",
+      14
+     ],
+     [
+      "UIImageView",
+      13
+     ],
+     [
+      "UIStoryboardSegue",
+      13
+     ],
+     [
+      "UIColor",
+      12
+     ],
+     [
+      "UIAlertAction",
+      12
+     ],
+     [
+      "NSAttributedString",
+      12
+     ],
+     [
+      "UINavigationController",
+      10
+     ],
+     [
+      "NSLayoutConstraint",
+      10
+     ],
+     [
+      "UITapGestureRecognizer",
+      7
+     ],
+     [
+      "UITextField",
+      7
+     ],
+     [
+      "UICollectionView",
+      7
+     ],
+     [
+      "UIWindow",
+      5
+     ],
+     [
+      "NSCoder",
+      5
+     ],
+     [
+      "UIScreen",
+      4
+     ],
+     [
+      "NSMutableAttributedString",
+      4
+     ],
+     [
+      "UIApplication",
+      4
+     ],
+     [
+      "NSMutableParagraphStyle",
+      3
+     ],
+     [
+      "UIViewControllerAnimatedTransitioning",
+      3
+     ],
+     [
+      "UICollectionViewCell",
+      2
+     ],
+     [
+      "UINavigationControllerDelegate",
+      2
+     ],
+     [
+      "UIWebView",
+      2
+     ],
+     [
+      "UITextView",
+      2
+     ],
+     [
+      "UIBarButtonItem",
+      2
+     ],
+     [
+      "UICollectionViewFlowLayout",
+      2
+     ],
+     [
+      "UITextFieldDelegate",
+      2
+     ],
+     [
+      "UIViewControllerContextTransitioning",
+      2
+     ],
+     [
+      "UILongPressGestureRecognizer",
+      1
+     ],
+     [
+      "UIGestureRecognizer",
+      1
+     ],
+     [
+      "UIViewControllerTransitioningDelegate",
+      1
+     ],
+     [
+      "UIResponder",
+      1
+     ],
+     [
+      "UIApplicationDelegate",
+      1
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIFont",
+      "member": "serifFont",
+      "uses": 8
+     },
+     {
+      "type": "UIFont",
+      "member": "sansSerifFont",
+      "uses": 7
+     },
+     {
+      "type": "UIFont",
+      "member": "serifItalicFont",
+      "uses": 5
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 5
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "fulfillment",
+      "uses": 4
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 4
+     },
+     {
+      "type": "UIImage",
+      "member": "testImage",
+      "uses": 3
+     },
+     {
+      "type": "UIStoryboard",
+      "member": "auction",
+      "uses": 3
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 3
+     },
+     {
+      "type": "UIFont",
+      "member": "serifBoldFont",
+      "uses": 3
+     },
+     {
+      "type": "UIFont",
+      "member": "serifSemiBoldFont",
+      "uses": 3
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 3
+     },
+     {
+      "type": "UIColor",
+      "member": "artsyGrayMedium",
+      "uses": 2
+     },
+     {
+      "type": "UIView",
+      "member": "animateIf",
+      "uses": 2
+     },
+     {
+      "type": "UIView",
+      "member": "alignAttribute",
+      "uses": 2
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 2
+     },
+     {
+      "type": "UIAlertController",
+      "member": "successfulBidderDetailsAlertController",
+      "uses": 1
+     },
+     {
+      "type": "UIAlertController",
+      "member": "failedBidderDetailsAlertController",
+      "uses": 1
+     },
+     {
+      "type": "UINavigationController",
+      "member": "self",
+      "uses": 1
+     },
+     {
+      "type": "UIView",
+      "member": "animateTwoStepIf",
+      "uses": 1
+     }
+    ]
+   },
+   "swift_lines": 13949,
+   "swiftui": {
+    "files": 159,
+    "test_files": 49,
+    "view_types": 0,
+    "some_view": 0,
+    "body_decls": 0,
+    "previews": 0,
+    "uikit_subclasses": 39,
+    "selector_sites": 8,
+    "objc_sites": 25,
+    "objc_dynamic": 14,
+    "objc_protocol": 0,
+    "objc_named": 0,
+    "objcmembers": 5,
+    "iboutlet": 103,
+    "ibaction": 40,
+    "import_uikit": 63,
+    "objc_files": 12,
+    "uikit_subclass_files": 39,
+    "selector_files": 6,
+    "selector_wiring": 8,
+    "wrappers": {},
+    "combine": {}
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 308,
+    "families": {
+     "collections": 91,
+     "dates": 78,
+     "files": 44,
+     "text/format": 41,
+     "persistence": 30,
+     "concurrency": 16,
+     "notification": 4,
+     "json/coding": 3,
+     "networking": 1
+    },
+    "top": [
+     [
+      "Date",
+      48
+     ],
+     [
+      "NSNumber",
+      32
+     ],
+     [
+      "URL",
+      29
+     ],
+     [
+      "UserDefaults",
+      24
+     ],
+     [
+      "Error",
+      23
+     ],
+     [
+      "NSError",
+      17
+     ],
+     [
+      "NSString",
+      14
+     ],
+     [
+      "Data",
+      13
+     ],
+     [
+      "NSDate",
+      12
+     ],
+     [
+      "NSAttributedString",
+      12
+     ],
+     [
+      "TimeInterval",
+      11
+     ],
+     [
+      "Bundle",
+      7
+     ],
+     [
+      "DispatchQueue",
+      6
+     ],
+     [
+      "FileManager",
+      5
+     ],
+     [
+      "NSCoder",
+      5
+     ],
+     [
+      "NSMutableAttributedString",
+      4
+     ],
+     [
+      "NumberFormatter",
+      4
+     ],
+     [
+      "Task",
+      4
+     ],
+     [
+      "NSDictionary",
+      3
+     ],
+     [
+      "JSONSerialization",
+      3
+     ],
+     [
+      "Calendar",
+      3
+     ],
+     [
+      "Locale",
+      3
+     ],
+     [
+      "CharacterSet",
+      3
+     ],
+     [
+      "Timer",
+      3
+     ],
+     [
+      "DateFormatter",
+      2
+     ],
+     [
+      "FileHandle",
+      2
+     ],
+     [
+      "NotificationCenter",
+      2
+     ],
+     [
+      "NSNotification",
+      2
+     ],
+     [
+      "OperationQueue",
+      2
+     ],
+     [
+      "NSCalendar",
+      1
+     ],
+     [
+      "ISO8601DateFormatter",
+      1
+     ],
+     [
+      "NSPredicate",
+      1
+     ],
+     [
+      "NSDecimalNumber",
+      1
+     ],
+     [
+      "NSURL",
+      1
+     ],
+     [
+      "NSURLRequest",
+      1
+     ],
+     [
+      "NSValue",
+      1
+     ],
+     [
+      "NSMutableString",
+      1
+     ],
+     [
+      "NSArray",
+      1
+     ],
+     [
+      "RunLoop",
+      1
+     ]
+    ],
+    "all": {
+     "Date": 48,
+     "NSNumber": 32,
+     "URL": 29,
+     "UserDefaults": 24,
+     "Error": 23,
+     "NSError": 17,
+     "NSString": 14,
+     "Data": 13,
+     "NSDate": 12,
+     "NSAttributedString": 12,
+     "TimeInterval": 11,
+     "Bundle": 7,
+     "DispatchQueue": 6,
+     "FileManager": 5,
+     "NSCoder": 5,
+     "NSMutableAttributedString": 4,
+     "NumberFormatter": 4,
+     "Task": 4,
+     "NSDictionary": 3,
+     "JSONSerialization": 3,
+     "Calendar": 3,
+     "Locale": 3,
+     "CharacterSet": 3,
+     "Timer": 3,
+     "DateFormatter": 2,
+     "FileHandle": 2,
+     "NotificationCenter": 2,
+     "NSNotification": 2,
+     "OperationQueue": 2,
+     "NSCalendar": 1,
+     "ISO8601DateFormatter": 1,
+     "NSPredicate": 1,
+     "NSDecimalNumber": 1,
+     "NSURL": 1,
+     "NSURLRequest": 1,
+     "NSValue": 1,
+     "NSMutableString": 1,
+     "NSArray": 1,
+     "RunLoop": 1
+    }
+   },
+   "imports": {
+    "RxSwift": 87,
+    "UIKit": 63,
+    "Quick": 49,
+    "Nimble": 49,
+    "Kiosk": 49,
+    "Foundation": 41,
+    "Moya": 32,
+    "Action": 20,
+    "Nimble_Snapshots": 19,
+    "SwiftyJSON": 14,
+    "RxOptional": 11,
+    "Artsy_UILabels": 10,
+    "RxNimble": 8,
+    "Keys": 7,
+    "Stripe": 7,
+    "RxCocoa": 7,
+    "Artsy_UIButtons": 7,
+    "ARAnalytics": 6,
+    "ORStackView": 6,
+    "RxBlocking": 5,
+    "Artsy_UIFonts": 4,
+    "SDWebImage": 3,
+    "CardFlight": 2,
+    "NSObject_Rx": 2,
+    "QuartzCore": 2,
+    "Alamofire": 2,
+    "FLKAutoLayout": 2,
+    "ARTiledImageView": 2,
+    "ObjectiveC": 1,
+    "Forgeries": 1
+   },
+   "languages": {
+    "files": {
+     ".swift": 159,
+     ".h": 5,
+     ".m": 3
+    },
+    "lines": {
+     ".swift": 13949,
+     ".h": 60,
+     ".m": 46
+    }
+   },
+   "build": {
+    "spm_manifests": 0,
+    "xcodeproj": 1,
+    "xcworkspace": 1,
+    "podfile": true,
+    "pods_declared": 37,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 0,
+    "spm_direct_urls": 0,
+    "submodules": 0,
+    "xcassets": 1,
+    "xib_storyboard": 3,
+    "strings_files": 0,
+    "_dep_urls": []
+   }
+  },
+  "firefox-ios": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 2086,
+    "uses": 10006,
+    "distinct_types": 200,
+    "implemented_types": 185,
+    "implemented_uses": 9866,
+    "missing_types": 15,
+    "missing_uses": 140,
+    "missing": [
+     [
+      "NSObject",
+      59
+     ],
+     [
+      "NSString",
+      50
+     ],
+     [
+      "UILargeContentViewerInteraction",
+      11
+     ],
+     [
+      "UIPasteControl",
+      3
+     ],
+     [
+      "NSValue",
+      3
+     ],
+     [
+      "UIDocumentInteractionControllerDelegate",
+      2
+     ],
+     [
+      "UIScreenshotServiceDelegate",
+      2
+     ],
+     [
+      "UIViewPrintFormatter",
+      2
+     ],
+     [
+      "UIMenuBuilder",
+      2
+     ],
+     [
+      "UIScreenshotService",
+      1
+     ],
+     [
+      "UITableViewDataSourcePrefetching",
+      1
+     ],
+     [
+      "UICollectionViewDataSourcePrefetching",
+      1
+     ],
+     [
+      "UICommandAlternate",
+      1
+     ],
+     [
+      "UIFindInteraction",
+      1
+     ],
+     [
+      "UITextItem",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIColor",
+      1432
+     ],
+     [
+      "UIView",
+      847
+     ],
+     [
+      "UIImage",
+      661
+     ],
+     [
+      "NSLayoutConstraint",
+      628
+     ],
+     [
+      "UITableView",
+      473
+     ],
+     [
+      "NSAttributedString",
+      462
+     ],
+     [
+      "NSCoder",
+      392
+     ],
+     [
+      "UIViewController",
+      336
+     ],
+     [
+      "UITableViewCell",
+      306
+     ],
+     [
+      "UIApplication",
+      285
+     ],
+     [
+      "UILabel",
+      285
+     ],
+     [
+      "UIButton",
+      244
+     ],
+     [
+      "UIImageView",
+      207
+     ],
+     [
+      "UIStackView",
+      167
+     ],
+     [
+      "UINavigationController",
+      162
+     ],
+     [
+      "UIDevice",
+      156
+     ],
+     [
+      "UIBarButtonItem",
+      142
+     ],
+     [
+      "UICollectionView",
+      128
+     ],
+     [
+      "UIFont",
+      111
+     ],
+     [
+      "UIAlertAction",
+      110
+     ],
+     [
+      "UIScrollView",
+      101
+     ],
+     [
+      "UIAlertController",
+      94
+     ],
+     [
+      "UIKeyCommand",
+      88
+     ],
+     [
+      "UIAction",
+      76
+     ],
+     [
+      "UITraitCollection",
+      65
+     ],
+     [
+      "UIWindow",
+      61
+     ],
+     [
+      "NSObject",
+      59
+     ],
+     [
+      "UITapGestureRecognizer",
+      59
+     ],
+     [
+      "UITextField",
+      59
+     ],
+     [
+      "UIPasteboard",
+      55
+     ],
+     [
+      "UICollectionViewCell",
+      53
+     ],
+     [
+      "NSString",
+      50
+     ],
+     [
+      "UIScreen",
+      47
+     ],
+     [
+      "UIFontMetrics",
+      43
+     ],
+     [
+      "UIResponder",
+      40
+     ],
+     [
+      "NSMutableAttributedString",
+      39
+     ],
+     [
+      "NSCollectionLayoutSize",
+      39
+     ],
+     [
+      "UIMenu",
+      38
+     ],
+     [
+      "NSCollectionLayoutSection",
+      38
+     ],
+     [
+      "UITableViewDelegate",
+      37
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 135
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 114
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 110
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 58
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 48
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 44
+     },
+     {
+      "type": "UIImage",
+      "member": "templateImageNamed",
+      "uses": 44
+     },
+     {
+      "type": "UIFontMetrics",
+      "member": "default",
+      "uses": 39
+     },
+     {
+      "type": "UIFont",
+      "member": "systemFont",
+      "uses": 38
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 38
+     },
+     {
+      "type": "UIApplication",
+      "member": "didEnterBackgroundNotification",
+      "uses": 27
+     },
+     {
+      "type": "UIApplication",
+      "member": "didBecomeActiveNotification",
+      "uses": 23
+     },
+     {
+      "type": "UIApplication",
+      "member": "willResignActiveNotification",
+      "uses": 19
+     },
+     {
+      "type": "UICollectionView",
+      "member": "elementKindSectionHeader",
+      "uses": 16
+     },
+     {
+      "type": "UIApplication",
+      "member": "willEnterForegroundNotification",
+      "uses": 15
+     },
+     {
+      "type": "UIView",
+      "member": "layoutFittingCompressedSize",
+      "uses": 12
+     },
+     {
+      "type": "UIWindow",
+      "member": "isLandscape",
+      "uses": 12
+     },
+     {
+      "type": "UIWindow",
+      "member": "keyWindow",
+      "uses": 11
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 11
+     },
+     {
+      "type": "UIColor",
+      "member": "white",
+      "uses": 10
+     },
+     {
+      "type": "UIView",
+      "member": "userInterfaceLayoutDirection",
+      "uses": 9
+     },
+     {
+      "type": "UIView",
+      "member": "performWithoutAnimation",
+      "uses": 8
+     },
+     {
+      "type": "UIView",
+      "member": "transition",
+      "uses": 8
+     },
+     {
+      "type": "UIColor",
+      "member": "primaryText",
+      "uses": 8
+     },
+     {
+      "type": "UIMenuController",
+      "member": "shared",
+      "uses": 7
+     },
+     {
+      "type": "UIFont",
+      "member": "boldSystemFont",
+      "uses": 6
+     },
+     {
+      "type": "UIApplication",
+      "member": "openSettingsURLString",
+      "uses": 5
+     },
+     {
+      "type": "UIImage",
+      "member": "self",
+      "uses": 5
+     },
+     {
+      "type": "UIDevice",
+      "member": "orientationDidChangeNotification",
+      "uses": 5
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputRightArrow",
+      "uses": 5
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputLeftArrow",
+      "uses": 5
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillHideNotification",
+      "uses": 5
+     },
+     {
+      "type": "UIWindow",
+      "member": "isPortrait",
+      "uses": 4
+     },
+     {
+      "type": "UICollectionView",
+      "member": "elementKindSectionFooter",
+      "uses": 4
+     },
+     {
+      "type": "UITableViewHeaderFooterView",
+      "member": "self",
+      "uses": 4
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "changedNotification",
+      "uses": 4
+     },
+     {
+      "type": "UIApplication",
+      "member": "willTerminateNotification",
+      "uses": 4
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillShowNotification",
+      "uses": 4
+     },
+     {
+      "type": "UIBackgroundConfiguration",
+      "member": "clear",
+      "uses": 4
+     },
+     {
+      "type": "UITextField",
+      "member": "appearance",
+      "uses": 3
+     }
+    ]
+   },
+   "swift_lines": 499256,
+   "swiftui": {
+    "files": 3150,
+    "view_types": 75,
+    "some_view": 300,
+    "body_decls": 111,
+    "previews": 57,
+    "uikit_subclasses": 344,
+    "selector_sites": 430,
+    "objc_sites": 446,
+    "objc_dynamic": 1,
+    "objc_protocol": 5,
+    "objc_named": 2,
+    "objcmembers": 7,
+    "iboutlet": 0,
+    "ibaction": 0,
+    "import_uikit": 679,
+    "uikit_subclass_files": 334,
+    "import_swiftui": 161,
+    "view_bearing_files": 101,
+    "import_combine": 26,
+    "selector_files": 192,
+    "selector_unclassified": 52,
+    "objc_files": 201,
+    "selector_wiring": 378,
+    "test_files": 1102,
+    "uikit_subclass_test_files": 12,
+    "import_swiftui_test": 6,
+    "selector_deep": 2,
+    "wrappers": {
+     "Environment": 45,
+     "ViewBuilder": 42,
+     "MainActor": 2759,
+     "State": 85,
+     "ObservedObject": 22,
+     "Binding": 5,
+     "ScaledMetric": 1,
+     "Published": 44,
+     "GestureState": 1,
+     "FocusState": 1,
+     "StateObject": 3
+    },
+    "combine": {
+     "AnyCancellable": 13,
+     "ObservableObject": 11,
+     "AnyPublisher": 6,
+     "PassthroughSubject": 3
+    }
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 14129,
+    "families": {
+     "collections": 4411,
+     "files": 4129,
+     "dates": 1103,
+     "concurrency": 958,
+     "text/format": 915,
+     "networking": 882,
+     "persistence": 818,
+     "notification": 571,
+     "json/coding": 342
+    },
+    "top": [
+     [
+      "URL",
+      3717
+     ],
+     [
+      "Data",
+      2659
+     ],
+     [
+      "Error",
+      858
+     ],
+     [
+      "Date",
+      615
+     ],
+     [
+      "NSAttributedString",
+      507
+     ],
+     [
+      "UUID",
+      469
+     ],
+     [
+      "NSCoder",
+      401
+     ],
+     [
+      "TimeInterval",
+      335
+     ],
+     [
+      "NotificationCenter",
+      324
+     ],
+     [
+      "DispatchQueue",
+      324
+     ],
+     [
+      "Task",
+      320
+     ],
+     [
+      "URLRequest",
+      304
+     ],
+     [
+      "NSError",
+      261
+     ],
+     [
+      "UserDefaults",
+      255
+     ],
+     [
+      "Notification",
+      228
+     ],
+     [
+      "Bundle",
+      216
+     ],
+     [
+      "Locale",
+      180
+     ],
+     [
+      "FileManager",
+      169
+     ],
+     [
+      "NSPredicate",
+      132
+     ],
+     [
+      "URLComponents",
+      131
+     ],
+     [
+      "Calendar",
+      108
+     ],
+     [
+      "Codable",
+      98
+     ],
+     [
+      "Thread",
+      81
+     ],
+     [
+      "URLSession",
+      76
+     ],
+     [
+      "NSLock",
+      72
+     ],
+     [
+      "NSString",
+      66
+     ],
+     [
+      "URLResponse",
+      66
+     ],
+     [
+      "JSONSerialization",
+      65
+     ],
+     [
+      "URLQueryItem",
+      60
+     ],
+     [
+      "HTTPURLResponse",
+      60
+     ],
+     [
+      "CharacterSet",
+      54
+     ],
+     [
+      "NSNull",
+      45
+     ],
+     [
+      "URLCredential",
+      41
+     ],
+     [
+      "NSNumber",
+      41
+     ],
+     [
+      "JSONDecoder",
+      40
+     ],
+     [
+      "CodingKeys",
+      40
+     ],
+     [
+      "NSMutableAttributedString",
+      40
+     ],
+     [
+      "Timer",
+      31
+     ],
+     [
+      "URLError",
+      31
+     ],
+     [
+      "Operation",
+      31
+     ]
+    ],
+    "all": {
+     "URL": 3717,
+     "Data": 2659,
+     "Error": 858,
+     "Date": 615,
+     "NSAttributedString": 507,
+     "UUID": 469,
+     "NSCoder": 401,
+     "TimeInterval": 335,
+     "NotificationCenter": 324,
+     "DispatchQueue": 324,
+     "Task": 320,
+     "URLRequest": 304,
+     "NSError": 261,
+     "UserDefaults": 255,
+     "Notification": 228,
+     "Bundle": 216,
+     "Locale": 180,
+     "FileManager": 169,
+     "NSPredicate": 132,
+     "URLComponents": 131,
+     "Calendar": 108,
+     "Codable": 98,
+     "Thread": 81,
+     "URLSession": 76,
+     "NSLock": 72,
+     "NSString": 66,
+     "URLResponse": 66,
+     "JSONSerialization": 65,
+     "URLQueryItem": 60,
+     "HTTPURLResponse": 60,
+     "CharacterSet": 54,
+     "NSNull": 45,
+     "URLCredential": 41,
+     "NSNumber": 41,
+     "JSONDecoder": 40,
+     "CodingKeys": 40,
+     "NSMutableAttributedString": 40,
+     "Timer": 31,
+     "URLError": 31,
+     "Operation": 31,
+     "JSONEncoder": 30,
+     "RunLoop": 28,
+     "NSRegularExpression": 27,
+     "NSURL": 26,
+     "DateFormatter": 25,
+     "URLProtectionSpace": 24,
+     "DispatchGroup": 22,
+     "URLSessionConfiguration": 22,
+     "URLAuthenticationChallenge": 22,
+     "IndexSet": 22,
+     "OperationQueue": 21,
+     "NSDictionary": 20,
+     "Decodable": 20,
+     "CodingKey": 18,
+     "NSNotification": 18,
+     "Encodable": 17,
+     "NSArray": 13,
+     "BlockOperation": 10,
+     "NSLocale": 10,
+     "NSKeyedArchiver": 9,
+     "NSData": 9,
+     "URLSessionTask": 9,
+     "ByteCountFormatter": 8,
+     "NSKeyedUnarchiver": 8,
+     "DateComponents": 8,
+     "URLSessionDownloadTask": 8,
+     "NSSecureCoding": 7,
+     "NSCache": 7,
+     "TimeZone": 6,
+     "URLProtocol": 6,
+     "URLCache": 6,
+     "Decoder": 5,
+     "DispatchSemaphore": 5,
+     "NumberFormatter": 5,
+     "URLSessionDataTask": 5,
+     "Encoder": 4,
+     "DispatchWorkItem": 4,
+     "NSUserDefaults": 4,
+     "NSMutableString": 4,
+     "Scanner": 4,
+     "NSURLComponents": 4,
+     "DispatchSource": 4,
+     "NSTextCheckingResult": 3,
+     "URLSessionTaskDelegate": 3,
+     "NSDate": 3,
+     "NSTimer": 3,
+     "NSValue": 3,
+     "NSCharacterSet": 2,
+     "Unicode": 2,
+     "ISO8601DateFormatter": 2,
+     "DecodingError": 2,
+     "EncodingError": 2,
+     "NSCoding": 2,
+     "URLSessionUploadTask": 2,
+     "MeasurementFormatter": 2,
+     "NSMutableDictionary": 2,
+     "NSSet": 1,
+     "URLSessionDelegate": 1,
+     "NSURLRequest": 1,
+     "NSThread": 1,
+     "Formatter": 1,
+     "NSCalendar": 1,
+     "NSNotificationCenter": 1,
+     "NSRecursiveLock": 1,
+     "PropertyListDecoder": 1,
+     "NSBundle": 1,
+     "NSException": 1
+    }
+   },
+   "imports": {
+    "Foundation": 1400,
+    "Common": 1178,
+    "XCTest": 844,
+    "UIKit": 682,
+    "Shared": 569,
+    "Client": 558,
+    "WebKit": 213,
+    "Redux": 201,
+    "Storage": 178,
+    "Glean": 163,
+    "SwiftUI": 161,
+    "MozillaAppServices": 134,
+    "struct": 115,
+    "ComponentLibrary": 92,
+    "WebEngine": 85,
+    "enum": 66,
+    "class": 59,
+    "TestKit": 57,
+    "SiteImageView": 55,
+    "MozillaRustComponents": 52,
+    "SummarizeKit": 51,
+    "QuickAnswersKit": 40,
+    "ModifiedCopy": 33,
+    "Combine": 26,
+    "ToolbarKit": 24,
+    "MappaMundi": 23,
+    "OnboardingKit": 22,
+    "Testing": 20,
+    "TabDataStore": 19,
+    "LLMKit": 18
+   },
+   "languages": {
+    "files": {
+     ".swift": 3150,
+     ".m": 7,
+     ".h": 24,
+     ".c": 10
+    },
+    "lines": {
+     ".swift": 499256,
+     ".m": 499,
+     ".h": 1205,
+     ".c": 2324
+    }
+   },
+   "build": {
+    "spm_manifests": 4,
+    "xcodeproj": 5,
+    "xcworkspace": 3,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 16,
+    "spm_direct_urls": 19,
+    "submodules": 0,
+    "xcassets": 20,
+    "xib_storyboard": 6,
+    "strings_files": 8059,
+    "_dep_urls": [
+     "https://github.com/AliSoftware/Dip.git",
+     "https://github.com/SnapKit/SnapKit",
+     "https://github.com/SnapKit/SnapKit.git",
+     "https://github.com/SwiftyBeaver/SwiftyBeaver.git",
+     "https://github.com/WilhelmOks/ModifiedCopyMacro.git",
+     "https://github.com/airbnb/lottie-ios.git",
+     "https://github.com/apple/swift-certificates.git",
+     "https://github.com/danger/swift.git",
+     "https://github.com/f-meloni/danger-swift-coverage",
+     "https://github.com/getsentry/sentry-cocoa",
+     "https://github.com/getsentry/sentry-cocoa.git",
+     "https://github.com/johnxnguyen/Down.git",
+     "https://github.com/kif-framework/KIF.git",
+     "https://github.com/mozilla-mobile/MappaMundi.git",
+     "https://github.com/mozilla/glean-swift",
+     "https://github.com/nbhasin2/Fuzi.git",
+     "https://github.com/nbhasin2/GCDWebServer.git",
+     "https://github.com/onevcat/Kingfisher.git",
+     "https://github.com/swhitty/SwiftDraw"
+    ]
+   }
+  },
+  "focus-ios": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 224,
+    "uses": 1335,
+    "distinct_types": 109,
+    "implemented_types": 106,
+    "implemented_uses": 1318,
+    "missing_types": 3,
+    "missing_uses": 17,
+    "missing": [
+     [
+      "NSString",
+      10
+     ],
+     [
+      "NSObject",
+      6
+     ],
+     [
+      "NSValue",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIView",
+      147
+     ],
+     [
+      "UIColor",
+      94
+     ],
+     [
+      "UITableView",
+      84
+     ],
+     [
+      "UIImage",
+      73
+     ],
+     [
+      "NSLayoutConstraint",
+      59
+     ],
+     [
+      "UIButton",
+      58
+     ],
+     [
+      "UITableViewCell",
+      54
+     ],
+     [
+      "NSCoder",
+      53
+     ],
+     [
+      "UIViewController",
+      50
+     ],
+     [
+      "UILabel",
+      49
+     ],
+     [
+      "UIApplication",
+      48
+     ],
+     [
+      "UIDevice",
+      34
+     ],
+     [
+      "UIStackView",
+      30
+     ],
+     [
+      "UIFont",
+      27
+     ],
+     [
+      "UIImageView",
+      25
+     ],
+     [
+      "NSAttributedString",
+      25
+     ],
+     [
+      "UITextField",
+      23
+     ],
+     [
+      "UIPasteboard",
+      21
+     ],
+     [
+      "UIAction",
+      19
+     ],
+     [
+      "UIKeyCommand",
+      18
+     ],
+     [
+      "UIBarButtonItem",
+      17
+     ],
+     [
+      "UIScrollView",
+      16
+     ],
+     [
+      "UITapGestureRecognizer",
+      16
+     ],
+     [
+      "UIScreen",
+      14
+     ],
+     [
+      "UISwitch",
+      14
+     ],
+     [
+      "UIAlertController",
+      12
+     ],
+     [
+      "UIAlertAction",
+      11
+     ],
+     [
+      "UIControl",
+      11
+     ],
+     [
+      "NSString",
+      10
+     ],
+     [
+      "UIMenu",
+      10
+     ],
+     [
+      "UIResponder",
+      9
+     ],
+     [
+      "UITextView",
+      9
+     ],
+     [
+      "UITableViewDelegate",
+      7
+     ],
+     [
+      "UITableViewDataSource",
+      7
+     ],
+     [
+      "NSMutableAttributedString",
+      7
+     ],
+     [
+      "UIPageViewController",
+      7
+     ],
+     [
+      "UITouch",
+      7
+     ],
+     [
+      "NSObject",
+      6
+     ],
+     [
+      "NSItemProvider",
+      6
+     ],
+     [
+      "UIEvent",
+      6
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 30
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 26
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 20
+     },
+     {
+      "type": "UIFont",
+      "member": "systemFont",
+      "uses": 18
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 16
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 13
+     },
+     {
+      "type": "UIColor",
+      "member": "primaryText",
+      "uses": 8
+     },
+     {
+      "type": "UIView",
+      "member": "transition",
+      "uses": 4
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 4
+     },
+     {
+      "type": "UIView",
+      "member": "userInterfaceLayoutDirection",
+      "uses": 4
+     },
+     {
+      "type": "UIApplication",
+      "member": "openSettingsURLString",
+      "uses": 3
+     },
+     {
+      "type": "UIDevice",
+      "member": "orientationDidChangeNotification",
+      "uses": 3
+     },
+     {
+      "type": "UIAction",
+      "member": "init",
+      "uses": 3
+     },
+     {
+      "type": "UIColor",
+      "member": "accent",
+      "uses": 3
+     },
+     {
+      "type": "UIColor",
+      "member": "secondaryText",
+      "uses": 3
+     },
+     {
+      "type": "UIColor",
+      "member": "white",
+      "uses": 3
+     },
+     {
+      "type": "UIFont",
+      "member": "body17",
+      "uses": 3
+     },
+     {
+      "type": "UIView",
+      "member": "layoutFittingCompressedSize",
+      "uses": 2
+     },
+     {
+      "type": "UIPageControl",
+      "member": "appearance",
+      "uses": 2
+     },
+     {
+      "type": "UINavigationBar",
+      "member": "appearance",
+      "uses": 2
+     },
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "secondaryLabel",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "inputPlaceholder",
+      "uses": 2
+     },
+     {
+      "type": "UIApplication",
+      "member": "didBecomeActiveNotification",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "grey10",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputLeftArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputRightArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputEscape",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 2
+     },
+     {
+      "type": "UIMenuController",
+      "member": "shared",
+      "uses": 2
+     },
+     {
+      "type": "UIApplication",
+      "member": "textInputMode",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "systemBackground",
+      "uses": 1
+     },
+     {
+      "type": "UIColor",
+      "member": "purple70",
+      "uses": 1
+     },
+     {
+      "type": "UIColor",
+      "member": "purple30",
+      "uses": 1
+     },
+     {
+      "type": "UIPointerEffect",
+      "member": "lift",
+      "uses": 1
+     },
+     {
+      "type": "UIAlertController",
+      "member": "renameAlertController",
+      "uses": 1
+     },
+     {
+      "type": "UIColor",
+      "member": "extensionNotEnabled",
+      "uses": 1
+     },
+     {
+      "type": "UIImage",
+      "member": "connectionSecure",
+      "uses": 1
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 1
+     },
+     {
+      "type": "UIColor",
+      "member": "actionButton",
+      "uses": 1
+     }
+    ]
+   },
+   "swift_lines": 24139,
+   "swiftui": {
+    "files": 227,
+    "import_uikit": 100,
+    "view_types": 14,
+    "some_view": 44,
+    "body_decls": 19,
+    "previews": 18,
+    "uikit_subclasses": 55,
+    "selector_sites": 77,
+    "objc_sites": 86,
+    "objc_dynamic": 0,
+    "objc_protocol": 0,
+    "objc_named": 0,
+    "objcmembers": 1,
+    "iboutlet": 0,
+    "ibaction": 0,
+    "test_files": 33,
+    "import_swiftui": 28,
+    "view_bearing_files": 18,
+    "uikit_subclass_files": 51,
+    "import_combine": 18,
+    "selector_files": 33,
+    "selector_wiring": 73,
+    "objc_files": 34,
+    "selector_deep": 1,
+    "selector_unclassified": 3,
+    "wrappers": {
+     "MainActor": 3,
+     "Published": 16,
+     "ObservedObject": 6,
+     "State": 1
+    },
+    "combine": {
+     "ObservableObject": 2,
+     "AnyCancellable": 11,
+     "AnyPublisher": 6,
+     "PassthroughSubject": 3
+    }
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 956,
+    "families": {
+     "files": 446,
+     "persistence": 128,
+     "text/format": 87,
+     "collections": 77,
+     "dates": 58,
+     "concurrency": 58,
+     "networking": 42,
+     "notification": 35,
+     "json/coding": 25
+    },
+    "top": [
+     [
+      "URL",
+      369
+     ],
+     [
+      "UserDefaults",
+      60
+     ],
+     [
+      "NSCoder",
+      53
+     ],
+     [
+      "Bundle",
+      52
+     ],
+     [
+      "TimeInterval",
+      41
+     ],
+     [
+      "DispatchQueue",
+      39
+     ],
+     [
+      "Error",
+      29
+     ],
+     [
+      "NSAttributedString",
+      25
+     ],
+     [
+      "NotificationCenter",
+      19
+     ],
+     [
+      "CharacterSet",
+      19
+     ],
+     [
+      "Data",
+      16
+     ],
+     [
+      "URLRequest",
+      16
+     ],
+     [
+      "URLComponents",
+      15
+     ],
+     [
+      "Date",
+      14
+     ],
+     [
+      "NSRegularExpression",
+      14
+     ],
+     [
+      "NSURL",
+      12
+     ],
+     [
+      "Notification",
+      12
+     ],
+     [
+      "FileManager",
+      12
+     ],
+     [
+      "NSPredicate",
+      11
+     ],
+     [
+      "NSString",
+      10
+     ],
+     [
+      "NSError",
+      10
+     ],
+     [
+      "JSONSerialization",
+      9
+     ],
+     [
+      "UUID",
+      8
+     ],
+     [
+      "Locale",
+      7
+     ],
+     [
+      "NSMutableAttributedString",
+      7
+     ],
+     [
+      "Task",
+      6
+     ],
+     [
+      "Timer",
+      6
+     ],
+     [
+      "Codable",
+      5
+     ],
+     [
+      "NSNumber",
+      4
+     ],
+     [
+      "NSNotification",
+      4
+     ],
+     [
+      "JSONDecoder",
+      3
+     ],
+     [
+      "NSDictionary",
+      3
+     ],
+     [
+      "URLQueryItem",
+      3
+     ],
+     [
+      "Decodable",
+      2
+     ],
+     [
+      "NSCache",
+      2
+     ],
+     [
+      "URLSessionDataTask",
+      2
+     ],
+     [
+      "URLSession",
+      2
+     ],
+     [
+      "JSONEncoder",
+      2
+     ],
+     [
+      "DispatchGroup",
+      2
+     ],
+     [
+      "Calendar",
+      2
+     ]
+    ],
+    "all": {
+     "URL": 369,
+     "UserDefaults": 60,
+     "NSCoder": 53,
+     "Bundle": 52,
+     "TimeInterval": 41,
+     "DispatchQueue": 39,
+     "Error": 29,
+     "NSAttributedString": 25,
+     "NotificationCenter": 19,
+     "CharacterSet": 19,
+     "Data": 16,
+     "URLRequest": 16,
+     "URLComponents": 15,
+     "Date": 14,
+     "NSRegularExpression": 14,
+     "NSURL": 12,
+     "Notification": 12,
+     "FileManager": 12,
+     "NSPredicate": 11,
+     "NSString": 10,
+     "NSError": 10,
+     "JSONSerialization": 9,
+     "UUID": 8,
+     "Locale": 7,
+     "NSMutableAttributedString": 7,
+     "Task": 6,
+     "Timer": 6,
+     "Codable": 5,
+     "NSNumber": 4,
+     "NSNotification": 4,
+     "JSONDecoder": 3,
+     "NSDictionary": 3,
+     "URLQueryItem": 3,
+     "Decodable": 2,
+     "NSCache": 2,
+     "URLSessionDataTask": 2,
+     "URLSession": 2,
+     "JSONEncoder": 2,
+     "DispatchGroup": 2,
+     "Calendar": 2,
+     "NumberFormatter": 2,
+     "NSURLComponents": 2,
+     "RunLoop": 2,
+     "NSNull": 2,
+     "Thread": 1,
+     "NSCharacterSet": 1,
+     "PropertyListDecoder": 1,
+     "HTTPURLResponse": 1,
+     "Encodable": 1,
+     "Decoder": 1,
+     "CodingKeys": 1,
+     "NSBundle": 1,
+     "NSSecureCoding": 1,
+     "DateFormatter": 1,
+     "NSException": 1,
+     "NSTextCheckingResult": 1,
+     "NSData": 1,
+     "NSKeyedUnarchiver": 1,
+     "NSKeyedArchiver": 1,
+     "NSCoding": 1,
+     "NSLocale": 1,
+     "NSTimer": 1,
+     "OperationQueue": 1,
+     "URLCache": 1,
+     "NSValue": 1
+    }
+   },
+   "imports": {
+    "UIKit": 100,
+    "Foundation": 71,
+    "XCTest": 40,
+    "SwiftUI": 28,
+    "Combine": 18,
+    "Glean": 15,
+    "Firefox_Focus": 8,
+    "Firefox_Klar": 8,
+    "UIHelpers": 7,
+    "SnapKit": 7,
+    "Onboarding": 7,
+    "AppShortcuts": 6,
+    "Intents": 6,
+    "WebKit": 6,
+    "DesignSystem": 5,
+    "FocusAppServices": 4,
+    "Widget": 3,
+    "UIComponents": 3,
+    "IntentsUI": 3,
+    "MobileCoreServices": 2,
+    "PackageDescription": 2,
+    "SafariServices": 2,
+    "Sentry": 2,
+    "LocalAuthentication": 2,
+    "ContentBlockerGenLib": 2,
+    "Social": 1,
+    "StoreKit": 1,
+    "Licenses": 1,
+    "Network": 1,
+    "Fuzi": 1
+   },
+   "languages": {
+    "files": {
+     ".swift": 227,
+     ".h": 2
+    },
+    "lines": {
+     ".swift": 24139,
+     ".h": 35
+    }
+   },
+   "build": {
+    "spm_manifests": 2,
+    "xcodeproj": 1,
+    "xcworkspace": 0,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 0,
+    "spm_direct_urls": 6,
+    "submodules": 0,
+    "xcassets": 8,
+    "xib_storyboard": 1,
+    "strings_files": 633,
+    "_dep_urls": [
+     "https://github.com/SnapKit/SnapKit",
+     "https://github.com/SnapKit/SnapKit.git",
+     "https://github.com/cezheng/Fuzi",
+     "https://github.com/getsentry/sentry-cocoa",
+     "https://github.com/mozilla/glean-swift",
+     "https://github.com/mozilla/rust-components-swift"
+    ]
+   }
+  },
+  "ios-oss": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 2055,
+    "uses": 6176,
+    "distinct_types": 109,
+    "implemented_types": 105,
+    "implemented_uses": 6120,
+    "missing_types": 4,
+    "missing_uses": 56,
+    "missing": [
+     [
+      "NSString",
+      39
+     ],
+     [
+      "NSObject",
+      10
+     ],
+     [
+      "NSValue",
+      6
+     ],
+     [
+      "UITableViewDataSourcePrefetching",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UILabel",
+      832
+     ],
+     [
+      "UIView",
+      698
+     ],
+     [
+      "UIStackView",
+      548
+     ],
+     [
+      "UIFont",
+      407
+     ],
+     [
+      "UIButton",
+      365
+     ],
+     [
+      "NSAttributedString",
+      363
+     ],
+     [
+      "UIColor",
+      272
+     ],
+     [
+      "UIViewController",
+      251
+     ],
+     [
+      "UITableViewCell",
+      245
+     ],
+     [
+      "UIApplication",
+      208
+     ],
+     [
+      "UITableView",
+      207
+     ],
+     [
+      "NSLayoutConstraint",
+      196
+     ],
+     [
+      "UIImageView",
+      186
+     ],
+     [
+      "UITextField",
+      120
+     ],
+     [
+      "NSCoder",
+      112
+     ],
+     [
+      "UIImage",
+      105
+     ],
+     [
+      "UIAlertController",
+      103
+     ],
+     [
+      "UITextView",
+      74
+     ],
+     [
+      "UIBarButtonItem",
+      71
+     ],
+     [
+      "UIAlertAction",
+      64
+     ],
+     [
+      "UINavigationController",
+      48
+     ],
+     [
+      "UITraitCollection",
+      41
+     ],
+     [
+      "UIActivityIndicatorView",
+      40
+     ],
+     [
+      "NSString",
+      39
+     ],
+     [
+      "UIScrollView",
+      38
+     ],
+     [
+      "NSMutableAttributedString",
+      31
+     ],
+     [
+      "UISwitch",
+      30
+     ],
+     [
+      "UICollectionView",
+      28
+     ],
+     [
+      "UITapGestureRecognizer",
+      25
+     ],
+     [
+      "UIStepper",
+      22
+     ],
+     [
+      "UICollectionViewCell",
+      21
+     ],
+     [
+      "UIActivityViewController",
+      20
+     ],
+     [
+      "UITableViewController",
+      19
+     ],
+     [
+      "UIPageViewController",
+      18
+     ],
+     [
+      "UITableViewDelegate",
+      16
+     ],
+     [
+      "UIDevice",
+      15
+     ],
+     [
+      "NSMutableParagraphStyle",
+      12
+     ],
+     [
+      "UICollectionViewFlowLayout",
+      12
+     ],
+     [
+      "UINavigationBarAppearance",
+      12
+     ],
+     [
+      "UIFontDescriptor",
+      11
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UILabel",
+      "member": "lens",
+      "uses": 297
+     },
+     {
+      "type": "UIButton",
+      "member": "lens",
+      "uses": 217
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 147
+     },
+     {
+      "type": "UIView",
+      "member": "setAnimationsEnabled",
+      "uses": 92
+     },
+     {
+      "type": "UIView",
+      "member": "lens",
+      "uses": 74
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_body",
+      "uses": 70
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_subhead",
+      "uses": 70
+     },
+     {
+      "type": "UIStackView",
+      "member": "lens",
+      "uses": 69
+     },
+     {
+      "type": "UIImageView",
+      "member": "lens",
+      "uses": 49
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 42
+     },
+     {
+      "type": "UIColor",
+      "member": "hex",
+      "uses": 35
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_caption1",
+      "uses": 35
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_headline",
+      "uses": 35
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_footnote",
+      "uses": 33
+     },
+     {
+      "type": "UITableViewCell",
+      "member": "lens",
+      "uses": 32
+     },
+     {
+      "type": "UITextField",
+      "member": "lens",
+      "uses": 32
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 26
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_callout",
+      "uses": 23
+     },
+     {
+      "type": "UIBarButtonItem",
+      "member": "lens",
+      "uses": 19
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_title2",
+      "uses": 16
+     },
+     {
+      "type": "UIAlertController",
+      "member": "genericError",
+      "uses": 15
+     },
+     {
+      "type": "UIViewController",
+      "member": "lens",
+      "uses": 13
+     },
+     {
+      "type": "UIDevice",
+      "member": "current",
+      "uses": 13
+     },
+     {
+      "type": "UITableView",
+      "member": "lens",
+      "uses": 13
+     },
+     {
+      "type": "UITextView",
+      "member": "lens",
+      "uses": 12
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_title3",
+      "uses": 12
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_title1",
+      "uses": 10
+     },
+     {
+      "type": "UIActivityIndicatorView",
+      "member": "lens",
+      "uses": 9
+     },
+     {
+      "type": "UIFont",
+      "member": "ksr_caption2",
+      "uses": 8
+     },
+     {
+      "type": "UIActivityViewController",
+      "member": "init",
+      "uses": 7
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 7
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 6
+     },
+     {
+      "type": "UIStepper",
+      "member": "lens",
+      "uses": 6
+     },
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 5
+     },
+     {
+      "type": "UIAlertController",
+      "member": "alert",
+      "uses": 5
+     },
+     {
+      "type": "UINavigationBar",
+      "member": "lens",
+      "uses": 5
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 4
+     },
+     {
+      "type": "UIView",
+      "member": "layoutFittingCompressedSize",
+      "uses": 4
+     },
+     {
+      "type": "UIAlertController",
+      "member": "blockUserAlert",
+      "uses": 4
+     },
+     {
+      "type": "UIAlertController",
+      "member": "blockUserActionSheet",
+      "uses": 4
+     }
+    ]
+   },
+   "swift_lines": 304366,
+   "swiftui": {
+    "files": 2072,
+    "view_types": 69,
+    "some_view": 172,
+    "body_decls": 88,
+    "previews": 18,
+    "uikit_subclasses": 233,
+    "selector_sites": 163,
+    "objc_sites": 165,
+    "objc_dynamic": 0,
+    "objc_protocol": 1,
+    "objc_named": 0,
+    "objcmembers": 0,
+    "iboutlet": 401,
+    "ibaction": 40,
+    "test_files": 485,
+    "import_swiftui": 115,
+    "import_swiftui_test": 23,
+    "import_uikit": 474,
+    "uikit_subclass_files": 227,
+    "view_bearing_files": 61,
+    "view_bearing_test_files": 6,
+    "uikit_subclass_test_files": 4,
+    "import_combine": 38,
+    "selector_files": 91,
+    "selector_unclassified": 40,
+    "objc_files": 88,
+    "selector_wiring": 123,
+    "wrappers": {
+     "ViewBuilder": 71,
+     "MainActor": 29,
+     "Binding": 20,
+     "ObservedObject": 6,
+     "Environment": 12,
+     "Published": 36,
+     "State": 32,
+     "Observable": 5,
+     "StateObject": 8,
+     "FocusState": 2,
+     "ScaledMetric": 3,
+     "Bindable": 1,
+     "Namespace": 1
+    },
+    "combine": {
+     "ObservableObject": 18,
+     "AnyPublisher": 86,
+     "AnyCancellable": 21,
+     "PassthroughSubject": 34,
+     "CurrentValueSubject": 7
+    }
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 4528,
+    "families": {
+     "collections": 1207,
+     "files": 907,
+     "json/coding": 600,
+     "text/format": 588,
+     "dates": 475,
+     "notification": 389,
+     "networking": 128,
+     "persistence": 118,
+     "concurrency": 116
+    },
+    "top": [
+     [
+      "Data",
+      925
+     ],
+     [
+      "URL",
+      814
+     ],
+     [
+      "NSAttributedString",
+      363
+     ],
+     [
+      "Notification",
+      279
+     ],
+     [
+      "Decodable",
+      201
+     ],
+     [
+      "Date",
+      176
+     ],
+     [
+      "CodingKeys",
+      157
+     ],
+     [
+      "TimeInterval",
+      153
+     ],
+     [
+      "Error",
+      131
+     ],
+     [
+      "NSCoder",
+      112
+     ],
+     [
+      "NotificationCenter",
+      109
+     ],
+     [
+      "Locale",
+      109
+     ],
+     [
+      "Bundle",
+      87
+     ],
+     [
+      "CodingKey",
+      87
+     ],
+     [
+      "URLRequest",
+      80
+     ],
+     [
+      "DispatchQueue",
+      58
+     ],
+     [
+      "Decoder",
+      51
+     ],
+     [
+      "Calendar",
+      44
+     ],
+     [
+      "TimeZone",
+      42
+     ],
+     [
+      "NSString",
+      39
+     ],
+     [
+      "JSONDecoder",
+      37
+     ],
+     [
+      "NSError",
+      36
+     ],
+     [
+      "Decimal",
+      34
+     ],
+     [
+      "JSONSerialization",
+      32
+     ],
+     [
+      "NSMutableAttributedString",
+      31
+     ],
+     [
+      "CharacterSet",
+      29
+     ],
+     [
+      "UUID",
+      29
+     ],
+     [
+      "Task",
+      28
+     ],
+     [
+      "DateComponents",
+      25
+     ],
+     [
+      "DateFormatter",
+      24
+     ],
+     [
+      "NSDecimalNumber",
+      17
+     ],
+     [
+      "Encodable",
+      15
+     ],
+     [
+      "URLComponents",
+      14
+     ],
+     [
+      "RunLoop",
+      12
+     ],
+     [
+      "Operation",
+      12
+     ],
+     [
+      "NSNumber",
+      11
+     ],
+     [
+      "NumberFormatter",
+      11
+     ],
+     [
+      "NSDictionary",
+      11
+     ],
+     [
+      "URLSession",
+      9
+     ],
+     [
+      "URLQueryItem",
+      9
+     ]
+    ],
+    "all": {
+     "Data": 925,
+     "URL": 814,
+     "NSAttributedString": 363,
+     "Notification": 279,
+     "Decodable": 201,
+     "Date": 176,
+     "CodingKeys": 157,
+     "TimeInterval": 153,
+     "Error": 131,
+     "NSCoder": 112,
+     "NotificationCenter": 109,
+     "Locale": 109,
+     "Bundle": 87,
+     "CodingKey": 87,
+     "URLRequest": 80,
+     "DispatchQueue": 58,
+     "Decoder": 51,
+     "Calendar": 44,
+     "TimeZone": 42,
+     "NSString": 39,
+     "JSONDecoder": 37,
+     "NSError": 36,
+     "Decimal": 34,
+     "JSONSerialization": 32,
+     "NSMutableAttributedString": 31,
+     "CharacterSet": 29,
+     "UUID": 29,
+     "Task": 28,
+     "DateComponents": 25,
+     "DateFormatter": 24,
+     "NSDecimalNumber": 17,
+     "Encodable": 15,
+     "URLComponents": 14,
+     "RunLoop": 12,
+     "Operation": 12,
+     "NSNumber": 11,
+     "NumberFormatter": 11,
+     "NSDictionary": 11,
+     "URLSession": 9,
+     "URLQueryItem": 9,
+     "ISO8601DateFormatter": 8,
+     "Codable": 7,
+     "DecodingError": 7,
+     "Thread": 6,
+     "NSValue": 6,
+     "URLResponse": 6,
+     "JSONEncoder": 5,
+     "NSRegularExpression": 5,
+     "UserDefaults": 4,
+     "HTTPURLResponse": 4,
+     "NSDate": 3,
+     "NSURL": 3,
+     "NSData": 3,
+     "URLSessionTaskDelegate": 2,
+     "URLSessionConfiguration": 2,
+     "NSCache": 2,
+     "NSBundle": 2,
+     "NSNull": 2,
+     "URLSessionTask": 1,
+     "NSNotification": 1,
+     "NSUserDefaults": 1,
+     "NSPredicate": 1,
+     "NSCharacterSet": 1,
+     "Encoder": 1,
+     "URLError": 1,
+     "FileManager": 1
+    }
+   },
+   "imports": {
+    "KsApi": 828,
+    "Prelude": 703,
+    "Library": 669,
+    "Foundation": 533,
+    "UIKit": 480,
+    "XCTest": 453,
+    "ReactiveSwift": 434,
+    "KsApiTestHelpers": 392,
+    "GraphAPI": 332,
+    "KDS": 322,
+    "ApolloAPI": 309,
+    "LibraryTestHelpers": 273,
+    "ReactiveExtensions_TestHelpers": 165,
+    "ApolloTestSupport": 153,
+    "ReactiveExtensions": 117,
+    "SwiftUI": 115,
+    "Kickstarter_Framework": 107,
+    "SnapshotTesting": 70,
+    "Combine": 38,
+    "Apollo": 38,
+    "Prelude_UIKit": 33,
+    "GraphAPITestMocks": 24,
+    "Experimentation": 22,
+    "AVFoundation": 19,
+    "PassKit": 19,
+    "WebKit": 17,
+    "ServerDrivenUI": 16,
+    "Kingfisher": 15,
+    "class": 12,
+    "UserNotifications": 10
+   },
+   "languages": {
+    "files": {
+     ".swift": 2072,
+     ".h": 1
+    },
+    "lines": {
+     ".swift": 304366,
+     ".h": 20
+    }
+   },
+   "build": {
+    "spm_manifests": 8,
+    "xcodeproj": 2,
+    "xcworkspace": 3,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": true,
+    "bazel": 0,
+    "spm_pins": 138,
+    "spm_direct_urls": 16,
+    "submodules": 0,
+    "xcassets": 3,
+    "xib_storyboard": 43,
+    "strings_files": 10,
+    "_dep_urls": [
+     "https://github.com/Alamofire/AlamofireImage",
+     "https://github.com/airbnb/lottie-ios.git",
+     "https://github.com/apollographql/apollo-ios.git",
+     "https://github.com/braze-inc/braze-segment-swift",
+     "https://github.com/facebook/facebook-ios-sdk",
+     "https://github.com/firebase/firebase-ios-sdk.git",
+     "https://github.com/kickstarter/Kickstarter-Prelude.git",
+     "https://github.com/kickstarter/Kickstarter-ReactiveExtensions",
+     "https://github.com/nalexn/ViewInspector",
+     "https://github.com/onevcat/Kingfisher",
+     "https://github.com/pointfreeco/swift-snapshot-testing",
+     "https://github.com/pointfreeco/swift-snapshot-testing.git",
+     "https://github.com/scinfu/SwiftSoup",
+     "https://github.com/statsig-io/statsig-kit.git",
+     "https://github.com/stripe/stripe-ios-spm",
+     "https://github.com/yeatse/KingfisherWebP.git"
+    ]
+   }
+  },
+  "simplenote-ios": {
+   "uikit": {
+    "walk": "apicensus SKIP_DIRS (Tests excluded)",
+    "swift_files": 351,
+    "uses": 1457,
+    "distinct_types": 97,
+    "implemented_types": 91,
+    "implemented_uses": 1375,
+    "missing_types": 6,
+    "missing_uses": 82,
+    "missing": [
+     [
+      "NSObject",
+      43
+     ],
+     [
+      "NSString",
+      26
+     ],
+     [
+      "NSValue",
+      7
+     ],
+     [
+      "UITextInputPasswordRules",
+      3
+     ],
+     [
+      "UIViewControllerRestoration",
+      2
+     ],
+     [
+      "UISimpleTextPrintFormatter",
+      1
+     ]
+    ],
+    "top_used": [
+     [
+      "UIColor",
+      255
+     ],
+     [
+      "UIView",
+      139
+     ],
+     [
+      "UITableView",
+      93
+     ],
+     [
+      "NSLayoutConstraint",
+      59
+     ],
+     [
+      "UIViewController",
+      55
+     ],
+     [
+      "UIFont",
+      51
+     ],
+     [
+      "UIKeyCommand",
+      49
+     ],
+     [
+      "NSCoder",
+      45
+     ],
+     [
+      "NSObject",
+      43
+     ],
+     [
+      "UITableViewCell",
+      43
+     ],
+     [
+      "NSAttributedString",
+      41
+     ],
+     [
+      "UILabel",
+      36
+     ],
+     [
+      "UIApplication",
+      28
+     ],
+     [
+      "UIBarButtonItem",
+      28
+     ],
+     [
+      "UIAlertController",
+      28
+     ],
+     [
+      "NSString",
+      26
+     ],
+     [
+      "UIButton",
+      25
+     ],
+     [
+      "UIImage",
+      23
+     ],
+     [
+      "UITextField",
+      20
+     ],
+     [
+      "UIResponder",
+      20
+     ],
+     [
+      "UIStackView",
+      19
+     ],
+     [
+      "UITextView",
+      18
+     ],
+     [
+      "UIAlertAction",
+      13
+     ],
+     [
+      "NSMutableAttributedString",
+      13
+     ],
+     [
+      "UIGestureRecognizer",
+      12
+     ],
+     [
+      "UIImageView",
+      12
+     ],
+     [
+      "UIDevice",
+      12
+     ],
+     [
+      "UIContextualAction",
+      12
+     ],
+     [
+      "UIPasteboard",
+      10
+     ],
+     [
+      "UITraitCollection",
+      10
+     ],
+     [
+      "UIViewControllerAnimatedTransitioning",
+      8
+     ],
+     [
+      "UITableViewDataSource",
+      8
+     ],
+     [
+      "UITableViewDelegate",
+      8
+     ],
+     [
+      "UIScreen",
+      7
+     ],
+     [
+      "UIViewControllerContextTransitioning",
+      7
+     ],
+     [
+      "NSValue",
+      7
+     ],
+     [
+      "UITapGestureRecognizer",
+      7
+     ],
+     [
+      "UIScrollView",
+      7
+     ],
+     [
+      "UIApplicationShortcutItem",
+      7
+     ],
+     [
+      "UIActivityViewController",
+      6
+     ]
+    ],
+    "missing_members_of_implemented": [
+     {
+      "type": "UIFont",
+      "member": "preferredFont",
+      "uses": 29
+     },
+     {
+      "type": "UIView",
+      "member": "animate",
+      "uses": 23
+     },
+     {
+      "type": "UIApplication",
+      "member": "shared",
+      "uses": 14
+     },
+     {
+      "type": "UIDevice",
+      "member": "isPad",
+      "uses": 10
+     },
+     {
+      "type": "UIPasteboard",
+      "member": "general",
+      "uses": 9
+     },
+     {
+      "type": "UIScreen",
+      "member": "main",
+      "uses": 6
+     },
+     {
+      "type": "UIImage",
+      "member": "image",
+      "uses": 5
+     },
+     {
+      "type": "UIColor",
+      "member": "white",
+      "uses": 5
+     },
+     {
+      "type": "UIColor",
+      "member": "clear",
+      "uses": 4
+     },
+     {
+      "type": "UIColor",
+      "member": "black",
+      "uses": 4
+     },
+     {
+      "type": "UIApplication",
+      "member": "isRTL",
+      "uses": 4
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteDividerColor",
+      "uses": 3
+     },
+     {
+      "type": "UIView",
+      "member": "performWithoutAnimation",
+      "uses": 3
+     },
+     {
+      "type": "UIMenuController",
+      "member": "shared",
+      "uses": 3
+     },
+     {
+      "type": "UIAlertController",
+      "member": "dismissableAlert",
+      "uses": 3
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardFrameEndUserInfoKey",
+      "uses": 3
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardAnimationDurationUserInfoKey",
+      "uses": 3
+     },
+     {
+      "type": "UINavigationBar",
+      "member": "appearance",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteNavigationBarTitleColor",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteTintColor",
+      "uses": 2
+     },
+     {
+      "type": "UIBarButtonItem",
+      "member": "appearance",
+      "uses": 2
+     },
+     {
+      "type": "UITraitCollection",
+      "member": "current",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteBlue50Color",
+      "uses": 2
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillShowNotification",
+      "uses": 2
+     },
+     {
+      "type": "UIResponder",
+      "member": "keyboardWillHideNotification",
+      "uses": 2
+     },
+     {
+      "type": "UITableView",
+      "member": "automaticDimension",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputTrailingArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputUpArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputDownArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputReturn",
+      "uses": 2
+     },
+     {
+      "type": "UIApplication",
+      "member": "didBecomeActiveNotification",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteTextColor",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteSecondaryTextColor",
+      "uses": 2
+     },
+     {
+      "type": "UIView",
+      "member": "layoutFittingCompressedSize",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteBlue60Color",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteBlue10Color",
+      "uses": 2
+     },
+     {
+      "type": "UITextField",
+      "member": "self",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputRightArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIKeyCommand",
+      "member": "inputLeftArrow",
+      "uses": 2
+     },
+     {
+      "type": "UIColor",
+      "member": "simplenoteDimmingColor",
+      "uses": 1
+     }
+    ]
+   },
+   "swift_lines": 33225,
+   "swiftui": {
+    "files": 351,
+    "test_files": 29,
+    "view_types": 10,
+    "some_view": 26,
+    "body_decls": 15,
+    "previews": 9,
+    "uikit_subclasses": 51,
+    "selector_sites": 103,
+    "objc_sites": 410,
+    "objc_dynamic": 0,
+    "objc_protocol": 4,
+    "objc_named": 21,
+    "objcmembers": 13,
+    "iboutlet": 110,
+    "ibaction": 47,
+    "import_swiftui": 21,
+    "objc_files": 98,
+    "view_bearing_files": 14,
+    "import_uikit": 105,
+    "uikit_subclass_files": 51,
+    "selector_files": 38,
+    "selector_wiring": 72,
+    "selector_unclassified": 31,
+    "wrappers": {
+     "ViewBuilder": 1,
+     "Environment": 5,
+     "State": 1,
+     "MainActor": 14
+    },
+    "combine": {}
+   },
+   "model": {
+    "walk": "model_census skip set (Tests included)",
+    "uses": 903,
+    "families": {
+     "persistence": 193,
+     "text/format": 177,
+     "files": 128,
+     "collections": 127,
+     "dates": 112,
+     "notification": 68,
+     "concurrency": 45,
+     "networking": 36,
+     "json/coding": 17
+    },
+    "top": [
+     [
+      "URL",
+      90
+     ],
+     [
+      "Error",
+      58
+     ],
+     [
+      "NSPredicate",
+      53
+     ],
+     [
+      "Date",
+      49
+     ],
+     [
+      "NSCoder",
+      47
+     ],
+     [
+      "NotificationCenter",
+      47
+     ],
+     [
+      "TimeInterval",
+      46
+     ],
+     [
+      "NSAttributedString",
+      46
+     ],
+     [
+      "CharacterSet",
+      39
+     ],
+     [
+      "NSString",
+      32
+     ],
+     [
+      "NSRegularExpression",
+      32
+     ],
+     [
+      "Data",
+      26
+     ],
+     [
+      "NSSortDescriptor",
+      25
+     ],
+     [
+      "UserDefaults",
+      22
+     ],
+     [
+      "UUID",
+      21
+     ],
+     [
+      "FileManager",
+      19
+     ],
+     [
+      "NSManagedObjectContext",
+      17
+     ],
+     [
+      "NSMutableAttributedString",
+      16
+     ],
+     [
+      "Timer",
+      13
+     ],
+     [
+      "Bundle",
+      13
+     ],
+     [
+      "NSFetchRequest",
+      13
+     ],
+     [
+      "Task",
+      13
+     ],
+     [
+      "DispatchQueue",
+      13
+     ],
+     [
+      "DateFormatter",
+      12
+     ],
+     [
+      "Notification",
+      11
+     ],
+     [
+      "NSNotification",
+      10
+     ],
+     [
+      "NSNumber",
+      9
+     ],
+     [
+      "URLComponents",
+      8
+     ],
+     [
+      "NSValue",
+      7
+     ],
+     [
+      "NSManagedObjectModel",
+      6
+     ],
+     [
+      "URLSession",
+      6
+     ],
+     [
+      "URLQueryItem",
+      6
+     ],
+     [
+      "NSURL",
+      6
+     ],
+     [
+      "NumberFormatter",
+      6
+     ],
+     [
+      "URLSessionConfiguration",
+      5
+     ],
+     [
+      "NSError",
+      4
+     ],
+     [
+      "JSONSerialization",
+      4
+     ],
+     [
+      "CodingKeys",
+      4
+     ],
+     [
+      "NSEntityDescription",
+      3
+     ],
+     [
+      "Codable",
+      3
+     ]
+    ],
+    "all": {
+     "URL": 90,
+     "Error": 58,
+     "NSPredicate": 53,
+     "Date": 49,
+     "NSCoder": 47,
+     "NotificationCenter": 47,
+     "TimeInterval": 46,
+     "NSAttributedString": 46,
+     "CharacterSet": 39,
+     "NSString": 32,
+     "NSRegularExpression": 32,
+     "Data": 26,
+     "NSSortDescriptor": 25,
+     "UserDefaults": 22,
+     "UUID": 21,
+     "FileManager": 19,
+     "NSManagedObjectContext": 17,
+     "NSMutableAttributedString": 16,
+     "Timer": 13,
+     "Bundle": 13,
+     "NSFetchRequest": 13,
+     "Task": 13,
+     "DispatchQueue": 13,
+     "DateFormatter": 12,
+     "Notification": 11,
+     "NSNotification": 10,
+     "NSNumber": 9,
+     "URLComponents": 8,
+     "NSValue": 7,
+     "NSManagedObjectModel": 6,
+     "URLSession": 6,
+     "URLQueryItem": 6,
+     "NSURL": 6,
+     "NumberFormatter": 6,
+     "URLSessionConfiguration": 5,
+     "NSError": 4,
+     "JSONSerialization": 4,
+     "CodingKeys": 4,
+     "NSEntityDescription": 3,
+     "Codable": 3,
+     "Thread": 3,
+     "NSManagedObject": 3,
+     "URLRequest": 3,
+     "Operation": 3,
+     "Unicode": 2,
+     "NSPersistentContainer": 2,
+     "URLSessionDelegate": 2,
+     "URLSessionTaskDelegate": 2,
+     "Locale": 2,
+     "JSONDecoder": 2,
+     "DateComponents": 2,
+     "Calendar": 2,
+     "NSDate": 1,
+     "NSURLSession": 1,
+     "URLResponse": 1,
+     "URLSessionTask": 1,
+     "PropertyListDecoder": 1,
+     "PropertyListEncoder": 1,
+     "Decodable": 1,
+     "NSURLComponents": 1,
+     "JSONEncoder": 1,
+     "NSFetchedResultsController": 1,
+     "Scanner": 1,
+     "NSMutableString": 1,
+     "NSSecureCoding": 1,
+     "NSDictionary": 1,
+     "NSArray": 1
+    }
+   },
+   "imports": {
+    "Foundation": 212,
+    "UIKit": 105,
+    "XCTest": 50,
+    "Simplenote": 36,
+    "SwiftUI": 21,
+    "WidgetKit": 17,
+    "Intents": 15,
+    "SimplenoteEndpoints": 11,
+    "CoreData": 10,
+    "SimplenoteFoundation": 9,
+    "CoreSpotlight": 6,
+    "UniformTypeIdentifiers": 5,
+    "SimplenoteSearch": 5,
+    "MobileCoreServices": 4,
+    "Simperium": 4,
+    "Gridicons": 3,
+    "SafariServices": 3,
+    "UITestsFoundation": 2,
+    "XCUITestHelpers": 2,
+    "AutomatticTracks": 2,
+    "PackageDescription": 1,
+    "Social": 1,
+    "ZIPFoundation": 1,
+    "StoreKit": 1,
+    "SimplenoteInterlinks": 1,
+    "LocalAuthentication": 1,
+    "Contacts": 1,
+    "QuartzCore": 1,
+    "ScreenObject": 1
+   },
+   "languages": {
+    "files": {
+     ".swift": 351,
+     ".h": 65,
+     ".m": 51,
+     ".c": 12
+    },
+    "lines": {
+     ".swift": 33225,
+     ".h": 2417,
+     ".m": 9558,
+     ".c": 7845
+    }
+   },
+   "build": {
+    "spm_manifests": 1,
+    "xcodeproj": 1,
+    "xcworkspace": 0,
+    "podfile": false,
+    "pods_declared": 0,
+    "pods_vendored": false,
+    "cartfile": false,
+    "carthage_vendored": false,
+    "tuist": false,
+    "bazel": 0,
+    "spm_pins": 1,
+    "spm_direct_urls": 10,
+    "submodules": 0,
+    "xcassets": 3,
+    "xib_storyboard": 28,
+    "strings_files": 40,
+    "_dep_urls": [
+     "git@github.com:Automattic/SimplenoteEndpoints-Swift.git",
+     "git@github.com:Automattic/SimplenoteFoundation-Swift.git",
+     "git@github.com:Automattic/SimplenoteInterlinks-Swift.git",
+     "git@github.com:Automattic/SimplenoteSearch-Swift.git",
+     "https://github.com/Automattic/Automattic-Tracks-iOS",
+     "https://github.com/Automattic/Gridicons-iOS",
+     "https://github.com/Automattic/ScreenObject",
+     "https://github.com/Simperium/simperium-ios/",
+     "https://github.com/SimplyDanny/SwiftLintPlugins",
+     "https://github.com/weichsel/ZIPFoundation"
+    ]
+   }
+  }
+ }
+}
