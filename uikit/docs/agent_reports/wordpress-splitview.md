@@ -180,4 +180,11 @@ exact sequence, and `isCollapsed` / the public array inside every callback.
 
 ## 7. Merge check
 
-Recorded below once the CHECK_ONLY run reports.
+`CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/wordpress-splitview` on the
+merged tree: **`checks passed (CHECK_ONLY)`**, no REFUSED. The first run hit
+`MERGE CONFLICT with main` in `uikit/docs/REAL_APP_TEST.md` (two landings
+added rows at the same table head while this branch waited on the lock);
+origin/main was merged into the branch keeping both rows (0862ded6, the
+5-line coder-init change to `UISplitViewController.swift` auto-merged, split
+suites re-run green), and the re-run passed. Log head: `==> agent/wordpress-splitview: 0862ded6 Merge origin/main into agent/wordpress-splitview (REAL_APP_TEST rows k`.
+Catalyst line not printed. 14 real-app screens scored, lowest 97.549.
