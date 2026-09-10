@@ -259,6 +259,27 @@ open class UIResponder: NSObject {
     /// `UIWindow.performKeyCommand(input:modifierFlags:)`.
     open var keyCommands: [UIKeyCommand]? { nil }
 
+    /// UIKit's `buildMenuWithBuilder:` — firefox-ios overrides it on its
+    /// AppDelegate to add its File/View/History/Bookmarks/Tools menus.
+    ///
+    /// MEASURED (Tools/oracle2/firefoxlastrowsprobe, iPhone 16 + iPad A16,
+    /// iOS 26.1): UIKit walks the responder chain ITSELF — for the context
+    /// system every responder from the interaction's view up to the app
+    /// delegate received the call, and an override that skipped `super` did
+    /// not stop the walk. So the default is a no-op and `super` costs
+    /// nothing. The main system's walk starts at `UIApplication.shared`
+    /// (application, then delegate; never the window or a controller) and
+    /// runs on the FIRST hardware key event (UIMenuBuilder.swift).
+    open func buildMenu(with builder: UIMenuBuilder) {}
+
+    /// UIKit's `validateCommand:`. MEASURED: sent exactly once per performed
+    /// key command, to the responder the key walk starts from (the first
+    /// responder, else the root controller), with the command that resolved
+    /// (for an alternate, the synthesized one), just before its action.
+    /// `UIMenuSystem.setNeedsRevalidate()` produced no calls within 8 s on
+    /// either device, so nothing else drives it. Default: nothing.
+    open func validate(_ command: UICommand) {}
+
     /// UIKit's `userActivity` on every responder (UIResponder.h). Focus
     /// BrowserViewController assigns Siri NSUserActivity here
     /// (a2832521 BrowserViewController.swift:805).

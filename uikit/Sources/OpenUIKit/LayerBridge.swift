@@ -253,6 +253,7 @@ public enum LayerBridge {
 
         let lay = v.layer
         h.combine(lay.cornerRadius)
+        h.combine(lay._cornerRadii)
         h.combine(lay.maskedCorners.rawValue)
         let traits = v.traitCollection
         if let bg = v.backgroundColor {
@@ -537,7 +538,7 @@ public enum LayerBridge {
         QZLayerSetHidden(l, v.isHidden)
         QZLayerSetOpacity(l, QZFloat(Swift.min(
             Swift.max(backingPresentation.opacity, 0), 1)))
-        QZLayerSetCornerRadius(l, QZFloat(backingPresentation.cornerRadius))
+        QZLayerSetCornerRadius(l, QZFloat(backingPresentation.effectiveCornerRadius))
         QZLayerSetMaskedCorners(l, UInt32(v.layer.maskedCorners.rawValue))
         QZLayerSetMasksToBounds(l, v.clipsToBounds)
 
@@ -571,7 +572,7 @@ public enum LayerBridge {
                                          y: backingPresentation.anchorPoint.y))
         QZLayerSetOpacity(l, QZFloat(Swift.min(
             Swift.max(backingPresentation.opacity, 0), 1)))
-        QZLayerSetCornerRadius(l, QZFloat(backingPresentation.cornerRadius))
+        QZLayerSetCornerRadius(l, QZFloat(backingPresentation.effectiveCornerRadius))
 
         // UIKit does not anti-alias the edges of transformed (rotated /
         // scaled) layers — same rule as RenderPass.isAxisAlignedTranslationOnly.
@@ -674,7 +675,7 @@ public enum LayerBridge {
                                          y: presentation.anchorPoint.y))
         QZLayerSetHidden(qz, layer.isHidden)
         QZLayerSetOpacity(qz, QZFloat(Swift.min(Swift.max(presentation.opacity, 0), 1)))
-        QZLayerSetCornerRadius(qz, QZFloat(presentation.cornerRadius))
+        QZLayerSetCornerRadius(qz, QZFloat(presentation.effectiveCornerRadius))
         QZLayerSetMaskedCorners(qz, UInt32(layer.maskedCorners.rawValue))
         QZLayerSetMasksToBounds(qz, layer.masksToBounds)
 
@@ -941,7 +942,8 @@ public enum LayerBridge {
             shadowOpacity: v.layer.shadowOpacity,
             shadowRadius: v.layer.shadowRadius,
             shadowOffset: v.layer.shadowOffset,
-            locations: (v.layer as? CAGradientLayer)?.locations)
+            locations: (v.layer as? CAGradientLayer)?.locations,
+            cornerRadii: v.layer._cornerRadii)
         // CA removes a completed animation from the layer, so the model
         // wins afterwards. Applying finished records with u=1 pins
         // presentation at `to` and hides a later model change — Pager
