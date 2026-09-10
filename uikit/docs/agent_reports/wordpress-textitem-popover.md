@@ -177,7 +177,16 @@ branch with `remeasure-2026-09-16.sh`'s regex (437 names), unchanged
 reproduces even staler rows — 9 / 51 for WordPress; the JSON figure is the
 "before".)
 
-Merge check: see the REAL_APP_TEST.md row for the CHECK_ONLY verdict.
+Merge check: `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/wordpress-textitem-popover`
+on `16068eff` (the one code commit over main):
+
+```
+checks passed (CHECK_ONLY)
+```
+
+(Catalyst goldens, real-app floors, conformance re-render and the Linux
+`openrender` build all inside the script; no REFUSED, no warning in the
+new files. This docs-only commit follows it.)
 
 ## Walls and leftovers
 
