@@ -28,6 +28,17 @@ import Foundation
 import struct Foundation.Data
 #endif
 
+// CALayer is an NSObject in Core Animation (see its declaration below), and
+// this file has to be able to spell the name. Same fail-closed provider
+// choice as UIResponder.swift.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
 
 public struct UIRectEdge: OptionSet, Sendable {
     public let rawValue: UInt
@@ -75,8 +86,22 @@ public extension CALayerDelegate {
 /// to the view; layers created directly keep independent geometry and can be
 /// attached as an explicit layer tree.  Rendering lives in RenderPass.swift
 /// (and LayerBridge.swift for the quartz compositor).
+///
+/// SDK EVIDENCE (iOS 26.1,
+/// .../iPhoneSimulator26.1.sdk/System/Library/Frameworks/QuartzCore.framework/
+/// Headers/CALayer.h:117):
+///
+///     @interface CALayer : NSObject <NSSecureCoding, CAMediaTiming>
+///
+/// The NSObject base is adopted here: without it Kickstarter-Prelude's
+/// `CALayerProtocol: KSObjectProtocol: NSObjectProtocol` cannot be satisfied
+/// ("cannot declare conformance to NSObjectProtocol", 9 lens diagnostics in
+/// docs/agent_reports/ios-oss-launch.md). `NSSecureCoding` and
+/// `CAMediaTiming` are NOT adopted: the port has no archiver for a layer and
+/// no `CAMediaTiming` protocol, and declaring either would mean writing
+/// unmeasured stubs. Recorded in docs/KNOWN_GAPS.md.
 @preconcurrency @MainActor
-open class CALayer {
+open class CALayer: NSObject {
     public weak var owner: UIView?
     public weak var delegate: CALayerDelegate?
 
@@ -344,9 +369,19 @@ open class CALayer {
         }
     }
 
-    public init() {}
+    /// Core Animation caches the layer's rendered content as a bitmap when
+    /// this is set. OpenUIKit's compositor rebuilds the layer tree every
+    /// frame and has no such cache, so this is faithful round-trip storage
+    /// and nothing else — the drawn result is identical either way.
+    /// Kickstarter-Prelude's `CALayerProtocol` requires it (`Lens` #9).
+    public var shouldRasterize = false
+    /// Companion to `shouldRasterize` (CALayer.h). Same storage-only status.
+    public var rasterizationScale: CGFloat = 1
+
+    public override init() {}
     public required init(owner: UIView) {
         self.owner = owner
+        super.init()
         self.delegate = owner
     }
 
@@ -363,7 +398,7 @@ open class CALayer {
     /// CALayer-owned compatibility surface rather than a pretend NSObject
     /// runtime: known public properties remain strongly typed above, while
     /// private filter inputs retain their exact values under their keys.
-    open func setValue(_ value: Any?, forKey key: String) {
+    func _openSetValue(_ value: Any?, forKey key: String) {
         switch key {
         case "isOpaque":
             if let value = value as? Bool { isOpaque = value }
@@ -378,7 +413,7 @@ open class CALayer {
         }
     }
 
-    open func value(forKey key: String) -> Any? {
+    func _openValue(forKey key: String) -> Any? {
         switch key {
         case "isOpaque": return isOpaque
         case "contentsScale": return contentsScale
@@ -386,16 +421,49 @@ open class CALayer {
         }
     }
 
+    // The four entry points below are `override`s only where the NSObject the
+    // port is built on actually declares KVC as CLASS members: Darwin, where
+    // they arrive from the Objective-C runtime. On the native-Linux corelibs
+    // branch they live in an `extension NSObject` (which Swift will not let a
+    // subclass override), and on the Foundation-hidden Mach-O guest route the
+    // ObjectiveC module's root class has no KVC at all — on both the layer
+    // declares them fresh. Same fail-closed shape as `awakeFromNib` above.
+    //
+    // The override matters on Darwin: without it, `layer.setValue(_:forKey:)`
+    // from an app's open-source visual-effect code would reach NSObject's real
+    // KVC and raise `undefined key`, because these layer properties are Swift
+    // stored properties, not `@objc` ivars.
+    //
     /// Key-path variants preserve the complete path. They cover private
     /// paths such as `filters.gaussianBlur.inputRadius` without claiming a
     /// general Objective-C KVC implementation on non-Objective-C platforms.
+#if canImport(ObjectiveC) && canImport(Foundation)
+    open override func setValue(_ value: Any?, forKey key: String) {
+        _openSetValue(value, forKey: key)
+    }
+    open override func value(forKey key: String) -> Any? {
+        _openValue(forKey: key)
+    }
+    open override func setValue(_ value: Any?, forKeyPath keyPath: String) {
+        _openSetValue(value, forKey: keyPath)
+    }
+    open override func value(forKeyPath keyPath: String) -> Any? {
+        _openValue(forKey: keyPath)
+    }
+#else
+    open func setValue(_ value: Any?, forKey key: String) {
+        _openSetValue(value, forKey: key)
+    }
+    open func value(forKey key: String) -> Any? {
+        _openValue(forKey: key)
+    }
     open func setValue(_ value: Any?, forKeyPath keyPath: String) {
-        setValue(value, forKey: keyPath)
+        _openSetValue(value, forKey: keyPath)
     }
-
     open func value(forKeyPath keyPath: String) -> Any? {
-        value(forKey: keyPath)
+        _openValue(forKey: keyPath)
     }
+#endif
 
     /// Marks this layer's delegate/layout pass dirty.
     public func setNeedsLayout() {

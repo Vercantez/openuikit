@@ -202,7 +202,10 @@ final class AttributedStringTests: XCTestCase {
         m.tailIndent = -12
         XCTAssertEqual(m.alignment, .center)
         XCTAssertEqual(m.lineSpacing, 6)
-        let copy = m.mutableCopy()
+        // `mutableCopy()` now has Apple's signature (`-> Any`, from
+        // NSMutableCopying on the NSObject base), so this is the spelling real
+        // app source uses. The typed helper is `mutableParagraphStyleCopy()`.
+        let copy = m.mutableCopy() as! NSMutableParagraphStyle
         XCTAssertEqual(copy, m)
         copy.lineSpacing = 7
         XCTAssertNotEqual(copy, m)

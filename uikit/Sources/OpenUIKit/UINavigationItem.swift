@@ -23,8 +23,27 @@
 //  * `backBarButtonItem` set on a controller supplies the back button the
 //    NEXT controller shows.
 
+// NSObject provider, chosen exactly as UIResponder.swift chooses it.
+#if canImport(Foundation)
+import class Foundation.NSObject
+#elseif canImport(ObjectiveC)
+import class ObjectiveC.NSObject
+#else
+#error("OpenUIKit requires Foundation.NSObject or ObjectiveC.NSObject")
+#endif
+
+/// SDK EVIDENCE (iOS 26.1,
+/// .../iPhoneSimulator26.1.sdk/System/Library/Frameworks/UIKit.framework/
+/// Headers/UINavigationItem.h:91):
+///
+///     @interface UINavigationItem : NSObject <NSCoding>
+///
+/// The NSObject base is adopted so Kickstarter-Prelude's
+/// `UINavigationItemProtocol: KSObjectProtocol: NSObjectProtocol` can be
+/// satisfied. `NSCoding` is not adopted — the port has no archiver for a
+/// navigation item (docs/KNOWN_GAPS.md).
 @preconcurrency @MainActor
-public class UINavigationItem {
+public class UINavigationItem: NSObject {
     public var title: String? {
         didSet { if title != oldValue { _bar?._navigationItemChanged(self) } }
     }
@@ -167,5 +186,6 @@ public class UINavigationItem {
 
     public init(title: String? = nil) {
         self.title = title
+        super.init()
     }
 }
