@@ -790,6 +790,10 @@ public final class UINavigationBar: UIView, _UIBarItemContainer {
         _rebuildItemViews()
     }
 
+    func _view(for item: UIBarButtonItem) -> UIView? {
+        (leftItemViews + rightItemViews).first { $0.item === item }
+    }
+
     func _barItemsChanged() { setNeedsLayout() }
 
     /// Rebuild the title + item platter views from `topItem`.

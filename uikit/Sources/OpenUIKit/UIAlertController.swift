@@ -848,8 +848,13 @@ final class _UIAlertPresentationController: UIPresentationController {
                                     size: CGSize) -> CGRect {
         var center = CGPoint(x: c.bounds.midX, y: c.bounds.midY)
         if let popover = alert._popoverController, let source = popover.sourceView {
-            let origin = source.convert(popover.sourceRect.origin, to: c)
-            center = origin
+            // `sourceRect` defaults to CGRect.null (measured); UIKit then
+            // anchors on the whole source view — its centre here (the
+            // explicit-rect case keeps the measured origin rule above).
+            let anchor = popover.sourceRect.isNull
+                ? CGPoint(x: source.bounds.midX, y: source.bounds.midY)
+                : popover.sourceRect.origin
+            center = source.convert(anchor, to: c)
         }
         return CGRect(x: center.x - size.width / 2,
                       y: center.y - size.height / 2,

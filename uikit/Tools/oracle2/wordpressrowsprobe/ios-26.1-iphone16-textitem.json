@@ -1,0 +1,1312 @@
+{
+  "_device" : {
+    "bounds" : [
+      0,
+      0,
+      393,
+      852
+    ],
+    "idiom" : 0,
+    "phase" : "textitem",
+    "scale" : 3,
+    "system" : "26.1"
+  },
+  "_order" : [
+    "base",
+    "tap.link.new.default",
+    "tap.link.new.nil",
+    "tap.link.new.custom",
+    "tap.link.old",
+    "tap.link.both",
+    "tap.link.noDelegate",
+    "tap.link.noneImplemented",
+    "tap.tag.new",
+    "tap.tag.both",
+    "tap.attachment.new",
+    "tap.attachment.both",
+    "tap.plain.new",
+    "tap.link.new.notSelectable",
+    "tap.link.new.editable",
+    "press.link.new.default",
+    "press.link.new.nilMenu",
+    "press.link.both",
+    "press.tag.new",
+    "press.attachment.new"
+  ],
+  "base" : {
+    "attRange" : [
+      27,
+      1
+    ],
+    "attRectWin" : [
+      241.49299999999999,
+      208,
+      24,
+      24.100999999999999
+    ],
+    "attributedReadback" : "wp-tag",
+    "gestureRecognizers" : [
+      "UITapAndAHalfRecognizer",
+      "UITextTapRecognizer",
+      "UITextTapRecognizer",
+      "UIVariableDelayLoupeGesture",
+      "UITextRangeAdjustmentGestureRecognizer",
+      "UITapGestureRecognizer",
+      "UIScrollViewDelayedTouchesBeganGestureRecognizer",
+      "UIScrollViewPanGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIScrollViewKnobLongPressGestureRecognizer",
+      "UIHoverGestureRecognizer",
+      "_UIDragAutoScrollGestureRecognizer",
+      "_UIPressGestureRecognizer",
+      "_UIDragAddItemsGesture",
+      "_UIDragLiftGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UIDragLiftPointerGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UITouchDurationObservingGestureRecognizer",
+      "_UITouchDurationObservingGestureRecognizer",
+      "_UISimplePressGestureRecognizer",
+      "_UISecondaryClickDriverGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UIRelationshipGestureRecognizer",
+      "_UIRelationshipGestureRecognizer"
+    ],
+    "httpsRange" : [
+      33,
+      3
+    ],
+    "interactions" : [
+      "_UIZoomEdgeFeedbackGenerator",
+      "_UIScrollEdgeEffectViewInteraction",
+      "_UIScrollPocketRegistrationInteraction",
+      "UIDragInteraction",
+      "UIDropInteraction",
+      "_UITextMenuLinkInteraction",
+      "UITextContextMenuInteraction",
+      "UIContextMenuInteraction",
+      "_UIClickPresentationInteraction",
+      "_UIClickPresentationFeedbackGenerator",
+      "UIEditMenuInteraction",
+      "_UIEditMenuBridgedContextMenuInteraction",
+      "_UIClickPresentationInteraction",
+      "_UIClickPresentationFeedbackGenerator",
+      "UITextSelectionDisplayInteraction",
+      "UITextInteraction",
+      "UITextRangeAdjustmentInteraction",
+      "UITextRefinementInteraction",
+      "UITextNonEditableInteraction",
+      "UITextSelectionInteraction",
+      "UITextIndirectNonEditableInteraction"
+    ],
+    "linkRange" : [
+      5,
+      5
+    ],
+    "linkRectWin" : [
+      68.015000000000001,
+      208,
+      44.061,
+      24.100999999999999
+    ],
+    "linkTextAttributesDefault" : [
+      "NSColor=<UIDynamicCatalogSystemColor: 0x600001711dc0; name = systemBlueColor>"
+    ],
+    "tagRange" : [
+      14,
+      7
+    ],
+    "tagRectWin" : [
+      136.43000000000001,
+      208,
+      62.438000000000002,
+      24.100999999999999
+    ],
+    "textItemTagKey" : "UITextItemTagAttribute"
+  },
+  "press.attachment.new" : {
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "attachmentClass" : "NSTextAttachment",
+          "class" : "UITextItem",
+          "content" : "textAttachment",
+          "range" : [
+            27,
+            1
+          ]
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.0F72AA48-CEF9-4540-BE43-17C12B1788AB",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Copy Image"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.BD1407D0-40B5-480E-94CC-D39846B35DFB",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Save to Camera Roll"
+            }
+          ],
+          "class" : "UIMenu",
+          "identifier" : "UITextItemDefaultMenuIdentifier",
+          "options" : 0,
+          "title" : ""
+        },
+        "item" : {
+          "attachmentClass" : "NSTextAttachment",
+          "class" : "UITextItem",
+          "content" : "textAttachment",
+          "range" : [
+            27,
+            1
+          ]
+        }
+      },
+      {
+        "call" : "textItemMenuWillDisplay",
+        "item" : {
+          "attachmentClass" : "NSTextAttachment",
+          "class" : "UITextItem",
+          "content" : "textAttachment",
+          "range" : [
+            27,
+            1
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      253.49267578125,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      27,
+      1
+    ],
+    "which" : "att",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " _UITouchFallbackView [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]",
+      " UIView [-500.0, -500.0, 0.0, 0.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIView [0.0, 0.0, 52.0, 45.0]",
+      " _UIContextMenuContainerView [0.0, 0.0, 393.0, 852.0]",
+      "  UIVisualEffectView [0.0, 0.0, 393.0, 852.0]",
+      "  _UIContextMenuPlatterTransitionView [0.0, 0.0, 393.0, 852.0]",
+      "   _UIContentPlatterView [223.333, 194.333, 60.0, 52.0]",
+      "   _UIContextMenuView [33.333, 262.333, 250.0, 104.0]",
+      "UITextEffectsWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITrackingWindowView [0.0, 0.0, 393.0, 852.0]",
+      "  UIKeyboardItemContainerView [0.0, 852.0, 393.0, 0.0]",
+      "  UIEditingOverlayGestureView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "press.link.both" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.6DAB1684-DDB9-4739-9F27-ACAC9BDFCC1A",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Open"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.28181C71-91EB-4C09-AC0E-3616F5D246D4",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Copy"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.039816C9-CC3C-45C1-8AD1-089B80E377E1",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Share…"
+            }
+          ],
+          "class" : "UIMenu",
+          "identifier" : "UITextItemDefaultMenuIdentifier",
+          "options" : 0,
+          "title" : "wpprobe:\/\/open?item=link"
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "textItemMenuWillDisplay",
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "both",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      5,
+      5
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " _UITouchFallbackView [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]",
+      " UIView [-500.0, -500.0, 0.0, 0.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIView [0.0, 0.0, 73.0, 45.0]",
+      " _UIContextMenuContainerView [0.0, 0.0, 393.0, 852.0]",
+      "  UIVisualEffectView [0.0, 0.0, 393.0, 852.0]",
+      "  _UIContextMenuPlatterTransitionView [0.0, 0.0, 393.0, 852.0]",
+      "   _UIContentPlatterView [48.333, 194.333, 84.0, 52.0]",
+      "   _UIContextMenuView [48.333, 262.333, 250.0, 186.333]",
+      "UITextEffectsWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITrackingWindowView [0.0, 0.0, 393.0, 852.0]",
+      "  UIKeyboardItemContainerView [0.0, 852.0, 393.0, 0.0]",
+      "  UIEditingOverlayGestureView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "press.link.new.default" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.27F374DF-A39A-48EC-AF16-EAC060C42360",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Open"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.5C1064D5-5A5C-4D93-B445-3A4CC417FAC8",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Copy"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.372487C8-900D-4CD0-B75D-4F33DCCFE6FD",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Share…"
+            }
+          ],
+          "class" : "UIMenu",
+          "identifier" : "UITextItemDefaultMenuIdentifier",
+          "options" : 0,
+          "title" : "wpprobe:\/\/open?item=link"
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "textItemMenuWillDisplay",
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      5,
+      5
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " _UITouchFallbackView [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]",
+      " UIView [-500.0, -500.0, 0.0, 0.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIView [0.0, 0.0, 73.0, 45.0]",
+      " _UIContextMenuContainerView [0.0, 0.0, 393.0, 852.0]",
+      "  UIVisualEffectView [0.0, 0.0, 393.0, 852.0]",
+      "  _UIContextMenuPlatterTransitionView [0.0, 0.0, 393.0, 852.0]",
+      "   _UIContentPlatterView [48.333, 194.333, 84.0, 52.0]",
+      "   _UIContextMenuView [48.333, 262.333, 250.0, 186.333]",
+      "UITextEffectsWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITrackingWindowView [0.0, 0.0, 393.0, 852.0]",
+      "  UIKeyboardItemContainerView [0.0, 852.0, 393.0, 0.0]",
+      "  UIEditingOverlayGestureView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "press.link.new.nilMenu" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.6DB43EA2-5E14-4529-AF0F-5F1F3CE3737C",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Open"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.DEEFC29C-9CF5-40EA-A8D0-8E29C92DF478",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Copy"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.72B694D8-928B-4859-9DC7-F0BEEDB649E3",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Share…"
+            }
+          ],
+          "class" : "UIMenu",
+          "identifier" : "UITextItemDefaultMenuIdentifier",
+          "options" : 0,
+          "title" : "wpprobe:\/\/open?item=link"
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : true,
+    "menuReturn" : "nil",
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]",
+      "UITextEffectsWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITrackingWindowView [0.0, 0.0, 393.0, 852.0]",
+      "  UIKeyboardItemContainerView [0.0, 852.0, 393.0, 0.0]",
+      "  UIEditingOverlayGestureView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "press.tag.new" : {
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+
+          ],
+          "class" : "UIMenu",
+          "identifier" : "com.apple.menu.dynamic.7409F920-9270-4327-983F-431B56990AB1",
+          "options" : 0,
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      },
+      {
+        "call" : "textItemMenuWillEnd",
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      167.64892578125,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "which" : "tag",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]",
+      "UITextEffectsWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITrackingWindowView [0.0, 0.0, 393.0, 852.0]",
+      "  UIKeyboardItemContainerView [0.0, 852.0, 393.0, 0.0]",
+      "  UIEditingOverlayGestureView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.attachment.both" : {
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "attachmentClass" : "NSTextAttachment",
+          "class" : "UITextItem",
+          "content" : "textAttachment",
+          "range" : [
+            27,
+            1
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "mode" : "both",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      253.49267578125,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "which" : "att",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.attachment.new" : {
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "attachmentClass" : "NSTextAttachment",
+          "class" : "UITextItem",
+          "content" : "textAttachment",
+          "range" : [
+            27,
+            1
+          ]
+        }
+      },
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "attachmentClass" : "NSTextAttachment",
+          "class" : "UITextItem",
+          "content" : "textAttachment",
+          "range" : [
+            27,
+            1
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : true,
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      253.49267578125,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "which" : "att",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.both" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "both",
+    "openedURLs" : [
+      "wpprobe:\/\/open?item=link"
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.new.custom" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "customActionFired"
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "custom",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.new.default" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "new",
+    "openedURLs" : [
+      "wpprobe:\/\/open?item=link"
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.new.editable" : {
+    "editable" : true,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "new",
+    "openedURLs" : [
+      "wpprobe:\/\/open?item=link"
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.new.nil" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.183AD2DC-398E-4F3B-B2FF-ABF0DD62E747",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Open"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.D9A2C42E-4CB6-4BBC-98A5-5088E02E30B0",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Copy"
+            },
+            {
+              "attributes" : 0,
+              "class" : "UIAction",
+              "identifier" : "com.apple.action.dynamic.B0370934-35FF-41E1-97DC-716030C1055A",
+              "image" : "set",
+              "subtitle" : "nil",
+              "title" : "Share…"
+            }
+          ],
+          "class" : "UIMenu",
+          "identifier" : "UITextItemDefaultMenuIdentifier",
+          "options" : 0,
+          "title" : "wpprobe:\/\/open?item=link"
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      },
+      {
+        "call" : "textItemMenuWillDisplay",
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "link",
+          "link" : "wpprobe:\/\/open?item=link",
+          "range" : [
+            5,
+            5
+          ]
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "nil",
+    "selectable" : true,
+    "selectedRange" : [
+      5,
+      5
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UIKit._UIMorphAnimationContainerView [0.0, 0.0, 393.0, 852.0]",
+      "  _TtCC5UIKit30_UIMorphAnimationContainerView13TransformView [0.0, 0.0, 393.0, 852.0]",
+      "   UIKit._UIMorphAnimationContainerView [0.0, 0.0, 393.0, 852.0]",
+      " _UITouchFallbackView [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIView [0.0, 0.0, 73.0, 45.0]",
+      " _UIContextMenuContainerView [0.0, 0.0, 393.0, 852.0]",
+      "  UIVisualEffectView [0.0, 0.0, 393.0, 852.0]",
+      "  _UIContextMenuPlatterTransitionView [0.0, 0.0, 393.0, 852.0]",
+      "   _UIContextMenuView [39.667, 234.667, 250.0, 186.333]",
+      "  UIKit._UIReparentingView [0.0, 0.0, 100.0, 100.0]",
+      "   _UIPortalView [0.0, 0.0, 0.0, 0.0]"
+    ]
+  },
+  "tap.link.new.notSelectable" : {
+    "editable" : false,
+    "events" : [
+
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : false,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.noDelegate" : {
+    "editable" : false,
+    "events" : [
+
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "noDelegate",
+    "openedURLs" : [
+      "wpprobe:\/\/open?item=link"
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.noneImplemented" : {
+    "editable" : false,
+    "events" : [
+
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "none",
+    "openedURLs" : [
+      "wpprobe:\/\/open?item=link"
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.link.old" : {
+    "editable" : false,
+    "events" : [
+      {
+        "call" : "shouldInteractWithURL",
+        "interaction" : 0,
+        "range" : [
+          5,
+          5
+        ],
+        "url" : "wpprobe:\/\/open?item=link"
+      }
+    ],
+    "isFirstResponder" : false,
+    "menuReturn" : "default",
+    "mode" : "old",
+    "openedURLs" : [
+      "wpprobe:\/\/open?item=link"
+    ],
+    "point" : [
+      90.044921875,
+      220.05029296875
+    ],
+    "primaryReturn" : "default",
+    "selectable" : true,
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.plain.new" : {
+    "events" : [
+
+    ],
+    "isFirstResponder" : true,
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      44.5400390625,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "which" : "plain",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.tag.both" : {
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+
+          ],
+          "class" : "UIMenu",
+          "identifier" : "com.apple.menu.dynamic.E06E96DF-DB14-426B-91E9-F314582C9C5C",
+          "options" : 0,
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "mode" : "both",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      167.64892578125,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "which" : "tag",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  },
+  "tap.tag.new" : {
+    "events" : [
+      {
+        "call" : "primaryActionFor",
+        "defaultAction" : {
+          "attributes" : 0,
+          "class" : "UIAction",
+          "identifier" : "UITextInteractableItemDefaultAction",
+          "image" : "nil",
+          "subtitle" : "nil",
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      },
+      {
+        "call" : "menuConfigurationFor",
+        "defaultMenu" : {
+          "children" : [
+
+          ],
+          "class" : "UIMenu",
+          "identifier" : "com.apple.menu.dynamic.DD1555D5-641B-41E8-A86F-21E11D328DFB",
+          "options" : 0,
+          "title" : ""
+        },
+        "item" : {
+          "class" : "UITextItem",
+          "content" : "tag",
+          "range" : [
+            14,
+            7
+          ],
+          "tag" : "wp-tag"
+        }
+      }
+    ],
+    "isFirstResponder" : false,
+    "mode" : "new",
+    "openedURLs" : [
+
+    ],
+    "point" : [
+      167.64892578125,
+      220.05029296875
+    ],
+    "selectedRange" : [
+      36,
+      0
+    ],
+    "which" : "tag",
+    "windowTree" : [
+      "UIWindow [0.0, 0.0, 393.0, 852.0]",
+      " UITransitionView [0.0, 0.0, 393.0, 852.0]",
+      "  UIDropShadowView [0.0, 0.0, 393.0, 852.0]",
+      "   UIView [0.0, 0.0, 393.0, 852.0]"
+    ]
+  }
+}
