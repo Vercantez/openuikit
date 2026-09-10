@@ -72,7 +72,7 @@ class ContractLockTests(unittest.TestCase):
         checkouts = checkouts_by_id(load_contract(ROOT))
         self.assertEqual(
             checkouts["uikit-inrepo"]["tree"],
-            "e5b0e61c7422a6cf11a024ce80d0d40f87ffe360",
+            "971b0051f87775f2508333478876f0e2086fa830",
         )
         self.assertEqual(
             checkouts["machorun-inrepo"]["tree"],
