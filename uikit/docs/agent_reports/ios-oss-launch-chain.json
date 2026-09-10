@@ -1,0 +1,285 @@
+{
+ "name": "KickstarterChain",
+ "app": "kickstarter/ios-oss",
+ "corpus_revision": "2f2dabb40b74dd1e7a7511a0dedb47d967ab08a0",
+ "note": "Targets point at unchanged upstream directories. 'checkouts' is the SwiftPM checkout dir Xcode resolved from the app's own Package.resolved (41 pins, revisions verified equal). Order is dependency order; the census stops at the first module that does not compile.",
+ "shims": [
+  {
+   "name": "Statsig",
+   "root": "openuikit",
+   "path": "Sources/KickstarterServiceShims/Statsig",
+   "deps": [],
+   "openuikit": []
+  }
+ ],
+ "targets": [
+  {
+   "name": "Prelude",
+   "root": "checkouts",
+   "path": "Kickstarter-Prelude/Sources/Prelude",
+   "deps": [],
+   "openuikit": [],
+   "exclude": [
+    "Info.plist",
+    "Prelude.h"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "ReactiveSwift",
+   "root": "checkouts",
+   "path": "ReactiveSwift/Sources",
+   "deps": [],
+   "openuikit": [],
+   "exclude": [
+    "Info.plist",
+    "ReactiveSwift.h"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "SwiftSoup",
+   "root": "checkouts",
+   "path": "SwiftSoup/Sources",
+   "deps": [],
+   "openuikit": [],
+   "exclude": [
+    "Info.plist",
+    "InfoMac.plist",
+    "InfotvOS.plist",
+    "InfoWatchOS.plist",
+    "SwiftSoup.h"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "ApolloAPI",
+   "root": "checkouts",
+   "path": "apollo-ios/Sources/ApolloAPI",
+   "deps": [],
+   "openuikit": [],
+   "exclude": [
+    "Documentation.docc",
+    "Resources"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Apollo",
+   "root": "checkouts",
+   "path": "apollo-ios/Sources/Apollo",
+   "deps": [
+    "ApolloAPI"
+   ],
+   "openuikit": [],
+   "exclude": [
+    "Documentation.docc",
+    "Resources"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "GraphAPI",
+   "root": "corpus",
+   "path": "GraphAPI/Sources",
+   "deps": [
+    "ApolloAPI"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "ReactiveExtensions",
+   "root": "checkouts",
+   "path": "Kickstarter-ReactiveExtensions/Sources/ReactiveExtensions",
+   "deps": [
+    "ReactiveSwift"
+   ],
+   "openuikit": [
+    "UIKit"
+   ],
+   "exclude": [
+    "Info.plist",
+    "ReactiveExtensions.h",
+    ".DS_Store"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Prelude_UIKit",
+   "root": "checkouts",
+   "path": "Kickstarter-Prelude/Sources/Prelude-UIKit",
+   "deps": [
+    "Prelude"
+   ],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Experimentation",
+   "root": "corpus",
+   "path": "Experimentation/Sources/Experimentation",
+   "deps": [
+    "Statsig"
+   ],
+   "openuikit": [],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "KDS",
+   "root": "corpus",
+   "path": "KDS/Sources/KDS",
+   "deps": [],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI"
+   ],
+   "resources": [
+    "Fonts/Resources"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "KsApi",
+   "root": "corpus",
+   "path": "KsApi/Sources/KsApi",
+   "deps": [
+    "Prelude",
+    "SwiftSoup",
+    "ReactiveExtensions",
+    "Apollo",
+    "GraphAPI"
+   ],
+   "openuikit": [
+    "UIKit"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Kingfisher",
+   "root": "checkouts",
+   "path": "Kingfisher/Sources",
+   "deps": [],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI"
+   ],
+   "exclude": [
+    "PrivacyInfo.xcprivacy",
+    "Documentation.docc",
+    "Info.plist"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "ServerDrivenUI",
+   "root": "corpus",
+   "path": "ServerDrivenUI/Sources/ServerDrivenUI",
+   "deps": [
+    "KDS",
+    "KsApi",
+    "GraphAPI",
+    "Kingfisher"
+   ],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Library",
+   "root": "corpus",
+   "path": "Library/Sources/Library",
+   "deps": [
+    "KsApi",
+    "KDS",
+    "Experimentation",
+    "ServerDrivenUI",
+    "Prelude",
+    "Prelude_UIKit",
+    "ReactiveSwift",
+    "ReactiveExtensions",
+    "Apollo",
+    "GraphAPI",
+    "SwiftSoup",
+    "Kingfisher"
+   ],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI"
+   ],
+   "resources": [
+    "Resources"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "Kickstarter_Framework",
+   "root": "corpus",
+   "path": "Kickstarter-Framework/Sources/Kickstarter-Framework",
+   "deps": [
+    "Library",
+    "KsApi",
+    "KDS",
+    "Experimentation",
+    "ServerDrivenUI",
+    "Prelude",
+    "Prelude_UIKit",
+    "ReactiveSwift",
+    "ReactiveExtensions",
+    "Apollo",
+    "GraphAPI",
+    "Kingfisher"
+   ],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI"
+   ],
+   "resources": [
+    "Resources"
+   ],
+   "swift_language_mode": "5"
+  },
+  {
+   "name": "KickstarterApp",
+   "root": "corpus",
+   "path": "Kickstarter-iOS",
+   "deps": [
+    "Kickstarter_Framework",
+    "Library",
+    "KsApi",
+    "KDS",
+    "Experimentation",
+    "Prelude",
+    "ReactiveSwift",
+    "ReactiveExtensions"
+   ],
+   "openuikit": [
+    "UIKit",
+    "SwiftUI",
+    "SafariServices"
+   ],
+   "exclude": [
+    "DataSources",
+    "Assets.xcassets",
+    "LaunchScreen.storyboard",
+    "Main.storyboard",
+    "Info.plist",
+    "PrivacyInfo.xcprivacy",
+    "Alpha.entitlements",
+    "Beta.entitlements",
+    "Debug.entitlements",
+    "Release.entitlements",
+    "de.lproj",
+    "en.lproj",
+    "es.lproj",
+    "fr.lproj",
+    "ja.lproj"
+   ],
+   "swift_language_mode": "5"
+  }
+ ]
+}

@@ -451,8 +451,17 @@ open class UIScrollView: UIView {
     public var delaysContentTouches = true
     public var canCancelContentTouches = true
     public var keyboardDismissMode: KeyboardDismissMode = .none
+    /// UIKit's `NS_TYPED_ENUM` over the per-millisecond deceleration factor.
+    /// MEASURED iPhone 16 / iOS 26.1: `.normal.rawValue` 0.998, `.fast.rawValue`
+    /// 0.99, a fresh scroll view reads `.normal` (ios-oss-launch.md probe).
+    public struct DecelerationRate: RawRepresentable, Hashable, Sendable {
+        public let rawValue: CGFloat
+        public init(rawValue: CGFloat) { self.rawValue = rawValue }
+        public static let normal = DecelerationRate(rawValue: UIScrollPhysics.decelerationRateNormal)
+        public static let fast = DecelerationRate(rawValue: 0.99)
+    }
     /// Per-millisecond deceleration factor (UIKit .normal).
-    public var decelerationRate: CGFloat = UIScrollPhysics.decelerationRateNormal
+    public var decelerationRate: DecelerationRate = .normal
 
     /// Bounds for programmatic zoom. OpenUIKit currently provides the
     /// delegate-selected zoom view and programmatic scaling path; pinch input

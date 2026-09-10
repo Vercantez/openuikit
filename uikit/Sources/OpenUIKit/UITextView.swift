@@ -131,6 +131,7 @@ open class UITextView: UIScrollView, UIKeyInput, UITextKeyHandling, UITextCaretH
     // own; hosts can inspect these exact values when choosing an input UI.
     open var autocapitalizationType: UITextAutocapitalizationType = .sentences
     open var autocorrectionType: UITextAutocorrectionType = .default
+    open var spellCheckingType: UITextSpellCheckingType = .default
     open var keyboardType: UIKeyboardType = .default
     open var keyboardAppearance: UIKeyboardAppearance = .default
     open var returnKeyType: UIReturnKeyType = .default

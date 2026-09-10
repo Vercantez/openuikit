@@ -44,7 +44,14 @@ open class UILabel: UIView {
     }
     var _text: String?
     public var font: UIFont = .systemFont(ofSize: 17)
-    public var textColor: UIColor = .label
+    /// UIKit declares `textColor` `null_resettable` (Swift `UIColor!`).
+    /// MEASURED iPhone 16 / iOS 26.1: a fresh label reads `labelColor`, and
+    /// assigning nil reads `labelColor` again (ios-oss-launch.md probe).
+    public var textColor: UIColor! {
+        get { _textColor }
+        set { _textColor = newValue ?? .label }
+    }
+    private var _textColor: UIColor = .label
     public var textAlignment: NSTextAlignment = .natural
     /// `.natural` follows `effectiveUserInterfaceLayoutDirection`.
     /// MEASURED Forms t200.rtl / NavFlow t200.rtl, iPhone SE 2x / iOS 26.1:
@@ -101,7 +108,7 @@ open class UILabel: UIView {
             if let a = _attributed { return a }
             guard let text else { return nil }
             return NSAttributedString(string: text,
-                                      attributes: [.font: font, .foregroundColor: textColor])
+                                      attributes: [.font: font, .foregroundColor: _textColor])
         }
         set {
             _attributed = newValue
@@ -123,7 +130,7 @@ open class UILabel: UIView {
     /// Flattened attributed content, or nil when the label holds plain text.
     var attributedLayoutText: AttributedTextLayout.Text? {
         guard let a = _attributed, a.length > 0 else { return nil }
-        return AttributedTextLayout.flatten(a, defaultFont: font, defaultColor: textColor)
+        return AttributedTextLayout.flatten(a, defaultFont: font, defaultColor: _textColor)
     }
 
     public override init(frame: CGRect) {
@@ -411,7 +418,7 @@ open class UILabel: UIView {
             y0 = (bounds.height - blockH) / 2 + (lineH - metrics.lineHeight) / 2
             baselineInLine = metrics.ascender
         }
-        let color = textColor.resolvedCGColor(with: traitCollection)
+        let color = _textColor.resolvedCGColor(with: traitCollection)
         guard color.alpha > 0 else { return }
         let glyphFont = GlyphRasterizer.font(for: drawingFont)
 
