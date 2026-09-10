@@ -292,7 +292,72 @@ open class UIScrollView: UIView {
     /// The scroll position — literally the layer's bounds origin (UIKit/CA).
     public var contentOffset: CGPoint {
         get { bounds.origin }
-        set { bounds.origin = newValue }
+        set {
+            // MEASURED 2026-09-10 (Tools/oracle2/signalrowsprobe/offset.swift,
+            // iPhone 16 / iOS 26.1, base/flow.bounds vs base/flow.contentOffset):
+            // UIKit sends scrollViewDidScroll from setContentOffset:, not from
+            // setBounds: — a direct `bounds` set still runs the collection
+            // view's bounds-change invalidation chain but the delegate never
+            // hears it. Only sets routed through here notify.
+            let saved = settingContentOffset
+            settingContentOffset = true
+            defer { settingContentOffset = saved }
+            bounds.origin = newValue
+        }
+    }
+    private var settingContentOffset = false
+
+    /// Called by `setContentOffset(_:animated:)` with the final target
+    /// before anything moves. UICollectionView runs its bounds-change
+    /// invalidation chain here: MEASURED (offset.swift *.setContentOffset.*,
+    /// *.scrollRectToVisible.*, *.scrollToItem.*) shouldInvalidateLayout /
+    /// invalidationContext / invalidateLayout / invalidateLayout(with:) all
+    /// observe the OLD bounds with the target as the argument, then the
+    /// bounds move, then scrollViewDidScroll. A direct `contentOffset` /
+    /// `bounds` set differs: there invalidateLayout sees the NEW bounds.
+    func _willSetContentOffset(_ offset: CGPoint, animated: Bool) {}
+
+    /// Origin-change tail of the bounds setter (indicators, refresh control,
+    /// delegate). UICollectionView overrides it to invalidate its layout
+    /// BEFORE calling super: on every measured entry point
+    /// invalidateLayout(with:) precedes scrollViewDidScroll.
+    func _boundsOriginDidChange(from oldValue: CGRect) {
+        _layoutRefreshControl()
+        if let rc = _refreshControl, isDragging {
+            rc._scrollDidDrag(to: bounds.origin.y, topEdge: _refreshTopEdge)
+        }
+        updateIndicators()
+        if settingContentOffset {
+            delegate?.scrollViewDidScroll(self)
+            _scrollObserver?.scrollViewDidScroll(self)
+        }
+    }
+
+    /// Scrolls the minimum distance that brings `rect` (content coordinates)
+    /// into the inset-adjusted visible area, clamped to the content.
+    /// MEASURED offset.swift *.scrollRectToVisible.false: (0,300,200,40)
+    /// from offset 0 lands on 40 (= maxY − height) for a base and a flow
+    /// collection view, (0,300,200,44) on 44 for a table, and the callback
+    /// order is exactly setContentOffset's. The inset adjustment is UIKit's
+    /// documented visible area, not separately measured.
+    public func scrollRectToVisible(_ rect: CGRect, animated: Bool) {
+        let inset = adjustedContentInset
+        let visible = CGRect(origin: contentOffset, size: bounds.size).inset(by: inset)
+        var target = contentOffset
+        if rect.minX < visible.minX {
+            target.x -= visible.minX - rect.minX
+        } else if rect.maxX > visible.maxX {
+            target.x += rect.maxX - visible.maxX
+        }
+        if rect.minY < visible.minY {
+            target.y -= visible.minY - rect.minY
+        } else if rect.maxY > visible.maxY {
+            target.y += rect.maxY - visible.maxY
+        }
+        let lo = minContentOffset, hi = maxContentOffset
+        target.x = Swift.min(Swift.max(target.x, lo.x), Swift.max(lo.x, hi.x))
+        target.y = Swift.min(Swift.max(target.y, lo.y), Swift.max(lo.y, hi.y))
+        setContentOffset(target, animated: animated)
     }
 
     /// MEASURED pager-clock probe + Pager fling, iPhone SE 2x / iOS 26.1:
@@ -313,6 +378,7 @@ open class UIScrollView: UIView {
            let nav = _scrollObserver as? UINavigationController {
             offset.y += nav.navigationBar.hideOnScrollContentBump(requestedY: offset.y)
         }
+        _willSetContentOffset(offset, animated: animated)
         if animated {
             UIView.animateScrollCurve(
                 withDuration: UIScrollView.animatedContentOffsetDuration,
@@ -621,13 +687,7 @@ open class UIScrollView: UIView {
     open override var bounds: CGRect {
         didSet {
             if bounds.origin != oldValue.origin {
-                _layoutRefreshControl()
-                if let rc = _refreshControl, isDragging {
-                    rc._scrollDidDrag(to: bounds.origin.y, topEdge: _refreshTopEdge)
-                }
-                updateIndicators()
-                delegate?.scrollViewDidScroll(self)
-                _scrollObserver?.scrollViewDidScroll(self)
+                _boundsOriginDidChange(from: oldValue)
             }
         }
     }
