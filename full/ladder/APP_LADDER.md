@@ -1228,3 +1228,58 @@ Shared remaining reach: `UISwipeGestureRecognizer` 10 apps/54 uses; `UICollectio
 Use §8.7 commands from `uikit/`, prefixing tool paths with `../full/ladder/`, reading the frozen `~/openuikit/scratch/ladder-corpus` and `~/openuikit/scratch/ladder-deps`, and writing each input/output with suffix `-2026-09-16` into a new output directory. `remeasure-2026-09-16.sh` records the executable sequence. `audit-2026-09-16.py` regenerates the supplemental declaration, delta, ledger-change and reviewed-model artifacts; `SHA256SUMS-2026-09-16.txt` records artifact hashes.
 
 Validation: all 50 HEADs equal frozen pins; 20 app and 30 dependency denominators retained; app non-UIKit demand/imports unchanged; SDK and nib rows unchanged modulo order; app UIKit use totals unchanged; 16 cluster groups / 86 names explicitly checked; no unclassified genuine UIKit gaps; all score sums and route counts checked; model band sums equal 130,883 before and after correction. No older dated artifact overwritten. Pixel/simulator/Catalyst/real-app/Linux-build gates were not re-run for this measurement-only change, consistent with `uikit/docs/agent_reports/ladder-census2.md`; no Sources, fixture, golden, package, or runtime implementation changes, and no build/pixel claim is made.
+
+### 9.8 NetNewsWire under its iOS target scope — 2026-09-10
+
+§9.6's NetNewsWire row said "separate the iOS target before treating
+`NSToolbarItem`'s 48 uses as a phone launch wall". Done, with a per-app
+**target scope** the census now honours (`target_scope.py` writes the file
+list from the `.xcodeproj`; `ladder_census.py --target-scope=FILE` restricts
+every per-file walk to it for the apps named; `classify_gaps.py` is
+unchanged). Artifacts: `target-scope-netnewswire-ios-2026-09-10.json`,
+`gap-classes-netnewswire-ios-2026-09-10.json`, `openuikit_types-2026-09-10.txt`
+(435 names, regenerated from `uikit/Sources/OpenUIKit` at `5b2a7364`; the
+committed `-2026-09-16.txt` has 411 while `ladder-census-2026-09-16.json`
+records `_meta.ours = 427` from an uncommitted regeneration — with any of the
+three lists NetNewsWire whole-repo is 2 / 50). Tests:
+`full/ladder/test_target_scope.py` (6, incl. one against the real clone).
+
+**Scope rule** (stated in full in the script header): the `NetNewsWire-iOS`
+PBXNativeTarget's sources phase plus its two synchronized folders (`iOS/`,
+`Shared/`) minus that target's membership exceptions — 150 Swift files — plus
+`Sources/` of the 17 local packages reachable transitively from its product
+dependencies (`Account → CloudKitSync, FeedFinder, NewsBlur, …`; 325 files),
+minus 28 files whose entire body sits under `#if os(macOS)` / `#if os(OSX)`
+(22 of them `RSCore/AppKit/*`). `Mac/` (112 Swift), the Mac app target, the
+test targets and the three extension targets are out. `build` stays repo-wide.
+Blindness: a *partial* `#if os(macOS)` region inside an in-scope file is still
+counted — measured: 20 in-scope files carry one, **0** SDK-type uses fall
+inside those regions, so the over-count is zero here.
+
+| NetNewsWire | whole repo (as §9.6) | iOS target scope | Δ |
+|---|---|---|---|
+| Swift files in the UIKit walk | 605 | 429 | −176 |
+| UIKit uses / distinct types | 1,598 / 129 | 1,333 / 124 | −265 / −5 |
+| missing types (after FREE/OOS) | `NSToolbarItem` 48 · `NSMenuToolbarItem` 2 | none | |
+| **BLOCKING types / uses** | **2 / 50** | **0 / 0** | −2 / −50 |
+| stub-able types / uses | 0 / 0 | 0 / 0 | 0 |
+| top ≤3 BLOCKING | `NSToolbarItem` 48 · `NSMenuToolbarItem` 2 | none | |
+| `#selector` sites (model walk) | 321 | 175 | −146 |
+
+Where the 50 whole-repo blocking uses live: `Mac/MainWindow/MainWindowController.swift`
+38, `Mac/Preferences/PreferencesWindowController.swift` 9,
+`Modules/RSCore/Sources/RSCore/AppKit/{NSToolbar+RSCore,RSToolbarItem}.swift` 3 — all
+in the Mac target or under a whole-file macOS guard. So NetNewsWire's phone
+demand has **no blocking UIKit row**, same standing as focus-ios, eidolon and
+simplenote-ios in §9.6; what remains for it is `DEP = ?` (Zip, Tidemark and
+the 17 local packages are unmeasured) and the route-(a) `#selector` count
+(175 in scope, still SEL = 3).
+
+**Control:** Hackers, not named in the scope file, is byte-identical between
+the scoped and unscoped runs (`control.scoped_run_equals_unscoped_run: true`),
+and both apps' non-UIKit census fields equal `ladder-census-2026-09-16.json`.
+The whole-repo NetNewsWire run regenerated alongside reproduces 1,598 uses /
+129 types / 2 blocking / 50 uses. The scoped model/SwiftUI/selector walk is
+Tests-excluded by construction (the scope lists target sources), where the
+whole-repo one is Tests-included; the UIKit walk was Tests-excluded in both.
+Only NetNewsWire is scoped; every other row in §9.2–9.6 is still whole-repo.

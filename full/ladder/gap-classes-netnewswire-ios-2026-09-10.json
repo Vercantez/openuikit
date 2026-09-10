@@ -1,0 +1,285 @@
+{
+ "_note": "NetNewsWire re-classified under the iOS app target scope (target_scope.py + ladder_census.py --target-scope). Same judgement classifier (classify_gaps.py, unchanged), same SDK alphabet as 2026-09-16, ours = openuikit_types-2026-09-10.txt regenerated from uikit/Sources/OpenUIKit at 5b2a7364. Whole-repo numbers are regenerated in the same run with the same inputs so the diff is instrument-for-instrument.",
+ "date": "2026-09-10",
+ "openuikit_commit": "5b2a7364fd95c396338b567d10f45061a04e369e",
+ "inputs": {
+  "corpus_pin": "3b378e72f877f86258b2d04e1601719f9d0036a7",
+  "sdk_types": "uikit_sdk_types-2026-09-16.txt",
+  "sdk_count": 737,
+  "ours": "openuikit_types-2026-09-10.txt",
+  "ours_count": 435,
+  "note_on_ours": "the committed openuikit_types-2026-09-16.txt has 411 names but ladder-census-2026-09-16.json records _meta.ours=427 (regenerated on 2026-09-07, list not committed); with either list NetNewsWire whole-repo is 2 blocking types / 50 uses",
+  "scope_file": "target-scope-netnewswire-ios-2026-09-10.json",
+  "scope_sha256": "a464a919aaf2a57bd1960b7a53f3e072730780d5a10928735565118387bfaff3"
+ },
+ "scope": {
+  "target": "NetNewsWire-iOS",
+  "target_id": "840D617B2029031C009BC708",
+  "product_type": "com.apple.product-type.application",
+  "xcodeproj": "NetNewsWire.xcodeproj",
+  "rule": "PBXSourcesBuildPhase + synchronized groups minus membership exceptions; + Sources/ of the transitive local-package closure; - whole-file macOS guards (target_scope.py docstring)",
+  "target_sources": 151,
+  "target_swift": 150,
+  "local_packages": [
+   "Modules/Account",
+   "Modules/ActivityLog",
+   "Modules/Articles",
+   "Modules/ArticlesDatabase",
+   "Modules/CloudKitSync",
+   "Modules/ErrorLog",
+   "Modules/FeedFinder",
+   "Modules/HTMLMetadata",
+   "Modules/Images",
+   "Modules/NewsBlur",
+   "Modules/RSCore",
+   "Modules/RSDatabase",
+   "Modules/RSParser",
+   "Modules/RSTree",
+   "Modules/RSWeb",
+   "Modules/Secrets",
+   "Modules/SyncDatabase"
+  ],
+  "package_sources": {
+   "Modules/Account": 76,
+   "Modules/ActivityLog": 6,
+   "Modules/Articles": 4,
+   "Modules/ArticlesDatabase": 11,
+   "Modules/CloudKitSync": 4,
+   "Modules/ErrorLog": 4,
+   "Modules/FeedFinder": 3,
+   "Modules/HTMLMetadata": 5,
+   "Modules/Images": 12,
+   "Modules/NewsBlur": 12,
+   "Modules/RSCore": 86,
+   "Modules/RSDatabase": 20,
+   "Modules/RSParser": 43,
+   "Modules/RSTree": 6,
+   "Modules/RSWeb": 27,
+   "Modules/Secrets": 2,
+   "Modules/SyncDatabase": 4
+  },
+  "remote_packages": [
+   "Zip",
+   "https://github.com/brentsimmons/Tidemark"
+  ],
+  "unresolved_products": [],
+  "excluded_whole_file_guard": 28,
+  "siblings": [
+   {
+    "target": "NetNewsWire",
+    "product_type": "com.apple.product-type.application",
+    "swift_files": 176
+   },
+   {
+    "target": "NetNewsWireTests",
+    "product_type": "com.apple.product-type.bundle.unit-test",
+    "swift_files": 13
+   },
+   {
+    "target": "Subscribe to Feed",
+    "product_type": "com.apple.product-type.app-extension",
+    "swift_files": 0
+   },
+   {
+    "target": "NetNewsWire iOS Share Extension",
+    "product_type": "com.apple.product-type.app-extension",
+    "swift_files": 0
+   },
+   {
+    "target": "NetNewsWire iOS Widget Extension",
+    "product_type": "com.apple.product-type.app-extension",
+    "swift_files": 9
+   },
+   {
+    "target": "NetNewsWire-iOSTests",
+    "product_type": "com.apple.product-type.bundle.unit-test",
+    "swift_files": 2
+   },
+   {
+    "target": "NetNewsWire Share Extension",
+    "product_type": "com.apple.product-type.app-extension",
+    "swift_files": 0
+   }
+  ],
+  "swift_files": 429,
+  "files": 448
+ },
+ "NetNewsWire": {
+  "whole_repo": {
+   "uikit": {
+    "swift_files": 605,
+    "uses": 1598,
+    "distinct_types": 129,
+    "implemented_types": 124,
+    "missing_types": 5,
+    "missing_uses": 226,
+    "missing": [
+     [
+      "NSString",
+      136
+     ],
+     [
+      "NSToolbarItem",
+      48
+     ],
+     [
+      "NSObject",
+      39
+     ],
+     [
+      "NSMenuToolbarItem",
+      2
+     ],
+     [
+      "UIStoryboardSegue",
+      1
+     ]
+    ]
+   },
+   "classes": {
+    "blocking": {
+     "types": 2,
+     "uses": 50,
+     "list": [
+      [
+       "NSToolbarItem",
+       48
+      ],
+      [
+       "NSMenuToolbarItem",
+       2
+      ]
+     ]
+    }
+   },
+   "selector_sites": 321,
+   "swiftui_walk_files": 696,
+   "languages": {
+    ".swift": 696,
+    ".h": 15,
+    ".m": 10
+   }
+  },
+  "ios_target": {
+   "uikit": {
+    "swift_files": 429,
+    "uses": 1333,
+    "distinct_types": 124,
+    "implemented_types": 121,
+    "missing_types": 3,
+    "missing_uses": 115,
+    "missing": [
+     [
+      "NSString",
+      100
+     ],
+     [
+      "NSObject",
+      14
+     ],
+     [
+      "UIStoryboardSegue",
+      1
+     ]
+    ]
+   },
+   "classes": {
+    "blocking": {
+     "types": 0,
+     "uses": 0,
+     "list": []
+    }
+   },
+   "selector_sites": 175,
+   "swiftui_walk_files": 429,
+   "languages": {
+    ".swift": 429,
+    ".m": 9,
+    ".h": 10
+   },
+   "walk_note": "scoped model/SwiftUI/selector walk is Tests-excluded by construction (the scope lists target sources); the whole-repo one is Tests-included as before"
+  },
+  "diff": {
+   "blocking_types": [
+    2,
+    0
+   ],
+   "blocking_uses": [
+    50,
+    0
+   ],
+   "stub_able_types": [
+    0,
+    0
+   ],
+   "stub_able_uses": [
+    0,
+    0
+   ],
+   "uikit_uses": [
+    1598,
+    1333
+   ],
+   "swift_files_uikit_walk": [
+    605,
+    429
+   ],
+   "selector_sites": [
+    321,
+    175
+   ]
+  },
+  "top_blocking_whole_repo": [
+   [
+    "NSToolbarItem",
+    48
+   ],
+   [
+    "NSMenuToolbarItem",
+    2
+   ]
+  ],
+  "top_blocking_ios_target": [],
+  "where_the_whole_repo_blockers_live": {
+   "NSToolbarItem": {
+    "Mac/MainWindow/MainWindowController.swift": 36,
+    "Mac/Preferences/PreferencesWindowController.swift": 9,
+    "Modules/RSCore/Sources/RSCore/AppKit/RSToolbarItem.swift": 1,
+    "Modules/RSCore/Sources/RSCore/AppKit/NSToolbar+RSCore.swift": 2
+   },
+   "NSMenuToolbarItem": {
+    "Mac/MainWindow/MainWindowController.swift": 2
+   }
+  },
+  "residual": {
+   "note": "BLINDNESS of the scope: partial #if os(macOS) regions inside in-scope files are still counted. This is the size of that over-count on the iOS side; it cannot hide a blocker, it can only overstate demand.",
+   "in_scope_files_with_partial_mac_guard": 20,
+   "sdk_type_uses_inside_partial_mac_regions": 0,
+   "of_which_missing_types": {}
+  }
+ },
+ "control": {
+  "app": "Hackers",
+  "scoped_run_equals_unscoped_run": true,
+  "classes_whole": {
+   "blocking": {
+    "types": 0,
+    "uses": 0,
+    "list": []
+   }
+  },
+  "classes_scoped_run": {
+   "blocking": {
+    "types": 0,
+    "uses": 0,
+    "list": []
+   }
+  },
+  "baseline_2026_09_16_non_uikit_fields_equal": true
+ },
+ "reproduce": [
+  "python3 full/ladder/target_scope.py <corpus>/NetNewsWire <corpus>/NetNewsWire/NetNewsWire.xcodeproj NetNewsWire-iOS target-scope-netnewswire-ios-2026-09-10.json",
+  "python3 full/ladder/ladder_census.py <corpus> uikit_sdk_types-2026-09-16.txt openuikit_types-2026-09-10.txt census-ios.json --target-scope=target-scope-netnewswire-ios-2026-09-10.json",
+  "python3 full/ladder/classify_gaps.py census-ios.json uikit-union-2026-09-16.json gap-ios.json"
+ ]
+}
