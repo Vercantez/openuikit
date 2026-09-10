@@ -154,6 +154,7 @@ guest route, test bundle, real-app screens, conformance apps, Linux build,
 - `UIScrollEdgeEffect` (`topEdgeEffect.style/isHidden`) does not exist in
   the port, so an app hiding the effect keeps the scrim.
 - `setContentOffset(animated: false)` invalidates before the bounds move on
-  iOS; the port moves first.
+  iOS; the port moves first. (Measured per entry point and fixed 2026-09-10:
+  `contentoffset-invalidation-order.md`.)
 - The synchronous `prepare()` after a size change is guarded like `retile`
   (data source set, non-empty bounds).
