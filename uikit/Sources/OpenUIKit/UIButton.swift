@@ -240,10 +240,19 @@ open class UIButton: UIControl {
 
     /// `UIButton(configuration:)` — Kickstarter's `AlertBanner` writes
     /// `UIButton(configuration: .plain())`.
+    ///
+    /// Note the explicit `applyConfiguration()`: Swift does NOT run a
+    /// property observer for an assignment made inside an initializer, so
+    /// `self.configuration = configuration` here fires no `didSet`. Without
+    /// this call the button kept a configuration it had never applied — its
+    /// label stayed empty and its intrinsic size came out 24 x 14, the bare
+    /// content insets. The assignment path (`button.configuration = c`) was
+    /// correct all along, which is exactly what made it invisible.
     public convenience init(configuration: Configuration) {
         self.init(frame: .zero)
         buttonType = .system
         self.configuration = configuration
+        applyConfiguration()
     }
 
     /// `UIButton(configuration:primaryAction:)`. MEASURED: the action's title
@@ -258,6 +267,7 @@ open class UIButton: UIControl {
             configuration.title = primaryAction.title
         }
         self.configuration = configuration
+        applyConfiguration()
         if let primaryAction {
             addAction(primaryAction, for: .touchUpInside)
         }
@@ -623,6 +633,15 @@ open class UIButton: UIControl {
         // identical across `.filled`, `.bordered`, `.borderless` and
         // `.plain`, and unchanged by an explicit green base colour.
         if !isEnabled { return .tertiaryLabel }
+        // MEASURED: selection recolours the FOREGROUND as well as the fill.
+        // A selected `.bordered()` draws its title in tint, where the same
+        // button draws `.label` when normal — the fill and the title move
+        // together, both to tint, under `automaticallyUpdateForSelection`.
+        // `.filled()` has that flag false and keeps white.
+        if state.contains(.selected), configuration.automaticallyUpdateForSelection,
+           configuration.baseForegroundColor == nil {
+            return tintColor
+        }
         if state.contains(.highlighted) {
             return base.withMultipliedAlpha(UIButton.configurationHighlightedAlpha)
         }
@@ -1035,10 +1054,39 @@ open class UIButton: UIControl {
     /// (92.33333 + 75 - 23.66667), and at `.leading` / `.automatic` at
     /// 92.33333.
     private func layoutConfigurationSubviews(_ configuration: Configuration) {
-        let content = inset(bounds, by: contentEdgeInsets)
+        // A plain inset, not the legacy `inset(_:by:)`: that one collapses
+        // crossed edges to their midpoint and then expands the interval to
+        // the pixel grid, which is UIKit's LEGACY `contentEdgeInsets` rule.
+        // A configuration's `contentInsets` are ordinary directional insets.
+        let insets = physicalInsets(configuration.contentInsets)
+        let content = CGRect(x: bounds.origin.x + insets.left,
+                             y: bounds.origin.y + insets.top,
+                             width: bounds.size.width - insets.left - insets.right,
+                             height: bounds.size.height - insets.top - insets.bottom)
         let scale = _titleLabel.layoutScale
-        func pixelRound(_ value: CGFloat) -> CGFloat {
-            (value * scale + 0.5).rounded(.down) / scale
+        // MEASURED: what gets rounded is the centring OFFSET, not the final
+        // position, and it rounds HALF DOWN — where the legacy path rounds
+        // the position half up.
+        //
+        // Both halves matter. On a 160 x 44 button the title's offset inside
+        // the content box is (136 - 75) / 2 = 30.5 pt = 91.5 px at 3x, which
+        // the oracle resolves to 91 px, giving x = 12 + 30.33333 = 42.33333.
+        // But a button whose content box exactly fits its title keeps the
+        // inset verbatim: with contentInsets top 8.5 the oracle puts the
+        // label at y 8.5, not the 8.33333 that rounding 25.5 px would give.
+        // Rounding the position would have quietly moved every KDS button,
+        // whose image insets are exactly that 8.5.
+        func pixelOffset(_ value: CGFloat) -> CGFloat {
+            // Half-down is `ceil(x - 0.5)`, which is exactly the form that
+            // floating-point noise breaks: a 44 pt button's 4.833333333333334
+            // offset scales to 14.500000000000002, and ceil(14.000000000000002)
+            // is 15, not 14 — one whole device pixel of drift from a 2e-15
+            // remainder. Quantise the scaled value first.
+            let scaled = (value * scale * 1_000_000).rounded() / 1_000_000
+            return (scaled - 0.5).rounded(.up) / scale
+        }
+        func centred(_ origin: CGFloat, _ available: CGFloat, _ used: CGFloat) -> CGFloat {
+            origin + pixelOffset((available - used) / 2)
         }
 
         let titleBlock = configurationTitleBlockSize(configuration)
@@ -1060,13 +1108,13 @@ open class UIButton: UIControl {
         switch placement {
         case .top, .bottom:
             let total = titleBlock.height + companion.height + padding
-            let top = pixelRound(content.midY - total / 2)
+            let top = centred(content.origin.y, content.size.height, total)
             let (first, second): (CGSize, CGSize) = placement == .top
                 ? (companion, titleBlock) : (titleBlock, companion)
             let firstY = top
             let secondY = top + first.height + padding
-            let firstX = pixelRound(content.midX - first.width / 2)
-            let secondX = pixelRound(content.midX - second.width / 2)
+            let firstX = centred(content.origin.x, content.size.width, first.width)
+            let secondX = centred(content.origin.x, content.size.width, second.width)
             if placement == .top {
                 companionOrigin = CGPoint(x: firstX, y: firstY)
                 titleOrigin = CGPoint(x: secondX, y: secondY)
@@ -1077,9 +1125,9 @@ open class UIButton: UIControl {
             _ = second
         default:
             let total = titleBlock.width + companion.width + padding
-            let left = pixelRound(content.midX - total / 2)
-            let titleY = pixelRound(content.midY - titleBlock.height / 2)
-            let companionY = pixelRound(content.midY - companion.height / 2)
+            let left = centred(content.origin.x, content.size.width, total)
+            let titleY = centred(content.origin.y, content.size.height, titleBlock.height)
+            let companionY = centred(content.origin.y, content.size.height, companion.height)
             if placement == .trailing {
                 titleOrigin = CGPoint(x: left, y: titleY)
                 companionOrigin = CGPoint(x: left + titleBlock.width + padding,
@@ -1106,7 +1154,7 @@ open class UIButton: UIControl {
             case .leading, .automatic: offset = 0
             }
             subtitleLabel.frame = CGRect(
-                x: pixelRound(titleOrigin.x + offset),
+                x: titleOrigin.x + pixelOffset(offset),
                 y: titleOrigin.y + titleSize.height + configuration.titlePadding,
                 width: subtitle.width, height: subtitle.height).standardized
         }
