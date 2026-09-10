@@ -1,0 +1,1993 @@
+{
+  "_device" : {
+    "bounds" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "idiom" : 1,
+    "phase" : "popover",
+    "scale" : 2,
+    "system" : "26.1"
+  },
+  "_order" : [
+    "base",
+    "sourceItem.barButton",
+    "sourceItem.barButton.left",
+    "sourceItem.view",
+    "sourceItem.lowView",
+    "sourceItem.tabItem",
+    "sourceView.view",
+    "sourceView.view.rect",
+    "sourceItem.view.rect",
+    "barButtonItem.prop",
+    "sourceItem.barButton.arrowsDown",
+    "sourceItem.view.arrowsLeft",
+    "sourceItem.view.arrowsRight",
+    "sourceItem.view.arrowsDown"
+  ],
+  "barButtonItem.prop" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x6000017486c0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          561,
+          62,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [561.0, 62.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 0,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "rightItem",
+    "barButtonItem.pre" : "set",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      240,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      561,
+      62,
+      240,
+      180
+    ],
+    "presentedView.frameProp" : [
+      561,
+      62,
+      240,
+      180
+    ],
+    "sourceItem.post" : "UIBarButtonItem",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : true,
+    "sourceItem.pre" : "UIBarButtonItem",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "base" : {
+    "anchorView.frameIn.root" : [
+      100,
+      300,
+      60,
+      40
+    ],
+    "anchorView.frameIn.self" : [
+      0,
+      0,
+      60,
+      40
+    ],
+    "anchorView.frameIn.window" : [
+      100,
+      300,
+      60,
+      40
+    ],
+    "anchorView.frameInWindow" : [
+      100,
+      300,
+      60,
+      40
+    ],
+    "detachedItem.frameIn.window" : [
+      0,
+      0,
+      0,
+      0
+    ],
+    "detachedView.frameIn.window" : [
+      1,
+      2,
+      3,
+      4
+    ],
+    "horizontalSizeClass" : 2,
+    "idiom" : 1,
+    "layoutGuide.frameIn.window" : [
+      10,
+      400,
+      50,
+      30
+    ],
+    "leftItem.frameIn.window" : [
+      14,
+      36,
+      63,
+      36
+    ],
+    "lowView.frameInWindow" : [
+      100,
+      980,
+      60,
+      40
+    ],
+    "navBar.frameInWindow" : [
+      0,
+      32,
+      820,
+      54
+    ],
+    "navBar.tree" : [
+      "_UIBarBackground [0.0, -32.0, 820.0, 86.0]",
+      "UIKit.NavigationBarContentView [0.0, 0.0, 820.0, 54.0]",
+      "_UIPointerInteractionAssistantEffectContainerView [0.0, 0.0, 0.0, 0.0]"
+    ],
+    "rightItem.frameIn.navBar" : [
+      741.5,
+      4,
+      64.5,
+      36
+    ],
+    "rightItem.frameIn.window" : [
+      741.5,
+      36,
+      64.5,
+      36
+    ],
+    "safeArea" : [
+      32,
+      0,
+      25,
+      0
+    ],
+    "scale" : 2,
+    "tabBar.frameInWindow" : [
+      0,
+      1097,
+      820,
+      64
+    ],
+    "tabItem1.frameIn.window" : [
+      342,
+      1101,
+      66,
+      36
+    ],
+    "tabItem2.frameIn.window" : [
+      412,
+      1101,
+      66,
+      36
+    ],
+    "window" : [
+      0,
+      0,
+      820,
+      1180
+    ]
+  },
+  "sourceItem.barButton" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x6000017619c0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          561,
+          62,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [561.0, 62.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 0,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "rightItem",
+    "barButtonItem.pre" : "set",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      240,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      561,
+      62,
+      240,
+      180
+    ],
+    "presentedView.frameProp" : [
+      561,
+      62,
+      240,
+      180
+    ],
+    "sourceItem.post" : "UIBarButtonItem",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : true,
+    "sourceItem.pre" : "UIBarButtonItem",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.barButton.arrowsDown" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x6000017452c0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          561,
+          62,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [561.0, 62.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 0,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "rightItem",
+    "barButtonItem.pre" : "set",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 2,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      240,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      561,
+      62,
+      240,
+      180
+    ],
+    "presentedView.frameProp" : [
+      561,
+      62,
+      240,
+      180
+    ],
+    "sourceItem.post" : "UIBarButtonItem",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : true,
+    "sourceItem.pre" : "UIBarButtonItem",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.barButton.left" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x60000175a100: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          19,
+          62,
+          240,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [19.0, 62.0, 240.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 0,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "other",
+    "barButtonItem.pre" : "set",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      240,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      19,
+      62,
+      240,
+      180
+    ],
+    "presentedView.frameProp" : [
+      19,
+      62,
+      240,
+      180
+    ],
+    "sourceItem.post" : "UIBarButtonItem",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIBarButtonItem",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.lowView" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x600001764c00: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 253.0, 180.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          160,
+          910,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-137.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [160.0, 910.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 4,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      253,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      160,
+      910,
+      253,
+      180
+    ],
+    "presentedView.frameProp" : [
+      160,
+      910,
+      253,
+      180
+    ],
+    "sourceItem.post" : "UIView",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIView",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.tabItem" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x600001763dc0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          193
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          193
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          193
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 240.0, 193.0]",
+          "UIView [0.0, 0.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          325,
+          908,
+          240,
+          193
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-150.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [325.0, 908.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 2,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      240,
+      193
+    ],
+    "presentedView.frameInWindow" : [
+      325,
+      908,
+      240,
+      193
+    ],
+    "presentedView.frameProp" : [
+      325,
+      908,
+      240,
+      193
+    ],
+    "sourceItem.post" : "UITabBarItem",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UITabBarItem",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.view" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x60000174fac0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 253.0, 180.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          160,
+          230,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-137.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [160.0, 230.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 4,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      253,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      160,
+      230,
+      253,
+      180
+    ],
+    "presentedView.frameProp" : [
+      160,
+      230,
+      253,
+      180
+    ],
+    "sourceItem.post" : "UIView",
+    "sourceItem.post.isAnchor" : true,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIView",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.view.arrowsDown" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x600001724240: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          193
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          193
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          240,
+          193
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 240.0, 193.0]",
+          "UIView [0.0, 0.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          19,
+          107,
+          240,
+          193
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-150.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [19.0, 107.0, 240.0, 193.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 2,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 2,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      240,
+      193
+    ],
+    "presentedView.frameInWindow" : [
+      19,
+      107,
+      240,
+      193
+    ],
+    "presentedView.frameProp" : [
+      19,
+      107,
+      240,
+      193
+    ],
+    "sourceItem.post" : "UIView",
+    "sourceItem.post.isAnchor" : true,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIView",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.view.arrowsLeft" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x60000173e5c0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 253.0, 180.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          160,
+          230,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-137.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [160.0, 230.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 4,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 4,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      253,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      160,
+      230,
+      253,
+      180
+    ],
+    "presentedView.frameProp" : [
+      160,
+      230,
+      253,
+      180
+    ],
+    "sourceItem.post" : "UIView",
+    "sourceItem.post.isAnchor" : true,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIView",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.view.arrowsRight" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x600001761ac0: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          111,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          111,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 111.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          111,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 111.0, 180.0]",
+          "UIView [0.0, 0.0, 111.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          19,
+          230,
+          111,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-150.0, -150.0, 398.0, 480.0]",
+          "UIView [0.0, 0.0, 111.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [19.0, 230.0, 111.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 8,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 8,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      111,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      19,
+      230,
+      111,
+      180
+    ],
+    "presentedView.frameProp" : [
+      19,
+      230,
+      111,
+      180
+    ],
+    "sourceItem.post" : "UIView",
+    "sourceItem.post.isAnchor" : true,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIView",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceItem.view.rect" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x600001748d40: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 253.0, 180.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          110,
+          215,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-137.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [110.0, 215.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 4,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      253,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      110,
+      215,
+      253,
+      180
+    ],
+    "presentedView.frameProp" : [
+      110,
+      215,
+      253,
+      180
+    ],
+    "sourceItem.post" : "UIView",
+    "sourceItem.post.isAnchor" : true,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "UIView",
+    "sourceRect.post" : [
+      0,
+      0,
+      10,
+      10
+    ],
+    "sourceRect.pre" : [
+      0,
+      0,
+      10,
+      10
+    ],
+    "sourceRect.pre.isNull" : false,
+    "sourceView.post" : "nil",
+    "sourceView.post.isAnchor" : false,
+    "sourceView.pre" : "nil",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceView.view" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x60000175f540: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 253.0, 180.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          160,
+          230,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-137.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [160.0, 230.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 4,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      253,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      160,
+      230,
+      253,
+      180
+    ],
+    "presentedView.frameProp" : [
+      160,
+      230,
+      253,
+      180
+    ],
+    "sourceItem.post" : "nil",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "nil",
+    "sourceRect.post" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre" : [
+      "inf",
+      "inf",
+      0,
+      0
+    ],
+    "sourceRect.pre.isNull" : true,
+    "sourceView.post" : "UIView",
+    "sourceView.post.isAnchor" : true,
+    "sourceView.pre" : "UIView",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  },
+  "sourceView.view.rect" : {
+    "adaptivePresentationStyle" : 2,
+    "adaptiveSheet.class" : "_UIFormSheetPresentationController",
+    "adaptiveSheet.detents" : [
+      "<UISheetPresentationControllerDetent: 0x60000173b300: _type=large, _identifier=com.apple.UIKit.large>"
+    ],
+    "adaptiveSheet.selected" : "nil",
+    "ancestors" : [
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIView",
+        "frame" : [
+          0,
+          0,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIPopoverShapeLayerChromeView [0.0, 0.0, 253.0, 180.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "_UIPopoverView",
+        "frame" : [
+          110,
+          215,
+          253,
+          180
+        ],
+        "subviews" : [
+          "_UIRoundedRectShadowView [-137.0, -150.0, 540.0, 480.0]",
+          "UIView [0.0, 0.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UITransitionView",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UIPopoverDimmingView [0.0, 0.0, 820.0, 1180.0]",
+          "_UIPopoverView [110.0, 215.0, 253.0, 180.0]"
+        ]
+      },
+      {
+        "class" : "UIWindow",
+        "frame" : [
+          0,
+          0,
+          820,
+          1180
+        ],
+        "subviews" : [
+          "_UITouchFallbackView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]",
+          "UITransitionView [0.0, 0.0, 820.0, 1180.0]"
+        ]
+      }
+    ],
+    "arrowDirection.post" : 4,
+    "arrowDirection.pre" : 18446744073709551615,
+    "barButtonItem.post" : "nil",
+    "barButtonItem.pre" : "nil",
+    "containerView.frame" : [
+      0,
+      0,
+      820,
+      1180
+    ],
+    "horizontalSizeClass" : 2,
+    "permittedArrowDirections.pre" : 15,
+    "presentationControllerClass" : "UIPopoverPresentationController",
+    "presentedView.class" : "_UIPopoverView",
+    "presentedView.frame" : [
+      0,
+      0,
+      253,
+      180
+    ],
+    "presentedView.frameInWindow" : [
+      110,
+      215,
+      253,
+      180
+    ],
+    "presentedView.frameProp" : [
+      110,
+      215,
+      253,
+      180
+    ],
+    "sourceItem.post" : "nil",
+    "sourceItem.post.isAnchor" : false,
+    "sourceItem.post.isRightItem" : false,
+    "sourceItem.pre" : "nil",
+    "sourceRect.post" : [
+      0,
+      0,
+      10,
+      10
+    ],
+    "sourceRect.pre" : [
+      0,
+      0,
+      10,
+      10
+    ],
+    "sourceRect.pre.isNull" : false,
+    "sourceView.post" : "UIView",
+    "sourceView.post.isAnchor" : true,
+    "sourceView.pre" : "UIView",
+    "windows" : [
+      "UIWindow [0.0, 0.0, 820.0, 1180.0]",
+      "UITextEffectsWindow [0.0, 0.0, 820.0, 1180.0]"
+    ]
+  }
+}

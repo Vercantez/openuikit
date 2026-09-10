@@ -102,6 +102,10 @@ public final class UIToolbar: UIView, _UIBarItemContainer, UIBarPositioning {
         self.items = items
     }
 
+    func _view(for item: UIBarButtonItem) -> UIView? {
+        itemViews.first { $0.item === item }
+    }
+
     func _barItemsChanged() {
         for v in itemViews { v.applyColors() }
         setNeedsLayout()
