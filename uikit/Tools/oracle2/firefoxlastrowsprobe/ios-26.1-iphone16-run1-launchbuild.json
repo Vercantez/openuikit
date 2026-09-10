@@ -1,0 +1,4297 @@
+{
+  "builder.context.1.presence" : {
+    "about" : "nil",
+    "alignment" : "nil",
+    "application" : "nil",
+    "autoFill" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "AutoFill"
+    },
+    "bringAllToFront" : "nil",
+    "close" : "nil",
+    "document" : "nil",
+    "edit" : "nil",
+    "file" : "nil",
+    "find" : "nil",
+    "findPanel" : "nil",
+    "font" : "nil",
+    "format" : {
+      "children" : 3,
+      "options" : 0,
+      "title" : "Format"
+    },
+    "fullscreen" : "nil",
+    "help" : "nil",
+    "hide" : "nil",
+    "learn" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "lookup" : {
+      "children" : 3,
+      "options" : 1,
+      "title" : ""
+    },
+    "minimizeAndZoom" : "nil",
+    "newItem" : "nil",
+    "newScene" : "nil",
+    "open" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "openRecent" : "nil",
+    "preferences" : "nil",
+    "print" : "nil",
+    "quit" : "nil",
+    "replace" : {
+      "children" : 5,
+      "options" : 1,
+      "title" : ""
+    },
+    "root" : {
+      "children" : 8,
+      "options" : 0,
+      "title" : ""
+    },
+    "services" : "nil",
+    "share" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "sidebar" : "nil",
+    "speech" : {
+      "children" : 3,
+      "options" : 1,
+      "title" : "Speech"
+    },
+    "spelling" : "nil",
+    "spellingOptions" : "nil",
+    "spellingPanel" : "nil",
+    "standardEdit" : {
+      "children" : 6,
+      "options" : 1,
+      "title" : ""
+    },
+    "substitutionOptions" : "nil",
+    "substitutions" : "nil",
+    "substitutionsPanel" : "nil",
+    "text" : "nil",
+    "textColor" : "nil",
+    "textSize" : "nil",
+    "textStyle" : {
+      "children" : 3,
+      "options" : 1,
+      "title" : "Text Style"
+    },
+    "textStylePasteboard" : "nil",
+    "toolbar" : "nil",
+    "transformations" : "nil",
+    "undoRedo" : "nil",
+    "view" : "nil",
+    "window" : "nil",
+    "writingDirection" : {
+      "children" : 2,
+      "options" : 1,
+      "title" : "Writing Direction"
+    }
+  },
+  "builder.context.1.root" : {
+    "children" : [
+      {
+        "children" : [
+          {
+            "action" : "cut:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "x",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Cut",
+            "wantsPriority" : false
+          },
+          {
+            "action" : "copy:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "c",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Copy",
+            "wantsPriority" : false
+          },
+          {
+            "action" : "paste:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "v",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Paste",
+            "wantsPriority" : false
+          },
+          {
+            "action" : "delete:",
+            "alternates" : [
+
+            ],
+            "attributes" : 2,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Delete"
+          },
+          {
+            "action" : "select:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Select"
+          },
+          {
+            "action" : "selectAll:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "a",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Select All",
+            "wantsPriority" : false
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.standard-edit",
+        "options" : 1,
+        "title" : ""
+      },
+      {
+        "children" : [
+          {
+            "action" : "promptForReplace:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Replace…"
+          },
+          {
+            "action" : "transliterateChinese:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "简⇄繁"
+          },
+          {
+            "action" : "_insertDrawing:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Insert Drawing"
+          },
+          {
+            "action" : "showWritingTools:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Writing Tools"
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.insert-from-external-sources",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "action" : "captureTextFromCamera:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Scan Text"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.autofill",
+            "options" : 0,
+            "title" : "AutoFill"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.replace",
+        "options" : 1,
+        "title" : ""
+      },
+      {
+        "children" : [
+
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.open",
+        "options" : 1,
+        "title" : ""
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "toggleBoldface:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "b",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Bold",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "toggleItalics:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "i",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Italic",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "toggleUnderline:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "u",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Underline",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.text-style",
+            "options" : 1,
+            "title" : "Text Style"
+          },
+          {
+            "children" : [
+              {
+                "action" : "makeTextWritingDirectionRightToLeft:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Right to Left"
+              },
+              {
+                "action" : "makeTextWritingDirectionLeftToRight:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Left to Right"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.writing-direction",
+            "options" : 1,
+            "title" : "Writing Direction"
+          },
+          {
+            "action" : "_showTextFormattingOptions:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "t",
+            "modifierFlags" : 1572864,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "More…",
+            "wantsPriority" : false
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.format",
+        "options" : 0,
+        "title" : "Format"
+      },
+      {
+        "children" : [
+          {
+            "action" : "findSelected:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Find Selection"
+          },
+          {
+            "action" : "_define:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Look Up"
+          },
+          {
+            "action" : "_translate:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Translate"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.lookup",
+        "options" : 1,
+        "title" : ""
+      },
+      {
+        "children" : [
+          {
+            "action" : "addShortcut:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Learn…"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.learn",
+        "options" : 1,
+        "title" : ""
+      },
+      {
+        "children" : [
+          {
+            "action" : "_accessibilitySpeak:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Speak"
+          },
+          {
+            "action" : "_accessibilitySpeakLanguageSelection:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Speak…"
+          },
+          {
+            "action" : "_accessibilityPauseSpeaking:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Pause"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.command.speech",
+        "options" : 1,
+        "title" : "Speech"
+      },
+      {
+        "children" : [
+          {
+            "action" : "share:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UICommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Share…"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.share",
+        "options" : 1,
+        "title" : ""
+      }
+    ],
+    "class" : "UIMenu",
+    "depth" : 0,
+    "identifier" : "com.apple.menu.root",
+    "options" : 0,
+    "title" : ""
+  },
+  "builder.main.1.steps" : [
+    {
+      "application" : [
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.find",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "com.apple.menu.find",
+      "font" : "com.apple.menu.font",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "0.before",
+      "view" : [
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.find",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "com.apple.menu.find",
+      "font" : "com.apple.menu.font",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "1.insertChild(app,atStartOf:.application)",
+      "view" : [
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.find",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "com.apple.menu.find",
+      "font" : "com.apple.menu.font",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "2.insertChild(file,atStartOf:.file)",
+      "view" : [
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "com.apple.menu.font",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "3.replace(.find,with:findMenu)",
+      "view" : [
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "4.remove(.font)",
+      "view" : [
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "5.insertChild(view,atStartOf:.view)",
+      "view" : [
+        "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.mozilla.firefox.menus.history",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "6.insertSibling(history,after:.view)",
+      "view" : [
+        "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.mozilla.firefox.menus.history",
+        "com.mozilla.firefox.menus.bookmarks",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "7.insertSibling(bookmarks,after:history)",
+      "view" : [
+        "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.mozilla.firefox.menus.history",
+        "com.mozilla.firefox.menus.bookmarks",
+        "com.mozilla.firefox.menus.tools",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "8.insertSibling(tools,after:bookmarks)",
+      "view" : [
+        "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.mozilla.firefox.menus.history",
+        "com.mozilla.firefox.menus.bookmarks",
+        "com.mozilla.firefox.menus.tools",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "9.insertChild(window,atStartOf:.window)",
+      "view" : [
+        "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.dynamic.F9C7D3B8-98E0-4F37-A5A4-7A6CE48FA768",
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    },
+    {
+      "application" : [
+        "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+        "com.apple.menu.about",
+        "com.apple.menu.preferences",
+        "com.apple.menu.services",
+        "com.apple.menu.hide",
+        "com.apple.menu.quit"
+      ],
+      "edit" : [
+        "com.apple.menu.undo-redo",
+        "com.apple.menu.standard-edit",
+        "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+        "com.apple.menu.spelling",
+        "com.apple.menu.substitutions",
+        "com.apple.menu.transformations",
+        "com.apple.command.speech"
+      ],
+      "file" : [
+        "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+        "com.apple.menu.new-item",
+        "com.apple.menu.open",
+        "com.apple.menu.close",
+        "com.apple.menu.document",
+        "com.apple.menu.print"
+      ],
+      "find" : "nil",
+      "font" : "nil",
+      "root" : [
+        "com.apple.menu.application",
+        "com.apple.menu.file",
+        "com.apple.menu.edit",
+        "com.apple.menu.format",
+        "com.apple.menu.view",
+        "com.mozilla.firefox.menus.history",
+        "com.mozilla.firefox.menus.bookmarks",
+        "com.mozilla.firefox.menus.tools",
+        "com.apple.menu.window",
+        "com.apple.menu.help"
+      ],
+      "step" : "10.insertChild(probeAction menu,atEndOf:.help)",
+      "view" : [
+        "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+        "com.apple.menu.toolbar",
+        "com.apple.menu.sidebar",
+        "com.apple.menu.fullscreen"
+      ],
+      "window" : [
+        "com.apple.menu.dynamic.F9C7D3B8-98E0-4F37-A5A4-7A6CE48FA768",
+        "com.apple.menu.minimize-and-zoom",
+        "com.apple.menu.bring-all-to-front"
+      ]
+    }
+  ],
+  "builder.main.1.steps.after.presence" : {
+    "about" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "alignment" : {
+      "children" : 4,
+      "options" : 1,
+      "title" : ""
+    },
+    "application" : {
+      "children" : 6,
+      "options" : 0,
+      "title" : "FirefoxLastRowsProbe"
+    },
+    "autoFill" : "nil",
+    "bringAllToFront" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "close" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "document" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "edit" : {
+      "children" : 7,
+      "options" : 0,
+      "title" : "Edit"
+    },
+    "file" : {
+      "children" : 6,
+      "options" : 0,
+      "title" : "File"
+    },
+    "find" : "nil",
+    "findPanel" : "nil",
+    "font" : "nil",
+    "format" : {
+      "children" : 1,
+      "options" : 0,
+      "title" : "Format"
+    },
+    "fullscreen" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "help" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Help"
+    },
+    "hide" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "learn" : "nil",
+    "lookup" : "nil",
+    "minimizeAndZoom" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "newItem" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "newScene" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "open" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "openRecent" : "nil",
+    "preferences" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "print" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "quit" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "replace" : "nil",
+    "root" : {
+      "children" : 10,
+      "options" : 0,
+      "title" : ""
+    },
+    "services" : {
+      "children" : 0,
+      "options" : 0,
+      "title" : "Services"
+    },
+    "share" : "nil",
+    "sidebar" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "speech" : {
+      "children" : 0,
+      "options" : 0,
+      "title" : "Speech"
+    },
+    "spelling" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Spelling and Grammar"
+    },
+    "spellingOptions" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "spellingPanel" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "standardEdit" : {
+      "children" : 6,
+      "options" : 1,
+      "title" : ""
+    },
+    "substitutionOptions" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "substitutions" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Substitutions"
+    },
+    "substitutionsPanel" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "text" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Text"
+    },
+    "textColor" : "nil",
+    "textSize" : "nil",
+    "textStyle" : "nil",
+    "textStylePasteboard" : "nil",
+    "toolbar" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "transformations" : {
+      "children" : 0,
+      "options" : 0,
+      "title" : "Transformations"
+    },
+    "undoRedo" : {
+      "children" : 2,
+      "options" : 1,
+      "title" : ""
+    },
+    "view" : {
+      "children" : 4,
+      "options" : 0,
+      "title" : "View"
+    },
+    "window" : {
+      "children" : 3,
+      "options" : 0,
+      "title" : "Window"
+    },
+    "writingDirection" : {
+      "children" : 3,
+      "options" : 0,
+      "title" : "Writing Direction"
+    }
+  },
+  "builder.main.1.steps.after.root" : {
+    "children" : [
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "openSettingsKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "Settings",
+                "input" : ",",
+                "modifierFlags" : 1572864,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Settings",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.about",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "orderFrontPreferencesPanel:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : ",",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "FirefoxLastRowsProbe Settings…",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.preferences",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.services",
+            "options" : 0,
+            "title" : "Services"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.hide",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.quit",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.application",
+        "options" : 0,
+        "title" : "FirefoxLastRowsProbe"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "newTabKeyCommand:",
+                "alternates" : [
+                  {
+                    "action" : "newPrivateTabKeyCommand:",
+                    "modifierFlags" : 131072,
+                    "title" : "New Private Tab"
+                  }
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "New Tab",
+                "input" : "t",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "New Tab",
+                "wantsPriority" : true
+              },
+              {
+                "action" : "newPrivateTabKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "New Private Tab",
+                "input" : "p",
+                "modifierFlags" : 1179648,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "New Private Tab",
+                "wantsPriority" : true
+              },
+              {
+                "action" : "closeTabKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "Close Tab",
+                "input" : "w",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Close Tab",
+                "wantsPriority" : true
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.new-item",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.open",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "performClose:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "w",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Close",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.close",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.document",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.print",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.file",
+        "options" : 0,
+        "title" : "File"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "undo:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "z",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Undo",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "redo:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "z",
+                "modifierFlags" : 1179648,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Redo",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.undo-redo",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "cut:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "x",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Cut",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "copy:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "c",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Copy",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "paste:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "v",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Paste",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "pasteAndMatchStyle:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "v",
+                "modifierFlags" : 1703936,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Paste and Match Style",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "delete:",
+                "alternates" : [
+
+                ],
+                "attributes" : 2,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Delete"
+              },
+              {
+                "action" : "selectAll:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "a",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Select All",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.standard-edit",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "findInPageKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "Find",
+                "input" : "f",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Find",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.dynamic.BED28159-ACB8-421C-BFC1-16254AB70B4E",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.spelling-panel",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.spelling-options",
+                "options" : 1,
+                "title" : ""
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.spelling",
+            "options" : 0,
+            "title" : "Spelling and Grammar"
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.substitutions-panel",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.substitution-options",
+                "options" : 1,
+                "title" : ""
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.substitutions",
+            "options" : 0,
+            "title" : "Substitutions"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.transformations",
+            "options" : 0,
+            "title" : "Transformations"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.command.speech",
+            "options" : 0,
+            "title" : "Speech"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.edit",
+        "options" : 0,
+        "title" : "Edit"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "children" : [
+                  {
+                    "action" : "alignLeft:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "{",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Align Left",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "alignCenter:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "|",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Center",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "alignJustified:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Justify"
+                  },
+                  {
+                    "action" : "alignRight:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "}",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Align Right",
+                    "wantsPriority" : false
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.alignment",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+                  {
+                    "action" : "makeTextWritingDirectionNatural:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Default"
+                  },
+                  {
+                    "action" : "makeTextWritingDirectionRightToLeft:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Right to Left"
+                  },
+                  {
+                    "action" : "makeTextWritingDirectionLeftToRight:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Left to Right"
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.writing-direction",
+                "options" : 0,
+                "title" : "Writing Direction"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.text",
+            "options" : 0,
+            "title" : "Text"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.format",
+        "options" : 0,
+        "title" : "Format"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "reloadTabKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "Reload",
+                "input" : "r",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Reload",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "reloadTabIgnoringCacheKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "Reload Without Cache",
+                "input" : "UIKeyInputF5",
+                "modifierFlags" : 262144,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Reload Without Cache",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.dynamic.390AE956-4D89-451E-B1EA-0A81AFAFB626",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "runToolbarCustomizationPalette:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Customize Toolbar…"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.toolbar",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "toggleSidebar:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "s",
+                "modifierFlags" : 1310720,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Show Sidebar",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.sidebar",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.fullscreen",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.view",
+        "options" : 0,
+        "title" : "View"
+      },
+      {
+        "children" : [
+          {
+            "action" : "goBackKeyCommand:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "Back",
+            "input" : "[",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Back",
+            "wantsPriority" : false
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.mozilla.firefox.menus.history",
+        "options" : 1,
+        "title" : "History"
+      },
+      {
+        "children" : [
+          {
+            "action" : "addBookmarkKeyCommand:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "Add Bookmark",
+            "input" : "d",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Add Bookmark",
+            "wantsPriority" : false
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.mozilla.firefox.menus.bookmarks",
+        "options" : 1,
+        "title" : "Bookmarks"
+      },
+      {
+        "children" : [
+          {
+            "action" : "showDownloadsKeyCommand:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "Downloads",
+            "input" : "j",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "Downloads",
+            "wantsPriority" : false
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.mozilla.firefox.menus.tools",
+        "options" : 1,
+        "title" : "Tools"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "nextTabKeyCommand:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "Next Tab",
+                "input" : "\t",
+                "modifierFlags" : 262144,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Next Tab",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "selectFirstTab:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "First Tab",
+                "input" : "1",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.dynamic.F9C7D3B8-98E0-4F37-A5A4-7A6CE48FA768",
+            "options" : 1,
+            "title" : "Window"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.minimize-and-zoom",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.bring-all-to-front",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.window",
+        "options" : 0,
+        "title" : "Window"
+      },
+      {
+        "children" : [
+          {
+            "action" : "showHelp:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "?",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "",
+            "wantsPriority" : false
+          },
+          {
+            "children" : [
+              {
+                "attributes" : 0,
+                "class" : "UIAction",
+                "depth" : 3,
+                "identifier" : "com.openuikit.probe.action",
+                "state" : 0,
+                "title" : "Probe Action"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.openuikit.probe.menu",
+            "options" : 1,
+            "title" : "Probe"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.help",
+        "options" : 0,
+        "title" : "Help"
+      }
+    ],
+    "class" : "UIMenu",
+    "depth" : 0,
+    "identifier" : "com.apple.menu.root",
+    "options" : 0,
+    "title" : ""
+  },
+  "builder.main.1.steps.lookups" : {
+    "action(probe)" : "Probe Action",
+    "action(unknown)" : "nil",
+    "command(cut:)" : {
+      "class" : "UIKeyCommand",
+      "title" : "Cut"
+    },
+    "command(newPrivateTab)" : {
+      "input" : "p",
+      "title" : "New Private Tab"
+    },
+    "command(newTab)" : {
+      "class" : "UIKeyCommand",
+      "title" : "New Tab"
+    },
+    "command(reloadTab,propertyList:nil)" : "Reload",
+    "command(unknownSel)" : "nil",
+    "menu(fileMenu.autoId) === fileMenu" : false,
+    "menu(find) === findMenu" : false,
+    "menu(find).identifier" : "nil",
+    "menu(findMenu.identifier)" : "",
+    "menu(font)" : "nil",
+    "menu(history) === historyMenu" : false,
+    "menu(root)" : {
+      "class" : "UIMenu",
+      "identifier" : "com.apple.menu.root",
+      "title" : ""
+    }
+  },
+  "builder.main.defaults.presence" : {
+    "about" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "alignment" : {
+      "children" : 4,
+      "options" : 1,
+      "title" : ""
+    },
+    "application" : {
+      "children" : 5,
+      "options" : 0,
+      "title" : "FirefoxLastRowsProbe"
+    },
+    "autoFill" : "nil",
+    "bringAllToFront" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "close" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "document" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "edit" : {
+      "children" : 7,
+      "options" : 0,
+      "title" : "Edit"
+    },
+    "file" : {
+      "children" : 5,
+      "options" : 0,
+      "title" : "File"
+    },
+    "find" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Find"
+    },
+    "findPanel" : {
+      "children" : 4,
+      "options" : 1,
+      "title" : ""
+    },
+    "font" : {
+      "children" : 4,
+      "options" : 0,
+      "title" : "Font"
+    },
+    "format" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Format"
+    },
+    "fullscreen" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "help" : {
+      "children" : 1,
+      "options" : 0,
+      "title" : "Help"
+    },
+    "hide" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "learn" : "nil",
+    "lookup" : "nil",
+    "minimizeAndZoom" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "newItem" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "newScene" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "open" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "openRecent" : "nil",
+    "preferences" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "print" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "quit" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "replace" : "nil",
+    "root" : {
+      "children" : 7,
+      "options" : 0,
+      "title" : ""
+    },
+    "services" : {
+      "children" : 0,
+      "options" : 0,
+      "title" : "Services"
+    },
+    "share" : "nil",
+    "sidebar" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "speech" : {
+      "children" : 0,
+      "options" : 0,
+      "title" : "Speech"
+    },
+    "spelling" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Spelling and Grammar"
+    },
+    "spellingOptions" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "spellingPanel" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "standardEdit" : {
+      "children" : 6,
+      "options" : 1,
+      "title" : ""
+    },
+    "substitutionOptions" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "substitutions" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Substitutions"
+    },
+    "substitutionsPanel" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "text" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Text"
+    },
+    "textColor" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "textSize" : {
+      "children" : 2,
+      "options" : 1,
+      "title" : ""
+    },
+    "textStyle" : {
+      "children" : 3,
+      "options" : 1,
+      "title" : "Text Style"
+    },
+    "textStylePasteboard" : {
+      "children" : 0,
+      "options" : 1,
+      "title" : ""
+    },
+    "toolbar" : {
+      "children" : 1,
+      "options" : 1,
+      "title" : ""
+    },
+    "transformations" : {
+      "children" : 0,
+      "options" : 0,
+      "title" : "Transformations"
+    },
+    "undoRedo" : {
+      "children" : 2,
+      "options" : 1,
+      "title" : ""
+    },
+    "view" : {
+      "children" : 3,
+      "options" : 0,
+      "title" : "View"
+    },
+    "window" : {
+      "children" : 2,
+      "options" : 0,
+      "title" : "Window"
+    },
+    "writingDirection" : {
+      "children" : 3,
+      "options" : 0,
+      "title" : "Writing Direction"
+    }
+  },
+  "builder.main.defaults.root" : {
+    "children" : [
+      {
+        "children" : [
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.about",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "orderFrontPreferencesPanel:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : ",",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "FirefoxLastRowsProbe Settings…",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.preferences",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.services",
+            "options" : 0,
+            "title" : "Services"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.hide",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.quit",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.application",
+        "options" : 0,
+        "title" : "FirefoxLastRowsProbe"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.new-item",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.open",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "performClose:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "w",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Close",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.close",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.document",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.print",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.file",
+        "options" : 0,
+        "title" : "File"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "undo:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "z",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Undo",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "redo:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "z",
+                "modifierFlags" : 1179648,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Redo",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.undo-redo",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "cut:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "x",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Cut",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "copy:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "c",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Copy",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "paste:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "v",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Paste",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "pasteAndMatchStyle:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "v",
+                "modifierFlags" : 1703936,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Paste and Match Style",
+                "wantsPriority" : false
+              },
+              {
+                "action" : "delete:",
+                "alternates" : [
+
+                ],
+                "attributes" : 2,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Delete"
+              },
+              {
+                "action" : "selectAll:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "a",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Select All",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.standard-edit",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+                  {
+                    "action" : "find:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "f",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Find",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "findAndReplace:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "f",
+                    "modifierFlags" : 1572864,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Find & Replace",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "findNext:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "g",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Find Next",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "findPrevious:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "g",
+                    "modifierFlags" : 1179648,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Find Previous",
+                    "wantsPriority" : false
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.find-panel",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "action" : "useSelectionForFind:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "e",
+                "modifierFlags" : 1048576,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Use Selection for Find",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.find",
+            "options" : 0,
+            "title" : "Find"
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.spelling-panel",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.spelling-options",
+                "options" : 1,
+                "title" : ""
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.spelling",
+            "options" : 0,
+            "title" : "Spelling and Grammar"
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.substitutions-panel",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.substitution-options",
+                "options" : 1,
+                "title" : ""
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.substitutions",
+            "options" : 0,
+            "title" : "Substitutions"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.transformations",
+            "options" : 0,
+            "title" : "Transformations"
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.command.speech",
+            "options" : 0,
+            "title" : "Speech"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.edit",
+        "options" : 0,
+        "title" : "Edit"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "children" : [
+                  {
+                    "action" : "toggleBoldface:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "b",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Bold",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "toggleItalics:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "i",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Italic",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "toggleUnderline:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "u",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Underline",
+                    "wantsPriority" : false
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.text-style",
+                "options" : 1,
+                "title" : "Text Style"
+              },
+              {
+                "children" : [
+                  {
+                    "action" : "increaseSize:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "+",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Bigger",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "decreaseSize:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "-",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Smaller",
+                    "wantsPriority" : false
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.text-size",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.text-color",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.text-style-pasteboard",
+                "options" : 1,
+                "title" : ""
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.font",
+            "options" : 0,
+            "title" : "Font"
+          },
+          {
+            "children" : [
+              {
+                "children" : [
+                  {
+                    "action" : "alignLeft:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "{",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Align Left",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "alignCenter:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "|",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Center",
+                    "wantsPriority" : false
+                  },
+                  {
+                    "action" : "alignJustified:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Justify"
+                  },
+                  {
+                    "action" : "alignRight:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UIKeyCommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "input" : "}",
+                    "modifierFlags" : 1048576,
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Align Right",
+                    "wantsPriority" : false
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.alignment",
+                "options" : 1,
+                "title" : ""
+              },
+              {
+                "children" : [
+                  {
+                    "action" : "makeTextWritingDirectionNatural:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Default"
+                  },
+                  {
+                    "action" : "makeTextWritingDirectionRightToLeft:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Right to Left"
+                  },
+                  {
+                    "action" : "makeTextWritingDirectionLeftToRight:",
+                    "alternates" : [
+
+                    ],
+                    "attributes" : 0,
+                    "class" : "UICommand",
+                    "depth" : 4,
+                    "discoverabilityTitle" : "nil",
+                    "propertyList" : "nil",
+                    "state" : 0,
+                    "title" : "Left to Right"
+                  }
+                ],
+                "class" : "UIMenu",
+                "depth" : 3,
+                "identifier" : "com.apple.menu.writing-direction",
+                "options" : 0,
+                "title" : "Writing Direction"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.text",
+            "options" : 0,
+            "title" : "Text"
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.format",
+        "options" : 0,
+        "title" : "Format"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+              {
+                "action" : "runToolbarCustomizationPalette:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UICommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Customize Toolbar…"
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.toolbar",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+              {
+                "action" : "toggleSidebar:",
+                "alternates" : [
+
+                ],
+                "attributes" : 0,
+                "class" : "UIKeyCommand",
+                "depth" : 3,
+                "discoverabilityTitle" : "nil",
+                "input" : "s",
+                "modifierFlags" : 1310720,
+                "propertyList" : "nil",
+                "state" : 0,
+                "title" : "Show Sidebar",
+                "wantsPriority" : false
+              }
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.sidebar",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.fullscreen",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.view",
+        "options" : 0,
+        "title" : "View"
+      },
+      {
+        "children" : [
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.minimize-and-zoom",
+            "options" : 1,
+            "title" : ""
+          },
+          {
+            "children" : [
+
+            ],
+            "class" : "UIMenu",
+            "depth" : 2,
+            "identifier" : "com.apple.menu.bring-all-to-front",
+            "options" : 1,
+            "title" : ""
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.window",
+        "options" : 0,
+        "title" : "Window"
+      },
+      {
+        "children" : [
+          {
+            "action" : "showHelp:",
+            "alternates" : [
+
+            ],
+            "attributes" : 0,
+            "class" : "UIKeyCommand",
+            "depth" : 2,
+            "discoverabilityTitle" : "nil",
+            "input" : "?",
+            "modifierFlags" : 1048576,
+            "propertyList" : "nil",
+            "state" : 0,
+            "title" : "",
+            "wantsPriority" : false
+          }
+        ],
+        "class" : "UIMenu",
+        "depth" : 1,
+        "identifier" : "com.apple.menu.help",
+        "options" : 0,
+        "title" : "Help"
+      }
+    ],
+    "class" : "UIMenu",
+    "depth" : 0,
+    "identifier" : "com.apple.menu.root",
+    "options" : 0,
+    "title" : ""
+  },
+  "builder.main.defaults.topLevel" : [
+    "com.apple.menu.application",
+    "com.apple.menu.file",
+    "com.apple.menu.edit",
+    "com.apple.menu.format",
+    "com.apple.menu.view",
+    "com.apple.menu.window",
+    "com.apple.menu.help"
+  ],
+  "device" : {
+    "appClass" : "probe.MyApp",
+    "edgeMode" : false,
+    "idiom" : 0,
+    "model" : "iPhone",
+    "screen" : [
+      393,
+      852
+    ],
+    "system" : "26.1"
+  },
+  "events" : [
+    {
+      "epoch" : 1789028705.0145249,
+      "phase" : "main",
+      "seq" : 1,
+      "t" : 6.4015388488769531e-05,
+      "what" : "UIApplicationMain.call"
+    },
+    {
+      "epoch" : 1789028705.177206,
+      "phase" : "willFinishLaunching",
+      "seq" : 2,
+      "t" : 0.16274607181549072,
+      "what" : "willFinishLaunching"
+    },
+    {
+      "epoch" : 1789028705.1795568,
+      "phase" : "didFinishLaunching",
+      "seq" : 3,
+      "t" : 0.16509699821472168,
+      "what" : "didFinishLaunching.enter"
+    },
+    {
+      "epoch" : 1789028705.1840649,
+      "phase" : "didFinishLaunching",
+      "seq" : 4,
+      "t" : 0.16960501670837402,
+      "what" : "beforeMakeKeyAndVisible"
+    },
+    {
+      "epoch" : 1789028705.1945472,
+      "phase" : "didFinishLaunching",
+      "seq" : 5,
+      "t" : 0.18008708953857422,
+      "what" : "afterMakeKeyAndVisible"
+    },
+    {
+      "epoch" : 1789028705.194957,
+      "phase" : "didFinishLaunching",
+      "seq" : 6,
+      "t" : 0.18049705028533936,
+      "what" : "didFinishLaunching.return"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028705.20594,
+      "keyWindow" : true,
+      "phase" : "didFinishLaunching",
+      "seq" : 7,
+      "system" : "main",
+      "t" : 0.19148004055023193,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "UIApplication"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028705.2063131,
+      "keyWindow" : true,
+      "phase" : "didFinishLaunching",
+      "seq" : 8,
+      "system" : "main",
+      "t" : 0.19185304641723633,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "AppDelegate"
+    },
+    {
+      "epoch" : 1789028705.2244051,
+      "phase" : "asyncAfter0",
+      "seq" : 9,
+      "t" : 0.20994508266448975,
+      "what" : "tick.asyncAfter0"
+    },
+    {
+      "epoch" : 1789028705.2258658,
+      "phase" : "asyncAfter0",
+      "seq" : 10,
+      "t" : 0.21140599250793457,
+      "what" : "tick.asyncAfter0.done"
+    },
+    {
+      "epoch" : 1789028705.4219131,
+      "phase" : "asyncAfter0",
+      "seq" : 11,
+      "t" : 0.40745306015014648,
+      "what" : "applicationDidBecomeActive"
+    },
+    {
+      "epoch" : 1789028705.697417,
+      "phase" : "t+0.5",
+      "seq" : 12,
+      "t" : 0.68295705318450928,
+      "what" : "tick.t+0.5"
+    },
+    {
+      "epoch" : 1789028705.69907,
+      "phase" : "t+0.5",
+      "seq" : 13,
+      "t" : 0.684609055519104,
+      "what" : "tick.t+0.5.done"
+    },
+    {
+      "epoch" : 1789028706.2441092,
+      "phase" : "setNeedsRebuild.1",
+      "seq" : 14,
+      "t" : 1.2296490669250488,
+      "what" : "tick.setNeedsRebuild.1"
+    },
+    {
+      "epoch" : 1789028706.2458749,
+      "phase" : "setNeedsRebuild.1",
+      "seq" : 15,
+      "t" : 1.2314150333404541,
+      "what" : "tick.setNeedsRebuild.1.done"
+    },
+    {
+      "epoch" : 1789028706.769418,
+      "phase" : "setNeedsRebuild.2.vcNoSuper",
+      "seq" : 16,
+      "t" : 1.7549570798873901,
+      "what" : "tick.setNeedsRebuild.2.vcNoSuper"
+    },
+    {
+      "epoch" : 1789028706.771198,
+      "phase" : "setNeedsRebuild.2.vcNoSuper",
+      "seq" : 17,
+      "t" : 1.7567380666732788,
+      "what" : "tick.setNeedsRebuild.2.vcNoSuper.done"
+    },
+    {
+      "epoch" : 1789028707.293004,
+      "phase" : "textField.becomeFirstResponder",
+      "seq" : 18,
+      "t" : 2.2785429954528809,
+      "what" : "tick.textField.becomeFirstResponder"
+    },
+    {
+      "epoch" : 1789028707.4683461,
+      "phase" : "textField.becomeFirstResponder",
+      "seq" : 19,
+      "t" : 2.4538860321044922,
+      "what" : "tick.textField.becomeFirstResponder.done"
+    },
+    {
+      "epoch" : 1789028707.7032361,
+      "phase" : "setNeedsRevalidate",
+      "seq" : 20,
+      "t" : 2.6887760162353516,
+      "what" : "tick.setNeedsRevalidate"
+    },
+    {
+      "epoch" : 1789028707.7051511,
+      "phase" : "setNeedsRevalidate",
+      "seq" : 21,
+      "t" : 2.6906909942626953,
+      "what" : "tick.setNeedsRevalidate.done"
+    },
+    {
+      "epoch" : 1789028708.3408232,
+      "phase" : "textField.resignFirstResponder",
+      "seq" : 22,
+      "t" : 3.3263630867004395,
+      "what" : "tick.textField.resignFirstResponder"
+    },
+    {
+      "epoch" : 1789028708.3530998,
+      "phase" : "textField.resignFirstResponder",
+      "seq" : 23,
+      "t" : 3.3386390209197998,
+      "what" : "tick.textField.resignFirstResponder.done"
+    },
+    {
+      "epoch" : 1789028708.7468669,
+      "phase" : "context.setNeedsRebuild",
+      "seq" : 24,
+      "t" : 3.7324069738388062,
+      "what" : "tick.context.setNeedsRebuild"
+    },
+    {
+      "epoch" : 1789028708.74863,
+      "phase" : "context.setNeedsRebuild",
+      "seq" : 25,
+      "t" : 3.7341700792312622,
+      "what" : "tick.context.setNeedsRebuild.done"
+    },
+    {
+      "epoch" : 1789028709.3807302,
+      "phase" : "presentEditMenu",
+      "seq" : 26,
+      "t" : 4.3662700653076172,
+      "what" : "tick.presentEditMenu"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028709.3859649,
+      "keyWindow" : true,
+      "phase" : "presentEditMenu",
+      "seq" : 27,
+      "system" : "context",
+      "t" : 4.3715040683746338,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "RootView"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028709.3878779,
+      "keyWindow" : true,
+      "phase" : "presentEditMenu",
+      "seq" : 28,
+      "system" : "context",
+      "t" : 4.3734170198440552,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "RootVC"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028709.389549,
+      "keyWindow" : true,
+      "phase" : "presentEditMenu",
+      "seq" : 29,
+      "system" : "context",
+      "t" : 4.3750890493392944,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "UIWindow"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028709.391191,
+      "keyWindow" : true,
+      "phase" : "presentEditMenu",
+      "seq" : 30,
+      "system" : "context",
+      "t" : 4.3767310380935669,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "UIApplication"
+    },
+    {
+      "builderClass" : "_UIMenuBuilder",
+      "callsSuper" : true,
+      "epoch" : 1789028709.3928199,
+      "keyWindow" : true,
+      "phase" : "presentEditMenu",
+      "seq" : 31,
+      "system" : "context",
+      "t" : 4.3783600330352783,
+      "textFieldIsFirstResponder" : false,
+      "what" : "buildMenu",
+      "who" : "AppDelegate"
+    },
+    {
+      "epoch" : 1789028709.396893,
+      "phase" : "presentEditMenu",
+      "seq" : 32,
+      "suggested" : [
+        {
+          "children" : [
+            {
+              "action" : "cut:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UIKeyCommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "input" : "x",
+              "modifierFlags" : 1048576,
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Cut",
+              "wantsPriority" : false
+            },
+            {
+              "action" : "copy:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UIKeyCommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "input" : "c",
+              "modifierFlags" : 1048576,
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Copy",
+              "wantsPriority" : false
+            },
+            {
+              "action" : "paste:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UIKeyCommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "input" : "v",
+              "modifierFlags" : 1048576,
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Paste",
+              "wantsPriority" : false
+            },
+            {
+              "action" : "delete:",
+              "alternates" : [
+
+              ],
+              "attributes" : 2,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Delete"
+            },
+            {
+              "action" : "select:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Select"
+            },
+            {
+              "action" : "selectAll:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UIKeyCommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "input" : "a",
+              "modifierFlags" : 1048576,
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Select All",
+              "wantsPriority" : false
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.standard-edit",
+          "options" : 1,
+          "title" : ""
+        },
+        {
+          "children" : [
+            {
+              "action" : "promptForReplace:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Replace…"
+            },
+            {
+              "action" : "transliterateChinese:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "简⇄繁"
+            },
+            {
+              "action" : "_insertDrawing:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Insert Drawing"
+            },
+            {
+              "action" : "showWritingTools:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Writing Tools"
+            },
+            {
+              "children" : [
+                {
+                  "children" : [
+
+                  ],
+                  "class" : "UIMenu",
+                  "depth" : 2,
+                  "identifier" : "com.apple.menu.insert-from-external-sources",
+                  "options" : 1,
+                  "title" : ""
+                },
+                {
+                  "action" : "captureTextFromCamera:",
+                  "alternates" : [
+
+                  ],
+                  "attributes" : 0,
+                  "class" : "UICommand",
+                  "depth" : 2,
+                  "discoverabilityTitle" : "nil",
+                  "propertyList" : "nil",
+                  "state" : 0,
+                  "title" : "Scan Text"
+                }
+              ],
+              "class" : "UIMenu",
+              "depth" : 1,
+              "identifier" : "com.apple.menu.autofill",
+              "options" : 0,
+              "title" : "AutoFill"
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.replace",
+          "options" : 1,
+          "title" : ""
+        },
+        {
+          "children" : [
+
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.open",
+          "options" : 1,
+          "title" : ""
+        },
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "action" : "toggleBoldface:",
+                  "alternates" : [
+
+                  ],
+                  "attributes" : 0,
+                  "class" : "UIKeyCommand",
+                  "depth" : 2,
+                  "discoverabilityTitle" : "nil",
+                  "input" : "b",
+                  "modifierFlags" : 1048576,
+                  "propertyList" : "nil",
+                  "state" : 0,
+                  "title" : "Bold",
+                  "wantsPriority" : false
+                },
+                {
+                  "action" : "toggleItalics:",
+                  "alternates" : [
+
+                  ],
+                  "attributes" : 0,
+                  "class" : "UIKeyCommand",
+                  "depth" : 2,
+                  "discoverabilityTitle" : "nil",
+                  "input" : "i",
+                  "modifierFlags" : 1048576,
+                  "propertyList" : "nil",
+                  "state" : 0,
+                  "title" : "Italic",
+                  "wantsPriority" : false
+                },
+                {
+                  "action" : "toggleUnderline:",
+                  "alternates" : [
+
+                  ],
+                  "attributes" : 0,
+                  "class" : "UIKeyCommand",
+                  "depth" : 2,
+                  "discoverabilityTitle" : "nil",
+                  "input" : "u",
+                  "modifierFlags" : 1048576,
+                  "propertyList" : "nil",
+                  "state" : 0,
+                  "title" : "Underline",
+                  "wantsPriority" : false
+                }
+              ],
+              "class" : "UIMenu",
+              "depth" : 1,
+              "identifier" : "com.apple.menu.text-style",
+              "options" : 1,
+              "title" : "Text Style"
+            },
+            {
+              "children" : [
+                {
+                  "action" : "makeTextWritingDirectionRightToLeft:",
+                  "alternates" : [
+
+                  ],
+                  "attributes" : 0,
+                  "class" : "UICommand",
+                  "depth" : 2,
+                  "discoverabilityTitle" : "nil",
+                  "propertyList" : "nil",
+                  "state" : 0,
+                  "title" : "Right to Left"
+                },
+                {
+                  "action" : "makeTextWritingDirectionLeftToRight:",
+                  "alternates" : [
+
+                  ],
+                  "attributes" : 0,
+                  "class" : "UICommand",
+                  "depth" : 2,
+                  "discoverabilityTitle" : "nil",
+                  "propertyList" : "nil",
+                  "state" : 0,
+                  "title" : "Left to Right"
+                }
+              ],
+              "class" : "UIMenu",
+              "depth" : 1,
+              "identifier" : "com.apple.menu.writing-direction",
+              "options" : 1,
+              "title" : "Writing Direction"
+            },
+            {
+              "action" : "_showTextFormattingOptions:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UIKeyCommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "input" : "t",
+              "modifierFlags" : 1572864,
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "More…",
+              "wantsPriority" : false
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.format",
+          "options" : 0,
+          "title" : "Format"
+        },
+        {
+          "children" : [
+            {
+              "action" : "findSelected:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Find Selection"
+            },
+            {
+              "action" : "_define:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Look Up"
+            },
+            {
+              "action" : "_translate:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Translate"
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.lookup",
+          "options" : 1,
+          "title" : ""
+        },
+        {
+          "children" : [
+            {
+              "action" : "addShortcut:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Learn…"
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.learn",
+          "options" : 1,
+          "title" : ""
+        },
+        {
+          "children" : [
+            {
+              "action" : "_accessibilitySpeak:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Speak"
+            },
+            {
+              "action" : "_accessibilitySpeakLanguageSelection:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Speak…"
+            },
+            {
+              "action" : "_accessibilityPauseSpeaking:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Pause"
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.command.speech",
+          "options" : 1,
+          "title" : "Speech"
+        },
+        {
+          "children" : [
+            {
+              "action" : "share:",
+              "alternates" : [
+
+              ],
+              "attributes" : 0,
+              "class" : "UICommand",
+              "depth" : 1,
+              "discoverabilityTitle" : "nil",
+              "propertyList" : "nil",
+              "state" : 0,
+              "title" : "Share…"
+            }
+          ],
+          "class" : "UIMenu",
+          "depth" : 0,
+          "identifier" : "com.apple.menu.share",
+          "options" : 1,
+          "title" : ""
+        }
+      ],
+      "t" : 4.3824330568313599,
+      "what" : "editMenu.menuFor"
+    },
+    {
+      "epoch" : 1789028709.4219799,
+      "phase" : "presentEditMenu",
+      "seq" : 33,
+      "t" : 4.407520055770874,
+      "what" : "tick.presentEditMenu.done"
+    },
+    {
+      "epoch" : 1789028710.274725,
+      "phase" : "dismissEditMenu",
+      "seq" : 34,
+      "t" : 5.2602649927139282,
+      "what" : "tick.dismissEditMenu"
+    },
+    {
+      "epoch" : 1789028710.277899,
+      "phase" : "dismissEditMenu",
+      "seq" : 35,
+      "t" : 5.2634390592575073,
+      "what" : "tick.dismissEditMenu.done"
+    },
+    {
+      "epoch" : 1789028710.9696279,
+      "phase" : "keyPhaseA",
+      "seq" : 36,
+      "t" : 5.9551680088043213,
+      "what" : "tick.keyPhaseA"
+    },
+    {
+      "epoch" : 1789028710.9740491,
+      "phase" : "keyPhaseA",
+      "seq" : 37,
+      "t" : 5.9595890045166016,
+      "what" : "tick.keyPhaseA.done"
+    },
+    {
+      "epoch" : 1789028721.467751,
+      "phase" : "keyPhaseB",
+      "seq" : 38,
+      "t" : 16.453289985656738,
+      "what" : "tick.keyPhaseB"
+    },
+    {
+      "epoch" : 1789028721.4703131,
+      "phase" : "keyPhaseB",
+      "seq" : 39,
+      "t" : 16.45585298538208,
+      "what" : "tick.keyPhaseB.done"
+    },
+    {
+      "epoch" : 1789028731.967654,
+      "phase" : "keyPhaseC",
+      "seq" : 40,
+      "t" : 26.953193068504333,
+      "what" : "tick.keyPhaseC"
+    },
+    {
+      "epoch" : 1789028731.9706001,
+      "phase" : "keyPhaseC",
+      "seq" : 41,
+      "t" : 26.956140041351318,
+      "what" : "tick.keyPhaseC.done"
+    },
+    {
+      "epoch" : 1789028742.467634,
+      "phase" : "keyPhaseEnd",
+      "seq" : 42,
+      "t" : 37.453173995018005,
+      "what" : "tick.keyPhaseEnd"
+    },
+    {
+      "epoch" : 1789028742.473444,
+      "phase" : "keyPhaseEnd",
+      "seq" : 43,
+      "t" : 37.458983063697815,
+      "what" : "tick.keyPhaseEnd.done"
+    },
+    {
+      "epoch" : 1789028742.477597,
+      "phase" : "exit",
+      "seq" : 44,
+      "t" : 37.463137030601501,
+      "what" : "tick.exit"
+    }
+  ],
+  "identifier.raw" : {
+    "about" : "com.apple.menu.about",
+    "alignment" : "com.apple.menu.alignment",
+    "application" : "com.apple.menu.application",
+    "autoFill" : "com.apple.menu.autofill",
+    "bringAllToFront" : "com.apple.menu.bring-all-to-front",
+    "close" : "com.apple.menu.close",
+    "document" : "com.apple.menu.document",
+    "edit" : "com.apple.menu.edit",
+    "file" : "com.apple.menu.file",
+    "find" : "com.apple.menu.find",
+    "findPanel" : "com.apple.menu.find-panel",
+    "font" : "com.apple.menu.font",
+    "format" : "com.apple.menu.format",
+    "fullscreen" : "com.apple.menu.fullscreen",
+    "help" : "com.apple.menu.help",
+    "hide" : "com.apple.menu.hide",
+    "learn" : "com.apple.menu.learn",
+    "lookup" : "com.apple.menu.lookup",
+    "minimizeAndZoom" : "com.apple.menu.minimize-and-zoom",
+    "newItem" : "com.apple.menu.new-item",
+    "newScene" : "com.apple.menu.new-item",
+    "open" : "com.apple.menu.open",
+    "openRecent" : "com.apple.menu.open-recent",
+    "preferences" : "com.apple.menu.preferences",
+    "print" : "com.apple.menu.print",
+    "quit" : "com.apple.menu.quit",
+    "replace" : "com.apple.menu.replace",
+    "root" : "com.apple.menu.root",
+    "services" : "com.apple.menu.services",
+    "share" : "com.apple.menu.share",
+    "sidebar" : "com.apple.menu.sidebar",
+    "speech" : "com.apple.command.speech",
+    "spelling" : "com.apple.menu.spelling",
+    "spellingOptions" : "com.apple.menu.spelling-options",
+    "spellingPanel" : "com.apple.menu.spelling-panel",
+    "standardEdit" : "com.apple.menu.standard-edit",
+    "substitutionOptions" : "com.apple.menu.substitution-options",
+    "substitutions" : "com.apple.menu.substitutions",
+    "substitutionsPanel" : "com.apple.menu.substitutions-panel",
+    "text" : "com.apple.menu.text",
+    "textColor" : "com.apple.menu.text-color",
+    "textSize" : "com.apple.menu.text-size",
+    "textStyle" : "com.apple.menu.text-style",
+    "textStylePasteboard" : "com.apple.menu.text-style-pasteboard",
+    "toolbar" : "com.apple.menu.toolbar",
+    "transformations" : "com.apple.menu.transformations",
+    "undoRedo" : "com.apple.menu.undo-redo",
+    "view" : "com.apple.menu.view",
+    "window" : "com.apple.menu.window",
+    "writingDirection" : "com.apple.menu.writing-direction"
+  },
+  "menuSystem" : {
+    "contextClass" : "UIContextMenuSystem",
+    "mainClass" : "UIMainMenuSystem",
+    "mainIsContext" : false,
+    "mainIsSingleton" : true
+  },
+  "model.alternate" : {
+    "a1" : {
+      "action" : "fireAltShift:",
+      "modifierFlags" : 131072,
+      "title" : "One"
+    },
+    "a1 == a1b (same flags)" : true,
+    "a1 == a2" : false,
+    "a1 isEqual a1b" : true,
+    "a2" : {
+      "action" : "fireAltOption:",
+      "modifierFlags" : 655360,
+      "title" : "Two"
+    },
+    "cmd.alternates.count" : 1,
+    "cmd.alternates[0] === a2" : true,
+    "copy === self" : true,
+    "description" : "<UICommandAlternate: 0x600000c2c960>",
+    "hash equal a1\/a1b" : true,
+    "kc.alternates.count" : 2,
+    "kc.alternates[0] === a1" : true,
+    "kc.alternates[1] === a2" : true,
+    "kc.class" : "UIKeyCommand",
+    "kc.description" : "<UIKeyCommand: 0x600003920270; title = KC; action: fireBase:; input: j; modifierFlags: Cmd>",
+    "kc.noAlternates.count" : 0,
+    "kc.superclass" : "UICommand",
+    "keyCommandsQueriedAtLaunch" : false,
+    "superclass" : "NSObject"
+  },
+  "model.autoIdentifier" : [
+    "com.apple.menu.dynamic.D364D7C5-87D6-4970-AEF4-3C29A6374654",
+    "com.apple.menu.dynamic.25903792-7B4C-4656-AA27-6497D6D027CE",
+    "com.apple.menu.dynamic.F9C7D3B8-98E0-4F37-A5A4-7A6CE48FA768",
+    "com.apple.menu.dynamic.1160F0BF-62F6-41BA-972F-BB5AAB8EFAF5",
+    "com.apple.menu.dynamic.BB85CF59-B5C5-4DEE-893D-D8DA2E3FECBA"
+  ]
+}
