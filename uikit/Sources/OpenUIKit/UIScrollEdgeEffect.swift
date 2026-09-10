@@ -87,7 +87,14 @@ public final class UIScrollEdgeEffect: NSObject {
         /// A scroll edge effect with a hard cutoff and dividing line.
         public static let hard = Style(name: "hard")
 
+#if canImport(Foundation)
+        /// Foundation's NSObject declares `description`, so this is a genuine
+        /// override (the same split UIView.swift makes).
         nonisolated public override var description: String { "<UIScrollEdgeEffectStyle: \(name)>" }
+#else
+        /// The guest ObjectiveC NSObject has no Foundation description property.
+        nonisolated public var description: String { "<UIScrollEdgeEffectStyle: \(name)>" }
+#endif
     }
 
     /// The edge this effect describes (one of `.top/.left/.bottom/.right`).
