@@ -140,7 +140,12 @@ full/ladder/classify_gaps.py (census regenerated from Sources at this branch)
   (UITab 3, UINavigationBarDelegate 2, NSIndexPath 2, UICornerConfiguration 1, UIBarPositioning 1)
 ```
 
-Merge check: see the commit message / final message.
+Merge check (`CHECK_ONLY=1 agent_merge.sh agent/signal-blocking-rows`):
+first run stopped in the Foundation-hidden guest route — `import class
+ObjectiveC.NSCoder` does not exist there (NSCoder is the module's own) —
+after 124/124 Catalyst; fixed in d8900660. Second run: 124/124 Catalyst,
+guest route, test bundle, real-app screens, conformance apps, Linux build,
+`checks passed (CHECK_ONLY)`.
 
 ## 5. Walls left
 
