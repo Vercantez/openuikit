@@ -25,6 +25,15 @@ effect) and continue on an `.ack` file. Committed outputs:
 - `profiles-ios-26.1-iphone16.json` — RGB per point row at x = 380 pt for
   the screenshot phases the port encodes (scrim alpha table) and the
   light-variant evidence. Regenerable from the PNGs with `profiles.py`.
+- `offset-order-ios-26.1-iphone16.json` — `offset.swift` via
+  `scripts/contentoffset_order_probe_sim.sh` (2026-09-10): for every
+  offset entry point (`setContentOffset` animated false/true,
+  `contentOffset`, `bounds`, `scrollRectToVisible`, `scrollToItem` /
+  `scrollToRow`, a synthetic drag) on a base layout, a flow layout and a
+  table, every layout callback, dequeue, layoutSubviews and
+  scrollViewDidScroll with the bounds seen inside it, phased sync / after /
+  frameN / touchK. Compact JSON; `python3 -m json.tool` pretty-prints it.
+  Report: `docs/agent_reports/contentoffset-invalidation-order.md`.
 
 What the port took from it is written above the code:
 `UICollectionView.bounds` (ordering), `UICollectionViewFlowLayout

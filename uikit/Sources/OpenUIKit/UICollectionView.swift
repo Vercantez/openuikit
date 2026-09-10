@@ -490,53 +490,136 @@ open class UICollectionView: UIScrollView {
     private var inTile = false
 
     /// Context produced by `invalidationContext(forBoundsChange:)` while the
-    /// bounds were still the old value; consumed by `didSet`.
+    /// bounds were still the old value; consumed when the bounds have moved.
     private var pendingBoundsContext: UICollectionViewLayoutInvalidationContext?
+    /// `_willSetContentOffset` already asked for the bounds set that
+    /// follows (`true`: and invalidated; `false`: the layout declined). That
+    /// set asks nothing and invalidates nothing more, but an invalidated one
+    /// still counts as bounds-invalidated (tiling waits for the pass).
+    private var preMoveChainResult: Bool?
+    /// A bounds-driven invalidation the layout has not yet consumed with
+    /// `prepare()`. MEASURED offset.swift base/flow.drag touch2/touch3: a
+    /// further bounds change while one is pending asks nothing at all — only
+    /// scrollViewDidScroll fires — and the question returns once the layout
+    /// pass prepared.
+    private var boundsInvalidationPending = false
+    /// Whether the bounds set in flight invalidated the layout.
+    private var invalidatedForCurrentBoundsChange = false
 
-    // MEASURED signalrowsprobe invalidate.*, iPhone 16 / iOS 26.1: EVERY
-    // bounds change (frame resize, bounds origin, contentOffset, and
-    // setContentOffset(animated: false)) asks
-    // shouldInvalidateLayout(forBoundsChange: new) while `bounds` is still
-    // OLD; a true answer fetches invalidationContext(forBoundsChange:) (still
-    // old bounds); then, with the new bounds in place, invalidateLayout()
-    // runs and invalidateLayout(with:) receives that SAME context object
-    // (flags false, adjustments zero; flow: attributes true only for a size
-    // or cross-axis change, metrics false). A false answer stops after the
-    // question. prepare() follows synchronously for a size change and on
-    // the next layout pass for an origin change. A frame set to the same
-    // rect asks nothing.
+    // MEASURED signalrowsprobe invalidate.* (2026-09-09) and
+    // signalrowsprobe/offset.swift (2026-09-10), iPhone 16 / iOS 26.1: EVERY
+    // bounds change (frame resize, bounds origin, contentOffset, a drag
+    // step, a deceleration frame) asks shouldInvalidateLayout(forBoundsChange:
+    // new) while `bounds` is still OLD; a true answer fetches
+    // invalidationContext(forBoundsChange:) (still old bounds); then, with
+    // the new bounds in place, invalidateLayout() runs and
+    // invalidateLayout(with:) receives that SAME context object (flags
+    // false, adjustments zero; flow: attributes true only for a size or
+    // cross-axis change, metrics false); scrollViewDidScroll comes AFTER
+    // invalidateLayout(with:). setContentOffset / scrollRectToVisible /
+    // scrollToItem (animated or not) run the whole chain BEFORE the move —
+    // see `_willSetContentOffset`. A false answer stops after the question.
+    // prepare() follows synchronously for a size change and on the next
+    // layout pass for an origin change (with layoutAttributesForElements
+    // and the cell dequeues). A frame set to the same rect asks nothing.
     open override var bounds: CGRect {
         willSet {
-            guard newValue != bounds, !inTile else { return }
+            invalidatedForCurrentBoundsChange = false
             pendingBoundsContext = nil
-            if collectionViewLayout.shouldInvalidateLayout(forBoundsChange: newValue) {
-                pendingBoundsContext = collectionViewLayout.invalidationContext(forBoundsChange: newValue)
+            guard newValue != bounds, !inTile else { preMoveChainResult = nil; return }
+            if let invalidated = preMoveChainResult {
+                preMoveChainResult = nil
+                invalidatedForCurrentBoundsChange = invalidated
+                return
+            }
+            switch boundsQuestion(for: newValue) {
+            case .stillPending: invalidatedForCurrentBoundsChange = true
+            case .declined: break
+            case .invalidate(let context): pendingBoundsContext = context
             }
         }
         didSet {
-            var invalidatedForBounds = false
-            if let context = pendingBoundsContext {
-                pendingBoundsContext = nil
-                invalidatedForBounds = true
-                let layout = collectionViewLayout
-                layout._pendingBoundsContext = context
-                layout.invalidateLayout()
-                layout._pendingBoundsContext = nil
-                if bounds.size != oldValue.size, dataSource != nil,
-                   bounds.width > 0, bounds.height > 0 {
-                    ensureCounts()
-                    layout.prepareIfNeeded()
-                }
+            // An origin change already ran `_boundsOriginDidChange` inside
+            // the superclass setter; a size-only change is consumed here.
+            consumePendingBoundsContext()
+            if invalidatedForCurrentBoundsChange, bounds.size != oldValue.size,
+               dataSource != nil, bounds.width > 0, bounds.height > 0 {
+                ensureCounts()
+                collectionViewLayout.prepareIfNeeded()
             }
-            // Scrolling IS a bounds-origin change: re-tile immediately so
-            // drags and deceleration steps bring elements in without waiting
-            // for a layout pass (same rule as UITableView). After a
-            // bounds-driven invalidation the measured prepare() waits for
-            // the layout pass the invalidation already queued, so tiling
-            // waits with it.
-            if bounds.origin != oldValue.origin, !inTile, !invalidatedForBounds {
-                retile()
+        }
+    }
+
+    private enum BoundsQuestion {
+        /// An earlier bounds-driven invalidation is still unconsumed: no
+        /// question, and tiling keeps waiting for the layout pass.
+        case stillPending
+        /// The layout declined.
+        case declined
+        case invalidate(UICollectionViewLayoutInvalidationContext)
+    }
+
+    /// The question half of the chain, asked on the OLD bounds.
+    private func boundsQuestion(for newBounds: CGRect) -> BoundsQuestion {
+        if boundsInvalidationPending {
+            // Only a layout pass that will actually prepare (data source
+            // set, non-empty bounds — `retile`'s guard) can consume the
+            // pending invalidation; otherwise keep asking as before.
+            if collectionViewLayout.isPrepared || dataSource == nil
+                || bounds.width <= 0 || bounds.height <= 0 {
+                boundsInvalidationPending = false
+            } else {
+                return .stillPending
             }
+        }
+        guard collectionViewLayout.shouldInvalidateLayout(forBoundsChange: newBounds) else { return .declined }
+        return .invalidate(collectionViewLayout.invalidationContext(forBoundsChange: newBounds))
+    }
+
+    /// The invalidation half: `invalidateLayout()` → `invalidateLayout(with:)`
+    /// with the context the question produced.
+    private func invalidateForBoundsChange(_ context: UICollectionViewLayoutInvalidationContext) {
+        let layout = collectionViewLayout
+        layout._pendingBoundsContext = context
+        layout.invalidateLayout()
+        layout._pendingBoundsContext = nil
+        boundsInvalidationPending = true
+    }
+
+    private func consumePendingBoundsContext() {
+        guard let context = pendingBoundsContext else { return }
+        pendingBoundsContext = nil
+        invalidatedForCurrentBoundsChange = true
+        invalidateForBoundsChange(context)
+    }
+
+    override func _willSetContentOffset(_ offset: CGPoint, animated: Bool) {
+        super._willSetContentOffset(offset, animated: animated)
+        let newBounds = CGRect(origin: offset, size: bounds.size)
+        preMoveChainResult = nil
+        guard newBounds != bounds, !inTile else { return }
+        switch boundsQuestion(for: newBounds) {
+        case .stillPending:
+            preMoveChainResult = true
+        case .declined:
+            preMoveChainResult = false
+        case .invalidate(let context):
+            invalidateForBoundsChange(context)
+            preMoveChainResult = true
+        }
+    }
+
+    override func _boundsOriginDidChange(from oldValue: CGRect) {
+        consumePendingBoundsContext()
+        super._boundsOriginDidChange(from: oldValue)
+        // Scrolling IS a bounds-origin change: re-tile immediately so drags
+        // and deceleration steps bring elements in without waiting for a
+        // layout pass (same rule as UITableView; UIKit tiles on the pass,
+        // the same cells a turn later). After a bounds-driven invalidation
+        // the measured prepare() waits for the layout pass the invalidation
+        // already queued, so tiling waits with it.
+        if !inTile, !invalidatedForCurrentBoundsChange {
+            retile()
         }
     }
 
