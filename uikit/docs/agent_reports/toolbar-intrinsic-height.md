@@ -128,7 +128,20 @@ swift test --filter "Navigation|Toolbar|SafeArea|AutoLayout|Hosting|SwiftUI"
   suite runs alone.
 ```
 
-Merge check: see the bottom of this file.
+Merge check (`CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/toolbar-intrinsic-height`):
+three runs hit `MERGE CONFLICT with main` on `docs/REAL_APP_TEST.md` rows
+added by concurrent landings (resolved by keeping both sides, merges
+34d30f5a / 68a0f579 / 4be19aa1); the first full run went `LINUX BUILD RED`
+on a bare `@MainActor` on the two test helpers (guarded in 3a5b106c); on
+3a5b106c:
+
+```
+checks passed (CHECK_ONLY)
+```
+
+707 board rows re-rendered, none below its board value (Tabs:t2000 84.946
+= board; Tabs-ipad:t2000 98.657 = board; Tabs:t1000 / Tabs-ipad:t1000 up
+0.03 / 0.07); real-app floors held (realapp_ledger_light 99.61).
 
 ## Walls and leftovers
 
