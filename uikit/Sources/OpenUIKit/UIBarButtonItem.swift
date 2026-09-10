@@ -58,8 +58,14 @@
 // all of which are exact.
 
 /// A button (or a space) in a `UINavigationBar` / `UIToolbar`.
+///
+/// SDK EVIDENCE (iOS 26.1, UIKit.framework/Headers/UIBarButtonItem.h:69):
+/// `@interface UIBarButtonItem : UIBarItem <NSCoding>`. `title`, `image`,
+/// `isEnabled`, `imageInsets`, `tag`, `accessibilityIdentifier` and the
+/// title-text-attribute pair therefore live on `UIBarItem` (UIBarItem.swift),
+/// not here. `NSCoding` is not adopted — see UIBarItem.swift.
 @preconcurrency @MainActor
-public class UIBarButtonItem {
+public class UIBarButtonItem: UIBarItem {
     /// UIKit's bar-button styles. iOS 26 renamed `.done` to `.prominent`
     /// (a tint-filled platter); both spellings are kept.
     public enum Style: Int, Sendable {
@@ -79,10 +85,13 @@ public class UIBarButtonItem {
         case undo, redo, close
     }
 
-    public var title: String?
-    public var image: UIImage?
+    // `title`, `image`, `isEnabled`, `imageInsets`, `tag`,
+    // `accessibilityIdentifier` and the title-text-attribute pair are
+    // inherited from `UIBarItem`, exactly as in UIKit. The iOS 26.1 runtime
+    // probe recorded with the old declaration still holds: UIKit keeps the
+    // identifier on the bar item, not on the private descendant UIView.
+
     public var style: Style
-    public var isEnabled: Bool = true
     /// Per-item tint. `nil` inherits the bar's, and an inherited tint is
     /// NOT applied to the content (measured — see the file header).
     public var tintColor: UIColor?
@@ -90,12 +99,10 @@ public class UIBarButtonItem {
     public var width: CGFloat = 0
     public var customView: UIView?
     public private(set) var systemItem: SystemItem?
-    /// Stable identifier consumed by UIKit's accessibility tree and UI tests.
-    /// OpenUIKit currently has no assistive-technology tree, so—as with the
-    /// other accessibility properties—this is faithful round-trip storage.
-    /// Real UIKit also keeps it on the UIBarItem rather than copying it onto
-    /// the private descendant UIView (iOS 26.1 runtime probe).
-    public var accessibilityIdentifier: String?
+    /// UIBarButtonItem.h: titles the bar may size the item for. Storage
+    /// only — the port's bars size an item from its own title
+    /// (docs/KNOWN_GAPS.md).
+    public var possibleTitles: Set<String>?
     /// Target-action, dispatched through the M12 selector machinery.
     public weak var target: AnyObject?
     public var action: Selector?
@@ -126,38 +133,43 @@ public class UIBarButtonItem {
 
     // MARK: Initializers (UIKit's own signatures)
 
-    public init() {
+    public override init() {
         style = .plain
+        super.init()
     }
 
     public init(title: String?, style: Style = .plain,
                 target: AnyObject? = nil, action: Selector? = nil) {
-        self.title = title
         self.style = style
         self.target = target
         self.action = action
+        super.init()
+        self.title = title
     }
 
     public init(image: UIImage?, style: Style = .plain,
                 target: AnyObject? = nil, action: Selector? = nil) {
-        self.image = image
         self.style = style
         self.target = target
         self.action = action
+        super.init()
+        self.image = image
     }
 
     /// UIKit's `init(primaryAction:)`: the action's title and image become
     /// the item's, and the action runs when the item is tapped.
     public init(primaryAction: UIAction?) {
         self.primaryAction = primaryAction
+        style = .plain
+        super.init()
         self.title = primaryAction?.title
         self.image = primaryAction?.image
-        style = .plain
     }
 
     public init(customView: UIView) {
         self.customView = customView
         style = .plain
+        super.init()
     }
 
     public init(barButtonSystemItem systemItem: SystemItem,
@@ -165,6 +177,8 @@ public class UIBarButtonItem {
         self.systemItem = systemItem
         self.target = target
         self.action = action
+        self.style = .plain
+        super.init()
         // Measured on iOS 26: only these two render as text; `.done` is a
         // PROMINENT checkmark, everything else a plain symbol.
         switch systemItem {
@@ -206,6 +220,112 @@ public class UIBarButtonItem {
               title == nil, image == nil,
               systemItem == .trash else { return nil }
         return "trash"
+    }
+
+    // MARK: Per-state / per-metrics appearance
+    //
+    // UIBarButtonItem.h declares these fourteen accessors, and
+    // Kickstarter-Prelude's `UIBarButtonItemProtocol` lists every one of them
+    // as a protocol requirement, so a retroactive conformance fails without
+    // them.
+    //
+    // STORAGE ONLY. The port's bars draw the measured iOS 26 glass / flat
+    // platters (see the file header) and never consult a custom background
+    // image or a position adjustment. These round-trip faithfully and change
+    // no pixel; a renderer that honoured them would need its own oracle pass.
+    // Recorded in docs/KNOWN_GAPS.md.
+
+    struct _StateMetricsKey: Hashable {
+        var state: UIControl.State
+        var style: Style?
+        var metrics: UIBarMetrics
+    }
+
+    private var _backgroundImages: [_StateMetricsKey: UIImage] = [:]
+    private var _backButtonBackgroundImages: [_StateMetricsKey: UIImage] = [:]
+    private var _backgroundVerticalAdjustments: [UIBarMetrics: CGFloat] = [:]
+    private var _backButtonBackgroundVerticalAdjustments: [UIBarMetrics: CGFloat] = [:]
+    private var _titlePositionAdjustments: [UIBarMetrics: UIOffset] = [:]
+    private var _backButtonTitlePositionAdjustments: [UIBarMetrics: UIOffset] = [:]
+
+    open func setBackgroundImage(_ backgroundImage: UIImage?,
+                                 for state: UIControl.State,
+                                 barMetrics: UIBarMetrics) {
+        let key = _StateMetricsKey(state: state, style: nil, metrics: barMetrics)
+        _backgroundImages[key] = backgroundImage
+    }
+
+    open func backgroundImage(for state: UIControl.State,
+                              barMetrics: UIBarMetrics) -> UIImage? {
+        _backgroundImages[_StateMetricsKey(state: state, style: nil,
+                                           metrics: barMetrics)]
+    }
+
+    open func setBackgroundImage(_ backgroundImage: UIImage?,
+                                 for state: UIControl.State,
+                                 style: Style,
+                                 barMetrics: UIBarMetrics) {
+        let key = _StateMetricsKey(state: state, style: style, metrics: barMetrics)
+        _backgroundImages[key] = backgroundImage
+    }
+
+    open func backgroundImage(for state: UIControl.State,
+                              style: Style,
+                              barMetrics: UIBarMetrics) -> UIImage? {
+        _backgroundImages[_StateMetricsKey(state: state, style: style,
+                                           metrics: barMetrics)]
+    }
+
+    open func setBackgroundVerticalPositionAdjustment(_ adjustment: CGFloat,
+                                                      for barMetrics: UIBarMetrics) {
+        _backgroundVerticalAdjustments[barMetrics] = adjustment
+    }
+
+    open func backgroundVerticalPositionAdjustment(for barMetrics: UIBarMetrics) -> CGFloat {
+        _backgroundVerticalAdjustments[barMetrics] ?? 0
+    }
+
+    open func setTitlePositionAdjustment(_ adjustment: UIOffset,
+                                         for barMetrics: UIBarMetrics) {
+        _titlePositionAdjustments[barMetrics] = adjustment
+    }
+
+    open func titlePositionAdjustment(for barMetrics: UIBarMetrics) -> UIOffset {
+        _titlePositionAdjustments[barMetrics] ?? .zero
+    }
+
+    open func setBackButtonBackgroundImage(_ backgroundImage: UIImage?,
+                                           for state: UIControl.State,
+                                           barMetrics: UIBarMetrics) {
+        let key = _StateMetricsKey(state: state, style: nil, metrics: barMetrics)
+        _backButtonBackgroundImages[key] = backgroundImage
+    }
+
+    open func backButtonBackgroundImage(for state: UIControl.State,
+                                        barMetrics: UIBarMetrics) -> UIImage? {
+        _backButtonBackgroundImages[_StateMetricsKey(state: state, style: nil,
+                                                     metrics: barMetrics)]
+    }
+
+    open func setBackButtonTitlePositionAdjustment(_ adjustment: UIOffset,
+                                                   for barMetrics: UIBarMetrics) {
+        _backButtonTitlePositionAdjustments[barMetrics] = adjustment
+    }
+
+    open func backButtonTitlePositionAdjustment(for barMetrics: UIBarMetrics) -> UIOffset {
+        _backButtonTitlePositionAdjustments[barMetrics] ?? .zero
+    }
+
+    open func setBackButtonBackgroundVerticalPositionAdjustment(
+        _ adjustment: CGFloat, for barMetrics: UIBarMetrics
+    ) {
+        _backButtonBackgroundVerticalAdjustments[barMetrics] = adjustment
+    }
+
+    open func backButtonBackgroundVerticalPositionAdjustment(
+        for barMetrics: UIBarMetrics
+    ) -> CGFloat {
+        _backButtonBackgroundVerticalAdjustments[barMetrics] ?? 0
     }
 }
 

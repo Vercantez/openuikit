@@ -44,13 +44,24 @@ import struct CoreGraphics.CGSize
 import Foundation
 #endif
 
+/// SDK EVIDENCE (iOS 26.1, UIKit.framework/Headers/UITabBarItem.h:35):
+/// `@interface UITabBarItem : UIBarItem`. `title`, `image` and `tag` are
+/// inherited from `UIBarItem` (UIBarItem.swift). `title` is overridden here
+/// only to keep the relayout notification it carried before the re-parent,
+/// so the change moves no pixels.
 @preconcurrency @MainActor
-public class UITabBarItem {
-    public var title: String? {
-        didSet { _bar?.setNeedsLayout() }
+public class UITabBarItem: UIBarItem {
+    open override var title: String? {
+        get { super.title }
+        set { super.title = newValue; _bar?.setNeedsLayout() }
     }
-    public var image: UIImage?
-    public var tag: Int
+    /// UITabBarItem.h: artwork for the selected state. Storage only — the
+    /// port resolves a selected icon through
+    /// `UITabBar.resolvedItemImage(_:selected:)` (docs/KNOWN_GAPS.md).
+    public var selectedImage: UIImage?
+    /// UITabBarItem.h: offset applied to the item's title. Storage only —
+    /// the bar centres titles on its own measured metrics.
+    public var titlePositionAdjustment: UIOffset = .zero
     /// Badge text drawn on the item's icon. `nil` / `""` hides it.
     /// The bar reads this from `_UITabBarItemView.layoutSubviews`.
     public var badgeValue: String? {
@@ -59,6 +70,7 @@ public class UITabBarItem {
     weak var _bar: UITabBar?
 
     public init(title: String?, image: UIImage?, tag: Int) {
+        super.init()
         self.title = title
         self.image = image
         self.tag = tag
