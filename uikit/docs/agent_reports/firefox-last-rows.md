@@ -109,6 +109,20 @@ swift test --filter "CommandAlternateTests|ContextMenuInteractionTests|FirstResp
   72 tests, 0 failures (13 new + 59 existing: key commands 9, menu layout 10, menu render 4, context menu 3, edit menu 10, responder 23)
 ```
 
+Merge check: `CHECK_ONLY=1 uikit/scripts/agent_merge.sh agent/firefox-last-rows`
+after `git merge origin/main` (clean; the ladder-table-regen landing was
+already on main). First run on `4c48ade6` stopped in the guest library
+route (Foundation hidden): `UIMenuBuilder.swift` named `NSObject` without
+UIMenu.swift's conditional import. `fd0c88e2` mirrors the import
+(`scripts/guest_route_check.sh` → `GUEST_ROUTE_CHECK_OK` locally); on it:
+
+```
+checks passed (CHECK_ONLY)
+```
+
+(macOS build + Catalyst gate, guest route, test bundle, real-app screens,
+conformance re-render, Linux `openrender` build; no REFUSED.)
+
 ## Classifier
 
 The `remeasure` regex over this worktree's `Sources/OpenUIKit` gives 440
