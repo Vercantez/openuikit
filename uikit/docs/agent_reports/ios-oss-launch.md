@@ -146,4 +146,19 @@ N/A — nothing rendered on OpenUIKit. Not added to the real-app set; the golden
 
 ### Merge check
 
-(filled in after `CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/ios-oss-launch`)
+`CHECK_ONLY=1 bash uikit/scripts/agent_merge.sh agent/ios-oss-launch` from the
+monorepo root, detached with `nohup` and polled in foreground loops. The first
+two attempts printed `MERGE CONFLICT with main` on the `REAL_APP_TEST.md` table
+row (main advanced twice while the branch waited for the shared lock); each
+time `origin/main` was merged into the branch with both rows kept. The third
+run, on merge commit `076490a5`, printed **`checks passed (CHECK_ONLY)`** and
+**0 `REFUSED` lines** (the script's documented exit 128 in cleanup applies).
+
+| stage | printed |
+|---|---|
+| macOS release `openrender` | complete, 168.19 s |
+| Catalyst gate | **124/124 scenes pass** |
+| real-app floors | history_light 99.137, settings_light 98.535, settings_dark 98.548, storage_light 99.74, settings_light_xs 98.72, settings_light_xxxl 98.334, settings_light_ax1 97.549, settings_light_ipad 99.65, focus_settings_light 98.823, focus_home_light 98.558, history_light_ipad 99.86, storage_light_ipad 99.734, hackers_feed_light 98.235, ledger_light 99.61 |
+| guest library route (Foundation hidden) | `GUEST_ROUTE_COMPILE_OK openuikit=148 opencoregraphics=12`, `GUEST_ROUTE_CHECK_OK elapsed=61s` |
+| conformance apps (SKIP_CAPTURE re-render) | all rows at their board values (no `lower` line) |
+| Linux build (`swift:6.2-noble`) | `openrender` complete, 163.96 s |
