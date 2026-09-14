@@ -99,8 +99,8 @@ test is `testAudiogramSensitivityPointAndTests` (26 rows).
   `elapsedTime(at:)`, `statistics(for:)`, `seriesBuilder(for:)`, activity add/update.
 - `HKWorkoutSession` state machine with synchronous delegate callbacks;
   `sendToRemoteWorkoutSession` fail-closes (`errorHealthDataUnavailable`, no Watch).
-- Local `HKAttachmentStore` byte table (name/size/data/stream/remove). `UTType`
-  addAttachment overloads stay deferred.
+- Local `HKAttachmentStore` byte table (name/size/data/stream/remove). File-URL
+  `UTType` addAttachment overloads copy into the local table (async overload declared).
 
 ### Wave 8 behaviour added
 
@@ -186,10 +186,9 @@ test is `testAudiogramSensitivityPointAndTests` (26 rows).
   (`errorHealthDataUnavailable` or empty hardware streams). Local ECG
   voltage tables and locally stored JWS clinical records are queryable; they
   are not Apple-verified credentials. Local attachment bytes are in-process only.
-- Attachment APIs that take `UTType` stay **deferred** (isolated gate cannot
-  import UniformTypeIdentifiers).
-- APIs whose signatures require `NSComparisonPredicate.Operator` stay
-  **deferred**; use `HKPredicateOperator` instead.
+- Attachment `UTType` and `NSComparisonPredicate.Operator` signatures are implemented
+  against the 2026-09-14 Apple oracle (raw values pinned identical); `HKPredicateOperator`
+  remains as the source-compatible explicit alternative.
 - `preferredUnits(for:)` throws `errorHealthDataUnavailable`.
 - Workout-activity quantity predicates currently match all (Linux NSPredicate
   cannot inspect nested `HKWorkoutActivity` via KVC).
@@ -215,7 +214,7 @@ Focused coverage tests (cited by `coverage.tsv`): `HealthKitEnumTests.swift`,
 `HealthKitStoreTests.swift`, `HealthKitQueryTests.swift`,
 `HealthKitStatisticsTests.swift`, `HealthKitSampleTests.swift`,
 `HealthKitWorkoutTests.swift`, `HealthKitDescriptorTests.swift`,
-`HealthKitSurfaceTests.swift`, `HealthKitDepthWave8Tests.swift`, `HealthKitDepthWave9Tests.swift`.
+`HealthKitSurfaceTests.swift`, `HealthKitDepthWave8Tests.swift`, `HealthKitDepthWave9Tests.swift`, `HealthKitPredicateOperatorTests.swift`.
 
 ### Unresolved behavioral questions
 
@@ -258,11 +257,14 @@ when no store directory is writable.
 
 ## Coverage
 
-See `coverage.tsv`. Implemented 2319, declared 287, deferred 39, unavailable 0,
+See `coverage.tsv`. Implemented 2644, declared 1, deferred 0, unavailable 0,
 not-applicable 0.
-Deferred rows are `NSComparisonPredicate.Operator` and `UTType` APIs only.
-Declared rows compile but lack a focused `*Tests.swift` assertion. Wave-8/9
-async `result(for:)` / `Sci12_Concurrency` combinators remain declared.
+The single declared row is the async file-URL `addAttachment` overload (compiles;
+no synchronous test can call it under the no-`await`/no-semaphore cited-test rule).
+No rows remain deferred: the `NSComparisonPredicate.Operator` / `UTType` APIs are
+implemented against the Apple oracle in `scratch/oracle-2026-09-14/`.
+Wave-8/9 async `result(for:)` / `Sci12_Concurrency` combinators are implemented and
+tested via the local store snapshots.
 
 ## Depth pass 2026-09 (wave 8)
 
@@ -327,3 +329,46 @@ The remaining 39 deferred identifiers require APIs absent from isolated Linux:
 unclaimed rather than fabricating Apple-only behavior. Oracle questions remain
 open for authorization/daemon transitions, clinical verification, attachment
 services, and device-backed streams.
+
+## Depth pass 2026-09-14 (predicate operators + UTType attachments)
+
+This pass resolved all 39 remaining deferred rows. Counts changed from
+**implemented 2606 / declared 0 / deferred 39 / unavailable 0 /
+not-applicable 0** to **implemented 2644 / declared 1 / deferred 0 /
+unavailable 0 / not-applicable 0** (2645 public-surface IDs).
+
+The prompt's premise was wrong about this host: the isolated gate compiles with
+the macOS SDK, which **does** declare `NSComparisonPredicate.Operator`,
+`NSPredicate(format:)`, `NSCompoundPredicate`, and `UniformTypeIdentifiers.UTType`
+(probe: `scratch/oracle-2026-09-14/hk-predicate-probe.swift`). A live Apple
+oracle transcript (`hk-predicate-probe.output.txt`, Xcode 26.1) pins
+`NSComparisonPredicate.Operator` raw values (lessThan=0 … equalTo=4 …) as
+identical to `HKPredicateOperator`, and confirms all 18 `HKQuery`
+operator-predicate selectors plus `HKAttachment.contentType` on Apple HealthKit.
+
+Behaviour added (`HKOperatorPredicates.swift`, in the guest manifest):
+
+- 18 `HKQuery` overloads taking `NSComparisonPredicate.Operator` (category,
+  metadata, quantity, states-of-mind valence, 5 workout-activity, 9 workout),
+  delegating to the oracle-pinned local comparison after raw-value mapping.
+- `HKCategoryValuePredicateProviding.predicateForSamples(_:value:)` taking
+  `NSComparisonPredicate.Operator` (1 base + 17 synthesized enum rows).
+- `HKAttachment.contentType` backed by a stored UTI identifier (`.data` for
+  data-created attachments, caller-supplied type for file-URL adds), with
+  NSSecureCoding round-trip.
+- File-URL `HKAttachmentStore.addAttachment` completion overload (local byte
+  copy, fail-closed on unreadable URLs). The async overload is **declared**
+  (compiles; no synchronous cited test can `await` it).
+
+Every new `implemented` row cites a synchronous top-level `func test*()` in
+`tests/agent/HealthKitPredicateOperatorTests.swift` (19 rows max per test,
+0.7% of implemented — under the 40% cap; no `await`, semaphores, `RunLoop`,
+or `DispatchQueue.main`). Nine bare-literal operator call sites in the
+pre-existing `HealthKitQueryTests.swift` were qualified with
+`HKPredicateOperator` to resolve overload ambiguity; behaviour unchanged.
+The runtime probe's sort descriptor was also made portable
+(`NSSortDescriptor(key:"startDate")` instead of the key-path initializer,
+which fatals on non-`@objc` roots in this host Foundation); the local `hkSort`
+behaves identically.
+
+Leftover: 1 declared row (async file-URL add, needs `await`); 0 deferred.

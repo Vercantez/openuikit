@@ -492,14 +492,29 @@ func testDetectTextRectanglesRequestConfig() {
     _ = request.hashValue
     var hasher = Hasher()
     request.hash(into: &hasher)
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "text rectangles")
+    let textImage = visionTextLinesImage()
+    let overlayLines = try! request.performOnHandler(VNImageRequestHandler(cgImage: textImage))
+    visionExpectEqual(overlayLines.count, 2, "two text lines")
+    visionExpectEqual(overlayLines[0].characterBoxes?.count ?? 0, 1, "line character box")
+    visionExpect(overlayLines[0].confidence > 0, "line confidence")
+    visionExpect(overlayLines[1].boundingBox.cgRect.minY < overlayLines[0].boundingBox.cgRect.minY, "line order")
 
     let vn = VNDetectTextRectanglesRequest()
     visionExpectEqual(vn.reportCharacterBoxes, false, "vn default")
     vn.reportCharacterBoxes = true
     visionExpectEqual(vn.reportCharacterBoxes, true, "vn set")
+    try! VNImageRequestHandler(cgImage: textImage).perform([vn])
+    let vnLines = (vn.results ?? []).compactMap { $0 as? VNTextObservation }
+    visionExpectEqual(vnLines.count, 2, "vn two lines")
+    visionExpectEqual(vnLines[0].characterBoxes?.count ?? 0, 1, "vn character box")
+    let vnPlain = VNDetectTextRectanglesRequest()
+    try! VNImageRequestHandler(cgImage: textImage).perform([vnPlain])
+    let vnPlainLines = (vnPlain.results ?? []).compactMap { $0 as? VNTextObservation }
+    visionExpectEqual(vnPlainLines.count, 2, "vn plain two lines")
+    visionExpectEqual(vnPlainLines[0].characterBoxes == nil, true, "vn no character boxes by default")
+    let vnEmpty = VNDetectTextRectanglesRequest()
+    try! VNImageRequestHandler(cgImage: visionUniformGrayImage()).perform([vnEmpty])
+    visionExpectEqual((vnEmpty.results ?? []).count, 0, "uniform gray has no text")
 }
 
 func testDetectHumanBodyPose3DRequestConfig() {
@@ -881,16 +896,17 @@ func testCalculateImageAestheticsScoresRequestConfig() {
     visionExpectRevisionCodable(CalculateImageAestheticsScoresRequest.Revision.revision1, "revision codable")
     let vn = VNCalculateImageAestheticsScoresRequest()
     visionExpect(vn.results == nil, "vn results")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "aesthetics overlay")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn aesthetics should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
-        visionExpect(vn.results == nil, "results stay nil")
-    }
+    let sharpScores = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    let flatScores = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(sharpScores.overallScore > flatScores.overallScore, "sharp scores higher")
+    visionExpectEqual(flatScores.overallScore, 0, "flat scores zero")
+    visionExpectEqual(flatScores.isUtility, true, "flat is utility")
+    visionExpect(sharpScores.overallScore > 0 && sharpScores.overallScore <= 1, "sharp score range")
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    let vnScores = (vn.results ?? []).compactMap { $0 as? VNImageAestheticsScoresObservation }
+    visionExpectEqual(vnScores.count, 1, "vn one observation")
+    visionExpect(vnScores[0].overallScore > 0, "vn positive score")
+    visionExpectEqual(vnScores[0].isUtility, false, "vn sharp not utility")
 }
 
 func testDetectDocumentSegmentationRequestConfig() {
@@ -910,16 +926,16 @@ func testDetectDocumentSegmentationRequestConfig() {
     visionExpectRevisionCodable(DetectDocumentSegmentationRequest.Revision.revision1, "revision codable")
     let vn = VNDetectDocumentSegmentationRequest()
     visionExpect(vn.results == nil, "vn results")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "document segmentation overlay")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn document segmentation should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
-        visionExpect(vn.results == nil, "results stay nil")
-    }
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    let quads = (vn.results ?? []).compactMap { $0 as? VNRectangleObservation }
+    visionExpectEqual(quads.count, 1, "one document quad")
+    visionExpect(quads[0].boundingBox.width > 0.3, "quad width")
+    visionExpect(quads[0].boundingBox.height > 0.3, "quad height")
+    let overlayDocument = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpect(overlayDocument != nil, "overlay document found")
+    visionExpect(overlayDocument!.boundingBox.width > 0.3, "overlay quad width")
+    let overlayEmpty = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(overlayEmpty == nil, "uniform gray has no document")
 }
 
 func testGeneratePersonInstanceMaskRequestConfig() {
@@ -995,16 +1011,23 @@ func testGenerateAttentionBasedSaliencyImageRequestConfig() {
     visionExpectRevisionCodable(GenerateAttentionBasedSaliencyImageRequest.Revision.revision2, "revision codable")
     let vn = VNGenerateAttentionBasedSaliencyImageRequest()
     visionExpect(vn.results == nil, "vn results")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "attention saliency overlay")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn attention should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
-        visionExpect(vn.results == nil, "results stay nil")
-    }
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    let maps = (vn.results ?? []).compactMap { $0 as? VNSaliencyImageObservation }
+    visionExpectEqual(maps.count, 1, "one saliency map")
+    visionExpectEqual(maps[0].pixelBuffer.width, 80, "heat map width")
+    visionExpectEqual(maps[0].pixelBuffer.height, 80, "heat map height")
+    visionExpect(maps[0].confidence > 0, "saliency confidence")
+    visionExpectEqual((maps[0].salientObjects ?? []).count, 1, "one salient box")
+    visionExpect(maps[0].salientObjects!.first!.boundingBox.contains(CGPoint(x: 0.5, y: 0.5)), "salient box covers center")
+    let overlayMap = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpectEqual(overlayMap.salientObjects.count, 1, "overlay salient box")
+    visionExpectEqual(overlayMap.heatMap.size.width, 80, "overlay heat width")
+    let flatVN = VNGenerateAttentionBasedSaliencyImageRequest()
+    try! VNImageRequestHandler(cgImage: visionUniformGrayImage()).perform([flatVN])
+    let flatMaps = (flatVN.results ?? []).compactMap { $0 as? VNSaliencyImageObservation }
+    visionExpectEqual(flatMaps.count, 1, "flat map exists")
+    visionExpectEqual(flatMaps[0].confidence, 0, "flat confidence zero")
+    visionExpectEqual((flatMaps[0].salientObjects ?? []).count, 0, "flat has no boxes")
 }
 
 func testTrackObjectRequestOverlayConfig() {
@@ -1310,16 +1333,15 @@ func testGenerateObjectnessBasedSaliencyImageRequestConfig() {
     let vn = VNGenerateObjectnessBasedSaliencyImageRequest()
     visionExpect(vn.results == nil, "vn results")
     visionExpectEqual(VNGenerateObjectnessBasedSaliencyImageRequest.currentRevision, VNGenerateObjectnessBasedSaliencyImageRequestRevision2, "vn rev")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "objectness overlay")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn objectness should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
-        visionExpect(vn.results == nil, "results stay nil")
-    }
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    let maps = (vn.results ?? []).compactMap { $0 as? VNSaliencyImageObservation }
+    visionExpectEqual(maps.count, 1, "one saliency map")
+    visionExpectEqual(maps[0].pixelBuffer.width, 80, "heat map width")
+    visionExpect(maps[0].confidence > 0, "saliency confidence")
+    visionExpectEqual((maps[0].salientObjects ?? []).count, 1, "one salient box")
+    let overlayMap = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpectEqual(overlayMap.salientObjects.count, 1, "overlay salient box")
+    visionExpectEqual(overlayMap.heatMap.size.height, 80, "overlay heat height")
 }
 
 func testRequestProgressAndRevisionProviding() {

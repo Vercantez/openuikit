@@ -455,3 +455,49 @@ or CoreGraphics types, Apple overlay/runtime behavior, or explicit synthesis
 witnesses not safely representable in this lane. The unresolved behavioral
 questions remain callback queue/timing and retention, Siri/account service
 semantics, live car-power updates, and Apple keyed-archive byte compatibility.
+
+### Wave 14 extension (Foundation-only sweep)
+
+This pass flips every deferred row implementable with Foundation-only types
+and leaves the rest deferred. Before: **4061 implemented / 0 declared / 99
+deferred / 0 unavailable / 0 not-applicable**. After: **4079 implemented / 0
+declared / 81 deferred / 0 unavailable / 0 not-applicable**, an implemented
+gain of **+18**. Nondeferred coverage is now 4079 of 4160 rows.
+
+New `tests/agent/IntentsWave14Tests.swift` holds nine focused synchronous
+retention/construction checks, each cited by at most three rows: the
+`INPersonRelationship` unlabeled `init(_:)` (mirroring the already-implemented
+`INPersonHandleLabel` overlay spelling), `INRideOption.usesMeteredFare`,
+`INSearchCallHistoryIntent.unseen`, both photo-response `searchResultsCount`
+members, `minutesToFull`, `numberOfLibraryItems`, ride/lodging/restaurant
+`partySize`/`numberOfAdults`/`numberOfChildren`, generic
+`INObjectCollection.allItems` (sections-aware), and the three nullary inits
+(`INGetRideStatusIntent`, `INListCarsIntent`, `INMediaUserContext`). The three
+bare inits were oracle-pinned available with Xcode 26.1's iPhoneSimulator SDK
+(transcript in `scratch/oracle-2026-09-14/intents-bare-inits.txt`), correcting
+the earlier unavailable-designated-init note. Three nested `init(rawValue:)`
+rows (`INSticker.StickerType`, `INIntentError.Code`,
+`INMediaUserContext.SubscriptionStatus`) cite the existing table-driven
+`testGeneratedEnumEqualityAndHashingWitnesses`, which calls `T(rawValue:)` for
+those exact nested types; the `So`-prefixed USRs carry nested path components
+matching the Linux declarations.
+
+Top-5 implemented evidence distribution after this pass:
+
+| Citations | Evidence |
+| ---: | --- |
+| 1178 | `IntentsSurfaceTests.swift#testEnumRawValues` |
+| 363 | `IntentsWave12Tests.swift#testGeneratedEnumEqualityAndHashingWitnesses` |
+| 186 | `IntentsWave10Tests.swift#testOptionSetAlgebraMessageAttribute` |
+| 172 | `IntentsWave13Tests.swift#testWave13ResolutionResultStateMachine` |
+| 118 | `IntentsWave13Tests.swift#testWave13FailClosedAndValueSurface` |
+
+The largest non-table test is 172/4079 (4.2%), under the 40% bulk-relabel
+bound. Still deferred: 44 CLPlacemark plus CLLocation/CNPostalAddress/CGColor/
+EKRecurrenceRule/CLRegion members (framework-local substitutes forbidden), 14
+Swift `INShortcut` enum-overlay rows (lane keeps the NSObject class), 9
+synthesis/`!=` witnesses with no writable anchor, the `INIntentSetImageKeyPath`
+protocol pair (private `_`-prefixed base), `NSExtensionContext.intent`
+(Foundation type absent from corelibs Foundation), the NSNumber spelling of
+`usesMeteredFare` (the Linux anchor serves the Bool overlay), and other Apple
+overlay/runtime-gated members. Siri authorization stays fail-closed `.denied`.

@@ -49,6 +49,9 @@ open class HKAttachment: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
     public private(set) var size: Int
     public private(set) var creationDate: Date
     public private(set) var metadata: [String: Any]?
+    /// Local UTI identifier backing `contentType` (see HKOperatorPredicates).
+    /// Defaults to `public.data` (`UTType.data`) for data-created attachments.
+    var _contentTypeIdentifier: String = "public.data"
 
     public override init() {
         self.identifier = UUID()
@@ -71,6 +74,24 @@ open class HKAttachment: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
         self.size = size
         self.creationDate = creationDate
         self.metadata = metadata
+        self._contentTypeIdentifier = "public.data"
+        super.init()
+    }
+
+    public init(
+        identifier: UUID = UUID(),
+        name: String,
+        size: Int,
+        creationDate: Date = Date(),
+        metadata: [String: Any]? = nil,
+        contentTypeIdentifier: String
+    ) {
+        self.identifier = identifier
+        self.name = name
+        self.size = size
+        self.creationDate = creationDate
+        self.metadata = metadata
+        self._contentTypeIdentifier = contentTypeIdentifier
         super.init()
     }
 
@@ -80,6 +101,7 @@ open class HKAttachment: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
         self.size = coder.decodeInteger(forKey: "size")
         self.creationDate = (coder.decodeObject(of: NSDate.self, forKey: "creationDate") as Date?) ?? Date()
         self.metadata = nil
+        self._contentTypeIdentifier = (coder.decodeObject(of: NSString.self, forKey: "contentTypeIdentifier") as String?) ?? "public.data"
         super.init()
     }
 
@@ -88,10 +110,11 @@ open class HKAttachment: NSObject, NSCopying, NSSecureCoding, @unchecked Sendabl
         coder.encode(name as NSString, forKey: "name")
         coder.encode(size, forKey: "size")
         coder.encode(creationDate as NSDate, forKey: "creationDate")
+        coder.encode(_contentTypeIdentifier as NSString, forKey: "contentTypeIdentifier")
     }
 
     public func copy(with zone: NSZone? = nil) -> Any {
-        HKAttachment(identifier: identifier, name: name, size: size, creationDate: creationDate, metadata: metadata)
+        HKAttachment(identifier: identifier, name: name, size: size, creationDate: creationDate, metadata: metadata, contentTypeIdentifier: _contentTypeIdentifier)
     }
 
     public struct AsyncBytes: AsyncSequence {
@@ -125,7 +148,7 @@ open class HKAttachmentStore: NSObject, @unchecked Sendable {
     }
 
     /// Linux local attachment: stores bytes in-process. Apple attachment daemons / iCloud
-    /// Health sharing are not invented; `UTType` overloads stay unavailable.
+    /// Health sharing are not invented; file-URL `UTType` overloads copy into the local table.
     public func addAttachment(
         to object: HKObject,
         name: String,

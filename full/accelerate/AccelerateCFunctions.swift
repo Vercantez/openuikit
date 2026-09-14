@@ -321,6 +321,8 @@ public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Double) { _sparseR
 public func SparseCleanup(_ toFree: SparseOpaqueFactorization_Float) { _sparseReleaseFactorFloat(toFree) }
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Complex_Double) { }
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Complex_Float) { }
+// Linux SparseOpaquePreconditioner/Subfactor/Symbolic values are plain Swift structs
+// holding at most a sentinel pointer, so cleanup is a no-op (nothing heap-owned).
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Double) { }
 public func SparseCleanup(_ Preconditioner: SparseOpaquePreconditioner_Float) { }
 public func SparseCleanup(_ toFree: SparseOpaqueSubfactor_Complex_Double) { }
@@ -632,19 +634,19 @@ public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Complex_Doub
 @discardableResult
 public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Complex_Float) -> SparseOpaqueFactorization_Complex_Float { return SparseOpaqueFactorization_Complex_Float() }
 @discardableResult
-public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Double) -> SparseOpaqueFactorization_Double { return SparseOpaqueFactorization_Double() }
+public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Double) -> SparseOpaqueFactorization_Double { return NumericFactor }
 @discardableResult
-public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Float) -> SparseOpaqueFactorization_Float { return SparseOpaqueFactorization_Float() }
+public func SparseRetain(_ NumericFactor: SparseOpaqueFactorization_Float) -> SparseOpaqueFactorization_Float { return NumericFactor }
 @discardableResult
 public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Complex_Double) -> SparseOpaqueSubfactor_Complex_Double { return SparseOpaqueSubfactor_Complex_Double() }
 @discardableResult
 public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Complex_Float) -> SparseOpaqueSubfactor_Complex_Float { return SparseOpaqueSubfactor_Complex_Float() }
 @discardableResult
-public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Double) -> SparseOpaqueSubfactor_Double { return SparseOpaqueSubfactor_Double() }
+public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Double) -> SparseOpaqueSubfactor_Double { return Subfactor }
 @discardableResult
-public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Float) -> SparseOpaqueSubfactor_Float { return SparseOpaqueSubfactor_Float() }
+public func SparseRetain(_ Subfactor: SparseOpaqueSubfactor_Float) -> SparseOpaqueSubfactor_Float { return Subfactor }
 @discardableResult
-public func SparseRetain(_ SymbolicFactor: SparseOpaqueSymbolicFactorization) -> SparseOpaqueSymbolicFactorization { return SparseOpaqueSymbolicFactorization() }
+public func SparseRetain(_ SymbolicFactor: SparseOpaqueSymbolicFactorization) -> SparseOpaqueSymbolicFactorization { return SymbolicFactor }
 @discardableResult
 public func SparseSolve(_ method: SparseIterativeMethod, _ A: SparseMatrix_Complex_Double, _ B: DenseMatrix_Complex_Double, _ X: DenseMatrix_Complex_Double) -> SparseIterativeStatus_t { _ = method; return SparseIterativeParameterError }
 @discardableResult
@@ -2305,95 +2307,163 @@ public func vImageVerticalShear_PlanarF(_ src: UnsafePointer<vImage_Buffer>, _ d
 @discardableResult
 public func vImageVerticalShear_XRGB2101010W(_ src: UnsafePointer<vImage_Buffer>, _ dest: UnsafePointer<vImage_Buffer>, _ srcOffsetToROI_X: vImagePixelCount, _ srcOffsetToROI_Y: vImagePixelCount, _ yTranslate: Float, _ shearSlope: Float, _ filter: ResamplingFilter!, _ backColor: Pixel_32U, _ flags: vImage_Flags) -> vImage_Error { return kvImageInvalidParameter }
 @discardableResult
-public func vacosf(_: vFloat) -> vFloat { return vFloat() }
+public func vacosf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.acos) }
 @discardableResult
-public func vacoshf(_: vFloat) -> vFloat { return vFloat() }
+public func vacoshf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.acosh) }
 @discardableResult
-public func vasinf(_: vFloat) -> vFloat { return vFloat() }
+public func vasinf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.asin) }
 @discardableResult
-public func vasinhf(_: vFloat) -> vFloat { return vFloat() }
+public func vasinhf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.asinh) }
 @discardableResult
-public func vatan2f(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vatan2f(_ y: vFloat, _ x: vFloat) -> vFloat { return _vLane2(y, x, Foundation.atan2) }
 @discardableResult
-public func vatanf(_: vFloat) -> vFloat { return vFloat() }
+public func vatanf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.atan) }
 @discardableResult
-public func vatanhf(_: vFloat) -> vFloat { return vFloat() }
+public func vatanhf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.atanh) }
 @discardableResult
-public func vceilf(_: vFloat) -> vFloat { return vFloat() }
+public func vceilf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.ceil) }
 @discardableResult
-public func vclassifyf(_: vFloat) -> vUInt32 { return vUInt32() }
+public func vclassifyf(_ x: vFloat) -> vUInt32 {
+    // Apple <math.h> FP_xxx codes pinned by the macOS 26.1 oracle
+    // (scratch/oracle-2026-09-14/vfp-simd-2026-09-14.txt):
+    // FP_NAN=1, FP_INFINITE=2, FP_ZERO=3, FP_NORMAL=4, FP_SUBNORMAL=5.
+    // These differ from glibc's fpclassify numbering, so map explicitly.
+    var r = vUInt32()
+    for i in 0..<4 {
+        switch x[i].floatingPointClass {
+        case .signalingNaN, .quietNaN: r[i] = 1
+        case .positiveInfinity, .negativeInfinity: r[i] = 2
+        case .positiveZero, .negativeZero: r[i] = 3
+        case .positiveNormal, .negativeNormal: r[i] = 4
+        case .positiveSubnormal, .negativeSubnormal: r[i] = 5
+        @unknown default: r[i] = 1
+        }
+    }
+    return r
+}
 @discardableResult
-public func vcopysignf(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vcopysignf(_ mag: vFloat, _ sign: vFloat) -> vFloat { return _vLane2(mag, sign, Foundation.copysign) }
 @discardableResult
-public func vcosf(_: vFloat) -> vFloat { return vFloat() }
+public func vcosf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.cos) }
 @discardableResult
-public func vcoshf(_: vFloat) -> vFloat { return vFloat() }
+public func vcoshf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.cosh) }
 @discardableResult
-public func vcospif(_: vFloat) -> vFloat { return vFloat() }
+public func vcospif(_ x: vFloat) -> vFloat { return _vLane1(x, { Foundation.cos($0 * .pi) }) }
 @discardableResult
-public func vdivf(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vdivf(_ x: vFloat, _ y: vFloat) -> vFloat { return _vLane2(x, y, /) }
 @discardableResult
-public func vexp2f(_: vFloat) -> vFloat { return vFloat() }
+public func vexp2f(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.exp2) }
 @discardableResult
-public func vexpf(_: vFloat) -> vFloat { return vFloat() }
+public func vexpf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.exp) }
 @discardableResult
-public func vexpm1f(_: vFloat) -> vFloat { return vFloat() }
+public func vexpm1f(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.expm1) }
 @discardableResult
-public func vfabsf(_: vFloat) -> vFloat { return vFloat() }
+public func vfabsf(_ x: vFloat) -> vFloat { return _vLane1(x, { $0 < 0 ? -$0 : $0 }) }
 @discardableResult
-public func vfloorf(_: vFloat) -> vFloat { return vFloat() }
+public func vfloorf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.floor) }
 @discardableResult
-public func vfmodf(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vfmodf(_ x: vFloat, _ y: vFloat) -> vFloat { return _vLane2(x, y, { $0.truncatingRemainder(dividingBy: $1) }) }
 @discardableResult
-public func vipowf(_: vFloat, _: vSInt32) -> vFloat { return vFloat() }
+public func vipowf(_ x: vFloat, _ n: vSInt32) -> vFloat {
+    return vFloat(Foundation.pow(x[0], Float(n[0])), Foundation.pow(x[1], Float(n[1])), Foundation.pow(x[2], Float(n[2])), Foundation.pow(x[3], Float(n[3])))
+}
 @discardableResult
-public func vlog10f(_: vFloat) -> vFloat { return vFloat() }
+public func vlog10f(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.log10) }
 @discardableResult
-public func vlog1pf(_: vFloat) -> vFloat { return vFloat() }
+public func vlog1pf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.log1p) }
 @discardableResult
-public func vlog2f(_: vFloat) -> vFloat { return vFloat() }
+public func vlog2f(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.log2) }
 @discardableResult
-public func vlogbf(_: vFloat) -> vFloat { return vFloat() }
+public func vlogbf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.logb) }
 @discardableResult
-public func vlogf(_: vFloat) -> vFloat { return vFloat() }
+public func vlogf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.log) }
 @discardableResult
-public func vnextafterf(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vnextafterf(_ x: vFloat, _ y: vFloat) -> vFloat {
+    return _vLane2(x, y, { a, b in a < b ? a.nextUp : (a > b ? a.nextDown : a) })
+}
 @discardableResult
-public func vnintf(_: vFloat) -> vFloat { return vFloat() }
+public func vnintf(_ x: vFloat) -> vFloat { return _vLane1(x, { $0.rounded(.toNearestOrEven) }) }
 @discardableResult
-public func vpowf(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vpowf(_ x: vFloat, _ y: vFloat) -> vFloat { return _vLane2(x, y, Foundation.pow) }
 @discardableResult
-public func vrecf(_: vFloat) -> vFloat { return vFloat() }
+public func vrecf(_ x: vFloat) -> vFloat { return _vLane1(x, { 1 / $0 }) }
 @discardableResult
-public func vremainderf(_: vFloat, _: vFloat) -> vFloat { return vFloat() }
+public func vremainderf(_ x: vFloat, _ y: vFloat) -> vFloat { return _vLane2(x, y, Foundation.remainder) }
 @discardableResult
-public func vremquof(_: vFloat, _: vFloat, _: UnsafeMutablePointer<vUInt32>) -> vFloat { return vFloat() }
+public func vremquof(_ x: vFloat, _ y: vFloat, _ quo: UnsafeMutablePointer<vUInt32>) -> vFloat {
+    // vfp.h: IEEE-754 remainder plus the 7 low-order bits of the integral
+    // quotient q (nearest-even, as for remainder) with the sign of x/y.
+    // Oracle lanes: (5.3,2)->q 3, (-5.3,2)->-3 stored as UInt32, (7,3)->2.
+    var r = vFloat()
+    var q = vUInt32()
+    for i in 0..<4 {
+        r[i] = Foundation.remainder(x[i], y[i])
+        let qd = (x[i] / y[i]).rounded(.toNearestOrEven)
+        var bits: UInt32 = 0
+        if qd.isFinite {
+            let mag = UInt32(qd.magnitude.truncatingRemainder(dividingBy: 128))
+            bits = mag & 0x7F
+            if qd.sign == .minus { bits = UInt32(bitPattern: -Int32(bitPattern: bits)) }
+        }
+        q[i] = bits
+    }
+    quo.pointee = q
+    return r
+}
 @discardableResult
-public func vrsqrtf(_: vFloat) -> vFloat { return vFloat() }
+public func vrsqrtf(_ x: vFloat) -> vFloat { return _vLane1(x, { 1 / Foundation.sqrt($0) }) }
 @discardableResult
-public func vscalbf(_: vFloat, _: vSInt32) -> vFloat { return vFloat() }
+public func vscalbf(_ x: vFloat, _ n: vSInt32) -> vFloat {
+    return vFloat(x[0] * Foundation.exp2(Float(n[0])), x[1] * Foundation.exp2(Float(n[1])), x[2] * Foundation.exp2(Float(n[2])), x[3] * Foundation.exp2(Float(n[3])))
+}
 @discardableResult
-public func vsignbitf(_: vFloat) -> vUInt32 { return vUInt32() }
+public func vsignbitf(_ x: vFloat) -> vUInt32 {
+    // Oracle: 1 when the sign bit is set (covers NaN/zero/inf), else 0.
+    var r = vUInt32()
+    for i in 0..<4 { r[i] = x[i].sign == .minus ? 1 : 0 }
+    return r
+}
 @discardableResult
-public func vsincosf(_: vFloat, _: UnsafeMutablePointer<vFloat>) -> vFloat { return vFloat() }
+public func vsincosf(_ x: vFloat, _ sineOut: UnsafeMutablePointer<vFloat>) -> vFloat {
+    // vfp.h: returns the cosine, stores the sine through the second argument.
+    var s = vFloat()
+    var c = vFloat()
+    for i in 0..<4 { s[i] = Foundation.sin(x[i]); c[i] = Foundation.cos(x[i]) }
+    sineOut.pointee = s
+    return c
+}
 @discardableResult
-public func vsinf(_: vFloat) -> vFloat { return vFloat() }
+public func vsinf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.sin) }
 @discardableResult
-public func vsinhf(_: vFloat) -> vFloat { return vFloat() }
+public func vsinhf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.sinh) }
 @discardableResult
-public func vsinpif(_: vFloat) -> vFloat { return vFloat() }
+public func vsinpif(_ x: vFloat) -> vFloat { return _vLane1(x, { Foundation.sin($0 * .pi) }) }
 @discardableResult
-public func vsqrtf(_: vFloat) -> vFloat { return vFloat() }
+public func vsqrtf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.sqrt) }
 @discardableResult
-public func vtablelookup(_: vSInt32, _: UnsafeMutablePointer<UInt32>) -> vUInt32 { return vUInt32() }
+public func vtablelookup(_ indices: vSInt32, _ table: UnsafeMutablePointer<UInt32>) -> vUInt32 {
+    // vfp.h gather: lane i takes table[signed index lane i].
+    var r = vUInt32()
+    for i in 0..<4 { r[i] = table[Int(indices[i])] }
+    return r
+}
 @discardableResult
-public func vtanf(_: vFloat) -> vFloat { return vFloat() }
+public func vtanf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.tan) }
 @discardableResult
-public func vtanhf(_: vFloat) -> vFloat { return vFloat() }
+public func vtanhf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.tanh) }
 @discardableResult
-public func vtanpif(_: vFloat) -> vFloat { return vFloat() }
+public func vtanpif(_ x: vFloat) -> vFloat { return _vLane1(x, { Foundation.tan($0 * .pi) }) }
 @discardableResult
-public func vtruncf(_: vFloat) -> vFloat { return vFloat() }
+public func vtruncf(_ x: vFloat) -> vFloat { return _vLane1(x, Foundation.trunc) }
+// Lane-wise helpers for the vFloat (SIMD4<Float>) vForce entry points above.
+@inline(__always)
+private func _vLane1(_ x: vFloat, _ op: (Float) -> Float) -> vFloat {
+    return vFloat(op(x[0]), op(x[1]), op(x[2]), op(x[3]))
+}
+@inline(__always)
+private func _vLane2(_ x: vFloat, _ y: vFloat, _ op: (Float, Float) -> Float) -> vFloat {
+    return vFloat(op(x[0], y[0]), op(x[1], y[1]), op(x[2], y[2]), op(x[3], y[3]))
+}
 public func vvacos(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acos(x[i]) } }
 public func vvacosf(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acos(x[i]) } }
 public func vvacosh(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.acosh(x[i]) } }

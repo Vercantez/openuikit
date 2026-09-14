@@ -41,6 +41,21 @@ func visionUniformGrayImage() -> CGImage {
     VisionRaster(width: 80, height: 80, filled: (128, 128, 128, 255)).makeCGImage()
 }
 
+func visionTextLinesImage() -> CGImage {
+    var raster = VisionRaster(width: 80, height: 80, filled: (255, 255, 255, 255))
+    for y in 20..<26 {
+        for x in 10..<70 {
+            raster[x, y] = (10, 10, 10, 255)
+        }
+    }
+    for y in 40..<46 {
+        for x in 10..<55 {
+            raster[x, y] = (10, 10, 10, 255)
+        }
+    }
+    return raster.makeCGImage()
+}
+
 func visionExpectOverlayInvalidModel<T>(_ work: () throws -> T, _ message: String) {
     do {
         _ = try work()

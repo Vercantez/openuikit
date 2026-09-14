@@ -253,8 +253,7 @@ open class VNCalculateImageAestheticsScoresRequest: VNImageBasedRequest {
     }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNCalculateImageAestheticsScoresRequest")
+        [visionAestheticsScores(in: context.rasterForROI(regionOfInterest))]
     }
 }
 
@@ -289,8 +288,10 @@ open class VNDetectDocumentSegmentationRequest: VNImageBasedRequest {
     public override class var defaultRevision: Int { VNDetectDocumentSegmentationRequestRevision1 }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNDetectDocumentSegmentationRequest")
+        if let quad = visionDetectDocumentQuad(in: context.rasterForROI(regionOfInterest)) {
+            return [quad]
+        }
+        return []
     }
 }
 
@@ -304,8 +305,7 @@ open class VNGenerateAttentionBasedSaliencyImageRequest: VNImageBasedRequest {
     }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNGenerateAttentionBasedSaliencyImageRequest")
+        [visionSaliencyMap(in: context.rasterForROI(regionOfInterest))]
     }
 }
 
@@ -319,8 +319,7 @@ open class VNGenerateObjectnessBasedSaliencyImageRequest: VNImageBasedRequest {
     }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNGenerateObjectnessBasedSaliencyImageRequest")
+        [visionSaliencyMap(in: context.rasterForROI(regionOfInterest))]
     }
 }
 
@@ -466,8 +465,7 @@ open class VNDetectTextRectanglesRequest: VNImageBasedRequest {
     public var reportCharacterBoxes: Bool = false
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNDetectTextRectanglesRequest")
+        visionDetectTextRectangles(in: context.rasterForROI(regionOfInterest), request: self)
     }
 }
 

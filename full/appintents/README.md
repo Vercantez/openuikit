@@ -31,8 +31,30 @@ Coverage this round (ledger at start of this increment, then after):
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 2726 | 1068 | 1204 | 0 | 1588 | 3794 |
-| After | 2906 | 896 | 1196 | 0 | 1588 | 3802 |
+| Before | 2906 | 896 | 1196 | 0 | 1588 | 3802 |
+| After | 3125 | 677 | 1196 | 0 | 1588 | 3802 |
+
+Wave 14 (this increment) implements portable shortcut-presentation and
+template models with twenty synchronous tests in
+`tests/agent/AppIntentsWave14Tests.swift` (219 rows, largest test cites 20):
+`NegativeAppShortcutPhrase` / `NegativeAppShortcutPhrases` templates,
+`AppShortcutsContent.appShortcuts`, `AppShortcutOptionsCollection` storage
+plus the options-collection specification protocol and its 1–15-arity
+result-builder concatenation, `AppShortcutParameterPresentation` /
+title / summary with key-path-interpolated title/summary strings,
+`EntityURLRepresentation` / `IntentURLRepresentation` templates,
+`IntentParameterDependency` 2–15-key-path arities (arity is recorded;
+options are never re-extracted), `ParameterSummaryString` interpolation +
+`IntentParameterSummary` table / key-path builders, `IntentItem` /
+`IntentItemSection` (new subtitle/image builder init) /
+`IntentItemCollection`, `IntentChoiceOption` styles,
+`ConfirmationConditions` / `EntityPropertyModifiers` option sets,
+`VideoCategory` / `StringSearchScope` tables, `UniqueAppEntityProvider`
+sync aliases, resolver input/output aliases, and the sync
+`needsDisambiguationError` / `donate()` / `donate(result:)` surface.
+Async `requestValue` / `requestConfirmation` / `requestChoice`, Siri
+daemon behavior, `EntityProperty.asyncGetter`, and SwiftUI overlays stay
+fail-closed, declared, or not-applicable.
 
 Prior increment on this tree was 1234 / 2548 / 1216 → 1526 / 2257 / 1215.
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
@@ -49,8 +71,9 @@ Top-5 implemented evidence:
 | 153 | 5.6% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
 | 147 | 5.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
 
-No test is cited by more than 6.1% of implemented rows (well under the
-40% bulk-relabel line). New depth-pass tests are synchronous; they do not
+No test is cited by more than 176 rows (5.7% of implemented rows, well
+under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
+New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
 

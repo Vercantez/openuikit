@@ -114,11 +114,26 @@ open class NSManagedObjectContext: NSObject, NSLocking, @unchecked Sendable {
         self.init(concurrencyType: type.rawValue)
     }
 
-    public init?(coder: NSCoder) {
-        self.concurrencyType = .mainQueueConcurrencyType
-        self._queue = DispatchQueue.main
+    public required init?(coder: NSCoder) {
+        let raw = coder.decodeInteger(forKey: "concurrencyType")
+        self.concurrencyType = NSManagedObjectContextConcurrencyType(rawValue: UInt(raw))
+            ?? .mainQueueConcurrencyType
+        if concurrencyType == .mainQueueConcurrencyType {
+            self._queue = DispatchQueue.main
+        } else {
+            self._queue = DispatchQueue(label: "coredata.nsmanagedobjectcontext.\(UUID().uuidString)")
+        }
         super.init()
         _queue.setSpecific(key: _queueKey, value: 1)
+        self.name = coder.decodeObject(of: NSString.self, forKey: "contextName") as String?
+    }
+
+    /// Archived scalar state is `concurrencyType` / `name`. Registered
+    /// objects, coordinator/parent links, and merge policy are runtime state
+    /// and are not archived.
+    open func encode(with coder: NSCoder) {
+        coder.encode(Int(concurrencyType.rawValue), forKey: "concurrencyType")
+        coder.encode((name ?? "") as NSString, forKey: "contextName")
     }
 
     public func lock() { _lock.lock() }
@@ -1123,3 +1138,8 @@ extension Notification.Name {
     public static let NSPersistentStoreRemoteChange = Notification.Name("NSPersistentStoreRemoteChange")
     public static let NSCoreDataCoreSpotlightDelegateIndexDidUpdate = NSCoreDataCoreSpotlightDelegate.indexDidUpdateNotification
 }
+
+// Keyed-archiving conformance archives `concurrencyType` / `name` only (see
+// `encode(with:)`); coordinator, parent, and registered objects are runtime
+// state.
+extension NSManagedObjectContext: NSCoding {}

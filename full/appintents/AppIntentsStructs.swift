@@ -100,44 +100,192 @@ public struct UniqueAppEntityProvider<Entity: UniqueAppEntity>: UniqueAppEntityQ
     }
 }
 
-public struct NegativeAppShortcutPhrase: @unchecked Sendable {
-    public init() {}
-    public struct StringInterpolation: @unchecked Sendable {
-        public init() {}
+public struct NegativeAppShortcutPhrase: Sendable, Hashable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+{
+    /// Process-local phrase template. Linux never registers with Shortcuts.
+    public let template: String
+
+    public init(_ phraseKey: String) { template = phraseKey }
+    public init(stringLiteral value: String) { template = value }
+    public init(stringInterpolation: StringInterpolation) {
+        template = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+
+        public mutating func appendInterpolation(_ token: AppShortcutPhraseToken) {
+            value += token == .applicationName ? "${applicationName}" : ""
+        }
+
+        public typealias StringLiteralType = String
     }
 }
 
-public struct NegativeAppShortcutPhrases: @unchecked Sendable {
-    public init() {}
-}
+public struct NegativeAppShortcutPhrases: Sendable {
+    public let phrases: [NegativeAppShortcutPhrase]
 
-public struct AppShortcutOptionsCollection<Provider>: @unchecked Sendable {
-    public init() {}
-}
+    public init() { phrases = [] }
 
-public struct AppShortcutParameterPresentation<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable {
-    public init() {}
-}
-
-public struct AppShortcutParameterPresentationTitle<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable {
-    public init() {}
-}
-
-public struct AppShortcutParameterPresentationSummary<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable {
-    public init() {}
-}
-
-public struct AppShortcutParameterPresentationTitleString<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable {
-    public init() {}
-    public struct StringInterpolation: @unchecked Sendable {
-        public init() {}
+    public init(phrases: [NegativeAppShortcutPhrase]) {
+        self.phrases = phrases
     }
 }
 
-public struct AppShortcutParameterPresentationSummaryString<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable {
-    public init() {}
-    public struct StringInterpolation: @unchecked Sendable {
-        public init() {}
+public struct AppShortcutOptionsCollection<Provider: DynamicOptionsProvider>: AppShortcutOptionsCollectionProtocol, @unchecked Sendable {
+    public typealias Provider = Provider
+    public let title: LocalizedStringResource
+    public let systemImageName: String?
+    /// Host-local provider identity. The provider is never consulted;
+    /// Linux has no Shortcuts options extractor.
+    public let hostProviderTypeName: String
+
+    public var dynamicOptionsProvider: Provider { fatalError("unavailable") }
+
+    public init(
+        _ dynamicOptionsProvider: Provider,
+        title: LocalizedStringResource,
+        systemImageName: String? = nil
+    ) {
+        self.title = title
+        self.systemImageName = systemImageName
+        self.hostProviderTypeName = String(describing: Provider.self)
+        _ = dynamicOptionsProvider
+    }
+}
+
+public struct AppShortcutParameterPresentation<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable
+    where Intent: AppIntent, Value: _IntentValue, Value: Sendable,
+    Parameter: IntentParameter<Value>, ParameterKeyPath: KeyPath<Intent, Parameter>
+{
+    public let hostKeyPathDescription: String
+    public let summary: AppShortcutParameterPresentationSummary<Intent, Value, Parameter, ParameterKeyPath>
+    public let optionsCollectionsCount: Int
+
+    public init(
+        for keyPath: ParameterKeyPath,
+        summary: AppShortcutParameterPresentationSummary<Intent, Value, Parameter, ParameterKeyPath>,
+        @AppShortcutOptionsCollectionSpecificationBuilder<Value.UnwrappedType> optionsCollections: () -> some AppShortcutOptionsCollectionSpecification<Value.UnwrappedType>
+    ) {
+        self.hostKeyPathDescription = String(describing: keyPath)
+        self.summary = summary
+        self.optionsCollectionsCount = optionsCollections().reduce(0) { count, _ in count + 1 }
+    }
+}
+
+public struct AppShortcutParameterPresentationTitle<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable
+    where Intent: AppIntent, Value: _IntentValue, Value: Sendable,
+    Parameter: IntentParameter<Value>, ParameterKeyPath: KeyPath<Intent, Parameter>
+{
+    public let specific: AppShortcutParameterPresentationTitleString<Intent, Value, Parameter, ParameterKeyPath>
+    public let generic: String
+    public let table: String?
+
+    public init(
+        specific: AppShortcutParameterPresentationTitleString<Intent, Value, Parameter, ParameterKeyPath>,
+        generic: StaticString,
+        table: StaticString? = nil
+    ) {
+        self.specific = specific
+        self.generic = String(describing: generic)
+        self.table = table.map { String(describing: $0) }
+    }
+}
+
+public struct AppShortcutParameterPresentationSummary<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable
+    where Intent: AppIntent, Value: _IntentValue, Value: Sendable,
+    Parameter: IntentParameter<Value>, ParameterKeyPath: KeyPath<Intent, Parameter>
+{
+    public let summary: AppShortcutParameterPresentationSummaryString<Intent, Value, Parameter, ParameterKeyPath>
+    public let table: String?
+
+    public init(
+        _ summaryString: AppShortcutParameterPresentationSummaryString<Intent, Value, Parameter, ParameterKeyPath>,
+        table: StaticString? = nil
+    ) {
+        self.summary = summaryString
+        self.table = table.map { String(describing: $0) }
+    }
+}
+
+public struct AppShortcutParameterPresentationTitleString<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+    where Intent: AppIntent, Value: _IntentValue, Value: Sendable,
+    Parameter: IntentParameter<Value>, ParameterKeyPath: KeyPath<Intent, Parameter>
+{
+    public let template: String
+
+    public init(_ value: String) { template = value }
+    public init(stringLiteral value: String) { template = value }
+    public init(stringInterpolation: StringInterpolation) {
+        template = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+
+        public mutating func appendInterpolation(_ subject: ParameterKeyPath) {
+            _ = subject
+            value += "${parameter}"
+        }
+
+        public typealias StringLiteralType = String
+    }
+}
+
+public struct AppShortcutParameterPresentationSummaryString<Intent, Value, Parameter, ParameterKeyPath>: @unchecked Sendable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+    where Intent: AppIntent, Value: _IntentValue, Value: Sendable,
+    Parameter: IntentParameter<Value>, ParameterKeyPath: KeyPath<Intent, Parameter>
+{
+    public let template: String
+
+    public init(_ value: String) { template = value }
+    public init(stringLiteral value: String) { template = value }
+    public init(stringInterpolation: StringInterpolation) {
+        template = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+
+        public mutating func appendInterpolation(_ subject: ParameterKeyPath) {
+            _ = subject
+            value += "${parameter}"
+        }
+
+        public typealias StringLiteralType = String
     }
 }
 
@@ -164,6 +312,7 @@ public struct IntentItem<Value: _IntentValue>: @unchecked Sendable {
         )
     }
 
+    @resultBuilder
     public enum Builder: Hashable, Sendable {
         case _appIntentsPlaceholder
         public static func buildBlock(_ items: IntentItem<Value>...) -> [IntentItem<Value>] {
@@ -184,7 +333,9 @@ public struct IntentItem<Value: _IntentValue>: @unchecked Sendable {
     }
 }
 
-public struct IntResolver: @unchecked Sendable {
+public struct IntResolver: Sendable, Hashable {
+    public typealias Input = Int
+    public typealias Output = Int
     public init() {}
 }
 
@@ -451,7 +602,9 @@ extension IntentPerson: Codable {
     }
 }
 
-public struct DoubleResolver: @unchecked Sendable {
+public struct DoubleResolver: Sendable, Hashable {
+    public typealias Input = Double
+    public typealias Output = Double
     public init() {}
 }
 
@@ -566,6 +719,26 @@ public struct IntentItemSection<Result: _IntentValue>: @unchecked Sendable {
         self.description = nil
     }
 
+    public init(
+        _ title: LocalizedStringResource,
+        subtitle: LocalizedStringResource? = nil,
+        image: DisplayRepresentation.Image? = nil,
+        @IntentItem<Result>.Builder itemsBuilder: () -> [IntentItem<Result>]
+    ) {
+        self.title = title
+        self.items = itemsBuilder()
+        if let subtitle {
+            self.description = DisplayRepresentation(
+                title: title,
+                subtitle: subtitle,
+                image: image
+            )
+        } else {
+            self.description = nil
+        }
+    }
+
+    @resultBuilder
     public enum Builder: Hashable, Sendable {
         case _appIntentsPlaceholder
         public static func buildBlock() -> [IntentItemSection<Result>] { [] }
@@ -1111,24 +1284,99 @@ public struct ParameterSummaryString<Intent: AppIntent>: Sendable,
     }
 }
 
-public struct EntityPropertyModifiers: @unchecked Sendable {
-    public init() {}
+/// Process-local entity-property modifier flags. Linux never writes Spotlight.
+public struct EntityPropertyModifiers: OptionSet, Hashable, Sendable {
+    public let rawValue: Int
+    public typealias RawValue = Int
+    public typealias Element = EntityPropertyModifiers
+
+    public init(rawValue: Int) { self.rawValue = rawValue }
+    public init() { self.rawValue = 0 }
+
+    public static let async = EntityPropertyModifiers(rawValue: 1 << 0)
+    public static let readOnly = EntityPropertyModifiers(rawValue: 1 << 1)
 }
 
-public struct EntityURLRepresentation<Entity>: @unchecked Sendable {
-    public init() {}
-    public struct StringInterpolation: @unchecked Sendable {
-        public init() {}
-        public enum Token: Hashable, Sendable {
-            case id
+public struct EntityURLRepresentation<Entity>: Sendable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+{
+    /// Process-local URL template. There is no system URL handler.
+    public let template: String
+
+    public init(_ value: String) { template = value }
+    public init(stringLiteral value: String) { template = value }
+    public init(stringInterpolation: StringInterpolation) {
+        template = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
         }
+
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+
+        public mutating func appendInterpolation(_ token: Token) {
+            switch token {
+            case .id:
+                value += "${id}"
+            }
+        }
+
+        public mutating func appendInterpolation<Value: _IntentValue>(
+            _ keyPath: KeyPath<Entity, EntityProperty<Value>>
+        ) {
+            _ = keyPath
+            value += "${property}"
+        }
+
+        public typealias StringLiteralType = String
+    }
+
+    public enum Token: Hashable, Sendable {
+        case id
     }
 }
 
-public struct IntentURLRepresentation<Intent>: @unchecked Sendable {
-    public init() {}
-    public struct StringInterpolation: @unchecked Sendable {
-        public init() {}
+public struct IntentURLRepresentation<Intent>: Sendable,
+    ExpressibleByStringLiteral, ExpressibleByStringInterpolation
+{
+    /// Process-local URL template. There is no system URL handler.
+    public let template: String
+
+    public init(_ value: String) { template = value }
+    public init(stringLiteral value: String) { template = value }
+    public init(stringInterpolation: StringInterpolation) {
+        template = stringInterpolation.value
+    }
+
+    public typealias StringLiteralType = String
+    public typealias UnicodeScalarLiteralType = String
+    public typealias ExtendedGraphemeClusterLiteralType = String
+
+    public struct StringInterpolation: StringInterpolationProtocol {
+        fileprivate var value = ""
+
+        public init(literalCapacity: Int, interpolationCount: Int) {
+            value.reserveCapacity(literalCapacity + interpolationCount * 12)
+        }
+
+        public mutating func appendLiteral(_ literal: String) { value += literal }
+
+        public mutating func appendInterpolation<Value: _IntentValue>(
+            _ keyPath: KeyPath<Intent, IntentParameter<Value>>
+        ) {
+            _ = keyPath
+            value += "${parameter}"
+        }
+
+        public typealias StringLiteralType = String
     }
 }
 
@@ -1161,7 +1409,9 @@ public struct DoubleFromStringResolver: Resolver {
     }
 }
 
-public struct StringFromDoubleResolver: @unchecked Sendable {
+public struct StringFromDoubleResolver: Sendable, Hashable {
+    public typealias Input = Double
+    public typealias Output = String
     public init() {}
 }
 

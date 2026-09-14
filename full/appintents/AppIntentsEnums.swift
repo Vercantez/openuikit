@@ -2,8 +2,158 @@ import Foundation
 
 // Generated AppIntents enumerations from the sealed public surface.
 
-public enum AppShortcutOptionsCollectionSpecificationBuilder: Hashable, Sendable {
+@resultBuilder
+public enum AppShortcutOptionsCollectionSpecificationBuilder<Value: _IntentValue>: Hashable, Sendable {
     case _appIntentsPlaceholder
+
+    public struct Specification<SpecValue: _IntentValue>: @unchecked Sendable, AppShortcutOptionsCollectionSpecification {
+        public typealias Value = SpecValue
+        public typealias Element = any AppShortcutOptionsCollectionProtocol
+        public var collections: [any AppShortcutOptionsCollectionProtocol]
+        public init(collections: [any AppShortcutOptionsCollectionProtocol] = []) {
+            self.collections = collections
+        }
+        public func makeIterator() -> IndexingIterator<[any AppShortcutOptionsCollectionProtocol]> {
+            collections.makeIterator()
+        }
+    }
+
+    public static func buildBlock<C0: AppShortcutOptionsCollectionProtocol>(_ c0: C0) -> Specification<Value> {
+        Specification(collections: [c0])
+    }
+
+    public static func buildBlock<C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol>(
+        _ c0: C0, _ c1: C1
+    ) -> Specification<Value> {
+        Specification(collections: [c0, c1])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol, C9: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol, C9: AppShortcutOptionsCollectionProtocol,
+        C10: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol, C9: AppShortcutOptionsCollectionProtocol,
+        C10: AppShortcutOptionsCollectionProtocol, C11: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol, C9: AppShortcutOptionsCollectionProtocol,
+        C10: AppShortcutOptionsCollectionProtocol, C11: AppShortcutOptionsCollectionProtocol,
+        C12: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol, C9: AppShortcutOptionsCollectionProtocol,
+        C10: AppShortcutOptionsCollectionProtocol, C11: AppShortcutOptionsCollectionProtocol,
+        C12: AppShortcutOptionsCollectionProtocol, C13: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13])
+    }
+
+    public static func buildBlock<
+        C0: AppShortcutOptionsCollectionProtocol, C1: AppShortcutOptionsCollectionProtocol,
+        C2: AppShortcutOptionsCollectionProtocol, C3: AppShortcutOptionsCollectionProtocol,
+        C4: AppShortcutOptionsCollectionProtocol, C5: AppShortcutOptionsCollectionProtocol,
+        C6: AppShortcutOptionsCollectionProtocol, C7: AppShortcutOptionsCollectionProtocol,
+        C8: AppShortcutOptionsCollectionProtocol, C9: AppShortcutOptionsCollectionProtocol,
+        C10: AppShortcutOptionsCollectionProtocol, C11: AppShortcutOptionsCollectionProtocol,
+        C12: AppShortcutOptionsCollectionProtocol, C13: AppShortcutOptionsCollectionProtocol,
+        C14: AppShortcutOptionsCollectionProtocol
+    >(_ c0: C0, _ c1: C1, _ c2: C2, _ c3: C3, _ c4: C4, _ c5: C5, _ c6: C6, _ c7: C7, _ c8: C8, _ c9: C9, _ c10: C10, _ c11: C11, _ c12: C12, _ c13: C13, _ c14: C14) -> Specification<Value> {
+        Specification(collections: [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14])
+    }
 }
 
 public enum VideoCategory: String, Hashable, Sendable {

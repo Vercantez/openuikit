@@ -514,3 +514,48 @@ This pass added 107 `implemented` rows (10 tests in
 (caption region / renderer / conversion models), well under 40% of the
 remaining implemented rows. URLSession subclassing and download start remain
 deferred.
+
+### Depth pass 2026-09-14 (fragmented movie / media selection / metadata objects)
+
+Non-UI depth on already-compiling data models: `AVFragmentedMovie` track
+queries plus synchronous completion-handler loads over stored tracks (inherited
+`AVAsset` behavior, no fragment daemon), `AVFragmentedMovieMinder` interval
+storage and membership calls, `AVFragmentedMovieTrack` identity,
+`AVMediaSelection` / `AVMutableMediaSelection` / `AVCustomMediaSelectionScheme`
+/ `AVMediaPresentationSelector` / `AVMediaPresentationSetting` fail-closed
+queries, face/body metadata objects (`AVMetadataBodyObject` hierarchy,
+`AVMetadataSalientObject.objectID`, machine-readable `corners` / `descriptor` /
+`stringValue`), `AVRenderedCaptionImage` buffers and position,
+`AVCaptionRegion.encode(with:)`, all fourteen `AVMutableCaption` attribute
+set/remove editors, caption/metadata raw-value identities
+(`AVCaption.Decoration`, `AVCaptionSettingsKey`, `AVMetadataObject.ObjectType`,
+`AVCaptionConversionWarning.WarningType`,
+`AVCaptionConversionAdjustment.AdjustmentType`), fail-closed
+`AVMutableMovieTrack.append` (`AVError.decoderNotFound`), and
+`AVAssetResourceRenewalRequest` plus fail-closed
+`AVAssetWriterInputPixelBufferAdaptor.append`. AVCapture*, AVPlayer UI, async
+`load(...)` (YaKF), FairPlay, PiP, AirPlay, and CIImage filtering stay
+deferred or fail-closed.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 4523 | 4594 |
+| `declared` | 865 | 794 |
+| `deferred` | 244 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+This pass added 71 `implemented` rows (11 tests in
+`tests/agent/AVDepthPass11Tests.swift`). Largest new test is 14 citations
+(mutable-caption attribute editors), well under 40% of the remaining
+implemented rows.

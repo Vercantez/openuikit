@@ -496,6 +496,10 @@ open class INObjectCollection<Element>: NSObject, @unchecked Sendable {
     public let items: [Element]
     public let sections: [INObjectSection<Element>]
 
+    public var allItems: [Element] {
+        sections.isEmpty ? items : sections.flatMap(\.items)
+    }
+
     public init(items: [Element]) {
         self.items = items
         self.sections = []

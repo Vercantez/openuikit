@@ -1254,6 +1254,7 @@ open class INGetCarPowerLevelStatusIntentResponse: INIntentResponse, @unchecked 
     open var maximumDistanceElectric: Measurement<UnitLength>? = nil
     open var maximumDistanceFuel: Measurement<UnitLength>? = nil
     open var minimumBatteryCapacity: Measurement<UnitEnergy>? = nil
+    @nonobjc public var minutesToFull: Int? = nil
     public required override init() { super.init() }
     public convenience init(code: INGetCarPowerLevelStatusIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
@@ -1455,6 +1456,8 @@ open class INLocationSearchTypeResolutionResult: INIntentResolutionResult, @unch
 }
 
 open class INLodgingReservation: INReservation, @unchecked Sendable {
+    @nonobjc public var numberOfAdults: Int? = nil
+    @nonobjc public var numberOfChildren: Int? = nil
     open var reservationDuration: INDateComponentsRange?
     public required init() { super.init() }
 }
@@ -1538,6 +1541,7 @@ open class INMediaUserContext: INUserContext, @unchecked Sendable {
         case unknown = 0
     }
 
+    @nonobjc public var numberOfLibraryItems: Int? = nil
     open var subscriptionStatus: INMediaUserContext.SubscriptionStatus?
     public required init() { super.init() }
 }
@@ -2391,6 +2395,7 @@ open class INRequestPaymentPayerResolutionResult: INIntentResolutionResult, @unc
 }
 
 open class INRequestRideIntent: INIntent, @unchecked Sendable {
+    @nonobjc public var partySize: Int? = nil
     open var paymentMethod: INPaymentMethod? = nil
     open var rideOptionName: INSpeakableString? = nil
     open var scheduledPickupTime: INDateComponentsRange? = nil
@@ -2522,6 +2527,7 @@ open class INRestaurantOffer: NSObject, @unchecked Sendable {
 }
 
 open class INRestaurantReservation: INReservation, @unchecked Sendable {
+    @nonobjc public var partySize: Int? = nil
     open var reservationDuration: INDateComponentsRange?
     public required init() { super.init() }
 }
@@ -2748,6 +2754,7 @@ open class INRideOption: NSObject, @unchecked Sendable {
     open var priceRange: INPriceRange? = nil
     open var specialPricing: String? = nil
     open var specialPricingBadgeImage: INImage? = nil
+    @nonobjc public var usesMeteredFare: Bool? = nil
     open var userActivityForBookingInApplication: NSUserActivity? = nil
     public required override init() { super.init() }
     public required convenience init?(coder: NSCoder) {
@@ -2839,6 +2846,7 @@ open class INSearchCallHistoryIntent: INIntent, @unchecked Sendable {
     open var callTypes: INCallRecordTypeOptions = []
     open var dateCreated: INDateComponentsRange? = nil
     open var recipient: INPerson? = nil
+    @nonobjc public var unseen: Bool? = nil
     public required override init() { super.init() }
     public convenience init(call callType: INCallRecordType, dateCreated: INDateComponentsRange?, recipient: INPerson?, callCapabilities: INCallCapabilityOptions = []) {
         self.init()
@@ -3092,6 +3100,7 @@ open class INSearchForPhotosIntent: INIntent, @unchecked Sendable {
 
 open class INSearchForPhotosIntentResponse: INIntentResponse, @unchecked Sendable {
     open var code: INSearchForPhotosIntentResponseCode?
+    @nonobjc public var searchResultsCount: Int? = nil
     public required override init() { super.init() }
     public convenience init(code: INSearchForPhotosIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()
@@ -3833,6 +3842,7 @@ open class INStartPhotoPlaybackIntent: INIntent, @unchecked Sendable {
 
 open class INStartPhotoPlaybackIntentResponse: INIntentResponse, @unchecked Sendable {
     open var code: INStartPhotoPlaybackIntentResponseCode?
+    @nonobjc public var searchResultsCount: Int? = nil
     public required override init() { super.init() }
     public convenience init(code: INStartPhotoPlaybackIntentResponseCode, userActivity: NSUserActivity?) {
         self.init()

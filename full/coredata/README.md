@@ -71,7 +71,7 @@ The isolated runtime probe `tests/agent/CoreDataRuntime.swift` prints
 `tests/agent/CoreDataDependencyIdentity.swift` prints
 `COREDATA_DEPENDENCY_IDENTITY_OK` and is not executed by the isolated gate.
 
-Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10): **88 → 1206 → 682 → 774 → 949 → 1283 implemented** / 11 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
+Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave 10 → pi-wave): **88 → 1206 → 682 → 774 → 949 → 1283 → 1291 implemented** / 3 declared / 15 deferred / 10 unavailable of 1319 public IDs. Nine `NSExpression` / `UndoManager` rows stay deferred so warnings-as-errors builds on Linux Foundation. Methods and properties that compile but are not called by a focused `func test*()` are `declared` with a product-source anchor, not `implemented`.
 
 ## Fail-closed boundaries
 
@@ -102,6 +102,43 @@ Coverage (wave-1 → depth pass → ledger repair → wave 8 → wave 9 → wave
 - Isolated Linux hosts have no UI run loop. `mainQueueConcurrencyType`
   confines with the context lock instead of `DispatchQueue.main.sync` /
   `.async`, which deadlocks a runner that never pumps main.
+
+## Depth pass 2026-09-14 (pi-wave)
+
+Focused `NSCoding` pass from the `1283 / 11 / 15 / 10` ledger. Eight
+`initWithCoder:` rows move `declared` → `implemented` (gain **+8**,
+`1291 / 3 / 15 / 10`):
+
+- Seven model-layer types (`NSPropertyDescription`, `NSEntityDescription`,
+  `NSFetchIndexDescription`, `NSFetchIndexElementDescription`,
+  `NSManagedObjectContext`, `NSPersistentHistoryToken`,
+  `NSQueryGenerationToken`) gain `required init(coder:)` +
+  `encode(with:)` + `NSCoding` conformance with real scalar round-trips,
+  observed by `testCodingRoundTrip` in
+  `tests/agent/CoreDataCodingTests.swift` (byte-identical copy embedded in
+  `tests/agent/CoreDataRuntime.swift` and invoked by the runtime probe).
+  Validation predicates, fetch-request predicates, entity relationships /
+  subindexes, and context coordinator links are runtime state and decode to
+  defaults; this is documented per class.
+- `NSFetchRequest init(coder:)` is observed decode-only: Linux
+  `NSKeyedArchiver` traps archiving generic instances, so no round-trip is
+  possible on the sealed gate and the tolerant initializer is tested against
+  an empty coder with defaults. An Apple fidelity question is recorded in
+  `oracle-questions.tsv`.
+
+No `NSExpression` row could be declared honestly: Linux probes (transcript
+in `scratch/oracle-2026-09-14/coredata-linux-foundation-2026-09-14.txt`)
+show the bare `NSExpression` type warns (fatal under warnings-as-errors),
+every initializer is unavailable, `NSPredicate(format:)` is unavailable, and
+`UndoManager` does not exist, so substituting `NSPredicate` would change the
+Apple signatures. The three async `perform` rows stay `declared` (no `await`
+in cited tests) and ubiquity/Spotlight daemon rows stay `unavailable`.
+
+Linux `NSKeyedUnarchiver` raises on absent object keys, so every decoded key
+is always encoded and tests decode only self-produced archives; nested
+`NSArray`-of-model-class round-trips use explicit allowed-class lists.
+`testCodingRoundTrip` is cited by 8 / 1291 rows (≈ 0.6%), below the 40%
+cap.
 
 ## Deferred
 

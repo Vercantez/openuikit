@@ -3,6 +3,7 @@ full/healthkit/HKDeclaredSurface.swift
 full/healthkit/HKEnums.swift
 full/healthkit/HKHealthStore.swift
 full/healthkit/HKIdentifiers.swift
+full/healthkit/HKOperatorPredicates.swift
 full/healthkit/HKPortable.swift
 full/healthkit/HKQuantity.swift
 full/healthkit/HKQuery.swift

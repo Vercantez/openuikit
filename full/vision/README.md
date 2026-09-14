@@ -38,7 +38,17 @@ and a true minimum enclosing circle.
   histogram + L2 `computeDistance`), `VNTranslationalImageRegistrationRequest`
   (phase correlation), `VNTrackObjectRequest` (centroid/template tracker),
   `VNDetectHorizonRequest` (Sobel + weighted-PCA line fit), overlay
-  `DetectLensSmudgeRequest` (Laplacian-RMS contrast).
+  `DetectLensSmudgeRequest` (Laplacian-RMS contrast),
+  `VNDetectTextRectanglesRequest` (dark-on-light connected components grouped
+  into line bands → `VNTextObservation` with optional `characterBoxes`; never
+  recognizes characters), `VNDetectDocumentSegmentationRequest` (largest
+  classical rectangle as the document quad → `VNRectangleObservation`),
+  `VNGenerateAttentionBasedSaliencyImageRequest` /
+  `VNGenerateObjectnessBasedSaliencyImageRequest` (shared center-surround
+  contrast heat map → `VNSaliencyImageObservation` with a thresholded salient
+  box), `VNCalculateImageAestheticsScoresRequest` (Laplacian-variance
+  sharpness + Hasler-Susstrunk colorfulness →
+  `VNImageAestheticsScoresObservation`; flat gray scores 0 with `isUtility`).
 - Observations: `VNObservation` / `VNDetectedObjectObservation` /
   `VNRectangleObservation` / `VNTextObservation` value semantics (`uuid`,
   `confidence`, normalized `boundingBox` with lower-left origin).
@@ -56,7 +66,10 @@ declaration evidence, not an on-device Apple oracle.
   `VNDetectFaceRectanglesRequest`, `VNClassifyImageRequest`,
   `VNDetectHumanBodyPoseRequest`, `VNCoreMLRequest`, and the other model-backed
   requests throw `VNErrorDomain` / `VNErrorCode.invalidModel` with `results ==
-  nil`. This is **not** `requestCancelled`.
+  nil`. This is **not** `requestCancelled`. Text *localization*
+  (`VNDetectTextRectanglesRequest`), document quads, contrast saliency, and
+  heuristic aesthetics scores are classical geometry/statistics instead (see
+  above) and never claim Apple model output.
 - `VNHomographicImageRegistrationRequest` throws `unsupportedRequest`; no 3×3
   warp is invented.
 - Feature prints are a documented non-Apple colour histogram, not a learned
@@ -70,9 +83,16 @@ declaration evidence, not an on-device Apple oracle.
 
 ## Still deferred
 
-About 150 exact public IDs remain deferred (3D pose joint names, video
-processor tracking requests, some document/aesthetics observations). Overlay
-stubs for remaining Swift iOS 26 request structs compile as `declared`.
+58 exact public IDs remain deferred: `VNVideoProcessor` and its cadence /
+processing-options surface (no Linux AVFoundation video pipeline) and
+`VNCoreMLFeatureValueObservation` plus its synthesized witnesses (no Apple
+Core ML runtime). 214 `declared` rows are all async
+`ImageProcessingRequest.perform(on:orientation:)` / `ImageRequestHandler.perform`
+/ targeted-`perform` overloads (`YaKF` / `YaK`): the sealed Linux gate forbids
+`await`, semaphores, and run-loop waits in cited tests, so async scheduling
+stays declared rather than receiving invented synchronous evidence.
+`tests/agent/VisionDependencyIdentity.swift` is a future EC2 probe against
+real CoreGraphics and CoreImage.
 `tests/agent/VisionDependencyIdentity.swift` is a future EC2 probe against
 real CoreGraphics and CoreImage.
 
@@ -572,3 +592,64 @@ Added Linux behaviour this pass:
 Classify / recognize / Core ML / video-processor / homographic tracking remain
 fail-closed or deferred as before. Async overlay `perform(on:orientation:)`
 stays declared.
+
+## Depth pass 2026-09 (classical text/saliency/aesthetics continuation)
+
+Campaign `ios26.1-fwdepth-r3` continuation on the ledger already in this tree
+(3312 implemented / 214 declared / 58 deferred). Work stays inside
+`full/vision/`.
+
+| Snapshot | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this continuation | 3312 | 214 | 58 | 0 | 0 |
+| After this continuation | **3312** | **214** | **58** | **0** | **0** |
+
+Implemented gain: **+0 by count, +5 request families by behaviour**. The
+ledger was already at its honest ceiling: every remaining `declared` row is an
+async `perform(on:orientation:)` / `ImageRequestHandler.perform` / targeted
+`perform` overload (`YaKF` / `YaK`) that the sealed Linux gate cannot cite
+without `await`, and every `deferred` row is `VNVideoProcessor` /
+`VNCoreMLFeatureValueObservation` (no video daemon / no Core ML runtime).
+This pass converts five fail-closed synchronous families to documented
+classical behaviour, keeping their `implemented` status with updated
+`test:…#testName` evidence and notes (114 rows re-noted, none relabelled).
+
+Added Linux behaviour this pass (all documented non-Apple heuristics):
+
+- `VNDetectTextRectanglesRequest` / overlay `DetectTextRectanglesRequest`:
+  dark-on-light connected components grouped into vertically-overlapping line
+  bands → `VNTextObservation` quads; `reportCharacterBoxes` attaches one
+  `VNRectangleObservation` per component. Never recognizes characters.
+- `VNDetectDocumentSegmentationRequest` / overlay
+  `DetectDocumentSegmentationRequest`: largest classical Sobel/quadrilateral
+  fit (permissive probe: `minimumSize` 0.02, tolerance 45°) as the document
+  quad; empty on uniform input.
+- `VNGenerateAttentionBasedSaliencyImageRequest` /
+  `VNGenerateObjectnessBasedSaliencyImageRequest` and both overlay structs:
+  one shared center-surround contrast heat map (32² grid, 3×3 blur residual,
+  full-resolution RGBA) → `VNSaliencyImageObservation` with a half-max
+  thresholded salient box; uniform input yields confidence 0 and no boxes.
+- `VNCalculateImageAestheticsScoresRequest` / overlay
+  `CalculateImageAestheticsScoresRequest`: Laplacian-variance sharpness (65%)
+  plus Hasler-Susstrunk colorfulness (35%) → `overallScore` in 0...1 with
+  `isUtility` below 0.2; flat gray scores exactly 0.
+- Overlay `performOnHandler` for all five delegates to the matching VN
+  request through `handler.perform([request])` (single source of truth) and
+  maps results to `TextObservation` / `DetectedDocumentObservation` /
+  `SaliencyImageObservation` / `ImageAestheticsScoresObservation`.
+- New `visionTextLinesImage()` fixture (two dark bars on white) shared by
+  `VisionHarnessTests.swift` and the sealed `VisionRuntime.swift`.
+
+Face / human / pose / hand / animal / text-recognition / classify / Core ML
+stay fail-closed (`invalidModel`); homography stays `unsupportedRequest`;
+video-processor and Core ML feature values stay deferred; async overlay
+`perform(on:orientation:)` stays declared.
+
+Known pre-existing failure (not introduced here, reproduced on the pristine
+HEAD in the same container): `testImageRequestHandlerPerformAll` /
+`testImageRequestHandlerOverlayPerformNow` fail at `performAll contours`
+because the greedy tracer in `traceContours` collapses into a sub-8-point
+cycle on the inverted (light-on-dark with `detectsDarkOnLight == true`) mask
+and reports 0 top-level contours. Repairing the tracer would change existing
+passing contour assertions, so it is left untouched and recorded here plus in
+`oracle-questions.tsv`.

@@ -1468,7 +1468,12 @@ public struct DetectTextRectanglesRequest: ImageProcessingRequest {
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNDetectTextRectanglesRequest()
+        request.reportCharacterBoxes = reportCharacterBoxes
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        return (request.results ?? []).compactMap { $0 as? VNTextObservation }.map(TextObservation.init)
     }
 
 }
@@ -1633,7 +1638,11 @@ public struct DetectDocumentSegmentationRequest: ImageProcessingRequest {
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNDetectDocumentSegmentationRequest()
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        return (request.results ?? []).compactMap { $0 as? VNRectangleObservation }.first.flatMap(DetectedDocumentObservation.init)
     }
 
 }
@@ -1818,7 +1827,14 @@ public struct CalculateImageAestheticsScoresRequest: ImageProcessingRequest {
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNCalculateImageAestheticsScoresRequest()
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        guard let observation = (request.results ?? []).first as? VNImageAestheticsScoresObservation else {
+            throw VisionError.invalidModel("Linux has no Apple aesthetics model output")
+        }
+        return ImageAestheticsScoresObservation(observation)
     }
 
 }
@@ -1921,7 +1937,17 @@ public struct GenerateAttentionBasedSaliencyImageRequest: ImageProcessingRequest
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNGenerateAttentionBasedSaliencyImageRequest()
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        guard let observation = (request.results ?? []).first as? VNSaliencyImageObservation else {
+            throw VisionError.invalidModel("Linux has no Apple saliency model output")
+        }
+        guard let mapped = SaliencyImageObservation(observation) else {
+            throw VisionError.invalidModel("Linux has no Apple saliency model output")
+        }
+        return mapped
     }
 
 }
@@ -1973,7 +1999,17 @@ public struct GenerateObjectnessBasedSaliencyImageRequest: ImageProcessingReques
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNGenerateObjectnessBasedSaliencyImageRequest()
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        guard let observation = (request.results ?? []).first as? VNSaliencyImageObservation else {
+            throw VisionError.invalidModel("Linux has no Apple saliency model output")
+        }
+        guard let mapped = SaliencyImageObservation(observation) else {
+            throw VisionError.invalidModel("Linux has no Apple saliency model output")
+        }
+        return mapped
     }
 
 }

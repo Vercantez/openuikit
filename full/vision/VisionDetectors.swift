@@ -511,3 +511,351 @@ private func perpendicularDistance(
     )
     return numerator / (dx * dx + dy * dy).squareRoot()
 }
+
+/// Classical dark-on-light connected-component text-line detector with optional
+/// per-component character boxes. This is a documented Linux-local heuristic,
+/// not Apple's text detection model: it finds high-contrast blob rows, so it
+/// reports geometric text regions but never recognizes characters.
+func visionDetectTextRectangles(
+    in raster: VisionRaster,
+    request: VNDetectTextRectanglesRequest
+) -> [VNTextObservation] {
+    let width = raster.width
+    let height = raster.height
+    guard width >= 8, height >= 8 else { return [] }
+    let gray = raster.grayscale()
+    var darkCount = 0
+    for value in gray {
+        if value < 128 { darkCount += 1 }
+    }
+    let darkIsForeground = darkCount * 2 <= gray.count
+    var foreground = [Bool](repeating: false, count: gray.count)
+    for index in 0..<gray.count {
+        foreground[index] = darkIsForeground ? gray[index] < 128 : gray[index] >= 128
+    }
+    var labels = [Int](repeating: -1, count: gray.count)
+    var components: [(minX: Int, minY: Int, maxX: Int, maxY: Int, area: Int)] = []
+    var stack: [Int] = []
+    for seed in 0..<gray.count {
+        if !foreground[seed] || labels[seed] != -1 { continue }
+        if components.count >= 512 { break }
+        let tag = components.count
+        var minX = width
+        var minY = height
+        var maxX = -1
+        var maxY = -1
+        var area = 0
+        stack.removeAll(keepingCapacity: true)
+        stack.append(seed)
+        labels[seed] = tag
+        while let index = stack.popLast() {
+            let x = index % width
+            let y = index / width
+            if x < minX { minX = x }
+            if y < minY { minY = y }
+            if x > maxX { maxX = x }
+            if y > maxY { maxY = y }
+            area += 1
+            if x > 0 && foreground[index - 1] && labels[index - 1] == -1 {
+                labels[index - 1] = tag
+                stack.append(index - 1)
+            }
+            if x + 1 < width && foreground[index + 1] && labels[index + 1] == -1 {
+                labels[index + 1] = tag
+                stack.append(index + 1)
+            }
+            if y > 0 && foreground[index - width] && labels[index - width] == -1 {
+                labels[index - width] = tag
+                stack.append(index - width)
+            }
+            if y + 1 < height && foreground[index + width] && labels[index + width] == -1 {
+                labels[index + width] = tag
+                stack.append(index + width)
+            }
+        }
+        components.append((minX, minY, maxX, maxY, area))
+    }
+    let minArea = max(8, (width * height) / 2000)
+    var kept: [(minX: Int, minY: Int, maxX: Int, maxY: Int, area: Int)] = []
+    for component in components {
+        let boxWidth = component.maxX - component.minX + 1
+        let boxHeight = component.maxY - component.minY + 1
+        guard component.area >= minArea else { continue }
+        guard boxWidth >= 3, boxHeight >= 2 else { continue }
+        guard boxHeight <= height / 2 else { continue }
+        guard Double(boxWidth) / Double(max(boxHeight, 1)) <= 64 else { continue }
+        kept.append(component)
+    }
+    kept.sort { $0.minY < $1.minY }
+    var lines: [[(minX: Int, minY: Int, maxX: Int, maxY: Int, area: Int)]] = []
+    for component in kept {
+        var placed = false
+        for index in 0..<lines.count {
+            let overlaps = lines[index].contains { member in
+                component.minY <= member.maxY && member.minY <= component.maxY
+            }
+            if overlaps {
+                lines[index].append(component)
+                placed = true
+                break
+            }
+        }
+        if !placed {
+            lines.append([component])
+        }
+    }
+    var observations: [VNTextObservation] = []
+    for line in lines.prefix(32) {
+        let minX = line.map(\.minX).min() ?? 0
+        let minY = line.map(\.minY).min() ?? 0
+        let maxX = line.map(\.maxX).max() ?? 0
+        let maxY = line.map(\.maxY).max() ?? 0
+        let unionArea = max(1, (maxX - minX + 1) * (maxY - minY + 1))
+        let fill = Double(line.reduce(0) { $0 + $1.area }) / Double(unionArea)
+        let confidence = VNConfidence(min(1, 0.4 + 0.6 * fill))
+        var characterBoxes: [VNRectangleObservation]? = nil
+        if request.reportCharacterBoxes {
+            characterBoxes = line.map { member in
+                visionAxisQuad(
+                    minX: member.minX,
+                    minY: member.minY,
+                    maxX: member.maxX,
+                    maxY: member.maxY,
+                    width: width,
+                    height: height,
+                    revision: VNDetectTextRectanglesRequest.currentRevision,
+                    confidence: confidence
+                )
+            }
+        }
+        let quad = visionAxisQuad(
+            minX: minX,
+            minY: minY,
+            maxX: maxX,
+            maxY: maxY,
+            width: width,
+            height: height,
+            revision: VNDetectTextRectanglesRequest.currentRevision,
+            confidence: confidence
+        )
+        observations.append(
+            VNTextObservation(
+                requestRevision: VNDetectTextRectanglesRequest.currentRevision,
+                topLeft: quad.topLeft,
+                topRight: quad.topRight,
+                bottomRight: quad.bottomRight,
+                bottomLeft: quad.bottomLeft,
+                characterBoxes: characterBoxes,
+                confidence: confidence
+            )
+        )
+    }
+    return observations
+}
+
+private func visionAxisQuad(
+    minX: Int,
+    minY: Int,
+    maxX: Int,
+    maxY: Int,
+    width: Int,
+    height: Int,
+    revision: Int,
+    confidence: VNConfidence
+) -> VNRectangleObservation {
+    VNRectangleObservation(
+        requestRevision: revision,
+        topLeft: visionNormalizedPoint(x: Double(minX), y: Double(minY), width: width, height: height),
+        topRight: visionNormalizedPoint(
+            x: Double(maxX + 1),
+            y: Double(minY),
+            width: width,
+            height: height
+        ),
+        bottomRight: visionNormalizedPoint(
+            x: Double(maxX + 1),
+            y: Double(maxY + 1),
+            width: width,
+            height: height
+        ),
+        bottomLeft: visionNormalizedPoint(
+            x: Double(minX),
+            y: Double(maxY + 1),
+            width: width,
+            height: height
+        ),
+        confidence: confidence
+    )
+}
+
+/// Largest classical Sobel/quadrilateral fit as the document quad. This is a
+/// documented Linux-local stand-in, not Apple's document segmentation model.
+func visionDetectDocumentQuad(in raster: VisionRaster) -> VNRectangleObservation? {
+    let probe = VNDetectRectanglesRequest()
+    probe.minimumSize = 0.02
+    probe.minimumAspectRatio = 0.05
+    probe.maximumAspectRatio = 1.0
+    probe.quadratureTolerance = 45
+    probe.maximumObservations = 0
+    let quads = visionDetectRectangles(in: raster, request: probe)
+    return quads.max { lhs, rhs in
+        lhs.boundingBox.width * lhs.boundingBox.height < rhs.boundingBox.width * rhs.boundingBox.height
+    }
+}
+
+/// Classical center-surround contrast saliency map with a thresholded salient
+/// box. One documented Linux-local heuristic stands in for both the attention
+/// and objectness requests; it is not either Apple saliency model.
+func visionSaliencyMap(in raster: VisionRaster) -> VNSaliencyImageObservation {
+    let width = raster.width
+    let height = raster.height
+    guard width >= 2, height >= 2 else {
+        return VNSaliencyImageObservation(
+            pixelBuffer: CVPixelBuffer(width: max(width, 0), height: max(height, 0)),
+            salientObjects: nil,
+            confidence: 0
+        )
+    }
+    let grid = 32
+    let small = raster.resized(width: grid, height: grid).grayscale().map { Double($0) }
+    var blur = [Double](repeating: 0, count: grid * grid)
+    for y in 0..<grid {
+        for x in 0..<grid {
+            var sum = 0.0
+            var count = 0.0
+            for dy in -1...1 {
+                for dx in -1...1 {
+                    let nx = x + dx
+                    let ny = y + dy
+                    if nx >= 0 && ny >= 0 && nx < grid && ny < grid {
+                        sum += small[ny * grid + nx]
+                        count += 1
+                    }
+                }
+            }
+            blur[y * grid + x] = sum / max(count, 1)
+        }
+    }
+    var contrast = [Double](repeating: 0, count: grid * grid)
+    var maxContrast = 0.0
+    for index in 0..<contrast.count {
+        contrast[index] = abs(small[index] - blur[index])
+        if contrast[index] > maxContrast { maxContrast = contrast[index] }
+    }
+    var heat = VisionRaster(width: width, height: height)
+    if maxContrast > 0 {
+        for y in 0..<height {
+            for x in 0..<width {
+                let gx = min(grid - 1, (x * grid) / width)
+                let gy = min(grid - 1, (y * grid) / height)
+                let scaled = (contrast[gy * grid + gx] / maxContrast * 255).rounded()
+                let value = UInt8(max(0, min(255, Int(scaled))))
+                heat[x, y] = (value, value, value, 255)
+            }
+        }
+    }
+    var objects: [VNRectangleObservation]? = nil
+    var confidence: VNConfidence = 0
+    if maxContrast > 1 {
+        let threshold = maxContrast * 0.5
+        var minX = grid
+        var minY = grid
+        var maxX = -1
+        var maxY = -1
+        for y in 0..<grid {
+            for x in 0..<grid {
+                if contrast[y * grid + x] >= threshold {
+                    if x < minX { minX = x }
+                    if y < minY { minY = y }
+                    if x > maxX { maxX = x }
+                    if y > maxY { maxY = y }
+                }
+            }
+        }
+        confidence = VNConfidence(min(1, maxContrast / 64))
+        if maxX >= 0 {
+            let left = Double(minX) / Double(grid)
+            let right = Double(maxX + 1) / Double(grid)
+            let top = Double(minY) / Double(grid)
+            let bottom = Double(maxY + 1) / Double(grid)
+            objects = [
+                VNRectangleObservation(
+                    requestRevision: VNGenerateAttentionBasedSaliencyImageRequest.currentRevision,
+                    topLeft: CGPoint(x: left, y: 1 - top),
+                    topRight: CGPoint(x: right, y: 1 - top),
+                    bottomRight: CGPoint(x: right, y: 1 - bottom),
+                    bottomLeft: CGPoint(x: left, y: 1 - bottom),
+                    confidence: confidence
+                )
+            ]
+        }
+    }
+    return VNSaliencyImageObservation(
+        pixelBuffer: heat.makePixelBuffer(),
+        salientObjects: objects,
+        confidence: confidence
+    )
+}
+
+/// Classical Laplacian-variance sharpness plus Hasler-Susstrunk colorfulness
+/// mapped to an overall score. A documented Linux-local heuristic, not Apple's
+/// aesthetics model: flat gray scores 0 and reports utility.
+func visionAestheticsScores(in raster: VisionRaster) -> VNImageAestheticsScoresObservation {
+    let width = raster.width
+    let height = raster.height
+    guard width >= 3, height >= 3 else {
+        return VNImageAestheticsScoresObservation(overallScore: 0, isUtility: true, confidence: 0.5)
+    }
+    let gray = raster.grayscale().map { Double($0) }
+    var sum = 0.0
+    var sumSquare = 0.0
+    var count = 0.0
+    for y in 1..<(height - 1) {
+        for x in 1..<(width - 1) {
+            let index = y * width + x
+            let laplacian =
+                gray[index - 1] + gray[index + 1] + gray[index - width] + gray[index + width]
+                - 4 * gray[index]
+            sum += laplacian
+            sumSquare += laplacian * laplacian
+            count += 1
+        }
+    }
+    let mean = sum / max(count, 1)
+    let variance = max(0, sumSquare / max(count, 1) - mean * mean)
+    let sharpness = variance / (variance + 500)
+    var rgSum = 0.0
+    var ybSum = 0.0
+    var rgSquare = 0.0
+    var ybSquare = 0.0
+    var samples = 0.0
+    for y in stride(from: 0, to: height, by: 2) {
+        for x in stride(from: 0, to: width, by: 2) {
+            let pixel = raster[x, y]
+            let red = Double(pixel.0)
+            let green = Double(pixel.1)
+            let blue = Double(pixel.2)
+            let rg = red - green
+            let yb = 0.5 * (red + green) - blue
+            rgSum += rg
+            ybSum += yb
+            rgSquare += rg * rg
+            ybSquare += yb * yb
+            samples += 1
+        }
+    }
+    let rgMean = rgSum / max(samples, 1)
+    let ybMean = ybSum / max(samples, 1)
+    let rgStd = (max(0, rgSquare / max(samples, 1) - rgMean * rgMean)).squareRoot()
+    let ybStd = (max(0, ybSquare / max(samples, 1) - ybMean * ybMean)).squareRoot()
+    let colorfulness =
+        (rgStd * rgStd + ybStd * ybStd).squareRoot()
+        + 0.3 * (rgMean * rgMean + ybMean * ybMean).squareRoot()
+    let color = colorfulness / (colorfulness + 70)
+    let overall = Float(max(0, min(1, 0.65 * sharpness + 0.35 * color)))
+    return VNImageAestheticsScoresObservation(
+        overallScore: overall,
+        isUtility: overall < 0.2,
+        confidence: 1
+    )
+}

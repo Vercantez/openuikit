@@ -109,12 +109,9 @@ func testDetectHumanHandPoseFailClosed() {
         visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "3d invalidModel")
     }
     let textRects = VNDetectTextRectanglesRequest()
-    do {
-        try handler.perform([textRects])
-        visionExpect(false, "text rect expected invalidModel")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "text rect invalidModel")
-    }
+    try! handler.perform([textRects])
+    let textObservations = (textRects.results ?? []).compactMap { $0 as? VNTextObservation }
+    visionExpectEqual(textObservations.count, 1, "square reads as one classical text line")
     let landmarksReq = VNDetectFaceLandmarksRequest()
     do {
         try handler.perform([landmarksReq])

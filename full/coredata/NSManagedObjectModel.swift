@@ -24,8 +24,24 @@ open class NSPropertyDescription: NSObject {
 
     public override init() { super.init() }
 
-    public init?(coder: NSCoder) {
+    /// Keyed-archiving support. Only scalar identity (`name`, `isOptional`,
+    /// `isTransient`) is archived: validation predicates, `userInfo`, and
+    /// subclass scalar state are not representable with block predicates on
+    /// Linux and decode back to their defaults. Every key read in
+    /// `init(coder:)` is always written here; Linux `NSKeyedUnarchiver`
+    /// raises on absent object keys, so callers must decode archives
+    /// produced by this encoder.
+    public required init?(coder: NSCoder) {
+        self.name = coder.decodeObject(of: NSString.self, forKey: "name") as String? ?? ""
+        self.isOptional = coder.decodeBool(forKey: "isOptional")
+        self.isTransient = coder.decodeBool(forKey: "isTransient")
         super.init()
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(name as NSString, forKey: "name")
+        coder.encode(isOptional, forKey: "isOptional")
+        coder.encode(isTransient, forKey: "isTransient")
     }
 
     public func setValidationPredicates(
@@ -143,9 +159,18 @@ open class NSFetchIndexElementDescription: NSObject {
         super.init()
     }
 
-    public init?(coder: NSCoder) {
-        self.collationType = .binary
+    /// Archived scalar state is `isAscending` / `collationType`. The
+    /// indexed `property` back-pointer is not archived and decodes to nil.
+    public required init?(coder: NSCoder) {
+        self.isAscending = coder.decodeBool(forKey: "isAscending")
+        let raw = coder.decodeInteger(forKey: "collationType")
+        self.collationType = NSFetchIndexElementType(rawValue: UInt(raw)) ?? .binary
         super.init()
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(isAscending, forKey: "isAscending")
+        coder.encode(Int(collationType.rawValue), forKey: "collationType")
     }
 }
 
@@ -164,10 +189,22 @@ open class NSFetchIndexDescription: NSObject {
         }
     }
 
-    public init?(coder: NSCoder) {
-        self.name = ""
-        self.elements = []
+    /// Archived scalar state is `name` / `elements`. The partial-index
+    /// predicate (block predicates do not archive) and the parent `entity`
+    /// back-pointer decode to nil and are relinked only for `elements`.
+    public required init?(coder: NSCoder) {
+        self.name = coder.decodeObject(of: NSString.self, forKey: "name") as String? ?? ""
+        let allowed: [AnyClass] = [NSArray.self, NSFetchIndexElementDescription.self]
+        self.elements = (coder.decodeObject(of: allowed, forKey: "elements") as? [NSFetchIndexElementDescription]) ?? []
         super.init()
+        for element in self.elements {
+            element.indexDescription = self
+        }
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode(name as NSString, forKey: "name")
+        coder.encode(elements as NSArray, forKey: "elements")
     }
 }
 
@@ -257,8 +294,36 @@ open class NSEntityDescription: NSObject {
 
     public override init() { super.init() }
 
-    public init?(coder: NSCoder) {
+    /// Archived scalar state is `name`, `isAbstract`,
+    /// `managedObjectClassName`, and `properties`. Relationships,
+    /// subentities, indexes, and model back-pointers are not archived:
+    /// decoded properties keep their archived scalar identity (subclass
+    /// scalar state decodes to defaults) and are reindexed to this entity.
+    public required init?(coder: NSCoder) {
+        self.name = coder.decodeObject(of: NSString.self, forKey: "entityName") as String?
+        self.isAbstract = coder.decodeBool(forKey: "isAbstract")
+        let className = coder.decodeObject(of: NSString.self, forKey: "managedObjectClassName") as String? ?? ""
+        self.managedObjectClassName = className.isEmpty ? nil : className
+        let allowed: [AnyClass] = [
+            NSArray.self,
+            NSPropertyDescription.self,
+            NSAttributeDescription.self,
+            NSCompositeAttributeDescription.self,
+            NSDerivedAttributeDescription.self,
+            NSRelationshipDescription.self,
+            NSFetchedPropertyDescription.self,
+            NSExpressionDescription.self
+        ]
+        self.properties = (coder.decodeObject(of: allowed, forKey: "properties") as? [NSPropertyDescription]) ?? []
         super.init()
+        _reindexProperties()
+    }
+
+    open func encode(with coder: NSCoder) {
+        coder.encode((name ?? "") as NSString, forKey: "entityName")
+        coder.encode(isAbstract, forKey: "isAbstract")
+        coder.encode((managedObjectClassName ?? "") as NSString, forKey: "managedObjectClassName")
+        coder.encode(properties as NSArray, forKey: "properties")
     }
 
     private func _reindexProperties() {
@@ -449,3 +514,11 @@ open class NSManagedObjectModel: NSObject {
         _entitiesByName = map
     }
 }
+
+// Keyed-archiving conformance. `init(coder:)` is `required` on each class so
+// the conformance holds for subclasses as well; subclass scalar state beyond
+// the archived base identity decodes to defaults (see the per-class notes).
+extension NSPropertyDescription: NSCoding {}
+extension NSFetchIndexElementDescription: NSCoding {}
+extension NSFetchIndexDescription: NSCoding {}
+extension NSEntityDescription: NSCoding {}

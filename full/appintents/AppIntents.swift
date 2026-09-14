@@ -1220,13 +1220,21 @@ public struct IntentSystemContext: Sendable {
 
 public struct IntentChoiceOption: Sendable {
     public var title: LocalizedStringResource
+    public var style: Style
     public struct Style: Hashable, Sendable {
-        public static let `default` = Style()
-        public init() {}
+        private let rawToken: String
+        public static let `default` = Style(rawToken: "default")
+        public static let cancel = Style(rawToken: "cancel")
+        public static let destructive = Style(rawToken: "destructive")
+        public init() { rawToken = "default" }
+        private init(rawToken: String) { self.rawToken = rawToken }
     }
     public init(title: LocalizedStringResource, style: Style = .default) {
         self.title = title
-        _ = style
+        self.style = style
+    }
+    public static var cancel: IntentChoiceOption {
+        IntentChoiceOption(title: LocalizedStringResource("Cancel"), style: .cancel)
     }
 }
 
@@ -1679,8 +1687,262 @@ public final class IntentParameterDependency<Intent: AppIntent>: @unchecked Send
         String(describing: Intent.self)
     }
 
-    public init<Value>(_ keyPath: KeyPath<Intent, IntentParameter<Value>>) {
+    /// Process-local dependency arity. Linux never asks Shortcuts to re-extract
+    /// options; multi-key-path inits only record how many paths were given.
+    public private(set) var keyPathCount: Int = 1
+
+    private init(hostKeyPathCount: Int) {
+        keyPathCount = hostKeyPathCount
+    }
+
+    public convenience init<Value>(_ keyPath: KeyPath<Intent, IntentParameter<Value>>) {
+        self.init(hostKeyPathCount: 1)
         _ = keyPath
+    }
+
+    public convenience init<V0, P0, V1, P1>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>
+    {
+        self.init(hostKeyPathCount: 2)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>, _ k2: KeyPath<Intent, P2>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>
+    {
+        self.init(hostKeyPathCount: 3)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>
+    {
+        self.init(hostKeyPathCount: 4)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>, _ k4: KeyPath<Intent, P4>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>
+    {
+        self.init(hostKeyPathCount: 5)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>
+    {
+        self.init(hostKeyPathCount: 6)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>, _ k6: KeyPath<Intent, P6>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>
+    {
+        self.init(hostKeyPathCount: 7)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>
+    {
+        self.init(hostKeyPathCount: 8)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>, _ k8: KeyPath<Intent, P8>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>
+    {
+        self.init(hostKeyPathCount: 9)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8, V9, P9>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>,
+        _ k8: KeyPath<Intent, P8>, _ k9: KeyPath<Intent, P9>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>,
+        V9: _IntentValue, V9: Sendable, P9: IntentParameter<V9>
+    {
+        self.init(hostKeyPathCount: 10)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8, V9, P9, V10, P10>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>,
+        _ k8: KeyPath<Intent, P8>, _ k9: KeyPath<Intent, P9>, _ k10: KeyPath<Intent, P10>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>,
+        V9: _IntentValue, V9: Sendable, P9: IntentParameter<V9>,
+        V10: _IntentValue, V10: Sendable, P10: IntentParameter<V10>
+    {
+        self.init(hostKeyPathCount: 11)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8, V9, P9, V10, P10, V11, P11>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>,
+        _ k8: KeyPath<Intent, P8>, _ k9: KeyPath<Intent, P9>,
+        _ k10: KeyPath<Intent, P10>, _ k11: KeyPath<Intent, P11>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>,
+        V9: _IntentValue, V9: Sendable, P9: IntentParameter<V9>,
+        V10: _IntentValue, V10: Sendable, P10: IntentParameter<V10>,
+        V11: _IntentValue, V11: Sendable, P11: IntentParameter<V11>
+    {
+        self.init(hostKeyPathCount: 12)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8, V9, P9, V10, P10, V11, P11, V12, P12>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>,
+        _ k8: KeyPath<Intent, P8>, _ k9: KeyPath<Intent, P9>,
+        _ k10: KeyPath<Intent, P10>, _ k11: KeyPath<Intent, P11>, _ k12: KeyPath<Intent, P12>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>,
+        V9: _IntentValue, V9: Sendable, P9: IntentParameter<V9>,
+        V10: _IntentValue, V10: Sendable, P10: IntentParameter<V10>,
+        V11: _IntentValue, V11: Sendable, P11: IntentParameter<V11>,
+        V12: _IntentValue, V12: Sendable, P12: IntentParameter<V12>
+    {
+        self.init(hostKeyPathCount: 13)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8, V9, P9, V10, P10, V11, P11, V12, P12, V13, P13>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>,
+        _ k8: KeyPath<Intent, P8>, _ k9: KeyPath<Intent, P9>,
+        _ k10: KeyPath<Intent, P10>, _ k11: KeyPath<Intent, P11>,
+        _ k12: KeyPath<Intent, P12>, _ k13: KeyPath<Intent, P13>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>,
+        V9: _IntentValue, V9: Sendable, P9: IntentParameter<V9>,
+        V10: _IntentValue, V10: Sendable, P10: IntentParameter<V10>,
+        V11: _IntentValue, V11: Sendable, P11: IntentParameter<V11>,
+        V12: _IntentValue, V12: Sendable, P12: IntentParameter<V12>,
+        V13: _IntentValue, V13: Sendable, P13: IntentParameter<V13>
+    {
+        self.init(hostKeyPathCount: 14)
+    }
+
+    public convenience init<V0, P0, V1, P1, V2, P2, V3, P3, V4, P4, V5, P5, V6, P6, V7, P7, V8, P8, V9, P9, V10, P10, V11, P11, V12, P12, V13, P13, V14, P14>(
+        _ k0: KeyPath<Intent, P0>, _ k1: KeyPath<Intent, P1>,
+        _ k2: KeyPath<Intent, P2>, _ k3: KeyPath<Intent, P3>,
+        _ k4: KeyPath<Intent, P4>, _ k5: KeyPath<Intent, P5>,
+        _ k6: KeyPath<Intent, P6>, _ k7: KeyPath<Intent, P7>,
+        _ k8: KeyPath<Intent, P8>, _ k9: KeyPath<Intent, P9>,
+        _ k10: KeyPath<Intent, P10>, _ k11: KeyPath<Intent, P11>,
+        _ k12: KeyPath<Intent, P12>, _ k13: KeyPath<Intent, P13>, _ k14: KeyPath<Intent, P14>
+    ) where V0: _IntentValue, V0: Sendable, P0: IntentParameter<V0>,
+        V1: _IntentValue, V1: Sendable, P1: IntentParameter<V1>,
+        V2: _IntentValue, V2: Sendable, P2: IntentParameter<V2>,
+        V3: _IntentValue, V3: Sendable, P3: IntentParameter<V3>,
+        V4: _IntentValue, V4: Sendable, P4: IntentParameter<V4>,
+        V5: _IntentValue, V5: Sendable, P5: IntentParameter<V5>,
+        V6: _IntentValue, V6: Sendable, P6: IntentParameter<V6>,
+        V7: _IntentValue, V7: Sendable, P7: IntentParameter<V7>,
+        V8: _IntentValue, V8: Sendable, P8: IntentParameter<V8>,
+        V9: _IntentValue, V9: Sendable, P9: IntentParameter<V9>,
+        V10: _IntentValue, V10: Sendable, P10: IntentParameter<V10>,
+        V11: _IntentValue, V11: Sendable, P11: IntentParameter<V11>,
+        V12: _IntentValue, V12: Sendable, P12: IntentParameter<V12>,
+        V13: _IntentValue, V13: Sendable, P13: IntentParameter<V13>,
+        V14: _IntentValue, V14: Sendable, P14: IntentParameter<V14>
+    {
+        self.init(hostKeyPathCount: 15)
     }
 }
 

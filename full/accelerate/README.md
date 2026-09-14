@@ -19,7 +19,11 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
   missing-edge / ROI error codes from that transcript plus `Accelerate.h`)
 - vDSP vector/matrix arithmetic, statistics, windowing, convolution, conversions,
   and radix-2 FFT/DFT (packed layouts; FFT cross-checked against a direct DFT)
-- vForce elementwise math for `Float`/`Double` via Foundation/`FloatingPoint`
+- vForce elementwise math for `Float`/`Double` via Foundation/`FloatingPoint`,
+  plus lane-wise `vFloat` (SIMD4) scalar entry points (`vacosf`…`vtruncf`,
+  `vsincosf`, `vremquof`, `vclassifyf`, `vsignbitf`, `vtablelookup`) pinned to
+  the macOS 26.1 oracle in `scratch/oracle-2026-09-14/vfp-simd-2026-09-14.txt`
+  (Apple `FP_xxx` codes, cosine-returning `vsincosf`, signed quotient bits)
 - BLAS level 1–3 (`saxpy_`/`daxpy_`, `sgemm_`/`dgemm_`, CBLAS enumerators),
   real packed/banded/symmetric (`sspmv_`/`sgbmv_`/`ssymm_`/`strmm_`/`srotm_`
   and `d*` twins), complex dense/packed/banded level-2 (`cgemv_`/`chemv_`/`chpmv_`/`cgbmv_`/`ctpmv_`
@@ -339,3 +343,26 @@ Top-5 evidence distribution for the 32 newly implemented rows:
 5. `testBLASBandedTbmvTbsv` — 4 (12.5%) — tied with `testBLASTrmmTrsm` and `testBLASRotmRotmg`
 
 Largest non-enum test is 6/32 = 18.8%, under the 40% remaining-row ceiling. No leftover real packed/banded/symmetric C entry points from this list. vImage CG/CV and BNNS graph execute stay deferred/fail-closed.
+
+## Depth pass 2026-09-14 (vForce SIMD lanes, sparse lifecycle, xerbla)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Implements the 45 remaining `vFloat` (SIMD4) vForce entry points lane-wise on Foundation math, `xerbla_` as a recording-free return-0 handler, and Float/Double `SparseCleanup` (preconditioner, subfactor, symbolic — no-ops over value types with sentinel storage) plus `SparseRetain` as the value-type identity for real dense-backed factorizations, subfactors, and symbolic objects. Complex sparse and `SparseRetain` for preconditioners (no such Apple overload) stay declared/fail-closed.
+
+- Implemented before: **4112**
+- Implemented after: **4168**
+- Declared before: **1489**
+- Declared after: **1433**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **56**
+
+Top-5 evidence distribution for the 56 newly implemented rows:
+
+1. `testVForceSIMDTrig` — 17 (30.4%) — inverse/forward trig, hyperbolic, `atan2`, `vsincosf`
+2. `testVForceSIMDExpLog` — 15 (26.8%) — exp/log/power/scale/sqrt/reciprocal/divide
+3. `testVForceSIMDRounding` — 13 (23.2%) — rounding, `fmod`/`remainder`/`remquo`, classify/signbit/gather
+4. `testSparseOpaqueCleanupRetain` — 10 (17.9%) — 5 Float/Double cleanup + 5 retain
+5. `testXerblaHandler` — 1 (1.8%) — `xerbla_` return-0, info untouched
+
+Largest test is 17/56 = 30.4%, under the 40% remaining-row ceiling. Oracle quirks honored from `vfp.h` plus the Apple run: `vsincosf` returns cosine and stores sine; `vclassifyf` uses Apple `FP_NAN=1/INFINITE=2/ZERO=3/NORMAL=4/SUBNORMAL=5` (not glibc numbering); `vremquof` stores sign-of-`x/y` with 7 low-order magnitude bits (large-quotient and NaN lanes recorded as oracle questions). `SparseRetain` aliases shared dense-factor storage without an extra retain; the tests never double-cleanup aliased factorizations.

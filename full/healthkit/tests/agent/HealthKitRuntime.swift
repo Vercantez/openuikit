@@ -224,7 +224,7 @@ private func testStoreAuthorizationAndCRUD() async {
         sampleType: heart,
         predicate: HKQuery.predicateForSamples(withStart: t0.addingTimeInterval(-1), end: t0.addingTimeInterval(120), options: []),
         limit: HKObjectQueryNoLimit,
-        sortDescriptors: [NSSortDescriptor(keyPath: \HKSample.startDate, ascending: true)]
+        sortDescriptors: [NSSortDescriptor(key: "startDate", ascending: true)]
     ) { _, samples, err in
         require(err == nil, "query error \(String(describing: err))")
         queried = samples
@@ -255,7 +255,7 @@ private func testStoreAuthorizationAndCRUD() async {
     require(uuidCount == 1, "uuid predicate")
 
     let qtyPred = HKQuery.predicateForQuantitySamples(
-        with: .greaterThan,
+        with: HKPredicateOperator.greaterThan,
         quantity: HKQuantity(unit: HKUnit.count().unitDivided(by: .minute()), doubleValue: 70)
     )
     let qtyLock = DispatchSemaphore(value: 0)

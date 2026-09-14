@@ -7,18 +7,33 @@ import Foundation
 open class NSQueryGenerationToken: NSObject {
     public static var current: NSQueryGenerationToken { NSQueryGenerationToken() }
     public override init() { super.init() }
-    public init?(coder: NSCoder) { super.init() }
+    public required init?(coder: NSCoder) { super.init() }
+    open func encode(with coder: NSCoder) { _ = coder }
+}
+
+extension NSQueryGenerationToken: NSCoding {}
+
+enum _CDTokenCoding {
+    static let sequenceKey = "sequence"
 }
 
 open class NSPersistentHistoryToken: NSObject {
     var sequence: Int64 = 0
     public override init() { super.init() }
-    public init?(coder: NSCoder) { super.init() }
+    public required init?(coder: NSCoder) {
+        self.sequence = Int64(coder.decodeInteger(forKey: _CDTokenCoding.sequenceKey))
+        super.init()
+    }
+    open func encode(with coder: NSCoder) {
+        coder.encode(Int(sequence), forKey: _CDTokenCoding.sequenceKey)
+    }
     convenience init(sequence: Int64) {
         self.init()
         self.sequence = sequence
     }
 }
+
+extension NSPersistentHistoryToken: NSCoding {}
 
 open class NSPersistentHistoryChange: NSObject {
     public internal(set) var changeID: Int64 = 0

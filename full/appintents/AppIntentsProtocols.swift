@@ -20,13 +20,24 @@ extension ShowInAppSearchResultsIntent where Criteria.SearchScopes == Void {
     public static var searchScopes: Void { () }
 }
 
-public protocol AppShortcutsContent {}
+public protocol AppShortcutsContent {
+    static var appShortcuts: [AppShortcut] { get }
+}
 
 public protocol AppEntityAnnotatable {}
 
-public protocol AppShortcutOptionsCollectionProtocol {}
+public protocol AppShortcutOptionsCollectionProtocol {
+    associatedtype Provider: DynamicOptionsProvider
+    var title: LocalizedStringResource { get }
+    var systemImageName: String? { get }
+    var dynamicOptionsProvider: Provider { get }
+}
 
-public protocol AppShortcutOptionsCollectionSpecification: Sendable {}
+public protocol AppShortcutOptionsCollectionSpecification<Value>: Sendable, Sequence
+    where Element == any AppShortcutOptionsCollectionProtocol
+{
+    associatedtype Value: _IntentValue
+}
 
 public protocol AppIntentsPackage {
     static var includedPackages: [any AppIntentsPackage.Type] { get }
