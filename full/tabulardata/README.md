@@ -52,12 +52,15 @@ Environment marker used by this campaign:
 
 Exact public IDs: **1768**. Nondeferred floor for `medium-full` is 884.
 
-- After this seed: implemented **1658** / declared **52** / deferred **58**
-  (TopLevelEncoder/Decoder, Combine `publisher`, collection `formatted(_:)`,
-  `compare(_:_:)` when `Element: SortComparator`, deprecated `index(of:)`,
-  and RangeSet `removingSubranges` / `moveSubranges` that the host runner
-  must not hang on).
-- Top-5 implemented evidence distribution (1658 rows):
+- Before this pass: implemented **1658** / declared **52** / deferred **58**.
+- After this pass: implemented **1731** / declared **0** / deferred **37**
+  (+73 implemented: 52 typealias/associatedtype tests, 5 `index(of:)` overlays
+  forwarding to `firstIndex(of:)`, 16 RangeSet `removingSubranges` /
+  `moveSubranges` calls that complete synchronously).
+- Leftover deferred: Combine TopLevelEncoder/Decoder, Combine `publisher`,
+  collection `formatted(_:)` whose `FormatInput` is the collection, and
+  `compare(_:_:)` when `Element: SortComparator`.
+- Top-5 implemented evidence distribution (1731 rows):
   1. `TabularDataColumnTests.swift#testColumnInitAndAppend` — 74
   2. `TabularDataGroupTests.swift#testGroupedCountsAndAggregates` — 68
   3. `TabularDataColumnTests.swift#testDiscontiguousColumnSliceBehavior` — 63
@@ -66,7 +69,7 @@ Exact public IDs: **1768**. Nondeferred floor for `medium-full` is 884.
 - Enum/option-set members share table-driven tests
   (`testCSVTypeCases`, `testJSONTypeCases`, error-case tests). No other
   single test exceeds 40% of the remaining implemented rows (largest remaining
-  citation is about 4.8%).
+  citation is about 4.3%).
 - Gate: `bash full/tabulardata/tests/acceptance/test_host.sh`.
 
 Still not claimed: Apple-identical CSV quoting of every Unicode edge

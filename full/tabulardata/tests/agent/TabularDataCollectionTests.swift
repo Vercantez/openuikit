@@ -234,3 +234,66 @@ func testCategoricalSummaryModeType() {
     let any = AnyCategoricalSummary(summary)
     precondition(any.modeType == String.self)
 }
+
+func testCollectionIndexOf() {
+    let column = Column<Int>(name: "n", contents: [3, 1, 2])
+    precondition(column.index(of: 1) == 1)
+    precondition(column.index(of: 9) == nil)
+    let slice = ColumnSlice(column)
+    precondition(slice.index(of: 2) == 2)
+    let disc = DiscontiguousColumnSlice(column)
+    precondition(disc.index(of: 3) == 0)
+    let filled = column.filled(with: 0)
+    precondition(filled.index(of: 1) == 1)
+    let rows = sampleFrame().rows
+    precondition(rows.index(of: rows[0]) == 0)
+}
+
+func testCollectionRemovingSubranges() {
+    var ranges = RangeSet<Int>()
+    ranges.insert(contentsOf: 1..<2)
+    let column = Column<Int>(name: "n", contents: [1, 2, 3, 4])
+    precondition(Array(column.removingSubranges(ranges)).map { $0 ?? -1 } == [1, 3, 4])
+    precondition(Array(ColumnSlice(column).removingSubranges(ranges)).map { $0 ?? -1 } == [1, 3, 4])
+    precondition(
+        Array(DiscontiguousColumnSlice(column).removingSubranges(ranges)).map { $0 ?? -1 } == [1, 3, 4]
+    )
+    precondition(Array(column.filled(with: 0).removingSubranges(ranges)) == [1, 3, 4])
+    let any = AnyColumn(column)
+    precondition(Array(any.removingSubranges(ranges)).map { $0 as? Int ?? -1 } == [1, 3, 4])
+    precondition(
+        Array(AnyColumnSlice(any).removingSubranges(ranges)).map { $0 as? Int ?? -1 } == [1, 3, 4]
+    )
+    let frame = sampleFrame()
+    precondition(Array(frame[row: 0].removingSubranges(ranges)).count == frame[row: 0].count - 1)
+    precondition(Array(frame.rows.removingSubranges(ranges)).count == frame.rows.count - 1)
+    let grouping = frame.grouped(by: ColumnID("name", String.self))
+    var groupRanges = RangeSet<Int>()
+    groupRanges.insert(contentsOf: 0..<1)
+    precondition(Array(grouping.removingSubranges(groupRanges)).count == grouping.count - 1)
+}
+
+func testCollectionMoveSubranges() {
+    var ranges = RangeSet<Int>()
+    ranges.insert(contentsOf: 1..<2)
+    var column = Column<Int>(name: "n", contents: [1, 2, 3, 4])
+    _ = column.moveSubranges(ranges, to: 0)
+    precondition(column.map { $0 ?? -1 } == [2, 1, 3, 4])
+    var slice = ColumnSlice(Column<Int>(name: "n", contents: [1, 2, 3, 4]))
+    _ = slice.moveSubranges(ranges, to: 0)
+    precondition(slice.map { $0 ?? -1 } == [2, 1, 3, 4])
+    var disc = DiscontiguousColumnSlice(Column<Int>(name: "n", contents: [1, 2, 3, 4]))
+    _ = disc.moveSubranges(ranges, to: 0)
+    precondition(disc.map { $0 ?? -1 } == [2, 1, 3, 4])
+    var any = AnyColumn(Column<Int>(name: "n", contents: [1, 2, 3, 4]))
+    _ = any.moveSubranges(ranges, to: 0)
+    precondition(any.map { $0 as? Int ?? -1 } == [2, 1, 3, 4])
+    var anySlice = AnyColumnSlice(AnyColumn(Column<Int>(name: "n", contents: [1, 2, 3, 4])))
+    _ = anySlice.moveSubranges(ranges, to: 0)
+    precondition(anySlice.map { $0 as? Int ?? -1 } == [2, 1, 3, 4])
+    var row = sampleFrame()[row: 0]
+    _ = row.moveSubranges(ranges, to: 0)
+    var rows = sampleFrame().rows
+    _ = rows.moveSubranges(ranges, to: 0)
+    precondition(rows.count == 4)
+}
