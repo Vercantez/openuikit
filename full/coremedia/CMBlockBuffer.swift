@@ -1,10 +1,10 @@
 import CoreFoundation
 import Foundation
 
-internal protocol CMBlockBufferProtocol: AnyObject {
-    var dataLength: Int { get }
-    func copyDataBytes(to destination: UnsafeMutableRawBufferPointer) throws
-    func dataBytes() throws -> Data
+public protocol CMBlockBufferProtocol {
+    var owner: CMBlockBuffer { get }
+    var startIndex: Int { get }
+    var endIndex: Int { get }
 }
 
 public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProtocol, @unchecked Sendable {
@@ -219,13 +219,12 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
         }
     }
 
-    public func append(bufferReference: CMBlockBuffer, flags: Flags = []) throws {
-        _ = flags
+    public func append<T: CMBlockBufferProtocol>(bufferReference: T, flags: Flags = []) throws {
         let status = CMBlockBufferAppendBufferReference(
             self,
-            targetBBuf: bufferReference,
-            offsetToData: 0,
-            dataLength: 0,
+            targetBBuf: bufferReference.owner,
+            offsetToData: bufferReference.startIndex,
+            dataLength: bufferReference.dataLength,
             flags: flags.rawValue
         )
         if status != 0 { throw cmNSError(code: Int(status)) }
@@ -309,6 +308,84 @@ extension CMBlockBuffer: Hashable {
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
+    }
+}
+
+extension CMBlockBuffer.Slice: CMBlockBufferProtocol {}
+
+extension CMBlockBufferProtocol {
+    public var dataLength: Int { endIndex - startIndex }
+
+    public var isContiguous: Bool { owner.isContiguous }
+
+    public func copyDataBytes(to destination: UnsafeMutableRawBufferPointer) throws {
+        let length = endIndex - startIndex
+        if destination.count < length {
+            throw CMBlockBuffer.Error.insufficientSpace
+        }
+        if length == 0 { return }
+        guard let base = destination.baseAddress else {
+            throw CMBlockBuffer.Error.badPointerParameter
+        }
+        try owner.copyDataBytes(atOffset: startIndex, dataLength: length, destination: base)
+    }
+
+    public func dataBytes() throws -> Data {
+        let length = endIndex - startIndex
+        var data = Data(count: length)
+        if length == 0 { return data }
+        try data.withUnsafeMutableBytes { destination in
+            try copyDataBytes(to: destination)
+        }
+        return data
+    }
+
+    public func fillDataBytes(with fillByte: UInt8) throws {
+        let length = endIndex - startIndex
+        try owner.withUnsafeMutableBytes(atOffset: startIndex) { buffer in
+            for index in 0..<length {
+                buffer[index] = fillByte
+            }
+        }
+    }
+
+    public func replaceDataBytes(with sourceBytes: UnsafeRawBufferPointer) throws {
+        let length = endIndex - startIndex
+        if sourceBytes.count > length {
+            throw CMBlockBuffer.Error.insufficientSpace
+        }
+        try owner.withUnsafeMutableBytes(atOffset: startIndex) { buffer in
+            guard let destination = buffer.baseAddress,
+                  let source = sourceBytes.baseAddress,
+                  sourceBytes.count > 0
+            else { return }
+            destination.copyMemory(from: source, byteCount: sourceBytes.count)
+        }
+    }
+
+    public subscript(bounds: Range<Int>) -> CMBlockBuffer.Slice {
+        CMBlockBuffer.Slice(owner: owner, startIndex: bounds.lowerBound, endIndex: bounds.upperBound)
+    }
+
+    public subscript(bounds: ClosedRange<Int>) -> CMBlockBuffer.Slice {
+        self[bounds.lowerBound..<(bounds.upperBound + 1)]
+    }
+
+    public subscript(bounds: PartialRangeFrom<Int>) -> CMBlockBuffer.Slice {
+        self[bounds.lowerBound..<endIndex]
+    }
+
+    public subscript(bounds: PartialRangeUpTo<Int>) -> CMBlockBuffer.Slice {
+        self[startIndex..<bounds.upperBound]
+    }
+
+    public subscript(bounds: PartialRangeThrough<Int>) -> CMBlockBuffer.Slice {
+        self[startIndex..<(bounds.upperBound + 1)]
+    }
+
+    public subscript(bounds: (UnboundedRange_) -> Void) -> CMBlockBuffer.Slice {
+        _ = bounds
+        return self[startIndex..<endIndex]
     }
 }
 

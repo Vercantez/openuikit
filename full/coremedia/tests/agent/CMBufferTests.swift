@@ -647,3 +647,142 @@ func testCMBlockBufferHashableEquatable() {
     _ = hasher.finalize()
     precondition(first.hashValue == first.hashValue)
 }
+
+func testCMBlockBufferProtocolMethods() {
+    let buffer = CMBlockBuffer(data: Data([1, 2, 3, 4, 5]))
+    try! verifyCMBlockBufferProtocol(buffer)
+    precondition(buffer.isContiguous)
+    precondition(buffer.dataLength == 5)
+    precondition(buffer.startIndex == 0)
+    precondition(buffer.endIndex == 5)
+    precondition(buffer.owner === buffer)
+    var dest = [UInt8](repeating: 0, count: 5)
+    try! dest.withUnsafeMutableBytes { raw in
+        try buffer.copyDataBytes(to: raw)
+    }
+    precondition(dest == [1, 2, 3, 4, 5])
+    let prefix: [UInt8] = [9, 8]
+    prefix.withUnsafeBytes { raw in
+        try! buffer.replaceDataBytes(with: raw)
+    }
+    precondition(Array(try! buffer.dataBytes()) == [9, 8, 3, 4, 5])
+    try! buffer.fillDataBytes(with: 4)
+    precondition(Array(try! buffer.dataBytes()) == [4, 4, 4, 4, 4])
+
+    let source = CMBlockBuffer(data: Data([1, 2, 3, 4, 5]))
+    let rangeSlice = source[1..<4]
+    precondition(rangeSlice.startIndex == 1)
+    precondition(rangeSlice.endIndex == 4)
+    precondition(rangeSlice.dataLength == 3)
+    precondition(rangeSlice.owner === source)
+    try! verifyCMBlockBufferProtocol(rangeSlice)
+    precondition(rangeSlice.isContiguous)
+    precondition(Array(try! rangeSlice.dataBytes()) == [2, 3, 4])
+    var sliceDest = [UInt8](repeating: 0, count: 3)
+    try! sliceDest.withUnsafeMutableBytes { raw in
+        try rangeSlice.copyDataBytes(to: raw)
+    }
+    precondition(sliceDest == [2, 3, 4])
+    let replacement: [UInt8] = [7, 7]
+    replacement.withUnsafeBytes { raw in
+        try! rangeSlice.replaceDataBytes(with: raw)
+    }
+    precondition(Array(try! source.dataBytes()) == [1, 7, 7, 4, 5])
+    try! rangeSlice.fillDataBytes(with: 0)
+    precondition(Array(try! source.dataBytes()) == [1, 0, 0, 4, 5])
+
+    let closed = source[1...3]
+    precondition(closed.startIndex == 1 && closed.endIndex == 4)
+    let from = source[2...]
+    precondition(from.startIndex == 2 && from.endIndex == 5)
+    let upTo = source[..<2]
+    precondition(upTo.startIndex == 0 && upTo.endIndex == 2)
+    let through = source[...2]
+    precondition(through.startIndex == 0 && through.endIndex == 3)
+    let unbounded = source[...]
+    precondition(unbounded.startIndex == 0 && unbounded.endIndex == 5)
+    let nested = source[1..<5][2..<4]
+    precondition(nested.startIndex == 2 && nested.endIndex == 4)
+    precondition(source[1...3].dataLength == 3)
+    precondition(source[2...].dataLength == 3)
+    precondition(source[..<2].dataLength == 2)
+    precondition(source[...2].dataLength == 3)
+    precondition(source[...].dataLength == 5)
+    let mid = source[1..<5]
+    precondition(mid[1...3].startIndex == 1 && mid[1...3].endIndex == 4)
+    precondition(mid[2...].startIndex == 2 && mid[2...].endIndex == 5)
+    precondition(mid[..<3].startIndex == 1 && mid[..<3].endIndex == 3)
+    precondition(mid[...3].startIndex == 1 && mid[...3].endIndex == 4)
+    precondition(mid[...].startIndex == 1 && mid[...].endIndex == 5)
+}
+
+func testCMDescriptionFlavorHashableEquatable() {
+    func verify<T: Hashable>(_ value: T, _ same: T, _ different: T) {
+        precondition(value == same)
+        precondition(!(value != same))
+        precondition(value != different)
+        var first = Hasher()
+        var second = Hasher()
+        value.hash(into: &first)
+        same.hash(into: &second)
+        precondition(first.finalize() == second.finalize())
+        precondition(value.hashValue == same.hashValue)
+    }
+    let iso = cmMakeCFStringForBufferTest("isoFamily")
+    let qt = cmMakeCFStringForBufferTest("quickTimeMovie")
+    verify(
+        CMImageDescriptionFlavor(rawValue: iso),
+        CMImageDescriptionFlavor(iso),
+        CMImageDescriptionFlavor(qt)
+    )
+    verify(
+        CMSoundDescriptionFlavor(rawValue: iso),
+        CMSoundDescriptionFlavor(iso),
+        CMSoundDescriptionFlavor(qt)
+    )
+    verify(
+        CMTextDescriptionFlavor(rawValue: iso),
+        CMTextDescriptionFlavor(iso),
+        CMTextDescriptionFlavor(qt)
+    )
+    verify(
+        CMMetadataDescriptionFlavor(rawValue: iso),
+        CMMetadataDescriptionFlavor(iso),
+        CMMetadataDescriptionFlavor(qt)
+    )
+    verify(
+        CMClosedCaptionDescriptionFlavor(rawValue: iso),
+        CMClosedCaptionDescriptionFlavor(iso),
+        CMClosedCaptionDescriptionFlavor(qt)
+    )
+    verify(
+        CMTimeCodeDescriptionFlavor(rawValue: iso),
+        CMTimeCodeDescriptionFlavor(iso),
+        CMTimeCodeDescriptionFlavor(qt)
+    )
+}
+
+private func verifyCMBlockBufferProtocol<T: CMBlockBufferProtocol>(_ buffer: T) throws {
+    precondition(buffer.startIndex >= 0)
+    precondition(buffer.endIndex >= buffer.startIndex)
+    precondition(buffer.dataLength == buffer.endIndex - buffer.startIndex)
+    precondition(buffer.isContiguous)
+    precondition(buffer.owner === buffer.owner)
+    let bytes = try buffer.dataBytes()
+    precondition(bytes.count == buffer.dataLength)
+    var dest = [UInt8](repeating: 0, count: buffer.dataLength)
+    try dest.withUnsafeMutableBytes { raw in
+        try buffer.copyDataBytes(to: raw)
+    }
+    precondition(dest == Array(bytes))
+}
+
+private func cmMakeCFStringForBufferTest(_ string: String) -> CFString {
+    string.withCString { pointer in
+        CFStringCreateWithCString(
+            kCFAllocatorDefault,
+            pointer,
+            CFStringBuiltInEncodings.UTF8.rawValue
+        )!
+    }
+}

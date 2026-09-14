@@ -1027,35 +1027,35 @@ c:@F@dasum_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLA
 c:@F@daxpy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@dcopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@ddot_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@dgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dgbmv_	
+c:@F@dgbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedGbmvSbmv	Double general banded MV 2x2, Apple-matched.
 c:@F@dgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@dgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@dger_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@dnrm2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@drot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRot	
 c:@F@drotg_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotg	
-c:@F@drotm_	declared	source:full/accelerate/AccelerateCFunctions.swift#drotm_	
-c:@F@drotmg_	declared	source:full/accelerate/AccelerateCFunctions.swift#drotmg_	
-c:@F@dsbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsbmv_	
+c:@F@drotm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASRotmRotmg	Double modified Givens apply, Apple-matched.
+c:@F@drotmg_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASRotmRotmg	Double modified Givens generate, Apple-matched.
+c:@F@dsbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedGbmvSbmv	Double symmetric banded MV 2x2, Apple-matched.
 c:@F@dscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@dsdot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASDsdot	
-c:@F@dspmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dspmv_	
-c:@F@dspr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#dspr2_	
-c:@F@dspr_	declared	source:full/accelerate/AccelerateCFunctions.swift#dspr_	
+c:@F@dspmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedSpmvSpr	Double packed symmetric MV 2x2, Apple-matched.
+c:@F@dspr2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedSpmvSpr	Double packed symmetric rank-2 2x2, Apple-matched.
+c:@F@dspr_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedSpmvSpr	Double packed symmetric rank-1 2x2, Apple-matched.
 c:@F@dswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@dsymm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsymm_	
+c:@F@dsymm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASSymmSyr2Syr2k	Double symmetric MM 2x2, Apple-matched.
 c:@F@dsymv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSymv	
-c:@F@dsyr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsyr2_	
-c:@F@dsyr2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#dsyr2k_	
+c:@F@dsyr2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASSymmSyr2Syr2k	Double symmetric rank-2 2x2, Apple-matched.
+c:@F@dsyr2k_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASSymmSyr2Syr2k	Double symmetric rank-2k 2x2, Apple-matched.
 c:@F@dsyr_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSyr	
 c:@F@dsyrk_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSyrk	
-c:@F@dtbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtbmv_	
-c:@F@dtbsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtbsv_	
-c:@F@dtpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtpmv_	
-c:@F@dtpsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtpsv_	
-c:@F@dtrmm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrmm_	
+c:@F@dtbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedTbmvTbsv	Double banded triangular MV 2x2, Apple-matched.
+c:@F@dtbsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedTbmvTbsv	Double banded triangular solve 2x2, Apple-matched.
+c:@F@dtpmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedTpmvTpsv	Double packed triangular MV 2x2, Apple-matched.
+c:@F@dtpsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedTpmvTpsv	Double packed triangular solve 2x2, Apple-matched.
+c:@F@dtrmm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASTrmmTrsm	Double triangular MM 2x2, Apple-matched.
 c:@F@dtrmv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASTrmv	
-c:@F@dtrsm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrsm_	
+c:@F@dtrsm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASTrmmTrsm	Double triangular solve MM 2x2, Apple-matched.
 c:@F@dtrsv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASTrsv	
 c:@F@dzasum_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex l1 sum.
 c:@F@dznrm2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex Euclidean norm.
@@ -1112,7 +1112,7 @@ c:@F@scnrm2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBL
 c:@F@scopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@sdot_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@sdsdot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSdsdot	
-c:@F@sgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#sgbmv_	
+c:@F@sgbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedGbmvSbmv	Real general banded MV 2x2/3-diagonal, Apple-matched.
 c:@F@sgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@sgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
 c:@F@sger_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel23	
@@ -1224,27 +1224,27 @@ c:@F@sparse_vector_triangular_solve_dense_double	implemented	test:full/accelerat
 c:@F@sparse_vector_triangular_solve_dense_float	implemented	test:full/accelerate/tests/agent/SparseLegacyTests.swift#testSparseLegacyExtractBlockSolve	
 c:@F@srot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRot	
 c:@F@srotg_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASRotg	
-c:@F@srotm_	declared	source:full/accelerate/AccelerateCFunctions.swift#srotm_	
-c:@F@srotmg_	declared	source:full/accelerate/AccelerateCFunctions.swift#srotmg_	
-c:@F@ssbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssbmv_	
+c:@F@srotm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASRotmRotmg	Modified Givens apply flags -2/0/1/-1, Apple-matched.
+c:@F@srotmg_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASRotmRotmg	Modified Givens generate 3,4 and identity, Apple-matched.
+c:@F@ssbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedGbmvSbmv	Real symmetric banded MV 2x2/3-diagonal, Apple-matched.
 c:@F@sscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@sspmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#sspmv_	
-c:@F@sspr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#sspr2_	
-c:@F@sspr_	declared	source:full/accelerate/AccelerateCFunctions.swift#sspr_	
+c:@F@sspmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedSpmvSpr	Packed symmetric MV 2x2/3x3, Apple-matched.
+c:@F@sspr2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedSpmvSpr	Packed symmetric rank-2 2x2, Apple-matched.
+c:@F@sspr_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedSpmvSpr	Packed symmetric rank-1 2x2, Apple-matched.
 c:@F@sswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@ssymm_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssymm_	
+c:@F@ssymm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASSymmSyr2Syr2k	Symmetric MM 2x2 left/right, Apple-matched.
 c:@F@ssymv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSymv	
-c:@F@ssyr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssyr2_	
-c:@F@ssyr2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#ssyr2k_	
+c:@F@ssyr2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASSymmSyr2Syr2k	Symmetric rank-2 2x2, Apple-matched.
+c:@F@ssyr2k_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASSymmSyr2Syr2k	Symmetric rank-2k 2x2, Apple-matched.
 c:@F@ssyr_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSyr	
 c:@F@ssyrk_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSyrk	
-c:@F@stbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stbmv_	
-c:@F@stbsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stbsv_	
-c:@F@stpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stpmv_	
-c:@F@stpsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#stpsv_	
-c:@F@strmm_	declared	source:full/accelerate/AccelerateCFunctions.swift#strmm_	
+c:@F@stbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedTbmvTbsv	Banded triangular MV 2x2/3x3, Apple-matched.
+c:@F@stbsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASBandedTbmvTbsv	Banded triangular solve 2x2/3x3, Apple-matched.
+c:@F@stpmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedTpmvTpsv	Packed triangular MV 2x2/3x3, Apple-matched.
+c:@F@stpsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASPackedTpmvTpsv	Packed triangular solve 2x2/3x3, Apple-matched.
+c:@F@strmm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASTrmmTrsm	Triangular MM 2x2 left/right, Apple-matched.
 c:@F@strmv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASTrmv	
-c:@F@strsm_	declared	source:full/accelerate/AccelerateCFunctions.swift#strsm_	
+c:@F@strsm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASTrmmTrsm	Triangular solve MM 2x2, Apple-matched.
 c:@F@strsv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASTrsv	
 c:@F@vDSP_DFT_Interleaved_CreateSetup	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testVDSPFFT	
 c:@F@vDSP_DFT_Interleaved_CreateSetupD	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testVDSPDFTInterleavedDouble	

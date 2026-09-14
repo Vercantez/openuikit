@@ -3,7 +3,30 @@ import Foundation
 // Additional AppIntents structs from the sealed public surface.
 
 public struct FocusFilterAppContext: @unchecked Sendable {
-    public init() {}
+    public let notificationFilterPredicate: NSPredicate?
+    public let targetContentIdentifierPrefix: String?
+
+    public var hostPredicateFormat: String? {
+        notificationFilterPredicate?.predicateFormat
+    }
+
+    public init() {
+        self.notificationFilterPredicate = nil
+        self.targetContentIdentifierPrefix = nil
+    }
+
+    public init(notificationFilterPredicate: NSPredicate?) {
+        self.notificationFilterPredicate = notificationFilterPredicate
+        self.targetContentIdentifierPrefix = nil
+    }
+
+    public init(
+        notificationFilterPredicate: NSPredicate?,
+        targetContentIdentifierPrefix: String?
+    ) {
+        self.notificationFilterPredicate = notificationFilterPredicate
+        self.targetContentIdentifierPrefix = targetContentIdentifierPrefix
+    }
 }
 
 public struct AttributedStringFromStringResolver: Resolver {
@@ -41,7 +64,7 @@ public struct StringSearchCriteriaFromStringResolverSpecificification: Resolver 
     ) throws -> StringSearchCriteria? {
         _ = input
         _ = context
-        return StringSearchCriteria()
+        return StringSearchCriteria(term: input)
     }
     public func resolve(
         from input: String,
@@ -715,8 +738,21 @@ public struct IntentItemCollection<Result: _IntentValue>: @unchecked Sendable {
     }
 }
 
-public struct StringSearchCriteria: @unchecked Sendable, _IntentValue {
-    public init() {}
+public struct StringSearchCriteria: Hashable, Sendable, SearchCriteria, _IntentValue {
+    public typealias SearchScopes = [StringSearchScope]
+    public var term: String
+
+    public init() {
+        self.term = ""
+    }
+
+    public init(term: String) {
+        self.term = term
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(term)
+    }
 }
 
 public struct DoubleFromIntResolver: Resolver {
@@ -979,6 +1015,13 @@ public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
     public var storedCurrencyCodes: [String]?
     public var storedPersonMode: IntentPerson.ParameterMode?
     public var storedPlacemarkDisplayStyle: IntentParameter<Value>.PlacemarkDisplayStyle?
+    public var storedDateKind: IntentParameter<Value>.DateKind?
+    public var storedBoolDisplayName: Bool.IntentDisplayName?
+    public var storedIntControlStyle: IntentParameter<Value>.IntControlStyle?
+    public var storedDoubleControlStyle: IntentParameter<Value>.DoubleControlStyle?
+    public var storedInclusiveRangeText: (lowerBound: String, upperBound: String)?
+    public var storedDecimalInclusiveRange: (lowerBound: Decimal, upperBound: Decimal)?
+    public var storedCollectionSize: IntentCollectionSize?
 
     public init(title: LocalizedStringResource = LocalizedStringResource(""), isOptional: Bool = true) {
         self.title = title
@@ -1023,7 +1066,7 @@ public struct IntentParameterContext<Value: _IntentValue>: @unchecked Sendable {
         throw AppIntentError.Unrecoverable.unsupportedOnDevice
     }
 
-    public var dateKind: IntentParameter<Value>.DateKind? { nil }
+    public var dateKind: IntentParameter<Value>.DateKind? { storedDateKind }
     public var displayStyle: IntentParameter<Value>.PlacemarkDisplayStyle? {
         storedPlacemarkDisplayStyle
     }

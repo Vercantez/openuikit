@@ -38,6 +38,13 @@ extension IntentParameter {
         context.storedCurrencyCodes = storedCurrencyCodes
         context.storedPersonMode = storedPersonMode
         context.storedPlacemarkDisplayStyle = storedPlacemarkDisplayStyle
+        context.storedDateKind = storedDateKind
+        context.storedBoolDisplayName = storedBoolDisplayName
+        context.storedIntControlStyle = storedIntControlStyle
+        context.storedDoubleControlStyle = storedDoubleControlStyle
+        context.storedInclusiveRangeText = storedInclusiveRange
+        context.storedDecimalInclusiveRange = storedDecimalInclusiveRange
+        context.storedCollectionSize = storedCollectionSize
         return context
     }
 }

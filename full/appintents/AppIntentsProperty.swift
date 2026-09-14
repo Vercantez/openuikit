@@ -14,7 +14,41 @@ extension IntentParameterContext where Value == IntentPerson {
 
 extension IntentParameterContext where Value == DateComponents {
     public var dateKind: IntentParameter<DateComponents>.DateKind? {
-        nil
+        storedDateKind
+    }
+}
+
+extension IntentParameterContext where Value == IntentCurrencyAmount {
+    public var inclusiveRange: (lowerBound: Decimal, upperBound: Decimal)? {
+        storedDecimalInclusiveRange
+    }
+}
+
+extension IntentParameterContext where Value == Bool {
+    public var displayName: Bool.IntentDisplayName? { storedBoolDisplayName }
+}
+
+extension IntentParameterContext where Value == Int {
+    public var controlStyle: IntentParameter<Int>.IntControlStyle? { storedIntControlStyle }
+    public var inclusiveRange: (lowerBound: Int, upperBound: Int)? {
+        guard let stored = storedInclusiveRangeText,
+              let lower = Int(stored.lowerBound),
+              let upper = Int(stored.upperBound) else {
+            return nil
+        }
+        return (lower, upper)
+    }
+}
+
+extension IntentParameterContext where Value == Double {
+    public var controlStyle: IntentParameter<Double>.DoubleControlStyle? { storedDoubleControlStyle }
+    public var inclusiveRange: (lowerBound: Double, upperBound: Double)? {
+        guard let stored = storedInclusiveRangeText,
+              let lower = Double(stored.lowerBound),
+              let upper = Double(stored.upperBound) else {
+            return nil
+        }
+        return (lower, upper)
     }
 }
 

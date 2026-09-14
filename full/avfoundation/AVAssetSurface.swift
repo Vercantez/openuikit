@@ -159,47 +159,77 @@ open class AVAssetCache: NSObject, @unchecked Sendable {
 }
 
 open class AVAssetDownloadConfiguration: NSObject, @unchecked Sendable {
-  public override init() { super.init() }
-  convenience init(asset: AVURLAsset, title: String) { self.init() }
-  public var artworkData: Data? {
-      get { nil }
-      set { _ = newValue }
-    }
-  public var primaryContentConfiguration: AVAssetDownloadContentConfiguration { AVAssetDownloadContentConfiguration() }
-  public var auxiliaryContentConfigurations: [AVAssetDownloadContentConfiguration] {
-      get { [] }
-      set { _ = newValue }
-    }
-  public var optimizesAuxiliaryContentConfigurations: Bool {
-      get { false }
-      set { _ = newValue }
-    }
-  public func setInterstitialMediaSelectionCriteria(_ criteria: [AVPlayerMediaSelectionCriteria], forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) {}
+  public var asset: AVURLAsset
+  public var title: String
+  public var artworkData: Data?
+  public let primaryContentConfiguration = AVAssetDownloadContentConfiguration()
+  public var auxiliaryContentConfigurations: [AVAssetDownloadContentConfiguration] = []
+  public var optimizesAuxiliaryContentConfigurations = false
+  private var interstitialCriteria: [AVMediaCharacteristic: [AVPlayerMediaSelectionCriteria]] = [:]
+
+  public override init() {
+    self.asset = AVURLAsset()
+    self.title = ""
+    super.init()
+  }
+
+  public convenience init(asset: AVURLAsset, title: String) {
+    self.init()
+    self.asset = asset
+    self.title = title
+  }
+
+  public func setInterstitialMediaSelectionCriteria(
+    _ criteria: [AVPlayerMediaSelectionCriteria],
+    forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic
+  ) {
+    interstitialCriteria[mediaCharacteristic] = criteria
+  }
+
+  public func interstitialMediaSelectionCriteria(
+    forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic
+  ) -> [AVPlayerMediaSelectionCriteria] {
+    interstitialCriteria[mediaCharacteristic] ?? []
+  }
 }
 
 open class AVAssetDownloadContentConfiguration: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  public var variantQualifiers: [AVAssetVariantQualifier] {
-      get { [] }
-      set { _ = newValue }
-    }
-  public var mediaSelections: [AVMediaSelection] {
-      get { [] }
-      set { _ = newValue }
-    }
+  public var variantQualifiers: [AVAssetVariantQualifier] = []
+  public var mediaSelections: [AVMediaSelection] = []
 }
 
 open class AVAssetDownloadStorageManagementPolicy: NSObject, @unchecked Sendable {
+  var storedPriority = AVAssetDownloadedAssetEvictionPriority.default
+  var storedExpirationDate = Date.distantPast
   public override init() { super.init() }
-  public var priority: AVAssetDownloadedAssetEvictionPriority { AVAssetDownloadedAssetEvictionPriority(rawValue: "") }
-  public var expirationDate: Date { Date.distantPast }
+  public var priority: AVAssetDownloadedAssetEvictionPriority { storedPriority }
+  public var expirationDate: Date { storedExpirationDate }
 }
 
 open class AVAssetDownloadStorageManager: NSObject, @unchecked Sendable {
+  private static let sharedManager = AVAssetDownloadStorageManager()
+  private let policyLock = NSLock()
+  private var policies: [URL: AVAssetDownloadStorageManagementPolicy] = [:]
+
   public override init() { super.init() }
-  public class func shared() -> AVAssetDownloadStorageManager { AVAssetDownloadStorageManager() }
-  public func setStorageManagementPolicy(_ storageManagementPolicy: AVAssetDownloadStorageManagementPolicy, for downloadStorageURL: URL) {}
-  public func storageManagementPolicy(for downloadStorageURL: URL) -> AVAssetDownloadStorageManagementPolicy? { nil }
+
+  public class func shared() -> AVAssetDownloadStorageManager { sharedManager }
+
+  public func setStorageManagementPolicy(
+    _ storageManagementPolicy: AVAssetDownloadStorageManagementPolicy,
+    for downloadStorageURL: URL
+  ) {
+    policyLock.lock()
+    policies[downloadStorageURL] = storageManagementPolicy
+    policyLock.unlock()
+  }
+
+  public func storageManagementPolicy(for downloadStorageURL: URL) -> AVAssetDownloadStorageManagementPolicy? {
+    policyLock.lock()
+    defer { policyLock.unlock() }
+    return policies[downloadStorageURL]
+  }
 }
 
 public struct AVAssetDownloadedAssetEvictionPriority: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
@@ -347,8 +377,15 @@ extension AVAssetImageGenerator {
 }
 
 open class AVAssetPlaybackAssistant: NSObject, @unchecked Sendable {
-  public override init() { super.init() }
-  convenience init(asset: AVAsset) { self.init() }
+  public private(set) var asset: AVAsset
+  public override init() {
+    self.asset = AVAsset()
+    super.init()
+  }
+  public convenience init(asset: AVAsset) {
+    self.init()
+    self.asset = asset
+  }
   public var playbackConfigurationOptions: [AVAssetPlaybackConfigurationOption] { get async { [] } }
 }
 
@@ -1391,6 +1428,14 @@ open class AVFragmentedMovieTrack: AVMovieTrack, @unchecked Sendable {
 
 open class AVMutableAssetDownloadStorageManagementPolicy: AVAssetDownloadStorageManagementPolicy, @unchecked Sendable {
   public override init() { super.init() }
+  public override var priority: AVAssetDownloadedAssetEvictionPriority {
+    get { storedPriority }
+    set { storedPriority = newValue }
+  }
+  public override var expirationDate: Date {
+    get { storedExpirationDate }
+    set { storedExpirationDate = newValue }
+  }
 }
 
 open class AVMutableAudioMix: AVAudioMix, @unchecked Sendable {
@@ -1419,6 +1464,26 @@ open class AVMutableAudioMixInputParameters: AVAudioMixInputParameters, @uncheck
 
 open class AVMutableCaption: AVCaption, @unchecked Sendable {
   public override init() { super.init() }
+  public override var text: String {
+    get { storedText }
+    set { storedText = newValue }
+  }
+  public override var timeRange: CMTimeRange {
+    get { storedTimeRange }
+    set { storedTimeRange = newValue }
+  }
+  public override var region: AVCaptionRegion? {
+    get { storedRegion }
+    set { storedRegion = newValue }
+  }
+  public override var textAlignment: AVCaption.TextAlignment {
+    get { storedTextAlignment }
+    set { storedTextAlignment = newValue }
+  }
+  public override var animation: AVCaption.Animation {
+    get { storedAnimation }
+    set { storedAnimation = newValue }
+  }
   public func setTextColor(_ textColor: CGColor, in range: NSRange) {}
   public func setBackgroundColor(_ backgroundColor: CGColor, in range: NSRange) {}
   public func setFontWeight(_ fontWeight: AVCaption.FontWeight, in range: NSRange) {}
@@ -1437,7 +1502,31 @@ open class AVMutableCaption: AVCaption, @unchecked Sendable {
 
 open class AVMutableCaptionRegion: AVCaptionRegion, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(identifier: String) { self.init() }
+  public convenience init(identifier: String) {
+    self.init()
+    storedIdentifier = identifier
+  }
+  public override var identifier: String? { storedIdentifier }
+  public override var origin: AVCaptionPoint {
+    get { storedOrigin }
+    set { storedOrigin = newValue }
+  }
+  public override var size: AVCaptionSize {
+    get { storedSize }
+    set { storedSize = newValue }
+  }
+  public override var scroll: AVCaptionRegion.Scroll {
+    get { storedScroll }
+    set { storedScroll = newValue }
+  }
+  public override var displayAlignment: AVCaptionRegion.DisplayAlignment {
+    get { storedDisplayAlignment }
+    set { storedDisplayAlignment = newValue }
+  }
+  public override var writingMode: AVCaptionRegion.WritingMode {
+    get { storedWritingMode }
+    set { storedWritingMode = newValue }
+  }
 }
 
 open class AVMutableComposition: AVComposition, @unchecked Sendable {

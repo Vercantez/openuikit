@@ -36,12 +36,80 @@ public typealias CMTimeCodeFormatType = UInt32
 public typealias CMTextFormatType = UInt32
 public typealias CMTaggedBufferGroupFormatType = UInt32
 
-public typealias CMImageDescriptionFlavor = CFString
-public typealias CMSoundDescriptionFlavor = CFString
-public typealias CMTextDescriptionFlavor = CFString
-public typealias CMMetadataDescriptionFlavor = CFString
-public typealias CMClosedCaptionDescriptionFlavor = CFString
-public typealias CMTimeCodeDescriptionFlavor = CFString
+public struct CMImageDescriptionFlavor: RawRepresentable, Hashable {
+    public var rawValue: CFString
+    public init(rawValue: CFString) { self.rawValue = rawValue }
+    public init(_ rawValue: CFString) { self.rawValue = rawValue }
+    public static func == (lhs: CMImageDescriptionFlavor, rhs: CMImageDescriptionFlavor) -> Bool {
+        cmCFStringEqual(lhs.rawValue, rhs.rawValue)
+    }
+    public func hash(into hasher: inout Hasher) {
+        cmHashCFString(rawValue, into: &hasher)
+    }
+}
+
+public struct CMSoundDescriptionFlavor: RawRepresentable, Hashable {
+    public var rawValue: CFString
+    public init(rawValue: CFString) { self.rawValue = rawValue }
+    public init(_ rawValue: CFString) { self.rawValue = rawValue }
+    public static func == (lhs: CMSoundDescriptionFlavor, rhs: CMSoundDescriptionFlavor) -> Bool {
+        cmCFStringEqual(lhs.rawValue, rhs.rawValue)
+    }
+    public func hash(into hasher: inout Hasher) {
+        cmHashCFString(rawValue, into: &hasher)
+    }
+}
+
+public struct CMTextDescriptionFlavor: RawRepresentable, Hashable {
+    public var rawValue: CFString
+    public init(rawValue: CFString) { self.rawValue = rawValue }
+    public init(_ rawValue: CFString) { self.rawValue = rawValue }
+    public static func == (lhs: CMTextDescriptionFlavor, rhs: CMTextDescriptionFlavor) -> Bool {
+        cmCFStringEqual(lhs.rawValue, rhs.rawValue)
+    }
+    public func hash(into hasher: inout Hasher) {
+        cmHashCFString(rawValue, into: &hasher)
+    }
+}
+
+public struct CMMetadataDescriptionFlavor: RawRepresentable, Hashable {
+    public var rawValue: CFString
+    public init(rawValue: CFString) { self.rawValue = rawValue }
+    public init(_ rawValue: CFString) { self.rawValue = rawValue }
+    public static func == (lhs: CMMetadataDescriptionFlavor, rhs: CMMetadataDescriptionFlavor) -> Bool {
+        cmCFStringEqual(lhs.rawValue, rhs.rawValue)
+    }
+    public func hash(into hasher: inout Hasher) {
+        cmHashCFString(rawValue, into: &hasher)
+    }
+}
+
+public struct CMClosedCaptionDescriptionFlavor: RawRepresentable, Hashable {
+    public var rawValue: CFString
+    public init(rawValue: CFString) { self.rawValue = rawValue }
+    public init(_ rawValue: CFString) { self.rawValue = rawValue }
+    public static func == (
+        lhs: CMClosedCaptionDescriptionFlavor,
+        rhs: CMClosedCaptionDescriptionFlavor
+    ) -> Bool {
+        cmCFStringEqual(lhs.rawValue, rhs.rawValue)
+    }
+    public func hash(into hasher: inout Hasher) {
+        cmHashCFString(rawValue, into: &hasher)
+    }
+}
+
+public struct CMTimeCodeDescriptionFlavor: RawRepresentable, Hashable {
+    public var rawValue: CFString
+    public init(rawValue: CFString) { self.rawValue = rawValue }
+    public init(_ rawValue: CFString) { self.rawValue = rawValue }
+    public static func == (lhs: CMTimeCodeDescriptionFlavor, rhs: CMTimeCodeDescriptionFlavor) -> Bool {
+        cmCFStringEqual(lhs.rawValue, rhs.rawValue)
+    }
+    public func hash(into hasher: inout Hasher) {
+        cmHashCFString(rawValue, into: &hasher)
+    }
+}
 
 public typealias CMAttachmentMode = UInt32
 public typealias CMBlockBufferFlags = UInt32
@@ -167,6 +235,14 @@ internal func cmFourCC(_ literal: String) -> UInt32 {
     let bytes = Array(literal.utf8)
     precondition(bytes.count == 4, "FourCC literal must be four UTF-8 bytes")
     return cmFourCC(bytes[0], bytes[1], bytes[2], bytes[3])
+}
+
+internal func cmCFStringEqual(_ lhs: CFString, _ rhs: CFString) -> Bool {
+    CFEqual(lhs, rhs)
+}
+
+internal func cmHashCFString(_ value: CFString, into hasher: inout Hasher) {
+    hasher.combine(unsafeBitCast(value, to: NSString.self) as String)
 }
 
 internal func cmMakeCFString(_ string: String) -> CFString {

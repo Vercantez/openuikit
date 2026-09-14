@@ -1273,12 +1273,31 @@ open class AVPlayerLooper: NSObject, @unchecked Sendable {
 }
 
 open class AVPlayerMediaSelectionCriteria: NSObject, @unchecked Sendable {
+  private var storedPreferredLanguages: [String]?
+  private var storedPreferredMediaCharacteristics: [AVMediaCharacteristic]?
+  private var storedPrincipalMediaCharacteristics: [AVMediaCharacteristic]?
   public override init() { super.init() }
-  public var preferredLanguages: [String]? { nil }
-  public var preferredMediaCharacteristics: [AVMediaCharacteristic]? { nil }
-  public var principalMediaCharacteristics: [AVMediaCharacteristic]? { nil }
-  convenience init(preferredLanguages: [String]?, preferredMediaCharacteristics: [AVMediaCharacteristic]?) { self.init() }
-  convenience init(principalMediaCharacteristics: [AVMediaCharacteristic]?, preferredLanguages: [String]?, preferredMediaCharacteristics: [AVMediaCharacteristic]?) { self.init() }
+  public var preferredLanguages: [String]? { storedPreferredLanguages }
+  public var preferredMediaCharacteristics: [AVMediaCharacteristic]? { storedPreferredMediaCharacteristics }
+  public var principalMediaCharacteristics: [AVMediaCharacteristic]? { storedPrincipalMediaCharacteristics }
+  public convenience init(
+    preferredLanguages: [String]?,
+    preferredMediaCharacteristics: [AVMediaCharacteristic]?
+  ) {
+    self.init()
+    storedPreferredLanguages = preferredLanguages
+    storedPreferredMediaCharacteristics = preferredMediaCharacteristics
+  }
+  public convenience init(
+    principalMediaCharacteristics: [AVMediaCharacteristic]?,
+    preferredLanguages: [String]?,
+    preferredMediaCharacteristics: [AVMediaCharacteristic]?
+  ) {
+    self.init()
+    storedPrincipalMediaCharacteristics = principalMediaCharacteristics
+    storedPreferredLanguages = preferredLanguages
+    storedPreferredMediaCharacteristics = preferredMediaCharacteristics
+  }
 }
 
 open class AVPlayerPlaybackCoordinator: AVPlaybackCoordinator, @unchecked Sendable {

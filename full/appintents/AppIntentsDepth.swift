@@ -373,7 +373,7 @@ extension IntentParameter where Value: AppEntity {
         requestValueDialog: IntentDialog? = nil,
         requestDisambiguationDialog: IntentDialog? = nil,
         inputConnectionBehavior: InputConnectionBehavior = .default,
-        query: some EntityQuery = Value.DefaultQuery()
+        query: some EntityQuery
     ) {
         self.init(
             title: appIntentsString(title),

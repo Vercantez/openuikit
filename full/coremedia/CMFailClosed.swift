@@ -894,7 +894,7 @@ public func CMTimeCodeFormatDescriptionGetTimeCodeFlags(
 /// Linux has no SoundDescription parser; CBR sample-table layout is never required.
 public func CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout(
     _ soundDescriptionBlockBuffer: CMBlockBuffer,
-    flavor: CFString?
+    flavor: CMSoundDescriptionFlavor?
 ) -> Bool {
     _ = soundDescriptionBlockBuffer
     _ = flavor

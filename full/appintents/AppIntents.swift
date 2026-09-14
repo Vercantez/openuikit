@@ -1403,9 +1403,14 @@ public final class IntentParameter<Value>: @unchecked Sendable
     var storedPersonMode: IntentPerson.ParameterMode?
     var storedDecimalInclusiveRange: (lowerBound: Decimal, upperBound: Decimal)?
     var storedPlacemarkDisplayStyle: PlacemarkDisplayStyle?
+    var storedCollectionSize: IntentCollectionSize?
+    var storedBoolDisplayName: Bool.IntentDisplayName?
+    var storedSupportedTypeIdentifiers: [String]?
 
     public var dateKind: DateKind? { storedDateKind }
     public var displayStyle: PlacemarkDisplayStyle? { storedPlacemarkDisplayStyle }
+    public var collectionSize: IntentCollectionSize? { storedCollectionSize }
+    public var supportedTypeIdentifiers: [String]? { storedSupportedTypeIdentifiers }
 
     public var title: LocalizedStringResource {
         LocalizedStringResource(metadata.title)
@@ -2154,6 +2159,16 @@ extension Int: _IntentValue, AppValue {
 
 extension Bool: _IntentValue, AppValue {
     public static var typeDisplayRepresentation: TypeDisplayRepresentation { "Bool" }
+
+    public struct IntentDisplayName: Sendable {
+        public let `true`: LocalizedStringResource
+        public let `false`: LocalizedStringResource
+
+        public init(true trueLabel: LocalizedStringResource, false falseLabel: LocalizedStringResource) {
+            self.true = trueLabel
+            self.false = falseLabel
+        }
+    }
 }
 
 extension Double: _IntentValue, AppValue {
@@ -2209,7 +2224,10 @@ public final class File: NSObject, _IntentValue, @unchecked Sendable {
     }
 }
 extension Optional: _IntentValue where Wrapped: _IntentValue {}
-extension Array: _IntentValue where Element: _IntentValue {}
+extension Array: _IntentValue where Element: _IntentValue {
+    public typealias ValueType = Element
+    public typealias UnwrappedType = Element
+}
 
 public struct OpenURLIntent: AppIntent {
     public var url: URL
@@ -2241,7 +2259,45 @@ extension DeprecatedAppIntent {
 }
 
 public struct IntentDeprecation<ReplacementIntent: AppIntent>: Sendable {
-    public init() {}
+    public var message: LocalizedStringResource
+    /// Process-local replacement type name. Linux never migrates Siri / Shortcuts.
+    public var hostReplacementTypeName: String?
+    private var storesReplacement: Bool
+
+    public var replacedBy: ReplacementIntent.Type? {
+        storesReplacement ? ReplacementIntent.self : nil
+    }
+
+    public init() {
+        self.message = LocalizedStringResource("")
+        self.hostReplacementTypeName = nil
+        self.storesReplacement = false
+    }
+
+    public init(replacedBy: ReplacementIntent.Type) {
+        self.message = LocalizedStringResource("")
+        self.hostReplacementTypeName = String(describing: replacedBy)
+        self.storesReplacement = true
+    }
+
+    public init(message: LocalizedStringResource, replacedBy: ReplacementIntent.Type?) {
+        self.message = message
+        if let replacedBy {
+            self.hostReplacementTypeName = String(describing: replacedBy)
+            self.storesReplacement = true
+        } else {
+            self.hostReplacementTypeName = nil
+            self.storesReplacement = false
+        }
+    }
+}
+
+extension IntentDeprecation where ReplacementIntent == Never {
+    public init(message: LocalizedStringResource) {
+        self.message = message
+        self.hostReplacementTypeName = nil
+        self.storesReplacement = false
+    }
 }
 
 public protocol CustomIntentMigratedAppIntent: AppIntent {
@@ -2250,4 +2306,26 @@ public protocol CustomIntentMigratedAppIntent: AppIntent {
 
 extension CustomIntentMigratedAppIntent {
     public static var persistentIdentifier: String { intentClassName }
+}
+
+/// Host sample: a deprecated intent that records a replacement type name.
+public struct HostDeprecatedOpenURLIntent: DeprecatedAppIntent {
+    public typealias ReplacementIntent = OpenURLIntent
+    public init() {}
+    public static var title: LocalizedStringResource { "Deprecated Open URL" }
+    public static var deprecation: IntentDeprecation<OpenURLIntent> {
+        IntentDeprecation(
+            message: LocalizedStringResource("Use OpenURLIntent"),
+            replacedBy: OpenURLIntent.self
+        )
+    }
+    public func perform() async throws -> IntentResultValue { .result() }
+}
+
+/// Host sample: INIntent class name stored as the persistent identifier.
+public struct HostMigratedCustomIntent: CustomIntentMigratedAppIntent {
+    public static var intentClassName: String { "INLegacyCustomIntent" }
+    public init() {}
+    public static var title: LocalizedStringResource { "Migrated Custom" }
+    public func perform() async throws -> IntentResultValue { .result() }
 }

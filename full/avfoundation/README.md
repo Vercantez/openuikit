@@ -477,3 +477,40 @@ WAVE `LIST INFO` / AIFF `NAME` metadata items, and identity
 `AVFragmentedAsset` is a real `AVURLAsset` subclass over the same probe.
 `AVError(rawValue:)` / `CustomNSError` / `~=` are exercised without claiming
 Apple NSError bridging. Capture/async/FairPlay leftover rows stay deferred.
+
+### Depth pass 2026-09-14 (AVAssetDownload / caption values)
+
+Non-UI depth on `AVAssetDownloadConfiguration` / `AVAssetDownloadContentConfiguration`
+/ `AVAssetDownloadStorageManagementPolicy` / `AVAssetDownloadStorageManager`.
+Artwork, title, media selections, variant qualifiers, expiration, and eviction
+priority are stored in-process. `shared()` is a singleton. No HLS bytes are
+fetched and `AVAssetDownloadTask` / `AVAssetDownloadURLSession` stay deferred.
+`AVAssetImageGeneratorCompletionHandler` is a stored callback invoked
+synchronously. Caption, ruby, region, grouper, and media-selection-criteria
+value types store constructor arguments. Capture, player chrome, PiP, CIImage
+filtering, and async `load(...)` stay fail-closed.
+
+| status | before | after |
+|---|---:|---:|
+| `implemented` | 4416 | 4523 |
+| `declared` | 972 | 865 |
+| `deferred` | 244 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+This pass added 107 `implemented` rows (10 tests in
+`tests/agent/AVAssetDownloadTests.swift` and
+`tests/agent/AVCaptionValueTests.swift`). Largest new test is 37 citations
+(caption region / renderer / conversion models), well under 40% of the
+remaining implemented rows. URLSession subclassing and download start remain
+deferred.

@@ -24,12 +24,23 @@ open class AVCaption: NSObject, @unchecked Sendable {
     case bold = 2
   }
   open class Ruby: NSObject, @unchecked Sendable {
+    var storedText = ""
+    var storedPosition = AVCaptionRubyPosition.before
+    var storedAlignment = AVCaptionRubyAlignment.start
     public override init() { super.init() }
-    convenience init(text: String) { self.init() }
-    convenience init(text: String, position: AVCaptionRubyPosition, alignment: AVCaptionRubyAlignment) { self.init() }
-    public var text: String { "" }
-    public var position: AVCaptionRubyPosition { AVCaptionRubyPosition(rawValue: 0)! }
-    public var alignment: AVCaptionRubyAlignment { AVCaptionRubyAlignment(rawValue: 0)! }
+    public convenience init(text: String) {
+      self.init()
+      storedText = text
+    }
+    public convenience init(text: String, position: AVCaptionRubyPosition, alignment: AVCaptionRubyAlignment) {
+      self.init()
+      storedText = text
+      storedPosition = position
+      storedAlignment = alignment
+    }
+    public var text: String { storedText }
+    public var position: AVCaptionRubyPosition { storedPosition }
+    public var alignment: AVCaptionRubyAlignment { storedAlignment }
   }
   public enum TextAlignment: Int, Hashable, Sendable {
     case start = 0
@@ -46,12 +57,21 @@ open class AVCaption: NSObject, @unchecked Sendable {
     case threeDigits = 4
     case fourDigits = 5
   }
-  convenience init(_ text: String, timeRange: CMTimeRange) { self.init() }
-  public var text: String { "" }
-  public var timeRange: CMTimeRange { .zero }
-  public var region: AVCaptionRegion? { nil }
-  public var textAlignment: AVCaption.TextAlignment { AVCaption.TextAlignment(rawValue: 0)! }
-  public var animation: AVCaption.Animation { AVCaption.Animation(rawValue: 0)! }
+  var storedText = ""
+  var storedTimeRange = CMTimeRange.zero
+  var storedRegion: AVCaptionRegion?
+  var storedTextAlignment = TextAlignment.start
+  var storedAnimation = Animation.none
+  public convenience init(_ text: String, timeRange: CMTimeRange) {
+    self.init()
+    storedText = text
+    storedTimeRange = timeRange
+  }
+  public var text: String { storedText }
+  public var timeRange: CMTimeRange { storedTimeRange }
+  public var region: AVCaptionRegion? { storedRegion }
+  public var textAlignment: AVCaption.TextAlignment { storedTextAlignment }
+  public var animation: AVCaption.Animation { storedAnimation }
 }
 
 open class AVCaptionConversionAdjustment: NSObject, @unchecked Sendable {
@@ -67,11 +87,15 @@ open class AVCaptionConversionAdjustment: NSObject, @unchecked Sendable {
 
 open class AVCaptionConversionTimeRangeAdjustment: AVCaptionConversionAdjustment, @unchecked Sendable {
   public override init() { super.init() }
+  public override var adjustmentType: AVCaptionConversionAdjustment.AdjustmentType { .timeRange }
   public var startTimeOffset: CMTime { .zero }
   public var durationOffset: CMTime { .zero }
 }
 
 open class AVCaptionConversionValidator: NSObject, @unchecked Sendable {
+  private var storedCaptions: [AVCaption] = []
+  private var storedTimeRange = CMTimeRange.zero
+  private var storedStatus = Status.unknown
   public override init() { super.init() }
   public enum Status: Int, Hashable, Sendable {
     case unknown = 0
@@ -79,11 +103,20 @@ open class AVCaptionConversionValidator: NSObject, @unchecked Sendable {
     case completed = 2
     case stopped = 3
   }
-  convenience init(captions: [AVCaption], timeRange: CMTimeRange, conversionSettings: [AVCaptionSettingsKey : Any]) { self.init() }
-  public var status: AVCaptionConversionValidator.Status { AVCaptionConversionValidator.Status(rawValue: 0)! }
-  public var captions: [AVCaption] { [] }
-  public var timeRange: CMTimeRange { .zero }
-  public func stopValidating() {}
+  public convenience init(
+    captions: [AVCaption],
+    timeRange: CMTimeRange,
+    conversionSettings: [AVCaptionSettingsKey : Any]
+  ) {
+    self.init()
+    storedCaptions = captions
+    storedTimeRange = timeRange
+    _ = conversionSettings
+  }
+  public var status: AVCaptionConversionValidator.Status { storedStatus }
+  public var captions: [AVCaption] { storedCaptions }
+  public var timeRange: CMTimeRange { storedTimeRange }
+  public func stopValidating() { storedStatus = .stopped }
   public var warnings: [AVCaptionConversionWarning] { [] }
 }
 
@@ -100,41 +133,74 @@ open class AVCaptionConversionWarning: NSObject, @unchecked Sendable {
 }
 
 public struct AVCaptionDimension: Sendable {
-  public init() {}
-  public init(value: CGFloat, units: AVCaptionUnitsType) {}
-  public var value: CGFloat = 0
-  public var units: AVCaptionUnitsType = AVCaptionUnitsType(rawValue: 0)!
+  public var value: CGFloat
+  public var units: AVCaptionUnitsType
+  public init() {
+    self.value = 0
+    self.units = .unspecified
+  }
+  public init(value: CGFloat, units: AVCaptionUnitsType) {
+    self.value = value
+    self.units = units
+  }
 }
 
 open class AVCaptionFormatConformer: NSObject, @unchecked Sendable {
   public override init() { super.init() }
-  convenience init(conversionSettings: [AVCaptionSettingsKey : Any]) { self.init() }
-  public var conformsCaptionsToTimeRange: Bool {
-      get { false }
-      set { _ = newValue }
-    }
-  public func conformedCaption(for caption: AVCaption) throws -> AVCaption { return AVCaption() }
+  public convenience init(conversionSettings: [AVCaptionSettingsKey : Any]) {
+    self.init()
+    _ = conversionSettings
+  }
+  public var conformsCaptionsToTimeRange = false
+  public func conformedCaption(for caption: AVCaption) throws -> AVCaption { caption }
 }
 
 open class AVCaptionGroup: NSObject, @unchecked Sendable {
+  private var storedCaptions: [AVCaption] = []
+  private var storedTimeRange = CMTimeRange.zero
   public override init() { super.init() }
-  convenience init(captions: [AVCaption], timeRange: CMTimeRange) { self.init() }
-  convenience init(timeRange: CMTimeRange) { self.init() }
-  public var timeRange: CMTimeRange { .zero }
-  public var captions: [AVCaption] { [] }
+  public convenience init(captions: [AVCaption], timeRange: CMTimeRange) {
+    self.init()
+    storedCaptions = captions
+    storedTimeRange = timeRange
+  }
+  public convenience init(timeRange: CMTimeRange) {
+    self.init()
+    storedTimeRange = timeRange
+  }
+  public var timeRange: CMTimeRange { storedTimeRange }
+  public var captions: [AVCaption] { storedCaptions }
 }
 
 open class AVCaptionGrouper: NSObject, @unchecked Sendable {
+  private var added: [AVCaption] = []
   public override init() { super.init() }
-  public func add(_ input: AVCaption) {}
-  public func flushAddedCaptions(upTo upToTime: CMTime) -> [AVCaptionGroup] { [] }
+  public func add(_ input: AVCaption) { added.append(input) }
+  public func flushAddedCaptions(upTo upToTime: CMTime) -> [AVCaptionGroup] {
+    let ready = added.filter { $0.timeRange.start.seconds <= upToTime.seconds }
+    added.removeAll { caption in ready.contains { $0 === caption } }
+    guard !ready.isEmpty else { return [] }
+    let startSeconds = ready.map(\.timeRange.start.seconds).min() ?? 0
+    let endSeconds = ready.map { $0.timeRange.start.seconds + $0.timeRange.duration.seconds }.max() ?? startSeconds
+    let range = CMTimeRange(
+      start: CMTime(seconds: startSeconds, preferredTimescale: 600),
+      duration: CMTime(seconds: max(0, endSeconds - startSeconds), preferredTimescale: 600)
+    )
+    return [AVCaptionGroup(captions: ready, timeRange: range)]
+  }
 }
 
 public struct AVCaptionPoint: Sendable {
-  public init() {}
-  public init(x: AVCaptionDimension, y: AVCaptionDimension) {}
-  public var x: AVCaptionDimension = AVCaptionDimension()
-  public var y: AVCaptionDimension = AVCaptionDimension()
+  public var x: AVCaptionDimension
+  public var y: AVCaptionDimension
+  public init() {
+    self.x = AVCaptionDimension()
+    self.y = AVCaptionDimension()
+  }
+  public init(x: AVCaptionDimension, y: AVCaptionDimension) {
+    self.x = x
+    self.y = y
+  }
 }
 
 open class AVCaptionRegion: NSObject, @unchecked Sendable {
@@ -152,19 +218,50 @@ open class AVCaptionRegion: NSObject, @unchecked Sendable {
     case leftToRightAndTopToBottom = 0
     case topToBottomAndRightToLeft = 1
   }
+  var storedIdentifier: String?
+  var storedOrigin = AVCaptionPoint()
+  var storedSize = AVCaptionSize()
+  var storedScroll = Scroll.none
+  var storedDisplayAlignment = DisplayAlignment.before
+  var storedWritingMode = WritingMode.leftToRightAndTopToBottom
   public class var appleITTTop: AVCaptionRegion { AVCaptionRegion() }
   public class var appleITTBottom: AVCaptionRegion { AVCaptionRegion() }
   public class var appleITTLeft: AVCaptionRegion { AVCaptionRegion() }
   public class var appleITTRight: AVCaptionRegion { AVCaptionRegion() }
   public class var subRipTextBottom: AVCaptionRegion { AVCaptionRegion() }
-  public var identifier: String? { nil }
-  public var origin: AVCaptionPoint { AVCaptionPoint() }
-  public var size: AVCaptionSize { AVCaptionSize() }
-  public var scroll: AVCaptionRegion.Scroll { AVCaptionRegion.Scroll(rawValue: 0)! }
-  public var displayAlignment: AVCaptionRegion.DisplayAlignment { AVCaptionRegion.DisplayAlignment(rawValue: 0)! }
-  public var writingMode: AVCaptionRegion.WritingMode { AVCaptionRegion.WritingMode(rawValue: 0)! }
+  public var identifier: String? { storedIdentifier }
+  public var origin: AVCaptionPoint { storedOrigin }
+  public var size: AVCaptionSize { storedSize }
+  public var scroll: AVCaptionRegion.Scroll { storedScroll }
+  public var displayAlignment: AVCaptionRegion.DisplayAlignment { storedDisplayAlignment }
+  public var writingMode: AVCaptionRegion.WritingMode { storedWritingMode }
   public func encode(with encoder: NSCoder) {}
-  public func mutableCopy(with zone: NSZone? = nil) -> Any { 0 }
+  public override func isEqual(_ object: Any?) -> Bool {
+    guard let other = object as? AVCaptionRegion else { return false }
+    return storedIdentifier == other.storedIdentifier
+      && storedOrigin.x.value == other.storedOrigin.x.value
+      && storedOrigin.x.units == other.storedOrigin.x.units
+      && storedOrigin.y.value == other.storedOrigin.y.value
+      && storedOrigin.y.units == other.storedOrigin.y.units
+      && storedSize.width.value == other.storedSize.width.value
+      && storedSize.width.units == other.storedSize.width.units
+      && storedSize.height.value == other.storedSize.height.value
+      && storedSize.height.units == other.storedSize.height.units
+      && storedScroll == other.storedScroll
+      && storedDisplayAlignment == other.storedDisplayAlignment
+      && storedWritingMode == other.storedWritingMode
+  }
+  public func mutableCopy(with zone: NSZone? = nil) -> Any {
+    _ = zone
+    let copy = AVMutableCaptionRegion()
+    copy.storedIdentifier = storedIdentifier
+    copy.storedOrigin = storedOrigin
+    copy.storedSize = storedSize
+    copy.storedScroll = storedScroll
+    copy.storedDisplayAlignment = storedDisplayAlignment
+    copy.storedWritingMode = storedWritingMode
+    return copy
+  }
 }
 
 open class AVCaptionRenderer: NSObject, @unchecked Sendable {
@@ -175,16 +272,15 @@ open class AVCaptionRenderer: NSObject, @unchecked Sendable {
     public var hasActiveCaptions: Bool { false }
     public var needsPeriodicRefresh: Bool { false }
   }
-  public var captions: [AVCaption] {
-      get { [] }
-      set { _ = newValue }
-    }
-  public var bounds: CGRect {
-      get { .zero }
-      set { _ = newValue }
-    }
-  public func captionSceneChanges(in consideredTimeRange: CMTimeRange) -> [AVCaptionRenderer.Scene] { [] }
-  public func render(in ctx: CGContext, for time: CMTime) {}
+  public var captions: [AVCaption] = []
+  public var bounds: CGRect = .zero
+  public func captionSceneChanges(in consideredTimeRange: CMTimeRange) -> [AVCaptionRenderer.Scene] {
+    _ = consideredTimeRange
+    return []
+  }
+  public func render(in ctx: CGContext, for time: CMTime) {
+    _ = (ctx, time)
+  }
 }
 
 public enum AVCaptionRubyAlignment: Int, Hashable, Sendable {
@@ -210,10 +306,16 @@ public struct AVCaptionSettingsKey: RawRepresentable, Hashable, Sendable, Expres
 }
 
 public struct AVCaptionSize: Sendable {
-  public init() {}
-  public init(width: AVCaptionDimension, height: AVCaptionDimension) {}
-  public var width: AVCaptionDimension = AVCaptionDimension()
-  public var height: AVCaptionDimension = AVCaptionDimension()
+  public var width: AVCaptionDimension
+  public var height: AVCaptionDimension
+  public init() {
+    self.width = AVCaptionDimension()
+    self.height = AVCaptionDimension()
+  }
+  public init(width: AVCaptionDimension, height: AVCaptionDimension) {
+    self.width = width
+    self.height = height
+  }
 }
 
 public enum AVCaptionUnitsType: Int, Hashable, Sendable {

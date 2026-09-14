@@ -401,3 +401,41 @@ still the CoreAudioTypes/CoreVideo family (`CMAudioFormatDescriptionCreate`
 and ASBD/channel-layout/format-list getters, audio packet-description sample
 buffers, `AudioBufferList` copy/set, image-buffer sample-buffer create/get,
 and `CMVideoFormatDescriptionCreateForImageBuffer` / `MatchesImageBuffer`).
+
+## Depth pass 2026-09-14 (CMBlockBufferProtocol / flavor Hashable)
+
+This continuation wraps the six description-flavor CFString typealiases as
+`RawRepresentable` structs so `==` / `!=`, `hash(into:)`, `hashValue`, and
+`init(rawValue:)` / `init(_:)` can be hashed and equated by a focused test.
+Public `CMBlockBufferProtocol` now matches Apple's requirements (`owner`,
+`startIndex`, `endIndex`) with extension defaults for `dataLength`,
+`isContiguous`, `copyDataBytes(to:)`, `dataBytes()`, `fillDataBytes(with:)`,
+`replaceDataBytes(with:)`, and the six slice subscripts. `CMBlockBuffer.Slice`
+conforms and those methods are called through the protocol and the concrete
+buffer. `makeContiguous` / `withContiguousStorage`, Foundation
+`DataProtocol.copyBytes`, `sorted(using: SortComparator)`, and
+CoreAudioTypes/CoreVideo sample APIs stay declared or deferred.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2904 | 2980 |
+| declared | 333 | 257 |
+| deferred | 267 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +76.
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` — 180 (6.0%)
+2. `CMCollectionDepthTests.swift#testCMDataBlockBufferCollectionAlgorithms` — 149 (5.0%)
+3. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (3.9%)
+4. `CMCollectionDepthTests.swift#testCMSampleAttachmentsArrayCollectionAlgorithms` — 110 (3.7%)
+5. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (3.0%)
+
+No test owns more than 40% of implemented rows. Leftover deferred C APIs are
+still the CoreAudioTypes/CoreVideo family (`CMAudioFormatDescriptionCreate`
+and ASBD/channel-layout/format-list getters, audio packet-description sample
+buffers, `AudioBufferList` copy/set, image-buffer sample-buffer create/get,
+and `CMVideoFormatDescriptionCreateForImageBuffer` / `MatchesImageBuffer`).

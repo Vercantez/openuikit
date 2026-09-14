@@ -2,7 +2,23 @@ import Foundation
 
 // Additional AppIntents protocols from the sealed public surface.
 
-public protocol ShowInAppSearchResultsIntent: SystemIntent {}
+public protocol ShowInAppSearchResultsIntent: SystemIntent {
+    associatedtype Criteria: SearchCriteria
+    var criteria: Criteria { get set }
+    static var searchScopes: Criteria.SearchScopes { get }
+}
+
+extension ShowInAppSearchResultsIntent {
+    public static var openAppWhenRun: Bool { true }
+}
+
+extension ShowInAppSearchResultsIntent where Criteria == StringSearchCriteria {
+    public static var searchScopes: [StringSearchScope] { [] }
+}
+
+extension ShowInAppSearchResultsIntent where Criteria.SearchScopes == Void {
+    public static var searchScopes: Void { () }
+}
 
 public protocol AppShortcutsContent {}
 
@@ -38,7 +54,9 @@ public protocol DeleteIntent: SystemIntent {
 
 public protocol AnyIntentValue: Sendable {}
 
-public protocol SearchCriteria: _IntentValue, Hashable, Sendable {}
+public protocol SearchCriteria: _IntentValue, Hashable, Sendable {
+    associatedtype SearchScopes = Void
+}
 
 public protocol SetValueIntent: AppIntent {
     associatedtype ValueType: _IntentValue

@@ -794,7 +794,10 @@ public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorizatio
 public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Double) { }
 public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Float) { }
 @discardableResult
-public func dgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let trans, let m, let n, let kl, let ku, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _gbmv(trans: trans.pointee, m: Int(m.pointee), n: Int(n.pointee), kl: Int(kl.pointee), ku: Int(ku.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
 public func dgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let transa, let transb, let m, let n, let k, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
@@ -833,32 +836,59 @@ public func drotg_(_ da: UnsafeMutablePointer<Double>!, _ db: UnsafeMutablePoint
     return _rotg(a: &da.pointee, b: &db.pointee, c: &c.pointee, s: &s.pointee)
 }
 @discardableResult
-public func drotm_(_ n: UnsafeMutablePointer<Int32>!, _ dx: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ dy: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ dparam: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
+public func drotm_(_ n: UnsafeMutablePointer<Int32>!, _ dx: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ dy: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ dparam: UnsafeMutablePointer<Double>!) -> Int32 {
+    guard let n, let dx, let incx, let dy, let incy, let dparam else { return -1 }
+    return _rotm(n: Int(n.pointee), x: dx, incx: Int(incx.pointee), y: dy, incy: Int(incy.pointee), param: dparam)
+}
 @discardableResult
-public func drotmg_(_ dd1: UnsafeMutablePointer<Double>!, _ dd2: UnsafeMutablePointer<Double>!, _ dx1: UnsafeMutablePointer<Double>!, _ dy1: UnsafeMutablePointer<Double>!, _ dparam: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
+public func drotmg_(_ dd1: UnsafeMutablePointer<Double>!, _ dd2: UnsafeMutablePointer<Double>!, _ dx1: UnsafeMutablePointer<Double>!, _ dy1: UnsafeMutablePointer<Double>!, _ dparam: UnsafeMutablePointer<Double>!) -> Int32 {
+    guard let dd1, let dd2, let dx1, let dy1, let dparam else { return -1 }
+    return _rotmg(d1: &dd1.pointee, d2: &dd2.pointee, x1: &dx1.pointee, y1: dy1.pointee, param: dparam)
+}
 @discardableResult
-public func dsbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let k, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _sbmv(uplo: uplo.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
 public func dsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Double {
     return sdot_(n, sx, incx, sy, incy)
 }
 @discardableResult
-public func dspmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dspmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let ap, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _spmv(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, ap: ap, x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
-public func dspr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
+public func dspr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let y, let incy, let ap else { return -1 }
+    return _spr2(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), y: y, incy: Int(incy.pointee), ap: ap)
+}
 @discardableResult
-public func dspr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!) -> Int32 { return 0 }
+public func dspr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let ap else { return -1 }
+    return _spr(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), ap: ap)
+}
 @discardableResult
-public func dsymm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsymm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let side, let uplo, let m, let n, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
+    return _symm(side: side.pointee, uplo: uplo.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
 public func dsymv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let n, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
     return _symv(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
 }
 @discardableResult
-public func dsyr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsyr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let y, let incy, let a, let lda else { return -1 }
+    return _syr2(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), y: y, incy: Int(incy.pointee), a: a, lda: Int(lda.pointee))
+}
 @discardableResult
-public func dsyr2k_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dsyr2k_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let n, let k, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
+    return _syr2k(uplo: uplo.pointee, trans: trans.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
 public func dsyr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let n, let alpha, let x, let incx, let a, let lda else { return -1 }
@@ -870,22 +900,40 @@ public func dsyrk_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutableP
     return _syrk(uplo: uplo.pointee, trans: trans.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
 }
 @discardableResult
-public func dtbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let k, let a, let lda, let x, let incx else { return -1 }
+    return _tbmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), k: Int(k.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func dtbsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtbsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let k, let a, let lda, let x, let incx else { return -1 }
+    return _tbsv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), k: Int(k.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func dtpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let ap, let x, let incx else { return -1 }
+    return _tpmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), ap: ap, x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func dtpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Double>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let ap, let x, let incx else { return -1 }
+    return _tpsv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), ap: ap, x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func dtrmm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtrmm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let side, let uplo, let transa, let diag, let m, let n, let alpha, let a, let lda, let b, let ldb else { return -1 }
+    return _trmm(side: side.pointee, uplo: uplo.pointee, transa: transa.pointee, diag: diag.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee))
+}
 @discardableResult
 public func dtrmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
     return _trmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
 }
 @discardableResult
-public func dtrsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func dtrsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let side, let uplo, let transa, let diag, let m, let n, let alpha, let a, let lda, let b, let ldb else { return -1 }
+    return _trsm(side: side.pointee, uplo: uplo.pointee, transa: transa.pointee, diag: diag.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee))
+}
 @discardableResult
 public func dtrsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
@@ -897,7 +945,10 @@ public func sdsdot_(_ n: UnsafeMutablePointer<Int32>!, _ sb: UnsafeMutablePointe
     return Double(sb.pointee) + sdot_(n, sx, incx, sy, incy)
 }
 @discardableResult
-public func sgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func sgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let trans, let m, let n, let kl, let ku, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _gbmv(trans: trans.pointee, m: Int(m.pointee), n: Int(n.pointee), kl: Int(kl.pointee), ku: Int(ku.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
 public func sgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let transa, let transb, let m, let n, let k, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
@@ -936,28 +987,55 @@ public func srotg_(_ sa: UnsafeMutablePointer<Float>!, _ sb: UnsafeMutablePointe
     return _rotg(a: &sa.pointee, b: &sb.pointee, c: &c.pointee, s: &s.pointee)
 }
 @discardableResult
-public func srotm_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ param: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
+public func srotm_(_ n: UnsafeMutablePointer<Int32>!, _ sx: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ sy: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ param: UnsafeMutablePointer<Float>!) -> Int32 {
+    guard let n, let sx, let incx, let sy, let incy, let param else { return -1 }
+    return _rotm(n: Int(n.pointee), x: sx, incx: Int(incx.pointee), y: sy, incy: Int(incy.pointee), param: param)
+}
 @discardableResult
-public func srotmg_(_ sd1: UnsafeMutablePointer<Float>!, _ sd2: UnsafeMutablePointer<Float>!, _ sx1: UnsafeMutablePointer<Float>!, _ sy1: UnsafeMutablePointer<Float>!, _ param: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
+public func srotmg_(_ sd1: UnsafeMutablePointer<Float>!, _ sd2: UnsafeMutablePointer<Float>!, _ sx1: UnsafeMutablePointer<Float>!, _ sy1: UnsafeMutablePointer<Float>!, _ param: UnsafeMutablePointer<Float>!) -> Int32 {
+    guard let sd1, let sd2, let sx1, let sy1, let param else { return -1 }
+    return _rotmg(d1: &sd1.pointee, d2: &sd2.pointee, x1: &sx1.pointee, y1: sy1.pointee, param: param)
+}
 @discardableResult
-public func ssbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let k, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _sbmv(uplo: uplo.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
-public func sspmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ ap: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func sspmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ ap: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let ap, let x, let incx, let beta, let y, let incy else { return -1 }
+    return _spmv(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, ap: ap, x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
+}
 @discardableResult
-public func sspr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
+public func sspr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let y, let incy, let ap else { return -1 }
+    return _spr2(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), y: y, incy: Int(incy.pointee), ap: ap)
+}
 @discardableResult
-public func sspr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!) -> Int32 { return 0 }
+public func sspr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let ap else { return -1 }
+    return _spr(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), ap: ap)
+}
 @discardableResult
-public func ssymm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssymm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let side, let uplo, let m, let n, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
+    return _symm(side: side.pointee, uplo: uplo.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
 public func ssymv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let n, let alpha, let a, let lda, let x, let incx, let beta, let y, let incy else { return -1 }
     return _symv(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee), beta: beta.pointee, y: y, incy: Int(incy.pointee))
 }
 @discardableResult
-public func ssyr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssyr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutablePointer<Float>!, _ incy: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let n, let alpha, let x, let incx, let y, let incy, let a, let lda else { return -1 }
+    return _syr2(uplo: uplo.pointee, n: Int(n.pointee), alpha: alpha.pointee, x: x, incx: Int(incx.pointee), y: y, incy: Int(incy.pointee), a: a, lda: Int(lda.pointee))
+}
 @discardableResult
-public func ssyr2k_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func ssyr2k_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Float>!, _ c__: UnsafeMutablePointer<Float>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let n, let k, let alpha, let a, let lda, let b, let ldb, let beta, let c__, let ldc else { return -1 }
+    return _syr2k(uplo: uplo.pointee, trans: trans.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
+}
 @discardableResult
 public func ssyr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let n, let alpha, let x, let incx, let a, let lda else { return -1 }
@@ -969,22 +1047,40 @@ public func ssyrk_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutableP
     return _syrk(uplo: uplo.pointee, trans: trans.pointee, n: Int(n.pointee), k: Int(k.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), beta: beta.pointee, c: c__, ldc: Int(ldc.pointee))
 }
 @discardableResult
-public func stbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func stbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let k, let a, let lda, let x, let incx else { return -1 }
+    return _tbmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), k: Int(k.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func stbsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func stbsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let k, let a, let lda, let x, let incx else { return -1 }
+    return _tbsv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), k: Int(k.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func stpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func stpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let ap, let x, let incx else { return -1 }
+    return _tpmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), ap: ap, x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func stpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func stpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutablePointer<Float>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let uplo, let trans, let diag, let n, let ap, let x, let incx else { return -1 }
+    return _tpsv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), ap: ap, x: x, incx: Int(incx.pointee))
+}
 @discardableResult
-public func strmm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func strmm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let side, let uplo, let transa, let diag, let m, let n, let alpha, let a, let lda, let b, let ldb else { return -1 }
+    return _trmm(side: side.pointee, uplo: uplo.pointee, transa: transa.pointee, diag: diag.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee))
+}
 @discardableResult
 public func strmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }
     return _trmv(uplo: uplo.pointee, trans: trans.pointee, diag: diag.pointee, n: Int(n.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee))
 }
 @discardableResult
-public func strsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
+public func strsm_(_ side: UnsafeMutablePointer<CChar>!, _ uplo: UnsafeMutablePointer<CChar>!, _ transa: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Float>!, _ ldb: UnsafeMutablePointer<Int32>!) -> Int32 {
+    guard let side, let uplo, let transa, let diag, let m, let n, let alpha, let a, let lda, let b, let ldb else { return -1 }
+    return _trsm(side: side.pointee, uplo: uplo.pointee, transa: transa.pointee, diag: diag.pointee, m: Int(m.pointee), n: Int(n.pointee), alpha: alpha.pointee, a: a, lda: Int(lda.pointee), b: b, ldb: Int(ldb.pointee))
+}
 @discardableResult
 public func strsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutablePointer<Float>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Float>!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 {
     guard let uplo, let trans, let diag, let n, let a, let lda, let x, let incx else { return -1 }

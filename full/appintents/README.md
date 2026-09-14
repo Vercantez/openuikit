@@ -17,20 +17,22 @@ isolated Linux host compiles these sources with `swiftc` and Foundation only.
 
 SDK depth for `AppIntents` in `full/appintents/` (6,586 exact IDs). This is
 a next pass: earlier sources and tests stay green. This round implements
-portable `IntentParameter` / `EntityProperty` storage that does not need
-Siri or SwiftUI: remaining Foundation.Measurement `@Parameter` inits,
-`EntityProperty` Codable encode/decode, public `title` / `defaultValue`,
-in-process requestValue display representations, and explicit
-`hash(into:)` on nested parameter enums. `requestConfirmation`,
-async `requestValue` prompting, and assistant-schema execution stay
-fail-closed or deferred. SwiftUI View overlays stay `not-applicable`.
+portable in-process data models: remaining `IntentParameter` title /
+`defaultValue` storage (AppEntity, File, collections, Bool displayName,
+Date / URL / String / control styles), `DeprecatedAppIntent` replacement
+type names, `FocusFilterAppContext` predicate storage, migrated custom
+intent identifiers, and `ShowInAppSearchResultsIntent` search scopes /
+criteria. `requestConfirmation`, async `requestValue` prompting, and
+assistant-schema execution stay fail-closed or deferred. SwiftUI View
+overlays stay `not-applicable`. EntityProperty `asyncGetter` stays
+declared (no run loop).
 
 Coverage this round (ledger at start of this increment, then after):
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 2388 | 1402 | 1208 | 0 | 1588 | 3790 |
-| After | 2726 | 1068 | 1204 | 0 | 1588 | 3794 |
+| Before | 2726 | 1068 | 1204 | 0 | 1588 | 3794 |
+| After | 2906 | 896 | 1196 | 0 | 1588 | 3802 |
 
 Prior increment on this tree was 1234 / 2548 / 1216 → 1526 / 2257 / 1215.
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
@@ -47,7 +49,7 @@ Top-5 implemented evidence:
 | 153 | 5.6% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
 | 147 | 5.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
 
-No test is cited by more than 6.4% of implemented rows (well under the
+No test is cited by more than 6.1% of implemented rows (well under the
 40% bulk-relabel line). New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
@@ -69,6 +71,25 @@ FRAMEWORK_FANOUT_DELIVERABLE_OK module=AppIntents lane=medium-full symbols=6586
 `bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
 
 ### What this pass added
+
+- Wave 13 stores `DeprecatedAppIntent` replacement metadata as a type
+  name (`IntentDeprecation.hostReplacementTypeName` / `replacedBy`).
+  Linux does not migrate Siri or Shortcuts.
+- `FocusFilterAppContext` is a value type holding an optional
+  `NSPredicate` and `targetContentIdentifierPrefix`. There is no Focus
+  daemon.
+- `CustomIntentMigratedAppIntent.persistentIdentifier` equals
+  `intentClassName`.
+- `ShowInAppSearchResultsIntent` stores `criteria` and `searchScopes`
+  and defaults `openAppWhenRun` to `true`. `StringSearchCriteria.term`
+  round-trips; hash is host-local.
+- Remaining `@Parameter` title / `defaultValue` inits for AppEntity,
+  FileEntity, IntentFile (`supportedTypeIdentifiers`), collection
+  `size`, Bool `displayName`, Date / URL / AttributedString / String
+  inputOptions, and Int/Double description-only control styles. Options
+  providers and resolvers attach metadata only.
+- `EntityProperty` Codable / title storage from wave 12 stays; remaining
+  `asyncGetter` overloads stay declared (no run loop).
 
 - Wave 12 implements the leftover Foundation.Measurement `@Parameter`
   inits (Mass / Area / Power / Pressure / Frequency / Duration / Angle /
@@ -290,6 +311,11 @@ No implemented test is cited by more than 29 rows (9.7% of implemented).
   `AppIntentError.Unrecoverable.unsupportedOnDevice`. Host display
   helpers read stored values / `requestValueDialog` without inventing a
   Siri prompt.
+- `DeprecatedAppIntent` stores a replacement type name. It does not
+  migrate Siri vocabulary or Shortcuts. `FocusFilterAppContext` stores
+  an `NSPredicate` / identifier prefix and never talks to Focus.
+  `ShowInAppSearchResultsIntent` stores criteria and scopes; it does
+  not present in-app search UI.
 - `EntityProperty` traps only when a non-optional value was never stored
   and no getter was supplied. Optional unset properties return `nil`.
   CoreSpotlight indexing keys are lookalikes on the isolated host.

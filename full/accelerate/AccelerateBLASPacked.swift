@@ -760,3 +760,379 @@ public func ztbsv_(
         n: Int(n.pointee), k: Int(k.pointee), a: a, lda: Int(lda.pointee), x: x, incx: Int(incx.pointee)
     )
 }
+
+func _packedSymElem<T: BinaryFloatingPoint>(
+    _ ap: UnsafePointer<T>,
+    i: Int,
+    j: Int,
+    n: Int,
+    upper: Bool
+) -> T {
+    if upper {
+        if i <= j { return ap[_packIndex(upper: true, n: n, row: i, col: j)] }
+        return ap[_packIndex(upper: true, n: n, row: j, col: i)]
+    }
+    if i >= j { return ap[_packIndex(upper: false, n: n, row: i, col: j)] }
+    return ap[_packIndex(upper: false, n: n, row: j, col: i)]
+}
+
+func _packedTriRealA<T: BinaryFloatingPoint>(
+    _ ap: UnsafePointer<T>,
+    row: Int,
+    col: Int,
+    n: Int,
+    upper: Bool,
+    unit: Bool,
+    doTrans: Bool
+) -> T {
+    let r = doTrans ? col : row
+    let c = doTrans ? row : col
+    if r == c && unit { return 1 }
+    let inTriangle = upper ? (r <= c) : (r >= c)
+    if !inTriangle { return 0 }
+    return ap[_packIndex(upper: upper, n: n, row: r, col: c)]
+}
+
+func _realBandLoad<T: BinaryFloatingPoint>(
+    _ a: UnsafePointer<T>,
+    i: Int,
+    j: Int,
+    m: Int,
+    n: Int,
+    kl: Int,
+    ku: Int,
+    lda: Int
+) -> T {
+    if i < 0 || j < 0 || i >= m || j >= n { return 0 }
+    if i < j - ku || i > j + kl { return 0 }
+    let row = ku + i - j
+    if row < 0 || row >= lda { return 0 }
+    return a[j * lda + row]
+}
+
+func _sbandElem<T: BinaryFloatingPoint>(
+    _ a: UnsafePointer<T>,
+    i: Int,
+    j: Int,
+    k: Int,
+    lda: Int,
+    upper: Bool
+) -> T {
+    let lo = min(i, j)
+    let hi = max(i, j)
+    if hi - lo > k { return 0 }
+    if upper {
+        if i <= j { return a[j * lda + (k + i - j)] }
+        return a[i * lda + (k + j - i)]
+    }
+    if i >= j { return a[j * lda + (i - j)] }
+    return a[i * lda + (j - i)]
+}
+
+func _tbandRealA<T: BinaryFloatingPoint>(
+    _ a: UnsafePointer<T>,
+    row: Int,
+    col: Int,
+    k: Int,
+    lda: Int,
+    upper: Bool,
+    unit: Bool,
+    doTrans: Bool
+) -> T {
+    let r = doTrans ? col : row
+    let c = doTrans ? row : col
+    if r == c && unit { return 1 }
+    let inTriangle = upper ? (r <= c) : (r >= c)
+    if !inTriangle { return 0 }
+    if abs(r - c) > k { return 0 }
+    let bandRow = upper ? (k + r - c) : (r - c)
+    if bandRow < 0 || bandRow >= lda { return 0 }
+    return a[c * lda + bandRow]
+}
+
+func _spmv<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    n: Int,
+    alpha: T,
+    ap: UnsafePointer<T>,
+    x: UnsafePointer<T>,
+    incx: Int,
+    beta: T,
+    y: UnsafeMutablePointer<T>,
+    incy: Int
+) -> Int32 {
+    guard n > 0, incx != 0, incy != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    var yi = 0
+    for i in 0..<n {
+        var sum: T = 0
+        var xj = 0
+        for j in 0..<n {
+            sum += _packedSymElem(ap, i: i, j: j, n: n, upper: upper) * x[xj]
+            xj += incx
+        }
+        y[yi] = alpha * sum + beta * y[yi]
+        yi += incy
+    }
+    return 0
+}
+
+func _spr<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    n: Int,
+    alpha: T,
+    x: UnsafePointer<T>,
+    incx: Int,
+    ap: UnsafeMutablePointer<T>
+) -> Int32 {
+    guard n > 0, incx != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    for j in 0..<n {
+        let xj = x[j * incx]
+        let iStart = upper ? 0 : j
+        let iEnd = upper ? j : n - 1
+        var i = iStart
+        while i <= iEnd {
+            ap[_packIndex(upper: upper, n: n, row: i, col: j)] += alpha * x[i * incx] * xj
+            i += 1
+        }
+    }
+    return 0
+}
+
+func _spr2<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    n: Int,
+    alpha: T,
+    x: UnsafePointer<T>,
+    incx: Int,
+    y: UnsafePointer<T>,
+    incy: Int,
+    ap: UnsafeMutablePointer<T>
+) -> Int32 {
+    guard n > 0, incx != 0, incy != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    for j in 0..<n {
+        let xj = x[j * incx]
+        let yj = y[j * incy]
+        let iStart = upper ? 0 : j
+        let iEnd = upper ? j : n - 1
+        var i = iStart
+        while i <= iEnd {
+            ap[_packIndex(upper: upper, n: n, row: i, col: j)] += alpha * (x[i * incx] * yj + y[i * incy] * xj)
+            i += 1
+        }
+    }
+    return 0
+}
+
+func _gbmv<T: BinaryFloatingPoint>(
+    trans: CChar,
+    m: Int,
+    n: Int,
+    kl: Int,
+    ku: Int,
+    alpha: T,
+    a: UnsafePointer<T>,
+    lda: Int,
+    x: UnsafePointer<T>,
+    incx: Int,
+    beta: T,
+    y: UnsafeMutablePointer<T>,
+    incy: Int
+) -> Int32 {
+    guard m > 0, n > 0, kl >= 0, ku >= 0, lda > 0, incx != 0, incy != 0 else { return 0 }
+    let doTrans = _isTrans(trans)
+    let outCount = doTrans ? n : m
+    let inner = doTrans ? m : n
+    var yi = 0
+    for i in 0..<outCount {
+        var sum: T = 0
+        var xi = 0
+        for p in 0..<inner {
+            let av: T = doTrans
+                ? _realBandLoad(a, i: p, j: i, m: m, n: n, kl: kl, ku: ku, lda: lda)
+                : _realBandLoad(a, i: i, j: p, m: m, n: n, kl: kl, ku: ku, lda: lda)
+            sum += av * x[xi]
+            xi += incx
+        }
+        y[yi] = alpha * sum + beta * y[yi]
+        yi += incy
+    }
+    return 0
+}
+
+func _sbmv<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    n: Int,
+    k: Int,
+    alpha: T,
+    a: UnsafePointer<T>,
+    lda: Int,
+    x: UnsafePointer<T>,
+    incx: Int,
+    beta: T,
+    y: UnsafeMutablePointer<T>,
+    incy: Int
+) -> Int32 {
+    guard n > 0, k >= 0, lda > 0, incx != 0, incy != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    var yi = 0
+    for i in 0..<n {
+        var sum: T = 0
+        var xj = 0
+        for j in 0..<n {
+            sum += _sbandElem(a, i: i, j: j, k: k, lda: lda, upper: upper) * x[xj]
+            xj += incx
+        }
+        y[yi] = alpha * sum + beta * y[yi]
+        yi += incy
+    }
+    return 0
+}
+
+func _tpmv<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    trans: CChar,
+    diag: CChar,
+    n: Int,
+    ap: UnsafePointer<T>,
+    x: UnsafeMutablePointer<T>,
+    incx: Int
+) -> Int32 {
+    guard n > 0, incx != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    let unit = _isUnitDiag(diag)
+    let doTrans = _isTrans(trans)
+    var y = [T](repeating: 0, count: n)
+    for i in 0..<n { y[i] = x[i * incx] }
+    var out = [T](repeating: 0, count: n)
+    for i in 0..<n {
+        var sum: T = 0
+        for j in 0..<n {
+            sum += _packedTriRealA(ap, row: i, col: j, n: n, upper: upper, unit: unit, doTrans: doTrans) * y[j]
+        }
+        out[i] = sum
+    }
+    for i in 0..<n { x[i * incx] = out[i] }
+    return 0
+}
+
+func _tpsv<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    trans: CChar,
+    diag: CChar,
+    n: Int,
+    ap: UnsafePointer<T>,
+    x: UnsafeMutablePointer<T>,
+    incx: Int
+) -> Int32 {
+    guard n > 0, incx != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    let unit = _isUnitDiag(diag)
+    let doTrans = _isTrans(trans)
+    var y = [T](repeating: 0, count: n)
+    for i in 0..<n { y[i] = x[i * incx] }
+    func opA(_ row: Int, _ col: Int) -> T {
+        _packedTriRealA(ap, row: row, col: col, n: n, upper: upper, unit: unit, doTrans: doTrans)
+    }
+    let opUpper = doTrans ? !upper : upper
+    if opUpper {
+        var i = n - 1
+        while i >= 0 {
+            var sum = y[i]
+            if i + 1 < n {
+                for j in (i + 1)..<n { sum -= opA(i, j) * y[j] }
+            }
+            let diagV = opA(i, i)
+            if diagV == 0 { return Int32(i + 1) }
+            y[i] = sum / diagV
+            i -= 1
+        }
+    } else {
+        for i in 0..<n {
+            var sum = y[i]
+            for j in 0..<i { sum -= opA(i, j) * y[j] }
+            let diagV = opA(i, i)
+            if diagV == 0 { return Int32(i + 1) }
+            y[i] = sum / diagV
+        }
+    }
+    for i in 0..<n { x[i * incx] = y[i] }
+    return 0
+}
+
+func _tbmv<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    trans: CChar,
+    diag: CChar,
+    n: Int,
+    k: Int,
+    a: UnsafePointer<T>,
+    lda: Int,
+    x: UnsafeMutablePointer<T>,
+    incx: Int
+) -> Int32 {
+    guard n > 0, k >= 0, lda > 0, incx != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    let unit = _isUnitDiag(diag)
+    let doTrans = _isTrans(trans)
+    var y = [T](repeating: 0, count: n)
+    for i in 0..<n { y[i] = x[i * incx] }
+    var out = [T](repeating: 0, count: n)
+    for i in 0..<n {
+        var sum: T = 0
+        for j in 0..<n {
+            sum += _tbandRealA(a, row: i, col: j, k: k, lda: lda, upper: upper, unit: unit, doTrans: doTrans) * y[j]
+        }
+        out[i] = sum
+    }
+    for i in 0..<n { x[i * incx] = out[i] }
+    return 0
+}
+
+func _tbsv<T: BinaryFloatingPoint>(
+    uplo: CChar,
+    trans: CChar,
+    diag: CChar,
+    n: Int,
+    k: Int,
+    a: UnsafePointer<T>,
+    lda: Int,
+    x: UnsafeMutablePointer<T>,
+    incx: Int
+) -> Int32 {
+    guard n > 0, k >= 0, lda > 0, incx != 0 else { return 0 }
+    let upper = _isUpper(uplo)
+    let unit = _isUnitDiag(diag)
+    let doTrans = _isTrans(trans)
+    var y = [T](repeating: 0, count: n)
+    for i in 0..<n { y[i] = x[i * incx] }
+    func opA(_ row: Int, _ col: Int) -> T {
+        _tbandRealA(a, row: row, col: col, k: k, lda: lda, upper: upper, unit: unit, doTrans: doTrans)
+    }
+    let opUpper = doTrans ? !upper : upper
+    if opUpper {
+        var i = n - 1
+        while i >= 0 {
+            var sum = y[i]
+            if i + 1 < n {
+                for j in (i + 1)..<n { sum -= opA(i, j) * y[j] }
+            }
+            let diagV = opA(i, i)
+            if diagV == 0 { return Int32(i + 1) }
+            y[i] = sum / diagV
+            i -= 1
+        }
+    } else {
+        for i in 0..<n {
+            var sum = y[i]
+            for j in 0..<i { sum -= opA(i, j) * y[j] }
+            let diagV = opA(i, i)
+            if diagV == 0 { return Int32(i + 1) }
+            y[i] = sum / diagV
+        }
+    }
+    for i in 0..<n { x[i * incx] = y[i] }
+    return 0
+}
