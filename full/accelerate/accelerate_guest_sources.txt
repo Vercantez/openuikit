@@ -3,6 +3,7 @@ full/accelerate/AccelerateBLASComplex.swift
 full/accelerate/AccelerateBLASLevel23.swift
 full/accelerate/AccelerateBLASMore.swift
 full/accelerate/AccelerateBLASOps.swift
+full/accelerate/AccelerateBLASPacked.swift
 full/accelerate/AccelerateBNNSTensorOps.swift
 full/accelerate/AccelerateCFunctions.swift
 full/accelerate/AccelerateCTypes.swift

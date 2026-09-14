@@ -794,24 +794,6 @@ public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorizatio
 public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Double>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Double) { }
 public func SparseUpdateFactor(_ updateAlgorithm: SparseUpdate_t, _ Factorization: UnsafeMutablePointer<SparseOpaqueFactorization_Float>, _ updateCount: Int32, _ updatedIndices: UnsafePointer<Int32>, _ Update: SparseMatrix_Float) { }
 @discardableResult
-public func cgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutableRawPointer!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func chbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutableRawPointer!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func chpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ ap: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutableRawPointer!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func chpr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!) -> Int32 { return 0 }
-@discardableResult
-public func chpr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Float>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!) -> Int32 { return 0 }
-@discardableResult
-public func ctbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func ctbsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func ctpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func ctpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
 public func dgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutablePointer<Double>!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ y: UnsafeMutablePointer<Double>!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 @discardableResult
 public func dgemm_(_ transa: UnsafeMutablePointer<CChar>!, _ transb: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ a: UnsafeMutablePointer<Double>!, _ lda: UnsafeMutablePointer<Int32>!, _ b: UnsafeMutablePointer<Double>!, _ ldb: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutablePointer<Double>!, _ c__: UnsafeMutablePointer<Double>!, _ ldc: UnsafeMutablePointer<Int32>!) -> Int32 {
@@ -2402,22 +2384,4 @@ public func vvtanpi(_ y: UnsafeMutablePointer<Double>, _ x: UnsafePointer<Double
 public func vvtanpif(_ y: UnsafeMutablePointer<Float>, _ x: UnsafePointer<Float>, _ n: UnsafePointer<Int32>) { let count = Int(n.pointee); for i in 0..<count { y[i] = Foundation.tan(x[i] * .pi) } }
 @discardableResult
 public func xerbla_(_ srname: UnsafeMutablePointer<CChar>!, _ info: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func zgbmv_(_ trans: UnsafeMutablePointer<CChar>!, _ m: UnsafeMutablePointer<Int32>!, _ n: UnsafeMutablePointer<Int32>!, _ kl: UnsafeMutablePointer<Int32>!, _ ku: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutableRawPointer!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func zhbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutableRawPointer!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func zhpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ ap: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ beta: UnsafeMutableRawPointer!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func zhpr2_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ y: UnsafeMutableRawPointer!, _ incy: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!) -> Int32 { return 0 }
-@discardableResult
-public func zhpr_(_ uplo: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ alpha: UnsafeMutablePointer<Double>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!) -> Int32 { return 0 }
-@discardableResult
-public func ztbmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func ztbsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ k: UnsafeMutablePointer<Int32>!, _ a: UnsafeMutableRawPointer!, _ lda: UnsafeMutablePointer<Int32>!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func ztpmv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
-@discardableResult
-public func ztpsv_(_ uplo: UnsafeMutablePointer<CChar>!, _ trans: UnsafeMutablePointer<CChar>!, _ diag: UnsafeMutablePointer<CChar>!, _ n: UnsafeMutablePointer<Int32>!, _ ap: UnsafeMutableRawPointer!, _ x: UnsafeMutableRawPointer!, _ incx: UnsafeMutablePointer<Int32>!) -> Int32 { return 0 }
 

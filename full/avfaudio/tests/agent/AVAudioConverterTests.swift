@@ -39,7 +39,15 @@ func testAVAudioConverterPCM() {
     converter.dither = true
     converter.downmix = false
     converter.primeMethod = .none
-    converter.primeInfo = AVAudioConverterPrimeInfo(leadingFrames: 0, trailingFrames: 0)
+    var prime = AVAudioConverterPrimeInfo()
+    precondition(prime.leadingFrames == 0 && prime.trailingFrames == 0)
+    prime = AVAudioConverterPrimeInfo(leadingFrames: 2, trailingFrames: 3)
+    precondition(prime.leadingFrames == 2 && prime.trailingFrames == 3)
+    prime.leadingFrames = 7
+    prime.trailingFrames = 9
+    converter.primeInfo = prime
+    precondition(converter.primeInfo.leadingFrames == 7)
+    precondition(converter.primeInfo.trailingFrames == 9)
     converter.contentSource = .unspecified
     converter.dynamicRangeControlConfiguration = .none
     converter.audioSyncPacketFrequency = 0

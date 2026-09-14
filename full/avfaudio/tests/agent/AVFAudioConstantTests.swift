@@ -67,6 +67,10 @@ func testAVFAudioConstants() {
         Notification.Name.AVAudioEngineConfigurationChange.rawValue
             == "AVAudioEngineConfigurationChangeNotification"
     )
+    precondition(
+        Notification.Name.AVAudioUnitComponentTagsDidChange.rawValue
+            == "AVAudioUnitComponentTagsDidChangeNotification"
+    )
 }
 
 func testAVFAudioTypealiases() {

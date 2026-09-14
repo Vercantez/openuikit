@@ -20,8 +20,10 @@ Portable Swift implementations exercised by `tests/agent/*Tests.swift`:
 - vDSP vector/matrix arithmetic, statistics, windowing, convolution, conversions,
   and radix-2 FFT/DFT (packed layouts; FFT cross-checked against a direct DFT)
 - vForce elementwise math for `Float`/`Double` via Foundation/`FloatingPoint`
-- BLAS level 1–3 (`saxpy_`/`daxpy_`, `sgemm_`/`dgemm_`, CBLAS enumerators) and
-  LAPACK `sgesv_`/`dgesv_`/`sgels_`/`sposv_`/`sgetrf_` via reference algorithms
+- BLAS level 1–3 (`saxpy_`/`daxpy_`, `sgemm_`/`dgemm_`, CBLAS enumerators),
+  complex dense/packed/banded level-2 (`cgemv_`/`chemv_`/`chpmv_`/`cgbmv_`/`ctpmv_`
+  and `z*` twins), and LAPACK `sgesv_`/`dgesv_`/`sgels_`/`sposv_`/`sgetrf_` via
+  reference algorithms
 - vImage buffer geometry, scaling, histogram, alpha compositing, and
   `PixelBuffer` operations on the documented planar/interleaved formats
 - BNNS filter creation returns `nil` (fail-closed; no BNNS runtime on Linux);
@@ -290,3 +292,26 @@ Top-5 evidence distribution for the 28 newly implemented rows:
 5. `testBLASComplexRotgRot` — 4 (14.3%) — `crotg_`/`csrot_`/`zrotg_`/`zdrot_`
 
 Largest non-enum test is 10/28 = 35.7%, under the 40% remaining-row ceiling. Remaining packed/banded complex BLAS (`cgbmv_`/`chbmv_`/`chpmv_`/`chpr*`/`ctbmv_`/`ctbsv_`/`ctpmv_`/`ctpsv_` and `z*` twins) stay `declared`. vImage CG/CV and BNNS graph execute stay deferred/fail-closed.
+
+## Depth pass 2026-09-14 (packed/banded complex BLAS)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Implements packed Hermitian (`chpmv_`/`chpr_`/`chpr2_` and `z*`), packed triangular (`ctpmv_`/`ctpsv_` and `z*`), and banded (`cgbmv_`/`chbmv_`/`ctbmv_`/`ctbsv_` and `z*`) complex C BLAS with netlib column-packed / banded layouts, pinned to the macOS 26.1 / Xcode 26.1 Accelerate oracle 2x2 and 3-diagonal 3x3 cases in `scratch/oracle-2026-09-14/packed-banded-complex-blas-2026-09-14.txt`.
+
+- Implemented before: **4062**
+- Implemented after: **4080**
+- Declared before: **1539**
+- Declared after: **1521**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **18**
+
+Top-5 evidence distribution for the 18 newly implemented rows:
+
+1. `testBLASComplexPackedHpr` — 4 (22.2%) — `chpr_`/`chpr2_`/`zhpr_`/`zhpr2_`
+2. `testBLASComplexPackedTpmvTpsv` — 4 (22.2%) — `ctpmv_`/`ctpsv_`/`ztpmv_`/`ztpsv_`
+3. `testBLASComplexBandedGbmvHbmv` — 4 (22.2%) — `cgbmv_`/`chbmv_`/`zgbmv_`/`zhbmv_`
+4. `testBLASComplexBandedTbmvTbsv` — 4 (22.2%) — `ctbmv_`/`ctbsv_`/`ztbmv_`/`ztbsv_`
+5. `testBLASComplexPackedHpmv` — 2 (11.1%) — `chpmv_`/`zhpmv_`
+
+Largest non-enum test is 4/18 = 22.2%, under the 40% remaining-row ceiling. No leftover packed/banded complex C entry points from this list. vImage CG/CV and BNNS graph execute stay deferred/fail-closed.

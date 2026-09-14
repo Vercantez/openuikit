@@ -635,3 +635,15 @@ func testCMDoesBigEndianSoundDescriptionFailClosed() {
         CMDoesBigEndianSoundDescriptionRequireLegacyCBRSampleTableLayout(buffer, flavor: nil) == false
     )
 }
+
+func testCMBlockBufferHashableEquatable() {
+    let first = CMBlockBuffer(data: Data([1, 2, 3]))
+    let second = CMBlockBuffer(data: Data([1, 2, 3]))
+    precondition(first == first)
+    precondition(first != second)
+    precondition(!(first != first))
+    var hasher = Hasher()
+    first.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(first.hashValue == first.hashValue)
+}

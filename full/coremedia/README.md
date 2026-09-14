@@ -363,3 +363,41 @@ Remaining deferred rows are still audio/image-buffer C APIs that need
 CoreAudioTypes/CoreVideo, DispatchSource timer overloads that abort
 libdispatch in the sealed Linux gate, and overlay hosts that this port
 does not implement. No Apple service or hardware success was invented.
+
+## Depth pass 2026-09-14 (Hashable / Equatable / OptionSet)
+
+This continuation converts previously declared stdlib Hashable, Equatable,
+and OptionSet witnesses only where a focused test hashes, equals, or uses
+OptionSet algebra on that host type. Identity `Hashable` on `CMClock`,
+`CMTimebase`, `CMBlockBuffer`, `CMBufferQueue`, and `CMSimpleQueue` matches
+the existing `CMMemoryPool` / `CMFormatDescription` pattern. Packing and
+projection enums, stereo-view option sets, attachment-mode, and timebase
+notification keys are exercised directly. Flavor `CFString` typealiases keep
+their `_SwiftNewtypeWrapper` witnesses declared: Linux does not wrap those
+C strings. `DataProtocol.copyBytes`, `sorted(using: SortComparator)`,
+un-called `CMBlockBufferProtocol` methods, and CoreAudioTypes/CoreVideo
+sample APIs stay declared or deferred.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2851 | 2904 |
+| declared | 386 | 333 |
+| deferred | 267 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +53.
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` — 180 (6.2%)
+2. `CMCollectionDepthTests.swift#testCMDataBlockBufferCollectionAlgorithms` — 149 (5.1%)
+3. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (4.0%)
+4. `CMCollectionDepthTests.swift#testCMSampleAttachmentsArrayCollectionAlgorithms` — 110 (3.8%)
+5. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (3.1%)
+
+No test owns more than 40% of implemented rows. Leftover deferred C APIs are
+still the CoreAudioTypes/CoreVideo family (`CMAudioFormatDescriptionCreate`
+and ASBD/channel-layout/format-list getters, audio packet-description sample
+buffers, `AudioBufferList` copy/set, image-buffer sample-buffer create/get,
+and `CMVideoFormatDescriptionCreateForImageBuffer` / `MatchesImageBuffer`).

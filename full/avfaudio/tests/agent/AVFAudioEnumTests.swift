@@ -347,3 +347,37 @@ func testAVFAudioEnumCases() {
     _ = AVSpeechSynthesisVoiceQuality.premium
     precondition(AVSpeechSynthesisVoiceQuality.`default` != AVSpeechSynthesisVoiceQuality.enhanced)
 }
+
+func testAVFAudioEnumHashable() {
+    func check<T: Hashable & RawRepresentable>(_ first: T, _ second: T) {
+        precondition(first == first)
+        precondition(first != second)
+        var values = Set<T>()
+        _ = values.insert(first)
+        _ = values.insert(first)
+        _ = values.insert(second)
+        precondition(values.count == 2)
+        precondition(values.contains(first) && values.contains(second))
+        precondition(first.hashValue == first.hashValue)
+        var hasher = Hasher()
+        first.hash(into: &hasher)
+        second.hash(into: &hasher)
+        _ = hasher.finalize()
+        precondition(T(rawValue: first.rawValue) == first)
+        precondition(T(rawValue: second.rawValue) == second)
+    }
+
+    check(AVAudioCommonFormat.pcmFormatFloat32, .pcmFormatInt16)
+    check(AVAudioContentSource.unspecified, .passthrough)
+    check(AVAudioConverterInputStatus.haveData, .endOfStream)
+    check(AVAudioConverterOutputStatus.haveData, .error)
+    check(AVAudioConverterPrimeMethod.none, .pre)
+    check(AVAudioDynamicRangeControlConfiguration.none, .music)
+    check(AVAudioEngineManualRenderingError.invalidMode, .notRunning)
+    check(AVAudioEngineManualRenderingMode.offline, .realtime)
+    check(AVAudioEngineManualRenderingStatus.success, .error)
+    check(AVAudioPlayerNodeCompletionCallbackType.dataConsumed, .dataPlayedBack)
+    check(AVAudioQuality.medium, .high)
+    check(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.min, .max)
+    check(AVAudioVoiceProcessingSpeechActivityEvent.started, .ended)
+}

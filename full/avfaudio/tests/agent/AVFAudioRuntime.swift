@@ -349,6 +349,40 @@ func testAVFAudioEnumCases() {
     precondition(AVSpeechSynthesisVoiceQuality.`default` != AVSpeechSynthesisVoiceQuality.enhanced)
 }
 
+func testAVFAudioEnumHashable() {
+    func check<T: Hashable & RawRepresentable>(_ first: T, _ second: T) {
+        precondition(first == first)
+        precondition(first != second)
+        var values = Set<T>()
+        _ = values.insert(first)
+        _ = values.insert(first)
+        _ = values.insert(second)
+        precondition(values.count == 2)
+        precondition(values.contains(first) && values.contains(second))
+        precondition(first.hashValue == first.hashValue)
+        var hasher = Hasher()
+        first.hash(into: &hasher)
+        second.hash(into: &hasher)
+        _ = hasher.finalize()
+        precondition(T(rawValue: first.rawValue) == first)
+        precondition(T(rawValue: second.rawValue) == second)
+    }
+
+    check(AVAudioCommonFormat.pcmFormatFloat32, .pcmFormatInt16)
+    check(AVAudioContentSource.unspecified, .passthrough)
+    check(AVAudioConverterInputStatus.haveData, .endOfStream)
+    check(AVAudioConverterOutputStatus.haveData, .error)
+    check(AVAudioConverterPrimeMethod.none, .pre)
+    check(AVAudioDynamicRangeControlConfiguration.none, .music)
+    check(AVAudioEngineManualRenderingError.invalidMode, .notRunning)
+    check(AVAudioEngineManualRenderingMode.offline, .realtime)
+    check(AVAudioEngineManualRenderingStatus.success, .error)
+    check(AVAudioPlayerNodeCompletionCallbackType.dataConsumed, .dataPlayedBack)
+    check(AVAudioQuality.medium, .high)
+    check(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.min, .max)
+    check(AVAudioVoiceProcessingSpeechActivityEvent.started, .ended)
+}
+
 
 func testAVFAudioOptionSets() {
     var buffer = AVAudioPlayerNodeBufferOptions()
@@ -585,6 +619,10 @@ func testAVFAudioConstants() {
     precondition(
         Notification.Name.AVAudioEngineConfigurationChange.rawValue
             == "AVAudioEngineConfigurationChangeNotification"
+    )
+    precondition(
+        Notification.Name.AVAudioUnitComponentTagsDidChange.rawValue
+            == "AVAudioUnitComponentTagsDidChangeNotification"
     )
 }
 
@@ -982,7 +1020,15 @@ func testAVAudioConverterPCM() {
     converter.dither = true
     converter.downmix = false
     converter.primeMethod = .none
-    converter.primeInfo = AVAudioConverterPrimeInfo(leadingFrames: 0, trailingFrames: 0)
+    var prime = AVAudioConverterPrimeInfo()
+    precondition(prime.leadingFrames == 0 && prime.trailingFrames == 0)
+    prime = AVAudioConverterPrimeInfo(leadingFrames: 2, trailingFrames: 3)
+    precondition(prime.leadingFrames == 2 && prime.trailingFrames == 3)
+    prime.leadingFrames = 7
+    prime.trailingFrames = 9
+    converter.primeInfo = prime
+    precondition(converter.primeInfo.leadingFrames == 7)
+    precondition(converter.primeInfo.trailingFrames == 9)
     converter.contentSource = .unspecified
     converter.dynamicRangeControlConfiguration = .none
     converter.audioSyncPacketFrequency = 0
@@ -1141,6 +1187,7 @@ func testAVAudioEngineGraphConnections() {
     engine.disconnectMIDI(sourceA, from: [destination])
     engine.disconnectMIDIInput(destination)
     engine.disconnectMIDIOutput(sourceA)
+    precondition(engine.inputConnectionPoint(for: destination, inputBus: 0) == nil)
     engine.detach(unrelated)
     let points = [AVAudioConnectionPoint(node: engine.mainMixerNode, bus: 1)]
     engine.connect(sourceA, to: points, fromBus: 0, format: nil)
@@ -1161,6 +1208,28 @@ func testAVAudioEngineGraphConnections() {
     _ = sourceA.outputFormat(forBus: 0)
     _ = sourceA.engine
     sourceA.reset()
+}
+
+func testAVAudioVoiceProcessingDuckingConfiguration() {
+    var config = AVAudioVoiceProcessingOtherAudioDuckingConfiguration()
+    precondition(config.enableAdvancedDucking.boolValue == false)
+    precondition(config.duckingLevel == .default)
+    precondition(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.min.rawValue == 10)
+    precondition(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.mid.rawValue == 20)
+    precondition(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.max.rawValue == 30)
+    config = AVAudioVoiceProcessingOtherAudioDuckingConfiguration(
+        enableAdvancedDucking: ObjCBool(true),
+        duckingLevel: .max
+    )
+    precondition(config.enableAdvancedDucking.boolValue)
+    precondition(config.duckingLevel == .max)
+    config.enableAdvancedDucking = ObjCBool(false)
+    config.duckingLevel = .min
+    precondition(config.enableAdvancedDucking.boolValue == false)
+    precondition(config.duckingLevel == .min)
+    let engine = AVAudioEngine()
+    engine.inputNode.voiceProcessingOtherAudioDuckingConfiguration = config
+    precondition(engine.inputNode.voiceProcessingOtherAudioDuckingConfiguration.duckingLevel == .min)
 }
 
 
@@ -1436,6 +1505,29 @@ func testAVAudioPlayerFailClosed() {
         _ = try AVAudioPlayer(contentsOf: tmp, fileTypeHint: "public.wav")
         _ = try AVAudioPlayer(contentsOfURL: tmp)
         _ = try AVAudioPlayer(contentsOfURL: tmp, fileTypeHint: "public.wav")
+        final class PlayerProbe: NSObject, AVAudioPlayerDelegate {
+            var begin = false
+            var end = false
+            var finish = false
+            var decode = false
+            func audioPlayerBeginInterruption(_ player: AVAudioPlayer) { begin = true }
+            func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
+                end = flags == 1
+            }
+            func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+                finish = flag
+            }
+            func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: (any Error)?) {
+                decode = error == nil
+            }
+        }
+        let probe = PlayerProbe()
+        fromData.delegate = probe
+        probe.audioPlayerBeginInterruption(fromData)
+        probe.audioPlayerEndInterruption(fromData, withOptions: 1)
+        probe.audioPlayerDidFinishPlaying(fromData, successfully: true)
+        probe.audioPlayerDecodeErrorDidOccur(fromData, error: nil)
+        precondition(probe.begin && probe.end && probe.finish && probe.decode)
     } catch {
         preconditionFailure("player fixtures: \(error)")
     }
@@ -1473,6 +1565,29 @@ func testAVAudioRecorderFailClosed() {
         _ = try AVAudioRecorder(URL: url, format: format)
         _ = try AVAudioRecorder(url: url, settings: format.settings)
         _ = try AVAudioRecorder(URL: url, settings: format.settings)
+        final class RecorderProbe: NSObject, AVAudioRecorderDelegate, @unchecked Sendable {
+            var begin = false
+            var end = false
+            var finish = false
+            var encode = false
+            func audioRecorderBeginInterruption(_ recorder: AVAudioRecorder) { begin = true }
+            func audioRecorderEndInterruption(_ recorder: AVAudioRecorder, withOptions flags: Int) {
+                end = flags == 2
+            }
+            func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+                finish = flag
+            }
+            func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?) {
+                encode = error == nil
+            }
+        }
+        let probe = RecorderProbe()
+        recorder.delegate = probe
+        probe.audioRecorderBeginInterruption(recorder)
+        probe.audioRecorderEndInterruption(recorder, withOptions: 2)
+        probe.audioRecorderDidFinishRecording(recorder, successfully: true)
+        probe.audioRecorderEncodeErrorDidOccur(recorder, error: nil)
+        precondition(probe.begin && probe.end && probe.finish && probe.encode)
     } catch {
         preconditionFailure("recorder: \(error)")
     }
@@ -1736,6 +1851,7 @@ func testAVFAudioHostAvailability() {
 
 func avfaudioRunAllFocusedTests() {
     testAVFAudioEnumCases()
+    testAVFAudioEnumHashable()
     testAVFAudioOptionSets()
     testAVFAudioConstants()
     testAVFAudioTypealiases()
@@ -1746,6 +1862,7 @@ func avfaudioRunAllFocusedTests() {
     testAVAudioConverterPCM()
     testAVAudioEngineManualRendering()
     testAVAudioEngineGraphConnections()
+    testAVAudioVoiceProcessingDuckingConfiguration()
     testAVAudioMixingPanGain()
     testAVAudioSessionCategoryAndFailClosed()
     testAVAudioSessionPortsAndNotifications()

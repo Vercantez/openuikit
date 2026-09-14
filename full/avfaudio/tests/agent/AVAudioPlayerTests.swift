@@ -60,6 +60,29 @@ func testAVAudioPlayerFailClosed() {
         _ = try AVAudioPlayer(contentsOf: tmp, fileTypeHint: "public.wav")
         _ = try AVAudioPlayer(contentsOfURL: tmp)
         _ = try AVAudioPlayer(contentsOfURL: tmp, fileTypeHint: "public.wav")
+        final class PlayerProbe: NSObject, AVAudioPlayerDelegate {
+            var begin = false
+            var end = false
+            var finish = false
+            var decode = false
+            func audioPlayerBeginInterruption(_ player: AVAudioPlayer) { begin = true }
+            func audioPlayerEndInterruption(_ player: AVAudioPlayer, withOptions flags: Int) {
+                end = flags == 1
+            }
+            func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+                finish = flag
+            }
+            func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: (any Error)?) {
+                decode = error == nil
+            }
+        }
+        let probe = PlayerProbe()
+        fromData.delegate = probe
+        probe.audioPlayerBeginInterruption(fromData)
+        probe.audioPlayerEndInterruption(fromData, withOptions: 1)
+        probe.audioPlayerDidFinishPlaying(fromData, successfully: true)
+        probe.audioPlayerDecodeErrorDidOccur(fromData, error: nil)
+        precondition(probe.begin && probe.end && probe.finish && probe.decode)
     } catch {
         preconditionFailure("player fixtures: \(error)")
     }

@@ -75,19 +75,20 @@ Coverage ledger repair (merge refused `c620a7c9` because implemented rows cited 
 | | implemented | declared | deferred | unavailable |
 | --- | ---: | ---: | ---: | ---: |
 | Before (`c620a7c9`) | 1558 | 0 | 79 | 1 |
-| After (this revision) | 1515 | 63 | 59 | 1 |
+| After ledger repair | 1515 | 63 | 59 | 1 |
+| After declared-to-implemented (this revision) | 1578 | 0 | 59 | 1 |
 
-Every `implemented` row now cites `test:full/avfaudio/tests/agent/<File>Tests.swift#testName` naming a real top-level `func testName()`. Rows without a focused test are `declared` with `source:full/avfaudio/<file>.swift#Symbol`. Option-set SetAlgebra on `AVMusicSequenceLoadOptions` moved from deferred to implemented because `testAVFAudioOptionSets` exercises it.
+Every `implemented` row cites `test:full/avfaudio/tests/agent/<File>Tests.swift#testName` naming a real top-level `func testName()`. Compiling declared rows were converted with tests that call the identifier: `AVMakeBeatRange`, `AVAudioConverterPrimeInfo` fields, `AVAudioVoiceProcessingOtherAudioDuckingConfiguration` fields (Apple ducking levels 0/10/20/30), `AVAudioUnitComponentTagsDidChange`, Hashable/`init(rawValue:)` witnesses via `Set`/`==`/`hash(into:)`, optional player/recorder delegate methods, and fail-closed engine MIDI disconnects.
 
-Top-5 implemented evidence (1515 rows; no non-table test exceeds 40%):
+Top-5 implemented evidence (1578 rows; no non-table test exceeds 40%):
 
 | rows | % | evidence |
 | ---: | ---: | --- |
-| 343 | 22.6% | `AVFAudioEnumTests.swift#testAVFAudioEnumCases` (table-driven enums/cases/`!=`) |
-| 186 | 12.3% | `AVFAudioOptionSetTests.swift#testAVFAudioOptionSets` (table-driven option-set members/algebra) |
-| 154 | 10.2% | `AVAudioMIDITests.swift#testAVAudioMIDISequencer` |
-| 131 | 8.6% | `AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications` |
-| 111 | 7.3% | `AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed` |
+| 343 | 21.7% | `AVFAudioEnumTests.swift#testAVFAudioEnumCases` (table-driven enums/cases/`!=`) |
+| 186 | 11.8% | `AVFAudioOptionSetTests.swift#testAVFAudioOptionSets` (table-driven option-set members/algebra) |
+| 154 | 9.8% | `AVAudioMIDITests.swift#testAVAudioMIDISequencer` |
+| 131 | 8.3% | `AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications` |
+| 111 | 7.0% | `AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed` |
 
 ### Public surface (Linux-backed)
 

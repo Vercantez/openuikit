@@ -331,6 +331,30 @@ func testCMBufferQueueHandlersBuilder() {
     precondition(queue.duration.value == 1)
 }
 
+func testCMSimpleQueueHashableEquatable() {
+    let first = try! CMSimpleQueue(capacity: 2)
+    let second = try! CMSimpleQueue(capacity: 2)
+    precondition(first == first)
+    precondition(first != second)
+    precondition(!(first != first))
+    var hasher = Hasher()
+    first.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(first.hashValue == first.hashValue)
+}
+
+func testCMBufferQueueHashableEquatable() {
+    let first = CMBufferQueue(capacity: 2, handlers: .unsortedSampleBuffers)
+    let second = CMBufferQueue(capacity: 2, handlers: .unsortedSampleBuffers)
+    precondition(first == first)
+    precondition(first != second)
+    precondition(!(first != first))
+    var hasher = Hasher()
+    first.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(first.hashValue == first.hashValue)
+}
+
 private func cmQueueTestSample(pts: Int64, duration: Int64, size: Int, dts: Int64? = nil) -> CMSampleBuffer {
     let timing = CMSampleTimingInfo(
         duration: CMTime(value: duration, timescale: 1),

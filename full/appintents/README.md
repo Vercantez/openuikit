@@ -17,23 +17,20 @@ isolated Linux host compiles these sources with `swiftc` and Foundation only.
 
 SDK depth for `AppIntents` in `full/appintents/` (6,586 exact IDs). This is
 a next pass: earlier sources and tests stay green. This round implements
-the remaining `@Property` specializations the ledger called out
-(`EntityProperty` where `Value` is `URL` / `Date` / `DateComponents` /
-`AttributedString` / `Calendar.RecurrenceRule` / `IntentFile` /
-`IntentPerson` / `IntentPaymentMethod` / `IntentCurrencyAmount` /
-`AppEntity` / `CLPlacemark`), plus typed `@Parameter` inits for DateComponents (`kind`),
-IntentCurrencyAmount (`currencyCodes` / Decimal `inclusiveRange`),
-IntentPerson (`parameterMode`), IntentPaymentMethod, and CLPlacemark
-(`displayStyle`). Unexercised `asyncGetter` specializations stay declared (no
-blocking run loop); wave 11 adds typed host attachment below. Sample
-`PropertyPayIntent` / `Wave9PlaceIntent` evaluate `hostResult()` in-process.
+portable `IntentParameter` / `EntityProperty` storage that does not need
+Siri or SwiftUI: remaining Foundation.Measurement `@Parameter` inits,
+`EntityProperty` Codable encode/decode, public `title` / `defaultValue`,
+in-process requestValue display representations, and explicit
+`hash(into:)` on nested parameter enums. `requestConfirmation`,
+async `requestValue` prompting, and assistant-schema execution stay
+fail-closed or deferred. SwiftUI View overlays stay `not-applicable`.
 
 Coverage this round (ledger at start of this increment, then after):
 
 | | implemented | declared | deferred | unavailable | not-applicable | nondeferred |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Before | 2088 | 1702 | 1208 | 0 | 1588 | 3790 |
-| After | 2388 | 1402 | 1208 | 0 | 1588 | 3790 |
+| Before | 2388 | 1402 | 1208 | 0 | 1588 | 3790 |
+| After | 2726 | 1068 | 1204 | 0 | 1588 | 3794 |
 
 Prior increment on this tree was 1234 / 2548 / 1216 → 1526 / 2257 / 1215.
 Floor is 3293. SwiftUI `s:7SwiftUI…` View / Button / Toggle / ModifiedContent
@@ -44,13 +41,13 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 176 | 7.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
-| 174 | 7.3% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
-| 153 | 6.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
-| 147 | 6.2% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
-| 53 | 2.2% | `AppIntentsWaveTests.swift#testAssistantSchemasNamespaceStatics` |
+| 176 | 6.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
+| 174 | 6.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
+| 157 | 5.8% | `AppIntentsWave12Tests.swift#testIntentParameterRemainingMeasurementDefaultUnitInits` |
+| 153 | 5.6% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
+| 147 | 5.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
 
-No test is cited by more than 7.4% of implemented rows (well under the
+No test is cited by more than 6.4% of implemented rows (well under the
 40% bulk-relabel line). New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.
@@ -59,18 +56,37 @@ Environment: `.cursor/verify-cloud-environment.sh` emitted
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=scratch-corpus evidence=dotnet-macios`. Starting commit
 `08da4b0127920d2a794d74490b5a0e8faed63584` matched the campaign invariant.
 
-`bash full/appintents/tests/acceptance/test_host.sh` ended:
+`python3 -B full/framework-fanout/validate_seed.py --framework full/appintents --phase deliverable`
+accepted 6,586 IDs. Darwin Apple `swiftc` cannot emit `libAppIntents.dylib`
+here because lookalikes are behind `!canImport(CoreLocation)` /
+`CoreSpotlight` (this SDK has both). The sealed Linux host gate remains
+the compile/run authority:
 
 ```
 FRAMEWORK_FANOUT_DELIVERABLE_OK module=AppIntents lane=medium-full symbols=6586
-FRAMEWORK_FANOUT_REFERENCE_OK
-APPINTENTS_AGENT_RUNTIME_OK
-FRAMEWORK_FANOUT_HOST_OK module=AppIntents dylib=libAppIntents.dylib
 ```
 
 `bash full/appintents/tests/test_appintents_host.sh` compiled the host runtime probe (`APPINTENTS_HOST_RUNTIME_OK`) and skipped exact ButtonKit/SFSafeSymbols consumers (`APPINTENTS_EXACT_CONSUMERS_SKIPPED`) because those caches are not on this VM.
 
 ### What this pass added
+
+- Wave 12 implements the leftover Foundation.Measurement `@Parameter`
+  inits (Mass / Area / Power / Pressure / Frequency / Duration / Angle /
+  electric and remaining unit families). Typed constructors store
+  `defaultValue`, `defaultUnit` / `unit`, `supportsNegativeNumbers`, and
+  `unitAdjustForLocale` the same way Volume / Length / InformationStorage
+  already did. Options providers and resolvers attach metadata only.
+- `EntityProperty` is Codable when `Value` is: encode/decode round-trips
+  stored value, title, and identifier. Host hash / display helpers are
+  in-process; they do not write Spotlight or claim Siri resolution.
+  Codable `asyncGetter` overloads stay declared (no run loop).
+- `IntentParameter.title` and `defaultValue` are public. Nested
+  `DateKind` / `IntControlStyle` / `DoubleControlStyle` /
+  `PlacemarkDisplayStyle` implement `hash(into:)`. Synthesized
+  `hashValue` / `==` stay deferred. `hostDisplayRepresentation` /
+  `hostRequestValueDisplayRepresentation()` read stored values and
+  `requestValueDialog`. Async `requestValue` and `requestConfirmation`
+  still throw `unsupportedOnDevice`.
 
 - Wave 11 exercises concrete `EntityProperty` storage and default-entity
   key-path access across strings, numbers, dates, URLs, attributed strings,
@@ -271,7 +287,9 @@ No implemented test is cited by more than 29 rows (9.7% of implemented).
   entitlements.
 - Request confirmation, request choice (empty), continue-in-foreground,
   and `IntentParameter.requestValue` throw
-  `AppIntentError.Unrecoverable.unsupportedOnDevice`.
+  `AppIntentError.Unrecoverable.unsupportedOnDevice`. Host display
+  helpers read stored values / `requestValueDialog` without inventing a
+  Siri prompt.
 - `EntityProperty` traps only when a non-optional value was never stored
   and no getter was supplied. Optional unset properties return `nil`.
   CoreSpotlight indexing keys are lookalikes on the isolated host.
@@ -324,9 +342,11 @@ by the Mach-O host probe remains unambiguous.
 
 Generic `IntentParameter` / `EntityProperty` catch-all inits in
 `AppIntentsMembers.swift` stay `declared` stubs unless a test calls that
-shape. Measurement `defaultUnit` specializations on
-`IntentParameterContext` stay deferred: UniformTypeIdentifiers / unit
-nested types are not a declared dependency.
+shape. EntityProperty `asyncGetter` specializations, including the
+Codable-constrained copies, stay declared (no blocking run loop).
+`requestConfirmation` and SwiftUI confirmation views stay declared or
+fail-closed. Synthesized `==` / `hash(into:)` witnesses without an
+explicit host source stay `deferred`.
 
 There is no public `ResolvedValue` symbol in the 26.1 graph.
 `IntentParameterDependency.wrappedValue` is an `IntentProjection`.

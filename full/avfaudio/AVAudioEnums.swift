@@ -245,9 +245,9 @@ public struct AVAudioConverterPrimeInfo: Hashable, Sendable {
 public struct AVAudioVoiceProcessingOtherAudioDuckingConfiguration: Sendable {
     public enum Level: Int, Hashable, Sendable {
         case `default` = 0
-        case min = 1
-        case mid = 2
-        case max = 3
+        case min = 10
+        case mid = 20
+        case max = 30
     }
     public var enableAdvancedDucking: ObjCBool
     public var duckingLevel: Level

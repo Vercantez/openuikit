@@ -118,6 +118,16 @@ public final class CMClock: CMSyncProtocol, @unchecked Sendable {
     }
 }
 
+extension CMClock: Hashable {
+    public static func == (lhs: CMClock, rhs: CMClock) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
 private let cmHostTimeClock = CMClock(hostTime: true)
 
 public final class CMTimebase: CMSyncProtocol, @unchecked Sendable {
@@ -348,6 +358,16 @@ public final class CMTimebase: CMSyncProtocol, @unchecked Sendable {
             self.timebaseAnchor = timebaseAnchor
             self.sourceAnchor = sourceAnchor
         }
+    }
+}
+
+extension CMTimebase: Hashable {
+    public static func == (lhs: CMTimebase, rhs: CMTimebase) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 

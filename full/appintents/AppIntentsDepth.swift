@@ -387,3 +387,109 @@ extension IntentParameter where Value: AppEntity {
     }
 }
 
+extension IntentParameter where Value.ValueType: Codable {
+    public convenience init(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default
+    ) {
+        self.init(
+            title: LocalizedStringResource(""),
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+    }
+
+    public convenience init<Provider: DynamicOptionsProvider>(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider
+    ) {
+        self.init(
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        optionsProviderAttached = true
+        _ = optionsProvider
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        resolvers: Spec
+    ) {
+        self.init(
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        _ = resolvers
+    }
+
+    public convenience init<Spec: ResolverSpecification, Provider: DynamicOptionsProvider>(
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider,
+        resolvers: Spec
+    ) {
+        self.init(
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider
+        )
+        _ = resolvers
+    }
+
+    public convenience init<Spec: ResolverSpecification>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior
+        )
+        _ = resolvers
+    }
+
+    public convenience init<Spec: ResolverSpecification, Provider: DynamicOptionsProvider>(
+        title: LocalizedStringResource,
+        description: LocalizedStringResource? = nil,
+        default defaultValue: Value? = nil,
+        requestValueDialog: IntentDialog? = nil,
+        inputConnectionBehavior: InputConnectionBehavior = .default,
+        optionsProvider: Provider,
+        resolvers: Spec
+    ) {
+        self.init(
+            title: title,
+            description: description,
+            default: defaultValue,
+            requestValueDialog: requestValueDialog,
+            inputConnectionBehavior: inputConnectionBehavior,
+            optionsProvider: optionsProvider
+        )
+        _ = resolvers
+    }
+}
+

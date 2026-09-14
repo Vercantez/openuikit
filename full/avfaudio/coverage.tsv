@@ -103,7 +103,7 @@ c:@AVAudioSessionSpatialAudioEnabledKey	implemented	test:full/avfaudio/tests/age
 c:@AVAudioSessionSpatialPlaybackCapabilitiesChangedNotification	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications	Focused Linux runtime evidence.
 c:@AVAudioSessionUserIntentToUnmuteOutputNotification	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications	Focused Linux runtime evidence.
 c:@AVAudioUnitComponentManagerRegistrationsChangedNotification	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
-c:@AVAudioUnitComponentTagsDidChangeNotification	declared	source:full/avfaudio/AVFAudio.swift#AVAudioUnitComponentTagsDidChange	Compiling Linux declaration; no focused agent test cites this identifier.
+c:@AVAudioUnitComponentTagsDidChangeNotification	implemented	test:full/avfaudio/tests/agent/AVFAudioConstantTests.swift#testAVFAudioConstants	Focused Linux runtime evidence.
 c:@AVAudioUnitManufacturerNameApple	implemented	test:full/avfaudio/tests/agent/AVFAudioConstantTests.swift#testAVFAudioConstants	Focused Linux runtime evidence.
 c:@AVAudioUnitTypeEffect	implemented	test:full/avfaudio/tests/agent/AVFAudioConstantTests.swift#testAVFAudioConstants	Focused Linux runtime evidence.
 c:@AVAudioUnitTypeFormatConverter	implemented	test:full/avfaudio/tests/agent/AVFAudioConstantTests.swift#testAVFAudioConstants	Focused Linux runtime evidence.
@@ -467,7 +467,7 @@ c:@F@AVAudioMake3DAngularOrientation	implemented	test:full/avfaudio/tests/agent/
 c:@F@AVAudioMake3DPoint	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 c:@F@AVAudioMake3DVector	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 c:@F@AVAudioMake3DVectorOrientation	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
-c:@F@AVMakeBeatRange	declared	source:full/avfaudio/AVFAudio.swift#AVMakeBeatRange	Compiling Linux declaration; no focused agent test cites this identifier.
+c:@F@AVMakeBeatRange	implemented	test:full/avfaudio/tests/agent/AVFAudioConstantTests.swift#testAVFAudioTypealiases	Focused Linux runtime evidence.
 c:@S@AVAudio3DAngularOrientation	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 c:@S@AVAudio3DAngularOrientation@FI@pitch	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 c:@S@AVAudio3DAngularOrientation@FI@roll	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
@@ -479,12 +479,12 @@ c:@S@AVAudio3DPoint@FI@z	implemented	test:full/avfaudio/tests/agent/AVAudio3DTes
 c:@S@AVAudio3DVectorOrientation	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 c:@S@AVAudio3DVectorOrientation@FI@forward	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 c:@S@AVAudio3DVectorOrientation@FI@up	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
-c:@S@AVAudioConverterPrimeInfo	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterPrimeInfo	Compiling Linux declaration; no focused agent test cites this identifier.
-c:@S@AVAudioConverterPrimeInfo@FI@leadingFrames	declared	source:full/avfaudio/AVAudioEnums.swift#leadingFrames	Compiling Linux declaration; no focused agent test cites this identifier.
-c:@S@AVAudioConverterPrimeInfo@FI@trailingFrames	declared	source:full/avfaudio/AVAudioEnums.swift#trailingFrames	Compiling Linux declaration; no focused agent test cites this identifier.
-c:@S@AVAudioVoiceProcessingOtherAudioDuckingConfiguration	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioVoiceProcessingOtherAudioDuckingConfiguration	Compiling Linux declaration; no focused agent test cites this identifier.
-c:@S@AVAudioVoiceProcessingOtherAudioDuckingConfiguration@FI@duckingLevel	declared	source:full/avfaudio/AVAudioEnums.swift#duckingLevel	Compiling Linux declaration; no focused agent test cites this identifier.
-c:@S@AVAudioVoiceProcessingOtherAudioDuckingConfiguration@FI@enableAdvancedDucking	declared	source:full/avfaudio/AVAudioEnums.swift#enableAdvancedDucking	Compiling Linux declaration; no focused agent test cites this identifier.
+c:@S@AVAudioConverterPrimeInfo	implemented	test:full/avfaudio/tests/agent/AVAudioConverterTests.swift#testAVAudioConverterPCM	Focused Linux runtime evidence.
+c:@S@AVAudioConverterPrimeInfo@FI@leadingFrames	implemented	test:full/avfaudio/tests/agent/AVAudioConverterTests.swift#testAVAudioConverterPCM	Focused Linux runtime evidence.
+c:@S@AVAudioConverterPrimeInfo@FI@trailingFrames	implemented	test:full/avfaudio/tests/agent/AVAudioConverterTests.swift#testAVAudioConverterPCM	Focused Linux runtime evidence.
+c:@S@AVAudioVoiceProcessingOtherAudioDuckingConfiguration	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioVoiceProcessingDuckingConfiguration	Focused Linux runtime evidence.
+c:@S@AVAudioVoiceProcessingOtherAudioDuckingConfiguration@FI@duckingLevel	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioVoiceProcessingDuckingConfiguration	Focused Linux runtime evidence.
+c:@S@AVAudioVoiceProcessingOtherAudioDuckingConfiguration@FI@enableAdvancedDucking	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioVoiceProcessingDuckingConfiguration	Focused Linux runtime evidence.
 c:@S@_AVBeatRange@FI@length::SYNTHESIZED::c:@T@AVBeatRange	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 c:@S@_AVBeatRange@FI@start::SYNTHESIZED::c:@T@AVBeatRange	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 c:@T@AVAudio3DVector	implemented	test:full/avfaudio/tests/agent/AVFAudioConstantTests.swift#testAVFAudioTypealiases	Focused Linux runtime evidence.
@@ -600,10 +600,10 @@ c:objc(cs)AVAudioEngine(im)connectMIDI:toNodes:format:block:	deferred		Deferred 
 c:objc(cs)AVAudioEngine(im)connectMIDI:toNodes:format:eventListBlock:	deferred		Deferred until a clean EC2 build imports real CoreAudioTypes/AudioToolbox/CoreMIDI/CoreMedia modules and the identity/ABI probe passes.
 c:objc(cs)AVAudioEngine(im)detachNode:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
 c:objc(cs)AVAudioEngine(im)disableManualRenderingMode	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineManualRendering	Focused Linux runtime evidence.
-c:objc(cs)AVAudioEngine(im)disconnectMIDI:from:	declared	source:full/avfaudio/AVAudioEngine.swift#disconnectMIDI	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(cs)AVAudioEngine(im)disconnectMIDI:fromNodes:	declared	source:full/avfaudio/AVAudioEngine.swift#disconnectMIDI	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(cs)AVAudioEngine(im)disconnectMIDIInput:	declared	source:full/avfaudio/AVAudioEngine.swift#disconnectMIDIInput	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(cs)AVAudioEngine(im)disconnectMIDIOutput:	declared	source:full/avfaudio/AVAudioEngine.swift#disconnectMIDIOutput	Compiling Linux declaration; no focused agent test cites this identifier.
+c:objc(cs)AVAudioEngine(im)disconnectMIDI:from:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
+c:objc(cs)AVAudioEngine(im)disconnectMIDI:fromNodes:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
+c:objc(cs)AVAudioEngine(im)disconnectMIDIInput:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
+c:objc(cs)AVAudioEngine(im)disconnectMIDIOutput:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
 c:objc(cs)AVAudioEngine(im)disconnectNodeInput:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
 c:objc(cs)AVAudioEngine(im)disconnectNodeInput:bus:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
 c:objc(cs)AVAudioEngine(im)disconnectNodeOutput:	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioEngineGraphConnections	Focused Linux runtime evidence.
@@ -1228,15 +1228,15 @@ c:objc(pl)AVAudioMixing	implemented	test:full/avfaudio/tests/agent/AVAudioMixing
 c:objc(pl)AVAudioMixing(im)destinationForMixer:bus:	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 c:objc(pl)AVAudioMixing(py)volume	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 c:objc(pl)AVAudioPlayerDelegate	implemented	test:full/avfaudio/tests/agent/AVAudioPlayerTests.swift#testAVAudioPlayerFailClosed	Focused Linux runtime evidence.
-c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerBeginInterruption:	declared	source:full/avfaudio/AVAudioIO.swift#audioPlayerBeginInterruption	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerDecodeErrorDidOccur:error:	declared	source:full/avfaudio/AVAudioIO.swift#audioPlayerDecodeErrorDidOccur	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerDidFinishPlaying:successfully:	declared	source:full/avfaudio/AVAudioIO.swift#audioPlayerDidFinishPlaying	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerEndInterruption:withOptions:	declared	source:full/avfaudio/AVAudioIO.swift#audioPlayerEndInterruption	Compiling Linux declaration; no focused agent test cites this identifier.
+c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerBeginInterruption:	implemented	test:full/avfaudio/tests/agent/AVAudioPlayerTests.swift#testAVAudioPlayerFailClosed	Focused Linux runtime evidence.
+c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerDecodeErrorDidOccur:error:	implemented	test:full/avfaudio/tests/agent/AVAudioPlayerTests.swift#testAVAudioPlayerFailClosed	Focused Linux runtime evidence.
+c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerDidFinishPlaying:successfully:	implemented	test:full/avfaudio/tests/agent/AVAudioPlayerTests.swift#testAVAudioPlayerFailClosed	Focused Linux runtime evidence.
+c:objc(pl)AVAudioPlayerDelegate(im)audioPlayerEndInterruption:withOptions:	implemented	test:full/avfaudio/tests/agent/AVAudioPlayerTests.swift#testAVAudioPlayerFailClosed	Focused Linux runtime evidence.
 c:objc(pl)AVAudioRecorderDelegate	implemented	test:full/avfaudio/tests/agent/AVAudioRecorderTests.swift#testAVAudioRecorderFailClosed	Focused Linux runtime evidence.
-c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderBeginInterruption:	declared	source:full/avfaudio/AVAudioIO.swift#audioRecorderBeginInterruption	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderDidFinishRecording:successfully:	declared	source:full/avfaudio/AVAudioIO.swift#audioRecorderDidFinishRecording	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderEncodeErrorDidOccur:error:	declared	source:full/avfaudio/AVAudioIO.swift#audioRecorderEncodeErrorDidOccur	Compiling Linux declaration; no focused agent test cites this identifier.
-c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderEndInterruption:withOptions:	declared	source:full/avfaudio/AVAudioIO.swift#audioRecorderEndInterruption	Compiling Linux declaration; no focused agent test cites this identifier.
+c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderBeginInterruption:	implemented	test:full/avfaudio/tests/agent/AVAudioRecorderTests.swift#testAVAudioRecorderFailClosed	Focused Linux runtime evidence.
+c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderDidFinishRecording:successfully:	implemented	test:full/avfaudio/tests/agent/AVAudioRecorderTests.swift#testAVAudioRecorderFailClosed	Focused Linux runtime evidence.
+c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderEncodeErrorDidOccur:error:	implemented	test:full/avfaudio/tests/agent/AVAudioRecorderTests.swift#testAVAudioRecorderFailClosed	Focused Linux runtime evidence.
+c:objc(pl)AVAudioRecorderDelegate(im)audioRecorderEndInterruption:withOptions:	implemented	test:full/avfaudio/tests/agent/AVAudioRecorderTests.swift#testAVAudioRecorderFailClosed	Focused Linux runtime evidence.
 c:objc(pl)AVAudioStereoMixing	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 c:objc(pl)AVAudioStereoMixing(py)pan	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 c:objc(pl)AVSpeechSynthesizerDelegate	implemented	test:full/avfaudio/tests/agent/AVSpeechTests.swift#testAVSpeechFailClosed	Focused Linux runtime evidence.
@@ -1316,19 +1316,19 @@ s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudio3DMixingRende
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudio3DMixingSourceMode	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioApplicationMicrophoneInjectionPermission	implemented	test:full/avfaudio/tests/agent/AVAudioApplicationTests.swift#testAVAudioApplicationFailClosed	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioApplicationRecordPermission	implemented	test:full/avfaudio/tests/agent/AVAudioApplicationTests.swift#testAVAudioApplicationFailClosed	Focused Linux runtime evidence.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioCommonFormat	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioCommonFormat	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioContentSource	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioContentSource	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioConverterInputStatus	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterInputStatus	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioConverterOutputStatus	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterOutputStatus	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioConverterPrimeMethod	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterPrimeMethod	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioDynamicRangeControlConfiguration	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioDynamicRangeControlConfiguration	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingError	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioEngineManualRenderingError	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingMode	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioEngineManualRenderingMode	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingStatus	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioEngineManualRenderingStatus	Compiling Linux declaration; no focused agent test cites this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioCommonFormat	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioContentSource	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioConverterInputStatus	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioConverterOutputStatus	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioConverterPrimeMethod	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioDynamicRangeControlConfiguration	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingError	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingMode	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingStatus	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEnvironmentDistanceAttenuationModel	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioEnvironmentOutputType	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioPlayerNodeCompletionCallbackType	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioPlayerNodeCompletionCallbackType	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioQuality	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioQuality	Compiling Linux declaration; no focused agent test cites this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioPlayerNodeCompletionCallbackType	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioQuality	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioSessionIOType	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioSessionInterruptionReason	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioSessionInterruptionType	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
@@ -1344,8 +1344,8 @@ s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioStereoOrienta
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioUnitDistortionPreset	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioUnitEQFilterType	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioUnitReverbPreset	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioVoiceProcessingOtherAudioDuckingLevel	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioVoiceProcessingOtherAudioDuckingConfiguration	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioVoiceProcessingSpeechActivityEvent	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioVoiceProcessingSpeechActivityEvent	Compiling Linux declaration; no focused agent test cites this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioVoiceProcessingOtherAudioDuckingLevel	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVAudioVoiceProcessingSpeechActivityEvent	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVMIDIControlChangeMessageType	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVMIDIMetaEventType	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE04hashB0Sivp::SYNTHESIZED::c:@E@AVMusicTrackLoopCount	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
@@ -1359,19 +1359,19 @@ s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudio3
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudio3DMixingSourceMode	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioApplicationMicrophoneInjectionPermission	implemented	test:full/avfaudio/tests/agent/AVAudioApplicationTests.swift#testAVAudioApplicationFailClosed	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioApplicationRecordPermission	implemented	test:full/avfaudio/tests/agent/AVAudioApplicationTests.swift#testAVAudioApplicationFailClosed	Focused Linux runtime evidence.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioCommonFormat	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioCommonFormat	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioContentSource	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioContentSource	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioConverterInputStatus	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterInputStatus	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioConverterOutputStatus	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterOutputStatus	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioConverterPrimeMethod	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioConverterPrimeMethod	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioDynamicRangeControlConfiguration	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioDynamicRangeControlConfiguration	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingError	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioEngineManualRenderingError	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingMode	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioEngineManualRenderingMode	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingStatus	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioEngineManualRenderingStatus	Compiling Linux declaration; no focused agent test cites this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioCommonFormat	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioContentSource	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioConverterInputStatus	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioConverterOutputStatus	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioConverterPrimeMethod	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioDynamicRangeControlConfiguration	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingError	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingMode	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEngineManualRenderingStatus	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEnvironmentDistanceAttenuationModel	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioEnvironmentOutputType	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioPlayerNodeCompletionCallbackType	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioPlayerNodeCompletionCallbackType	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioQuality	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioQuality	Compiling Linux declaration; no focused agent test cites this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioPlayerNodeCompletionCallbackType	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioQuality	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioSessionIOType	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioSessionInterruptionReason	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioSessionInterruptionType	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
@@ -1387,8 +1387,8 @@ s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioS
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioUnitDistortionPreset	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioUnitEQFilterType	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioUnitReverbPreset	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioVoiceProcessingOtherAudioDuckingLevel	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioVoiceProcessingOtherAudioDuckingConfiguration	Compiling Linux declaration; no focused agent test cites this identifier.
-s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioVoiceProcessingSpeechActivityEvent	declared	source:full/avfaudio/AVAudioEnums.swift#AVAudioVoiceProcessingSpeechActivityEvent	Compiling Linux declaration; no focused agent test cites this identifier.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioVoiceProcessingOtherAudioDuckingLevel	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVAudioVoiceProcessingSpeechActivityEvent	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVMIDIControlChangeMessageType	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVMIDIMetaEventType	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:SYsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@E@AVMusicTrackLoopCount	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
@@ -1401,13 +1401,13 @@ s:So12_AVBeatRangeV5start6lengthABSd_Sdtcfc::SYNTHESIZED::c:@T@AVBeatRange	imple
 s:So12_AVBeatRangeVABycfc::SYNTHESIZED::c:@T@AVBeatRange	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:So14AVAudio3DPointV1x1y1zABSf_S2ftcfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 s:So14AVAudio3DPointVABycfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
-s:So14AVAudioQualityV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So14AVAudioQualityV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So16AVSpeechBoundaryV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVSpeechTests.swift#testAVSpeechFailClosed	Focused Linux runtime evidence.
 s:So18AVAudioSessionModea8rawValueABSS_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications	Focused Linux runtime evidence.
 s:So18AVAudioSessionPorta8rawValueABSS_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications	Focused Linux runtime evidence.
-s:So19AVAudioCommonFormatV8rawValueABSgSu_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So19AVAudioCommonFormatV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So19AVMIDIMetaEventTypeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
-s:So20AVAudioContentSourceV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So20AVAudioContentSourceV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So20AVAudioSessionIOTypeV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:So21AVMusicTrackLoopCountV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:So22AVAudioSessionCategorya8rawValueABSS_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications	Focused Linux runtime evidence.
@@ -1426,8 +1426,8 @@ s:So23AVAudioUnitEQFilterTypeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudi
 s:So23AVAudioUnitReverbPresetV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
 s:So24AVAudioStereoOrientationV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:So25AVAudio3DMixingSourceModeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
-s:So25AVAudioConverterPrimeInfoV13leadingFrames08trailingF0ABs6UInt32V_AFtcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
-s:So25AVAudioConverterPrimeInfoVABycfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So25AVAudioConverterPrimeInfoV13leadingFrames08trailingF0ABs6UInt32V_AFtcfc	implemented	test:full/avfaudio/tests/agent/AVAudioConverterTests.swift#testAVAudioConverterPCM	Focused Linux runtime evidence.
+s:So25AVAudioConverterPrimeInfoVABycfc	implemented	test:full/avfaudio/tests/agent/AVAudioConverterTests.swift#testAVAudioConverterPCM	Focused Linux runtime evidence.
 s:So25AVAudioSessionOrientationa8rawValueABSS_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionPortsAndNotifications	Focused Linux runtime evidence.
 s:So25AVAudioSessionPromptStyleV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:So26AVAudio3DVectorOrientationV7forward2upABSo0A6DPointV_AFtcfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
@@ -1437,12 +1437,12 @@ s:So26AVAudioSessionPortOverrideV8rawValueABSgSu_tcfc	implemented	test:full/avfa
 s:So26AVMusicSequenceLoadOptionsV8rawValueABSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.
 s:So27AVAudio3DAngularOrientationV3yaw5pitch4rollABSf_S2ftcfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 s:So27AVAudio3DAngularOrientationVABycfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
-s:So27AVAudioConverterInputStatusV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
-s:So27AVAudioConverterPrimeMethodV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So27AVAudioConverterInputStatusV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:So27AVAudioConverterPrimeMethodV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So27AVAudioSessionRenderingModeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:So27AVAudioUnitDistortionPresetV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioUnitTests.swift#testAVAudioUnitsAndSampler	Focused Linux runtime evidence.
 s:So27AVSpeechSynthesisMarkerMarkV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVSpeechTests.swift#testAVSpeechFailClosed	Focused Linux runtime evidence.
-s:So28AVAudioConverterOutputStatusV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So28AVAudioConverterOutputStatusV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So28AVAudioEnvironmentOutputTypeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 s:So28AVSpeechSynthesisVoiceGenderV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVSpeechTests.swift#testAVSpeechFailClosed	Focused Linux runtime evidence.
 s:So28AVSpeechSynthesisVoiceTraitsV8rawValueABSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.
@@ -1455,27 +1455,27 @@ s:So30AVAudioSessionSetActiveOptionsV8rawValueABSu_tcfc	implemented	test:full/av
 s:So30AVMIDIControlChangeMessageTypeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:So31AVAudioSessionActivationOptionsV8rawValueABSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.
 s:So31AVAudioSessionRouteChangeReasonV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
-s:So32AVAudioEngineManualRenderingModeV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So32AVAudioEngineManualRenderingModeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So32AVAudioSessionInterruptionReasonV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:So32AVAudioSessionRouteSharingPolicyV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
 s:So33AVAudio3DMixingRenderingAlgorithmV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
-s:So33AVAudioEngineManualRenderingErrorV8rawValueABSgs5Int32V_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So33AVAudioEngineManualRenderingErrorV8rawValueABSgs5Int32V_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So33AVAudioSequencerInfoDictionaryKeya8rawValueABSS_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMIDITests.swift#testAVAudioMIDISequencer	Focused Linux runtime evidence.
 s:So33AVAudioSessionInterruptionOptionsV8rawValueABSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.
 s:So34AVAudioApplicationRecordPermissionV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioApplicationTests.swift#testAVAudioApplicationFailClosed	Focused Linux runtime evidence.
-s:So34AVAudioEngineManualRenderingStatusV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So34AVAudioEngineManualRenderingStatusV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So36AVAudio3DMixingPointSourceInHeadModeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioMixingTests.swift#testAVAudioMixingPanGain	Focused Linux runtime evidence.
 s:So37AVAudioSessionMicrophoneInjectionModeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
-s:So39AVAudioDynamicRangeControlConfigurationV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
-s:So39AVAudioPlayerNodeCompletionCallbackTypeV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
-s:So41AVAudioVoiceProcessingSpeechActivityEventV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So39AVAudioDynamicRangeControlConfigurationV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:So39AVAudioPlayerNodeCompletionCallbackTypeV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
+s:So41AVAudioVoiceProcessingSpeechActivityEventV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So42AVAudioEnvironmentDistanceAttenuationModelV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudio3DTests.swift#testAVAudio3DHelpers	Focused Linux runtime evidence.
 s:So43AVAudioSessionSilenceSecondaryAudioHintTypeV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioSessionTests.swift#testAVAudioSessionCategoryAndFailClosed	Focused Linux runtime evidence.
-s:So44AVAudioVoiceProcessingOtherAudioDuckingLevelV8rawValueABSgSi_tcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So44AVAudioVoiceProcessingOtherAudioDuckingLevelV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVFAudioEnumTests.swift#testAVFAudioEnumHashable	Focused Linux runtime evidence.
 s:So47AVAudioApplicationMicrophoneInjectionPermissionV8rawValueABSgSi_tcfc	implemented	test:full/avfaudio/tests/agent/AVAudioApplicationTests.swift#testAVAudioApplicationFailClosed	Focused Linux runtime evidence.
 s:So49AVSpeechSynthesisPersonalVoiceAuthorizationStatusV8rawValueABSgSu_tcfc	implemented	test:full/avfaudio/tests/agent/AVSpeechTests.swift#testAVSpeechFailClosed	Focused Linux runtime evidence.
-s:So52AVAudioVoiceProcessingOtherAudioDuckingConfigurationV014enableAdvancedF012duckingLevelAB10ObjectiveC8ObjCBoolV_So0abcdefK0Vtcfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
-s:So52AVAudioVoiceProcessingOtherAudioDuckingConfigurationVABycfc	declared	source:full/avfaudio/AVAudioEnums.swift#init	Compiling Linux declaration; no focused agent test cites this identifier.
+s:So52AVAudioVoiceProcessingOtherAudioDuckingConfigurationV014enableAdvancedF012duckingLevelAB10ObjectiveC8ObjCBoolV_So0abcdefK0Vtcfc	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioVoiceProcessingDuckingConfiguration	Focused Linux runtime evidence.
+s:So52AVAudioVoiceProcessingOtherAudioDuckingConfigurationVABycfc	implemented	test:full/avfaudio/tests/agent/AVAudioEngineTests.swift#testAVAudioVoiceProcessingDuckingConfiguration	Focused Linux runtime evidence.
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AVAudioPlayerNodeBufferOptions	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AVAudioSessionActivationOptions	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.
 s:s10SetAlgebraPs7ElementQz012ArrayLiteralC0RtzrlE05arrayE0xAFd_tcfc::SYNTHESIZED::c:@E@AVAudioSessionCategoryOptions	implemented	test:full/avfaudio/tests/agent/AVFAudioOptionSetTests.swift#testAVFAudioOptionSets	Focused Linux runtime evidence.

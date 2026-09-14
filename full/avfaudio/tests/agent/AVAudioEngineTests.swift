@@ -109,6 +109,7 @@ func testAVAudioEngineGraphConnections() {
     engine.disconnectMIDI(sourceA, from: [destination])
     engine.disconnectMIDIInput(destination)
     engine.disconnectMIDIOutput(sourceA)
+    precondition(engine.inputConnectionPoint(for: destination, inputBus: 0) == nil)
     engine.detach(unrelated)
     let points = [AVAudioConnectionPoint(node: engine.mainMixerNode, bus: 1)]
     engine.connect(sourceA, to: points, fromBus: 0, format: nil)
@@ -129,5 +130,27 @@ func testAVAudioEngineGraphConnections() {
     _ = sourceA.outputFormat(forBus: 0)
     _ = sourceA.engine
     sourceA.reset()
+}
+
+func testAVAudioVoiceProcessingDuckingConfiguration() {
+    var config = AVAudioVoiceProcessingOtherAudioDuckingConfiguration()
+    precondition(config.enableAdvancedDucking.boolValue == false)
+    precondition(config.duckingLevel == .default)
+    precondition(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.min.rawValue == 10)
+    precondition(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.mid.rawValue == 20)
+    precondition(AVAudioVoiceProcessingOtherAudioDuckingConfiguration.Level.max.rawValue == 30)
+    config = AVAudioVoiceProcessingOtherAudioDuckingConfiguration(
+        enableAdvancedDucking: ObjCBool(true),
+        duckingLevel: .max
+    )
+    precondition(config.enableAdvancedDucking.boolValue)
+    precondition(config.duckingLevel == .max)
+    config.enableAdvancedDucking = ObjCBool(false)
+    config.duckingLevel = .min
+    precondition(config.enableAdvancedDucking.boolValue == false)
+    precondition(config.duckingLevel == .min)
+    let engine = AVAudioEngine()
+    engine.inputNode.voiceProcessingOtherAudioDuckingConfiguration = config
+    precondition(engine.inputNode.voiceProcessingOtherAudioDuckingConfiguration.duckingLevel == .min)
 }
 

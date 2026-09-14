@@ -38,6 +38,29 @@ func testAVAudioRecorderFailClosed() {
         _ = try AVAudioRecorder(URL: url, format: format)
         _ = try AVAudioRecorder(url: url, settings: format.settings)
         _ = try AVAudioRecorder(URL: url, settings: format.settings)
+        final class RecorderProbe: NSObject, AVAudioRecorderDelegate, @unchecked Sendable {
+            var begin = false
+            var end = false
+            var finish = false
+            var encode = false
+            func audioRecorderBeginInterruption(_ recorder: AVAudioRecorder) { begin = true }
+            func audioRecorderEndInterruption(_ recorder: AVAudioRecorder, withOptions flags: Int) {
+                end = flags == 2
+            }
+            func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+                finish = flag
+            }
+            func audioRecorderEncodeErrorDidOccur(_ recorder: AVAudioRecorder, error: (any Error)?) {
+                encode = error == nil
+            }
+        }
+        let probe = RecorderProbe()
+        recorder.delegate = probe
+        probe.audioRecorderBeginInterruption(recorder)
+        probe.audioRecorderEndInterruption(recorder, withOptions: 2)
+        probe.audioRecorderDidFinishRecording(recorder, successfully: true)
+        probe.audioRecorderEncodeErrorDidOccur(recorder, error: nil)
+        precondition(probe.begin && probe.end && probe.finish && probe.encode)
     } catch {
         preconditionFailure("recorder: \(error)")
     }

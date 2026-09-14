@@ -509,5 +509,51 @@ public final class EntityProperty<Value>: NSObject, @unchecked Sendable
     public convenience init<T0, T1>(title p0: T0? = nil, customIndexingKey p1: T1? = nil) { self.init() }
     public convenience init<T0>(title p0: T0? = nil) { self.init() }
     public convenience init<T0>(from p0: T0? = nil) { self.init() }
+
+    public var hostDisplayRepresentation: DisplayRepresentation {
+        if let representable = stored as? any InstanceDisplayRepresentable {
+            return representable.displayRepresentation
+        }
+        if let stored {
+            return DisplayRepresentation(title: String(describing: stored))
+        }
+        return DisplayRepresentation(title: storedTitle)
+    }
+
+    public func hostHashStoredValue() -> Int {
+        var hasher = Hasher()
+        hasher.combine(storedTitle)
+        hasher.combine(storedIdentifier)
+        if let stored {
+            hasher.combine(String(describing: stored))
+        }
+        return hasher.finalize()
+    }
 }
+
+extension EntityProperty: Encodable where Value: Encodable {
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: EntityPropertyHostCodingKey.self)
+        try container.encode(storedTitle, forKey: .title)
+        try container.encodeIfPresent(storedIdentifier, forKey: .identifier)
+        try container.encodeIfPresent(stored, forKey: .value)
+    }
+}
+
+extension EntityProperty: Decodable where Value: Decodable {
+    public convenience init(from decoder: any Decoder) throws {
+        self.init()
+        let container = try decoder.container(keyedBy: EntityPropertyHostCodingKey.self)
+        storedTitle = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
+        storedIdentifier = try container.decodeIfPresent(String.self, forKey: .identifier)
+        stored = try container.decodeIfPresent(Value.self, forKey: .value)
+    }
+}
+
+enum EntityPropertyHostCodingKey: String, CodingKey {
+    case title
+    case identifier
+    case value
+}
+
 public typealias Property = EntityProperty

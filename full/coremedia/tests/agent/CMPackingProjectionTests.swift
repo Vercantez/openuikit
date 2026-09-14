@@ -36,3 +36,47 @@ func testCMPackingProjectionStereoRawValues() {
     precondition(CMStereoViewComponents(rawValue: 1) == CMStereoViewComponents.leftEye)
     precondition(CMStereoViewInterpretationOptions(rawValue: 1) == .stereoOrderReversed)
 }
+
+func testCMPackingProjectionHashableEquatable() {
+    func verify<T: Hashable>(_ value: T, _ same: T, _ different: T) {
+        precondition(value == same)
+        precondition(!(value != same))
+        precondition(value != different)
+        var first = Hasher()
+        var second = Hasher()
+        value.hash(into: &first)
+        same.hash(into: &second)
+        precondition(first.finalize() == second.finalize())
+        precondition(value.hashValue == same.hashValue)
+    }
+    verify(CMPackingType.none, .none, .sideBySide)
+    verify(CMPackingType.overUnder, .overUnder, .none)
+    verify(CMProjectionType.rectangular, .rectangular, .fisheye)
+    verify(CMProjectionType.equirectangular, .equirectangular, .parametricImmersive)
+}
+
+func testCMStereoViewOptionSetAlgebra() {
+    func verify<T: OptionSet>(_ member: T, _ other: T)
+    where T.Element == T, T.RawValue: FixedWidthInteger {
+        var flags = T()
+        precondition(!flags.contains(member))
+        precondition(flags.insert(member).inserted)
+        precondition(flags.contains(member))
+        precondition(flags.update(with: member) != nil)
+        precondition(flags.union(other).contains(member))
+        precondition(flags.union(other).contains(other))
+        precondition(flags.intersection(member) == member)
+        precondition(flags.symmetricDifference(other).contains(other))
+        flags.formUnion(other)
+        precondition(flags.contains(other))
+        flags.formIntersection(member)
+        precondition(flags.contains(member))
+        flags.formSymmetricDifference(member)
+        precondition(!flags.contains(member))
+        flags.insert(member)
+        precondition(flags.remove(member) != nil)
+        precondition(!flags.contains(member))
+    }
+    verify(CMStereoViewComponents.leftEye, .rightEye)
+    verify(CMStereoViewInterpretationOptions.stereoOrderReversed, .additionalViews)
+}

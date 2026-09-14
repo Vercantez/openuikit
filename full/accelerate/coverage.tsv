@@ -992,21 +992,21 @@ c:@F@caxpy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLA
 c:@F@ccopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex copy.
 c:@F@cdotc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Conjugate complex dot.
 c:@F@cdotu_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Unconjugated complex dot.
-c:@F@cgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#cgbmv_	
+c:@F@cgbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedGbmvHbmv	Complex general banded MV 2x2/3-diagonal, Apple-matched.
 c:@F@cgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemm	Complex GEMM 2x2 hand-computed case.
 c:@F@cgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Complex GEMV 2x2.
 c:@F@cgerc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Complex conjugated rank-1 update.
 c:@F@cgeru_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Complex unconjugated rank-1 update.
-c:@F@chbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#chbmv_	
+c:@F@chbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedGbmvHbmv	Hermitian banded MV 2x2/3-diagonal, Apple-matched.
 c:@F@chemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexHemmHerkCher	Hermitian MM 2x2 left/right, Apple-matched.
 c:@F@chemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Hermitian matrix-vector 2x2.
 c:@F@cher2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Hermitian rank-2 2x2, Apple-matched.
 c:@F@cher2k_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Hermitian rank-2k 2x2, Apple-matched.
 c:@F@cher_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexHemmHerkCher	Hermitian rank-1 2x2, Apple-matched.
 c:@F@cherk_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexHemmHerkCher	Hermitian rank-k 2x2 N/C, Apple-matched.
-c:@F@chpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#chpmv_	
-c:@F@chpr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#chpr2_	
-c:@F@chpr_	declared	source:full/accelerate/AccelerateCFunctions.swift#chpr_	
+c:@F@chpmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedHpmv	Packed Hermitian MV 2x2/3x3, Apple-matched.
+c:@F@chpr2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedHpr	Packed Hermitian rank-2 2x2, Apple-matched.
+c:@F@chpr_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedHpr	Packed Hermitian rank-1 2x2, Apple-matched.
 c:@F@crotg_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexRotgRot	Complex Givens generation, Apple-matched.
 c:@F@cscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex scale.
 c:@F@csrot_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexRotgRot	Real plane rotation of complex vectors.
@@ -1015,10 +1015,10 @@ c:@F@cswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLA
 c:@F@csymm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Complex symmetric MM 2x2, Apple-matched.
 c:@F@csyr2k_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Complex symmetric rank-2k 2x2, Apple-matched.
 c:@F@csyrk_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Complex symmetric rank-k 2x2, Apple-matched.
-c:@F@ctbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ctbmv_	
-c:@F@ctbsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ctbsv_	
-c:@F@ctpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ctpmv_	
-c:@F@ctpsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ctpsv_	
+c:@F@ctbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedTbmvTbsv	Triangular banded MV 2x2/3-diagonal, Apple-matched.
+c:@F@ctbsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedTbmvTbsv	Triangular banded solve 2x2/3-diagonal, Apple-matched.
+c:@F@ctpmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedTpmvTpsv	Packed triangular MV 2x2/3x3, Apple-matched.
+c:@F@ctpsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedTpmvTpsv	Packed triangular solve 2x2/3x3, Apple-matched.
 c:@F@ctrmm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmmTrsm	Complex triangular MM 2x2 left/right, Apple-matched.
 c:@F@ctrmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmvTrsv	Complex triangular MV 2x2/3x3, Apple-matched.
 c:@F@ctrsm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmmTrsm	Complex triangular SM 2x2 recovers I.
@@ -1970,31 +1970,31 @@ c:@F@zdotc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLA
 c:@F@zdotu_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex unconjugated dot.
 c:@F@zdrot_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexRotgRot	Real plane rotation of double-complex vectors.
 c:@F@zdscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Real scale of double-complex vector.
-c:@F@zgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zgbmv_	
+c:@F@zgbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedGbmvHbmv	Double general banded MV 2x2, Apple-matched.
 c:@F@zgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemm	Double-complex GEMM 2x2 hand-computed case.
 c:@F@zgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double-complex GEMV 2x2.
 c:@F@zgerc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double-complex conjugated rank-1 update.
 c:@F@zgeru_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double-complex unconjugated rank-1 update.
-c:@F@zhbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhbmv_	
+c:@F@zhbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedGbmvHbmv	Double Hermitian banded MV 2x2, Apple-matched.
 c:@F@zhemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexHemmHerkCher	Double Hermitian MM 2x2.
 c:@F@zhemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double Hermitian matrix-vector 2x2.
 c:@F@zher2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Double Hermitian rank-2 2x2.
 c:@F@zher2k_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Double Hermitian rank-2k 2x2.
 c:@F@zher_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexHemmHerkCher	Double Hermitian rank-1 2x2.
 c:@F@zherk_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexHemmHerkCher	Double Hermitian rank-k 2x2.
-c:@F@zhpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhpmv_	
-c:@F@zhpr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhpr2_	
-c:@F@zhpr_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhpr_	
+c:@F@zhpmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedHpmv	Double packed Hermitian MV 2x2, Apple-matched.
+c:@F@zhpr2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedHpr	Double packed Hermitian rank-2 2x2, Apple-matched.
+c:@F@zhpr_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedHpr	Double packed Hermitian rank-1 2x2, Apple-matched.
 c:@F@zrotg_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexRotgRot	Double-complex Givens generation.
 c:@F@zscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex scale.
 c:@F@zswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex swap.
 c:@F@zsymm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Double-complex symmetric MM 2x2.
 c:@F@zsyr2k_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Double-complex symmetric rank-2k 2x2.
 c:@F@zsyrk_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexCher2SymmSyrk	Double-complex symmetric rank-k 2x2.
-c:@F@ztbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ztbmv_	
-c:@F@ztbsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ztbsv_	
-c:@F@ztpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ztpmv_	
-c:@F@ztpsv_	declared	source:full/accelerate/AccelerateCFunctions.swift#ztpsv_	
+c:@F@ztbmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedTbmvTbsv	Double triangular banded MV 2x2, Apple-matched.
+c:@F@ztbsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexBandedTbmvTbsv	Double triangular banded solve 2x2, Apple-matched.
+c:@F@ztpmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedTpmvTpsv	Double packed triangular MV 2x2, Apple-matched.
+c:@F@ztpsv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexPackedTpmvTpsv	Double packed triangular solve 2x2, Apple-matched.
 c:@F@ztrmm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmmTrsm	Double-complex triangular MM 2x2.
 c:@F@ztrmv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmvTrsv	Double-complex triangular MV 2x2.
 c:@F@ztrsm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexTrmmTrsm	Double-complex triangular SM 2x2.

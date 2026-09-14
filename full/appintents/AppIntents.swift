@@ -1358,19 +1358,34 @@ public final class IntentParameter<Value>: @unchecked Sendable
     public enum IntControlStyle: Sendable, Hashable {
         case field
         case stepper
+
+        public func hash(into hasher: inout Hasher) {
+            switch self {
+            case .field: hasher.combine(0)
+            case .stepper: hasher.combine(1)
+            }
+        }
     }
 
     public enum DoubleControlStyle: Sendable, Hashable {
         case field
         case slider
         case stepper
+
+        public func hash(into hasher: inout Hasher) {
+            switch self {
+            case .field: hasher.combine(0)
+            case .slider: hasher.combine(1)
+            case .stepper: hasher.combine(2)
+            }
+        }
     }
 
     public typealias InclusiveRange<Bound: Comparable> = (lowerBound: Bound, upperBound: Bound)
 
     private let storage: _ParameterStorage<Value>
     public let metadata: Metadata
-    var defaultValue: Value?
+    public var defaultValue: Value?
     var storedIntControlStyle: IntControlStyle?
     var storedDoubleControlStyle: DoubleControlStyle?
     var storedInclusiveRange: (lowerBound: String, upperBound: String)?
@@ -1391,6 +1406,38 @@ public final class IntentParameter<Value>: @unchecked Sendable
 
     public var dateKind: DateKind? { storedDateKind }
     public var displayStyle: PlacemarkDisplayStyle? { storedPlacemarkDisplayStyle }
+
+    public var title: LocalizedStringResource {
+        LocalizedStringResource(metadata.title)
+    }
+
+    /// In-process display of the stored or default value. Linux has no Siri
+    /// prompt UI; `requestValue` still fails closed.
+    public var hostDisplayRepresentation: DisplayRepresentation {
+        if let value = storedDisplayValue() {
+            if let representable = value as? any InstanceDisplayRepresentable {
+                return representable.displayRepresentation
+            }
+            return DisplayRepresentation(title: String(describing: value))
+        }
+        return DisplayRepresentation(title: metadata.title)
+    }
+
+    public func hostRequestValueDisplayRepresentation() -> DisplayRepresentation? {
+        if let dialog = metadata.requestValueDialog {
+            return DisplayRepresentation(title: dialog.text)
+        }
+        return hostDisplayRepresentation
+    }
+
+    private func storedDisplayValue() -> Value? {
+        switch storage.state {
+        case let .value(value):
+            return value
+        case .unset:
+            return defaultValue
+        }
+    }
 
     public var requestDisambiguationDialog: IntentDialog? { storedRequestDisambiguationDialog }
     public var supportedValues: [Any] { storedSupportedValues }
@@ -1509,12 +1556,28 @@ public final class IntentParameter<Value>: @unchecked Sendable
         case date
         case time
         case dateTime
+
+        public func hash(into hasher: inout Hasher) {
+            switch self {
+            case .date: hasher.combine(0)
+            case .time: hasher.combine(1)
+            case .dateTime: hasher.combine(2)
+            }
+        }
     }
 
     public enum PlacemarkDisplayStyle: Sendable, Hashable {
         case city
         case name
         case address
+
+        public func hash(into hasher: inout Hasher) {
+            switch self {
+            case .city: hasher.combine(0)
+            case .name: hasher.combine(1)
+            case .address: hasher.combine(2)
+            }
+        }
     }
 }
 

@@ -89,6 +89,16 @@ public final class CMSimpleQueue: @unchecked Sendable {
     }
 }
 
+extension CMSimpleQueue: Hashable {
+    public static func == (lhs: CMSimpleQueue, rhs: CMSimpleQueue) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
 public func CMSimpleQueueGetTypeID() -> CFTypeID { CMSimpleQueue.typeID }
 
 public func CMSimpleQueueCreate(
@@ -566,6 +576,16 @@ public final class CMBufferQueue: @unchecked Sendable {
             box.handler?(box.token)
         }
         inTrigger = false
+    }
+}
+
+extension CMBufferQueue: Hashable {
+    public static func == (lhs: CMBufferQueue, rhs: CMBufferQueue) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
     }
 }
 

@@ -261,6 +261,13 @@ func testCMTimeHashableEquatable() {
     CMTimeRoundingMethod.quickTime.hash(into: &methodHasher)
     _ = methodHasher.finalize()
     _ = CMTimeRoundingMethod.roundTowardZero.hashValue
+    let flags: CMTimeFlags = [.valid, .hasBeenRounded]
+    precondition(flags == [.valid, .hasBeenRounded])
+    precondition(flags != .valid)
+    var flagsHasher = Hasher()
+    flags.hash(into: &flagsHasher)
+    _ = flagsHasher.finalize()
+    precondition(flags.hashValue == CMTimeFlags([.valid, .hasBeenRounded]).hashValue)
 }
 
 func testCMTimeComparableOperators() {

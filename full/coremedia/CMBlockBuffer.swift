@@ -302,6 +302,16 @@ public final class CMBlockBuffer: CMBlockBufferProtocol, CMAttachmentBearerProto
     }
 }
 
+extension CMBlockBuffer: Hashable {
+    public static func == (lhs: CMBlockBuffer, rhs: CMBlockBuffer) -> Bool {
+        lhs === rhs
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}
+
 public struct CMBlockBufferCustomBlockSource {
     public var version: UInt32
     public var AllocateBlock: ((UnsafeMutableRawPointer?, Int) -> UnsafeMutableRawPointer?)?

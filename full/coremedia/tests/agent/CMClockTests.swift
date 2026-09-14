@@ -33,6 +33,19 @@ func testCMClockHostTime() {
     precondition(fromUnits.value == roundTrip.value)
 }
 
+func testCMClockHashableEquatable() {
+    let clock = CMClock.hostTimeClock
+    let other = CMClock(referencing: clock)
+    precondition(clock == clock)
+    precondition(clock == CMClockGetHostTimeClock())
+    precondition(clock != other)
+    precondition(!(clock != clock))
+    var hasher = Hasher()
+    clock.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(clock.hashValue == CMClock.hostTimeClock.hashValue)
+}
+
 func testCMTimebaseRateAndAnchor() {
     let clock = CMClockGetHostTimeClock()
     var timebase: CMTimebase?
@@ -166,4 +179,28 @@ func testCMTimebaseCopyMasterAndAnchor() {
             == kCMTimebaseError_TimerIntervalTooShort
     )
     precondition(CMTimebaseSetTimerToFireImmediately(tb, timer: timer) == kCMTimebaseError_TimerIntervalTooShort)
+}
+
+func testCMTimebaseHashableEquatable() {
+    let clock = CMClock.hostTimeClock
+    let first = CMTimebase(sourceClock: clock)
+    let second = CMTimebase(sourceClock: clock)
+    precondition(first == first)
+    precondition(first != second)
+    precondition(!(first != first))
+    var hasher = Hasher()
+    first.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(first.hashValue == first.hashValue)
+}
+
+func testCMTimebaseNotificationKeyHashable() {
+    let key = CMTimebase.NotificationKey.eventTime
+    let same = CMTimebase.NotificationKey(rawValue: kCMTimebaseNotificationKey_EventTime)
+    precondition(key == same)
+    precondition(!(key != same))
+    var hasher = Hasher()
+    key.hash(into: &hasher)
+    _ = hasher.finalize()
+    precondition(key.hashValue == same.hashValue)
 }

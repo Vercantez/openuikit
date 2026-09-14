@@ -661,3 +661,236 @@ func testBLASComplexRotgRot() {
     _ = zdrot_(&n, &dzx, &incx, &dzy, &incy, &dcval, &dsval)
     precondition(abs(dzx[0] - 4.6) < 1e-12 && abs(dzy[0] - 2.2) < 1e-12)
 }
+
+func testBLASComplexPackedHpmv() {
+    var uplo = CChar(85)
+    var uploL = CChar(76)
+    var n: Int32 = 2
+    var alpha: [Float] = [1, 0]
+    var beta: [Float] = [0, 0]
+    var incx: Int32 = 1
+    var incy: Int32 = 1
+    var ap: [Float] = [1, 0, 2, -3, 4, 0]
+    var x: [Float] = [1, 0, 0, 1]
+    var y = [Float](repeating: 0, count: 4)
+    _ = chpmv_(&uplo, &n, &alpha, &ap, &x, &incx, &beta, &y, &incy)
+    precondition(abs(y[0] - 4) < 0.0001 && abs(y[1] - 2) < 0.0001)
+    precondition(abs(y[2] - 2) < 0.0001 && abs(y[3] - 7) < 0.0001)
+    var apL: [Float] = [1, 0, 2, 3, 4, 0]
+    var yL = [Float](repeating: 0, count: 4)
+    _ = chpmv_(&uploL, &n, &alpha, &apL, &x, &incx, &beta, &yL, &incy)
+    precondition(abs(yL[0] - 4) < 0.0001 && abs(yL[3] - 7) < 0.0001)
+    var n3: Int32 = 3
+    var ap3: [Float] = [2, 0, 1, -1, 3, 0, 0, 0, 1, 0, 4, 0]
+    var x3: [Float] = [1, 0, 1, 0, 1, 0]
+    var y3 = [Float](repeating: 0, count: 6)
+    _ = chpmv_(&uplo, &n3, &alpha, &ap3, &x3, &incx, &beta, &y3, &incy)
+    precondition(abs(y3[0] - 3) < 0.0001 && abs(y3[1] + 1) < 0.0001)
+    precondition(abs(y3[2] - 5) < 0.0001 && abs(y3[3] - 1) < 0.0001)
+    precondition(abs(y3[4] - 5) < 0.0001)
+    var dalpha: [Double] = [1, 0]
+    var dbeta: [Double] = [0, 0]
+    var dap: [Double] = [1, 0, 2, -3, 4, 0]
+    var dx: [Double] = [1, 0, 0, 1]
+    var dy = [Double](repeating: 0, count: 4)
+    _ = zhpmv_(&uplo, &n, &dalpha, &dap, &dx, &incx, &dbeta, &dy, &incy)
+    precondition(abs(dy[0] - 4) < 1e-12 && abs(dy[3] - 7) < 1e-12)
+}
+
+func testBLASComplexPackedHpr() {
+    var uplo = CChar(85)
+    var uploL = CChar(76)
+    var n: Int32 = 2
+    var alphaR: Float = 1
+    var incx: Int32 = 1
+    var incy: Int32 = 1
+    var ap: [Float] = [1, 0, 0, 0, 1, 0]
+    var x: [Float] = [1, 0, 0, 1]
+    _ = chpr_(&uplo, &n, &alphaR, &x, &incx, &ap)
+    precondition(abs(ap[0] - 2) < 0.0001 && abs(ap[1]) < 0.0001)
+    precondition(abs(ap[2]) < 0.0001 && abs(ap[3] + 1) < 0.0001)
+    precondition(abs(ap[4] - 2) < 0.0001)
+    var apL: [Float] = [1, 0, 0, 0, 1, 0]
+    _ = chpr_(&uploL, &n, &alphaR, &x, &incx, &apL)
+    precondition(abs(apL[0] - 2) < 0.0001 && abs(apL[3] - 1) < 0.0001 && abs(apL[4] - 2) < 0.0001)
+    var alpha: [Float] = [1, 0]
+    var y: [Float] = [0, 1, 1, 0]
+    var ap2 = [Float](repeating: 0, count: 6)
+    _ = chpr2_(&uplo, &n, &alpha, &x, &incx, &y, &incy, &ap2)
+    precondition(abs(ap2[0]) < 0.0001 && abs(ap2[2] - 2) < 0.0001 && abs(ap2[4]) < 0.0001)
+    var dAlphaR: Double = 1
+    var dap: [Double] = [1, 0, 0, 0, 1, 0]
+    var dx: [Double] = [1, 0, 0, 1]
+    _ = zhpr_(&uplo, &n, &dAlphaR, &dx, &incx, &dap)
+    precondition(abs(dap[0] - 2) < 1e-12 && abs(dap[3] + 1) < 1e-12)
+    var dalpha: [Double] = [1, 0]
+    var dy: [Double] = [0, 1, 1, 0]
+    var dap2 = [Double](repeating: 0, count: 6)
+    _ = zhpr2_(&uplo, &n, &dalpha, &dx, &incx, &dy, &incy, &dap2)
+    precondition(abs(dap2[2] - 2) < 1e-12)
+}
+
+func testBLASComplexPackedTpmvTpsv() {
+    var uplo = CChar(85)
+    var uploL = CChar(76)
+    var transN = CChar(78)
+    var transC = CChar(67)
+    var transT = CChar(84)
+    var diagN = CChar(78)
+    var diagU = CChar(85)
+    var n: Int32 = 2
+    var incx: Int32 = 1
+    var ap: [Float] = [1, 1, 2, 0, 3, -1]
+    var x: [Float] = [1, 0, 0, 1]
+    _ = ctpmv_(&uplo, &transN, &diagN, &n, &ap, &x, &incx)
+    precondition(abs(x[0] - 1) < 0.0001 && abs(x[1] - 3) < 0.0001)
+    precondition(abs(x[2] - 1) < 0.0001 && abs(x[3] - 3) < 0.0001)
+    var xc: [Float] = [1, 0, 0, 1]
+    _ = ctpmv_(&uplo, &transC, &diagN, &n, &ap, &xc, &incx)
+    precondition(abs(xc[0] - 1) < 0.0001 && abs(xc[1] + 1) < 0.0001)
+    precondition(abs(xc[2] - 1) < 0.0001 && abs(xc[3] - 3) < 0.0001)
+    var xt: [Float] = [1, 0, 0, 1]
+    _ = ctpmv_(&uplo, &transT, &diagN, &n, &ap, &xt, &incx)
+    precondition(abs(xt[0] - 1) < 0.0001 && abs(xt[1] - 1) < 0.0001)
+    precondition(abs(xt[2] - 3) < 0.0001 && abs(xt[3] - 3) < 0.0001)
+    var xl: [Float] = [1, 0, 0, 1]
+    _ = ctpmv_(&uploL, &transN, &diagN, &n, &ap, &xl, &incx)
+    precondition(abs(xl[0] - 1) < 0.0001 && abs(xl[1] - 1) < 0.0001)
+    precondition(abs(xl[2] - 3) < 0.0001 && abs(xl[3] - 3) < 0.0001)
+    var apU: [Float] = [99, 99, 2, 0, 99, 99]
+    var xu: [Float] = [1, 0, 0, 1]
+    _ = ctpmv_(&uplo, &transN, &diagU, &n, &apU, &xu, &incx)
+    precondition(abs(xu[0] - 1) < 0.0001 && abs(xu[1] - 2) < 0.0001)
+    precondition(abs(xu[2]) < 0.0001 && abs(xu[3] - 1) < 0.0001)
+    var xs: [Float] = [1, 3, 1, 3]
+    _ = ctpsv_(&uplo, &transN, &diagN, &n, &ap, &xs, &incx)
+    precondition(abs(xs[0] - 1) < 0.0001 && abs(xs[1]) < 0.0001)
+    precondition(abs(xs[2]) < 0.0001 && abs(xs[3] - 1) < 0.0001)
+    var n3: Int32 = 3
+    var ap3: [Float] = [2, 0, 1, 0, 2, 0, 0, 0, 1, 0, 2, 0]
+    var x3: [Float] = [1, 0, 1, 0, 1, 0]
+    _ = ctpmv_(&uplo, &transN, &diagN, &n3, &ap3, &x3, &incx)
+    precondition(abs(x3[0] - 3) < 0.0001 && abs(x3[2] - 3) < 0.0001 && abs(x3[4] - 2) < 0.0001)
+    var b3 = x3
+    _ = ctpsv_(&uplo, &transN, &diagN, &n3, &ap3, &b3, &incx)
+    precondition(abs(b3[0] - 1) < 0.0001 && abs(b3[2] - 1) < 0.0001 && abs(b3[4] - 1) < 0.0001)
+    var dap: [Double] = [1, 1, 2, 0, 3, -1]
+    var dx: [Double] = [1, 0, 0, 1]
+    _ = ztpmv_(&uplo, &transN, &diagN, &n, &dap, &dx, &incx)
+    precondition(abs(dx[0] - 1) < 1e-12 && abs(dx[1] - 3) < 1e-12)
+    var dxs: [Double] = [1, 3, 1, 3]
+    _ = ztpsv_(&uplo, &transN, &diagN, &n, &dap, &dxs, &incx)
+    precondition(abs(dxs[0] - 1) < 1e-12 && abs(dxs[3] - 1) < 1e-12)
+}
+
+func testBLASComplexBandedGbmvHbmv() {
+    var trans = CChar(78)
+    var transT = CChar(84)
+    var transC = CChar(67)
+    var m: Int32 = 2
+    var n: Int32 = 2
+    var kl: Int32 = 1
+    var ku: Int32 = 1
+    var alpha: [Float] = [1, 0]
+    var beta: [Float] = [0, 0]
+    var lda: Int32 = 3
+    var incx: Int32 = 1
+    var incy: Int32 = 1
+    var a: [Float] = [9, 9, 1, 0, 3, 0, 2, 0, 4, 0, 9, 9]
+    var x: [Float] = [1, 0, 1, 0]
+    var y = [Float](repeating: 0, count: 4)
+    _ = cgbmv_(&trans, &m, &n, &kl, &ku, &alpha, &a, &lda, &x, &incx, &beta, &y, &incy)
+    precondition(abs(y[0] - 3) < 0.0001 && abs(y[2] - 7) < 0.0001)
+    var yT = [Float](repeating: 0, count: 4)
+    _ = cgbmv_(&transT, &m, &n, &kl, &ku, &alpha, &a, &lda, &x, &incx, &beta, &yT, &incy)
+    precondition(abs(yT[0] - 4) < 0.0001 && abs(yT[2] - 6) < 0.0001)
+    var aC: [Float] = [9, 9, 1, 1, 3, 0, 2, 0, 4, -1, 9, 9]
+    var yC = [Float](repeating: 0, count: 4)
+    _ = cgbmv_(&transC, &m, &n, &kl, &ku, &alpha, &aC, &lda, &x, &incx, &beta, &yC, &incy)
+    precondition(abs(yC[0] - 4) < 0.0001 && abs(yC[1] + 1) < 0.0001)
+    precondition(abs(yC[2] - 6) < 0.0001 && abs(yC[3] - 1) < 0.0001)
+    var m3: Int32 = 3
+    var n3: Int32 = 3
+    var a3: [Float] = [9, 9, 2, 0, 1, 0, 1, 0, 2, 0, 1, 0, 1, 0, 2, 0, 9, 9]
+    var x3: [Float] = [1, 0, 1, 0, 1, 0]
+    var y3 = [Float](repeating: 0, count: 6)
+    _ = cgbmv_(&trans, &m3, &n3, &kl, &ku, &alpha, &a3, &lda, &x3, &incx, &beta, &y3, &incy)
+    precondition(abs(y3[0] - 3) < 0.0001 && abs(y3[2] - 4) < 0.0001 && abs(y3[4] - 3) < 0.0001)
+    var uplo = CChar(85)
+    var uploL = CChar(76)
+    var k: Int32 = 1
+    var hlda: Int32 = 2
+    var ha: [Float] = [9, 9, 1, 0, 2, -3, 4, 0]
+    var hx: [Float] = [1, 0, 0, 1]
+    var hy = [Float](repeating: 0, count: 4)
+    _ = chbmv_(&uplo, &n, &k, &alpha, &ha, &hlda, &hx, &incx, &beta, &hy, &incy)
+    precondition(abs(hy[0] - 4) < 0.0001 && abs(hy[1] - 2) < 0.0001)
+    precondition(abs(hy[2] - 2) < 0.0001 && abs(hy[3] - 7) < 0.0001)
+    var haL: [Float] = [1, 0, 2, 3, 4, 0, 9, 9]
+    var hyL = [Float](repeating: 0, count: 4)
+    _ = chbmv_(&uploL, &n, &k, &alpha, &haL, &hlda, &hx, &incx, &beta, &hyL, &incy)
+    precondition(abs(hyL[0] - 4) < 0.0001 && abs(hyL[3] - 7) < 0.0001)
+    var ha3: [Float] = [9, 9, 2, 0, 1, -1, 3, 0, 1, 0, 4, 0]
+    var hy3 = [Float](repeating: 0, count: 6)
+    _ = chbmv_(&uplo, &n3, &k, &alpha, &ha3, &hlda, &x3, &incx, &beta, &hy3, &incy)
+    precondition(abs(hy3[0] - 3) < 0.0001 && abs(hy3[1] + 1) < 0.0001)
+    precondition(abs(hy3[2] - 5) < 0.0001 && abs(hy3[3] - 1) < 0.0001)
+    precondition(abs(hy3[4] - 5) < 0.0001)
+    var dalpha: [Double] = [1, 0]
+    var dbeta: [Double] = [0, 0]
+    var da: [Double] = [9, 9, 1, 0, 3, 0, 2, 0, 4, 0, 9, 9]
+    var dx: [Double] = [1, 0, 1, 0]
+    var dy = [Double](repeating: 0, count: 4)
+    _ = zgbmv_(&trans, &m, &n, &kl, &ku, &dalpha, &da, &lda, &dx, &incx, &dbeta, &dy, &incy)
+    precondition(abs(dy[0] - 3) < 1e-12 && abs(dy[2] - 7) < 1e-12)
+    var dha: [Double] = [9, 9, 1, 0, 2, -3, 4, 0]
+    var dhx: [Double] = [1, 0, 0, 1]
+    var dhy = [Double](repeating: 0, count: 4)
+    _ = zhbmv_(&uplo, &n, &k, &dalpha, &dha, &hlda, &dhx, &incx, &dbeta, &dhy, &incy)
+    precondition(abs(dhy[0] - 4) < 1e-12 && abs(dhy[3] - 7) < 1e-12)
+}
+
+func testBLASComplexBandedTbmvTbsv() {
+    var uplo = CChar(85)
+    var uploL = CChar(76)
+    var transN = CChar(78)
+    var transC = CChar(67)
+    var diagN = CChar(78)
+    var n: Int32 = 2
+    var k: Int32 = 1
+    var lda: Int32 = 2
+    var incx: Int32 = 1
+    var a: [Float] = [9, 9, 1, 1, 2, 0, 3, -1]
+    var x: [Float] = [1, 0, 0, 1]
+    _ = ctbmv_(&uplo, &transN, &diagN, &n, &k, &a, &lda, &x, &incx)
+    precondition(abs(x[0] - 1) < 0.0001 && abs(x[1] - 3) < 0.0001)
+    precondition(abs(x[2] - 1) < 0.0001 && abs(x[3] - 3) < 0.0001)
+    var xc: [Float] = [1, 0, 0, 1]
+    _ = ctbmv_(&uplo, &transC, &diagN, &n, &k, &a, &lda, &xc, &incx)
+    precondition(abs(xc[0] - 1) < 0.0001 && abs(xc[1] + 1) < 0.0001)
+    precondition(abs(xc[2] - 1) < 0.0001 && abs(xc[3] - 3) < 0.0001)
+    var aL: [Float] = [1, 1, 2, 0, 3, -1, 9, 9]
+    var xl: [Float] = [1, 0, 0, 1]
+    _ = ctbmv_(&uploL, &transN, &diagN, &n, &k, &aL, &lda, &xl, &incx)
+    precondition(abs(xl[0] - 1) < 0.0001 && abs(xl[1] - 1) < 0.0001)
+    precondition(abs(xl[2] - 3) < 0.0001 && abs(xl[3] - 3) < 0.0001)
+    var xs: [Float] = [1, 3, 1, 3]
+    _ = ctbsv_(&uplo, &transN, &diagN, &n, &k, &a, &lda, &xs, &incx)
+    precondition(abs(xs[0] - 1) < 0.0001 && abs(xs[1]) < 0.0001)
+    precondition(abs(xs[2]) < 0.0001 && abs(xs[3] - 1) < 0.0001)
+    var n3: Int32 = 3
+    var a3: [Float] = [9, 9, 2, 0, 1, 0, 2, 0, 1, 0, 2, 0]
+    var x3: [Float] = [1, 0, 1, 0, 1, 0]
+    _ = ctbmv_(&uplo, &transN, &diagN, &n3, &k, &a3, &lda, &x3, &incx)
+    precondition(abs(x3[0] - 3) < 0.0001 && abs(x3[2] - 3) < 0.0001 && abs(x3[4] - 2) < 0.0001)
+    var b3 = x3
+    _ = ctbsv_(&uplo, &transN, &diagN, &n3, &k, &a3, &lda, &b3, &incx)
+    precondition(abs(b3[0] - 1) < 0.0001 && abs(b3[2] - 1) < 0.0001 && abs(b3[4] - 1) < 0.0001)
+    var da: [Double] = [9, 9, 1, 1, 2, 0, 3, -1]
+    var dx: [Double] = [1, 0, 0, 1]
+    _ = ztbmv_(&uplo, &transN, &diagN, &n, &k, &da, &lda, &dx, &incx)
+    precondition(abs(dx[0] - 1) < 1e-12 && abs(dx[1] - 3) < 1e-12)
+    var dxs: [Double] = [1, 3, 1, 3]
+    _ = ztbsv_(&uplo, &transN, &diagN, &n, &k, &da, &lda, &dxs, &incx)
+    precondition(abs(dxs[0] - 1) < 1e-12 && abs(dxs[3] - 1) < 1e-12)
+}
