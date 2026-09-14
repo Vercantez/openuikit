@@ -74,7 +74,7 @@ func testVDSPStats() {
     precondition(vDSP.sumOfMagnitudes(a) == 10)
     let pair = vDSP.sumAndSumOfSquares(a)
     precondition(pair.elementsSum == 10)
-    precondition(vDSP.rootMeanSquare(a) > 0)
+    precondition(abs(vDSP.rootMeanSquare(a) - Float(2.738613)) < 0.000001)
     _ = vDSP.maximum(a)
     _ = vDSP.minimum(a)
     _ = vDSP.indexOfMaximum(a)
@@ -273,6 +273,79 @@ func testVDSPFFT() {
         var dctOut = [Float](repeating: 0, count: 8)
         dct.transform(impulseF, result: &dctOut)
         _ = dct.transform(impulseF)
+    }
+}
+
+func testFFTImpulseUnnormalizedRoundTrip() {
+    let setup = vDSP.FFT<DSPSplitComplex>(log2n: 4, radix: .radix2, ofType: DSPSplitComplex.self)
+    precondition(setup != nil)
+    var real = [Float](repeating: 0, count: 16)
+    var imag = [Float](repeating: 0, count: 16)
+    real[0] = 1
+    var freqR = [Float](repeating: 0, count: 16)
+    var freqI = [Float](repeating: 0, count: 16)
+    real.withUnsafeMutableBufferPointer { rp in
+        imag.withUnsafeMutableBufferPointer { ip in
+            freqR.withUnsafeMutableBufferPointer { orp in
+                freqI.withUnsafeMutableBufferPointer { oip in
+                    let src = DSPSplitComplex(realp: rp.baseAddress!, imagp: ip.baseAddress!)
+                    var dest = DSPSplitComplex(realp: orp.baseAddress!, imagp: oip.baseAddress!)
+                    setup!.forward(input: src, output: &dest)
+                }
+            }
+        }
+    }
+    for i in 0..<16 {
+        precondition(abs(freqR[i] - 1) < 0.0001)
+        precondition(abs(freqI[i]) < 0.0001)
+    }
+    var backR = [Float](repeating: 0, count: 16)
+    var backI = [Float](repeating: 0, count: 16)
+    freqR.withUnsafeMutableBufferPointer { rp in
+        freqI.withUnsafeMutableBufferPointer { ip in
+            backR.withUnsafeMutableBufferPointer { orp in
+                backI.withUnsafeMutableBufferPointer { oip in
+                    let src = DSPSplitComplex(realp: rp.baseAddress!, imagp: ip.baseAddress!)
+                    var dest = DSPSplitComplex(realp: orp.baseAddress!, imagp: oip.baseAddress!)
+                    setup!.inverse(input: src, output: &dest)
+                    setup!.transform(input: src, output: &dest, direction: .inverse)
+                }
+            }
+        }
+    }
+    precondition(abs(backR[0] - 16) < 0.0001)
+    for i in 1..<16 {
+        precondition(abs(backR[i]) < 0.0001)
+        precondition(abs(backI[i]) < 0.0001)
+    }
+    if let fftSetup = vDSP_SplitComplexFloat.makeFFTSetup(log2n: 4, radix: .radix2) {
+        var srcR = [Float](repeating: 0, count: 16)
+        var srcI = [Float](repeating: 0, count: 16)
+        srcR[0] = 1
+        var dstR = [Float](repeating: 0, count: 16)
+        var dstI = [Float](repeating: 0, count: 16)
+        srcR.withUnsafeMutableBufferPointer { rp in
+            srcI.withUnsafeMutableBufferPointer { ip in
+                dstR.withUnsafeMutableBufferPointer { orp in
+                    dstI.withUnsafeMutableBufferPointer { oip in
+                        let source = DSPSplitComplex(realp: rp.baseAddress!, imagp: ip.baseAddress!)
+                        var destination = DSPSplitComplex(realp: orp.baseAddress!, imagp: oip.baseAddress!)
+                        vDSP_SplitComplexFloat.transform(
+                            fftSetup: fftSetup,
+                            log2n: 4,
+                            source: source,
+                            destination: &destination,
+                            direction: .forward
+                        )
+                    }
+                }
+            }
+        }
+        for i in 0..<16 {
+            precondition(abs(dstR[i] - 1) < 0.0001)
+            precondition(abs(dstI[i]) < 0.0001)
+        }
+        vDSP_SplitComplexFloat.destroySetup(fftSetup)
     }
 }
 

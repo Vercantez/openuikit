@@ -258,3 +258,30 @@ func testWebSocketFramerAndCoderProtocolStacks() {
     tlvChannel.sendIdempotent(Data([1]), type: 1, lastMessage: false)
     _ = TLS().certificateValidator { _, _ in true }
 }
+
+func testTLVInProcessEncodeDecode() {
+    let tlv = TLV { TCP() }
+    let payload = Data([0xde, 0xad])
+    let encoded = tlv.encode(type: 7, payload: payload)
+    expect(encoded.count == 1 + 2 + 2, "u8 type + u16 length + payload")
+    let decoded = tlv.decode(encoded)
+    expect(decoded?.type == 7, "type")
+    expect(decoded?.payload == payload, "payload")
+    let typed = TLV(type: UInt8.self, length: UInt16.self) { TCP() }
+    expect(typed.typeWidth == 1 && typed.lengthWidth == 2, "widths")
+    let meta = TLV.Metadata(type: 7, length: payload.count, isComplete: true, lastMessage: false, other: [])
+    expect(meta.type == 7, "meta type")
+    expect(meta.length == 2, "meta length")
+    expect(meta.isComplete, "complete")
+    expect(meta.lastMessage == false, "last")
+    expect(meta.other.isEmpty, "other")
+    _ = TLV { UDP() }
+    _ = TLV(type: UInt16.self, length: UInt32.self) { UDP() }
+    let content: TLV.ContentType = payload
+    let below: TLV.BelowProtocol = TCP()
+    _ = below
+    let legacy: TLV.LegacyMessage = (type: 1, content: payload, metadata: nil, isFinal: true)
+    expect(legacy.type == 1, "legacy")
+    _ = TLV.ProtocolStorage()
+    _ = content
+}

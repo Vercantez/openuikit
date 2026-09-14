@@ -7,6 +7,10 @@ public struct AVError: Error, @unchecked Sendable {
     self.code = code
     self.userInfo = userInfo
   }
+  public init?(rawValue: Int) {
+    guard let code = Code(rawValue: rawValue) else { return nil }
+    self.init(code)
+  }
   public var errorCode: Int { code.rawValue }
   public var errorUserInfo: [String: Any] { userInfo }
   public var localizedDescription: String { "AVError.\(code)" }
@@ -198,3 +202,12 @@ extension AVError: Hashable {
 }
 
 extension AVError: CustomNSError {}
+
+extension AVError.Code {
+  public static func ~= (pattern: AVError.Code, value: AVError) -> Bool {
+    pattern == value.code
+  }
+  public static func ~= (pattern: AVError.Code, value: any Error) -> Bool {
+    (value as? AVError)?.code == pattern
+  }
+}

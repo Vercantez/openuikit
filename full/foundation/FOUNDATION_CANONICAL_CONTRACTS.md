@@ -38,8 +38,14 @@ evicted, or class-disallowed values fail closed.
 ## Predicate and streams
 
 `NSPredicate(value:)`, block predicates, both evaluation overloads, copying,
-and secure coding of constant predicates are implemented. Format parsing is
-not guessed and block predicates do not claim archival support.
+and secure coding of constant predicates are implemented. Format parsing
+covers the Apple-oracled grammar measured 2026-09-14: `== != > >= < <=`,
+`BEGINSWITH`/`ENDSWITH`/`CONTAINS`/`LIKE`/`MATCHES` including `[c]`, `IN`,
+`BETWEEN`, `AND`/`OR`/`NOT`, `SELF`, `$variables`, `TRUEPREDICATE`/
+`FALSEPREDICATE`, YES/NO/TRUE as 1/0, and dotted key paths. Unsupported
+syntax fails closed. Block and format predicates do not claim archival
+support. `NSCompoundPredicate`, `NSExpression` (`forKeyPath`,
+`forConstantValue`, `add:to:`), and `NSSortDescriptor` match that oracle.
 
 `OutputStream` implements real growable-memory and caller-buffer destinations.
 It follows the measured Apple rule that a buffer write larger than remaining

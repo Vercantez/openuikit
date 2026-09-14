@@ -318,3 +318,45 @@ The required cloud-environment probe and sealed host gate pass together. The
 remaining behavioral questions are recorded in `oracle-questions.tsv`; Apple
 TLS/QUIC, Bonjour/mDNS, service discovery, and callback timing remain
 fail-closed or deferred rather than fabricated.
+
+## Depth pass 2026-09-14 (Apple Network oracle)
+
+Before: **2525 implemented / 241 declared / 281 deferred / 0 unavailable /
+0 not-applicable** (2766 nondeferred).
+
+This pass matches the 2026-09-14 Apple Network oracle (Xcode 26.1 / macOS 26.1)
+for endpoint and address classification, then converts remaining declared
+rows that a sealed synchronous test can actually call.
+
+- IPv4 / IPv6 `isLoopback` / `isLinkLocal` / `isMulticast` follow the captured
+  table (RFC 1122 `127/8`, RFC 3927 `169.254/16`, RFC 1112 `224/4`; IPv6 `::1`,
+  `fe80::/10`, `ff00::/8`). IPv6 `debugDescription` is RFC 5952 compressed.
+  Zoned `fe80::1%lo0` stays link-local; Linux does not invent a `lo0`
+  interface. Zoned `127.0.0.1%lo0` parses as IPv4 and is not loopback, matching
+  Darwin.
+- Named ports `http`/`https`/`ssh` and `"8080"` plus IANA statics remain
+  local. TXT `["a":"1","b":"hello"]` subscript and RFC 6763 length-prefixed
+  `data` match the oracle hex.
+- `NWConnection.State` has no `.invalid`. `waiting(posix ECONNREFUSED)` debug
+  contains `POSIXErrorCode` and the host raw value (61 on Darwin, 111 on Linux).
+- TCP `allowLocalEndpointReuse` / `acceptLocalOnly` / `includePeerToPeer`
+  default false as captured.
+- In-process WebSocket ping/pong/close frame encode/decode and TLV
+  type/length/value encode/decode. C `nw_*` enum `Hashable`/`!=` witnesses
+  and object typealiases are exercised. Async `NetworkChannel.send` /
+  `receive` / `ping` stay declared (a blocking wait would hang the gate).
+  QUIC/TLS remain fail-closed (`EOPNOTSUPP` / `tls(-9800)`). Foundation
+  FormatStyle / SortComparator overlays stay deferred.
+
+After: **2753 implemented / 20 declared / 274 deferred / 0 unavailable /
+0 not-applicable** (2773 nondeferred). Implemented gain **+228**.
+
+Top-5 `implemented` evidence distribution (of 2753):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (6.9%)
+2. `NetworkCAPITests.swift#testCObjectTypealiasesAndOSProtocols` — 113 (4.1%)
+3. `NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses` — 96 (3.5%)
+4. `NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses` — 88 (3.2%)
+5. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (3.2%)
+
+No non-exempt test is cited by more than 40% of implemented rows.

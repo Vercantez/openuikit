@@ -20,13 +20,13 @@ c:@E@CBLAS_TRANSPOSE@CblasTrans	implemented	test:full/accelerate/tests/agent/BLA
 c:@E@CBLAS_UPLO	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_UPLO	
 c:@E@CBLAS_UPLO@CblasLower	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testCBLASRemainingConstants	
 c:@E@CBLAS_UPLO@CblasUpper	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testCBLASRemainingConstants	
-c:@E@vDSP_DCT_Type	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_DCT_Type	
-c:@E@vDSP_DCT_Type@vDSP_DCT_II	declared	source:full/accelerate/AccelerateCTypes.swift#II	
-c:@E@vDSP_DCT_Type@vDSP_DCT_III	declared	source:full/accelerate/AccelerateCTypes.swift#III	
-c:@E@vDSP_DCT_Type@vDSP_DCT_IV	declared	source:full/accelerate/AccelerateCTypes.swift#IV	
-c:@E@vDSP_DFT_Direction	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_DFT_Direction	
-c:@E@vDSP_DFT_Direction@vDSP_DFT_FORWARD	declared	source:full/accelerate/AccelerateCTypes.swift#FORWARD	
-c:@E@vDSP_DFT_Direction@vDSP_DFT_INVERSE	declared	source:full/accelerate/AccelerateCTypes.swift#INVERSE	
+c:@E@vDSP_DCT_Type	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured DCT type raw values.
+c:@E@vDSP_DCT_Type@vDSP_DCT_II	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured vDSP_DCT_II=2.
+c:@E@vDSP_DCT_Type@vDSP_DCT_III	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured vDSP_DCT_III=3.
+c:@E@vDSP_DCT_Type@vDSP_DCT_IV	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured vDSP_DCT_IV=4.
+c:@E@vDSP_DFT_Direction	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured DFT direction raw values.
+c:@E@vDSP_DFT_Direction@vDSP_DFT_FORWARD	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured vDSP_DFT_FORWARD=1.
+c:@E@vDSP_DFT_Direction@vDSP_DFT_INVERSE	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured vDSP_DFT_INVERSE=-1.
 c:@E@vDSP_DFT_RealtoComplex	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_DFT_RealtoComplex	
 c:@E@vDSP_DFT_RealtoComplex@vDSP_DFT_Interleaved_ComplextoComplex	declared	source:full/accelerate/AccelerateCTypes.swift#interleaved_ComplextoComplex	
 c:@E@vDSP_DFT_RealtoComplex@vDSP_DFT_Interleaved_RealtoComplex	declared	source:full/accelerate/AccelerateCTypes.swift#interleaved_RealtoComplex	
@@ -301,19 +301,19 @@ c:@EA@BNNSSparsityType@BNNSSparsityTypeUnstructured	implemented	test:full/accele
 c:@EA@BNNSTargetSystem	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	
 c:@EA@BNNSTargetSystem@BNNSTargetSystemGeneric	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
 c:@EA@SparseControl_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseControl_t@SparseDefaultControl	declared	source:full/accelerate/AccelerateCTypes.swift#SparseDefaultControl	
+c:@EA@SparseControl_t@SparseDefaultControl	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseDefaultControl=0.
 c:@EA@SparseFactorization_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseFactorization_t@SparseFactorizationCholesky	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationCholesky	
-c:@EA@SparseFactorization_t@SparseFactorizationCholeskyAtA	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationCholeskyAtA	
-c:@EA@SparseFactorization_t@SparseFactorizationLDLT	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLDLT	
+c:@EA@SparseFactorization_t@SparseFactorizationCholesky	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationCholesky=0.
+c:@EA@SparseFactorization_t@SparseFactorizationCholeskyAtA	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationCholeskyAtA=41.
+c:@EA@SparseFactorization_t@SparseFactorizationLDLT	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationLDLT=1.
 c:@EA@SparseFactorization_t@SparseFactorizationLDLTSBK	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLDLTSBK	
 c:@EA@SparseFactorization_t@SparseFactorizationLDLTTPP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLDLTTPP	
-c:@EA@SparseFactorization_t@SparseFactorizationLDLTUnpivoted	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLDLTUnpivoted	
+c:@EA@SparseFactorization_t@SparseFactorizationLDLTUnpivoted	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationLDLTUnpivoted=2.
 c:@EA@SparseFactorization_t@SparseFactorizationLU	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
 c:@EA@SparseFactorization_t@SparseFactorizationLUSPP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLUSPP	
 c:@EA@SparseFactorization_t@SparseFactorizationLUTPP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLUTPP	
 c:@EA@SparseFactorization_t@SparseFactorizationLUUnpivoted	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLUUnpivoted	
-c:@EA@SparseFactorization_t@SparseFactorizationQR	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationQR	
+c:@EA@SparseFactorization_t@SparseFactorizationQR	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationQR=40.
 c:@EA@SparseGMRESVariant_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
 c:@EA@SparseGMRESVariant_t@SparseVariantDQGMRES	declared	source:full/accelerate/AccelerateCTypes.swift#SparseVariantDQGMRES	
 c:@EA@SparseGMRESVariant_t@SparseVariantFGMRES	declared	source:full/accelerate/AccelerateCTypes.swift#SparseVariantFGMRES	
@@ -988,18 +988,18 @@ c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Comp
 c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Complex_Float#I#*1I#$@SA@SparseMatrix_Complex_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseUpdateFactor	
 c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Double#I#*1I#$@SA@SparseMatrix_Double#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseUpdateFactor	
 c:@F@SparseUpdateFactor#$@EA@SparseUpdate_t#*$@SA@SparseOpaqueFactorization_Float#I#*1I#$@SA@SparseMatrix_Float#	declared	source:full/accelerate/AccelerateCFunctions.swift#SparseUpdateFactor	
-c:@F@caxpy_	declared	source:full/accelerate/AccelerateCFunctions.swift#caxpy_	
-c:@F@ccopy_	declared	source:full/accelerate/AccelerateCFunctions.swift#ccopy_	
-c:@F@cdotc_	declared	source:full/accelerate/AccelerateCFunctions.swift#cdotc_	
-c:@F@cdotu_	declared	source:full/accelerate/AccelerateCFunctions.swift#cdotu_	
+c:@F@caxpy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex saxpy against hand-computed 2-vector.
+c:@F@ccopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex copy.
+c:@F@cdotc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Conjugate complex dot.
+c:@F@cdotu_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Unconjugated complex dot.
 c:@F@cgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#cgbmv_	
-c:@F@cgemm_	declared	source:full/accelerate/AccelerateCFunctions.swift#cgemm_	
-c:@F@cgemv_	declared	source:full/accelerate/AccelerateCFunctions.swift#cgemv_	
-c:@F@cgerc_	declared	source:full/accelerate/AccelerateCFunctions.swift#cgerc_	
-c:@F@cgeru_	declared	source:full/accelerate/AccelerateCFunctions.swift#cgeru_	
+c:@F@cgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemm	Complex GEMM 2x2 hand-computed case.
+c:@F@cgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Complex GEMV 2x2.
+c:@F@cgerc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Complex conjugated rank-1 update.
+c:@F@cgeru_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Complex unconjugated rank-1 update.
 c:@F@chbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#chbmv_	
 c:@F@chemm_	declared	source:full/accelerate/AccelerateCFunctions.swift#chemm_	
-c:@F@chemv_	declared	source:full/accelerate/AccelerateCFunctions.swift#chemv_	
+c:@F@chemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Hermitian matrix-vector 2x2.
 c:@F@cher2_	declared	source:full/accelerate/AccelerateCFunctions.swift#cher2_	
 c:@F@cher2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#cher2k_	
 c:@F@cher_	declared	source:full/accelerate/AccelerateCFunctions.swift#cher_	
@@ -1008,10 +1008,10 @@ c:@F@chpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#chpmv_
 c:@F@chpr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#chpr2_	
 c:@F@chpr_	declared	source:full/accelerate/AccelerateCFunctions.swift#chpr_	
 c:@F@crotg_	declared	source:full/accelerate/AccelerateCFunctions.swift#crotg_	
-c:@F@cscal_	declared	source:full/accelerate/AccelerateCFunctions.swift#cscal_	
+c:@F@cscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex scale.
 c:@F@csrot_	declared	source:full/accelerate/AccelerateCFunctions.swift#csrot_	
-c:@F@csscal_	declared	source:full/accelerate/AccelerateCFunctions.swift#csscal_	
-c:@F@cswap_	declared	source:full/accelerate/AccelerateCFunctions.swift#cswap_	
+c:@F@csscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Real scale of complex vector.
+c:@F@cswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex swap.
 c:@F@csymm_	declared	source:full/accelerate/AccelerateCFunctions.swift#csymm_	
 c:@F@csyr2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#csyr2k_	
 c:@F@csyrk_	declared	source:full/accelerate/AccelerateCFunctions.swift#csyrk_	
@@ -1057,12 +1057,12 @@ c:@F@dtrmm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrmm_
 c:@F@dtrmv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASTrmv	
 c:@F@dtrsm_	declared	source:full/accelerate/AccelerateCFunctions.swift#dtrsm_	
 c:@F@dtrsv_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASTrsv	
-c:@F@dzasum_	declared	source:full/accelerate/AccelerateCFunctions.swift#dzasum_	
-c:@F@dznrm2_	declared	source:full/accelerate/AccelerateCFunctions.swift#dznrm2_	
-c:@F@icamax_	declared	source:full/accelerate/AccelerateCFunctions.swift#icamax_	
+c:@F@dzasum_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex l1 sum.
+c:@F@dznrm2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex Euclidean norm.
+c:@F@icamax_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Index of max complex abs1.
 c:@F@idamax_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@isamax_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@izamax_	declared	source:full/accelerate/AccelerateCFunctions.swift#izamax_	
+c:@F@izamax_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Index of max double-complex abs1.
 c:@F@la_add_attributes	implemented	test:full/accelerate/tests/agent/LinearAlgebraTests.swift#testLAFloatMatrixRoundTrip	
 c:@F@la_diagonal_matrix_from_vector	implemented	test:full/accelerate/tests/agent/LinearAlgebraTests.swift#testLASlicingDiagonalSolve	
 c:@F@la_difference	implemented	test:full/accelerate/tests/agent/LinearAlgebraTests.swift#testLASumProductTranspose	
@@ -1107,8 +1107,8 @@ c:@F@la_vector_to_double_buffer	implemented	test:full/accelerate/tests/agent/Lin
 c:@F@la_vector_to_float_buffer	implemented	test:full/accelerate/tests/agent/LinearAlgebraTests.swift#testLAVectorInnerOuterNorm	
 c:@F@sasum_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@saxpy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
-c:@F@scasum_	declared	source:full/accelerate/AccelerateCFunctions.swift#scasum_	
-c:@F@scnrm2_	declared	source:full/accelerate/AccelerateCFunctions.swift#scnrm2_	
+c:@F@scasum_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex l1 sum.
+c:@F@scnrm2_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Float	Complex Euclidean norm.
 c:@F@scopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@sdot_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASLevel1	
 c:@F@sdsdot_	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testBLASSdsdot	
@@ -1964,20 +1964,20 @@ c:@F@vvtanhf	implemented	test:full/accelerate/tests/agent/VForceCTests.swift#tes
 c:@F@vvtanpi	implemented	test:full/accelerate/tests/agent/VForceCTests.swift#testVForceCUnary	
 c:@F@vvtanpif	implemented	test:full/accelerate/tests/agent/VForceCTests.swift#testVForceCUnary	
 c:@F@xerbla_	declared	source:full/accelerate/AccelerateCFunctions.swift#xerbla_	
-c:@F@zaxpy_	declared	source:full/accelerate/AccelerateCFunctions.swift#zaxpy_	
-c:@F@zcopy_	declared	source:full/accelerate/AccelerateCFunctions.swift#zcopy_	
-c:@F@zdotc_	declared	source:full/accelerate/AccelerateCFunctions.swift#zdotc_	
-c:@F@zdotu_	declared	source:full/accelerate/AccelerateCFunctions.swift#zdotu_	
+c:@F@zaxpy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex axpy.
+c:@F@zcopy_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex copy.
+c:@F@zdotc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex conjugate dot.
+c:@F@zdotu_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex unconjugated dot.
 c:@F@zdrot_	declared	source:full/accelerate/AccelerateCFunctions.swift#zdrot_	
-c:@F@zdscal_	declared	source:full/accelerate/AccelerateCFunctions.swift#zdscal_	
+c:@F@zdscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Real scale of double-complex vector.
 c:@F@zgbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zgbmv_	
-c:@F@zgemm_	declared	source:full/accelerate/AccelerateCFunctions.swift#zgemm_	
-c:@F@zgemv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zgemv_	
-c:@F@zgerc_	declared	source:full/accelerate/AccelerateCFunctions.swift#zgerc_	
-c:@F@zgeru_	declared	source:full/accelerate/AccelerateCFunctions.swift#zgeru_	
+c:@F@zgemm_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemm	Double-complex GEMM 2x2 hand-computed case.
+c:@F@zgemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double-complex GEMV 2x2.
+c:@F@zgerc_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double-complex conjugated rank-1 update.
+c:@F@zgeru_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double-complex unconjugated rank-1 update.
 c:@F@zhbmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhbmv_	
 c:@F@zhemm_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhemm_	
-c:@F@zhemv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhemv_	
+c:@F@zhemv_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexGemvHemv	Double Hermitian matrix-vector 2x2.
 c:@F@zher2_	declared	source:full/accelerate/AccelerateCFunctions.swift#zher2_	
 c:@F@zher2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#zher2k_	
 c:@F@zher_	declared	source:full/accelerate/AccelerateCFunctions.swift#zher_	
@@ -1986,8 +1986,8 @@ c:@F@zhpmv_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhpmv_
 c:@F@zhpr2_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhpr2_	
 c:@F@zhpr_	declared	source:full/accelerate/AccelerateCFunctions.swift#zhpr_	
 c:@F@zrotg_	declared	source:full/accelerate/AccelerateCFunctions.swift#zrotg_	
-c:@F@zscal_	declared	source:full/accelerate/AccelerateCFunctions.swift#zscal_	
-c:@F@zswap_	declared	source:full/accelerate/AccelerateCFunctions.swift#zswap_	
+c:@F@zscal_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex scale.
+c:@F@zswap_	implemented	test:full/accelerate/tests/agent/BLASTests.swift#testBLASComplexLevel1Double	Double-complex swap.
 c:@F@zsymm_	declared	source:full/accelerate/AccelerateCFunctions.swift#zsymm_	
 c:@F@zsyr2k_	declared	source:full/accelerate/AccelerateCFunctions.swift#zsyr2k_	
 c:@F@zsyrk_	declared	source:full/accelerate/AccelerateCFunctions.swift#zsyrk_	
@@ -5657,7 +5657,7 @@ s:So13SparseOrder_tayABs5UInt8Vcfc	declared	source:full/accelerate/AccelerateCTy
 s:So13sparse_statusa8rawValueABs5Int32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#sparse_status	
 s:So13sparse_statusa8rawValues5Int32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#sparse_status	
 s:So13sparse_statusayABs5Int32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#sparse_status	
-s:So13vDSP_DCT_TypeV8rawValueABSgs5Int32V_tcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So13vDSP_DCT_TypeV8rawValueABSgs5Int32V_tcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Failable DCT type raw-value init.
 s:So13vImage_BufferV10AccelerateE02cgA05flagsABSo10CGImageRefa_AC01vA0O7OptionsVtKcfc	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testVImageCGeometry	
 s:So13vImage_BufferV10AccelerateE02cgA06format5flagsABSo10CGImageRefa_So01va1_G6FormatVAC01vA0O7OptionsVtKcfc	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testVImageCGeometry	
 s:So13vImage_BufferV10AccelerateE13createCGImage6format5flagsSo0E3RefaSo01va1_E6FormatV_AC01vA0O7OptionsVtKF	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
@@ -5707,12 +5707,12 @@ s:So15CBLAS_TRANSPOSEV8rawValues6UInt32Vvp	declared	source:full/accelerate/Accel
 s:So15CBLAS_TRANSPOSEVyABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#CBLAS_TRANSPOSE	
 s:So15DSPSplitComplexV10AccelerateE12FFTFunctionsa	declared	source:full/accelerate/Accelerate.swift#FFTFunctions	
 s:So15DSPSplitComplexV10AccelerateE14fromInputArray9realParts09imaginaryH0ABSaySfG_AGzAGztcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DSPSplitComplex	
-s:So15DSPSplitComplexV5realp5imagpABSpySfG_AEtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So15DSPSplitComplexV5realp5imagpABSpySfG_AEtcfc	implemented	test:full/accelerate/tests/agent/VDSPFamilyTests.swift#testFFTImpulseUnnormalizedRoundTrip	Split-complex init used by unnormalized FFT impulse.
 s:So15SparseCGOptionsa11reportError13maxIterations4atol4rtol0C6StatusABySPys4Int8VGXCSg_s5Int32VS2dAKtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So15SparseCGOptionsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseCGOptions	
-s:So15SparseControl_ta8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseControl_t	
-s:So15SparseControl_ta8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#SparseControl_t	
-s:So15SparseControl_tayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseControl_t	
+s:So15SparseControl_ta8rawValueABs6UInt32V_tcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseControl_t raw-value init.
+s:So15SparseControl_ta8rawValues6UInt32Vvp	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseControl_t.rawValue.
+s:So15SparseControl_tayABs6UInt32Vcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseControl_t unlabeled raw-value init.
 s:So15SparseScaling_ta8rawValueABs5UInt8V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScaling_t	
 s:So15SparseScaling_ta8rawValues5UInt8Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScaling_t	
 s:So15SparseScaling_tayABs5UInt8Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScaling_t	
@@ -5763,10 +5763,10 @@ s:So18DenseVector_Doublea5count4dataABs5Int32V_SpySdGtcfc	implemented	test:full/
 s:So18SparseAttributes_taABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseAttributes_t	
 s:So18SparseGMRESOptionsa11reportError7variant4nvec13maxIterations4atol4rtol0C6StatusABySPys4Int8VGXCSg_So0A14GMRESVariant_tas5Int32VAQS2dAMtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So18SparseGMRESOptionsaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseGMRESOptions	
-s:So18SparseMatrix_Floata9structure4dataABSo0aB9Structurea_SpySfGtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So18SparseMatrix_Floata9structure4dataABSo0aB9Structurea_SpySfGtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDiagOracle	CSC constructor used by Apple-oracle diag multiply.
 s:So18bnns_graph_shape_ta4rank0C0ABSi_Spys6UInt64VGSgtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So18bnns_graph_shape_taABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#bnns_graph_shape_t	
-s:So18vDSP_DFT_DirectionV8rawValueABSgs5Int32V_tcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So18vDSP_DFT_DirectionV8rawValueABSgs5Int32V_tcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Failable DFT direction raw-value init.
 s:So18vImageConverterRefa10AccelerateE13sourceBuffers10colorSpaceSayAC01vA0O10BufferTypeOSgGSo07CGColorhC0a_tF	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
 s:So18vImageConverterRefa10AccelerateE17sourceBufferCountSivp	deferred		Swift overlay on an imported Clang type is not declared on Linux; Apple runtime behavior is unobserved.
 s:So18vImageConverterRefa10AccelerateE18destinationBuffers10colorSpaceSayAC01vA0O10BufferTypeOSgGSo07CGColorhC0a_tF	deferred		Requires CoreGraphics/CoreVideo/CoreFoundation types that are not declared dependencies; no public lookalike is introduced.
@@ -5790,7 +5790,7 @@ s:So19BNNSPoolingFunctiona10AccelerateE7averageABvpZ	declared	source:full/accele
 s:So19BNNSPoolingFunctiona8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunction	
 s:So19BNNSPoolingFunctiona8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunction	
 s:So19BNNSPoolingFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#BNNSPoolingFunction	
-s:So19SparseMatrix_Doublea9structure4dataABSo0aB9Structurea_SpySdGtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So19SparseMatrix_Doublea9structure4dataABSo0aB9Structurea_SpySdGtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDiagOracle	CSC constructor used by Apple-oracle diag multiply.
 s:So19vImage_ARGBToYpCbCrV6opaqueABs5UInt8V_A127Et_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_ARGBToYpCbCr	
 s:So19vImage_ARGBToYpCbCrVABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_ARGBToYpCbCr	
 s:So19vImage_YpCbCrToARGBV6opaqueABs5UInt8V_A127Et_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#vImage_YpCbCrToARGB	
@@ -5861,12 +5861,12 @@ s:So21BNNSQuantizerFunctionayABs6UInt32Vcfc	declared	source:full/accelerate/Acce
 s:So21DSPDoubleSplitComplexV10AccelerateE12FFTFunctionsa	declared	source:full/accelerate/Accelerate.swift#FFTFunctions	
 s:So21DSPDoubleSplitComplexV10AccelerateE14fromInputArray9realParts09imaginaryI0ABSaySdG_AGzAGztcfc	declared	source:full/accelerate/AccelerateCTypes.swift#DSPDoubleSplitComplex	
 s:So21DSPDoubleSplitComplexV5realp5imagpABSpySdG_AEtcfc	declared	source:full/accelerate/Accelerate.swift#init	
-s:So21SparseFactorization_ta8rawValueABs5UInt8V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorization_t	
-s:So21SparseFactorization_ta8rawValues5UInt8Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorization_t	
-s:So21SparseFactorization_tayABs5UInt8Vcfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorization_t	
+s:So21SparseFactorization_ta8rawValueABs5UInt8V_tcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseFactorization_t raw-value init.
+s:So21SparseFactorization_ta8rawValues5UInt8Vvp	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseFactorization_t.rawValue.
+s:So21SparseFactorization_tayABs5UInt8Vcfc	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	SparseFactorization_t unlabeled raw-value init.
 s:So21SparseIterativeMethoda6method7optionsABs5Int32V_AB016__Unnamed_union_E0Vtcfc	declared	source:full/accelerate/Accelerate.swift#init	
 s:So21SparseIterativeMethodaABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseIterativeMethod	
-s:So21SparseMatrixStructurea8rowCount06columnE00F6Starts0D7Indices10attributes9blockSizeABs5Int32V_AJSpySiGSpyAJGSo0A12Attributes_tas5UInt8Vtcfc	declared	source:full/accelerate/Accelerate.swift#init	
+s:So21SparseMatrixStructurea8rowCount06columnE00F6Starts0D7Indices10attributes9blockSizeABs5Int32V_AJSpySiGSpyAJGSo0A12Attributes_tas5UInt8Vtcfc	implemented	test:full/accelerate/tests/agent/DepthNumericsTests.swift#testSparseMultiplyDiagOracle	Memberwise CSC structure init.
 s:So21bnns_graph_argument_taABycfc	declared	source:full/accelerate/AccelerateCTypes.swift#bnns_graph_argument_t	
 s:So21quadrature_integratora8rawValueABs6UInt32V_tcfc	declared	source:full/accelerate/AccelerateCTypes.swift#quadrature_integrator	
 s:So21quadrature_integratora8rawValues6UInt32Vvp	declared	source:full/accelerate/AccelerateCTypes.swift#quadrature_integrator	

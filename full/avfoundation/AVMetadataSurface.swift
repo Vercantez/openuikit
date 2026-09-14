@@ -27,6 +27,7 @@ open class AVMetadataDogHeadObject: AVMetadataObject, @unchecked Sendable {
 public struct AVMetadataExtraAttributeKey: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
   public static let valueURI = AVMetadataExtraAttributeKey(rawValue: "valueURI")
   public static let baseURI = AVMetadataExtraAttributeKey(rawValue: "baseURI")
@@ -45,21 +46,26 @@ open class AVMetadataFaceObject: AVMetadataObject, @unchecked Sendable {
 public struct AVMetadataFormat: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let quickTimeUserData = AVMetadataFormat(rawValue: "quickTimeUserData")
-  public static let isoUserData = AVMetadataFormat(rawValue: "isoUserData")
-  public static let quickTimeMetadata = AVMetadataFormat(rawValue: "quickTimeMetadata")
-  public static let iTunesMetadata = AVMetadataFormat(rawValue: "iTunesMetadata")
-  public static let id3Metadata = AVMetadataFormat(rawValue: "id3Metadata")
-  public static let hlsMetadata = AVMetadataFormat(rawValue: "hlsMetadata")
-  public static let unknown = AVMetadataFormat(rawValue: "unknown")
+  // Measured 2026-09-14 from Xcode 26.1 `import AVFoundation`.
+  public static let quickTimeUserData = AVMetadataFormat(rawValue: "com.apple.quicktime.udta")
+  public static let isoUserData = AVMetadataFormat(rawValue: "org.mp4ra")
+  public static let quickTimeMetadata = AVMetadataFormat(rawValue: "com.apple.quicktime.mdta")
+  public static let iTunesMetadata = AVMetadataFormat(rawValue: "com.apple.itunes")
+  public static let id3Metadata = AVMetadataFormat(rawValue: "org.id3")
+  public static let hlsMetadata = AVMetadataFormat(rawValue: "com.apple.quicktime.HLS")
+  public static let unknown = AVMetadataFormat(rawValue: "public.unknown")
 }
 
 open class AVMetadataGroup: NSObject, @unchecked Sendable {
+  var storedItems: [AVMetadataItem] = []
+  var storedClassifyingLabel: String?
+  var storedUniqueID: String?
   public override init() { super.init() }
-  public var items: [AVMetadataItem] { [] }
-  public var classifyingLabel: String? { nil }
-  public var uniqueID: String? { nil }
+  open var items: [AVMetadataItem] { storedItems }
+  open var classifyingLabel: String? { storedClassifyingLabel }
+  open var uniqueID: String? { storedUniqueID }
 }
 
 open class AVMetadataHumanBodyObject: AVMetadataBodyObject, @unchecked Sendable {
@@ -73,31 +79,33 @@ open class AVMetadataHumanFullBodyObject: AVMetadataBodyObject, @unchecked Senda
 public struct AVMetadataIdentifier: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let commonIdentifierTitle = AVMetadataIdentifier(rawValue: "commonIdentifierTitle")
-  public static let commonIdentifierCreator = AVMetadataIdentifier(rawValue: "commonIdentifierCreator")
-  public static let commonIdentifierSubject = AVMetadataIdentifier(rawValue: "commonIdentifierSubject")
-  public static let commonIdentifierDescription = AVMetadataIdentifier(rawValue: "commonIdentifierDescription")
-  public static let commonIdentifierPublisher = AVMetadataIdentifier(rawValue: "commonIdentifierPublisher")
-  public static let commonIdentifierContributor = AVMetadataIdentifier(rawValue: "commonIdentifierContributor")
-  public static let commonIdentifierCreationDate = AVMetadataIdentifier(rawValue: "commonIdentifierCreationDate")
-  public static let commonIdentifierLastModifiedDate = AVMetadataIdentifier(rawValue: "commonIdentifierLastModifiedDate")
-  public static let commonIdentifierType = AVMetadataIdentifier(rawValue: "commonIdentifierType")
-  public static let commonIdentifierFormat = AVMetadataIdentifier(rawValue: "commonIdentifierFormat")
-  public static let commonIdentifierAssetIdentifier = AVMetadataIdentifier(rawValue: "commonIdentifierAssetIdentifier")
-  public static let commonIdentifierSource = AVMetadataIdentifier(rawValue: "commonIdentifierSource")
-  public static let commonIdentifierLanguage = AVMetadataIdentifier(rawValue: "commonIdentifierLanguage")
-  public static let commonIdentifierRelation = AVMetadataIdentifier(rawValue: "commonIdentifierRelation")
-  public static let commonIdentifierLocation = AVMetadataIdentifier(rawValue: "commonIdentifierLocation")
-  public static let commonIdentifierCopyrights = AVMetadataIdentifier(rawValue: "commonIdentifierCopyrights")
-  public static let commonIdentifierAlbumName = AVMetadataIdentifier(rawValue: "commonIdentifierAlbumName")
-  public static let commonIdentifierAuthor = AVMetadataIdentifier(rawValue: "commonIdentifierAuthor")
-  public static let commonIdentifierArtist = AVMetadataIdentifier(rawValue: "commonIdentifierArtist")
-  public static let commonIdentifierArtwork = AVMetadataIdentifier(rawValue: "commonIdentifierArtwork")
-  public static let commonIdentifierMake = AVMetadataIdentifier(rawValue: "commonIdentifierMake")
-  public static let commonIdentifierModel = AVMetadataIdentifier(rawValue: "commonIdentifierModel")
-  public static let commonIdentifierSoftware = AVMetadataIdentifier(rawValue: "commonIdentifierSoftware")
-  public static let commonIdentifierAccessibilityDescription = AVMetadataIdentifier(rawValue: "commonIdentifierAccessibilityDescription")
+  // Common identifiers measured 2026-09-14 from Xcode 26.1 `import AVFoundation`.
+  public static let commonIdentifierTitle = AVMetadataIdentifier(rawValue: "common/title")
+  public static let commonIdentifierCreator = AVMetadataIdentifier(rawValue: "common/creator")
+  public static let commonIdentifierSubject = AVMetadataIdentifier(rawValue: "common/subject")
+  public static let commonIdentifierDescription = AVMetadataIdentifier(rawValue: "common/description")
+  public static let commonIdentifierPublisher = AVMetadataIdentifier(rawValue: "common/publisher")
+  public static let commonIdentifierContributor = AVMetadataIdentifier(rawValue: "common/contributor")
+  public static let commonIdentifierCreationDate = AVMetadataIdentifier(rawValue: "common/creationDate")
+  public static let commonIdentifierLastModifiedDate = AVMetadataIdentifier(rawValue: "common/lastModifiedDate")
+  public static let commonIdentifierType = AVMetadataIdentifier(rawValue: "common/type")
+  public static let commonIdentifierFormat = AVMetadataIdentifier(rawValue: "common/format")
+  public static let commonIdentifierAssetIdentifier = AVMetadataIdentifier(rawValue: "common/identifier")
+  public static let commonIdentifierSource = AVMetadataIdentifier(rawValue: "common/source")
+  public static let commonIdentifierLanguage = AVMetadataIdentifier(rawValue: "common/language")
+  public static let commonIdentifierRelation = AVMetadataIdentifier(rawValue: "common/relation")
+  public static let commonIdentifierLocation = AVMetadataIdentifier(rawValue: "common/location")
+  public static let commonIdentifierCopyrights = AVMetadataIdentifier(rawValue: "common/copyrights")
+  public static let commonIdentifierAlbumName = AVMetadataIdentifier(rawValue: "common/albumName")
+  public static let commonIdentifierAuthor = AVMetadataIdentifier(rawValue: "common/author")
+  public static let commonIdentifierArtist = AVMetadataIdentifier(rawValue: "common/artist")
+  public static let commonIdentifierArtwork = AVMetadataIdentifier(rawValue: "common/artwork")
+  public static let commonIdentifierMake = AVMetadataIdentifier(rawValue: "common/make")
+  public static let commonIdentifierModel = AVMetadataIdentifier(rawValue: "common/model")
+  public static let commonIdentifierSoftware = AVMetadataIdentifier(rawValue: "common/software")
+  public static let commonIdentifierAccessibilityDescription = AVMetadataIdentifier(rawValue: "common/accessibilityDescription")
   public static let quickTimeUserDataAlbum = AVMetadataIdentifier(rawValue: "quickTimeUserDataAlbum")
   public static let quickTimeUserDataArranger = AVMetadataIdentifier(rawValue: "quickTimeUserDataArranger")
   public static let quickTimeUserDataArtist = AVMetadataIdentifier(rawValue: "quickTimeUserDataArtist")
@@ -457,15 +465,14 @@ open class AVMetadataItem: NSObject, @unchecked Sendable {
     } else {
       return nil
     }
-    if keySpace == .common, keyString.hasPrefix("commonKey") {
-      let suffix = String(keyString.dropFirst("commonKey".count))
-      return AVMetadataIdentifier(rawValue: "commonIdentifier" + suffix)
+    if keySpace == .common {
+      return AVMetadataIdentifier(rawValue: "common/\(keyString)")
     }
     return AVMetadataIdentifier(rawValue: "\(keySpace.rawValue)/\(keyString)")
   }
 
   public class func keySpace(forIdentifier identifier: AVMetadataIdentifier) -> AVMetadataKeySpace? {
-    if identifier.rawValue.hasPrefix("commonIdentifier") {
+    if identifier.rawValue.hasPrefix("common/") {
       return .common
     }
     guard let slash = identifier.rawValue.firstIndex(of: "/") else { return nil }
@@ -473,9 +480,9 @@ open class AVMetadataItem: NSObject, @unchecked Sendable {
   }
 
   public class func key(forIdentifier identifier: AVMetadataIdentifier) -> Any? {
-    if identifier.rawValue.hasPrefix("commonIdentifier") {
-      let suffix = String(identifier.rawValue.dropFirst("commonIdentifier".count))
-      return AVMetadataKey(rawValue: "commonKey" + suffix)
+    if identifier.rawValue.hasPrefix("common/") {
+      let suffix = String(identifier.rawValue.dropFirst("common/".count))
+      return AVMetadataKey(rawValue: suffix)
     }
     guard let slash = identifier.rawValue.firstIndex(of: "/") else { return identifier.rawValue }
     return String(identifier.rawValue[identifier.rawValue.index(after: slash)...])
@@ -558,31 +565,33 @@ open class AVMetadataItemValueRequest: NSObject, @unchecked Sendable {
 public struct AVMetadataKey: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let commonKeyTitle = AVMetadataKey(rawValue: "commonKeyTitle")
-  public static let commonKeyCreator = AVMetadataKey(rawValue: "commonKeyCreator")
-  public static let commonKeySubject = AVMetadataKey(rawValue: "commonKeySubject")
-  public static let commonKeyDescription = AVMetadataKey(rawValue: "commonKeyDescription")
-  public static let commonKeyPublisher = AVMetadataKey(rawValue: "commonKeyPublisher")
-  public static let commonKeyContributor = AVMetadataKey(rawValue: "commonKeyContributor")
-  public static let commonKeyCreationDate = AVMetadataKey(rawValue: "commonKeyCreationDate")
-  public static let commonKeyLastModifiedDate = AVMetadataKey(rawValue: "commonKeyLastModifiedDate")
-  public static let commonKeyType = AVMetadataKey(rawValue: "commonKeyType")
-  public static let commonKeyFormat = AVMetadataKey(rawValue: "commonKeyFormat")
-  public static let commonKeyIdentifier = AVMetadataKey(rawValue: "commonKeyIdentifier")
-  public static let commonKeySource = AVMetadataKey(rawValue: "commonKeySource")
-  public static let commonKeyLanguage = AVMetadataKey(rawValue: "commonKeyLanguage")
-  public static let commonKeyRelation = AVMetadataKey(rawValue: "commonKeyRelation")
-  public static let commonKeyLocation = AVMetadataKey(rawValue: "commonKeyLocation")
-  public static let commonKeyCopyrights = AVMetadataKey(rawValue: "commonKeyCopyrights")
-  public static let commonKeyAlbumName = AVMetadataKey(rawValue: "commonKeyAlbumName")
-  public static let commonKeyAuthor = AVMetadataKey(rawValue: "commonKeyAuthor")
-  public static let commonKeyArtist = AVMetadataKey(rawValue: "commonKeyArtist")
-  public static let commonKeyArtwork = AVMetadataKey(rawValue: "commonKeyArtwork")
-  public static let commonKeyMake = AVMetadataKey(rawValue: "commonKeyMake")
-  public static let commonKeyModel = AVMetadataKey(rawValue: "commonKeyModel")
-  public static let commonKeySoftware = AVMetadataKey(rawValue: "commonKeySoftware")
-  public static let commonKeyAccessibilityDescription = AVMetadataKey(rawValue: "commonKeyAccessibilityDescription")
+  // Common keys measured 2026-09-14 from Xcode 26.1 `import AVFoundation`.
+  public static let commonKeyTitle = AVMetadataKey(rawValue: "title")
+  public static let commonKeyCreator = AVMetadataKey(rawValue: "creator")
+  public static let commonKeySubject = AVMetadataKey(rawValue: "subject")
+  public static let commonKeyDescription = AVMetadataKey(rawValue: "description")
+  public static let commonKeyPublisher = AVMetadataKey(rawValue: "publisher")
+  public static let commonKeyContributor = AVMetadataKey(rawValue: "contributor")
+  public static let commonKeyCreationDate = AVMetadataKey(rawValue: "creationDate")
+  public static let commonKeyLastModifiedDate = AVMetadataKey(rawValue: "lastModifiedDate")
+  public static let commonKeyType = AVMetadataKey(rawValue: "type")
+  public static let commonKeyFormat = AVMetadataKey(rawValue: "format")
+  public static let commonKeyIdentifier = AVMetadataKey(rawValue: "identifier")
+  public static let commonKeySource = AVMetadataKey(rawValue: "source")
+  public static let commonKeyLanguage = AVMetadataKey(rawValue: "language")
+  public static let commonKeyRelation = AVMetadataKey(rawValue: "relation")
+  public static let commonKeyLocation = AVMetadataKey(rawValue: "location")
+  public static let commonKeyCopyrights = AVMetadataKey(rawValue: "copyrights")
+  public static let commonKeyAlbumName = AVMetadataKey(rawValue: "albumName")
+  public static let commonKeyAuthor = AVMetadataKey(rawValue: "author")
+  public static let commonKeyArtist = AVMetadataKey(rawValue: "artist")
+  public static let commonKeyArtwork = AVMetadataKey(rawValue: "artwork")
+  public static let commonKeyMake = AVMetadataKey(rawValue: "make")
+  public static let commonKeyModel = AVMetadataKey(rawValue: "model")
+  public static let commonKeySoftware = AVMetadataKey(rawValue: "software")
+  public static let commonKeyAccessibilityDescription = AVMetadataKey(rawValue: "accessibilityDescription")
   public static let quickTimeUserDataKeyAlbum = AVMetadataKey(rawValue: "quickTimeUserDataKeyAlbum")
   public static let quickTimeUserDataKeyArranger = AVMetadataKey(rawValue: "quickTimeUserDataKeyArranger")
   public static let quickTimeUserDataKeyArtist = AVMetadataKey(rawValue: "quickTimeUserDataKeyArtist")
@@ -843,16 +852,18 @@ public struct AVMetadataKey: RawRepresentable, Hashable, Sendable, ExpressibleBy
 public struct AVMetadataKeySpace: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let common = AVMetadataKeySpace(rawValue: "common")
-  public static let quickTimeUserData = AVMetadataKeySpace(rawValue: "quickTimeUserData")
-  public static let isoUserData = AVMetadataKeySpace(rawValue: "isoUserData")
-  public static let quickTimeMetadata = AVMetadataKeySpace(rawValue: "quickTimeMetadata")
-  public static let iTunes = AVMetadataKeySpace(rawValue: "iTunes")
-  public static let id3 = AVMetadataKeySpace(rawValue: "id3")
+  // Measured 2026-09-14 from Xcode 26.1 `import AVFoundation`.
+  public static let common = AVMetadataKeySpace(rawValue: "comn")
+  public static let quickTimeUserData = AVMetadataKeySpace(rawValue: "udta")
+  public static let isoUserData = AVMetadataKeySpace(rawValue: "uiso")
+  public static let quickTimeMetadata = AVMetadataKeySpace(rawValue: "mdta")
+  public static let iTunes = AVMetadataKeySpace(rawValue: "itsk")
+  public static let id3 = AVMetadataKeySpace(rawValue: "org.id3")
   public static let icy = AVMetadataKeySpace(rawValue: "icy")
-  public static let hlsDateRange = AVMetadataKeySpace(rawValue: "hlsDateRange")
-  public static let audioFile = AVMetadataKeySpace(rawValue: "audioFile")
+  public static let hlsDateRange = AVMetadataKeySpace(rawValue: "lsdr")
+  public static let audioFile = AVMetadataKeySpace(rawValue: "caaf")
 }
 
 open class AVMetadataMachineReadableCodeObject: AVMetadataObject, @unchecked Sendable {

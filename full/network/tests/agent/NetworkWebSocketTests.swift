@@ -192,3 +192,33 @@ func testWebSocketCloseCodesAndOptions() {
     _ = NWProtocolWebSocket.CloseCode.Defined.RawValue.self
     wsExpect(NWProtocolWebSocket.CloseCode.Defined(rawValue: 1000) == .normalClosure, "raw init")
 }
+
+func testWebSocketPingPongCloseFrameStorage() {
+    let ping = NWProtocolWebSocket.Frame(opcode: .ping, payload: Data("hi".utf8)).encode()
+    let decodedPing = NWProtocolWebSocket.Frame.decode(ping)
+    wsExpect(decodedPing?.opcode == .ping, "ping opcode")
+    wsExpect(decodedPing?.payload == Data("hi".utf8), "ping payload")
+    let pong = NWProtocolWebSocket.Frame(opcode: .pong, payload: Data("hi".utf8)).encode()
+    wsExpect(NWProtocolWebSocket.Frame.decode(pong)?.opcode == .pong, "pong")
+    var closePayload = Data([0x03, 0xe8])
+    closePayload.append(contentsOf: Data("bye".utf8))
+    let close = NWProtocolWebSocket.Frame(opcode: .close, payload: closePayload).encode()
+    let decodedClose = NWProtocolWebSocket.Frame.decode(close)
+    wsExpect(decodedClose?.opcode == .close, "close")
+    wsExpect(decodedClose?.payload.starts(with: [0x03, 0xe8]) == true, "1000")
+    let options = NWProtocolWebSocket.Options()
+    options.autoReplyPing = true
+    options.skipHandshake = true
+    options.maximumMessageSize = 128
+    options.setSubprotocols(["chat"])
+    options.addAdditionalHeader("X-Test", value: "1")
+    wsExpect(options.autoReplyPing && options.skipHandshake, "options stored")
+    wsExpect(options.subprotocols == ["chat"], "subprotocols")
+    wsExpect(options.additionalHeaders.contains { $0.name == "X-Test" && $0.value == "1" }, "headers")
+    let channel = NetworkChannel<WebSocket>(
+        inner: NWConnection(to: .hostPort(host: .ipv4(.loopback), port: 9), using: .tcp)
+    )
+    channel.sendIdempotent(ping)
+    channel.sendIdempotent(pong)
+    channel.sendIdempotent(close)
+}

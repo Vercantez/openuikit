@@ -157,7 +157,9 @@ public struct CMTaggedDynamicBuffer: Sendable {
 }
 
 extension CMSampleBuffer {
-    public enum DynamicContent {}
+    public enum DynamicContent {
+        case portable
+    }
 }
 #endif
 

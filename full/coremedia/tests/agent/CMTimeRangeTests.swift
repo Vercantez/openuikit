@@ -16,6 +16,25 @@ func testCMTimeRangeMakeAndEnd() {
     precondition(!range.containsTime(CMTime(value: 0, timescale: 1)))
 }
 
+func testCMTimeRangeAppleOracleHalfThird() {
+    let a = CMTime(value: 1, timescale: 2)
+    let b = CMTime(value: 1, timescale: 3)
+    let range = CMTimeRange(start: a, duration: b)
+    precondition(range.start.value == 1 && range.start.timescale == 2)
+    precondition(range.duration.value == 1 && range.duration.timescale == 3)
+    let end = range.end
+    precondition(end.value == 5 && end.timescale == 6)
+    precondition(CMTimeRangeContainsTime(range, time: a))
+    precondition(!CMTimeRangeContainsTime(range, time: CMTime(value: 1, timescale: 1)))
+    let fromTo = CMTimeRangeFromTimeToTime(start: .zero, end: a)
+    precondition(fromTo.duration.value == 1 && fromTo.duration.timescale == 2)
+    let uni = CMTimeRangeGetUnion(range, otherRange: fromTo)
+    precondition(uni.duration.value == 5 && uni.duration.timescale == 6)
+    let inter = CMTimeRangeGetIntersection(range, otherRange: fromTo)
+    precondition(inter.duration.value == 0 && inter.duration.timescale == 1)
+    precondition(inter.duration.flags.rawValue == 1)
+}
+
 func testCMTimeRangeFromStartEnd() {
     let range = CMTimeRange(start: .zero, end: CMTime(value: 4, timescale: 1))
     precondition(range.duration == CMTime(value: 4, timescale: 1))
@@ -77,6 +96,12 @@ func testCMTimeMappingMake() {
     let empty = CMTimeMappingMakeEmpty(target: target)
     precondition(empty.source.isEmpty || empty.source == .zero)
     precondition(CMTimeMapping.invalid.source == .invalid)
+    precondition(mapping == mapping)
+    precondition(mapping != .invalid)
+    _ = mapping.hashValue
+    var hasher = Hasher()
+    mapping.hash(into: &hasher)
+    _ = hasher.finalize()
     let dict = CMTimeMappingCopyAsDictionary(mapping, allocator: nil)!
     let restored = CMTimeMappingMakeFromDictionary(dict)
     precondition(restored.source == mapping.source)
@@ -95,6 +120,12 @@ func testCMSampleTimingInfoFields() {
     let zero = CMSampleTimingInfo()
     precondition(!zero.duration.isValid)
     precondition(!CMSampleTimingInfo.invalid.duration.isValid)
+    precondition(info != zero)
+    precondition(info == info)
+    _ = info.hashValue
+    var hasher = Hasher()
+    info.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 func testCMVideoDimensionsFields() {
@@ -104,6 +135,12 @@ func testCMVideoDimensionsFields() {
     let empty = CMVideoDimensions()
     precondition(empty.width == 0)
     precondition(empty.height == 0)
+    precondition(dim != empty)
+    precondition(dim == CMVideoDimensions(width: 1920, height: 1080))
+    _ = dim.hashValue
+    var hasher = Hasher()
+    dim.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 func testCMTimeRangeShowAndCopyDescription() {

@@ -33,7 +33,21 @@ public enum NWError: Error, Hashable, Sendable, CustomStringConvertible,
         }
     }
 
-    public var debugDescription: String { description }
+    /// Apple's overlay prints `POSIXErrorCode(rawValue: N): …` for `.posix`.
+    /// Linux uses the host `POSIXErrorCode` raw value (ECONNREFUSED is 111,
+    /// not Darwin 61).
+    public var debugDescription: String {
+        switch self {
+        case .posix(let code):
+            return String(describing: code)
+        case .dns(let code):
+            return "dns(\(code))"
+        case .tls(let code):
+            return "tls(\(code))"
+        case .wifiAware(let code):
+            return "wifiAware(\(code))"
+        }
+    }
     public var localizedDescription: String { description }
 }
 
@@ -54,6 +68,9 @@ public struct IPv4Address: Hashable, Sendable, RawRepresentable, IPAddress,
 {
     public let rawValue: Data
     public let interface: NWInterface?
+    /// Zone suffix as parsed (`%lo0`). Kept even when Linux has no such
+    /// interface so `debugDescription` can reprint the literal.
+    let zoneIdentifier: String?
 
     public init?(rawValue: Data) {
         self.init(rawValue, nil)
@@ -63,14 +80,21 @@ public struct IPv4Address: Hashable, Sendable, RawRepresentable, IPAddress,
         guard rawValue.count == 4 else { return nil }
         self.rawValue = rawValue
         self.interface = interface
+        self.zoneIdentifier = interface?.name
     }
 
     public init?(_ data: Data) { self.init(rawValue: data) }
 
     public init?(_ string: String) {
-        guard let bytes = Self.parseBytes(string) else { return nil }
+        let (literal, zone) = nwSplitZone(string)
+        guard let bytes = Self.parseBytes(literal) else { return nil }
         rawValue = Data(bytes)
-        interface = nil
+        zoneIdentifier = zone
+        if let zone {
+            interface = NWPOSIX.interfaceForZone(zone)
+        } else {
+            interface = nil
+        }
     }
 
     public static let any = IPv4Address(rawValue: Data(repeating: 0, count: 4))!
@@ -83,8 +107,9 @@ public struct IPv4Address: Hashable, Sendable, RawRepresentable, IPAddress,
     public static let allReportsGroup = IPv4Address("224.0.0.22")!
     public static let mdnsGroup = IPv4Address("224.0.0.251")!
 
-    /// RFC 1122 §3.2.1.3: 127.0.0.0/8 is loopback (not only 127.0.0.1).
-    public var isLoopback: Bool { rawValue.first == 127 }
+    /// RFC 1122 §3.2.1.3: unzoned 127.0.0.0/8 is loopback.
+    /// Apple's `Host("127.0.0.1%lo0")` reports `isLoopback == false`.
+    public var isLoopback: Bool { rawValue.first == 127 && zoneIdentifier == nil }
     /// RFC 3927: 169.254.0.0/16.
     public var isLinkLocal: Bool { rawValue.count == 4 && rawValue[0] == 169 && rawValue[1] == 254 }
     /// RFC 1112: 224.0.0.0/4.
@@ -94,7 +119,11 @@ public struct IPv4Address: Hashable, Sendable, RawRepresentable, IPAddress,
     }
 
     public var debugDescription: String {
-        rawValue.map(String.init).joined(separator: ".")
+        let body = rawValue.map(String.init).joined(separator: ".")
+        if let zoneIdentifier {
+            return body + "%" + zoneIdentifier
+        }
+        return body
     }
 
     public var description: String { debugDescription }
@@ -124,6 +153,7 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
 {
     public let rawValue: Data
     public let interface: NWInterface?
+    let zoneIdentifier: String?
 
     public enum Scope: UInt8, Hashable, Sendable {
         case nodeLocal = 1
@@ -141,6 +171,7 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
         guard rawValue.count == 16 else { return nil }
         self.rawValue = rawValue
         self.interface = interface
+        self.zoneIdentifier = interface?.name
     }
 
     public init?(_ data: Data) { self.init(rawValue: data) }
@@ -155,6 +186,7 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
             bytes.append(UInt8(word & 0xff))
         }
         self.rawValue = Data(bytes)
+        self.zoneIdentifier = zone
         if let zone {
             self.interface = NWPOSIX.interfaceForZone(zone)
         } else {
@@ -169,8 +201,8 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
     public static let linkLocalNodes = IPv6Address("ff02::1")!
     public static let linkLocalRouters = IPv6Address("ff02::2")!
 
-    public var isLoopback: Bool { self == .loopback }
-    public var isAny: Bool { self == .any }
+    public var isLoopback: Bool { rawValue == IPv6Address.loopback.rawValue }
+    public var isAny: Bool { rawValue == IPv6Address.any.rawValue }
     public var isLinkLocal: Bool { rawValue.count == 16 && rawValue[0] == 0xfe && (rawValue[1] & 0xc0) == 0x80 }
     public var isMulticast: Bool { rawValue.first == 0xff }
     public var isUniqueLocal: Bool { rawValue.first == 0xfc || rawValue.first == 0xfd }
@@ -191,17 +223,67 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
     }
 
     public var debugDescription: String {
-        let body = stride(from: 0, to: 16, by: 2).map { index in
-            let word = UInt16(rawValue[index]) << 8 | UInt16(rawValue[index + 1])
-            return String(word, radix: 16)
-        }.joined(separator: ":")
-        if let interface {
-            return body + "%" + interface.name
+        let body = Self.formatRFC5952(rawValue)
+        if let zoneIdentifier {
+            return body + "%" + zoneIdentifier
         }
         return body
     }
 
     public var description: String { debugDescription }
+
+    /// RFC 5952 compressed lowercase IPv6 text (longest zero run, leftmost on tie).
+    fileprivate static func formatRFC5952(_ rawValue: Data) -> String {
+        guard rawValue.count == 16 else { return "" }
+        var words = [UInt16]()
+        words.reserveCapacity(8)
+        for index in stride(from: 0, to: 16, by: 2) {
+            words.append(UInt16(rawValue[index]) << 8 | UInt16(rawValue[index + 1]))
+        }
+        var bestStart = -1
+        var bestLength = 0
+        var cursor = 0
+        while cursor < 8 {
+            if words[cursor] == 0 {
+                let start = cursor
+                while cursor < 8 && words[cursor] == 0 {
+                    cursor += 1
+                }
+                let length = cursor - start
+                if length > bestLength {
+                    bestStart = start
+                    bestLength = length
+                }
+            } else {
+                cursor += 1
+            }
+        }
+        if bestLength < 2 {
+            bestStart = -1
+            bestLength = 0
+        }
+        var parts: [String] = []
+        var index = 0
+        while index < 8 {
+            if bestLength >= 2 && index == bestStart {
+                if index == 0 {
+                    parts.append("")
+                }
+                parts.append("")
+                index += bestLength
+                if index >= 8 {
+                    parts.append("")
+                }
+                continue
+            }
+            parts.append(String(words[index], radix: 16))
+            index += 1
+        }
+        if parts.allSatisfy({ $0.isEmpty }) {
+            return "::"
+        }
+        return parts.joined(separator: ":")
+    }
 
     private static func parseWords(_ string: String) -> [UInt16]? {
         guard !string.isEmpty else { return nil }
@@ -263,7 +345,9 @@ public struct IPv6Address: Hashable, Sendable, RawRepresentable, IPAddress,
     }
 }
 
-public struct NWInterface: Hashable, Sendable, CustomDebugStringConvertible {
+public struct NWInterface: Hashable, Sendable, CustomStringConvertible,
+    CustomDebugStringConvertible
+{
     public enum InterfaceType: Int, Hashable, Sendable {
         case other = 0
         case wifi = 1
@@ -306,6 +390,7 @@ public struct NWInterface: Hashable, Sendable, CustomDebugStringConvertible {
         self.index = index
     }
 
+    public var description: String { name }
     public var debugDescription: String { "\(name)(\(type))" }
 }
 
@@ -629,7 +714,9 @@ extension NWPathMonitor: AsyncSequence {
     public typealias Element = NWPath
 }
 
-public class NWProtocol {}
+public class NWProtocol {
+    public init() {}
+}
 
 public class NWProtocolDefinition: Equatable, CustomDebugStringConvertible {
     public let identifier: String
@@ -961,13 +1048,24 @@ public final class NWParameters {
 }
 
 public final class NWConnection: @unchecked Sendable {
-    public enum State: Equatable, Sendable {
+    public enum State: Equatable, Sendable, CustomDebugStringConvertible {
         case setup
         case waiting(NWError)
         case preparing
         case ready
         case failed(NWError)
         case cancelled
+
+        public var debugDescription: String {
+            switch self {
+            case .setup: return "setup"
+            case .waiting(let error): return "waiting(\(error.debugDescription))"
+            case .preparing: return "preparing"
+            case .ready: return "ready"
+            case .failed(let error): return "failed(\(error.debugDescription))"
+            case .cancelled: return "cancelled"
+            }
+        }
     }
 
     public class ContentContext {
@@ -1569,4 +1667,14 @@ public final class NWListener {
     }
 
     public var debugDescription: String { "NWListener(\(state))" }
+}
+
+private var nwURLSessionProxyConfigurations: [ObjectIdentifier: [ProxyConfiguration]] = [:]
+
+extension URLSessionConfiguration {
+    /// Network overlay storage. Linux does not apply these to URLSession.
+    public var proxyConfigurations: [ProxyConfiguration] {
+        get { nwURLSessionProxyConfigurations[ObjectIdentifier(self)] ?? [] }
+        set { nwURLSessionProxyConfigurations[ObjectIdentifier(self)] = newValue }
+    }
 }

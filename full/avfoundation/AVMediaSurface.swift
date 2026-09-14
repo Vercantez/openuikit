@@ -3,32 +3,34 @@ import Foundation
 public struct AVMediaCharacteristic: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let visual = AVMediaCharacteristic(rawValue: "visual")
-  public static let audible = AVMediaCharacteristic(rawValue: "audible")
-  public static let legible = AVMediaCharacteristic(rawValue: "legible")
-  public static let frameBased = AVMediaCharacteristic(rawValue: "frameBased")
-  public static let usesWideGamutColorSpace = AVMediaCharacteristic(rawValue: "usesWideGamutColorSpace")
-  public static let containsHDRVideo = AVMediaCharacteristic(rawValue: "containsHDRVideo")
-  public static let containsAlphaChannel = AVMediaCharacteristic(rawValue: "containsAlphaChannel")
-  public static let isMainProgramContent = AVMediaCharacteristic(rawValue: "isMainProgramContent")
-  public static let isAuxiliaryContent = AVMediaCharacteristic(rawValue: "isAuxiliaryContent")
-  public static let isOriginalContent = AVMediaCharacteristic(rawValue: "isOriginalContent")
-  public static let containsOnlyForcedSubtitles = AVMediaCharacteristic(rawValue: "containsOnlyForcedSubtitles")
-  public static let transcribesSpokenDialogForAccessibility = AVMediaCharacteristic(rawValue: "transcribesSpokenDialogForAccessibility")
-  public static let describesMusicAndSoundForAccessibility = AVMediaCharacteristic(rawValue: "describesMusicAndSoundForAccessibility")
-  public static let enhancesSpeechIntelligibility = AVMediaCharacteristic(rawValue: "enhancesSpeechIntelligibility")
-  public static let easyToRead = AVMediaCharacteristic(rawValue: "easyToRead")
-  public static let describesVideoForAccessibility = AVMediaCharacteristic(rawValue: "describesVideoForAccessibility")
-  public static let languageTranslation = AVMediaCharacteristic(rawValue: "languageTranslation")
-  public static let dubbedTranslation = AVMediaCharacteristic(rawValue: "dubbedTranslation")
-  public static let voiceOverTranslation = AVMediaCharacteristic(rawValue: "voiceOverTranslation")
-  public static let tactileMinimal = AVMediaCharacteristic(rawValue: "tactileMinimal")
-  public static let containsStereoMultiviewVideo = AVMediaCharacteristic(rawValue: "containsStereoMultiviewVideo")
-  public static let carriesVideoStereoMetadata = AVMediaCharacteristic(rawValue: "carriesVideoStereoMetadata")
-  public static let indicatesHorizontalFieldOfView = AVMediaCharacteristic(rawValue: "indicatesHorizontalFieldOfView")
-  public static let indicatesNonRectilinearProjection = AVMediaCharacteristic(rawValue: "indicatesNonRectilinearProjection")
-  public static let machineGenerated = AVMediaCharacteristic(rawValue: "machineGenerated")
+  // C-string payloads measured 2026-09-14 from Xcode 26.1 `import AVFoundation`.
+  public static let visual = AVMediaCharacteristic(rawValue: "AVMediaCharacteristicVisual")
+  public static let audible = AVMediaCharacteristic(rawValue: "AVMediaCharacteristicAudible")
+  public static let legible = AVMediaCharacteristic(rawValue: "AVMediaCharacteristicLegible")
+  public static let frameBased = AVMediaCharacteristic(rawValue: "AVMediaCharacteristicFrameBased")
+  public static let usesWideGamutColorSpace = AVMediaCharacteristic(rawValue: "public.uses-wide-gamut-color-space")
+  public static let containsHDRVideo = AVMediaCharacteristic(rawValue: "public.contains-hdr-video")
+  public static let containsAlphaChannel = AVMediaCharacteristic(rawValue: "public.contains-alpha-channel")
+  public static let isMainProgramContent = AVMediaCharacteristic(rawValue: "public.main-program-content")
+  public static let isAuxiliaryContent = AVMediaCharacteristic(rawValue: "public.auxiliary-content")
+  public static let isOriginalContent = AVMediaCharacteristic(rawValue: "public.original-content")
+  public static let containsOnlyForcedSubtitles = AVMediaCharacteristic(rawValue: "public.subtitles.forced-only")
+  public static let transcribesSpokenDialogForAccessibility = AVMediaCharacteristic(rawValue: "public.accessibility.transcribes-spoken-dialog")
+  public static let describesMusicAndSoundForAccessibility = AVMediaCharacteristic(rawValue: "public.accessibility.describes-music-and-sound")
+  public static let enhancesSpeechIntelligibility = AVMediaCharacteristic(rawValue: "public.accessibility.enhances-speech-intelligibility")
+  public static let easyToRead = AVMediaCharacteristic(rawValue: "public.easy-to-read")
+  public static let describesVideoForAccessibility = AVMediaCharacteristic(rawValue: "public.accessibility.describes-video")
+  public static let languageTranslation = AVMediaCharacteristic(rawValue: "public.translation")
+  public static let dubbedTranslation = AVMediaCharacteristic(rawValue: "public.translation.dubbed")
+  public static let voiceOverTranslation = AVMediaCharacteristic(rawValue: "public.translation.voice-over")
+  public static let tactileMinimal = AVMediaCharacteristic(rawValue: "public.haptics.minimal")
+  public static let containsStereoMultiviewVideo = AVMediaCharacteristic(rawValue: "public.contains-stereo-multiview-video")
+  public static let carriesVideoStereoMetadata = AVMediaCharacteristic(rawValue: "com.apple.quicktime.video.stereo-metadata")
+  public static let indicatesHorizontalFieldOfView = AVMediaCharacteristic(rawValue: "public.indicates-horizontal-field-of-view")
+  public static let indicatesNonRectilinearProjection = AVMediaCharacteristic(rawValue: "public.indicates-non-rectilinear-projection")
+  public static let machineGenerated = AVMediaCharacteristic(rawValue: "public.machine-generated")
 }
 
 open class AVMediaDataStorage: NSObject, @unchecked Sendable {
@@ -91,17 +93,19 @@ open class AVMediaSelectionOption: NSObject, @unchecked Sendable {
 public struct AVMediaType: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let video = AVMediaType(rawValue: "video")
-  public static let audio = AVMediaType(rawValue: "audio")
+  // Four-character codes measured 2026-09-14 from Xcode 26.1 `import AVFoundation`.
+  public static let video = AVMediaType(rawValue: "vide")
+  public static let audio = AVMediaType(rawValue: "soun")
   public static let text = AVMediaType(rawValue: "text")
-  public static let closedCaption = AVMediaType(rawValue: "closedCaption")
-  public static let subtitle = AVMediaType(rawValue: "subtitle")
-  public static let timecode = AVMediaType(rawValue: "timecode")
-  public static let metadata = AVMediaType(rawValue: "metadata")
-  public static let muxed = AVMediaType(rawValue: "muxed")
-  public static let haptic = AVMediaType(rawValue: "haptic")
+  public static let closedCaption = AVMediaType(rawValue: "clcp")
+  public static let subtitle = AVMediaType(rawValue: "sbtl")
+  public static let timecode = AVMediaType(rawValue: "tmcd")
+  public static let metadata = AVMediaType(rawValue: "meta")
+  public static let muxed = AVMediaType(rawValue: "muxx")
+  public static let haptic = AVMediaType(rawValue: "hapt")
   public static let metadataObject = AVMediaType(rawValue: "metadataObject")
-  public static let depthData = AVMediaType(rawValue: "depthData")
-  public static let auxiliaryPicture = AVMediaType(rawValue: "auxiliaryPicture")
+  public static let depthData = AVMediaType(rawValue: "dpth")
+  public static let auxiliaryPicture = AVMediaType(rawValue: "auxv")
 }

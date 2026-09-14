@@ -5,13 +5,16 @@ This directory is a clean-room Linux implementation of Apple's public
 
 ## What is real
 
-- `CMTime` arithmetic exactly as documented in `CMTime.h`: make,
-  make-with-seconds, get-seconds, add/subtract/multiply/multiplyByFloat64/
-  multiplyByRatio, compare/min/max/absoluteValue, convertScale for every
-  `CMTimeRoundingMethod` (QuickTime uses toward-+infinity as a labeled
-  stand-in; see `oracle-questions.tsv`), flags, epoch mismatch → invalid,
-  and `kCMTimeZero` / `Invalid` / `Indefinite` / `±Infinity`. Dictionary
-  round-trip uses `value` / `timescale` / `epoch` / `flags` CFString keys.
+- `CMTime` arithmetic matching Apple macOS 26.1 (2026-09-14 oracle) and
+  `CMTime.h`: make, make-with-seconds (toward-zero; NaN → rounded zero),
+  get-seconds, add/subtract (epoch 0 is a duration), multiply /
+  multiplyByFloat64 / multiplyByRatio, compare/min/max/absoluteValue,
+  convertScale for every `CMTimeRoundingMethod` including QuickTime
+  (toward-zero when shrinking the scale, away-from-zero when growing it,
+  never round a negative value to 0), flags, and `kCMTimeZero` /
+  `Invalid` / `Indefinite` / `±Infinity` (inf/indefinite use timescale 0).
+  Dictionary round-trip uses `epoch` / `flags` / `timescale` / `value`
+  CFString keys.
 - `CMTimeRange` (make, fromTimeToTime, contains, union/intersection, end,
   equal, dictionary) and `CMTimeMapping`.
 - Host `CMClock` on `DispatchTime` nanoseconds (CMSync.h: "large integer
@@ -61,8 +64,9 @@ color/matrix, sample attachments, metadata key spaces).
 
 ## Fail-closed
 
-- Invalid timescale, NaN seconds, mixed infinities, different epochs on add,
+- Invalid timescale, mixed infinities, different nonzero epochs on add,
   empty/malformed buffer offsets, and invalidated sample buffers fail closed.
+  NaN seconds become a valid rounded-zero CMTime at the preferred timescale.
 - Big-endian sample-description bridges, `CMSwap*` endian helpers, and
   H.264/HEVC parameter-set parsers return
   `kCMFormatDescriptionBridgeError_UnsupportedSampleDescriptionFlavor`
@@ -323,3 +327,39 @@ Top-5 `implemented` evidence distribution after this continuation:
 The sealed Linux host gate completed with all deliverable, reference, runtime,
 and dylib markers. The environment verifier separately confirmed Swift 6.2.4,
 the Linux target, scratch corpus, and dotnet-macios evidence marker.
+
+## Depth pass 2026-09-14 (Apple CMTime oracle)
+
+This pass matches the Linux `CMTime` / `CMTimeRange` port to a live Apple
+CoreMedia transcript captured on this Mac (`scratch/oracle-2026-09-14/`,
+Xcode 26.1 / macOS 26.1). Guest sources typecheck as `CoreMediaPort`.
+A host runner compiled `CMTime.swift` + `CMTimeRange.swift` against the
+same assertions as the Apple transcript: every measured key matched except
+`CMTimeMultiplyByFloat64` timescale (seconds 0.75 and flags valid match;
+Darwin used 1e9, Linux follows the public header's 65536 doubling).
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 2818 | 2851 |
+| declared | 419 | 386 |
+| deferred | 267 | 267 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Apple mismatches fixed:
+
+1. Rounding raw values: default=1, halfAway=1, towardZero=2, away=3, quickTime=4, pinf=5, ninf=6.
+2. QuickTime is not toward-+infinity. Convert 1/2→ts 1 is 0; 1/2→ts 3 is 2; −1/2→ts 1 is −1; 5/3→ts 2 is 3. Rule: toward-zero when shrinking the timescale, away-from-zero when growing it, and never round a negative value down to 0.
+3. Special constants: invalid 0/0/fl=0; zero 0/1/fl=1; indefinite 0/0/fl=17; +inf 0/0/fl=5; −inf 0/0/fl=9 (timescale 0 for inf/indefinite).
+4. `CMTimeMakeWithSeconds`: 1.5@ts=2 is exact 3/2; 0.5@ts=1 is toward-zero 0 with hasBeenRounded; NaN@ts=600 is valid+rounded zero, not invalid; ±inf map to the inf constants; ts≤0 is invalid.
+5. Epoch: adding (1/1, epoch 1) + (1/1, epoch 0) yields (2/1, epoch 1), not invalid. Epoch 0 is a duration; compare orders the later epoch first.
+6. Dictionary keys are exactly `epoch,flags,timescale,value`.
+7. Range: start 1/2 + duration 1/3 → end 5/6; contains 1/2 true, 1.0 false; fromTimeToTime(.zero, 1/2).duration = 1/2; union duration 5/6; intersection duration 0.
+8. `CMTimeMultiplyByFloat64(1/2, 1.5)` matches seconds 0.75 and valid flags. Darwin's 1e9 timescale is recorded in `oracle-questions.tsv`.
+9. `CMTimeMultiplyByRatio(1/2, 2, 3)` is the exact rational 2/6.
+10. `CMTimeCompare` total order is now `-inf < finite < indefinite < +inf < invalid` as documented in `CMTime.h`.
+
+Remaining deferred rows are still audio/image-buffer C APIs that need
+CoreAudioTypes/CoreVideo, DispatchSource timer overloads that abort
+libdispatch in the sealed Linux gate, and overlay hosts that this port
+does not implement. No Apple service or hardware success was invented.

@@ -1,4 +1,5 @@
 full/accelerate/Accelerate.swift
+full/accelerate/AccelerateBLASComplex.swift
 full/accelerate/AccelerateBLASLevel23.swift
 full/accelerate/AccelerateBLASMore.swift
 full/accelerate/AccelerateBLASOps.swift

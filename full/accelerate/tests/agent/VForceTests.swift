@@ -173,4 +173,24 @@ func testVForceBinary() {
     _ = vForce.truncatingRemainder(dividends: db, divisors: de)
 }
 
+func testVForceAtan2ArgumentOrder() {
+    let x: [Float] = [1, 0, -1, 0]
+    let y: [Float] = [0, 1, 0, -1]
+    var overlay = [Float](repeating: 0, count: 4)
+    vForce.atan2(x: x, y: y, result: &overlay)
+    var cOut = [Float](repeating: 0, count: 4)
+    var n = Int32(4)
+    var yy = y
+    var xx = x
+    vvatan2f(&cOut, &yy, &xx, &n)
+    let expected: [Float] = [0, Float.pi / 2, Float.pi, -Float.pi / 2]
+    for i in 0..<4 {
+        precondition(abs(overlay[i] - expected[i]) < 0.0001)
+        precondition(abs(cOut[i] - expected[i]) < 0.0001)
+        precondition(abs(overlay[i] - Foundation.atan2(y[i], x[i])) < 0.0001)
+    }
+    let returned = vForce.atan2(x: x, y: y)
+    precondition(abs(returned[0]) < 0.0001)
+}
+
 private func inputX() -> [Float] { [1, 2, 3] }

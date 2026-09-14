@@ -46,6 +46,14 @@ func testFixedWidthIntegerBigEndianValueWitnesses() {
     requireIntegerWitness(Int64(0x0102030405060708).bigEndian == 0x0807060504030201 && UInt64(0x0102030405060708).bigEndian == 0x0807060504030201, "64-bit big endian")
 }
 
+func testNetworkFixedWidthIntegerBigEndianInit() {
+    func roundTrip<T: NetworkFixedWidthInteger>(_ value: T) -> T {
+        T(bigEndian: value.bigEndian)
+    }
+    requireIntegerWitness(roundTrip(UInt8(7)) == 7, "uint8 bigEndian init")
+    requireIntegerWitness(UInt8(bigEndian: 9) == 9, "uint8 protocol init")
+}
+
 func testFixedWidthIntegerBigEndianInitializerWitnesses() {
     requireIntegerWitness(Int8(bigEndian: 7) == 7 && UInt8(bigEndian: 7) == 7, "8-bit big endian init")
     requireIntegerWitness(Int16(bigEndian: 0x3412) == 0x1234 && UInt16(bigEndian: 0x3412) == 0x1234, "16-bit big endian init")

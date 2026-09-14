@@ -199,6 +199,30 @@ func testBNNSEnumCases() {
     _ = Quadrature.Integrator.qags(maxIntervals: 1)
 }
 
+func testOraclePinnedEnumRawValues() {
+    precondition(vDSP_DCT_Type.II.rawValue == 2)
+    precondition(vDSP_DCT_Type.III.rawValue == 3)
+    precondition(vDSP_DCT_Type.IV.rawValue == 4)
+    precondition(vDSP_DCT_Type(rawValue: 2) == .II)
+    precondition(vDSP_DCT_Type(rawValue: 3) == .III)
+    precondition(vDSP_DCT_Type(rawValue: 4) == .IV)
+    precondition(vDSP_DFT_Direction.FORWARD.rawValue == 1)
+    precondition(vDSP_DFT_Direction.INVERSE.rawValue == -1)
+    precondition(vDSP_DFT_Direction(rawValue: 1) == .FORWARD)
+    precondition(vDSP_DFT_Direction(rawValue: -1) == .INVERSE)
+    precondition(SparseDefaultControl.rawValue == 0)
+    precondition(SparseControl_t(rawValue: 0) == SparseDefaultControl)
+    precondition(SparseControl_t(0).rawValue == 0)
+    precondition(SparseFactorizationCholesky.rawValue == 0)
+    precondition(SparseFactorizationLDLT.rawValue == 1)
+    precondition(SparseFactorizationLDLTUnpivoted.rawValue == 2)
+    precondition(SparseFactorizationQR.rawValue == 40)
+    precondition(SparseFactorizationCholeskyAtA.rawValue == 41)
+    precondition(SparseFactorization_t(rawValue: 0) == SparseFactorizationCholesky)
+    precondition(SparseFactorization_t(1) == SparseFactorizationLDLT)
+    precondition(SparseFactorization_t(rawValue: 40).rawValue == 40)
+}
+
 func testEquatableHashable() {
     precondition(vImage.Error.noError == vImage.Error.noError)
     precondition(vImage.Error.noError != vImage.Error.invalidParameter)

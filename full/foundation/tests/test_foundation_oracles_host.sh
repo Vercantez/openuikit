@@ -68,6 +68,8 @@ run_family HTTPCookie HTTPCOOKIE_PORT HTTPCookiePort \
     "$SRC/URLSession.swift" httpcookie "-D HTTPCOOKIE_PORT"
 run_family URLComponents URLCOMPONENTS_PORT URLComponentsPort \
     "$SRC/URLLoading.swift" urlcomponents "-D URLCOMPONENTS_PORT" 2026-09-06
+run_family NSPredicate NSPREDICATE_PORT NSPredicatePort \
+    "$SRC/NSPredicateCollections.swift" nspredicate "" 2026-09-14
 
 if [ "$fail" -ne 0 ]; then
     echo "FOUNDATION_ORACLES_HOST failed" >&2

@@ -88,6 +88,10 @@ func testFramerHostDriverParseInputWriteOutput() {
     let message = NWProtocolFramer.Message(definition: driver.instance.options.definition)
     driver.handleOutgoing(message: message, payload: payload, isComplete: true)
     framerExpect(driver.output == framed, "writeOutput length prefix")
+    let impl = LengthPrefixFramer(framer: driver.instance)
+    impl.wakeup(framer: driver.instance)
+    framerExpect(impl.stop(framer: driver.instance), "stop")
+    impl.cleanup(framer: driver.instance)
 }
 
 func testFramerParseInputWaitsForMinimum() {

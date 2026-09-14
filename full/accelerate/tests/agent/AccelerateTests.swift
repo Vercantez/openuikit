@@ -44,6 +44,50 @@ func testVImageBoxConvolveARGB8888MatchesAppleTranscript() {
     precondition(output == expected)
 }
 
+func testVImageBoxConvolveARGB8888Oracle20260914() {
+    var source: [UInt8] = [
+        255, 10, 20, 30,  255, 40, 50, 60,  255, 70, 80, 90,
+        255, 11, 21, 31,  255, 41, 51, 61,  255, 71, 81, 91,
+        255, 12, 22, 32,  255, 42, 52, 62,  255, 72, 82, 92,
+    ]
+    var output = [UInt8](repeating: 0, count: 36)
+    let status = source.withUnsafeMutableBytes { sourceBytes in
+        output.withUnsafeMutableBytes { outputBytes in
+            var input = vImage_Buffer(
+                data: sourceBytes.baseAddress,
+                height: 3,
+                width: 3,
+                rowBytes: 12
+            )
+            var destination = vImage_Buffer(
+                data: outputBytes.baseAddress,
+                height: 3,
+                width: 3,
+                rowBytes: 12
+            )
+            var bg: [UInt8] = [0, 0, 0, 0]
+            return vImageBoxConvolve_ARGB8888(
+                &input,
+                &destination,
+                nil,
+                0,
+                0,
+                3,
+                3,
+                &bg,
+                vImage_Flags(kvImageEdgeExtend)
+            )
+        }
+    }
+    let expected: [UInt8] = [
+        255, 20, 30, 40, 255, 40, 50, 60, 255, 60, 70, 80,
+        255, 21, 31, 41, 255, 41, 51, 61, 255, 61, 71, 81,
+        255, 22, 32, 42, 255, 42, 52, 62, 255, 62, 72, 82,
+    ]
+    precondition(status == kvImageNoError)
+    precondition(output == expected)
+}
+
 func testVImageBoxConvolveErrorCodes() {
     var source: [UInt8] = [
         10, 0, 1, 2, 20, 3, 4, 5,

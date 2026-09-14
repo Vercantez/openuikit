@@ -28,6 +28,10 @@ func testCMMemoryPoolCreateFlushInvalidate() {
     let other = CMMemoryPoolCreate(options: nil)
     precondition(pool != other)
     precondition(pool == pool)
+    _ = pool.hashValue
+    var hasher = Hasher()
+    pool.hash(into: &hasher)
+    _ = hasher.finalize()
 }
 
 private func cmMemoryPoolAgeOutKey() -> CFString {

@@ -5,6 +5,9 @@ extension AVAsset {
   public func unusedTrackID() -> CMPersistentTrackID {
     let used = Set(tracks.map(\.trackID))
     var candidate: CMPersistentTrackID = 1
+    if let next = portableProbe()?.nextTrackID, next > 0 {
+      candidate = next
+    }
     while used.contains(candidate) { candidate += 1 }
     return candidate
   }
@@ -80,20 +83,60 @@ extension AVAsset {
     completionHandler(tracks(withMediaCharacteristic: mediaCharacteristic), nil)
   }
   public var trackGroups: [AVAssetTrackGroup] { [] }
-  public var creationDate: AVMetadataItem? { nil }
+  public var creationDate: AVMetadataItem? {
+    metadata.first { $0.commonKey == .commonKeyCreationDate || $0.identifier == .commonIdentifierCreationDate }
+  }
   public var lyrics: String? { nil }
-  public var commonMetadata: [AVMetadataItem] { [] }
-  public var metadata: [AVMetadataItem] { [] }
-  public var availableMetadataFormats: [AVMetadataFormat] { [] }
-  public func metadata(forFormat format: AVMetadataFormat) -> [AVMetadataItem] { [] }
-  public func loadMetadata(for format: AVMetadataFormat) async throws -> [AVMetadataItem] { return [] }
+  public var commonMetadata: [AVMetadataItem] {
+    metadata.filter { $0.keySpace == .common || $0.commonKey != nil }
+  }
+  public var metadata: [AVMetadataItem] { portableProbe()?.metadataItems ?? [] }
+  public var availableMetadataFormats: [AVMetadataFormat] {
+    var formats: [AVMetadataFormat] = []
+    let items = metadata
+    if items.contains(where: { $0.keySpace == .quickTimeUserData }) { formats.append(.quickTimeUserData) }
+    if items.contains(where: { $0.keySpace == .isoUserData }) { formats.append(.isoUserData) }
+    if items.contains(where: { $0.keySpace == .quickTimeMetadata }) { formats.append(.quickTimeMetadata) }
+    if items.contains(where: { $0.keySpace == .iTunes }) { formats.append(.iTunesMetadata) }
+    if items.contains(where: { $0.keySpace == .id3 }) { formats.append(.id3Metadata) }
+    return formats
+  }
+  public func metadata(forFormat format: AVMetadataFormat) -> [AVMetadataItem] {
+    switch format {
+    case .quickTimeUserData: return metadata.filter { $0.keySpace == .quickTimeUserData }
+    case .isoUserData: return metadata.filter { $0.keySpace == .isoUserData }
+    case .quickTimeMetadata: return metadata.filter { $0.keySpace == .quickTimeMetadata }
+    case .iTunesMetadata: return metadata.filter { $0.keySpace == .iTunes }
+    case .id3Metadata: return metadata.filter { $0.keySpace == .id3 }
+    default: return []
+    }
+  }
+  public func loadMetadata(for format: AVMetadataFormat) async throws -> [AVMetadataItem] { return metadata(forFormat: format) }
+  public func loadMetadata(
+    for format: AVMetadataFormat,
+    completionHandler: @escaping ([AVMetadataItem]?, (any Error)?) -> Void
+  ) {
+    completionHandler(metadata(forFormat: format), nil)
+  }
   public var availableChapterLocales: [Locale] { [] }
   public func chapterMetadataGroups(withTitleLocale locale: Locale, containingItemsWithCommonKeys commonKeys: [AVMetadataKey]?) -> [AVTimedMetadataGroup] { [] }
   public func chapterMetadataGroups(bestMatchingPreferredLanguages preferredLanguages: [String]) -> [AVTimedMetadataGroup] { [] }
   public func loadChapterMetadataGroups(bestMatchingPreferredLanguages preferredLanguages: [String]) async throws -> [AVTimedMetadataGroup] { return [] }
+  public func loadChapterMetadataGroups(
+    bestMatchingPreferredLanguages preferredLanguages: [String],
+    completionHandler: @escaping ([AVTimedMetadataGroup]?, (any Error)?) -> Void
+  ) {
+    completionHandler(chapterMetadataGroups(bestMatchingPreferredLanguages: preferredLanguages), nil)
+  }
   public var availableMediaCharacteristicsWithMediaSelectionOptions: [AVMediaCharacteristic] { [] }
   public func mediaSelectionGroup(forMediaCharacteristic mediaCharacteristic: AVMediaCharacteristic) -> AVMediaSelectionGroup? { nil }
   public func loadMediaSelectionGroup(for mediaCharacteristic: AVMediaCharacteristic) async throws -> AVMediaSelectionGroup? { return nil }
+  public func loadMediaSelectionGroup(
+    for mediaCharacteristic: AVMediaCharacteristic,
+    completionHandler: @escaping (AVMediaSelectionGroup?, (any Error)?) -> Void
+  ) {
+    completionHandler(mediaSelectionGroup(forMediaCharacteristic: mediaCharacteristic), nil)
+  }
   public var preferredMediaSelection: AVMediaSelection { AVMediaSelection() }
   public var allMediaSelections: [AVMediaSelection] { [] }
   public var hasProtectedContent: Bool { false }
@@ -695,12 +738,28 @@ open class AVAssetTrack: NSObject, @unchecked Sendable {
     portableRecord.minFrameDuration.isValid ? portableRecord.minFrameDuration : .zero
   }
   public var requiresFrameReordering: Bool { false }
-  public var segments: [AVAssetTrackSegment] { [] }
-  public func segment(forTrackTime trackTime: CMTime) -> AVAssetTrackSegment? { nil }
+  public var segments: [AVAssetTrackSegment] {
+    guard portableRecord.duration.isValid, portableRecord.duration.seconds > 0 else { return [] }
+    let range = timeRange
+    let segment = AVAssetTrackSegment()
+    segment.portableTimeMapping = CMTimeMapping(source: range, target: range)
+    segment.portableEmpty = false
+    return [segment]
+  }
+  public func segment(forTrackTime trackTime: CMTime) -> AVAssetTrackSegment? {
+    segments.first { $0.timeMapping.target.containsTime(trackTime) }
+  }
   public func loadSegment(forTrackTime trackTime: CMTime) async throws -> AVAssetTrackSegment? { return nil }
   public func samplePresentationTime(forTrackTime trackTime: CMTime) -> CMTime {
-    // Unedited local tracks have identity mapping; no elst is parsed yet.
-    trackTime.isValid ? trackTime : .invalid
+    guard trackTime.isValid else { return .invalid }
+    let empty = portableRecord.editEmptyDuration
+    if empty.isValid, empty.seconds > 0 {
+      let shifted = trackTime.seconds - empty.seconds
+      if shifted < 0 { return .invalid }
+      let scale = trackTime.timescale == 0 ? 600 : trackTime.timescale
+      return CMTime(seconds: shifted, preferredTimescale: scale)
+    }
+    return trackTime
   }
   public func loadSamplePresentationTime(forTrackTime trackTime: CMTime) async throws -> CMTime { return .zero }
   public var commonMetadata: [AVMetadataItem] { [] }
@@ -729,9 +788,11 @@ public struct AVAssetTrackGroupOutputHandling: OptionSet, Hashable, Sendable {
 }
 
 open class AVAssetTrackSegment: NSObject, @unchecked Sendable {
+  var portableTimeMapping = CMTimeMapping()
+  var portableEmpty = true
   public override init() { super.init() }
-  public var timeMapping: CMTimeMapping { CMTimeMapping() }
-  public var isEmpty: Bool { false }
+  public var timeMapping: CMTimeMapping { portableTimeMapping }
+  public var isEmpty: Bool { portableEmpty }
 }
 
 open class AVAssetVariant: NSObject, @unchecked Sendable {
@@ -1262,10 +1323,8 @@ open class AVCompositionTrackSegment: AVAssetTrackSegment, @unchecked Sendable {
   }
   var portableSourceURL: URL?
   var portableSourceTrackID: CMPersistentTrackID = 0
-  var portableTimeMapping = CMTimeMapping()
   public var sourceURL: URL? { portableSourceURL }
   public var sourceTrackID: CMPersistentTrackID { portableSourceTrackID }
-  public override var timeMapping: CMTimeMapping { portableTimeMapping }
   public override var isEmpty: Bool { portableSourceURL == nil }
 }
 
@@ -1273,20 +1332,41 @@ public protocol AVFragmentMinding {
   var isAssociatedWithFragmentMinder: Bool { get }
 }
 
-open class AVFragmentedAsset: AVURLAsset, @unchecked Sendable {
+open class AVFragmentedAsset: AVURLAsset, AVFragmentMinding, @unchecked Sendable {
+  var associatedWithMinder = false
   public override init() { super.init() }
+  public override init(url: URL, options: [String: Any]? = nil) {
+    super.init(url: url, options: options)
+  }
+  public class func fragmentedAsset(with url: URL, options: [String: Any]? = nil) -> AVFragmentedAsset {
+    AVFragmentedAsset(url: url, options: options)
+  }
+  public var isAssociatedWithFragmentMinder: Bool { associatedWithMinder }
 }
 
 open class AVFragmentedAssetMinder: NSObject, @unchecked Sendable {
+  private var storedAssets: [any AVAsset & AVFragmentMinding] = []
+  private var storedInterval: TimeInterval = 0
   public override init() { super.init() }
-  convenience init(asset: any AVAsset & AVFragmentMinding, mindingInterval: TimeInterval) { self.init() }
+  public init(asset: any AVAsset & AVFragmentMinding, mindingInterval: TimeInterval) {
+    super.init()
+    storedInterval = mindingInterval
+    storedAssets = [asset]
+    (asset as? AVFragmentedAsset)?.associatedWithMinder = true
+  }
   public var mindingInterval: TimeInterval {
-      get { 0 }
-      set { _ = newValue }
+      get { storedInterval }
+      set { storedInterval = newValue }
     }
-  public var assets: [any AVAsset & AVFragmentMinding] { [] }
-  public func addFragmentedAsset(_ asset: any AVAsset & AVFragmentMinding) {}
-  public func removeFragmentedAsset(_ asset: any AVAsset & AVFragmentMinding) {}
+  public var assets: [any AVAsset & AVFragmentMinding] { storedAssets }
+  public func addFragmentedAsset(_ asset: any AVAsset & AVFragmentMinding) {
+    storedAssets.append(asset)
+    (asset as? AVFragmentedAsset)?.associatedWithMinder = true
+  }
+  public func removeFragmentedAsset(_ asset: any AVAsset & AVFragmentMinding) {
+    storedAssets.removeAll { ($0 as AnyObject) === (asset as AnyObject) }
+    (asset as? AVFragmentedAsset)?.associatedWithMinder = false
+  }
 }
 
 open class AVFragmentedAssetTrack: AVAssetTrack, @unchecked Sendable {
@@ -1577,6 +1657,18 @@ open class AVMutableCompositionTrack: AVCompositionTrack, @unchecked Sendable {
 
 open class AVMutableDateRangeMetadataGroup: AVDateRangeMetadataGroup, @unchecked Sendable {
   public override init() { super.init() }
+  public override var items: [AVMetadataItem] {
+    get { storedItems }
+    set { storedItems = newValue }
+  }
+  public override var startDate: Date {
+    get { storedStartDate }
+    set { storedStartDate = newValue }
+  }
+  public override var endDate: Date? {
+    get { storedEndDate }
+    set { storedEndDate = newValue }
+  }
 }
 
 open class AVMutableMediaSelection: AVMediaSelection, @unchecked Sendable {
@@ -1981,6 +2073,14 @@ open class AVMutableMovieTrack: AVMovieTrack, @unchecked Sendable {
 
 open class AVMutableTimedMetadataGroup: AVTimedMetadataGroup, @unchecked Sendable {
   public override init() { super.init() }
+  public override var items: [AVMetadataItem] {
+    get { storedItems }
+    set { storedItems = newValue }
+  }
+  public override var timeRange: CMTimeRange {
+    get { storedTimeRange }
+    set { storedTimeRange = newValue }
+  }
 }
 
 open class AVMutableVideoComposition: AVVideoComposition, @unchecked Sendable {
@@ -2044,6 +2144,12 @@ extension AVURLAsset {
   }
   public func findCompatibleTrack(for compositionTrack: AVCompositionTrack) async throws -> AVAssetTrack? {
     return compatibleTrack(for: compositionTrack)
+  }
+  public func findCompatibleTrack(
+    for compositionTrack: AVCompositionTrack,
+    completionHandler: @escaping (AVAssetTrack?, (any Error)?) -> Void
+  ) {
+    completionHandler(compatibleTrack(for: compositionTrack), nil)
   }
   public var variants: [AVAssetVariant] { [] }
   public var mayRequireContentKeysForMediaDataProcessing: Bool { false }

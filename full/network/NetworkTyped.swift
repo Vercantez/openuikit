@@ -759,6 +759,126 @@ public struct WebSocket: MessageProtocol, NWParametersProvider {
     }
 }
 
+/// Type-length-value application protocol. Encode/decode are local; they do
+/// not speak a live TLS/QUIC handshake.
+public struct TLV: MessageProtocol, NWParametersProvider {
+    public typealias BelowProtocol = any NetworkProtocolOptions
+    public typealias ProtocolStorage = DefaultProtocolStorage
+    public typealias ContentType = Data
+    public typealias LegacyMessage = (
+        type: Int,
+        content: Data,
+        metadata: [NWProtocolMetadata]?,
+        isFinal: Bool
+    )
+
+    public struct Metadata: NetworkMetadataProtocol {
+        public let isComplete: Bool
+        public let lastMessage: Bool
+        public let type: Int
+        public let other: [NWProtocolMetadata]
+        public let length: Int
+
+        public init(
+            type: Int,
+            length: Int,
+            isComplete: Bool = true,
+            lastMessage: Bool = false,
+            other: [NWProtocolMetadata] = []
+        ) {
+            self.type = type
+            self.length = length
+            self.isComplete = isComplete
+            self.lastMessage = lastMessage
+            self.other = other
+        }
+    }
+
+    public var parameters: NWParameters
+    public let typeWidth: Int
+    public let lengthWidth: Int
+
+    public init<BelowProtocol>(
+        @ProtocolStackBuilder<BelowProtocol> _ builder: () -> BelowProtocol
+    ) where BelowProtocol: StreamProtocol {
+        parameters = builder().parameters
+        typeWidth = 1
+        lengthWidth = 2
+    }
+
+    public init<BelowProtocol>(
+        @ProtocolStackBuilder<BelowProtocol> _ builder: () -> BelowProtocol
+    ) where BelowProtocol: MessageProtocol {
+        parameters = builder().parameters
+        typeWidth = 1
+        lengthWidth = 2
+    }
+
+    public init<T, L, BelowProtocol>(
+        type: T.Type,
+        length: L.Type,
+        @ProtocolStackBuilder<BelowProtocol> _ builder: () -> BelowProtocol
+    ) where T: Sendable, T: UnsignedInteger, L: Sendable, L: UnsignedInteger,
+        BelowProtocol: StreamProtocol
+    {
+        parameters = builder().parameters
+        typeWidth = MemoryLayout<T>.size
+        lengthWidth = MemoryLayout<L>.size
+        _ = type
+        _ = length
+    }
+
+    public init<T, L, BelowProtocol>(
+        type: T.Type,
+        length: L.Type,
+        @ProtocolStackBuilder<BelowProtocol> _ builder: () -> BelowProtocol
+    ) where T: Sendable, T: UnsignedInteger, L: Sendable, L: UnsignedInteger,
+        BelowProtocol: MessageProtocol
+    {
+        parameters = builder().parameters
+        typeWidth = MemoryLayout<T>.size
+        lengthWidth = MemoryLayout<L>.size
+        _ = type
+        _ = length
+    }
+
+    public func encode(type: Int, payload: Data) -> Data {
+        var frame = Data()
+        appendBigEndian(type, width: typeWidth, into: &frame)
+        appendBigEndian(payload.count, width: lengthWidth, into: &frame)
+        frame.append(payload)
+        return frame
+    }
+
+    public func decode(_ data: Data) -> (type: Int, payload: Data)? {
+        let header = typeWidth + lengthWidth
+        guard data.count >= header else { return nil }
+        let type = readBigEndian(data, offset: 0, width: typeWidth)
+        let length = readBigEndian(data, offset: typeWidth, width: lengthWidth)
+        guard data.count >= header + length else { return nil }
+        let payload = data.subdata(in: header..<(header + length))
+        return (type, payload)
+    }
+}
+
+private func appendBigEndian(_ value: Int, width: Int, into data: inout Data) {
+    var remaining = UInt64(value)
+    var bytes = [UInt8](repeating: 0, count: max(width, 0))
+    for index in stride(from: bytes.count - 1, through: 0, by: -1) {
+        bytes[index] = UInt8(remaining & 0xff)
+        remaining >>= 8
+    }
+    data.append(contentsOf: bytes)
+}
+
+private func readBigEndian(_ data: Data, offset: Int, width: Int) -> Int {
+    var value = 0
+    for index in 0..<width {
+        value = (value << 8) | Int(data[offset + index])
+    }
+    return value
+}
+
 public struct Framer<T: FramerProtocol>: MessageProtocol, NWParametersProvider {
     public typealias BelowProtocol = any NetworkProtocolOptions
     public typealias ProtocolStorage = DefaultProtocolStorage
@@ -1106,6 +1226,166 @@ public class NetworkChannel<ApplicationProtocol: NetworkProtocolOptions>: Hashab
         case .failed(let error): return .failed(error)
         case .cancelled: return .cancelled
         }
+    }
+}
+
+extension NetworkChannel where ApplicationProtocol == WebSocket {
+    public func ping<Content>(
+        _ content: Content? = nil,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Content: DataProtocol {
+        _ = builder()
+        let payload = content.map { Data($0) } ?? Data()
+        sendIdempotent(NWProtocolWebSocket.Frame(opcode: .ping, payload: payload).encode())
+    }
+
+    public func pong<Content>(
+        _ content: Content? = nil,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Content: DataProtocol {
+        _ = builder()
+        let payload = content.map { Data($0) } ?? Data()
+        sendIdempotent(NWProtocolWebSocket.Frame(opcode: .pong, payload: payload).encode())
+    }
+
+    public func close(
+        code: NWProtocolWebSocket.CloseCode = .protocolCode(.normalClosure),
+        reason: String? = nil,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws {
+        _ = builder()
+        var payload = Data()
+        payload.append(UInt8(code.rawValue >> 8))
+        payload.append(UInt8(code.rawValue & 0xff))
+        if let reason {
+            payload.append(contentsOf: reason.utf8)
+        }
+        sendIdempotent(NWProtocolWebSocket.Frame(opcode: .close, payload: payload).encode())
+    }
+
+    public func send(
+        _ content: String,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws {
+        _ = builder()
+        sendIdempotent(
+            NWProtocolWebSocket.Frame(opcode: .text, payload: Data(content.utf8)).encode()
+        )
+    }
+
+    public func send<Content>(
+        _ content: Content,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Content: DataProtocol {
+        _ = builder()
+        sendIdempotent(
+            NWProtocolWebSocket.Frame(opcode: .binary, payload: Data(content)).encode()
+        )
+    }
+
+    public func receive() async throws -> ApplicationProtocol.Message<Data> {
+        throw NWError.posix(.ENOTCONN)
+    }
+}
+
+extension NetworkChannel where ApplicationProtocol: StreamProtocol {
+    public func send<Content>(
+        _ content: Content,
+        endOfStream: Bool = false,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Content: DataProtocol {
+        sendIdempotent(content, endOfStream: endOfStream, metadata: builder)
+    }
+
+    public func send<Value>(
+        _ value: Value,
+        endOfStream: Bool = false,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Value: NetworkFixedWidthInteger {
+        sendIdempotent(value, endOfStream: endOfStream, metadata: builder)
+    }
+
+    public func receive<Value>(as type: Value.Type) async throws -> ApplicationProtocol.Message<Value>
+    where Value: NetworkFixedWidthInteger {
+        _ = type
+        throw NWError.posix(.ENOTCONN)
+    }
+
+    public func receive(atLeast: Int = 1, atMost: Int) async throws -> ApplicationProtocol.Message<Data> {
+        _ = atLeast
+        _ = atMost
+        throw NWError.posix(.ENOTCONN)
+    }
+
+    public func receive(exactly: Int) async throws -> ApplicationProtocol.Message<Data> {
+        _ = exactly
+        throw NWError.posix(.ENOTCONN)
+    }
+}
+
+extension NetworkChannel where ApplicationProtocol: DatagramProtocol {
+    public func send<Content>(
+        _ content: Content,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Content: DataProtocol {
+        sendIdempotent(content, metadata: builder)
+    }
+
+    public func receive() async throws -> ApplicationProtocol.Message<Data> {
+        throw NWError.posix(.ENOTCONN)
+    }
+}
+
+extension NetworkChannel where ApplicationProtocol == TLV {
+    public func send<Content>(
+        _ content: Content,
+        type: Int,
+        lastMessage: Bool = false,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where Content: DataProtocol {
+        sendIdempotent(content, type: type, lastMessage: lastMessage, metadata: builder)
+    }
+
+    public func receive() async throws -> ApplicationProtocol.Message<Data> {
+        throw NWError.posix(.ENOTCONN)
+    }
+}
+
+extension NetworkChannel {
+    public func send<T>(
+        _ content: Data,
+        lastMessage: Bool = false,
+        metadata: NWProtocolFramer.Message? = nil,
+        @ProtocolMetadataBuilder other builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where ApplicationProtocol == Framer<T>, T: FramerProtocol {
+        _ = lastMessage
+        _ = metadata
+        _ = builder()
+        sendIdempotent(content)
+    }
+
+    public func receive<T>() async throws -> ApplicationProtocol.Message<Data>
+    where ApplicationProtocol == Framer<T>, T: FramerProtocol {
+        throw NWError.posix(.ENOTCONN)
+    }
+
+    public func send<Sending, Receiving, CoderType>(
+        _ content: Sending,
+        @ProtocolMetadataBuilder metadata builder: () -> [NWProtocolMetadata] = { [] }
+    ) async throws where ApplicationProtocol == Coder<Sending, Receiving, CoderType>,
+        Sending: Encodable, Receiving: Decodable, CoderType: NetworkCoder
+    {
+        _ = builder()
+        let encoder = CoderType().makeEncoder()
+        let data = try encoder.encode(content)
+        sendIdempotent(data)
+    }
+
+    public func receive<Sending, Receiving, CoderType>() async throws -> ApplicationProtocol.Message<Receiving>
+    where ApplicationProtocol == Coder<Sending, Receiving, CoderType>,
+        Sending: Encodable, Receiving: Decodable, CoderType: NetworkCoder
+    {
+        throw NWError.posix(.ENOTCONN)
     }
 }
 

@@ -19,6 +19,8 @@ struct AVLocalMediaTrack {
     var isEnabled: Bool = true
     var isSelfContained: Bool = true
     var totalSampleDataLength: Int64 = 0
+    var editEmptyDuration: CMTime = .zero
+    var pixelAspectRatio = AVPixelAspectRatio()
 }
 
 struct AVLocalMediaProbe {
@@ -27,6 +29,8 @@ struct AVLocalMediaProbe {
     var preferredVolume: Float = 1
     var preferredTransform: CGAffineTransform = .identity
     var majorBrand: String = ""
+    var nextTrackID: CMPersistentTrackID = 0
+    var metadataItems: [AVMetadataItem] = []
     var tracks: [AVLocalMediaTrack] = []
     var kind: Kind = .unknown
 
@@ -99,7 +103,7 @@ enum AVISOBoxParser {
     static func fourCC(_ data: Data, _ offset: Int) -> String? {
         guard offset >= 0, offset + 4 <= data.count else { return nil }
         let bytes = [UInt8](data[offset..<(offset + 4)])
-        return String(bytes: bytes, encoding: .ascii)
+        return String(bytes: bytes, encoding: .isoLatin1)
     }
 
     static func boxes(in data: Data) -> [Box] {
@@ -160,6 +164,7 @@ private func parseISOBMFF(_ data: Data) -> AVLocalMediaProbe? {
         probe.duration = header.duration
         probe.preferredRate = header.preferredRate
         probe.preferredVolume = header.preferredVolume
+        probe.nextTrackID = header.nextTrackID
     }
     for trak in moovBoxes where trak.type == "trak" {
         if let track = parseTrak(trak.payload) {
@@ -169,40 +174,50 @@ private func parseISOBMFF(_ data: Data) -> AVLocalMediaProbe? {
             }
         }
     }
+    for udta in moovBoxes where udta.type == "udta" {
+        probe.metadataItems.append(contentsOf: parseUDTA(udta.payload, keySpace: .quickTimeUserData))
+    }
+    if let meta = moovBoxes.first(where: { $0.type == "meta" }) {
+        probe.metadataItems.append(contentsOf: parseMeta(meta.payload))
+    }
     if !probe.duration.isValid, let longest = probe.tracks.map(\.duration.seconds).max(), longest > 0 {
         probe.duration = AVTimeMath.time(seconds: longest)
     }
     return probe
 }
 
-private func parseMVHD(_ payload: Data) -> (duration: CMTime, preferredRate: Float, preferredVolume: Float) {
+private func parseMVHD(_ payload: Data) -> (duration: CMTime, preferredRate: Float, preferredVolume: Float, nextTrackID: CMPersistentTrackID) {
     guard let versionFlags = AVISOBoxParser.u32(payload, 0) else {
-        return (.invalid, 1, 1)
+        return (.invalid, 1, 1, 0)
     }
     let version = versionFlags >> 24
     if version == 1 {
         guard let timescale = AVISOBoxParser.u32(payload, 20),
               let duration = AVISOBoxParser.u64(payload, 24),
               timescale > 0
-        else { return (.invalid, 1, 1) }
+        else { return (.invalid, 1, 1, 0) }
         let rate = AVISOBoxParser.u32(payload, 32).map { Float($0) / 65536 } ?? 1
         let volume = AVISOBoxParser.u16(payload, 36).map { Float($0) / 256 } ?? 1
+        let next = AVISOBoxParser.u32(payload, 108).map { CMPersistentTrackID($0) } ?? 0
         return (
             CMTime(value: CMTimeValue(duration), timescale: CMTimeScale(timescale)),
             rate,
-            volume
+            volume,
+            next
         )
     }
     guard let timescale = AVISOBoxParser.u32(payload, 12),
           let duration = AVISOBoxParser.u32(payload, 16),
           timescale > 0
-    else { return (.invalid, 1, 1) }
+    else { return (.invalid, 1, 1, 0) }
     let rate = AVISOBoxParser.u32(payload, 20).map { Float($0) / 65536 } ?? 1
     let volume = AVISOBoxParser.u16(payload, 24).map { Float($0) / 256 } ?? 1
+    let next = AVISOBoxParser.u32(payload, 96).map { CMPersistentTrackID($0) } ?? 0
     return (
         CMTime(value: CMTimeValue(duration), timescale: CMTimeScale(timescale)),
         rate,
-        volume
+        volume,
+        next
     )
 }
 
@@ -211,6 +226,12 @@ private func parseTrak(_ payload: Data) -> AVLocalMediaTrack? {
     let boxes = AVISOBoxParser.boxes(in: payload)
     if let tkhd = boxes.first(where: { $0.type == "tkhd" }) {
         parseTKHD(tkhd.payload, into: &track)
+    }
+    if let edts = boxes.first(where: { $0.type == "edts" }) {
+        let edits = AVISOBoxParser.boxes(in: edts.payload)
+        if let elst = edits.first(where: { $0.type == "elst" }) {
+            parseELST(elst.payload, into: &track)
+        }
     }
     guard let mdia = boxes.first(where: { $0.type == "mdia" }) else { return track }
     let mediaBoxes = AVISOBoxParser.boxes(in: mdia.payload)
@@ -224,6 +245,9 @@ private func parseTrak(_ payload: Data) -> AVLocalMediaTrack? {
     }
     guard let minf = mediaBoxes.first(where: { $0.type == "minf" }) else { return track }
     let minfBoxes = AVISOBoxParser.boxes(in: minf.payload)
+    if let dinf = minfBoxes.first(where: { $0.type == "dinf" }) {
+        parseDREF(dinf.payload, into: &track)
+    }
     guard let stbl = minfBoxes.first(where: { $0.type == "stbl" }) else { return track }
     let sampleBoxes = AVISOBoxParser.boxes(in: stbl.payload)
     if let stsd = sampleBoxes.first(where: { $0.type == "stsd" }) {
@@ -344,6 +368,20 @@ private func parseSTSD(_ payload: Data, into track: inout AVLocalMediaTrack) {
                 track.naturalSize = CGSize(width: CGFloat(width), height: CGFloat(height))
             }
         }
+        // Visual sample entry is 86 bytes including the box header; remaining child boxes
+        // include pasp (pixel aspect) and clap (clean aperture).
+        if box.count > 86 {
+            let extras = AVISOBoxParser.boxes(in: box.subdata(in: 86..<box.count))
+            if let pasp = extras.first(where: { $0.type == "pasp" }),
+               let horizontal = AVISOBoxParser.u32(pasp.payload, 0),
+               let vertical = AVISOBoxParser.u32(pasp.payload, 4)
+            {
+                track.pixelAspectRatio = AVPixelAspectRatio(
+                    horizontalSpacing: Int(horizontal),
+                    verticalSpacing: Int(vertical)
+                )
+            }
+        }
     }
     if track.mediaType == .audio || ["mp4a", "sowt", "twos", "lpcm", "aac "].contains(entry.type) {
         if track.mediaType.rawValue.isEmpty { track.mediaType = .audio }
@@ -395,6 +433,135 @@ private func parseSTTS(_ payload: Data, into track: inout AVLocalMediaTrack) {
     _ = sampleCount
 }
 
+private func parseELST(_ payload: Data, into track: inout AVLocalMediaTrack) {
+    guard let versionFlags = AVISOBoxParser.u32(payload, 0),
+          let count = AVISOBoxParser.u32(payload, 4),
+          count >= 1
+    else { return }
+    let version = versionFlags >> 24
+    let mediaTime: Int64
+    let segmentDuration: UInt64
+    if version == 1 {
+        guard let duration = AVISOBoxParser.u64(payload, 8),
+              let time = AVISOBoxParser.u64(payload, 16)
+        else { return }
+        segmentDuration = duration
+        mediaTime = Int64(bitPattern: time)
+    } else {
+        guard let duration = AVISOBoxParser.u32(payload, 8),
+              let time = AVISOBoxParser.u32(payload, 12)
+        else { return }
+        segmentDuration = UInt64(duration)
+        mediaTime = Int64(Int32(bitPattern: time))
+    }
+    if mediaTime < 0 {
+        let scale = track.mediaTimescale == 0 ? 600 : track.mediaTimescale
+        track.editEmptyDuration = CMTime(value: CMTimeValue(segmentDuration), timescale: scale)
+    }
+}
+
+private func parseDREF(_ dinfPayload: Data, into track: inout AVLocalMediaTrack) {
+    let boxes = AVISOBoxParser.boxes(in: dinfPayload)
+    guard let dref = boxes.first(where: { $0.type == "dref" }), dref.payload.count >= 8 else { return }
+    let entries = AVISOBoxParser.boxes(in: dref.payload.subdata(in: 8..<dref.payload.count))
+    guard !entries.isEmpty else { return }
+    track.isSelfContained = entries.allSatisfy { entry in
+        guard let versionFlags = AVISOBoxParser.u32(entry.payload, 0) else { return true }
+        return (versionFlags & 1) != 0
+    }
+}
+
+private func parseUDTA(_ payload: Data, keySpace: AVMetadataKeySpace) -> [AVMetadataItem] {
+    var items: [AVMetadataItem] = []
+    for box in AVISOBoxParser.boxes(in: payload) {
+        if box.type == "meta" {
+            items.append(contentsOf: parseMeta(box.payload))
+            continue
+        }
+        guard let item = metadataItem(fromUserData: box, keySpace: keySpace) else { continue }
+        items.append(item)
+    }
+    return items
+}
+
+private func parseMeta(_ payload: Data) -> [AVMetadataItem] {
+    // `meta` is a full box (version/flags) followed by child boxes.
+    let body: Data
+    if let type = AVISOBoxParser.fourCC(payload, 4),
+       ["hdlr", "ilst", "udta", "dinf", "keys", "iloc"].contains(type)
+    {
+        body = payload.subdata(in: 4..<payload.count)
+    } else {
+        body = payload
+    }
+    let boxes = AVISOBoxParser.boxes(in: body)
+    var items: [AVMetadataItem] = []
+    if let ilst = boxes.first(where: { $0.type == "ilst" }) {
+        for atom in AVISOBoxParser.boxes(in: ilst.payload) {
+            let dataBoxes = AVISOBoxParser.boxes(in: atom.payload)
+            if let data = dataBoxes.first(where: { $0.type == "data" }), data.payload.count >= 8 {
+                let text = String(data: data.payload.subdata(in: 8..<data.payload.count), encoding: .utf8)
+                    ?? String(data: data.payload.subdata(in: 8..<data.payload.count), encoding: .ascii)
+                if let text, let item = metadataItem(fourCC: atom.type, string: text, keySpace: .iTunes) {
+                    items.append(item)
+                }
+            }
+        }
+    }
+    if let udta = boxes.first(where: { $0.type == "udta" }) {
+        items.append(contentsOf: parseUDTA(udta.payload, keySpace: .quickTimeUserData))
+    }
+    return items
+}
+
+private func metadataItem(fromUserData box: AVISOBoxParser.Box, keySpace: AVMetadataKeySpace) -> AVMetadataItem? {
+    var payload = box.payload
+    if payload.count >= 2, let packed = AVISOBoxParser.u16(payload, 0), packed <= 0x7FFF {
+        payload = payload.subdata(in: 2..<payload.count)
+    }
+    let stripped = Data(payload.filter { $0 != 0 })
+    let text = String(data: stripped, encoding: .utf8)
+        ?? String(data: stripped, encoding: .ascii)
+    guard let text, !text.isEmpty else { return nil }
+    return metadataItem(fourCC: box.type, string: text, keySpace: keySpace)
+}
+
+private func metadataItem(fourCC: String, string: String, keySpace: AVMetadataKeySpace) -> AVMetadataItem? {
+    let item = AVMutableMetadataItem()
+    item.keySpace = keySpace
+    item.key = fourCC as NSString
+    item.value = string as NSString
+    switch fourCC {
+    case "©nam", "name", "INAM":
+        item.commonKey = .commonKeyTitle
+        item.identifier = .commonIdentifierTitle
+    case "©ART", "ART ", "IART":
+        item.commonKey = .commonKeyArtist
+        item.identifier = .commonIdentifierArtist
+    case "©alb", "alb ", "©Alb":
+        item.commonKey = .commonKeyAlbumName
+        item.identifier = .commonIdentifierAlbumName
+    case "©cmt", "cmt ", "©des", "ICMT":
+        item.commonKey = .commonKeyDescription
+        item.identifier = .commonIdentifierDescription
+    case "©too", "too ", "ISFT":
+        item.commonKey = .commonKeySoftware
+        item.identifier = .commonIdentifierSoftware
+    case "©day", "day ", "©xyz", "ICRD":
+        item.commonKey = .commonKeyCreationDate
+        item.identifier = .commonIdentifierCreationDate
+    case "©cpy", "cprt":
+        item.commonKey = .commonKeyCopyrights
+        item.identifier = .commonIdentifierCopyrights
+    case "©aut", "AUTH":
+        item.commonKey = .commonKeyAuthor
+        item.identifier = .commonIdentifierAuthor
+    default:
+        item.identifier = AVMetadataItem.identifier(forKey: fourCC, keySpace: keySpace)
+    }
+    return item
+}
+
 private func mediaType(forHandler handler: String) -> AVMediaType {
     switch handler {
     case "vide": return .video
@@ -415,6 +582,7 @@ private func parseWAV(_ data: Data) -> AVLocalMediaProbe? {
     var byteRate = 0
     var bits = 0
     var dataBytes = 0
+    var probeMetadata: [AVMetadataItem] = []
     while offset + 8 <= data.count {
         guard let chunk = AVISOBoxParser.fourCC(data, offset),
               let size = AVISOBoxParser.u32LE(data, offset + 4)
@@ -428,6 +596,10 @@ private func parseWAV(_ data: Data) -> AVLocalMediaProbe? {
             if let bps = AVISOBoxParser.u16LE(data, payloadStart + 14) { bits = Int(bps) }
         } else if chunk == "data" {
             dataBytes = Int(size)
+        } else if chunk == "LIST", payloadEnd - payloadStart >= 4,
+                  AVISOBoxParser.fourCC(data, payloadStart) == "INFO"
+        {
+            probeMetadata.append(contentsOf: parseWAVInfo(data.subdata(in: (payloadStart + 4)..<payloadEnd)))
         }
         offset = payloadEnd + (Int(size) % 2)
     }
@@ -449,12 +621,35 @@ private func parseWAV(_ data: Data) -> AVLocalMediaProbe? {
     track.sampleRate = Double(sampleRate)
     track.codec = "sowt"
     track.totalSampleDataLength = Int64(dataBytes)
+    track.preferredVolume = 1
     var probe = AVLocalMediaProbe()
     probe.kind = .wav
     probe.majorBrand = "WAVE"
     probe.duration = track.duration
+    probe.nextTrackID = 2
+    probe.metadataItems = probeMetadata
     probe.tracks = [track]
     return probe
+}
+
+private func parseWAVInfo(_ payload: Data) -> [AVMetadataItem] {
+    var items: [AVMetadataItem] = []
+    var offset = 0
+    while offset + 8 <= payload.count {
+        guard let chunk = AVISOBoxParser.fourCC(payload, offset),
+              let size = AVISOBoxParser.u32LE(payload, offset + 4)
+        else { break }
+        let start = offset + 8
+        let end = min(start + Int(size), payload.count)
+        let chunkBytes = Data(payload.subdata(in: start..<end).prefix { $0 != 0 })
+        let text = String(data: chunkBytes, encoding: .utf8)
+            ?? String(data: chunkBytes, encoding: .ascii)
+        if let text, let item = metadataItem(fourCC: chunk, string: text, keySpace: .quickTimeUserData) {
+            items.append(item)
+        }
+        offset = end + (Int(size) % 2)
+    }
+    return items
 }
 
 private func parseAIFF(_ data: Data) -> AVLocalMediaProbe? {
@@ -467,6 +662,7 @@ private func parseAIFF(_ data: Data) -> AVLocalMediaProbe? {
     var sampleRate = 0.0
     var bits = 0
     var dataBytes = 0
+    var probeMetadata: [AVMetadataItem] = []
     while offset + 8 <= data.count {
         guard let chunk = AVISOBoxParser.fourCC(data, offset),
               let size = AVISOBoxParser.u32(data, offset + 4)
@@ -479,6 +675,15 @@ private func parseAIFF(_ data: Data) -> AVLocalMediaProbe? {
             sampleRate = extended80(data, payloadStart + 8)
         } else if chunk == "SSND" {
             dataBytes = Int(size)
+        } else if chunk == "NAME" || chunk == "AUTH" || chunk == "ANNO" || chunk == "(c) " {
+            let payloadEnd = min(payloadStart + Int(size), data.count)
+            let chunkBytes = Data(data.subdata(in: payloadStart..<payloadEnd).prefix { $0 != 0 })
+            let text = String(data: chunkBytes, encoding: .utf8)
+                ?? String(data: chunkBytes, encoding: .ascii)
+            let mapped = chunk == "NAME" ? "©nam" : (chunk == "AUTH" ? "©aut" : (chunk == "(c) " ? "cprt" : "©cmt"))
+            if let text, let item = metadataItem(fourCC: mapped, string: text, keySpace: .quickTimeUserData) {
+                probeMetadata.append(item)
+            }
         }
         let payloadEnd = min(payloadStart + Int(size), data.count)
         offset = payloadEnd + (Int(size) % 2)
@@ -495,10 +700,13 @@ private func parseAIFF(_ data: Data) -> AVLocalMediaProbe? {
     track.sampleRate = sampleRate
     track.codec = "twos"
     track.totalSampleDataLength = Int64(dataBytes == 0 ? frames * channels * max(bits / 8, 1) : dataBytes)
+    track.preferredVolume = 1
     var probe = AVLocalMediaProbe()
     probe.kind = .aiff
     probe.majorBrand = form
     probe.duration = track.duration
+    probe.nextTrackID = 2
+    probe.metadataItems = probeMetadata
     probe.tracks = [track]
     return probe
 }

@@ -12,20 +12,23 @@ public struct AVVideoApertureMode: RawRepresentable, Hashable, Sendable, Express
 public struct AVVideoCodecType: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
   public let rawValue: String
   public init(rawValue: String) { self.rawValue = rawValue }
+  public init(_ rawValue: String) { self.init(rawValue: rawValue) }
   public init(stringLiteral value: String) { self.init(rawValue: value) }
-  public static let hevc = AVVideoCodecType(rawValue: "hevc")
-  public static let h264 = AVVideoCodecType(rawValue: "h264")
+  // Four-character codes measured 2026-09-14 from Xcode 26.1 `import AVFoundation`
+  // (also documented next to the C constants in AVVideoSettings.h).
+  public static let hevc = AVVideoCodecType(rawValue: "hvc1")
+  public static let h264 = AVVideoCodecType(rawValue: "avc1")
   public static let jpeg = AVVideoCodecType(rawValue: "jpeg")
-  public static let JPEGXL = AVVideoCodecType(rawValue: "JPEGXL")
-  public static let proRes4444 = AVVideoCodecType(rawValue: "proRes4444")
-  public static let appleProRes4444XQ = AVVideoCodecType(rawValue: "appleProRes4444XQ")
-  public static let proRes422 = AVVideoCodecType(rawValue: "proRes422")
-  public static let proRes422HQ = AVVideoCodecType(rawValue: "proRes422HQ")
-  public static let proRes422LT = AVVideoCodecType(rawValue: "proRes422LT")
-  public static let proRes422Proxy = AVVideoCodecType(rawValue: "proRes422Proxy")
-  public static let proResRAW = AVVideoCodecType(rawValue: "proResRAW")
-  public static let proResRAWHQ = AVVideoCodecType(rawValue: "proResRAWHQ")
-  public static let hevcWithAlpha = AVVideoCodecType(rawValue: "hevcWithAlpha")
+  public static let JPEGXL = AVVideoCodecType(rawValue: "jxlc")
+  public static let proRes4444 = AVVideoCodecType(rawValue: "ap4h")
+  public static let appleProRes4444XQ = AVVideoCodecType(rawValue: "ap4x")
+  public static let proRes422 = AVVideoCodecType(rawValue: "apcn")
+  public static let proRes422HQ = AVVideoCodecType(rawValue: "apch")
+  public static let proRes422LT = AVVideoCodecType(rawValue: "apcs")
+  public static let proRes422Proxy = AVVideoCodecType(rawValue: "apco")
+  public static let proResRAW = AVVideoCodecType(rawValue: "aprn")
+  public static let proResRAWHQ = AVVideoCodecType(rawValue: "aprh")
+  public static let hevcWithAlpha = AVVideoCodecType(rawValue: "muxa")
 }
 
 public protocol AVVideoCompositing : AnyObject, Sendable {

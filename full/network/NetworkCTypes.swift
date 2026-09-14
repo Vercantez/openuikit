@@ -72,7 +72,7 @@ public var NW_FRAMER_WAKEUP_TIME_FOREVER: UInt64 { ~UInt64(0) }
 public var NW_LISTENER_INFINITE_CONNECTION_LIMIT: UInt32 { ~UInt32(0) }
 public var NW_QUIC_CONNECTION_DEFAULT_KEEPALIVE: Int32 { 0 }
 
-public enum nw_parameters_attribution_t: UInt8, Sendable {
+public enum nw_parameters_attribution_t: UInt8, Hashable, Sendable {
     case developer = 1
     case user = 2
 }

@@ -85,6 +85,8 @@ func testNWEndpointPortsAndHosts() {
     nwExpect(NWEndpoint.Port("443")?.rawValue == 443, "string port")
     nwExpect(NWEndpoint.Port("http")?.rawValue == 80, "service name http")
     nwExpect(NWEndpoint.Port("https")?.rawValue == 443, "service name https")
+    nwExpect(NWEndpoint.Port("ssh")?.rawValue == 22, "service name ssh")
+    nwExpect(NWEndpoint.Port("8080")?.rawValue == 8080, "numeric 8080")
     nwExpect(NWEndpoint.Port("not-a-port") == nil, "bad port")
     nwExpect(NWEndpoint.Port(rawValue: 8080)?.rawValue == 8080, "rawValue init")
     let host: NWEndpoint.Host = "example.invalid"
@@ -121,6 +123,111 @@ func testNWEndpointPortsAndHosts() {
     _ = Set([endpoint, url, unix, service])
     var hasher = Hasher()
     endpoint.hash(into: &hasher)
+    let ports: Set<NWEndpoint.Port> = [.http, .https, .ssh, 8080]
+    nwExpect(ports.contains(.http) && ports.contains(8080), "port set")
+    nwExpect(NWEndpoint.Port.http != .https, "port inequality")
+}
+
+func testAppleAddressClassificationTable() {
+    func flags(_ loopback: Bool, _ linkLocal: Bool, _ multicast: Bool) -> (Bool, Bool, Bool) {
+        (loopback, linkLocal, multicast)
+    }
+    func v4(_ string: String) -> IPv4Address {
+        guard let address = IPv4Address(string) else {
+            preconditionFailure("IPv4 \(string)")
+        }
+        return address
+    }
+    func v6(_ string: String) -> IPv6Address {
+        guard let address = IPv6Address(string) else {
+            preconditionFailure("IPv6 \(string)")
+        }
+        return address
+    }
+
+    nwExpect(flags(v4("127.0.0.1").isLoopback, v4("127.0.0.1").isLinkLocal, v4("127.0.0.1").isMulticast) == (true, false, false), "127.0.0.1")
+    nwExpect(v4("127.255.255.255").isLoopback && !v4("127.255.255.255").isLinkLocal && !v4("127.255.255.255").isMulticast, "127/8")
+    nwExpect(flags(v4("0.0.0.0").isLoopback, v4("0.0.0.0").isLinkLocal, v4("0.0.0.0").isMulticast) == (false, false, false), "0.0.0.0")
+    nwExpect(flags(v4("255.255.255.255").isLoopback, v4("255.255.255.255").isLinkLocal, v4("255.255.255.255").isMulticast) == (false, false, false), "broadcast")
+    nwExpect(flags(v4("169.254.1.1").isLoopback, v4("169.254.1.1").isLinkLocal, v4("169.254.1.1").isMulticast) == (false, true, false), "link local")
+    nwExpect(flags(v4("10.0.0.1").isLoopback, v4("10.0.0.1").isLinkLocal, v4("10.0.0.1").isMulticast) == (false, false, false), "10/8")
+    nwExpect(flags(v4("192.168.1.1").isLoopback, v4("192.168.1.1").isLinkLocal, v4("192.168.1.1").isMulticast) == (false, false, false), "192.168")
+    nwExpect(flags(v4("8.8.8.8").isLoopback, v4("8.8.8.8").isLinkLocal, v4("8.8.8.8").isMulticast) == (false, false, false), "8.8.8.8")
+    nwExpect(flags(v4("224.0.0.1").isLoopback, v4("224.0.0.1").isLinkLocal, v4("224.0.0.1").isMulticast) == (false, false, true), "all hosts")
+    nwExpect(flags(v4("239.255.255.250").isLoopback, v4("239.255.255.250").isLinkLocal, v4("239.255.255.250").isMulticast) == (false, false, true), "admin scope")
+
+    nwExpect(v6("::1").isLoopback && !v6("::1").isLinkLocal && !v6("::1").isMulticast, "::1")
+    nwExpect(v6("::1").debugDescription == "::1", "::1 debug")
+    nwExpect(!v6("::").isLoopback && !v6("::").isLinkLocal && !v6("::").isMulticast, "::")
+    nwExpect(v6("::").debugDescription == "::", ":: debug")
+    nwExpect(!v6("fe80::1").isLoopback && v6("fe80::1").isLinkLocal && !v6("fe80::1").isMulticast, "fe80::1")
+    nwExpect(v6("fe80::1").debugDescription == "fe80::1", "fe80 debug")
+    nwExpect(!v6("ff02::1").isLoopback && !v6("ff02::1").isLinkLocal && v6("ff02::1").isMulticast, "ff02::1")
+    nwExpect(v6("ff02::1").debugDescription == "ff02::1", "ff02 debug")
+    nwExpect(!v6("2001:db8::1").isLoopback && !v6("2001:db8::1").isLinkLocal && !v6("2001:db8::1").isMulticast, "2001:db8::1")
+    nwExpect(v6("2001:db8::1").debugDescription == "2001:db8::1", "db8 debug")
+
+    let zoned = v6("fe80::1%lo0")
+    nwExpect(zoned.isLinkLocal && !zoned.isLoopback && !zoned.isMulticast, "fe80::1%lo0 class")
+    nwExpect(zoned.debugDescription.hasPrefix("fe80::1%lo0"), "fe80 zone debug")
+    if let iface = zoned.interface {
+        nwExpect(iface.name == "lo0", "Darwin-style lo0")
+        nwExpect(iface.description == "lo0", "interface description is name")
+    }
+
+    if case .ipv4(let address) = NWEndpoint.Host("127.0.0.1") {
+        nwExpect(address.isLoopback, "Host 127 ipv4")
+    } else {
+        preconditionFailure("Host 127")
+    }
+    if case .name(let name, _) = NWEndpoint.Host("localhost") {
+        nwExpect(name == "localhost", "localhost name")
+    } else {
+        preconditionFailure("localhost")
+    }
+    if case .name(let name, _) = NWEndpoint.Host("example.com") {
+        nwExpect(name == "example.com", "example.com name")
+    } else {
+        preconditionFailure("example.com")
+    }
+    if case .ipv4(let address) = NWEndpoint.Host("127.0.0.1%lo0") {
+        nwExpect(address.debugDescription == "127.0.0.1%lo0", "zoned ipv4 debug")
+        nwExpect(!address.isLoopback, "Apple: zoned 127 is not loopback")
+    } else {
+        preconditionFailure("zoned ipv4 host")
+    }
+
+    let addresses: Set<IPv4Address> = [v4("127.0.0.1"), v4("169.254.1.1"), v4("224.0.0.1")]
+    nwExpect(addresses.count == 3, "ipv4 set")
+    nwExpect(v4("127.0.0.1") != v4("8.8.8.8"), "ipv4 inequality")
+    let v6s: Set<IPv6Address> = [v6("::1"), v6("fe80::1"), v6("ff02::1")]
+    nwExpect(v6s.count == 3, "ipv6 set")
+
+    let tcp = NWParameters.tcp
+    nwExpect(tcp.allowLocalEndpointReuse == false, "reuse default")
+    nwExpect(tcp.acceptLocalOnly == false, "local only default")
+    nwExpect(tcp.includePeerToPeer == false, "p2p default")
+    let txt = NWTXTRecord(["a": "1", "b": "hello"])
+    nwExpect(txt["a"] == "1", "txt a")
+    nwExpect(txt.count == 2, "txt count")
+    nwExpect(
+        txt.data.map { String(format: "%02x", Int($0)) }.joined() == "03613d3107623d68656c6c6f",
+        "txt rfc6763"
+    )
+}
+
+func testNWErrorWaitingDebugContainsPOSIXErrorCode() {
+    let refused = NWError.posix(.ECONNREFUSED)
+    let debug = refused.debugDescription
+    nwExpect(debug.contains("POSIXErrorCode"), "POSIXErrorCode")
+    nwExpect(debug.contains("rawValue: \(POSIXErrorCode.ECONNREFUSED.rawValue)"), "rawValue")
+    let waiting = String(describing: NWConnection.State.waiting(refused))
+    nwExpect(waiting.contains("waiting("), "waiting case")
+    nwExpect(waiting.contains("POSIXErrorCode"), "waiting POSIXErrorCode")
+    nwExpect(String(describing: NWConnection.State.setup) == "setup", "setup")
+    nwExpect(String(describing: NWConnection.State.preparing) == "preparing", "preparing")
+    nwExpect(String(describing: NWConnection.State.ready) == "ready", "ready")
+    nwExpect(String(describing: NWConnection.State.cancelled) == "cancelled", "cancelled")
 }
 
 func testNWErrorFailClosedCases() {

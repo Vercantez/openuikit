@@ -1998,6 +1998,21 @@ public struct SparseMatrixStructure {
         self.rowCount = 0
         self.rowIndices = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
     }
+    public init(
+        rowCount: Int32,
+        columnCount: Int32,
+        columnStarts: UnsafeMutablePointer<Int>,
+        rowIndices: UnsafeMutablePointer<Int32>,
+        attributes: SparseAttributes_t,
+        blockSize: UInt8
+    ) {
+        self.rowCount = rowCount
+        self.columnCount = columnCount
+        self.columnStarts = columnStarts
+        self.rowIndices = rowIndices
+        self.attributes = attributes
+        self.blockSize = blockSize
+    }
 }
 
 public struct SparseMatrixStructureComplex {
@@ -2044,6 +2059,10 @@ public struct SparseMatrix_Double {
         self.data = UnsafeMutablePointer<Double>.allocate(capacity: 1)
         self.structure = SparseMatrixStructure()
     }
+    public init(structure: SparseMatrixStructure, data: UnsafeMutablePointer<Double>) {
+        self.structure = structure
+        self.data = data
+    }
 }
 
 public struct SparseMatrix_Float {
@@ -2052,6 +2071,10 @@ public struct SparseMatrix_Float {
     public init() {
         self.data = UnsafeMutablePointer<Float>.allocate(capacity: 1)
         self.structure = SparseMatrixStructure()
+    }
+    public init(structure: SparseMatrixStructure, data: UnsafeMutablePointer<Float>) {
+        self.structure = structure
+        self.data = data
     }
 }
 
@@ -2672,17 +2695,18 @@ public var BNNSShuffleTypeSpaceToDepthNCHW: BNNSShuffleType { BNNSShuffleType(ra
 public var BNNSSparsityTypeUnstructured: BNNSSparsityType { BNNSSparsityType(rawValue: 0) }
 public var BNNSTargetSystemGeneric: BNNSTargetSystem { BNNSTargetSystem(rawValue: 0) }
 public var SparseDefaultControl: SparseControl_t { SparseControl_t(rawValue: 0) }
+// Apple-measured 2026-09-14: Cholesky=0, LDLT=1, LDLTUnpivoted=2, QR=40, CholeskyAtA=41.
 public var SparseFactorizationCholesky: SparseFactorization_t { SparseFactorization_t(rawValue: 0) }
-public var SparseFactorizationCholeskyAtA: SparseFactorization_t { SparseFactorization_t(rawValue: 1) }
-public var SparseFactorizationLDLT: SparseFactorization_t { SparseFactorization_t(rawValue: 2) }
+public var SparseFactorizationLDLT: SparseFactorization_t { SparseFactorization_t(rawValue: 1) }
+public var SparseFactorizationLDLTUnpivoted: SparseFactorization_t { SparseFactorization_t(rawValue: 2) }
 public var SparseFactorizationLDLTSBK: SparseFactorization_t { SparseFactorization_t(rawValue: 3) }
 public var SparseFactorizationLDLTTPP: SparseFactorization_t { SparseFactorization_t(rawValue: 4) }
-public var SparseFactorizationLDLTUnpivoted: SparseFactorization_t { SparseFactorization_t(rawValue: 5) }
 public var SparseFactorizationLU: SparseFactorization_t { SparseFactorization_t(rawValue: 6) }
 public var SparseFactorizationLUSPP: SparseFactorization_t { SparseFactorization_t(rawValue: 7) }
 public var SparseFactorizationLUTPP: SparseFactorization_t { SparseFactorization_t(rawValue: 8) }
 public var SparseFactorizationLUUnpivoted: SparseFactorization_t { SparseFactorization_t(rawValue: 9) }
-public var SparseFactorizationQR: SparseFactorization_t { SparseFactorization_t(rawValue: 10) }
+public var SparseFactorizationQR: SparseFactorization_t { SparseFactorization_t(rawValue: 40) }
+public var SparseFactorizationCholeskyAtA: SparseFactorization_t { SparseFactorization_t(rawValue: 41) }
 public var SparseVariantDQGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 0) }
 public var SparseVariantFGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 1) }
 public var SparseVariantGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 2) }

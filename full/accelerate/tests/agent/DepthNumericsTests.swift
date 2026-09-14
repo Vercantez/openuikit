@@ -76,6 +76,81 @@ func testQuadratureErrorHashable() {
     }
 }
 
+func testSparseMultiplyDiagOracle() {
+    var rowIndices: [Int32] = [0, 1]
+    var columnStarts: [Int] = [0, 1, 2]
+    var values: [Float] = [2, 3]
+    var product = [Float](repeating: 0, count: 2)
+    var rhs: [Float] = [1, 1]
+    rowIndices.withUnsafeMutableBufferPointer { ri in
+        columnStarts.withUnsafeMutableBufferPointer { cs in
+            values.withUnsafeMutableBufferPointer { vs in
+                var attributes = SparseAttributes_t()
+                attributes.transpose = false
+                attributes.triangle = SparseUpperTriangle
+                attributes.kind = SparseOrdinary
+                let matrix = SparseMatrix_Float(
+                    structure: SparseMatrixStructure(
+                        rowCount: 2,
+                        columnCount: 2,
+                        columnStarts: cs.baseAddress!,
+                        rowIndices: ri.baseAddress!,
+                        attributes: attributes,
+                        blockSize: 1
+                    ),
+                    data: vs.baseAddress!
+                )
+                rhs.withUnsafeMutableBufferPointer { rb in
+                    product.withUnsafeMutableBufferPointer { ob in
+                        SparseMultiply(
+                            matrix,
+                            DenseVector_Float(count: 2, data: rb.baseAddress!),
+                            DenseVector_Float(count: 2, data: ob.baseAddress!)
+                        )
+                    }
+                }
+            }
+        }
+    }
+    precondition(abs(product[0] - 2) < 0.0001)
+    precondition(abs(product[1] - 3) < 0.0001)
+    var dRows: [Int32] = [0, 1]
+    var dStarts: [Int] = [0, 1, 2]
+    var dVals: [Double] = [2, 3]
+    var dProduct = [Double](repeating: 0, count: 2)
+    var dRhs: [Double] = [1, 1]
+    dRows.withUnsafeMutableBufferPointer { ri in
+        dStarts.withUnsafeMutableBufferPointer { cs in
+            dVals.withUnsafeMutableBufferPointer { vs in
+                var attributes = SparseAttributes_t()
+                attributes.kind = SparseOrdinary
+                let matrix = SparseMatrix_Double(
+                    structure: SparseMatrixStructure(
+                        rowCount: 2,
+                        columnCount: 2,
+                        columnStarts: cs.baseAddress!,
+                        rowIndices: ri.baseAddress!,
+                        attributes: attributes,
+                        blockSize: 1
+                    ),
+                    data: vs.baseAddress!
+                )
+                dRhs.withUnsafeMutableBufferPointer { rb in
+                    dProduct.withUnsafeMutableBufferPointer { ob in
+                        SparseMultiply(
+                            matrix,
+                            DenseVector_Double(count: 2, data: rb.baseAddress!),
+                            DenseVector_Double(count: 2, data: ob.baseAddress!)
+                        )
+                    }
+                }
+            }
+        }
+    }
+    precondition(abs(dProduct[0] - 2) < 1e-12)
+    precondition(abs(dProduct[1] - 3) < 1e-12)
+}
+
 func testSparseMultiplyFloatVector() {
     var rows: [Int32] = [0, 0, 1]
     var cols: [Int32] = [0, 1, 1]

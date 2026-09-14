@@ -126,19 +126,36 @@ open class AVCustomMediaSelectionScheme: NSObject, @unchecked Sendable {
 }
 
 open class AVDateRangeMetadataGroup: AVMetadataGroup, @unchecked Sendable {
+  var storedStartDate: Date = .distantPast
+  var storedEndDate: Date?
   public override init() { super.init() }
-  convenience init(items: [AVMetadataItem], start startDate: Date, end endDate: Date?) { self.init() }
-  public var startDate: Date { Date.distantPast }
-  public var endDate: Date? { nil }
+  public init(items: [AVMetadataItem], start startDate: Date, end endDate: Date?) {
+    super.init()
+    storedItems = items
+    storedStartDate = startDate
+    storedEndDate = endDate
+  }
+  open var startDate: Date { storedStartDate }
+  open var endDate: Date? { storedEndDate }
 }
 
 public struct AVEdgeWidths: Sendable {
-  public init() {}
-  public init(left: CGFloat, top: CGFloat, right: CGFloat, bottom: CGFloat) {}
-  public var left: CGFloat = 0
-  public var top: CGFloat = 0
-  public var right: CGFloat = 0
-  public var bottom: CGFloat = 0
+  public var left: CGFloat
+  public var top: CGFloat
+  public var right: CGFloat
+  public var bottom: CGFloat
+  public init() {
+    self.left = 0
+    self.top = 0
+    self.right = 0
+    self.bottom = 0
+  }
+  public init(left: CGFloat, top: CGFloat, right: CGFloat, bottom: CGFloat) {
+    self.left = left
+    self.top = top
+    self.right = right
+    self.bottom = bottom
+  }
 }
 
 open class AVFrameRateRange: NSObject, @unchecked Sendable {
@@ -210,6 +227,15 @@ extension AVPartialAsyncProperty where Root: AVAsset {
   }
 }
 
+extension AVPartialAsyncProperty where Root: AVURLAsset {
+  public static var tracks: AVAsyncProperty<Root, [AVAssetTrack]> {
+    AVAsyncProperty(portableKey: "tracks")
+  }
+  public static var variants: AVAsyncProperty<Root, [AVAssetVariant]> {
+    AVAsyncProperty(portableKey: "variants")
+  }
+}
+
 open class AVPersistableContentKeyRequest: AVContentKeyRequest, @unchecked Sendable {
   public override init() { super.init() }
   public func persistableContentKey(fromKeyVendorResponse keyVendorResponse: Data, options: [String : Any]? = nil) throws -> Data {
@@ -219,10 +245,16 @@ open class AVPersistableContentKeyRequest: AVContentKeyRequest, @unchecked Senda
 }
 
 public struct AVPixelAspectRatio: Sendable {
-  public init() {}
-  public init(horizontalSpacing: Int, verticalSpacing: Int) {}
-  public var horizontalSpacing: Int = 0
-  public var verticalSpacing: Int = 0
+  public var horizontalSpacing: Int
+  public var verticalSpacing: Int
+  public init() {
+    self.horizontalSpacing = 0
+    self.verticalSpacing = 0
+  }
+  public init(horizontalSpacing: Int, verticalSpacing: Int) {
+    self.horizontalSpacing = horizontalSpacing
+    self.verticalSpacing = verticalSpacing
+  }
 }
 
 open class AVPortraitEffectsMatte: NSObject, @unchecked Sendable {
@@ -345,11 +377,22 @@ open class AVTextStyleRule: NSObject, @unchecked Sendable {
 }
 
 open class AVTimedMetadataGroup: AVMetadataGroup, @unchecked Sendable {
+  var storedTimeRange: CMTimeRange = .zero
   public override init() { super.init() }
-  convenience init?(sampleBuffer: CMReadySampleBuffer<CMSampleBuffer.DynamicContent>) { return nil }
-  convenience init(items: [AVMetadataItem], timeRange: CMTimeRange) { self.init() }
-  convenience init?(sampleBuffer: CMSampleBuffer) { return nil }
-  public var timeRange: CMTimeRange { .zero }
+  public init?(sampleBuffer: CMReadySampleBuffer<CMSampleBuffer.DynamicContent>) {
+    _ = sampleBuffer
+    return nil
+  }
+  public init(items: [AVMetadataItem], timeRange: CMTimeRange) {
+    super.init()
+    storedItems = items
+    storedTimeRange = timeRange
+  }
+  public init?(sampleBuffer: CMSampleBuffer) {
+    _ = sampleBuffer
+    return nil
+  }
+  open var timeRange: CMTimeRange { storedTimeRange }
   public func copyFormatDescription() -> CMMetadataFormatDescription? { nil }
 }
 

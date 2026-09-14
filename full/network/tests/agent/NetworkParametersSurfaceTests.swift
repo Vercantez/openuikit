@@ -43,6 +43,9 @@ func testNWParametersProtocolStackAndPrivacy() {
     privacy.proxyConfigurations = [ProxyConfiguration()]
     expect(privacy.proxyConfigurations.count == 1, "proxyConfigurations")
     tcp.setPrivacyContext(privacy)
+    let session = URLSessionConfiguration.ephemeral
+    session.proxyConfigurations = [ProxyConfiguration()]
+    expect(session.proxyConfigurations.count == 1, "URLSessionConfiguration proxyConfigurations")
 }
 
 func testNWParametersHashableEnums() {

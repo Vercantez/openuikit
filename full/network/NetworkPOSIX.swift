@@ -12,8 +12,11 @@ enum NWPOSIX {
     /// fail closed with `NWError.tls` carrying this code.
     static let tlsUnsupportedStatus: OSStatus = -9800
 
-    static func interfaceForZone(_ zone: String) -> NWInterface {
+    /// Returns an interface only when `if_nametoindex` succeeds. Darwin's
+    /// `lo0` is not invented on Linux.
+    static func interfaceForZone(_ zone: String) -> NWInterface? {
         let index = Int(if_nametoindex(zone))
+        guard index != 0 else { return nil }
         return NWInterface(name: zone, type: .other, index: index)
     }
 

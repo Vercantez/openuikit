@@ -5,6 +5,14 @@ private func expect(_ condition: Bool, _ message: String) {
     precondition(condition, message)
 }
 
+func testNWProtocolBaseClasses() {
+    let options: NWProtocolOptions = NWProtocolTCP.Options()
+    let metadata: NWProtocolMetadata = NWProtocolTCP.Metadata()
+    expect(ObjectIdentifier(options) != ObjectIdentifier(metadata), "distinct instances")
+    let proto: NWProtocol = NWProtocol()
+    expect(type(of: proto) == NWProtocol.self, "NWProtocol")
+}
+
 func testProtocolDefinitionsAndHashable() {
     let tls = NWProtocolTLS.definition
     let udp = NWProtocolUDP.definition

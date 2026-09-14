@@ -237,3 +237,33 @@ CoreGraphics or CoreVideo remain deferred because those modules are not declared
 dependencies. Complex sparse solve/factor paths remain parameter-error fail-closed.
 Oracle questions for unobserved Apple callback, graph, allocator, and image-framework
 behavior remain recorded in `oracle-questions.tsv`.
+
+## Depth pass 2026-09-14 (Apple Accelerate oracle)
+
+Depth pass against the macOS 26.1 / Xcode 26.1 Accelerate oracle in
+`scratch/oracle-2026-09-14/`. Pins Apple-measured enumerator raw values, confirms
+unnormalized radix-2 FFT scaling, records overlay `vForce.atan2(x:y:)` as
+`Foundation.atan2(y, x)`, and implements a complex BLAS level-1 plus
+`cgemm_`/`zgemm_`/`cgemv_`/`chemv_`/`cger*` subset. Remaining banded/packed/triangular
+complex BLAS stay empty stubs. Sparse Float/Double CSC multiply of `diag(2,3)*[1,1]`
+matches `[2,3]`. `vImageBoxConvolve_ARGB8888` 3x3 edge-extend matches the 2026-09-14
+ARGB raster. BNNS graph compile/execute stays fail-closed.
+
+- Implemented before: **3979**
+- Implemented after: **4034**
+- Declared before: **1622**
+- Declared after: **1567**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **55**
+
+Top-5 evidence distribution for the 55 newly implemented rows:
+
+1. `testOraclePinnedEnumRawValues` — 21 (38.2%) — table-driven Apple-measured DCT/DFT/SparseControl/SparseFactorization raw values (enum/constant sharing allowed)
+2. `testBLASComplexLevel1Float` — 10 (18.2%) — complex Float level-1
+3. `testBLASComplexLevel1Double` — 10 (18.2%) — complex Double level-1
+4. `testBLASComplexGemvHemv` — 8 (14.5%) — `cgemv_`/`chemv_`/`cger*` 2x2 cases
+5. `testSparseMultiplyDiagOracle` — 3 (5.5%) — CSC `init(structure:data:)` plus diag multiply
+
+Largest non-enum test is 10/55 = 18.2%, under the 40% remaining-row ceiling. Unobserved SparseFactorization LU/SBK members stay sequential placeholders and `declared`. vImage CG/CV and BNNS graph execute stay deferred/fail-closed. SwiftUI overlay IDs were not present.

@@ -54,10 +54,12 @@ func _biquadApply<T: BinaryFloatingPoint>(
 final class _FFTSetupBox {
     let log2n: Int
     let n: Int
-    init?(log2n: Int) {
+    let inverse: Bool
+    init?(log2n: Int, inverse: Bool = false) {
         guard log2n >= 0, log2n <= 20 else { return nil }
         self.log2n = log2n
         self.n = 1 << log2n
+        self.inverse = inverse
     }
 }
 

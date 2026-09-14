@@ -1,0 +1,62 @@
+const.true	true
+const.false	false
+eval.age == 30	true|parsed=age == 30
+eval.age == 30	false|parsed=age == 30
+eval.age != 30	true|parsed=age != 30
+eval.age > 18	true|parsed=age > 18
+eval.age >= 30	true|parsed=age >= 30
+eval.age < 18	true|parsed=age < 18
+eval.age <= 17	true|parsed=age <= 17
+eval.name == "Alice"	true|parsed=name == "Alice"
+eval.name == 'Alice'	true|parsed=name == "Alice"
+eval.name BEGINSWITH "Al"	true|parsed=name BEGINSWITH "Al"
+eval.name BEGINSWITH[c] "al"	true|parsed=name BEGINSWITH[c] "al"
+eval.name BEGINSWITH[c] "al"	false|parsed=name BEGINSWITH[c] "al"
+eval.name ENDSWITH "ice"	true|parsed=name ENDSWITH "ice"
+eval.name CONTAINS "lic"	true|parsed=name CONTAINS "lic"
+eval.name LIKE "Al*"	true|parsed=name LIKE "Al*"
+eval.name LIKE[c] "al*"	true|parsed=name LIKE[c] "al*"
+eval.name MATCHES "A.*e"	true|parsed=name MATCHES "A.*e"
+eval.city IN {"Austin", "Dallas"}	true|parsed=city IN {"Austin", "Dallas"}
+eval.city IN {"Austin", "Dallas"}	false|parsed=city IN {"Austin", "Dallas"}
+eval."ios" IN tags	true|parsed="ios" IN tags
+eval."linux" IN tags	false|parsed="linux" IN tags
+eval.age BETWEEN {18, 40}	true|parsed=age BETWEEN {18, 40}
+eval.age BETWEEN {18, 40}	false|parsed=age BETWEEN {18, 40}
+eval.active == YES	true|parsed=active == 1
+eval.active == NO	true|parsed=active == 0
+eval.active == TRUE	true|parsed=active == 1
+eval.active == 1	true|parsed=active == 1
+eval.score == 4.5	true|parsed=score == 4.5
+eval.score > 4	true|parsed=score > 4
+eval.name == $N	true|parsed=name == $N
+eval.age == $A	true|parsed=age == $A
+eval.age == 30 AND city == "Austin"	true|parsed=age == 30 AND city == "Austin"
+eval.age == 30 AND city == "Austin"	false|parsed=age == 30 AND city == "Austin"
+eval.age == 17 OR city == "Austin"	true|parsed=age == 17 OR city == "Austin"
+eval.NOT (age == 30)	true|parsed=NOT age == 30
+eval.NOT age == 30	true|parsed=NOT age == 30
+eval.parent.name == "Alice"	true|parsed=parent.name == "Alice"
+eval.parent.name == "Alice"	false|parsed=parent.name == "Alice"
+eval.SELF == 1	true|parsed=SELF == 1
+eval.SELF == "x"	true|parsed=SELF == "x"
+eval.SELF IN {1, 2, 3}	true|parsed=SELF IN {1, 2, 3}
+eval.SELF BEGINSWITH "he"	true|parsed=SELF BEGINSWITH "he"
+eval.SELF CONTAINS[c] "EL"	true|parsed=SELF CONTAINS[c] "EL"
+eval.1 == 1	true|parsed=1 == 1
+eval.1 == 2	false|parsed=1 == 2
+eval.TRUEPREDICATE	true|parsed=TRUEPREDICATE
+eval.FALSEPREDICATE	false|parsed=FALSEPREDICATE
+block.alice	true
+block.bob	false
+compound.and.alice	true
+compound.and.bob	false
+compound.and.format	age == 30 AND city == "Austin"
+compound.or.bob	true
+compound.not.bob	true
+expr.keypath	age
+expr.const	30
+expr.add	5
+sort.age.names	Bob,Alice,Carol
+sort.name.desc	Carol,Bob,Alice
+oracle.done	1

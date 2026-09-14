@@ -64,3 +64,43 @@ func testCStructRawValueInitializers() {
     expect(nw_parameters_expired_dns_behavior_t(2).rawValue == 2, "expired dns init")
     expect(nw_parameters_attribution_t(rawValue: 1)?.rawValue == 1, "attribution")
 }
+
+func testCEnumHashableAndEquatableWitnesses() {
+    func check<T: Hashable>(_ a: T, _ b: T, _ message: String) {
+        expect(a != b, message)
+        expect(Set([a, b]).count == 2, message + " set")
+        _ = a.hashValue
+        var hasher = Hasher()
+        a.hash(into: &hasher)
+        b.hash(into: &hasher)
+    }
+    check(nw_parameters_attribution_t.developer, .user, "attribution")
+    check(nw_browser_state_ready, nw_browser_state_failed, "browser")
+    check(nw_connection_group_state_ready, nw_connection_group_state_failed, "group")
+    check(nw_connection_state_ready, nw_connection_state_failed, "connection")
+    check(nw_data_transfer_report_state_collecting, nw_data_transfer_report_state_collected, "dtr")
+    check(nw_endpoint_type_host, nw_endpoint_type_address, "endpoint")
+    check(nw_error_domain_posix, nw_error_domain_tls, "error domain")
+    check(nw_framer_start_result_ready, nw_framer_start_result_will_mark_ready, "framer")
+    check(nw_interface_radio_type_wifi_n, nw_interface_radio_type_wifi_ax, "radio")
+    check(nw_interface_type_wifi, nw_interface_type_loopback, "iface")
+    check(nw_ip_ecn_flag_ect_0, nw_ip_ecn_flag_ce, "ecn")
+    check(nw_ip_local_address_preference_temporary, nw_ip_local_address_preference_stable, "pref")
+    check(nw_ip_version_4, nw_ip_version_6, "ip ver")
+    check(nw_link_quality_minimal, nw_link_quality_good, "lq")
+    check(nw_listener_state_ready, nw_listener_state_failed, "listener")
+    check(nw_multipath_service_disabled, nw_multipath_service_aggregate, "mp")
+    check(nw_multipath_version_0, nw_multipath_version_1, "mp ver")
+    check(nw_parameters_expired_dns_behavior_allow, nw_parameters_expired_dns_behavior_prohibit, "dns")
+    check(nw_path_status_satisfied, nw_path_status_unsatisfied, "path")
+    check(nw_path_unsatisfied_reason_not_available, nw_path_unsatisfied_reason_wifi_denied, "reason")
+    check(nw_quic_stream_type_bidirectional, nw_quic_stream_type_unidirectional, "quic")
+    check(nw_report_resolution_protocol_udp, nw_report_resolution_protocol_tcp, "res proto")
+    check(nw_report_resolution_source_query, nw_report_resolution_source_cache, "res source")
+    check(nw_service_class_best_effort, nw_service_class_signaling, "svc")
+    check(nw_txt_record_find_key_not_present, nw_txt_record_find_key_non_empty_value, "txt")
+    check(nw_ws_close_code_normal_closure, nw_ws_close_code_going_away, "ws close")
+    check(nw_ws_opcode_text, nw_ws_opcode_binary, "ws opcode")
+    check(nw_ws_response_status_accept, nw_ws_response_status_reject, "ws resp")
+    check(nw_ws_version_13, nw_ws_version_invalid, "ws ver")
+}

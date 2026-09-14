@@ -67,13 +67,13 @@ public struct CMTime: Sendable {
 
     public static let invalid = CMTime(value: 0, timescale: 0, flags: [], epoch: 0)
     public static let indefinite = CMTime(
-        value: 0, timescale: 1, flags: [.valid, .indefinite], epoch: 0
+        value: 0, timescale: 0, flags: [.valid, .indefinite], epoch: 0
     )
     public static let positiveInfinity = CMTime(
-        value: 0, timescale: 1, flags: [.valid, .positiveInfinity], epoch: 0
+        value: 0, timescale: 0, flags: [.valid, .positiveInfinity], epoch: 0
     )
     public static let negativeInfinity = CMTime(
-        value: 0, timescale: 1, flags: [.valid, .negativeInfinity], epoch: 0
+        value: 0, timescale: 0, flags: [.valid, .negativeInfinity], epoch: 0
     )
     public static let zero = CMTime(value: 0, timescale: 1, flags: [.valid], epoch: 0)
 
@@ -169,19 +169,45 @@ public func CMTimeMakeWithEpoch(value: Int64, timescale: Int32, epoch: Int64) ->
 
 public func CMTimeMakeWithSeconds(_ seconds: Float64, preferredTimescale: Int32) -> CMTime {
     if preferredTimescale <= 0 { return .invalid }
-    if seconds.isNaN { return .invalid }
     if seconds == Float64.infinity { return .positiveInfinity }
     if seconds == -Float64.infinity { return .negativeInfinity }
-    let product = seconds * Float64(preferredTimescale)
-    if product.isNaN { return .invalid }
-    if product >= Float64(Int64.max) { return .positiveInfinity }
-    if product <= Float64(Int64.min) { return .negativeInfinity }
-    let rounded = cmRoundDoubleToInt64(product, method: .default)
+    // Apple 2026-09-14: NaN @ preferredTimescale 600 is valid+hasBeenRounded zero,
+    // not invalid. Int64(Double.nan) is undefined, so this path is explicit.
+    if seconds.isNaN {
+        return CMTime(
+            value: 0,
+            timescale: preferredTimescale,
+            flags: [.valid, .hasBeenRounded],
+            epoch: 0
+        )
+    }
+    var timescale = preferredTimescale
+    var product = seconds * Float64(timescale)
+    while timescale > 1
+        && (product.isInfinite || product >= Float64(Int64.max) || product <= Float64(Int64.min))
+    {
+        timescale /= 2
+        product = seconds * Float64(timescale)
+    }
+    if product.isNaN || product.isInfinite
+        || product >= Float64(Int64.max) || product <= Float64(Int64.min)
+    {
+        if seconds > 0 { return .positiveInfinity }
+        if seconds < 0 { return .negativeInfinity }
+        return CMTime(
+            value: 0,
+            timescale: timescale,
+            flags: [.valid, .hasBeenRounded],
+            epoch: 0
+        )
+    }
+    // Apple 2026-09-14: 0.5 @ timescale 1 is toward-zero (0), not half-away (1).
+    let rounded = Int64(product)
     var flags: CMTimeFlags = .valid
-    if Float64(rounded) != product {
+    if Float64(rounded) / Float64(timescale) != seconds {
         flags.insert(.hasBeenRounded)
     }
-    return CMTime(value: rounded, timescale: preferredTimescale, flags: flags, epoch: 0)
+    return CMTime(value: rounded, timescale: timescale, flags: flags, epoch: 0)
 }
 
 public func CMTimeGetSeconds(_ time: CMTime) -> Float64 {
@@ -196,25 +222,37 @@ public func CMTimeConvertScale(
     timescale newTimescale: Int32,
     method: CMTimeRoundingMethod
 ) -> CMTime {
-    // CMTime.h: Default == RoundHalfAwayFromZero (1). Sample 1/2 → timescale 1:
-    // half-away=1, toward-zero=0, away=1, toward-+inf=1, toward-−inf=0.
-    // QuickTime is a labeled toward-+inf stand-in (oracle-questions.tsv).
+    // CMTime.h: Default == RoundHalfAwayFromZero (1). QuickTime is toward-zero
+    // when shrinking the scale, away-from-zero when growing it, and never
+    // rounds a negative value down to 0.
     if !time.isValid { return .invalid }
     if newTimescale == 0 { return .invalid }
     if !time.isNumeric { return time }
     if time.timescale == newTimescale { return time }
     let numer = Int128(time.value) * Int128(newTimescale)
     let denom = Int128(time.timescale)
-    let (quotient, rounded) = cmDivideRounding(numer, denom, method)
+    let (quotient, rounded) = cmDivideRounding(
+        numer,
+        denom,
+        cmResolvedRoundingMethod(
+            method,
+            fromTimescale: time.timescale,
+            toTimescale: newTimescale
+        )
+    )
     switch quotient {
     case .overflowPositive:
         return .positiveInfinity
     case .overflowNegative:
         return .negativeInfinity
     case .value(let value):
+        var stored = value
+        if method == .quickTime && stored == 0 && time.value < 0 {
+            stored = -1
+        }
         var flags: CMTimeFlags = .valid
-        if rounded { flags.insert(.hasBeenRounded) }
-        return CMTime(value: value, timescale: newTimescale, flags: flags, epoch: time.epoch)
+        if rounded || stored != value { flags.insert(.hasBeenRounded) }
+        return CMTime(value: stored, timescale: newTimescale, flags: flags, epoch: time.epoch)
     }
 }
 
@@ -232,7 +270,20 @@ public func CMTimeMultiply(_ time: CMTime, multiplier: Int32) -> CMTime {
 
 public func CMTimeMultiplyByRatio(_ time: CMTime, multiplier: Int32, divisor: Int32) -> CMTime {
     if !time.isValid { return .invalid }
-    if divisor == 0 { return .invalid }
+    if divisor == 0 {
+        if time.isIndefinite { return .indefinite }
+        if !time.isNumeric {
+            if multiplier == 0 { return .invalid }
+            let negative = (multiplier < 0) != time.isNegativeInfinity
+            if time.isPositiveInfinity || time.isNegativeInfinity {
+                return negative ? .negativeInfinity : .positiveInfinity
+            }
+            return .invalid
+        }
+        if time.value == 0 || multiplier == 0 { return .invalid }
+        let negative = (time.value < 0) != (multiplier < 0)
+        return negative ? .negativeInfinity : .positiveInfinity
+    }
     if !time.isNumeric {
         if multiplier == 0 { return .invalid }
         if time.isIndefinite { return .indefinite }
@@ -245,19 +296,21 @@ public func CMTimeMultiplyByRatio(_ time: CMTime, multiplier: Int32, divisor: In
         }
         return .invalid
     }
-    let numer = Int128(time.value) * Int128(multiplier)
-    let denom = Int128(divisor)
-    let (quotient, rounded) = cmDivideRounding(numer, denom, .default)
-    switch quotient {
-    case .overflowPositive:
-        return .positiveInfinity
-    case .overflowNegative:
-        return .negativeInfinity
-    case .value(let value):
-        var flags: CMTimeFlags = .valid
-        if rounded { flags.insert(.hasBeenRounded) }
-        return CMTime(value: value, timescale: time.timescale, flags: flags, epoch: time.epoch)
+    // Preserve the exact rational (value * multiplier) / (timescale * divisor)
+    // when both halves fit. Apple 2026-09-14: 1/2 * 2/3 is 2/6, not a rounded
+    // value at the original timescale.
+    var numer = Int128(time.value) * Int128(multiplier)
+    var denom = Int128(time.timescale) * Int128(divisor)
+    if denom < 0 {
+        numer = -numer
+        denom = -denom
     }
+    return cmTimeFromRational(
+        numer,
+        timescale: denom,
+        epoch: time.epoch,
+        rounded: time.hasBeenRounded
+    )
 }
 
 public func CMTimeMultiplyByFloat64(_ time: CMTime, multiplier: Float64) -> CMTime {
@@ -283,9 +336,23 @@ public func CMTimeMultiplyByFloat64(_ time: CMTime, multiplier: Float64) -> CMTi
         return time.value > 0 ? .negativeInfinity : .positiveInfinity
     }
     let seconds = CMTimeGetSeconds(time) * multiplier
-    var result = CMTimeMakeWithSeconds(seconds, preferredTimescale: time.timescale)
+    if seconds.isNaN { return .invalid }
+    if seconds == Float64.infinity { return .positiveInfinity }
+    if seconds == -Float64.infinity { return .negativeInfinity }
+    // CMTime.h: start at the operand timescale, then double until >= 65536.
+    // Apple 2026-09-14 used timescale 1_000_000_000 for 1/2 * 1.5; tests match
+    // seconds/flags and leave that Darwin scale as an oracle question.
+    var timescale = time.timescale < 0 ? -time.timescale : time.timescale
+    if timescale < 1 { timescale = 1 }
+    while timescale < 65536 && timescale <= Int32.max / 2 {
+        timescale *= 2
+    }
+    var result = CMTimeMakeWithSeconds(seconds, preferredTimescale: timescale)
     if result.isNumeric {
         result.epoch = time.epoch
+        if time.hasBeenRounded {
+            result.flags.insert(.hasBeenRounded)
+        }
     }
     return result
 }
@@ -494,7 +561,7 @@ private func cmDivideRounding(
         chosen = towardPos
     case .roundTowardNegativeInfinity:
         chosen = towardNeg
-    case .roundHalfAwayFromZero:
+    case .roundHalfAwayFromZero, .quickTime:
         if half > absDenom {
             chosen = awayFromZero
         } else if half < absDenom {
@@ -502,11 +569,19 @@ private func cmDivideRounding(
         } else {
             chosen = awayFromZero
         }
-    case .quickTime:
-        // Linux stand-in: toward +infinity. Apple QuickTime rounding is unobserved.
-        chosen = towardPos
     }
     return (cmFitInt64(chosen), true)
+}
+
+private func cmResolvedRoundingMethod(
+    _ method: CMTimeRoundingMethod,
+    fromTimescale: Int32,
+    toTimescale: Int32
+) -> CMTimeRoundingMethod {
+    guard method == .quickTime else { return method }
+    let from = fromTimescale < 0 ? -fromTimescale : fromTimescale
+    let to = toTimescale < 0 ? -toTimescale : toTimescale
+    return to > from ? .roundAwayFromZero : .roundTowardZero
 }
 
 private func cmFitInt64(_ value: Int128) -> CMRoundedQuotient {
@@ -515,32 +590,19 @@ private func cmFitInt64(_ value: Int128) -> CMRoundedQuotient {
     return .value(Int64(value))
 }
 
-private func cmRoundDoubleToInt64(_ value: Double, method: CMTimeRoundingMethod) -> Int64 {
-    switch method {
-    case .roundTowardZero:
-        return Int64(value)
-    case .roundAwayFromZero:
-        return value >= 0 ? Int64(value.rounded(.up)) : Int64(value.rounded(.down))
-    case .roundTowardPositiveInfinity:
-        return Int64(value.rounded(.up))
-    case .roundTowardNegativeInfinity:
-        return Int64(value.rounded(.down))
-    case .roundHalfAwayFromZero, .quickTime:
-        return Int64(value.rounded(.toNearestOrAwayFromZero))
-    }
-}
-
 private func cmNonNumericRank(_ time: CMTime) -> Int {
-    if !time.isValid { return 0 }
-    if time.isNegativeInfinity { return 1 }
-    if time.isIndefinite { return 3 }
-    if time.isPositiveInfinity { return 4 }
-    return 2
+    // CMTime.h total order used by CMTimeCompare:
+    // -infinity < finite < indefinite < +infinity < invalid
+    if time.isNegativeInfinity { return 0 }
+    if time.isNumeric { return 1 }
+    if time.isIndefinite { return 2 }
+    if time.isPositiveInfinity { return 3 }
+    return 4
 }
 
 private func cmAddSubtract(_ lhs: CMTime, _ rhs: CMTime, subtracting: Bool) -> CMTime {
     if !lhs.isValid || !rhs.isValid { return .invalid }
-    if lhs.epoch != rhs.epoch { return .invalid }
+    guard let epoch = cmEpochForAddSubtract(lhs.epoch, rhs.epoch) else { return .invalid }
     let rhsAdjusted: CMTime
     if subtracting {
         if rhs.isPositiveInfinity {
@@ -567,13 +629,13 @@ private func cmAddSubtract(_ lhs: CMTime, _ rhs: CMTime, subtracting: Bool) -> C
     if lhs.isNegativeInfinity || rhsAdjusted.isNegativeInfinity { return .negativeInfinity }
     if lhs.timescale == rhsAdjusted.timescale {
         let sum = Int128(lhs.value) + Int128(rhsAdjusted.value)
-        return cmTimeFromInt128(sum, timescale: lhs.timescale, epoch: lhs.epoch, rounded: false)
+        return cmTimeFromInt128(sum, timescale: lhs.timescale, epoch: epoch, rounded: false)
     }
     let lcm = cmLCM(Int64(lhs.timescale), Int64(rhsAdjusted.timescale))
     if lcm > Int64(Int32.max) || lcm <= 0 {
         let seconds = CMTimeGetSeconds(lhs) + CMTimeGetSeconds(rhsAdjusted)
         var result = CMTimeMakeWithSeconds(seconds, preferredTimescale: lhs.timescale)
-        if result.isNumeric { result.epoch = lhs.epoch }
+        if result.isNumeric { result.epoch = epoch }
         if result.isNumeric { result.flags.insert(.hasBeenRounded) }
         return result
     }
@@ -581,11 +643,100 @@ private func cmAddSubtract(_ lhs: CMTime, _ rhs: CMTime, subtracting: Bool) -> C
     let left = CMTimeConvertScale(lhs, timescale: scale, method: .default)
     let right = CMTimeConvertScale(rhsAdjusted, timescale: scale, method: .default)
     if !left.isNumeric || !right.isNumeric {
-        return cmAddSubtract(left, right, subtracting: false)
+        return cmAddSubtract(
+            CMTime(value: left.value, timescale: left.timescale, flags: left.flags, epoch: epoch),
+            CMTime(value: right.value, timescale: right.timescale, flags: right.flags, epoch: 0),
+            subtracting: false
+        )
     }
     let rounded = left.hasBeenRounded || right.hasBeenRounded
     let sum = Int128(left.value) + Int128(right.value)
-    return cmTimeFromInt128(sum, timescale: scale, epoch: lhs.epoch, rounded: rounded)
+    return cmTimeFromInt128(sum, timescale: scale, epoch: epoch, rounded: rounded)
+}
+
+private func cmEpochForAddSubtract(_ lhs: CMTimeEpoch, _ rhs: CMTimeEpoch) -> CMTimeEpoch? {
+    // CMTime.h: epoch 0 is a duration and can mix with any epoch. Different
+    // nonzero epochs are invalid. Same nonzero epoch yields duration epoch 0.
+    // Apple 2026-09-14: (1, epoch 1) + (1, epoch 0) is (2, epoch 1).
+    if lhs == 0 { return rhs }
+    if rhs == 0 { return lhs }
+    if lhs == rhs { return 0 }
+    return nil
+}
+
+private func cmTimeFromRational(
+    _ value: Int128,
+    timescale: Int128,
+    epoch: CMTimeEpoch,
+    rounded: Bool
+) -> CMTime {
+    var storedValue = value
+    var storedScale = timescale
+    if storedScale < 0 {
+        storedValue = -storedValue
+        storedScale = -storedScale
+    }
+    if storedScale == 0 { return .invalid }
+    if storedScale <= Int128(Int32.max)
+        && storedValue >= Int128(Int64.min)
+        && storedValue <= Int128(Int64.max)
+    {
+        return cmTimeFromInt128(
+            storedValue,
+            timescale: Int32(storedScale),
+            epoch: epoch,
+            rounded: rounded
+        )
+    }
+    let divisor = cmGCDInt128(storedValue, storedScale)
+    storedValue /= divisor
+    storedScale /= divisor
+    if storedScale <= Int128(Int32.max)
+        && storedValue >= Int128(Int64.min)
+        && storedValue <= Int128(Int64.max)
+    {
+        return cmTimeFromInt128(
+            storedValue,
+            timescale: Int32(storedScale),
+            epoch: epoch,
+            rounded: rounded
+        )
+    }
+    var scale = storedScale
+    while scale > Int128(Int32.max) && scale > 1 {
+        scale /= 2
+    }
+    if scale > Int128(Int32.max) { scale = Int128(Int32.max) }
+    if scale < 1 { scale = 1 }
+    let (converted, convertedRounded) = cmDivideRounding(
+        storedValue * scale,
+        storedScale,
+        .default
+    )
+    switch converted {
+    case .overflowPositive:
+        return .positiveInfinity
+    case .overflowNegative:
+        return .negativeInfinity
+    case .value(let fitted):
+        return cmTimeFromInt128(
+            Int128(fitted),
+            timescale: Int32(scale),
+            epoch: epoch,
+            rounded: rounded || convertedRounded
+        )
+    }
+}
+
+private func cmGCDInt128(_ a: Int128, _ b: Int128) -> Int128 {
+    var x = a < 0 ? -a : a
+    var y = b < 0 ? -b : b
+    while y != 0 {
+        let t = x % y
+        x = y
+        y = t
+    }
+    return x == 0 ? 1 : x
 }
 
 private func cmTimeFromInt128(

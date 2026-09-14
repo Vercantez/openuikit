@@ -232,6 +232,10 @@ func testMulticastGroupInitFailsClosed() {
         expect((error as? NWError) == .posix(.EOPNOTSUPP), "multicast fail-closed")
     }
     _ = NWMultiplexGroup(to: .hostPort(host: .ipv4(.loopback), port: .http))
+    let multiplex = NWMultiplexGroup(with: .unix(path: "/tmp/openuikit-mux.sock"))
+    let descriptor: any NWGroupDescriptor = multiplex
+    expect(ObjectIdentifier(descriptor as AnyObject) == ObjectIdentifier(multiplex), "multiplex descriptor")
+    expect(NWMulticastGroup.self != NWMultiplexGroup.self, "distinct classes")
 }
 
 func testTypedListenerStateCases() {

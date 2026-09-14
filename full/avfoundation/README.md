@@ -431,3 +431,49 @@ The fail-closed boundary is unchanged: Apple media services, capture devices,
 FairPlay/content-key services, codecs, and UI rendering never report invented
 success. Questions about callback queues/timing, service policy, and native
 coding behavior remain in `oracle-questions.tsv` for an Apple-oracle run.
+
+### Depth pass 2026-09-14 (non-UI AVAsset/metadata)
+
+Non-UI depth on `AVAsset` / `AVURLAsset` / `AVFragmentedAsset`, metadata
+groups, media-type/file-type/codec raw values, `AVError` witnesses, and the
+local ISO-BMFF / WAV / AIFF probe. Capture, player chrome, PiP, AirPlay, and
+SwiftUI stay fail-closed. Async `load(...)` that would hang the sealed gate
+stays deferred.
+
+An `xcrun swiftc` `import AVFoundation` probe on Xcode 26.1 (macOS 26.1 SDK)
+pinned four-character media types, remaining `AVFileType` UTIs, video codec
+fourCCs, common metadata keys/identifiers/key spaces/formats, and
+`AVPixelAspectRatio` / `AVEdgeWidths` field storage. Transcript:
+`scratch/oracle-2026-09-14/AVFoundationConstantsProbe.transcript.txt`.
+
+| status | before | after |
+|---|---:|---:|
+| `implemented` | 4311 | 4416 |
+| `declared` | 1077 | 972 |
+| `deferred` | 244 | 244 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+This pass added 105 `implemented` rows (8 tests in
+`tests/agent/AVDepthPass10Tests.swift`). Largest new test is 24 citations
+(cache / segment-report / track-group fail-closed), well under 40% of the
+remaining implemented rows.
+
+Local probe additions: `mvhd` `next_track_ID` for `unusedTrackID()`, `elst`
+empty-edit offset, `dref` self-contained flag, `pasp` pixel aspect, `udta` /
+WAVE `LIST INFO` / AIFF `NAME` metadata items, and identity
+`AVAssetTrack.segments` for unedited local tracks. `AVDateRangeMetadataGroup`
+/ `AVTimedMetadataGroup` now store items and dates/time ranges.
+`AVFragmentedAsset` is a real `AVURLAsset` subclass over the same probe.
+`AVError(rawValue:)` / `CustomNSError` / `~=` are exercised without claiming
+Apple NSError bridging. Capture/async/FairPlay leftover rows stay deferred.
