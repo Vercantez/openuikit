@@ -556,8 +556,7 @@ open class VNDetectHorizonRequest: VNImageBasedRequest {
     public override class var defaultRevision: Int { VNDetectHorizonRequestRevision1 }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNDetectHorizonRequest")
+        [visionDetectHorizon(in: context.rasterForROI(regionOfInterest))]
     }
 }
 

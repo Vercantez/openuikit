@@ -36,7 +36,9 @@ and a true minimum enclosing circle.
   (threshold + tracing → `VNContoursObservation` with `normalizedPath`),
   `VNGenerateImageFeaturePrintRequest` (documented non-Apple 8³ colour
   histogram + L2 `computeDistance`), `VNTranslationalImageRegistrationRequest`
-  (phase correlation), `VNTrackObjectRequest` (centroid/template tracker).
+  (phase correlation), `VNTrackObjectRequest` (centroid/template tracker),
+  `VNDetectHorizonRequest` (Sobel + weighted-PCA line fit), overlay
+  `DetectLensSmudgeRequest` (Laplacian-RMS contrast).
 - Observations: `VNObservation` / `VNDetectedObjectObservation` /
   `VNRectangleObservation` / `VNTextObservation` value semantics (`uuid`,
   `confidence`, normalized `boundingBox` with lower-left origin).
@@ -530,3 +532,43 @@ The five largest evidence anchors remain `testOverlayRevisionComparableOperators
 the 3310 implemented rows. The new focused anchors cover 5 optical-flow rows,
 7 targeted-input rows, 7 protocol/typealias rows, 4 Codable rows, and 2
 recognized-object rows.
+
+## Depth pass 2026-09 (classical overlay continuation)
+
+Campaign `ios26.1-fwdepth-r3` continuation on the ledger already in this tree
+(3310 implemented / 216 declared / 58 deferred). Work stays inside
+`full/vision/`.
+
+| Snapshot | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this continuation | 3310 | 216 | 58 | 0 | 0 |
+| After this continuation | **3312** | **214** | **58** | **0** | **0** |
+
+Implemented gain: **+2**. The only remaining non-async `perform` identifiers in
+the graph were `ImageRequestHandler.performAll` and
+`TargetedImageRequestHandler.performAll` (mangled as ordinary methods that
+return `some AsyncSequence`, not `YaKF`). Both now run the request list
+synchronously, wrap the `VisionResult`s in an `AsyncSequence` with `Never`
+failure, and are asserted through `@_spi(OpenUIKitHost) performAllNow` so the
+sealed Linux gate never `await`s. The 214 leftover declared rows are all
+async `perform(on:orientation:)` / `ImageRequestHandler.perform` / targeted
+`perform` overloads (`YaKF` / `YaK`). Those stay declared: a different
+synchronous helper is not the same identifier.
+
+Added Linux behaviour this pass:
+
+- `VNDetectHorizonRequest` / overlay `DetectHorizonRequest` classical Sobel +
+  weighted-PCA line fit (documented non-Apple; 0 rad = level in lower-left
+  coordinates).
+- Overlay `DetectLensSmudgeRequest` Laplacian-RMS contrast mapped to 0...1
+  (uniform gray scores high; a sharp rectangle scores lower). Not Apple's
+  smudge model.
+- Overlay `TrackObjectRequest.performOnHandler` now has a focused two-frame
+  centroid/template assertion, matching the existing VN tracker.
+- `ImageRequestHandler.performAll` exercises barcodes, rectangles, contours,
+  feature print, horizon, lens smudge, object tracking, and fail-closed
+  classify through the same synchronous collector.
+
+Classify / recognize / Core ML / video-processor / homographic tracking remain
+fail-closed or deferred as before. Async overlay `perform(on:orientation:)`
+stays declared.

@@ -75,7 +75,42 @@ func testOverlayFeaturePrintPerform() {
 }
 
 func testOverlayTrackObjectRequest() {
-    let seed = DetectedObjectObservation(boundingBox: .fullImage)
-    _ = TrackObjectRequest(detectedObject: seed)
-    visionExpect(seed.boundingBox == .fullImage, "overlay detected object")
+    var frame1 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
+    var frame2 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
+    for y in 10..<22 {
+        for x in 10..<22 {
+            frame1[x, y] = (255, 255, 255, 255)
+        }
+    }
+    for y in 14..<26 {
+        for x in 18..<30 {
+            frame2[x, y] = (255, 255, 255, 255)
+        }
+    }
+    let seedBox = NormalizedRect(x: 10.0 / 60.0, y: 1 - 22.0 / 60.0, width: 12.0 / 60.0, height: 12.0 / 60.0)
+    let seed = DetectedObjectObservation(boundingBox: seedBox)
+    let request = TrackObjectRequest(detectedObject: seed)
+    visionExpect(seed.boundingBox == seedBox, "overlay detected object")
+    let first = try! request.performOnHandler(VNImageRequestHandler(cgImage: frame1.makeCGImage()))
+    visionExpect(first != nil, "first tracked frame")
+    let second = try! request.performOnHandler(VNImageRequestHandler(cgImage: frame2.makeCGImage()))
+    visionExpect(second != nil, "second tracked frame")
+    visionExpect(second!.boundingBox.origin.x > seedBox.origin.x - 0.05, "overlay centroid moved")
+}
+
+func testOverlayHorizonPerform() {
+    var request = DetectHorizonRequest()
+    request.setComputeDevice(.cpu, for: .main)
+    let observation = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionHorizonImage()))
+    visionExpect(observation != nil, "overlay horizon")
+    visionExpect(observation!.confidence > 0, "overlay horizon confidence")
+    _ = observation!.transform(for: CGSize(width: 80, height: 80))
+}
+
+func testOverlayLensSmudgePerform() {
+    var request = DetectLensSmudgeRequest()
+    request.cropAndScaleAction = .centerCrop
+    let sharp = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    let smudged = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(smudged.confidence > sharp.confidence, "overlay lens smudge contrast")
 }

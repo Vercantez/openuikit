@@ -906,7 +906,11 @@ public struct DetectHorizonRequest: ImageProcessingRequest {
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNDetectHorizonRequest()
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        return (request.results ?? []).compactMap { $0 as? VNHorizonObservation }.first.map(HorizonObservation.init)
     }
 
 }
@@ -965,7 +969,12 @@ public struct DetectLensSmudgeRequest: ImageProcessingRequest {
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let working = handler.raster.cropped(toNormalized: regionOfInterest.cgRect)
+        return SmudgeObservation(
+            confidence: visionLensSmudgeConfidence(in: working),
+            originatingRequestDescriptor: descriptor
+        )
     }
 
 }

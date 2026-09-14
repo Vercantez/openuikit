@@ -45,3 +45,36 @@ func testContourDetector() {
         visionExpect(area > 0, "contour area")
     }
 }
+
+func testHorizonDetector() {
+    let tilted = VNDetectHorizonRequest()
+    try! VNImageRequestHandler(cgImage: visionHorizonImage(slope: 0.25)).perform([tilted])
+    let tiltedObs = tilted.results?.first as? VNHorizonObservation
+    visionExpect(tiltedObs != nil, "horizon observation")
+    visionExpect(abs(tiltedObs!.angle + 0.245) < 0.2, "tilted horizon angle")
+    visionExpect(tiltedObs!.confidence > 0, "horizon confidence")
+    _ = tiltedObs!.transform
+    _ = tiltedObs!.transform(forImageWidth: 80, height: 80)
+
+    let level = VNDetectHorizonRequest()
+    var levelRaster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
+    for y in 0..<40 {
+        for x in 0..<80 {
+            levelRaster[x, y] = (220, 220, 220, 255)
+        }
+    }
+    try! VNImageRequestHandler(cgImage: levelRaster.makeCGImage()).perform([level])
+    let levelObs = level.results?.first as? VNHorizonObservation
+    visionExpect(levelObs != nil, "level horizon")
+    visionExpect(abs(levelObs!.angle) < 0.2, "level horizon near 0")
+}
+
+func testLensSmudgeDetector() {
+    let request = DetectLensSmudgeRequest()
+    let sharp = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    let smudged = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(smudged.confidence > sharp.confidence, "uniform is more smudged than sharp rectangle")
+    visionExpect(smudged.confidence > 0.8, "uniform smudge high")
+    visionExpect(sharp.confidence < 0.6, "sharp rectangle smudge low")
+    visionExpectEqual(smudged.originatingRequestDescriptor, .detectLensSmudgeRequest(.revision1), "smudge descriptor")
+}

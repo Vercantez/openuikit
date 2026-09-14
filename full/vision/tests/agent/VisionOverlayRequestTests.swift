@@ -492,6 +492,85 @@ func testImageRequestHandlerOverlayPerformNow() {
     }
 }
 
+func testImageRequestHandlerPerformAll() {
+    let qrImage = try! VisionHost.makeQRImage(payload: "HELLO")
+    var barcodes = DetectBarcodesRequest()
+    barcodes.symbologies = [.qr]
+    let qrHandler = ImageRequestHandler(qrImage)
+    _ = qrHandler.performAll([barcodes])
+    let barcodeItems = qrHandler.performAllNow([barcodes])
+    visionExpectEqual(barcodeItems.count, 1, "barcode performAll count")
+    if case .detectBarcodes(_, let hits) = barcodeItems[0] {
+        visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "performAll QR")
+    } else {
+        visionExpect(false, "expected barcode VisionResult")
+    }
+
+    let rectangleHandler = ImageRequestHandler(visionRectangleImage())
+    _ = rectangleHandler.performAll([DetectRectanglesRequest()])
+    let rectangleItems = rectangleHandler.performAllNow([DetectRectanglesRequest()])
+    if case .detectRectangles(_, let found) = rectangleItems[0] {
+        visionExpect(!found.isEmpty, "performAll rectangles")
+    } else {
+        visionExpect(false, "expected rectangle VisionResult")
+    }
+
+    _ = rectangleHandler.performAll([DetectContoursRequest()])
+    let contourItems = rectangleHandler.performAllNow([DetectContoursRequest()])
+    if case .detectContours(_, let contours) = contourItems[0] {
+        visionExpect(contours.contourCount >= 1, "performAll contours")
+    } else {
+        visionExpect(false, "expected contour VisionResult")
+    }
+
+    _ = rectangleHandler.performAll([GenerateImageFeaturePrintRequest()])
+    let printItems = rectangleHandler.performAllNow([GenerateImageFeaturePrintRequest()])
+    if case .generateImageFeaturePrint(_, let printObs) = printItems[0] {
+        visionExpectEqual(try! printObs.distance(to: printObs), 0, "performAll feature print")
+    } else {
+        visionExpect(false, "expected feature-print VisionResult")
+    }
+
+    let horizonHandler = ImageRequestHandler(visionHorizonImage())
+    _ = horizonHandler.performAll([DetectHorizonRequest()])
+    let horizonItems = horizonHandler.performAllNow([DetectHorizonRequest()])
+    if case .detectHorizon(_, let horizon) = horizonItems[0] {
+        visionExpect(horizon != nil, "performAll horizon")
+    } else {
+        visionExpect(false, "expected horizon VisionResult")
+    }
+
+    let smudgeHandler = ImageRequestHandler(visionUniformGrayImage())
+    _ = smudgeHandler.performAll([DetectLensSmudgeRequest()])
+    let smudgeItems = smudgeHandler.performAllNow([DetectLensSmudgeRequest()])
+    if case .detectLensSmudge(_, let smudge) = smudgeItems[0] {
+        visionExpect(smudge.confidence > 0.8, "performAll smudge")
+    } else {
+        visionExpect(false, "expected smudge VisionResult")
+    }
+
+    let seed = DetectedObjectObservation(boundingBox: .fullImage)
+    _ = rectangleHandler.performAll([TrackObjectRequest(detectedObject: seed)])
+    let trackItems = rectangleHandler.performAllNow([TrackObjectRequest(detectedObject: seed)])
+    if case .trackObject(_, let tracked) = trackItems[0] {
+        visionExpect(tracked != nil, "performAll track object")
+    } else {
+        visionExpect(false, "expected track VisionResult")
+    }
+
+    _ = rectangleHandler.performAll([ClassifyImageRequest()])
+    let classifyItems = rectangleHandler.performAllNow([ClassifyImageRequest()])
+    if case .error(_, let error) = classifyItems[0] {
+        if case .invalidModel = error as? VisionError {
+            visionExpect(true, "performAll classify fail closed")
+        } else {
+            visionExpect(false, "unexpected classify error \(error)")
+        }
+    } else {
+        visionExpect(false, "expected classify error VisionResult")
+    }
+}
+
 func testOverlayEquatableInequality() {
     visionExpect(DetectBarcodesRequest() == DetectBarcodesRequest(), "barcodes ==")
     visionExpect(!(DetectBarcodesRequest() != DetectBarcodesRequest()), "barcodes !=")

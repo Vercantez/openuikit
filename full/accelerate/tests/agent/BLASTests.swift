@@ -396,3 +396,268 @@ func testBLASComplexGemvHemv() {
     _ = zhemv_(&uplo, &n, &dalpha, &dha, &dhlda, &dhx, &dhincx, &dbeta, &dhy, &dhincy)
     precondition(abs(dhy[0] - 4) < 1e-12 && abs(dhy[3] - 7) < 1e-12)
 }
+
+func testBLASComplexTrmvTrsv() {
+    var uplo = CChar(85)
+    var transN = CChar(78)
+    var transC = CChar(67)
+    var diagN = CChar(78)
+    var diagU = CChar(85)
+    var n: Int32 = 2
+    var lda: Int32 = 2
+    var incx: Int32 = 1
+    var a: [Float] = [1, 1, 0, 0, 2, 0, 3, -1]
+    var x: [Float] = [1, 0, 0, 1]
+    _ = ctrmv_(&uplo, &transN, &diagN, &n, &a, &lda, &x, &incx)
+    precondition(abs(x[0] - 1) < 0.0001 && abs(x[1] - 3) < 0.0001)
+    precondition(abs(x[2] - 1) < 0.0001 && abs(x[3] - 3) < 0.0001)
+    var xc: [Float] = [1, 0, 0, 1]
+    _ = ctrmv_(&uplo, &transC, &diagN, &n, &a, &lda, &xc, &incx)
+    precondition(abs(xc[0] - 1) < 0.0001 && abs(xc[1] + 1) < 0.0001)
+    precondition(abs(xc[2] - 1) < 0.0001 && abs(xc[3] - 3) < 0.0001)
+    var xs: [Float] = [1, 3, 1, 3]
+    _ = ctrsv_(&uplo, &transN, &diagN, &n, &a, &lda, &xs, &incx)
+    precondition(abs(xs[0] - 1) < 0.0001 && abs(xs[1]) < 0.0001)
+    precondition(abs(xs[2]) < 0.0001 && abs(xs[3] - 1) < 0.0001)
+    var uploL = CChar(76)
+    var aLow: [Float] = [1, 1, 2, 0, 0, 0, 3, -1]
+    var xl: [Float] = [1, 0, 0, 1]
+    _ = ctrmv_(&uploL, &transN, &diagN, &n, &aLow, &lda, &xl, &incx)
+    precondition(abs(xl[0] - 1) < 0.0001 && abs(xl[1] - 1) < 0.0001)
+    precondition(abs(xl[2] - 3) < 0.0001 && abs(xl[3] - 3) < 0.0001)
+    var aUnit: [Float] = [99, 99, 0, 0, 2, 0, 99, 99]
+    var xu: [Float] = [1, 0, 0, 1]
+    _ = ctrmv_(&uplo, &transN, &diagU, &n, &aUnit, &lda, &xu, &incx)
+    precondition(abs(xu[0] - 1) < 0.0001 && abs(xu[1] - 2) < 0.0001)
+    precondition(abs(xu[2]) < 0.0001 && abs(xu[3] - 1) < 0.0001)
+    var n3: Int32 = 3
+    var lda3: Int32 = 3
+    var a3: [Float] = [
+        2, 0, 0, 0, 0, 0,
+        1, 0, 2, 0, 0, 0,
+        0, 0, 1, 0, 2, 0
+    ]
+    var x3: [Float] = [1, 0, 1, 0, 1, 0]
+    _ = ctrmv_(&uplo, &transN, &diagN, &n3, &a3, &lda3, &x3, &incx)
+    precondition(abs(x3[0] - 3) < 0.0001 && abs(x3[2] - 3) < 0.0001 && abs(x3[4] - 2) < 0.0001)
+    var b3 = x3
+    _ = ctrsv_(&uplo, &transN, &diagN, &n3, &a3, &lda3, &b3, &incx)
+    precondition(abs(b3[0] - 1) < 0.0001 && abs(b3[2] - 1) < 0.0001 && abs(b3[4] - 1) < 0.0001)
+    var da: [Double] = [1, 1, 0, 0, 2, 0, 3, -1]
+    var dx: [Double] = [1, 0, 0, 1]
+    _ = ztrmv_(&uplo, &transN, &diagN, &n, &da, &lda, &dx, &incx)
+    precondition(abs(dx[0] - 1) < 1e-12 && abs(dx[1] - 3) < 1e-12)
+    var dxs: [Double] = [1, 3, 1, 3]
+    _ = ztrsv_(&uplo, &transN, &diagN, &n, &da, &lda, &dxs, &incx)
+    precondition(abs(dxs[0] - 1) < 1e-12 && abs(dxs[3] - 1) < 1e-12)
+}
+
+func testBLASComplexTrmmTrsm() {
+    var sideL = CChar(76)
+    var sideR = CChar(82)
+    var uplo = CChar(85)
+    var transN = CChar(78)
+    var transC = CChar(67)
+    var diagN = CChar(78)
+    var m: Int32 = 2
+    var n: Int32 = 2
+    var lda: Int32 = 2
+    var ldb: Int32 = 2
+    var alpha: [Float] = [1, 0]
+    var a: [Float] = [1, 1, 0, 0, 2, 0, 3, -1]
+    var b: [Float] = [1, 0, 0, 0, 0, 0, 1, 0]
+    _ = ctrmm_(&sideL, &uplo, &transN, &diagN, &m, &n, &alpha, &a, &lda, &b, &ldb)
+    precondition(abs(b[0] - 1) < 0.0001 && abs(b[1] - 1) < 0.0001)
+    precondition(abs(b[4] - 2) < 0.0001 && abs(b[6] - 3) < 0.0001 && abs(b[7] + 1) < 0.0001)
+    var bC: [Float] = [1, 0, 0, 0, 0, 0, 1, 0]
+    _ = ctrmm_(&sideL, &uplo, &transC, &diagN, &m, &n, &alpha, &a, &lda, &bC, &ldb)
+    precondition(abs(bC[0] - 1) < 0.0001 && abs(bC[1] + 1) < 0.0001)
+    precondition(abs(bC[2] - 2) < 0.0001 && abs(bC[6] - 3) < 0.0001 && abs(bC[7] - 1) < 0.0001)
+    var bR: [Float] = [1, 0, 0, 0, 0, 0, 1, 0]
+    _ = ctrmm_(&sideR, &uplo, &transN, &diagN, &m, &n, &alpha, &a, &lda, &bR, &ldb)
+    precondition(abs(bR[0] - 1) < 0.0001 && abs(bR[6] - 3) < 0.0001)
+    var bS = b
+    _ = ctrsm_(&sideL, &uplo, &transN, &diagN, &m, &n, &alpha, &a, &lda, &bS, &ldb)
+    precondition(abs(bS[0] - 1) < 0.0001 && abs(bS[1]) < 0.0001)
+    precondition(abs(bS[2]) < 0.0001 && abs(bS[3]) < 0.0001)
+    precondition(abs(bS[4]) < 0.0001 && abs(bS[6] - 1) < 0.0001)
+    var da: [Double] = [1, 1, 0, 0, 2, 0, 3, -1]
+    var db: [Double] = [1, 0, 0, 0, 0, 0, 1, 0]
+    var dalpha: [Double] = [1, 0]
+    _ = ztrmm_(&sideL, &uplo, &transN, &diagN, &m, &n, &dalpha, &da, &lda, &db, &ldb)
+    precondition(abs(db[0] - 1) < 1e-12 && abs(db[6] - 3) < 1e-12)
+    _ = ztrsm_(&sideL, &uplo, &transN, &diagN, &m, &n, &dalpha, &da, &lda, &db, &ldb)
+    precondition(abs(db[0] - 1) < 1e-12 && abs(db[6] - 1) < 1e-12)
+}
+
+func testBLASComplexHemmHerkCher() {
+    var sideL = CChar(76)
+    var sideR = CChar(82)
+    var uplo = CChar(85)
+    var transN = CChar(78)
+    var transC = CChar(67)
+    var m: Int32 = 2
+    var n: Int32 = 2
+    var k1: Int32 = 1
+    var lda: Int32 = 2
+    var ldb: Int32 = 2
+    var ldc: Int32 = 2
+    var lda1: Int32 = 1
+    var incx: Int32 = 1
+    var alpha: [Float] = [1, 0]
+    var beta: [Float] = [0, 0]
+    var alphaR: Float = 1
+    var betaR: Float = 0
+    var aH: [Float] = [1, 0, 0, 0, 2, -3, 4, 0]
+    var b: [Float] = [1, 0, 0, 0, 1, 0, 0, 1]
+    var c = [Float](repeating: 0, count: 8)
+    _ = chemm_(&sideL, &uplo, &m, &n, &alpha, &aH, &lda, &b, &ldb, &beta, &c, &ldc)
+    precondition(abs(c[0] - 1) < 0.0001 && abs(c[1]) < 0.0001)
+    precondition(abs(c[2] - 2) < 0.0001 && abs(c[3] - 3) < 0.0001)
+    precondition(abs(c[4] - 4) < 0.0001 && abs(c[5] - 2) < 0.0001)
+    precondition(abs(c[6] - 2) < 0.0001 && abs(c[7] - 7) < 0.0001)
+    var cR = [Float](repeating: 0, count: 8)
+    _ = chemm_(&sideR, &uplo, &m, &n, &alpha, &aH, &lda, &b, &ldb, &beta, &cR, &ldc)
+    precondition(abs(cR[0] - 3) < 0.0001 && abs(cR[1] - 3) < 0.0001)
+    precondition(abs(cR[2] + 3) < 0.0001 && abs(cR[3] - 2) < 0.0001)
+    var aI: [Float] = [1, 0, 0, 0, 0, 0, 1, 0]
+    var xh: [Float] = [1, 0, 0, 1]
+    _ = cher_(&uplo, &n, &alphaR, &xh, &incx, &aI, &lda)
+    precondition(abs(aI[0] - 2) < 0.0001 && abs(aI[1]) < 0.0001)
+    precondition(abs(aI[4]) < 0.0001 && abs(aI[5] + 1) < 0.0001)
+    precondition(abs(aI[6] - 2) < 0.0001)
+    var aCol: [Float] = [1, 0, 0, 1]
+    var ck = [Float](repeating: 0, count: 8)
+    _ = cherk_(&uplo, &transN, &n, &k1, &alphaR, &aCol, &lda, &betaR, &ck, &ldc)
+    precondition(abs(ck[0] - 1) < 0.0001 && abs(ck[5] + 1) < 0.0001 && abs(ck[6] - 1) < 0.0001)
+    var aRow: [Float] = [1, 0, 0, 1]
+    var ckC = [Float](repeating: 0, count: 8)
+    _ = cherk_(&uplo, &transC, &n, &k1, &alphaR, &aRow, &lda1, &betaR, &ckC, &ldc)
+    precondition(abs(ckC[0] - 1) < 0.0001 && abs(ckC[5] - 1) < 0.0001 && abs(ckC[6] - 1) < 0.0001)
+    var daH: [Double] = [1, 0, 0, 0, 2, -3, 4, 0]
+    var db: [Double] = [1, 0, 0, 0, 1, 0, 0, 1]
+    var dc = [Double](repeating: 0, count: 8)
+    var dalpha: [Double] = [1, 0]
+    var dbeta: [Double] = [0, 0]
+    _ = zhemm_(&sideL, &uplo, &m, &n, &dalpha, &daH, &lda, &db, &ldb, &dbeta, &dc, &ldc)
+    precondition(abs(dc[0] - 1) < 1e-12 && abs(dc[7] - 7) < 1e-12)
+    var daI: [Double] = [1, 0, 0, 0, 0, 0, 1, 0]
+    var dxh: [Double] = [1, 0, 0, 1]
+    var dAlphaR: Double = 1
+    _ = zher_(&uplo, &n, &dAlphaR, &dxh, &incx, &daI, &lda)
+    precondition(abs(daI[0] - 2) < 1e-12 && abs(daI[5] + 1) < 1e-12)
+    var daCol: [Double] = [1, 0, 0, 1]
+    var dck = [Double](repeating: 0, count: 8)
+    var dBetaR: Double = 0
+    _ = zherk_(&uplo, &transN, &n, &k1, &dAlphaR, &daCol, &lda, &dBetaR, &dck, &ldc)
+    precondition(abs(dck[0] - 1) < 1e-12 && abs(dck[5] + 1) < 1e-12)
+}
+
+func testBLASComplexCher2SymmSyrk() {
+    var sideL = CChar(76)
+    var uplo = CChar(85)
+    var transN = CChar(78)
+    var n: Int32 = 2
+    var m: Int32 = 2
+    var k1: Int32 = 1
+    var lda: Int32 = 2
+    var ldb: Int32 = 2
+    var ldc: Int32 = 2
+    var incx: Int32 = 1
+    var incy: Int32 = 1
+    var alpha: [Float] = [1, 0]
+    var beta: [Float] = [0, 0]
+    var betaR: Float = 0
+    var aH = [Float](repeating: 0, count: 8)
+    var x2: [Float] = [1, 0, 0, 1]
+    var y2: [Float] = [0, 1, 1, 0]
+    _ = cher2_(&uplo, &n, &alpha, &x2, &incx, &y2, &incy, &aH, &lda)
+    precondition(abs(aH[0]) < 0.0001 && abs(aH[4] - 2) < 0.0001 && abs(aH[6]) < 0.0001)
+    var aA: [Float] = [1, 0, 0, 1]
+    var bB: [Float] = [0, 1, 1, 0]
+    var c2k = [Float](repeating: 0, count: 8)
+    _ = cher2k_(&uplo, &transN, &n, &k1, &alpha, &aA, &lda, &bB, &ldb, &betaR, &c2k, &ldc)
+    precondition(abs(c2k[0]) < 0.0001 && abs(c2k[4] - 2) < 0.0001)
+    var aS: [Float] = [1, 0, 0, 0, 2, 1, 3, 0]
+    var b: [Float] = [1, 0, 0, 0, 1, 0, 0, 1]
+    var cS = [Float](repeating: 0, count: 8)
+    _ = csymm_(&sideL, &uplo, &m, &n, &alpha, &aS, &lda, &b, &ldb, &beta, &cS, &ldc)
+    precondition(abs(cS[0] - 1) < 0.0001 && abs(cS[2] - 2) < 0.0001 && abs(cS[3] - 1) < 0.0001)
+    precondition(abs(cS[4]) < 0.0001 && abs(cS[5] - 2) < 0.0001)
+    precondition(abs(cS[6] - 2) < 0.0001 && abs(cS[7] - 4) < 0.0001)
+    var aCol: [Float] = [1, 0, 0, 1]
+    var cK = [Float](repeating: 0, count: 8)
+    _ = csyrk_(&uplo, &transN, &n, &k1, &alpha, &aCol, &lda, &beta, &cK, &ldc)
+    precondition(abs(cK[0] - 1) < 0.0001 && abs(cK[5] - 1) < 0.0001 && abs(cK[6] + 1) < 0.0001)
+    var c2s = [Float](repeating: 0, count: 8)
+    _ = csyr2k_(&uplo, &transN, &n, &k1, &alpha, &aA, &lda, &bB, &ldb, &beta, &c2s, &ldc)
+    precondition(abs(c2s[1] - 2) < 0.0001 && abs(c2s[7] - 2) < 0.0001)
+    var dalpha: [Double] = [1, 0]
+    var dbeta: [Double] = [0, 0]
+    var dBetaR: Double = 0
+    var daH = [Double](repeating: 0, count: 8)
+    var dx2: [Double] = [1, 0, 0, 1]
+    var dy2: [Double] = [0, 1, 1, 0]
+    _ = zher2_(&uplo, &n, &dalpha, &dx2, &incx, &dy2, &incy, &daH, &lda)
+    precondition(abs(daH[4] - 2) < 1e-12)
+    var daA: [Double] = [1, 0, 0, 1]
+    var dbB: [Double] = [0, 1, 1, 0]
+    var dc2k = [Double](repeating: 0, count: 8)
+    _ = zher2k_(&uplo, &transN, &n, &k1, &dalpha, &daA, &lda, &dbB, &ldb, &dBetaR, &dc2k, &ldc)
+    precondition(abs(dc2k[4] - 2) < 1e-12)
+    var daS: [Double] = [1, 0, 0, 0, 2, 1, 3, 0]
+    var db: [Double] = [1, 0, 0, 0, 1, 0, 0, 1]
+    var dcS = [Double](repeating: 0, count: 8)
+    _ = zsymm_(&sideL, &uplo, &m, &n, &dalpha, &daS, &lda, &db, &ldb, &dbeta, &dcS, &ldc)
+    precondition(abs(dcS[6] - 2) < 1e-12 && abs(dcS[7] - 4) < 1e-12)
+    var daCol: [Double] = [1, 0, 0, 1]
+    var dcK = [Double](repeating: 0, count: 8)
+    _ = zsyrk_(&uplo, &transN, &n, &k1, &dalpha, &daCol, &lda, &dbeta, &dcK, &ldc)
+    precondition(abs(dcK[6] + 1) < 1e-12)
+    var dc2s = [Double](repeating: 0, count: 8)
+    _ = zsyr2k_(&uplo, &transN, &n, &k1, &dalpha, &daA, &lda, &dbB, &ldb, &dbeta, &dc2s, &ldc)
+    precondition(abs(dc2s[1] - 2) < 1e-12 && abs(dc2s[7] - 2) < 1e-12)
+}
+
+func testBLASComplexRotgRot() {
+    var n: Int32 = 2
+    var incx: Int32 = 1
+    var incy: Int32 = 1
+    var ca: [Float] = [3, 4]
+    var cb: [Float] = [0, 5]
+    var c: Float = 0
+    var cs: [Float] = [0, 0]
+    _ = crotg_(&ca, &cb, &c, &cs)
+    precondition(abs(ca[0] - 4.2426405) < 0.0001 && abs(ca[1] - 5.656854) < 0.0001)
+    precondition(abs(c - 0.70710677) < 0.0001)
+    precondition(abs(cs[0] - 0.565685) < 0.0001 && abs(cs[1] + 0.424264) < 0.0001)
+    var ca0: [Float] = [0, 0]
+    var cb0: [Float] = [3, 4]
+    var c0: Float = 99
+    var s0: [Float] = [9, 9]
+    _ = crotg_(&ca0, &cb0, &c0, &s0)
+    precondition(abs(c0) < 0.0001 && abs(s0[0] - 1) < 0.0001 && abs(s0[1]) < 0.0001)
+    precondition(abs(ca0[0] - 3) < 0.0001 && abs(ca0[1] - 4) < 0.0001)
+    var cx: [Float] = [1, 2, 3, 4]
+    var cy: [Float] = [5, 6, 7, 8]
+    var cval: Float = 0.6
+    var sval: Float = 0.8
+    _ = csrot_(&n, &cx, &incx, &cy, &incy, &cval, &sval)
+    precondition(abs(cx[0] - 4.6) < 0.0001 && abs(cx[1] - 6) < 0.0001)
+    precondition(abs(cx[2] - 7.4) < 0.0001 && abs(cx[3] - 8.8) < 0.0001)
+    precondition(abs(cy[0] - 2.2) < 0.0001 && abs(cy[1] - 2) < 0.0001)
+    precondition(abs(cy[2] - 1.8) < 0.0001 && abs(cy[3] - 1.6) < 0.0001)
+    var zca: [Double] = [3, 4]
+    var zcb: [Double] = [0, 5]
+    var zc: Double = 0
+    var zcs: [Double] = [0, 0]
+    _ = zrotg_(&zca, &zcb, &zc, &zcs)
+    precondition(abs(zca[0] - 4.242640687119285) < 1e-9)
+    precondition(abs(zc - 0.7071067811865475) < 1e-12)
+    var dzx: [Double] = [1, 2, 3, 4]
+    var dzy: [Double] = [5, 6, 7, 8]
+    var dcval: Double = 0.6
+    var dsval: Double = 0.8
+    _ = zdrot_(&n, &dzx, &incx, &dzy, &incy, &dcval, &dsval)
+    precondition(abs(dzx[0] - 4.6) < 1e-12 && abs(dzy[0] - 2.2) < 1e-12)
+}

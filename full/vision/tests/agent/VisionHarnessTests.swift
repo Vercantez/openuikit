@@ -25,6 +25,22 @@ func visionRectangleImage() -> CGImage {
     return raster.makeCGImage()
 }
 
+func visionHorizonImage(slope: Double = 0.25) -> CGImage {
+    var raster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
+    for y in 0..<80 {
+        for x in 0..<80 {
+            if Double(y) < 20 + slope * Double(x) {
+                raster[x, y] = (220, 220, 220, 255)
+            }
+        }
+    }
+    return raster.makeCGImage()
+}
+
+func visionUniformGrayImage() -> CGImage {
+    VisionRaster(width: 80, height: 80, filled: (128, 128, 128, 255)).makeCGImage()
+}
+
 func visionExpectOverlayInvalidModel<T>(_ work: () throws -> T, _ message: String) {
     do {
         _ = try work()

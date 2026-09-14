@@ -254,6 +254,72 @@ func visionTrackObject(
     )
 }
 
+/// Classical Sobel + weighted PCA line fit. Not Apple's horizon model.
+func visionDetectHorizon(in raster: VisionRaster) -> VNHorizonObservation {
+    let gray = raster.grayscale()
+    let width = raster.width
+    let height = raster.height
+    guard width > 2, height > 2 else {
+        return VNHorizonObservation(angle: 0, confidence: 0)
+    }
+    var sumX = 0.0
+    var sumY = 0.0
+    var sumXX = 0.0
+    var sumXY = 0.0
+    var sumYY = 0.0
+    var weightSum = 0.0
+    for y in 1..<(height - 1) {
+        for x in 1..<(width - 1) {
+            let gx = Double(gray[y * width + x + 1]) - Double(gray[y * width + x - 1])
+            let gy = Double(gray[(y + 1) * width + x]) - Double(gray[(y - 1) * width + x])
+            let mag = (gx * gx + gy * gy).squareRoot()
+            guard mag >= 16 else { continue }
+            let px = Double(x)
+            let py = Double(height - 1 - y)
+            sumX += mag * px
+            sumY += mag * py
+            sumXX += mag * px * px
+            sumXY += mag * px * py
+            sumYY += mag * py * py
+            weightSum += mag
+        }
+    }
+    guard weightSum > 0 else {
+        return VNHorizonObservation(angle: 0, confidence: 0)
+    }
+    let meanX = sumX / weightSum
+    let meanY = sumY / weightSum
+    let covXX = sumXX / weightSum - meanX * meanX
+    let covXY = sumXY / weightSum - meanX * meanY
+    let covYY = sumYY / weightSum - meanY * meanY
+    let angle = 0.5 * Foundation.atan2(2 * covXY, covXX - covYY)
+    let density = weightSum / Double(max(1, width * height))
+    let confidence = Float(max(0.05, min(1, density / 8)))
+    return VNHorizonObservation(angle: angle, confidence: confidence)
+}
+
+/// Laplacian-energy smudge score in 0...1. Not an Apple lens-smudge model.
+func visionLensSmudgeConfidence(in raster: VisionRaster) -> Float {
+    let gray = raster.grayscale()
+    let width = raster.width
+    let height = raster.height
+    guard width > 2, height > 2 else { return 1 }
+    var sumSq = 0.0
+    var count = 0.0
+    for y in 1..<(height - 1) {
+        for x in 1..<(width - 1) {
+            let index = y * width + x
+            let lap = Double(gray[index - 1]) + Double(gray[index + 1])
+                + Double(gray[index - width]) + Double(gray[index + width])
+                - 4 * Double(gray[index])
+            sumSq += lap * lap
+            count += 1
+        }
+    }
+    let rms = (sumSq / max(count, 1)).squareRoot()
+    return Float(max(0, min(1, 1 - rms / 30)))
+}
+
 private func traceContours(
     _ binary: [UInt8],
     width: Int,

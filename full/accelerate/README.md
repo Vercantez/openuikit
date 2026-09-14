@@ -267,3 +267,26 @@ Top-5 evidence distribution for the 55 newly implemented rows:
 5. `testSparseMultiplyDiagOracle` — 3 (5.5%) — CSC `init(structure:data:)` plus diag multiply
 
 Largest non-enum test is 10/55 = 18.2%, under the 40% remaining-row ceiling. Unobserved SparseFactorization LU/SBK members stay sequential placeholders and `declared`. vImage CG/CV and BNNS graph execute stay deferred/fail-closed. SwiftUI overlay IDs were not present.
+
+## Depth pass 2026-09-14 (complex triangular/hermitian BLAS)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Implements the remaining dense complex triangular and Hermitian/symmetric level-2/3 C BLAS plus Givens helpers, with Double `z*` twins, against hand-computed 2x2/3x3 cases pinned to the macOS 26.1 / Xcode 26.1 Accelerate oracle in `scratch/oracle-2026-09-14/complex-blas-2026-09-14.txt`. Packed/banded complex BLAS stay declared stubs.
+
+- Implemented before: **4034**
+- Implemented after: **4062**
+- Declared before: **1567**
+- Declared after: **1539**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **28**
+
+Top-5 evidence distribution for the 28 newly implemented rows:
+
+1. `testBLASComplexCher2SymmSyrk` — 10 (35.7%) — `cher2_`/`cher2k_`/`csymm_`/`csyrk_`/`csyr2k_` and `z*` twins
+2. `testBLASComplexHemmHerkCher` — 6 (21.4%) — `chemm_`/`cherk_`/`cher_` and `z*` twins
+3. `testBLASComplexTrmvTrsv` — 4 (14.3%) — `ctrmv_`/`ctrsv_`/`ztrmv_`/`ztrsv_`
+4. `testBLASComplexTrmmTrsm` — 4 (14.3%) — `ctrmm_`/`ctrsm_`/`ztrmm_`/`ztrsm_`
+5. `testBLASComplexRotgRot` — 4 (14.3%) — `crotg_`/`csrot_`/`zrotg_`/`zdrot_`
+
+Largest non-enum test is 10/28 = 35.7%, under the 40% remaining-row ceiling. Remaining packed/banded complex BLAS (`cgbmv_`/`chbmv_`/`chpmv_`/`chpr*`/`ctbmv_`/`ctbsv_`/`ctpmv_`/`ctpsv_` and `z*` twins) stay `declared`. vImage CG/CV and BNNS graph execute stay deferred/fail-closed.

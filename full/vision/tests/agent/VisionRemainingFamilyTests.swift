@@ -79,6 +79,38 @@ func testTargetedImageRequestHandlerInputs() {
     }
 }
 
+func testTargetedImageRequestHandlerPerformAll() {
+    let image = visionRectangleImage()
+    let handler = TargetedImageRequestHandler(source: image, target: image)
+    let seed = DetectedObjectObservation(boundingBox: .fullImage)
+    let request = TrackObjectRequest(detectedObject: seed)
+    _ = handler.performAll([request])
+    let items = handler.performAllNow([request])
+    visionExpectEqual(items.count, 1, "targeted performAll count")
+    if case .error(_, let error) = items[0] {
+        if case .invalidModel = error as? VisionError {
+            visionExpect(true, "targeted performAll fail closed")
+        } else {
+            visionExpect(false, "wrong targeted performAll error \(error)")
+        }
+    } else {
+        visionExpect(false, "expected targeted error VisionResult")
+    }
+
+    let invalid = TargetedImageRequestHandler(source: Data(), target: VisionHost.encodeRaw(image))
+    _ = invalid.performAll([request])
+    let invalidItems = invalid.performAllNow([request])
+    if case .error(_, let error) = invalidItems[0] {
+        if case .invalidImage = error as? VisionError {
+            visionExpect(true, "targeted performAll invalid image")
+        } else {
+            visionExpect(false, "wrong invalid-image error \(error)")
+        }
+    } else {
+        visionExpect(false, "expected invalid-image VisionResult")
+    }
+}
+
 func testRemainingOverlayProtocolContracts() {
     func boundingBox<T: BoundingBoxProviding>(_ value: T) -> NormalizedRect { value.boundingBox }
     func boundingRegion<T: BoundingRegionProviding>(_ value: T) -> NormalizedRegion { value.boundingRegion }

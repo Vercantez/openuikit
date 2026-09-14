@@ -738,9 +738,8 @@ func testDetectLensSmudgeRequestConfig() {
     visionExpectRevisionCodable(DetectLensSmudgeRequest.Revision.revision1, "revision codable")
     _ = DetectLensSmudgeRequest.Revision.revision1.hashValue
     visionExpect(DetectLensSmudgeRequest.Revision.revision1 != DetectLensSmudgeRequest.Revision.revision1 || request.revision == .revision1, "!=")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "lens smudge")
+    let smudge = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(smudge.confidence > 0.5, "config smudge contrast")
 }
 
 func testDetectFaceLandmarksRequestConfig() {
@@ -1132,9 +1131,9 @@ func testDetectHorizonRequestConfig() {
     var hasher = Hasher()
     request.hash(into: &hasher)
     visionExpectRevisionCodable(DetectHorizonRequest.Revision.revision1, "revision codable")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "horizon overlay")
+    let horizon = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionHorizonImage()))
+    visionExpect(horizon != nil, "config horizon")
+    visionExpect(horizon!.confidence > 0, "config horizon confidence")
 }
 
 func testTextObservationOverlayValues() {

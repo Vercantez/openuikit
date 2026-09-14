@@ -108,13 +108,6 @@ func testDetectHumanHandPoseFailClosed() {
     } catch let error as NSError {
         visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "3d invalidModel")
     }
-    let horizonReq = VNDetectHorizonRequest()
-    do {
-        try handler.perform([horizonReq])
-        visionExpect(false, "horizon expected invalidModel")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "horizon invalidModel")
-    }
     let textRects = VNDetectTextRectanglesRequest()
     do {
         try handler.perform([textRects])

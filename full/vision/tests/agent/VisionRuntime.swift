@@ -91,6 +91,39 @@ func testContourDetector() {
     }
 }
 
+func testHorizonDetector() {
+    let tilted = VNDetectHorizonRequest()
+    try! VNImageRequestHandler(cgImage: visionHorizonImage(slope: 0.25)).perform([tilted])
+    let tiltedObs = tilted.results?.first as? VNHorizonObservation
+    visionExpect(tiltedObs != nil, "horizon observation")
+    visionExpect(abs(tiltedObs!.angle + 0.245) < 0.2, "tilted horizon angle")
+    visionExpect(tiltedObs!.confidence > 0, "horizon confidence")
+    _ = tiltedObs!.transform
+    _ = tiltedObs!.transform(forImageWidth: 80, height: 80)
+
+    let level = VNDetectHorizonRequest()
+    var levelRaster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
+    for y in 0..<40 {
+        for x in 0..<80 {
+            levelRaster[x, y] = (220, 220, 220, 255)
+        }
+    }
+    try! VNImageRequestHandler(cgImage: levelRaster.makeCGImage()).perform([level])
+    let levelObs = level.results?.first as? VNHorizonObservation
+    visionExpect(levelObs != nil, "level horizon")
+    visionExpect(abs(levelObs!.angle) < 0.2, "level horizon near 0")
+}
+
+func testLensSmudgeDetector() {
+    let request = DetectLensSmudgeRequest()
+    let sharp = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    let smudged = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(smudged.confidence > sharp.confidence, "uniform is more smudged than sharp rectangle")
+    visionExpect(smudged.confidence > 0.8, "uniform smudge high")
+    visionExpect(sharp.confidence < 0.6, "sharp rectangle smudge low")
+    visionExpectEqual(smudged.originatingRequestDescriptor, .detectLensSmudgeRequest(.revision1), "smudge descriptor")
+}
+
 func testValueCatalog() {
     func roundtrip<T: CaseIterable & RawRepresentable & Equatable & Hashable>(_ values: T.Type, _ message: String)
     where T.RawValue: Equatable {
@@ -629,6 +662,22 @@ func visionRectangleImage() -> CGImage {
     return raster.makeCGImage()
 }
 
+func visionHorizonImage(slope: Double = 0.25) -> CGImage {
+    var raster = VisionRaster(width: 80, height: 80, filled: (0, 0, 0, 255))
+    for y in 0..<80 {
+        for x in 0..<80 {
+            if Double(y) < 20 + slope * Double(x) {
+                raster[x, y] = (220, 220, 220, 255)
+            }
+        }
+    }
+    return raster.makeCGImage()
+}
+
+func visionUniformGrayImage() -> CGImage {
+    VisionRaster(width: 80, height: 80, filled: (128, 128, 128, 255)).makeCGImage()
+}
+
 func testHarnessRectangleImage() {
     let image = visionRectangleImage()
     visionExpect(image.width == 80 && image.height == 80, "harness raster")
@@ -839,9 +888,44 @@ func testOverlayFeaturePrintPerform() {
 }
 
 func testOverlayTrackObjectRequest() {
-    let seed = DetectedObjectObservation(boundingBox: .fullImage)
-    _ = TrackObjectRequest(detectedObject: seed)
-    visionExpect(seed.boundingBox == .fullImage, "overlay detected object")
+    var frame1 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
+    var frame2 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
+    for y in 10..<22 {
+        for x in 10..<22 {
+            frame1[x, y] = (255, 255, 255, 255)
+        }
+    }
+    for y in 14..<26 {
+        for x in 18..<30 {
+            frame2[x, y] = (255, 255, 255, 255)
+        }
+    }
+    let seedBox = NormalizedRect(x: 10.0 / 60.0, y: 1 - 22.0 / 60.0, width: 12.0 / 60.0, height: 12.0 / 60.0)
+    let seed = DetectedObjectObservation(boundingBox: seedBox)
+    let request = TrackObjectRequest(detectedObject: seed)
+    visionExpect(seed.boundingBox == seedBox, "overlay detected object")
+    let first = try! request.performOnHandler(VNImageRequestHandler(cgImage: frame1.makeCGImage()))
+    visionExpect(first != nil, "first tracked frame")
+    let second = try! request.performOnHandler(VNImageRequestHandler(cgImage: frame2.makeCGImage()))
+    visionExpect(second != nil, "second tracked frame")
+    visionExpect(second!.boundingBox.origin.x > seedBox.origin.x - 0.05, "overlay centroid moved")
+}
+
+func testOverlayHorizonPerform() {
+    var request = DetectHorizonRequest()
+    request.setComputeDevice(.cpu, for: .main)
+    let observation = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionHorizonImage()))
+    visionExpect(observation != nil, "overlay horizon")
+    visionExpect(observation!.confidence > 0, "overlay horizon confidence")
+    _ = observation!.transform(for: CGSize(width: 80, height: 80))
+}
+
+func testOverlayLensSmudgePerform() {
+    var request = DetectLensSmudgeRequest()
+    request.cropAndScaleAction = .centerCrop
+    let sharp = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    let smudged = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(smudged.confidence > sharp.confidence, "overlay lens smudge contrast")
 }
 
 func testRequestBase() {
@@ -1523,13 +1607,6 @@ func testDetectHumanHandPoseFailClosed() {
         visionExpect(false, "3d expected invalidModel")
     } catch let error as NSError {
         visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "3d invalidModel")
-    }
-    let horizonReq = VNDetectHorizonRequest()
-    do {
-        try handler.perform([horizonReq])
-        visionExpect(false, "horizon expected invalidModel")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "horizon invalidModel")
     }
     let textRects = VNDetectTextRectanglesRequest()
     do {
@@ -2484,6 +2561,117 @@ func testImageRequestHandlerOverlayPerformNow() {
     }
 }
 
+func testImageRequestHandlerPerformAll() {
+    let qrImage = try! VisionHost.makeQRImage(payload: "HELLO")
+    var barcodes = DetectBarcodesRequest()
+    barcodes.symbologies = [.qr]
+    let qrHandler = ImageRequestHandler(qrImage)
+    _ = qrHandler.performAll([barcodes])
+    let barcodeItems = qrHandler.performAllNow([barcodes])
+    visionExpectEqual(barcodeItems.count, 1, "barcode performAll count")
+    if case .detectBarcodes(_, let hits) = barcodeItems[0] {
+        visionExpect(hits.contains(where: { $0.payloadString == "HELLO" }), "performAll QR")
+    } else {
+        visionExpect(false, "expected barcode VisionResult")
+    }
+
+    let rectangleHandler = ImageRequestHandler(visionRectangleImage())
+    _ = rectangleHandler.performAll([DetectRectanglesRequest()])
+    let rectangleItems = rectangleHandler.performAllNow([DetectRectanglesRequest()])
+    if case .detectRectangles(_, let found) = rectangleItems[0] {
+        visionExpect(!found.isEmpty, "performAll rectangles")
+    } else {
+        visionExpect(false, "expected rectangle VisionResult")
+    }
+
+    _ = rectangleHandler.performAll([DetectContoursRequest()])
+    let contourItems = rectangleHandler.performAllNow([DetectContoursRequest()])
+    if case .detectContours(_, let contours) = contourItems[0] {
+        visionExpect(contours.contourCount >= 1, "performAll contours")
+    } else {
+        visionExpect(false, "expected contour VisionResult")
+    }
+
+    _ = rectangleHandler.performAll([GenerateImageFeaturePrintRequest()])
+    let printItems = rectangleHandler.performAllNow([GenerateImageFeaturePrintRequest()])
+    if case .generateImageFeaturePrint(_, let printObs) = printItems[0] {
+        visionExpectEqual(try! printObs.distance(to: printObs), 0, "performAll feature print")
+    } else {
+        visionExpect(false, "expected feature-print VisionResult")
+    }
+
+    let horizonHandler = ImageRequestHandler(visionHorizonImage())
+    _ = horizonHandler.performAll([DetectHorizonRequest()])
+    let horizonItems = horizonHandler.performAllNow([DetectHorizonRequest()])
+    if case .detectHorizon(_, let horizon) = horizonItems[0] {
+        visionExpect(horizon != nil, "performAll horizon")
+    } else {
+        visionExpect(false, "expected horizon VisionResult")
+    }
+
+    let smudgeHandler = ImageRequestHandler(visionUniformGrayImage())
+    _ = smudgeHandler.performAll([DetectLensSmudgeRequest()])
+    let smudgeItems = smudgeHandler.performAllNow([DetectLensSmudgeRequest()])
+    if case .detectLensSmudge(_, let smudge) = smudgeItems[0] {
+        visionExpect(smudge.confidence > 0.8, "performAll smudge")
+    } else {
+        visionExpect(false, "expected smudge VisionResult")
+    }
+
+    let seed = DetectedObjectObservation(boundingBox: .fullImage)
+    _ = rectangleHandler.performAll([TrackObjectRequest(detectedObject: seed)])
+    let trackItems = rectangleHandler.performAllNow([TrackObjectRequest(detectedObject: seed)])
+    if case .trackObject(_, let tracked) = trackItems[0] {
+        visionExpect(tracked != nil, "performAll track object")
+    } else {
+        visionExpect(false, "expected track VisionResult")
+    }
+
+    _ = rectangleHandler.performAll([ClassifyImageRequest()])
+    let classifyItems = rectangleHandler.performAllNow([ClassifyImageRequest()])
+    if case .error(_, let error) = classifyItems[0] {
+        if case .invalidModel = error as? VisionError {
+            visionExpect(true, "performAll classify fail closed")
+        } else {
+            visionExpect(false, "unexpected classify error \(error)")
+        }
+    } else {
+        visionExpect(false, "expected classify error VisionResult")
+    }
+}
+
+func testTargetedImageRequestHandlerPerformAll() {
+    let image = visionRectangleImage()
+    let handler = TargetedImageRequestHandler(source: image, target: image)
+    let seed = DetectedObjectObservation(boundingBox: .fullImage)
+    let request = TrackObjectRequest(detectedObject: seed)
+    _ = handler.performAll([request])
+    let items = handler.performAllNow([request])
+    visionExpectEqual(items.count, 1, "targeted performAll count")
+    if case .error(_, let error) = items[0] {
+        if case .invalidModel = error as? VisionError {
+            visionExpect(true, "targeted performAll fail closed")
+        } else {
+            visionExpect(false, "wrong targeted performAll error \(error)")
+        }
+    } else {
+        visionExpect(false, "expected targeted error VisionResult")
+    }
+
+    let invalid = TargetedImageRequestHandler(source: Data(), target: VisionHost.encodeRaw(image))
+    _ = invalid.performAll([request])
+    let invalidItems = invalid.performAllNow([request])
+    if case .error(_, let error) = invalidItems[0] {
+        if case .invalidImage = error as? VisionError {
+            visionExpect(true, "targeted performAll invalid image")
+        } else {
+            visionExpect(false, "wrong invalid-image error \(error)")
+        }
+    } else {
+        visionExpect(false, "expected invalid-image VisionResult")
+    }
+}
+
 func testOverlayEquatableInequality() {
     visionExpect(DetectBarcodesRequest() == DetectBarcodesRequest(), "barcodes ==")
     visionExpect(!(DetectBarcodesRequest() != DetectBarcodesRequest()), "barcodes !=")
@@ -3248,9 +3436,8 @@ func testDetectLensSmudgeRequestConfig() {
     visionExpectRevisionCodable(DetectLensSmudgeRequest.Revision.revision1, "revision codable")
     _ = DetectLensSmudgeRequest.Revision.revision1.hashValue
     visionExpect(DetectLensSmudgeRequest.Revision.revision1 != DetectLensSmudgeRequest.Revision.revision1 || request.revision == .revision1, "!=")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "lens smudge")
+    let smudge = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionUniformGrayImage()))
+    visionExpect(smudge.confidence > 0.5, "config smudge contrast")
 }
 
 func testDetectFaceLandmarksRequestConfig() {
@@ -3642,9 +3829,9 @@ func testDetectHorizonRequestConfig() {
     var hasher = Hasher()
     request.hash(into: &hasher)
     visionExpectRevisionCodable(DetectHorizonRequest.Revision.revision1, "revision codable")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "horizon overlay")
+    let horizon = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionHorizonImage()))
+    visionExpect(horizon != nil, "config horizon")
+    visionExpect(horizon!.confidence > 0, "config horizon confidence")
 }
 
 func testTextObservationOverlayValues() {
@@ -3908,6 +4095,8 @@ func visionRunFocusedTests() {
     testBarcodeURLHandler()
     testRectangleDetector()
     testContourDetector()
+    testHorizonDetector()
+    testLensSmudgeDetector()
     testFeaturePrint()
     testTranslationalRegistration()
     testHomographicRegistrationFailClosed()
@@ -3923,6 +4112,8 @@ func visionRunFocusedTests() {
     testOverlayContourPerform()
     testOverlayFeaturePrintPerform()
     testOverlayTrackObjectRequest()
+    testOverlayHorizonPerform()
+    testOverlayLensSmudgePerform()
     testCoordinateMappingOrientation()
     testRecognizedPointKeyCatalog()
     testHumanBodyPoseObservationJoints()
@@ -3955,6 +4146,8 @@ func visionRunFocusedTests() {
     testOverlayROIAndInvalidImage()
     testVNTrackOpticalFlowRequestConfig()
     testImageRequestHandlerOverlayPerformNow()
+    testImageRequestHandlerPerformAll()
+    testTargetedImageRequestHandlerPerformAll()
     testOverlayEquatableInequality()
     testPixelBufferObservationValues()
     testVisionErrorCatalog()

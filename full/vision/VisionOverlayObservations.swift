@@ -2028,6 +2028,145 @@ public final class ImageRequestHandler: @unchecked Sendable {
         }
         throw VisionError.unsupportedRequest("request type")
     }
+
+    public func performAll<S: Sequence>(_ requests: S) -> some AsyncSequence<VisionResult, Never>
+        where S.Element: VisionRequest
+    {
+        VisionResultSequence(items: performAllNow(requests))
+    }
+
+    @_spi(OpenUIKitHost)
+    public func performAllNow<S: Sequence>(_ requests: S) -> [VisionResult] where S.Element: VisionRequest {
+        requests.map { visionCollectOverlayResult($0, on: inner) }
+    }
+}
+
+struct VisionResultSequence: AsyncSequence {
+    typealias Element = VisionResult
+    typealias Failure = Never
+    let items: [VisionResult]
+
+    func makeAsyncIterator() -> Iterator {
+        Iterator(items: items)
+    }
+
+    struct Iterator: AsyncIteratorProtocol {
+        let items: [VisionResult]
+        var index = 0
+
+        mutating func next() async -> VisionResult? {
+            guard index < items.count else { return nil }
+            defer { index += 1 }
+            return items[index]
+        }
+    }
+}
+
+func visionCollectOverlayResult<T: VisionRequest>(_ request: T, on handler: VNImageRequestHandler) -> VisionResult {
+    do {
+        if let typed = request as? DetectBarcodesRequest {
+            return .detectBarcodes(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectRectanglesRequest {
+            return .detectRectangles(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectContoursRequest {
+            return .detectContours(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? GenerateImageFeaturePrintRequest {
+            return .generateImageFeaturePrint(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectHorizonRequest {
+            return .detectHorizon(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectLensSmudgeRequest {
+            return .detectLensSmudge(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? TrackObjectRequest {
+            return .trackObject(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? TrackRectangleRequest {
+            return .trackRectangle(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? TrackTranslationalImageRegistrationRequest {
+            return .trackTranslationalImageRegistration(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? TrackHomographicImageRegistrationRequest {
+            return .trackHomographicImageRegistration(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? TrackOpticalFlowRequest {
+            return .trackOpticalFlow(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? ClassifyImageRequest {
+            return .classifyImage(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? RecognizeTextRequest {
+            return .recognizeText(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? RecognizeAnimalsRequest {
+            return .recognizeAnimals(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? RecognizeDocumentsRequest {
+            return .recognizeDocuments(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectFaceRectanglesRequest {
+            return .detectFaceRectangles(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectFaceLandmarksRequest {
+            return .detectFaceLandmarks(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectHumanBodyPoseRequest {
+            return .detectHumanBodyPose(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectHumanHandPoseRequest {
+            return .detectHumanHandPose(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectAnimalBodyPoseRequest {
+            return .detectAnimalBodyPose(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectTextRectanglesRequest {
+            return .detectTextRectangles(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectHumanRectanglesRequest {
+            return .detectHumanRectangles(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectFaceCaptureQualityRequest {
+            return .detectFaceCaptureQuality(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectDocumentSegmentationRequest {
+            return .detectDocumentSegmentation(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectTrajectoriesRequest {
+            return .detectTrajectories(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? DetectHumanBodyPose3DRequest {
+            return .detectHumanBodyPose3D(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? GeneratePersonInstanceMaskRequest {
+            return .generatePersonInstanceMask(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? GeneratePersonSegmentationRequest {
+            return .generatePersonSegmentation(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? GenerateForegroundInstanceMaskRequest {
+            return .generateForegroundInstanceMask(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? GenerateAttentionBasedSaliencyImageRequest {
+            return .generateAttentionBasedSaliencyImage(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? GenerateObjectnessBasedSaliencyImageRequest {
+            return .generateObjectnessBasedSaliencyImage(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? CalculateImageAestheticsScoresRequest {
+            return .calculateImageAestheticsScores(typed, try typed.performOnHandler(handler))
+        }
+        if let typed = request as? CoreMLRequest {
+            return .coreML(typed, try typed.performOnHandler(handler))
+        }
+        return .error(request, VisionError.unsupportedRequest("request type"))
+    } catch {
+        return .error(request, error)
+    }
 }
 
 protocol ImageProcessingRequestBox {
@@ -2166,6 +2305,72 @@ extension TrackTranslationalImageRegistrationRequest: ImageProcessingRequestBox 
     }
 }
 
+extension ClassifyImageRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension RecognizeAnimalsRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectTrajectoriesRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectHumanBodyPoseRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectHumanHandPoseRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectAnimalBodyPoseRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectTextRectanglesRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension DetectHumanBodyPose3DRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension GeneratePersonSegmentationRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension CoreMLRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler)
+    }
+}
+
+extension TrackRectangleRequest: ImageProcessingRequestBox {
+    func performBoxed(on handler: VNImageRequestHandler) throws -> Any {
+        try performOnHandler(handler) as Any
+    }
+}
+
 public final class TargetedImageRequestHandler: @unchecked Sendable {
     private let source: VNImageRequestHandler
     private let target: VNImageRequestHandler
@@ -2229,10 +2434,24 @@ public final class TargetedImageRequestHandler: @unchecked Sendable {
         throw VisionError.invalidModel("Linux has no Apple model for targeted image requests")
     }
 
-    public func performAll<S: Sequence>(_ requests: S) async throws where S.Element == any TargetedRequest {
-        _ = requests
-        try validateInputs()
-        throw VisionError.invalidModel("Linux has no Apple models for targeted image requests")
+    public func performAll<S: Sequence>(_ requests: S) -> some AsyncSequence<VisionResult, Never>
+        where S.Element: TargetedRequest
+    {
+        VisionResultSequence(items: performAllNow(requests))
+    }
+
+    @_spi(OpenUIKitHost)
+    public func performAllNow<S: Sequence>(_ requests: S) -> [VisionResult] where S.Element: TargetedRequest {
+        let failure: VisionError
+        do {
+            try validateInputs()
+            failure = VisionError.invalidModel("Linux has no Apple model for targeted image requests")
+        } catch let error as VisionError {
+            failure = error
+        } catch {
+            failure = VisionError.operationFailed(String(describing: error))
+        }
+        return requests.map { VisionResult.error($0, failure) }
     }
 }
 
