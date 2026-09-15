@@ -76,6 +76,7 @@ public enum MTLBlendFactor: UInt, Equatable, Hashable, Sendable {
     case oneMinusSource1Color = 16
     case source1Alpha = 17
     case oneMinusSource1Alpha = 18
+    case unspecialized = 19
 }
 
 public enum MTLBlendOperation: UInt, Equatable, Hashable, Sendable {
@@ -84,6 +85,7 @@ public enum MTLBlendOperation: UInt, Equatable, Hashable, Sendable {
     case reverseSubtract = 2
     case min = 3
     case max = 4
+    case unspecialized = 5
 }
 
 public enum MTLCompareFunction: UInt, Equatable, Hashable, Sendable {

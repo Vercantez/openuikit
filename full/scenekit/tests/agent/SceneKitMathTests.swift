@@ -23,11 +23,32 @@ func testVectorMath() {
     _ = SCNVector3(1 as Int, 2, 3)
     let simd3 = SIMD3<Float>(v)
     skNear(SCNVector3(simd3).y, 2, "simd3")
+    let simd3d = SIMD3<Double>(v)
+    skNear(Float(simd3d.x), 1, "simd3 double x")
+    skNear(Float(simd3d.y), 2, "simd3 double y")
+    skNear(Float(simd3d.z), 3, "simd3 double z")
+    precondition(SCNVector3(simd3d) == v)
     precondition(SCNVector4EqualToVector4(SCNVector4Make(1, 2, 3, 4), SCNVector4(x: 1, y: 2, z: 3, w: 4)))
     let q = SCNVector4(1, 2, 3, 4)
     skNear(q.w, 4, "w")
     let simd4 = SIMD4<Float>(q)
     skNear(SCNVector4(simd4).z, 3, "simd4")
+    let simd4d = SIMD4<Double>(q)
+    skNear(Float(simd4d.x), 1, "simd4 double x")
+    skNear(Float(simd4d.w), 4, "simd4 double w")
+    precondition(SCNVector4(simd4d) == q)
+}
+
+func testNSValueBoxing() {
+    let v3 = SCNVector3(1, 2, 3)
+    let boxed3 = NSValue(SCNVector3: v3)
+    precondition(SCNVector3EqualToVector3(boxed3.scnVector3Value, v3))
+    let v4 = SCNVector4(1, 2, 3, 4)
+    let boxed4 = NSValue(SCNVector4: v4)
+    precondition(SCNVector4EqualToVector4(boxed4.scnVector4Value, v4))
+    let m = SCNMatrix4MakeTranslation(3, 4, 5)
+    let boxedM = NSValue(SCNMatrix4: m)
+    precondition(SCNMatrix4EqualToMatrix4(boxedM.scnMatrix4Value, m))
 }
 
 func testMatrixMath() {

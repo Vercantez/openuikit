@@ -26,7 +26,9 @@ overlay plus `CoreFoundation` / `Foundation` types the overlay already names.
   `MIDIValueMap` 128-byte identity).
 - Overlay `Sequence` / `Collection` / `BidirectionalCollection` /
   `MutableCollection` witnesses on packet and event views (map, filter,
-  indices, slices, sort, partition, shuffle).
+  indices, slices, sort, partition, shuffle), plus Foundation
+  `sorted(using:)` / `sort(using:)` with custom `SortComparator`s and
+  `formatted(_:)` with whole-collection `FormatStyle`s.
 - In-process `MIDINetworkHost` / `MIDINetworkConnection` / `MIDINetworkSession`
   contact lists (no Bonjour advertisement; endpoints stay `0`).
 - MIDI-CI / UMP class surface: managers with empty discovery, profile/state
@@ -56,7 +58,13 @@ driver.
 - `MIDIGetDriverIORunLoop` returns the current `CFRunLoop`; it is not a Darwin
   driver thread.
 - Combine `Sequence.publisher` is `unavailable` (Combine is not a dependency).
-- Foundation `SortComparator` / `FormatStyle` members stay `declared`.
+- Foundation `sorted(using:)` / `sort(using:)` / `formatted(_:)` are exercised
+  with custom `SortComparator` (`Compared == Element`) and `FormatStyle`
+  (`FormatInput == Self`, `ListFormatStyle`-style) witnesses
+  (`tests/agent/CollectionFoundationTests.swift`).
+- `Sequence.compare` stays `declared`: it requires `Element: SortComparator`
+  and no CoreMIDI sequence element (`UInt8` / `UInt32` / packet pointers)
+  conforms.
 - Optional-returning `Sequence.flatMap` and deprecated `Collection.index(of:)`
   stay `declared` under Swift 6 warnings-as-errors.
 
@@ -68,17 +76,19 @@ Coverage of the 1773 exact public IDs (fresh seed; no prior implemented rows):
 
 | status | count |
 | --- | ---: |
-| implemented | 1705 |
-| declared | 58 |
+| implemented | 1739 |
+| declared | 24 |
 | unavailable | 10 |
 | deferred | 0 |
 | not-applicable | 0 |
 
 Nondeferred 1763 (floor 887). Combine `publisher` is `unavailable`. Foundation
-`sorted(using:)` / `compare` / `formatted` / `sort(using:)` stay `declared`.
+`sorted(using:)` / `sort(using:)` / `formatted(_:)` are implemented via custom
+comparators/styles. `Sequence.compare` stays `declared` (`Element` is not a
+`SortComparator`).
 Optional `Sequence.flatMap` and `Collection.index(of:)` stay `declared`.
 
-Top-5 implemented evidence distribution (of 1705 implemented rows):
+Top-5 implemented evidence distribution (of 1739 implemented rows):
 
 1. `ConstantsTests.swift#testEnumRawValues` — 216 (table-driven enum raw values)
 2. `NetworkCITests.swift#testCIAndUMPClasses` — 189
@@ -89,7 +99,7 @@ Top-5 implemented evidence distribution (of 1705 implemented rows):
 `testEnumRawValues` / `testErrorAndLimitConstants` / `testPropertyKeys` /
 `testOptionSetMembers` are table-driven enum, `k…`/`err…`, and option-set
 member tests. After those constant rows, no remaining test exceeds 40% of the
-remaining implemented rows (`testCIAndUMPClasses` is 13.6%).
+remaining implemented rows (`testCIAndUMPClasses` is 10.9%).
 
 The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4
 target=linux products=clean` is a host-inventory token, not printed by the

@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 import SceneKit
 
@@ -134,6 +135,15 @@ func testCustomActionAndRotate() {
     eased.runAction(timed)
     eased.linux_advanceTime(0.5)
     precondition(abs(eased.position.x - 2.5) < 1e-3)
+}
+
+func testRunBlockWithQueue() {
+    let queue = DispatchQueue(label: "scn-runblock-test")
+    var ran = false
+    let node = SCNNode()
+    node.runAction(SCNAction.run({ _ in ran = true }, queue: queue))
+    node.linux_advanceTime(0)
+    precondition(ran)
 }
 
 func testJavaScriptAndPlayAudioFailClosed() {

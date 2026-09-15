@@ -5,6 +5,14 @@ import Foundation
 
 // MARK: - Live Activities / Dynamic Island (no ActivityKit daemon on Linux)
 
+/// The activity-type string used to bridge a Live Activity into an
+/// NSUserActivity. Pinned by an Apple oracle probe on this Mac (Xcode 26.1):
+/// a tiny `import WidgetKit` program printing the constant was compiled with
+/// `xcrun --sdk macosx swiftc` (linking the real WidgetKit) and also
+/// compiled with `xcrun --sdk iphoneos swiftc` for arm64 iOS 26.1. Both
+/// builds agree the payload is the symbol name itself (30 characters).
+public let NSUserActivityTypeLiveActivity: String = "NSUserActivityTypeLiveActivity"
+
 public enum ActivityFamily: Int, Sendable, CustomStringConvertible {
     case small = 0
     case medium = 1

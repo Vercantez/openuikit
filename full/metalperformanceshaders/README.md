@@ -440,3 +440,58 @@ Top-5 implemented evidence distribution after this pass:
 
 The newly cited test holds 2 citations. No non-enum/option-set test cites
 more than 40% of the remaining implemented rows.
+
+## Depth pass 2026-09 (pi wave 8)
+
+Coverage before this pass: **3,131 implemented / 0 declared / 251 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **3,379 implemented / 0 declared / 3 deferred /
+0 unavailable / 0 not-applicable**. The implemented gain is **+248**.
+
+This pass closes the leftover GPU-deferred surface without inventing GPU
+success. New product code lives in `MPSWave12Missing.swift` (listed in
+`metalperformanceshaders_guest_sources.txt`) and implements the missing
+families as constructable validated host data with fail-closed encode:
+binary convolution / fully-connected kernels and graph nodes, fully-connected
+and transpose nodes, cross-channel / group / instance normalization nodes and
+gradients, batch-norm statistics kernels, loss nodes, `MPSImageConversion`
+(alpha configuration; pixel conversion refuses), matrix decomposition and
+solve descriptors (Cholesky/LU/triangular; encode refuses), NDArray unary /
+binary / multiary gradient kernels (allocating overloads return the incoming
+gradient unchanged with the refusal marker; destination overloads leave the
+destination untouched) plus gather / strided-slice gradients and gradient
+states, NN arithmetic / scale / pad / reshape / initial-gradient nodes, and
+the Gram-matrix gradient kernel and node. `MPSNDArrayVectorLUTDequantize`
+now exposes `vectorAxis` settable per the pinned overlay. All refused paths
+record `MPSHostBoundary.lastRefusedAPI` and write no fabricated results.
+
+Evidence is split across 16 focused synchronous tests in
+`tests/agent/MPSWave12MissingTests.swift` (batch-norm statistics, binary
+convolution, fully-connected, normalization nodes, loss nodes, image
+conversion, matrix decomposition, matrix solve, matrix unary/log-softmax,
+NDArray gradient kernels, NDArray states, NN gradient states, NN arithmetic
+nodes, pad/reshape/scale nodes, compare/gram/grid, descriptors+protocols).
+No cited test holds more than 40% of implemented rows.
+
+The 3 remaining deferred rows are the `MPSHandle` / `MPSHeapProvider`
+overlay members (`label()`, `newHeap(with:)`, `retire(_:cacheDelay:)`) that
+have no host equivalent: the host stub exposes `label` as a property and
+`MTLHeap`/`MTLHeapDescriptor` are GPU-only (see `oracle-questions.tsv`).
+No row was classified unavailable or not-applicable, and no Apple-only
+result is fabricated.
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 11.2% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (table-driven option-set values) |
+| 343 | 10.2% | `MPSTypesTests.swift#testMPSEnumRawValues` (table-driven enum values) |
+| 243 | 7.2% | `MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels` |
+| 135 | 4.0% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 107 | 3.2% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+
+Validation: sealed `tests/acceptance/test_host.sh` reports
+`FRAMEWORK_FANOUT_HOST_OK module=MetalPerformanceShaders`, and
+`tests/test_agent.sh` reports `MPS_FOCUSED_TESTS_OK count=114` (98 carried
+plus 16 new), both with warnings as errors and no checked-in build products.

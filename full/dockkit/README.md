@@ -19,6 +19,15 @@ waits allowed in cited tests, and hardware/daemon success stays fail-closed.
 No SwiftUI View overlay rows exist in this surface, so the overlay-conversion
 playbook does not apply. Implemented gain this wave: 0.
 
+Wave-8 audit (2026-09-15): recounted **284 implemented / 65 declared /
+0 deferred / 0 not-applicable / 349 total** — unchanged. Re-examined all 65
+declared rows: every one is `async` (same 18 hardware/camera commands and
+iterator `next()` methods plus the same 47 async-consuming stdlib witnesses).
+No declared row is synchronously callable, so none can gain a synchronous
+`test*` caller under the sealed-runner contract, and hardware/daemon success
+stays fail-closed. No SwiftUI View overlay rows exist in this surface.
+Implemented gain this wave: 0.
+
 ## What is real
 
 - `DockKitError` cases in API-digester order (`notSupported` …

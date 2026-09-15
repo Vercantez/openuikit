@@ -9,6 +9,7 @@ full/metal/MetalErrors.swift
 full/metal/MetalGeometry.swift
 full/metal/MetalHost.swift
 full/metal/MetalIO.swift
+full/metal/MetalLeftover.swift
 full/metal/MetalOptionSets.swift
 full/metal/MetalOverlays.swift
 full/metal/MetalPixelFormat.swift

@@ -491,3 +491,38 @@ Top-5 evidence distribution for the 157 newly implemented rows:
 5. `testSparseComplexCleanupRetain` — 20 (12.7%) — complex cleanup/retain plus opaque complex structs
 
 Largest test is 32/157 = 20.4%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. All 224 agent tests pass together and the 7 touched tests pass in isolation on macOS. Complex `SparseIterate`, `SparseConvertFromOpaque`, complex `SparseConvertFromCoordinate`, and complex `SparseGetInertia` stay declared; `SparseIterate` (any precision), BNNS graph execute, and vImage CG/CV paths stay declared/deferred/fail-closed.
+
+## Depth pass 2026-09-15 (declared-remainder conversion, oracle-corrected constants)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Converts the portable declared remainder to implemented and triages out-of-lane witnesses to deferred. Prior agents had written the `OvRemA/B/C` and `SoBNNSRem` behavioral tests but never flipped the rows; this pass verifies each test executes real Linux behavior, adds `OvRemDTests.swift` for the gaps, and flips 270 rows.
+
+Oracle work on macOS 26.1 / Xcode 26.1 via `xcrun swiftc` probes:
+
+- All `BNNSDataType*` globals pinned (Int8=131080, Float32=65568, Boolean=1048584, Int64=131136, UInt64=262208, Indexed8=524296, …). Linux sequential placeholders (including all-zero overlay globals and `UInt8/16/32` aliased onto the signed codes) corrected; `Bool: BNNSScalar` added (`Boolean`); `testBNNSPinnedConstantValues1` rewritten with oracle values.
+- All `BNNSActivationFunction*` (Abs=6, Identity=0, ReLU=1, …), `BNNSArithmetic*` (Add=0, Multiply=2, …), `BNNSOptimizerFunction*` (SGDMomentum=1, Adam=2, RMSProp=3, AdamW=4, …), `BNNSPoolingFunction*`, and `BNNSRelationalOperator*` (Less=1, Greater=3, OR=7, NOT=8, …) globals pinned; `testBNNSPinnedConstantValues0/2` rewritten. Apple exposes no public no-arg `BNNS.AdamOptimizer()` (full init requires all fields), so optimizer structs keep trap-on-read getters with sink setters; only types and setter calls are cited.
+- `Array(fromSplitComplex:scale:count:)` probed: output length equals `count` with interleaved scaled pairs (odd tails uninitialized on Apple); Linux implements the deterministic variant (zero tail) and records the divergence in `oracle-questions.tsv`.
+- `vImage.BufferType` rawValue/bufferTypeCode fully mapped (chunky=10/code 25, alpha=0/17, luminance=15/20, …) and implemented with round-trip init; `FloodFillConnectivity` edges=4/corners=8 implemented.
+- `BNNS.RelationalOperator` (size 4 on Apple) gains one-code storage with oracle-mapped statics.
+
+Source changes (all in already-manifested files): oracle values in `AccelerateCTypes.swift`/`AccelerateOverlay.swift`; corrected `UInt8/16/32` mappings plus `Bool: BNNSScalar` in `Accelerate.swift`; `Array.fromSplitComplex` in `AccelerateVDSPOps.swift`; protocol associated types (`StaticPixelFormat.bitCountPerPixel`, `MultiplePlanePixelFormat` trio, `vDSP_DFTFunctions.Scalar`, `vDSP_BiquadFunctions.Scalar`, `vDSP_FourierTransformFunctions.SplitComplex`, `BiquadFunctions`/`FFTFunctions`/`DFTFunctions` witnesses) with Scalar-only conformances for `VectorizableFloat/Double` and `vDSP_SplitComplexFloat/Double`; real `BufferType`/`FloodFillConnectivity`/`MorphologyOperation`/`RelationalOperator` bodies; `public init() {}` for the eight `Fused*Parameters` structs and `SparseParameters` so sink setters are callable.
+
+77 stdlib/Foundation synthesized witnesses (plus 4 undeclared CoreVideo vImage types) move declared→deferred as out-of-lane. The SwiftUI View-overlay override is vacuous here (no SwiftUI identifiers in coverage).
+
+- Implemented before: **4987**
+- Implemented after: **5257**
+- Declared before: **498**
+- Declared after: **151**
+- Deferred before/after: **1368** / **1445**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **270**
+
+Top-5 evidence distribution for the 270 newly implemented rows:
+
+1. `testOvRemCBatch0` — 30 (11.1%) — vDSP transform types, enums, and classes
+2. `testOvRemBOptimizers` — 23 (8.5%) — Adam/AdamW/RMSProp/SGD types and sink setters
+3. `testOvRemBLayers` — 17 (6.3%) — BNNS layer class identities
+4. `testOvRemCBatch1` — 16 (5.9%) — vImage lookup-table setters and BNNSGraph structural protocols
+5. `testOvRemCBatch2` — 16 (5.9%) — scalar `DFTFunctions`/`BiquadFunctions`/`bnnsDataType` witnesses
+
+Largest test is 30/270 = 11.1%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. Trap-on-read getters (optimizer fields, layer filters, graph tensor state) stay declared and are referenced by keypath only. BNNS layer/graph designated inits and apply methods (no Linux runtime), `InitializableFromCGImage`, and the `CGColorSpaceModel` buffer-code init stay declared.

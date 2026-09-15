@@ -723,3 +723,55 @@ tests prints `COREMEDIA_ALL_CITED_MACOS_PROBE_OK` (ObjC duplicate-class notes
 on stderr from the system `libswiftCoreMedia.dylib`, as in prior passes). The
 sealed gate's final stage remains Linux-only (`import Glibc` in the generated
 runner). No new product files; the guest sources manifest is unchanged.
+
+## Depth pass 2026-09-15 (coremedia prompt: copyBytes overloads / notification names)
+
+No SwiftUI/View overlay rows exist in this module's public surface (zero
+`coverage.tsv` IDs mention SwiftUI or View), so the overlay-override clause
+has nothing to convert here. This pass converts the honestly exercisable
+remainder of the declared keep-list plus two deferred pure constants:
+
+- `CMCopyBytesDepthTests.swift#testCMDataBlockBufferCopyBytesOverloads`
+  (16 rows) calls all seven `DataProtocol` / `ContiguousBytes` `copyBytes`
+  spellings the Apple surface synthesizes (demangled via `swift-demangle` to
+  confirm the exact signatures, including the Void-returning
+  `ContiguousBytes`-constrained `copyBytes(to:from:)`), on each host that
+  carries no custom shadowing overload: `CMReadOnlyDataBlockBuffer` (6 rows),
+  its `BlockRegion` (5 rows), and `CMMutableDataBlockBuffer.BlockRegion`
+  (5 rows). Every call checks byte fidelity against a known source.
+- `CMSampleBufferOverlayTests.swift#testCMSampleBufferDataNotificationNames`
+  (2 deferred rows) asserts the Apple-oracle-pinned raw values
+  `CMSampleBufferDataFailed` and `FigSampleBufferDataBecameReady` (Xcode macOS
+  SDK 26.1 probe 2026-09-15; the `Fig` prefix is unguessable without the
+  oracle). New `public static let` members on the existing `CMSampleBuffer`
+  overlay; posting and delivery timing stay unobserved.
+
+Kept out (stay declared/deferred as recorded): Foundation
+`sorted(using:)` / `compare` / `formatted` (no concrete `SortComparator` /
+`FormatStyle` exists for these byte hosts; a throwaway test-only comparator
+would exercise nothing Apple-meaningful), Combine `publisher` (no Combine on
+Linux), the deprecated optional-`flatMap` on `Buffers` (warns under
+`-warnings-as-errors`), `indices(where:)` / `indices(of:)` on
+`CMReadOnlyDataBlockBuffer` (slicing breaks index stability; traps),
+`CVBufferRef` attachment members (host absent), DispatchSource timer
+overloads (live `DispatchSource` aborts libdispatch in the sealed gate),
+audio/image/pixel/tagged-dynamic APIs (need CoreAudioTypes/CoreVideo),
+`simd` calibration matrix, and notification posting semantics.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3230 | 3248 |
+| declared | 45 | 29 |
+| deferred | 229 | 227 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +18 (16 declared, 2 deferred).
+
+Top-5 `implemented` evidence distribution after this pass is unchanged (the
+new tests cite 16 and 2 rows, 0.5% and 0.1%). No test owns more than 40% of
+implemented rows. Leftover deferred rows still need CoreAudioTypes/CoreVideo
+(audio/image sample paths, tagged-dynamic pixel content, parameter-set and
+single-sample collections), `simd`, DispatchSource timers, hardware/daemons,
+or unobserved family-overlay shapes. No Apple service or hardware success was
+invented.

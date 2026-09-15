@@ -63,9 +63,15 @@ extension PixelFormat {
 
 public protocol SinglePlanePixelFormat: PixelFormat {}
 
-public protocol StaticPixelFormat: SinglePlanePixelFormat {}
+public protocol StaticPixelFormat: SinglePlanePixelFormat {
+    static var bitCountPerPixel: Int { get }
+}
 
-public protocol MultiplePlanePixelFormat: PixelFormat {}
+public protocol MultiplePlanePixelFormat: PixelFormat {
+    static var bitCountPerPlanarPixel: Int { get }
+    static var planeCount: Int { get }
+    associatedtype PlanarPixelFormat
+}
 
 public protocol InitializableFromCGImage: SinglePlanePixelFormat {}
 
@@ -80,19 +86,29 @@ public protocol vDSP_FloatingPointConvertable {
     init<T: BinaryInteger>(_ value: T)
 }
 public protocol vDSP_FloatingPointGeneratable: BinaryFloatingPoint {}
-public protocol vDSP_FourierTransformable {}
+public protocol vDSP_FourierTransformable {
+    associatedtype FFTFunctions
+}
 public protocol vDSP_DiscreteFourierTransformable {
     associatedtype DiscreteFourierTransformFunctions
 }
 public protocol vDSP_FloatingPointDiscreteFourierTransformable: BinaryFloatingPoint {
     associatedtype DiscreteFourierTransformFunctions
+    associatedtype DFTFunctions
 }
-public protocol vDSP_FloatingPointBiquadFilterable: BinaryFloatingPoint {}
+public protocol vDSP_FloatingPointBiquadFilterable: BinaryFloatingPoint {
+    associatedtype BiquadFunctions
+}
 public protocol vDSP_DFTFunctions {
+    associatedtype Scalar
     static func destroySetup(_ setup: OpaquePointer)
 }
-public protocol vDSP_BiquadFunctions {}
-public protocol vDSP_FourierTransformFunctions {}
+public protocol vDSP_BiquadFunctions {
+    associatedtype Scalar
+}
+public protocol vDSP_FourierTransformFunctions {
+    associatedtype SplitComplex
+}
 public protocol vDSP_DiscreteTransformLifecycleFunctions {}
 
 extension Array: AccelerateBuffer, AccelerateMutableBuffer {}
@@ -136,13 +152,16 @@ extension Int64: BNNSScalar {
     public static var bnnsDataType: BNNSDataType { BNNSDataTypeInt64 }
 }
 extension UInt8: BNNSScalar, vDSP_IntegerConvertable {
-    public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x20008) }
+    public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x40008) }
 }
 extension UInt16: BNNSScalar, vDSP_IntegerConvertable {
-    public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x20010) }
+    public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x40010) }
 }
 extension UInt32: BNNSScalar, vDSP_IntegerConvertable {
-    public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x20020) }
+    public static var bnnsDataType: BNNSDataType { BNNSDataType(rawValue: 0x40020) }
+}
+extension Bool: BNNSScalar {
+    public static var bnnsDataType: BNNSDataType { BNNSDataTypeBoolean }
 }
 extension UInt64: BNNSScalar {
     public static var bnnsDataType: BNNSDataType { BNNSDataTypeUInt64 }

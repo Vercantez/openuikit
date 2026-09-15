@@ -654,7 +654,7 @@ c:objc(pl)GKChallengeListener(im)player:wantsToPlayChallenge:	implemented	test:f
 c:objc(pl)GKFriendRequestComposeViewControllerDelegate	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKViewControllerLocalState	family behavioral test
 c:objc(pl)GKFriendRequestComposeViewControllerDelegate(im)friendRequestComposeViewControllerDidFinish:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKViewControllerLocalState	family behavioral test
 c:objc(pl)GKGameActivityListener	implemented	test:full/gamekit/tests/agent/GKGameActivityTests.swift#testGKGameActivityStateMachine	family behavioral test
-c:objc(pl)GKGameActivityListener(im)player:wantsToPlayGameActivity:completionHandler:	declared	source:full/gamekit/GKProtocols.swift#player	async Game Center API is declared; isolated tests cannot await
+c:objc(pl)GKGameActivityListener(im)player:wantsToPlayGameActivity:completionHandler:	implemented	test:full/gamekit/tests/agent/GKListenerTests.swift#testGKListenerSyncCompletions	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(pl)GKGameCenterControllerDelegate	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKProtocolWitnesses	family behavioral test
 c:objc(pl)GKGameCenterControllerDelegate(im)gameCenterViewControllerDidFinish:	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKProtocolWitnesses	family behavioral test
 c:objc(pl)GKGameSessionEventListener	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKGameSessionFailClosed	family behavioral test
@@ -684,7 +684,7 @@ c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFind
 c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFindMatch:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didFindPlayers:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:didReceiveAcceptFromHostedPlayer:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
-c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:	declared	source:full/gamekit/GKProtocols.swift#matchmakerViewController	async Game Center API is declared; isolated tests cannot await
+c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:	implemented	test:full/gamekit/tests/agent/GKListenerTests.swift#testGKListenerSyncCompletions	sync fail-closed completion-handler companion; synchronous fail-closed test
 c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewController:hostedPlayerDidAccept:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(pl)GKMatchmakerViewControllerDelegate(im)matchmakerViewControllerWasCancelled:	implemented	test:full/gamekit/tests/agent/GKMatchTests.swift#testGKMatchmakerFailClosed	family behavioral test
 c:objc(pl)GKSavedGameListener	implemented	test:full/gamekit/tests/agent/GKSessionTests.swift#testGKSavedGameFailClosed	family behavioral test

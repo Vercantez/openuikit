@@ -558,7 +558,7 @@ open class MPSNDArrayAffineInt4Dequantize: MPSNDArrayMultiaryKernel {
 
 /// Vector lookup-table dequantize kernel descriptor.
 open class MPSNDArrayVectorLUTDequantize: MPSNDArrayMultiaryKernel {
-    public private(set) var vectorAxis: Int
+    public var vectorAxis: Int
 
     public init(device: any MTLDevice, axis: Int) {
         self.vectorAxis = axis

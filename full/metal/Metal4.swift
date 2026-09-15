@@ -601,6 +601,40 @@ public protocol MTL4ComputeCommandEncoder: MTL4CommandEncoder {
     func optimizeContents(forGPUAccess texture: any MTLTexture)
     func optimizeContents(forGPUAccess texture: any MTLTexture, slice: Int, level: Int)
     func executeCommands(buffer indirectCommandbuffer: any MTLIndirectCommandBuffer, indirectBuffer indirectRangeBuffer: MTLGPUAddress)
+    func copyCommands(
+        sourceBuffer: any MTLIndirectCommandBuffer,
+        sourceRange: Range<Int>,
+        destinationBuffer: any MTLIndirectCommandBuffer,
+        destinationIndex: Int
+    )
+    func resetCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>)
+    func executeCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>)
+    func optimizeCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>)
+    func copy(
+        sourceBuffer: any MTLBuffer,
+        sourceOffset: Int,
+        sourceBytesPerRow: Int,
+        sourceBytesPerImage: Int,
+        sourceSize: MTLSize,
+        destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin,
+        options: MTLBlitOption
+    )
+    func copy(
+        sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        destinationBuffer: any MTLBuffer,
+        destinationOffset: Int,
+        destinationBytesPerRow: Int,
+        destinationBytesPerImage: Int,
+        options: MTLBlitOption
+    )
+    func fill(buffer: any MTLBuffer, range: Range<Int>, value: UInt8)
     func copy(
         sourceTensor: any MTLTensor,
         sourceOrigin: MTLTensorExtents,
@@ -721,6 +755,10 @@ public protocol MTL4RenderCommandEncoder: MTL4CommandEncoder {
         buffer indirectCommandBuffer: any MTLIndirectCommandBuffer,
         indirectBuffer indirectRangeBuffer: MTLGPUAddress
     )
+    func executeCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>)
+    func setDepthTestBounds(_ bounds: ClosedRange<Float>)
+    func setVertexAmplificationCount(_ count: Int)
+    func setVertexAmplificationCount(_ viewMappings: [MTLVertexAmplificationViewMapping])
     func writeTimestamp(
         granularity: MTL4TimestampGranularity,
         after stage: MTLRenderStages,
@@ -743,6 +781,7 @@ public protocol MTL4CommandBuffer: NSObjectProtocol {
     func pushDebugGroup(_ string: String)
     func popDebugGroup()
     func useResidencySet(_ residencySet: any MTLResidencySet)
+    func makeMachineLearningCommandEncoder() -> (any MTL4MachineLearningCommandEncoder)?
     func writeTimestamp(counterHeap: any MTL4CounterHeap, index: Int)
     func resolveCounterHeap(
         _ counterHeap: any MTL4CounterHeap,
@@ -852,6 +891,9 @@ public protocol MTL4Compiler: NSObjectProtocol, Sendable {
         descriptor: MTL4PipelineDescriptor,
         pipeline: any MTLRenderPipelineState
     ) throws -> any MTLRenderPipelineState
+    func makeMachineLearningPipelineState(
+        descriptor: MTL4MachineLearningPipelineDescriptor
+    ) throws -> any MTL4MachineLearningPipelineState
 }
 
 extension MTL4CommandQueue {
@@ -961,6 +1003,10 @@ final class LinuxMTL4CommandBuffer: NSObject, MTL4CommandBuffer, @unchecked Send
         options: MTL4RenderEncoderOptions
     ) -> (any MTL4RenderCommandEncoder)? {
         LinuxMTL4RenderCommandEncoder(commandBuffer: self, descriptor: descriptor, options: options)
+    }
+
+    func makeMachineLearningCommandEncoder() -> (any MTL4MachineLearningCommandEncoder)? {
+        LinuxMTL4MachineLearningCommandEncoder(commandBuffer: self)
     }
 
     func pushDebugGroup(_ string: String) { _ = string }
@@ -1273,6 +1319,131 @@ final class LinuxMTL4ComputeCommandEncoder: LinuxMTL4EncoderBase, MTL4ComputeCom
         }
     }
 
+    func copyCommands(
+        sourceBuffer: any MTLIndirectCommandBuffer,
+        sourceRange: Range<Int>,
+        destinationBuffer: any MTLIndirectCommandBuffer,
+        destinationIndex: Int
+    ) {
+        guard let source = sourceBuffer as? LinuxMTLIndirectCommandBuffer,
+              let destination = destinationBuffer as? LinuxMTLIndirectCommandBuffer
+        else { return }
+        destination.copyCommands(from: source, sourceRange: sourceRange, destinationIndex: destinationIndex)
+    }
+
+    func resetCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        (buffer as? LinuxMTLIndirectCommandBuffer)?.resetCommands(range)
+    }
+
+    func executeCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        guard let icb = buffer as? LinuxMTLIndirectCommandBuffer else { return }
+        let snapshot = icb.snapshotCompute(range: range)
+        owner.record {
+            for command in snapshot {
+                guard let pipeline = command.pipeline, pipeline.function.isCPUBuiltin else {
+                    self.owner.noteShaderWork()
+                    continue
+                }
+                let count: Int
+                switch command.dispatch {
+                case .none:
+                    continue
+                case .threadgroups(let groups, let threads):
+                    count = max(groups.width, 0) * max(threads.width, 0)
+                        * max(groups.height, 0) * max(threads.height, 0)
+                        * max(groups.depth, 0) * max(threads.depth, 0)
+                case .threads(let threads, _):
+                    count = max(threads.width, 0) * max(threads.height, 0) * max(threads.depth, 0)
+                }
+                LinuxMTLCPUKernel.run(
+                    name: pipeline.function.name,
+                    threadCount: count,
+                    buffers: command.buffers,
+                    bytes: [:]
+                )
+            }
+        }
+    }
+
+    func optimizeCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        _ = (buffer, range)
+    }
+
+    func copy(
+        sourceBuffer: any MTLBuffer,
+        sourceOffset: Int,
+        sourceBytesPerRow: Int,
+        sourceBytesPerImage: Int,
+        sourceSize: MTLSize,
+        destinationTexture: any MTLTexture,
+        destinationSlice: Int,
+        destinationLevel: Int,
+        destinationOrigin: MTLOrigin,
+        options: MTLBlitOption
+    ) {
+        _ = options
+        owner.record {
+            let width = max(sourceSize.width, 0)
+            let height = max(sourceSize.height, 0)
+            let depth = max(sourceSize.depth, 1)
+            guard width > 0, height > 0, sourceOffset >= 0,
+                  sourceOffset + sourceBytesPerImage * depth <= sourceBuffer.length
+            else { return }
+            destinationTexture.replace(
+                region: MTLRegion(origin: destinationOrigin, size: MTLSize(width: width, height: height, depth: depth)),
+                mipmapLevel: destinationLevel,
+                slice: destinationSlice,
+                withBytes: sourceBuffer.contents().advanced(by: sourceOffset),
+                bytesPerRow: sourceBytesPerRow,
+                bytesPerImage: sourceBytesPerImage
+            )
+        }
+    }
+
+    func copy(
+        sourceTexture: any MTLTexture,
+        sourceSlice: Int,
+        sourceLevel: Int,
+        sourceOrigin: MTLOrigin,
+        sourceSize: MTLSize,
+        destinationBuffer: any MTLBuffer,
+        destinationOffset: Int,
+        destinationBytesPerRow: Int,
+        destinationBytesPerImage: Int,
+        options: MTLBlitOption
+    ) {
+        _ = options
+        owner.record {
+            let width = max(sourceSize.width, 0)
+            let height = max(sourceSize.height, 0)
+            let depth = max(sourceSize.depth, 1)
+            guard width > 0, height > 0, destinationOffset >= 0,
+                  destinationOffset + destinationBytesPerImage * depth <= destinationBuffer.length
+            else { return }
+            sourceTexture.getBytes(
+                destinationBuffer.contents().advanced(by: destinationOffset),
+                bytesPerRow: destinationBytesPerRow,
+                bytesPerImage: destinationBytesPerImage,
+                from: MTLRegion(origin: sourceOrigin, size: MTLSize(width: width, height: height, depth: depth)),
+                mipmapLevel: sourceLevel,
+                slice: sourceSlice
+            )
+        }
+    }
+
+    func fill(buffer: any MTLBuffer, range: Range<Int>, value: UInt8) {
+        owner.record {
+            let lower = max(range.lowerBound, 0)
+            let upper = min(range.upperBound, buffer.length)
+            guard upper > lower else { return }
+            buffer.contents().advanced(by: lower).initializeMemory(
+                as: UInt8.self,
+                repeating: value,
+                count: upper - lower
+            )
+        }
+    }
+
     func optimizeContents(forCPUAccess texture: any MTLTexture) { _ = texture }
     func optimizeContents(forCPUAccess texture: any MTLTexture, slice: Int, level: Int) {
         _ = (texture, slice, level)
@@ -1376,6 +1547,9 @@ final class LinuxMTL4RenderCommandEncoder: LinuxMTL4EncoderBase, MTL4RenderComma
     private var scissor = MTLScissorRect()
     private var cull: MTLCullMode = .none
     private var winding: MTLWinding = .clockwise
+    private var depthTestBounds: ClosedRange<Float> = 0...1
+    private var vertexAmplificationCount = 0
+    private var vertexAmplificationMappings: [MTLVertexAmplificationViewMapping] = []
 
     init(
         commandBuffer: LinuxMTL4CommandBuffer,
@@ -1571,6 +1745,25 @@ final class LinuxMTL4RenderCommandEncoder: LinuxMTL4EncoderBase, MTL4RenderComma
         owner.noteShaderWork()
     }
 
+    func executeCommands(buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
+        _ = (buffer, range)
+        owner.noteShaderWork()
+    }
+
+    func setDepthTestBounds(_ bounds: ClosedRange<Float>) {
+        depthTestBounds = bounds
+    }
+
+    func setVertexAmplificationCount(_ count: Int) {
+        vertexAmplificationCount = max(count, 0)
+        vertexAmplificationMappings = []
+    }
+
+    func setVertexAmplificationCount(_ viewMappings: [MTLVertexAmplificationViewMapping]) {
+        vertexAmplificationCount = viewMappings.count
+        vertexAmplificationMappings = viewMappings
+    }
+
     func writeTimestamp(
         granularity: MTL4TimestampGranularity,
         after stage: MTLRenderStages,
@@ -1706,6 +1899,16 @@ final class LinuxMTL4Compiler: NSObject, MTL4Compiler, @unchecked Sendable {
             reason: "no shader compiler"
         )
     }
+
+    func makeMachineLearningPipelineState(
+        descriptor: MTL4MachineLearningPipelineDescriptor
+    ) throws -> any MTL4MachineLearningPipelineState {
+        _ = descriptor
+        throw metalUnsupportedLibraryError(
+            .compileFailure,
+            reason: "no shader compiler"
+        )
+    }
 }
 
 final class LinuxMTL4CounterHeap: NSObject, MTL4CounterHeap, @unchecked Sendable {
@@ -1747,15 +1950,19 @@ final class LinuxMTL4CounterHeap: NSObject, MTL4CounterHeap, @unchecked Sendable
     }
 }
 
-final class LinuxMTL4Archive: NSObject, MTL4Archive, @unchecked Sendable {
-    var label: String?
+public final class LinuxMTL4Archive: NSObject, MTL4Archive, @unchecked Sendable {
+    public var label: String?
 
-    func makeBinaryFunction(descriptor: MTL4BinaryFunctionDescriptor) throws -> any MTL4BinaryFunction {
+    public override init() {
+        super.init()
+    }
+
+    public func makeBinaryFunction(descriptor: MTL4BinaryFunctionDescriptor) throws -> any MTL4BinaryFunction {
         _ = descriptor
         throw metalUnsupportedLibraryError(.compileFailure, reason: "no shader compiler")
     }
 
-    func makeRenderPipelineState(
+    public func makeRenderPipelineState(
         descriptor: MTL4PipelineDescriptor,
         dynamicLinkingDescriptor: MTL4RenderPipelineDynamicLinkingDescriptor?
     ) throws -> any MTLRenderPipelineState {
@@ -1763,7 +1970,7 @@ final class LinuxMTL4Archive: NSObject, MTL4Archive, @unchecked Sendable {
         throw metalUnsupportedLibraryError(.compileFailure, reason: "no shader compiler")
     }
 
-    func makeComputePipelineState(
+    public func makeComputePipelineState(
         descriptor: MTL4ComputePipelineDescriptor,
         dynamicLinkingDescriptor: MTL4PipelineStageDynamicLinkingDescriptor?
     ) throws -> any MTLComputePipelineState {

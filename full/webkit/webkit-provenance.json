@@ -109,7 +109,7 @@
     },
     {
       "path": "full/webkit/WebKitExtensions.swift",
-      "sha256": "0d22160dc768ccc470cd60906e86f9436e67f97617e13ea4af9c786a086530ec"
+      "sha256": "c467ebea26e619e188096d21d8f40246ae1751a3e05a097d75d0b5c0b5b78ab5"
     },
     {
       "path": "full/webkit/WebKitNavigation.swift",

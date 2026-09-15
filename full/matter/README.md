@@ -423,3 +423,75 @@ Environment: local `swiftc` is Apple Swift 6.2.1 targeting
 `arm64-apple-macosx26.0` (this Mac). The sealed gate was run in the
 `uikit-linux` container (Swift 6.2.4, `aarch64-unknown-linux-gnu`) with a
 clean product tree (`products=clean`).
+
+## Depth pass 2026-09 (wave 8, isolated worktree)
+
+Converts the leftover compiling containers and Apple-oracle enum statics.
+No product behavior changes beyond additive static aliases; no fabric,
+daemon, radio, `await`, or success invention.
+
+**Coverage before:** 28259 implemented / 130 declared / 33 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28320 implemented / 90 declared / 12 deferred / 40 unavailable / 0 not-applicable
+(+61 implemented; 28410 nondeferred; floor 150).
+
+**Top-5 implemented evidence distribution**
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 3788 | 13.4% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
+| 3212 | 11.3% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2541 | 9.0% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 3.2% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 3.2% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
+
+Largest new evidence citation is 12 rows
+(`MatterWave8EvidenceTests.swift#testTimeSynchronizationLegacySourceAliasesWave8`),
+far below the 40% cap.
+
+**Added this pass**
+
+- **Apple-oracle legacy enum spellings (21 deferred → implemented).**
+  Values pinned from the Xcode 26.1 `Matter.framework` headers
+  (`MTRBaseClusters.h`) and confirmed by a macOS runtime probe built with
+  `xcrun swiftc` against the 26.1 SDK: TimeSynchronization legacy sources
+  nonFabricSntp/nonFabricNtp/fabricSntp/fabricNtp/mixedNtp = 4/5/6/7/8,
+  NTS variants = 9/10/11/12/13, ptp = 15, gnss = 16;
+  `MTRThermostatSetpointAdjustMode` heatSetpoint/coolSetpoint/
+  heatAndCoolSetpoints = 0/1/2; `MTRWiFiNetworkDiagnosticsWiFiVersionType`
+  type80211a/b/g/n/ac/ax = 0/1/2/3/4/5 (Swift names from
+  `Matter.apinotes`). Each duplicates a newer enumerator, so the Linux port
+  models them as `static var` aliases in `MTREnumAliasesWave11.swift`
+  (duplicate raw-value cases are illegal in Swift). The three related
+  `oracle-questions.tsv` rows are marked resolved with the pinned values.
+- **Callback typealias containers (20 declared → implemented).** All 20
+  `MTR*`/`StatusCompletion`/`ResponseHandler`/`SubscriptionEstablishedHandler`
+  aliases in `MTRError.swift` are assigned to host closures and invoked
+  synchronously in `MatterWave8EvidenceTests.swift`; no fabric behavior is
+  claimed.
+- **Protocol containers (20 declared → implemented).** Each of the 20
+  delegate/storage/keypair/XPC protocols in `MTRProtocols.swift` gains a host
+  stub (in-memory storage for `MTRStorage`, echo signers for `MTRKeypair`,
+  recording delegate for `MTRDeviceDelegate`) with conformance checked
+  synchronously via an existential. Callbacks stay host-inert; no daemon
+  invokes them.
+
+### Leftover deferred (12) and declared (90)
+
+- `MTRSetMessageReliabilityParameters` (would invent radio timing),
+  `MTRAttributeCacheContainer.readAttributeWithEndpointId:...` (generic cache
+  read needs a cache-store design), and 10 `NSCoding.initWithCoder` rows
+  (NSCoder round-trips stay deferred by design).
+- Declared rows are live fabric/daemon surface that stays fail-closed:
+  `MTRDeviceController` pairing/commissioning/XPC members (11 class, 20
+  instance, 4 property rows), 2 `MTRDeviceControllerParameters`
+  OTA/issuer setters, and 53 delegate/keypair/storage/XPC protocol
+  requirement rows. Individual requirement rows are not promoted on
+  container evidence alone.
+
+Environment: local `swiftc` is Apple Swift 6.2.1 targeting
+`arm64-apple-macosx26.0` (this Mac). Product `libMatter.dylib` and the full
+`tests/agent/*Tests.swift` set compile clean under `-warnings-as-errors`;
+the 13 new `MatterWave8EvidenceTests` functions pass in-process on this Mac.
+The sealed gate runs in the `uikit-linux` container (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).

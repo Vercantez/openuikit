@@ -151,6 +151,12 @@ public struct AURenderEvent {
         MIDI = AUMIDIEvent()
     }
 
+    public init(head: AURenderEventHeader) {
+        self.head = head
+        parameter = AUParameterEvent()
+        MIDI = AUMIDIEvent()
+    }
+
     public init(parameter: AUParameterEvent) {
         self.init()
         self.parameter = parameter

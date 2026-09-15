@@ -495,3 +495,102 @@ Top-five implemented evidence distribution after this wave:
 The largest anchor covers 6.61% of the 3,028 implemented rows and is a permitted
 table-driven enum/option-set value test. No SwiftUI overlay rows or other rows
 were reclassified as `not-applicable`.
+
+## Depth pass 2026-09 (wave 12)
+
+Sixth SDK-depth pass on the wave-11 tree (keep existing tests green; do not
+rewrite). No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in
+this census. A prior wave's `AudioToolboxParameterMath.swift`
+(`AUParameterValueFromLinear` / `ToLinear`, display-type get/set, already
+exercised by `AudioToolboxWave10Tests.swift`) was present but missing from
+`audiotoolbox_guest_sources.txt` with its four rows still `deferred`; this
+pass registers the file and flips those rows to `implemented` with no code
+changes.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3028 | 3146 |
+| declared | 0 | 0 |
+| deferred | 205 | 87 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+This pass gains **118 implemented rows** across 21 new focused, synchronous
+tests in `tests/agent/AudioToolboxWave12Tests.swift` (`AudioToolboxWave12.swift`,
+`AudioToolboxWave13.swift` product code) while preserving all earlier tests
+(150 distinct cited tests after this wave).
+
+### Public surface added this pass
+
+- **Constants (oracle-pinned).** `AUDIO_TOOLBOX_VERSION=1060`,
+  `AUDIO_UNIT_VERSION=1070`, `AU_SUPPORT_INTERAPP_AUDIO=1`,
+  `kAUPresetNumberKey="preset-number"`, both component notifications, and the
+  three VoiceIO property IDs (2102/2108/2103, pinned from the pinned iPhoneOS
+  26.1 SDK header; they are iOS-only/deprecated, hence absent from macOS
+  probes).
+- **AudioUnitEvent.** Flattened C-union overlay with a nested
+  `__Unnamed_union_mArgument` payload, memberwise and zero inits, and both
+  field accessors (house precedent: flattened `AudioUnitParameterEvent`).
+- **Listeners.** In-process `AUListener` / `AUEventListener` registries:
+  create/dispose/add/remove/notify plus `AUParameterSet` (stores through
+  `AudioUnitSetParameter`, then notifies; the sending listener is excluded
+  from its own notification) and oracle-pinned `AUParameterFormatValue`
+  (`%.*f`, precision `max(digits-1, 0)`).
+- **Components.** `AudioComponentCopyConfigurationInfo`,
+  `AudioComponentGetLastActiveTime`, `AudioComponentValidateWithResults`
+  (synchronous `.failed` completion, mirroring sync `Validate`), and the
+  app-extension list entry points — all fail-closed. `CAShow` prints to
+  stderr so automation stdout keeps carrying only the load-smoke marker.
+- **Music.** Host-time/beats conversion over the offline tempo map
+  (self-consistent round trips), `{tempo}` info dictionary (macOS probe:
+  fresh sequences report tempo 120), SMPTE resolution codec (macOS probe:
+  the setter stores the negated frame rate, `Set(25,96) == -6304`),
+  per-track destination nodes, user callbacks, extended-note and user
+  events.
+- **Delegates.** `AudioConverterNewSpecific`, realtime-safe complex-buffer
+  fill (shared PCM engine behind the realtime-safe input-proc shape),
+  packet-dependency fill/write variants (vacuous for linear PCM),
+  `AudioConverterInputDataProc`, and offline-render format setting.
+- **Callback types.** The remaining scalar/raw-pointer v1 AudioUnit procs,
+  render/process procs, queue input/output/tap blocks, host
+  musical-context/transport blocks, MIDI schedule/output blocks,
+  `CallHostBlock`, `MIDIChannelNumber`, `MagicCookieInfo`, remote-control
+  and VoiceIO speech listeners — each invoked synchronously in tests.
+- **v3 objects.** `AUAudioUnit.instantiate` completion-handler spelling
+  (synchronous completion), `messageChannel(for:)` with an echo-capable
+  `AUMessageChannel`, stored musical-context/transport/MIDI-output blocks,
+  a parameter-tree-applying `scheduleParameterBlock`, and nil MIDI
+  scheduling. Plus test-only conversions for 19 pre-existing struct/enum
+  initializers (including `AURenderEvent(head:)`).
+
+### Still deferred (87)
+
+Callback-backed `AudioFileOpen/InitializeWithCallbacks` (needs a
+callback-backed persistence model), dispatch-queue entry points
+(`dispatch_queue_t`), `ExtAudioFileWriteAsync` (runloop async semantics),
+`CAShowFile` (`FILE*` bridging), `AudioComponentGetIcon` (`UIImage`),
+MIDI-endpoint routing and MIDI-CI (CoreMIDI-owned), `AUAudioUnitFactory`
+(`NSExtensionRequestHandling` is absent from Linux Foundation),
+`shouldChangeToFormat` (`AVAudioFormat`), ASBD/channel-layout/timestamp/
+packet records and render/MIDI-list blocks (CoreAudioTypes-owned),
+`AUMIDIEventList` and union layouts (MIDIEventList / unnamed-union oracle
+items), flexible-tail memberwise inits (CAF packet table, marker lists),
+`MusicDeviceNoteParams` (dependency USR), `DarwinBoolean` memberwise inits
+(hosted as `UInt8`), `AudioCodec*Proc` (typed fail-closed entry points are
+hosted instead, by design), and the two `NSCoding` synthesized witnesses
+(stdlib protocol witnesses are not converted).
+
+Top-five implemented evidence distribution after this wave:
+
+| rows | test |
+| ---: | --- |
+| 200 | `AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog` |
+| 200 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue` |
+| 168 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags` |
+| 163 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioFileFamily` |
+| 146 | `AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog` |
+
+The largest anchor covers 6.36% of the 3,146 implemented rows and is a
+permitted table-driven enum/option-set value test. The largest wave-12 test
+(`testWave12AudioUnitProcTypedefs`, 14 rows) covers 0.44%. No SwiftUI overlay
+rows or other rows were reclassified as `not-applicable`.

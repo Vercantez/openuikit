@@ -129,3 +129,29 @@ cited by more than 40% of implemented rows.
 
 The sealed host gate is run as
 `bash full/managedappdistribution/tests/acceptance/test_host.sh`.
+
+## Depth pass 2026-09 (wave 8, contract-compliance review)
+
+Re-examined the two async `ManagedApps.AsyncIterator.next` overloads the
+earlier wave-8 note marked `implemented` via a bounded `NSCondition` harness.
+The lane contract forbids `await` and blocking waits in cited tests, and a
+synchronous sealed entry point cannot invoke an `async` method without one
+or the other, so no compliant test can cite them. Both rows return to
+`deferred` alongside their 22 async `AsyncSequence` siblings; the
+in-process fail-closed iterator implementation itself is unchanged, and the
+harness plus its two test functions are removed from
+`tests/agent/ManagedAppLibraryTests.swift`.
+
+Before: **1642 implemented / 0 declared / 22 deferred / 0 unavailable /
+0 not-applicable**. After: **1640 implemented / 0 declared / 24 deferred /
+0 unavailable / 0 not-applicable**. Implemented gain is −2 for
+contract compliance. All 24 deferred rows are `async` Swift concurrency
+`AsyncSequence`/`AsyncIterator` members the sealed runner cannot await.
+No cited test uses `DispatchQueue.main`, a run loop, a semaphore or
+condition wait, `Task`, or `await`.
+
+The sealed host gate is Linux-only (the generated runner imports `Glibc`);
+on this Mac its reference/coverage/evidence validation reports
+`FRAMEWORK_FANOUT_REFERENCE_OK`, while the compile-and-run stages cannot
+execute here (Xcode SwiftUI is present, so the Linux `View` stubs are
+correctly excluded).

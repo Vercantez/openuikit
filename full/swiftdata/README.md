@@ -16,7 +16,7 @@ lane and is not linked here.
 Unchanged application source continues to import `SwiftData`. Linux has no
 CoreData SQLite store, no CloudKit, and no Apple schema-migration engine.
 
-Coverage (884 public precise IDs): **635 implemented** / 11 declared /
+Coverage (884 public precise IDs): **638 implemented** / 8 declared /
 48 deferred / 2 unavailable / 188 not-applicable. The
 ModelContainer, ModelConfiguration, ModelContext, FetchDescriptor, and
 Schema families are nondeferred (implemented or declared).
@@ -47,7 +47,8 @@ Schema families are nondeferred (implemented or declared).
 - History fetches return an empty list; history types construct and
   compare but do not invent transactions.
 - `DefaultSerialModelExecutor` and a `ModelActor` conforming actor expose
-  the nonisolated container / executor / unownedExecutor path.
+  the nonisolated container / executor / context / subscript /
+  unownedExecutor path.
 
 Tests adopt `PersistentModel` directly. `@Model` is a protocol-based
 replacement: the isolated Linux compile has no SwiftSyntax macro plugin
@@ -75,7 +76,8 @@ sketch and is not in `swiftdata_guest_sources.txt`.
 - Foundation `#Predicate` over class KeyPath traps on this Linux
   Foundation revision; focused tests do not use `#Predicate`.
 - `PersistentModel.init(backingData:)` still fatalErrors without `@Model`
-  generated storage (declared). `Hashable.hashValue` is not redeclared;
+  generated storage; a conforming type may provide its own witness, as
+  exercised by `testPersistentModelInitBackingData`. `Hashable.hashValue` is not redeclared;
   reads do not warn on this toolchain, so all 18 per-type `hashValue`
   witnesses are exercised by `testHashValueSurface`.
 

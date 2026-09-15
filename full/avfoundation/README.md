@@ -817,3 +817,44 @@ witnesses that cannot be exercised synchronously without inventing Apple
 API or tripping `-warnings-as-errors` deprecation errors. The 245
 `deferred` rows are unchanged
 (hardware/daemon/URLSession/`CALayer`/async-service).
+
+### Depth pass 2026-09-15 (wave 8 leftover sweep)
+
+Wave 8 sweep converts the last 8 synchronous `declared` rows that already
+compile with fail-closed bodies: the six
+`AVAsynchronousCIImageFilteringRequest` class/member rows (zeroed
+`renderSize` / `compositionTime`, inert `finish(with:)` calls, no filtering
+service claimed), `AVVideoCompositionCoreAnimationTool` (default and
+configuration inits; `CALayer`-backed factories stay deferred), and the
+`AVMetricEventStreamPublisher` protocol (recording witness returning empty
+`AVMetrics`; no metric service claimed). Three tests in
+`tests/agent/AVDepthPass17Tests.swift` (largest group 6 citations).
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5218 | 5226 |
+| `declared` | 169 | 161 |
+| `deferred` | 245 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest share is 315 rows, ~6% of the 5,226 implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The remaining 161 `declared` rows are async witnesses (calling them needs
+`await`, which the sealed gate forbids: `AsyncSequence` members,
+`next()` iterators, async `load` / `seek` / `image` / receiver `append`
+methods), `NSCoding` `init(coder:)` witnesses, `Combine` publishers (no
+Combine on the isolated host), `FormatStyle` / `compare` witnesses, and
+`Element`-constrained or `SortComparator`-element witnesses that cannot be
+exercised synchronously without inventing Apple API. The 245 `deferred`
+rows are unchanged (hardware/daemon/URLSession/`CALayer`/async-service
+bodies that cannot be written without guessing Apple behavior).

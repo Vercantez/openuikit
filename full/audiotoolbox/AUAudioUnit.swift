@@ -343,6 +343,9 @@ open class AUAudioUnit: NSObject {
     public var virtualMIDICableCount: Int { 0 }
     public var MIDIOutputBufferSizeHint: Int = 0
     public var migrateFromPlugin: [String] { [] }
+    public var musicalContextBlock: AUHostMusicalContextBlock?
+    public var transportStateBlock: AUHostTransportStateBlock?
+    public var midiOutputEventBlock: AUMIDIOutputEventBlock?
 
     private var renderObserverTokens: [Int] = []
     private var nextRenderObserverToken = 1

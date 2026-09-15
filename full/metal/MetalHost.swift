@@ -199,6 +199,10 @@ final class LinuxMTLIndirectComputeCommand: NSObject, MTLIndirectComputeCommand,
         stageIn = region
     }
 
+    func setStageIn(_ region: MTLRegion) {
+        setStageInRegion(region)
+    }
+
     func setThreadgroupMemoryLength(_ length: Int, index: Int) {
         threadgroupMemory[index] = length
     }
@@ -425,6 +429,10 @@ final class LinuxMTLIndirectCommandBuffer: LinuxMTLResource, MTLIndirectCommandB
 
     func indirectComputeCommandAt(_ commandIndex: Int) -> any MTLIndirectComputeCommand {
         computeCommands[min(max(commandIndex, 0), size - 1)]
+    }
+
+    func indirectComputeCommand(at index: Int) -> any MTLIndirectComputeCommand {
+        indirectComputeCommandAt(index)
     }
 
     func indirectRenderCommandAt(_ commandIndex: Int) -> any MTLIndirectRenderCommand {

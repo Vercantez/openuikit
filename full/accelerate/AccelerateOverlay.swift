@@ -330,6 +330,7 @@ public enum BNNS {
     public class FullyConnectedLayer: ConvolutionLayer {
     }
     public struct FusedBinaryArithmeticParameters {
+        public init() {}
         public var inputADescriptorType: BNNS.DescriptorType {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -350,6 +351,7 @@ public enum BNNS {
     public class FusedConvolutionNormalizationLayer: FusedLayer {
     }
     public struct FusedConvolutionParameters {
+        public init() {}
         public var dilationStride: (x: Int, y: Int) {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -380,6 +382,7 @@ public enum BNNS {
         }
     }
     public struct FusedDequantizationParameters {
+        public init() {}
         public var axis: Int? {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -396,6 +399,7 @@ public enum BNNS {
     public class FusedFullyConnectedNormalizationLayer: FusedLayer {
     }
     public struct FusedFullyConnectedParameters {
+        public init() {}
         public var bias: BNNSNDArrayDescriptor? {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -408,6 +412,7 @@ public enum BNNS {
     public class FusedLayer: Layer {
     }
     public struct FusedNormalizationParameters {
+        public init() {}
         public var activation: BNNS.ActivationFunction {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -436,6 +441,7 @@ public enum BNNS {
     public class FusedParametersLayer: FusedLayer {
     }
     public struct FusedQuantizationParameters {
+        public init() {}
         public var axis: Int? {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -450,6 +456,7 @@ public enum BNNS {
         }
     }
     public struct FusedTernaryArithmeticParameters {
+        public init() {}
         public var inputADescriptorType: BNNS.DescriptorType {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -472,6 +479,7 @@ public enum BNNS {
         }
     }
     public struct FusedUnaryArithmeticParameters {
+        public init() {}
         public var inputDescriptorType: BNNS.DescriptorType {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -716,18 +724,20 @@ public enum BNNS {
     public class ReductionLayer: UnaryLayer {
     }
     @frozen public struct RelationalOperator {
-        public static var greaterEqual: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var or: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var and: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var nor: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var not: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var xor: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var less: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var nand: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var equal: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var greater: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var notEqual: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
-        public static var lessEqual: BNNS.RelationalOperator { preconditionFailure("Accelerate Linux: unread property") }
+        public var rawValue: BNNSRelationalOperator
+        public init(rawValue: BNNSRelationalOperator) { self.rawValue = rawValue }
+        public static var greaterEqual: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorGreaterEqual) }
+        public static var or: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLogicalOR) }
+        public static var and: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLogicalAND) }
+        public static var nor: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLogicalNOR) }
+        public static var not: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLogicalNOT) }
+        public static var xor: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLogicalXOR) }
+        public static var less: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLess) }
+        public static var nand: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLogicalNAND) }
+        public static var equal: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorEqual) }
+        public static var greater: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorGreater) }
+        public static var notEqual: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorNotEqual) }
+        public static var lessEqual: BNNS.RelationalOperator { BNNS.RelationalOperator(rawValue: BNNSRelationalOperatorLessEqual) }
     }
     public class ResizeLayer: UnaryLayer {
     }
@@ -929,6 +939,7 @@ public enum BNNS {
         case csr(columnIndices: BNNSNDArrayDescriptor, rowStarts: BNNSNDArrayDescriptor)
     }
     public struct SparseParameters {
+        public init() {}
         public var targetSystem: BNNSTargetSystem {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -1495,6 +1506,10 @@ public struct vDSP_SplitComplexDouble {
     public typealias SplitComplex = DSPDoubleSplitComplex
 }
 
+extension vDSP_SplitComplexFloat: vDSP_FourierTransformFunctions {}
+
+extension vDSP_SplitComplexDouble: vDSP_FourierTransformFunctions {}
+
 public struct vDSP_SplitComplexFloat {
     public init() {}
     public typealias SplitComplex = DSPSplitComplex
@@ -1536,8 +1551,88 @@ public enum vImage {
         case rgbGreen
         case cmykBlack
         case luminance
-        public var bufferTypeCode: vImageBufferTypeCode { preconditionFailure("Accelerate Linux: unread property") }
-        public var rawValue: Int { preconditionFailure("Accelerate Linux: unread property") }
+        public init?(rawValue: Int) {
+            switch rawValue {
+            case 0: self = .alpha
+            case 1: self = .coreGraphics
+            case 2: self = .cmykBlack
+            case 3: self = .cmykCyan
+            case 4: self = .cmykMagenta
+            case 5: self = .cmykYellow
+            case 6: self = .YCbCr
+            case 7: self = .Cb
+            case 8: self = .Cr
+            case 9: self = .chroma
+            case 10: self = .chunky
+            case 11: self = .indexed
+            case 12: self = .labA
+            case 13: self = .labB
+            case 14: self = .labL
+            case 15: self = .luminance
+            case 16: self = .monochrome
+            case 17: self = .rgbRed
+            case 18: self = .rgbGreen
+            case 19: self = .rgbBlue
+            case 20: self = .xyzX
+            case 21: self = .xyzY
+            case 22: self = .xyzZ
+            default: return nil
+            }
+        }
+        public var bufferTypeCode: vImageBufferTypeCode {
+            switch self {
+            case .cmykYellow: return 3
+            case .monochrome: return 1
+            case .cmykMagenta: return 2
+            case .coreGraphics: return 24
+            case .Cb: return 22
+            case .Cr: return 23
+            case .labA: return 2
+            case .labB: return 3
+            case .labL: return 1
+            case .xyzX: return 1
+            case .xyzY: return 2
+            case .xyzZ: return 3
+            case .YCbCr: return 19
+            case .alpha: return 17
+            case .chroma: return 21
+            case .chunky: return 25
+            case .rgbRed: return 1
+            case .indexed: return 18
+            case .rgbBlue: return 3
+            case .cmykCyan: return 1
+            case .rgbGreen: return 2
+            case .cmykBlack: return 4
+            case .luminance: return 20
+            }
+        }
+        public var rawValue: Int {
+            switch self {
+            case .alpha: return 0
+            case .coreGraphics: return 1
+            case .cmykBlack: return 2
+            case .cmykCyan: return 3
+            case .cmykMagenta: return 4
+            case .cmykYellow: return 5
+            case .YCbCr: return 6
+            case .Cb: return 7
+            case .Cr: return 8
+            case .chroma: return 9
+            case .chunky: return 10
+            case .indexed: return 11
+            case .labA: return 12
+            case .labB: return 13
+            case .labL: return 14
+            case .luminance: return 15
+            case .monochrome: return 16
+            case .rgbRed: return 17
+            case .rgbGreen: return 18
+            case .rgbBlue: return 19
+            case .xyzX: return 20
+            case .xyzY: return 21
+            case .xyzZ: return 22
+            }
+        }
     }
     public enum ChannelOrdering: Equatable, Hashable {
         case ARGB
@@ -1608,7 +1703,19 @@ public enum vImage {
         case edgesAndCorners
         case edges
         public typealias RawValue = Int32
-        public var rawValue: Int32 { preconditionFailure("Accelerate Linux: unread property") }
+        public init?(rawValue: Int32) {
+            switch rawValue {
+            case 4: self = .edges
+            case 8: self = .edgesAndCorners
+            default: return nil
+            }
+        }
+        public var rawValue: Int32 {
+            switch self {
+            case .edges: return 4
+            case .edgesAndCorners: return 8
+            }
+        }
     }
     public enum Gamma {
         case fullPrecision(Float)
@@ -1686,9 +1793,24 @@ public enum vImage {
         case dilate(structuringElement: vImage.ConvolutionKernel2D<ComponentType>)
         case maximize(kernelSize: vImage.Size)
         case minimize(kernelSize: vImage.Size)
-        public var structuringElement: vImage.ConvolutionKernel2D<ComponentType>? { preconditionFailure("Accelerate Linux: unread property") }
-        public var width: vImagePixelCount { preconditionFailure("Accelerate Linux: unread property") }
-        public var height: vImagePixelCount { preconditionFailure("Accelerate Linux: unread property") }
+        public var structuringElement: vImage.ConvolutionKernel2D<ComponentType>? {
+            switch self {
+            case .erode(let kernel), .dilate(let kernel): return kernel
+            case .maximize, .minimize: return nil
+            }
+        }
+        public var width: vImagePixelCount {
+            switch self {
+            case .erode(let kernel), .dilate(let kernel): return kernel.width
+            case .maximize(let size), .minimize(let size): return vImagePixelCount(size.width)
+            }
+        }
+        public var height: vImagePixelCount {
+            switch self {
+            case .erode(let kernel), .dilate(let kernel): return kernel.height
+            case .maximize(let size), .minimize(let size): return vImagePixelCount(size.height)
+            }
+        }
     }
     public struct MultidimensionalLookupTable {
         public init() {}
@@ -1901,19 +2023,19 @@ public enum vImage {
     }
 }
 
-public var BNNSDataTypeInt8: BNNSDataType { BNNSDataType(rawValue: 0) }
-public var BNNSDataTypeInt16: BNNSDataType { BNNSDataType(rawValue: 0) }
-public var BNNSDataTypeInt32: BNNSDataType { BNNSDataType(rawValue: 0) }
-public var BNNSDataTypeFloat16: BNNSDataType { BNNSDataType(rawValue: 0) }
-public var BNNSDataTypeFloat32: BNNSDataType { BNNSDataType(rawValue: 0) }
-public var BNNSDataTypeIndexed8: BNNSDataType { BNNSDataType(rawValue: 0) }
-public var BNNSFlagsUseClientPtr: BNNSFlags { BNNSFlags(rawValue: 0) }
+public var BNNSDataTypeInt8: BNNSDataType { BNNSDataType(rawValue: 131080) }
+public var BNNSDataTypeInt16: BNNSDataType { BNNSDataType(rawValue: 131088) }
+public var BNNSDataTypeInt32: BNNSDataType { BNNSDataType(rawValue: 131104) }
+public var BNNSDataTypeFloat16: BNNSDataType { BNNSDataType(rawValue: 65552) }
+public var BNNSDataTypeFloat32: BNNSDataType { BNNSDataType(rawValue: 65568) }
+public var BNNSDataTypeIndexed8: BNNSDataType { BNNSDataType(rawValue: 524296) }
+public var BNNSFlagsUseClientPtr: BNNSFlags { BNNSFlags(rawValue: 1) }
 public var BNNSPoolingFunctionMax: BNNSPoolingFunction { BNNSPoolingFunction(rawValue: 0) }
-public var BNNSActivationFunctionAbs: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
-public var BNNSActivationFunctionTanh: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
-public var BNNSPoolingFunctionAverage: BNNSPoolingFunction { BNNSPoolingFunction(rawValue: 0) }
-public var BNNSActivationFunctionSigmoid: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
+public var BNNSActivationFunctionAbs: BNNSActivationFunction { BNNSActivationFunction(rawValue: 6) }
+public var BNNSActivationFunctionTanh: BNNSActivationFunction { BNNSActivationFunction(rawValue: 4) }
+public var BNNSPoolingFunctionAverage: BNNSPoolingFunction { BNNSPoolingFunction(rawValue: 1) }
+public var BNNSActivationFunctionSigmoid: BNNSActivationFunction { BNNSActivationFunction(rawValue: 3) }
 public var BNNSActivationFunctionIdentity: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
-public var BNNSActivationFunctionScaledTanh: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
-public var BNNSActivationFunctionRectifiedLinear: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
-public var BNNSActivationFunctionLeakyRectifiedLinear: BNNSActivationFunction { BNNSActivationFunction(rawValue: 0) }
+public var BNNSActivationFunctionScaledTanh: BNNSActivationFunction { BNNSActivationFunction(rawValue: 5) }
+public var BNNSActivationFunctionRectifiedLinear: BNNSActivationFunction { BNNSActivationFunction(rawValue: 1) }
+public var BNNSActivationFunctionLeakyRectifiedLinear: BNNSActivationFunction { BNNSActivationFunction(rawValue: 2) }

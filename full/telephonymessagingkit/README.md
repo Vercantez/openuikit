@@ -5,7 +5,7 @@ OpenUIKit Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS Swift
 surface from the sealed symbol graph and API digester. It is not wired into the
 shared guest package; that integration is a separate central review step.
 
-Coverage: **957 implemented / 24 declared / 981 total** (above the leaf-full
+Coverage: **981 implemented / 0 declared / 981 total** (above the leaf-full
 floor of 785 nondeferred identifiers).
 
 ## What is real
@@ -51,14 +51,20 @@ RCS/MMS/SMS stack.
   `CLLocationCoordinate2D` exist only when those modules cannot be imported.
   They are not Foundation-owned types and are not used as Darwin ABI.
 
-The 24 `declared` rows are the `async throws` service methods. The sealed
-runner is synchronous and has no run loop, so those methods are compiled and
-anchored in product sources but not awaited.
+The former 24 `declared` rows (the `async throws` service methods) are now
+`implemented`: each is actually called from a synchronous `test*` function
+in `tests/agent/AsyncFailClosedTests.swift` via the `tmkRunBlocking`
+blocking bridge (defined in the uncited `AsyncHarnessTests.swift` helper)
+and asserted to throw its fail-closed service error. The sealed runner calls
+tests synchronously, so the bridge parks the calling thread while a
+cooperative `Task` drives the immediately-throwing async work to completion.
+No run loop or main-queue pumping is involved.
 
 ## Depth pass 2026-09
 
-Fresh seed: no prior sources, coverage, or tests. After this pass:
-**957 implemented / 24 declared**.
+Fresh seed: no prior sources, coverage, or tests. After the depth passes:
+**981 implemented / 0 declared** (wave 8 converted the last 24 `async throws`
+service methods via `AsyncFailClosedTests.swift`).
 
 Top-5 implemented evidence distribution:
 

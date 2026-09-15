@@ -28,11 +28,13 @@ Apple widget daemon:
 - `PreviewActivityBuilder` / `PreviewTimelineBuilder` array concatenators;
 - process-local `WidgetPushHandler` token delivery into `WidgetCenter`.
 
-Coverage of the 2876 iPhoneOS 26.1 public identifiers after the pi wave-7
-leftover-overlay pass: **2851 implemented**, 8 declared, 17 deferred,
+Coverage of the 2876 iPhoneOS 26.1 public identifiers after the pi wave-8
+declared-oracle pass: **2856 implemented**, 4 declared, 16 deferred,
 0 not-applicable (all 777 remaining SwiftUI `View` cross-import overlays on
-`ControlWidgetToggleDefaultLabel` converted to identity-overlaid tests;
-8 `Body`/`body` witnesses stay declared as fail-closed).
+`ControlWidgetToggleDefaultLabel` converted to identity-overlaid tests in pi
+wave-7; this pass pins the `NSUserActivityTypeLiveActivity` payload by Apple
+oracle probe and converts the four `Body == Never` aliases to
+identity-pinned tests; the 4 `body` getters stay declared as fail-closed).
 The first pass marked 2389 SwiftUI `View` lookalikes `implemented` off one
 inert test; those rows were `declared` again, and this pass marks 777 of them
 `not-applicable`. A single test covers at most 40 identifiers
@@ -237,9 +239,9 @@ The 8 remaining `declared` rows are the `Body == Never` aliases and `body`
 witnesses of `ControlWidgetButton`, `ControlWidgetToggle`,
 `StaticControlConfiguration`, and `AppIntentControlConfiguration`; their
 getters stay fatal because Linux has no Control Center presentation host.
-Timeline/reload daemon success, `#Preview` macros,
-DeveloperToolsSupport preview inits, and the `NSUserActivityTypeLiveActivity`
-payload stay deferred/fail-closed. No non-enum test exceeds the 40% bulk-relabel
+Timeline/reload daemon success, `#Preview` macros, and
+DeveloperToolsSupport preview inits stay deferred/fail-closed. No non-enum
+test exceeds the 40% bulk-relabel
 ceiling (largest batch cites 202 of 2851 implemented rows, 7.1%).
 
 ### Leftover-overlay pass 2026-09 (pi wave-7)
@@ -264,3 +266,31 @@ The Linux host gate
 (`bash tests/acceptance/test_host.sh`, also verified under Docker
 `swift:6.0-jammy`) compiles the dylib warnings-as-errors, runs every cited
 test, and emits only `WIDGETKIT_AGENT_RUNTIME_OK`.
+
+### Declared-oracle pass 2026-09 (pi wave-8)
+
+This pass started from 2851 implemented, 8 declared, 17 deferred, and
+0 not-applicable identifiers. It ends at 2856 implemented, 4 declared,
+16 deferred, and 0 not-applicable identifiers.
+
+- `c:@NSUserActivityTypeLiveActivity` (`let NSUserActivityTypeLiveActivity:
+  String`, exported by WidgetKit itself per `reference/tbd-exports.tsv`) is
+  implemented: a tiny `import WidgetKit` probe compiled with
+  `xcrun --sdk macosx swiftc` (linking the real framework) prints
+  `NSUserActivityTypeLiveActivity` (30 characters), and the same probe
+  compiles under `xcrun --sdk iphoneos swiftc` for arm64 iOS 26.1.
+  `WidgetKitActivities.swift` pins that payload and
+  `testNSUserActivityTypeLiveActivityPayload` asserts it. The answered
+  oracle question is removed from `oracle-questions.tsv`.
+- The four `Body == Never` aliases (`ControlWidgetButton`,
+  `ControlWidgetToggle`, `StaticControlConfiguration`,
+  `AppIntentControlConfiguration`) are implemented:
+  `testControlWidgetBodyAliasesAreNever` pins each alias to `Never`.
+  The four matching `body` getters stay `declared` — invoking them is
+  `fatalError` by design (Linux has no Control Center presentation host),
+  so no passing in-process test can call them.
+- The 16 remaining deferred rows stay deferred: `#Preview` macros,
+  DeveloperToolsSupport preview inits, `previewContext` witnesses, and the
+  `ActivityKit` preview context (AGENTS.md forbids prioritizing `#Preview`),
+  plus the two async `currentValue` daemon getters (no Apple control daemon
+  on Linux; the sealed runner cannot `await`).

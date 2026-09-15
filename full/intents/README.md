@@ -501,3 +501,23 @@ protocol pair (private `_`-prefixed base), `NSExtensionContext.intent`
 (Foundation type absent from corelibs Foundation), the NSNumber spelling of
 `usesMeteredFare` (the Linux anchor serves the Bool overlay), and other Apple
 overlay/runtime-gated members. Siri authorization stays fail-closed `.denied`.
+
+### Wave 8 sweep (2026-09-15)
+
+Re-examined the full census for convertible rows. Before: **4079
+implemented / 0 declared / 81 deferred / 0 unavailable / 0
+not-applicable**. After: **4079 implemented / 0 declared / 81 deferred /
+0 unavailable / 0 not-applicable**. Implemented gain is **+0**: there are
+no `declared` rows left to convert and no SwiftUI cross-import overlay rows
+in this census. Every deferred row was re-checked against in-process
+implementability and stays deferred: CoreLocation/EventKit/CoreGraphics/
+Contacts-gated members (framework-local substitutes forbidden), the Swift
+`INShortcut` enum overlay (lane keeps the NSObject class), synthesis/`!=`
+witnesses with no writable anchor, `NSExtensionContext.intent` (absent from
+corelibs Foundation), the NSNumber spelling of `usesMeteredFare` (collides
+with the implemented Bool overlay), and the `INIntentSetImageKeyPath`
+protocol pair (private `_`-prefixed base). Evidence re-validated: all 176
+implemented anchors resolve to defined top-level synchronous `test*`
+functions, the largest citation is the table-driven `testEnumRawValues` at
+28.9% (under the 40% bound), and no cited test uses DispatchQueue.main,
+RunLoop, semaphores, or await.

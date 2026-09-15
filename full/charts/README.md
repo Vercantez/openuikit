@@ -956,3 +956,73 @@ ran with marker-only stdout `CHARTS_AGENT_RUNTIME_OK`.
 `FRAMEWORK_FANOUT_DELIVERABLE_OK module=Charts lane=medium-full
 symbols=9474`. No `.build`, `build`, or `scratch` products remain
 under `full/charts/`.
+
+### Wave-8 Shape-overlay pass (pi agent, leftover declared `Shape` rows)
+
+This pass converts the 40 remaining declared `s:7SwiftUI5Shape` rows on
+the Charts-owned symbol shapes (`AnyChartSymbolShape` /
+`BasicChartSymbolShape`) per the wave-8 prompt: pin Shape/plot rows
+only where no renderer output is invented, and leave the GPU/image
+renderer deferred. It starts from the wave-7 overlay ledger
+(`implemented` 8410, `declared` 101, `deferred` 905, `unavailable` 0,
+`not-applicable` 58) and ends at `implemented` 8450, `declared` 61,
+`deferred` 905, `unavailable` 0, `not-applicable` 58: an implemented
+gain of 40. Nondeferred (`implemented` + `declared`) is 8511, above the
+medium-full floor (4737).
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 8410 | 8450 |
+| declared | 101 | 61 |
+| deferred | 905 | 905 |
+| unavailable | 0 | 0 |
+| not-applicable | 58 | 58 |
+
+Converted rows (20 modifier bases x 2 shapes, notes
+`identity Shape overlay; no renderer`):
+
+- `fill` (3 overloads x 2) — new `ChartsShapeOverlay.swift` identity
+  stubs, cited from `ChartsShapeOverlayTests.swift#testShapeOverlayFill`
+  (6 rows). The test calls `fill()` on both shapes and asserts the
+  symbol `path(in:)` is unchanged.
+- `size` (4 x 2) — same stubs, cited from `#testShapeOverlaySize`
+  (8 rows), with the same path-identity assertion.
+- `stroke` (6 x 2) — same stubs, cited from `#testShapeOverlayStroke`
+  (12 rows), with the same path-identity assertion.
+- `transform` (1 x 2) — same stubs, cited from
+  `#testShapeOverlayTransform` (2 rows). Apple would remap geometry;
+  Linux returns `Self` unchanged and asserts the path is unchanged, so
+  no transformed output is invented.
+- `body` (1 x 2) + `role` (1 x 2) — both shapes already expose
+  `body`; `AnyChartSymbolShape.role` is added (`ShapeRole.fill` to match
+  `BasicChartSymbolShape.role`). Cited from
+  `#testShapeOverlayBodyAndRole` (4 rows), which accesses both bodies
+  and asserts both roles equal `.fill`.
+- `offset` (3 x 2) + `layoutDirectionBehavior` (1 x 2) — these bases
+  already compile through the existing View no-op stubs, and the
+  existing `ChartsViewOverlayTests.swift#testViewOverlayBatch01` already
+  calls both bases on both shapes. The 8 Shape rows are re-cited to that
+  test (274 rows after, still far below the 40% cap of 3380).
+
+Not converted, deliberately: the 61 remaining declared rows are
+uninhabited `Never` witnesses (`ChartContent` / `Chart3DContent` /
+`AxisMark` modifiers synthesized on `Never`, `PrimitivePlottable` on
+`Never`), `Chart3DContent` modifiers synthesized on lookalike-absent
+`ModifiedContent`, one `AnyChartSymbolShape.AnimatableData` row (no
+`Animatable`/`VectorArithmetic` in the pinned Linux set — inventing it
+would invent behavior), and one `SurfacePlot.body: Never` row whose
+product body is intentionally the fail-closed `EmptyView`. All 905
+deferred rows stay deferred (stdlib operators, Combine/FormatStyle
+overlays, GPU/image renderer, `symbolRotation` with no RealityKit type,
+scroll/gesture timing). The 58 `not-applicable` rows stay untouched
+(SwiftUI `Shape` boolean-combiner/`trim`/`scale`/`rotation` /
+`sizeThatFits` on `Circle`, `animatableData`, `circle` static,
+`ScrollTargetBehavior.properties`); none is a `View` modifier, so the
+overlay override does not apply. Hardware/daemon/Siri/Apple Pay/Screen
+Time success stays fail-closed. No `DispatchQueue.main`, `RunLoop`,
+semaphore waits, or `await` in cited tests.
+
+Top implemented evidence after this pass (8450 rows; cap 40% = 3380):
+`testViewOverlayBatch01` grows 266 -> 274 rows (3.2%); no single test
+exceeds 40% of implemented rows. New tests cite 12 / 8 / 6 / 4 / 2 rows
+respectively.

@@ -1801,3 +1801,29 @@ extension vDSP {
     }
 
 }
+
+extension Array where Element == Float {
+    public init(fromSplitComplex splitComplex: DSPSplitComplex, scale: Float, count: Int) {
+        let n = Swift.max(0, count)
+        self.init(repeating: 0, count: n)
+        var i = 0
+        while i + 1 < n {
+            self[i] = splitComplex.realp[i / 2] * scale
+            self[i + 1] = splitComplex.imagp[i / 2] * scale
+            i += 2
+        }
+    }
+}
+
+extension Array where Element == Double {
+    public init(fromSplitComplex splitComplex: DSPDoubleSplitComplex, scale: Double, count: Int) {
+        let n = Swift.max(0, count)
+        self.init(repeating: 0, count: n)
+        var i = 0
+        while i + 1 < n {
+            self[i] = splitComplex.realp[i / 2] * scale
+            self[i + 1] = splitComplex.imagp[i / 2] * scale
+            i += 2
+        }
+    }
+}

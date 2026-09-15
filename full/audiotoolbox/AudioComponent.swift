@@ -67,7 +67,7 @@ public struct AudioComponentDescription: Equatable, Hashable, Sendable {
     }
 }
 
-private final class ATAudioComponentRecord: ATObject {
+internal final class ATAudioComponentRecord: ATObject {
     let description: AudioComponentDescription
     init(description: AudioComponentDescription) {
         self.description = description

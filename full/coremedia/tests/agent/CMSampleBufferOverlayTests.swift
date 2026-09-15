@@ -314,3 +314,12 @@ func testCMSampleBufferTimingArrayAndRangeCopy() {
     precondition(CMSampleBuffer.Flags(rawValue: 1).rawValue == 1)
     precondition(CMSampleBuffer.Flags.audioBufferListAssure16ByteAlignment.rawValue == 1)
 }
+
+/// Apple oracle 2026-09-15 (Xcode macOS SDK 26.1 probe): the overlay exposes
+/// these exact notification names, including the unguessable `Fig` prefix on
+/// `dataBecameReady`. Synchronous raw-value assertions; posting and delivery
+/// timing stay unobserved.
+func testCMSampleBufferDataNotificationNames() {
+    precondition(CMSampleBuffer.dataFailed.rawValue == "CMSampleBufferDataFailed")
+    precondition(CMSampleBuffer.dataBecameReady.rawValue == "FigSampleBufferDataBecameReady")
+}

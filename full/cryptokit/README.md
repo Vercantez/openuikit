@@ -31,7 +31,11 @@ Portable Swift implementations that match published test vectors:
 `libCryptoKit.dylib` compiles with `-warnings-as-errors`.
 
 Coverage after this round: **1221 implemented / 21 declared / 0 deferred / 22
-not-applicable / 23 unavailable** of 1287 IDs. Implemented ≥ 900. Nondeferred except
+not-applicable / 23 unavailable** of 1287 IDs. Wave 8 recount: before
+1221/21/0, after 1221/21/0 (gain 0 — all 21 leftover declared rows are
+SecureEnclave PrivateKey instance members whose only Apple initializers
+require LAContext/SecAccessControl, so no instance is obtainable in-process;
+they stay declared fail-closed rather than inventing a synthetic initializer). Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
 not-applicable: their generic constraints (`Element: SortComparator`,

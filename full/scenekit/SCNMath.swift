@@ -419,7 +419,9 @@ extension SIMD4 where Scalar == Double {
 extension NSValue {
     public convenience init(scnVector3 v: SCNVector3) {
         var copy = v
-        self.init(bytes: &copy, objCType: "SCNVector3")
+        // @encode(SCNVector3): NSValue derives the stored length from the
+        // type string, so a bare "SCNVector3" stores zero bytes.
+        self.init(bytes: &copy, objCType: "{SCNVector3=fff}")
     }
 
     public convenience init(SCNVector3 v: SCNVector3) {
@@ -428,7 +430,8 @@ extension NSValue {
 
     public convenience init(scnVector4 v: SCNVector4) {
         var copy = v
-        self.init(bytes: &copy, objCType: "SCNVector4")
+        // @encode(SCNVector4).
+        self.init(bytes: &copy, objCType: "{SCNVector4=ffff}")
     }
 
     public convenience init(SCNVector4 v: SCNVector4) {
@@ -437,7 +440,8 @@ extension NSValue {
 
     public convenience init(scnMatrix4 v: SCNMatrix4) {
         var copy = v
-        self.init(bytes: &copy, objCType: "SCNMatrix4")
+        // @encode(SCNMatrix4): sixteen floats.
+        self.init(bytes: &copy, objCType: "{SCNMatrix4=ffffffffffffffff}")
     }
 
     public convenience init(SCNMatrix4 v: SCNMatrix4) {

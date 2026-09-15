@@ -837,3 +837,35 @@ arm64-apple-macosx). The sealed Linux gate is RED at baseline here because the
 Apple frameworks are importable but never imported by the Linux-first sources.
 That is a host/SDK mismatch, not a coverage regression: no product, coverage,
 manifest, or test file was changed by this audit.
+
+## Depth pass 2026-09 (pi-wave8 re-audit, no gain)
+
+Campaign `pi-wave8`, framework `Vision` (3584 IDs). Work stays inside
+`full/vision/`. Recounted `coverage.tsv` from scratch, re-checked every
+non-implemented row for a convertible sync path, re-checked the overlay
+OVERRIDE trigger.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this pass | 3312 | 214 | 58 | 0 | 0 |
+| After this pass | **3312** | **214** | **58** | **0** | **0** |
+
+Implemented gain: **+0**. Findings, re-verified:
+
+- Overlay OVERRIDE inapplicable: **0** precise IDs mention `View` or
+  `SwiftUI`; product sources define no SwiftUI `View` modifiers.
+- All 214 `declared` rows contain the async marker `YaK`/`YaKF` (verified:
+  zero declared rows lack it). No sync path exists for these exact mangled
+  IDs, and the sealed synchronous-test rule forbids `await`, semaphores,
+  and run-loop waits in cited tests, so they stay declared.
+- All 58 `deferred` rows are `VNVideoProcessor` / cadence /
+  processing-options (40) and `VNCoreMLFeatureValueObservation` (18): no
+  Linux AVFoundation video pipeline, no Apple Core ML runtime. Per-contract
+  video-processor policy they stay deferred.
+- Sealed gate re-run on this macOS host (Apple Swift 6.2.1,
+  arm64-apple-macosx) is RED at baseline with the same documented
+  `#if !canImport(...)` lookalike host/SDK mismatch
+  (`VisionRequest.swift: cannot find type 'CMSampleBuffer' in scope`). No
+  Linux Swift toolchain is available on this host to re-run the Linux gate;
+  no file was changed by this audit, so the last Linux-green ledger stands
+  unaltered.

@@ -400,3 +400,72 @@ The enum/option-set/C-constant catalog is the permitted table-driven evidence.
 No other focused test approaches 40% of the remaining implemented rows.
 Unresolved Apple-oracle questions remain recorded in `oracle-questions.tsv`;
 this pass does not infer Apple GPU, daemon, entitlement, or shader behavior.
+
+## Depth pass 2026-09 (wave 8)
+
+Campaign `ios26.1-fwdepth-r21`, framework `Metal`, lane `large-partitioned`.
+Sixth pass on the existing CPU reference: convert every leftover row that can
+be exercised by a synchronous host test, keep hardware/async/witness rows
+fail-closed or deferred, and repair implemented rows whose cited test never
+called the identifier.
+
+| Status | Before (wave-8 r20 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 4313 | 4514 |
+| declared | 0 | 0 |
+| deferred | 231 | 30 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+201** (195 deferred conversions + 6 already-implemented
+error witnesses the existing enum/fail-closed tests already call). Evidence is
+`test:full/metal/tests/agent/<File>Tests.swift#testName` naming a real
+synchronous `test*` function. MetalRuntime.swift inlines and calls every new
+`testLeftover*` function before printing `METAL_AGENT_RUNTIME_OK`.
+
+New product surface (`MetalLeftover.swift`, listed in
+`metal_guest_sources.txt`): indirect-argument C structs
+(`MTLAxisAlignedBoundingBox`, `MTL4TimestampHeapEntry`,
+`MTLDispatchThread(s)IndirectArguments`,
+`MTLIntersectionFunctionBufferArguments`, quad/triangle half tessellation
+factors, stage-in-region arguments), the five async pipeline
+completion-handler aliases, a fail-closed IO compression context
+(`MTLIOCreateCompressionContext` returns nil, appends are inert, flush reports
+`.error`, default chunk size pinned by oracle probe), attribute/buffer-layout
+descriptors and arrays, render-pass sample-buffer attachments,
+`MTLStageInputOutputDescriptor` attributes/layouts, `MTLType`, function
+stitching nodes/graphs/attributes, Metal 4 machine-learning descriptors and
+reflection, `MTLCounter`/`MTLCounterSet`, function-log debug locations and log
+value objects, IO scratch buffers, object-payload/texture/threadgroup/tensor
+binding value objects, CPU visible/intersection function tables with
+pipeline-state factories, array/range overloads on argument/compute/render/
+blit/ICB encoders, Metal 4 buffer/texture copies and command-buffer helpers,
+and a fail-closed synchronous `MTL4Compiler.makeMachineLearningPipelineState`
+that throws `MTLLibraryError.compileFailure`.
+
+Apple-oracle pins (iPhoneOS 26.1 SDK headers + `xcrun swiftc` probe):
+`MTLBlendFactor.unspecialized = 19`, `MTLBlendOperation.unspecialized = 5`,
+`MTLPixelFormat.unspecialized = 263`,
+`MTLIOCompressionContextDefaultChunkSize() = 65536`.
+
+Top-5 implemented evidence distribution (of 4514):
+1. `MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues` — 2120
+2. `MetalDescriptorTests.swift#testDescriptorValueSemantics` — 324
+3. `MetalDescriptorTests.swift#testMetal4PipelineDescriptors` — 204
+4. `MetalCommandTests.swift#testMetal4CommandEncoders` — 203
+5. `MetalGeometryTests.swift#testGeometryHelpers` — 108
+
+New focused tests (`MetalLeftoverTests.swift`, 10–39 rows each):
+`testLeftoverIndirectStructs`, `testLeftoverCompletionHandlersAndCompression`,
+`testLeftoverVertexAndSampleDescriptors`, `testLeftoverFunctionStitching`,
+`testLeftoverBindingReflection`, `testLeftoverFunctionTables`,
+`testLeftoverEncoderOverloads`, `testLeftoverMetal4Surface`.
+No non-table test exceeds 40% of the remaining implemented rows.
+
+Still deferred (30): hardware device-certification types
+(`NSDeviceCertification`, `NSProcessPerformanceProfile` and witnesses),
+`MTLLogContainer` Foundation/Combine overlay witnesses, the `NSCoding`
+`MTLSharedEventHandle` witness, IOSurface-backed texture properties, and the
+`async` Metal 4 compiler entry points plus `MTLSharedEvent.valueSignaled`
+(cited tests stay synchronous with no `await`). The three unavailable
+process-info APIs still require Apple's hardware certification service.

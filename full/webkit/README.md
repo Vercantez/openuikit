@@ -90,6 +90,79 @@ overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
 
+### Sync completionHandler conversion (pi-wave8 webkit)
+
+This pass converts **32 declared ObjC `completionHandler:` / `replyHandler:`
+rows to implemented** (2139 → 2171 implemented, 68 → 36 declared;
+deferred 26, unavailable 0, not-applicable 0 unchanged, total 2233),
+following the `WKWebsiteDataStore` / `WKWebView` precedent already in this
+tree: a synchronous `completionHandler:` overload whose handler runs before
+return, exercised by a synchronous test that calls it. No new product source
+was added (all overloads live in the existing `WebKitExtensions.swift`, so
+`webkit_guest_sources.txt` still lists 17 sources and only that file's
+digest in `webkit-provenance.json` was refreshed).
+
+| Status | Before | After |
+| --- | ---: | ---: |
+| implemented | 2139 | 2171 |
+| declared | 68 | 36 |
+| deferred | 26 | 26 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+| Total | 2233 | 2233 |
+
+- `WKWebExtensionController.dataRecord(ofTypes:for:completionHandler:)` /
+  `dataRecords(ofTypes:completionHandler:)` return the same in-process
+  records the async siblings compute; `removeData(ofTypes:from:completionHandler:)`
+  is a no-op that runs its handler. `MessagePort.sendMessage(_:completionHandler:)`
+  delivers `(nil, .notConnected)` exactly like the throwing sibling.
+- Nine `WKWebExtensionControllerDelegate` overloads use Apple's Swift overlay
+  labels (`openNewTabUsing`, `promptForPermissionToAccess`, `presentActionPopup`,
+  `connectUsing`, …). Mutations deliver `WKError.unknown`; the three prompt
+  overloads echo the request with nil expiry, mirroring the async defaults.
+- Fifteen `WKWebExtensionTab` and four `WKWebExtensionWindow` overloads deliver
+  `WKError.unknown` (value-returning ones as `(nil, unknown)`): no tab, window,
+  locale, duplication, or snapshot behavior exists on this host. `setReaderModeActive`,
+  `setSelected`, and `snapshot(using:for:)` exist only as these fail-closed overloads.
+- Evidence is **eight synchronous, self-contained tests** in the new
+  `tests/agent/WebKitExtensionCompletionTests.swift`; each handler is asserted
+  synchronously because every overload invokes it before return. None awaits,
+  waits on a queue or semaphore, or touches `DispatchQueue.main`/`RunLoop`.
+  The largest new evidence group is 8/32 rows; the largest share of the 2171
+  implemented rows is 7.14% (`testOptionSetRawValues`, still 155 rows) — no
+  test exceeds 40%.
+- Still declared (not convertible synchronously): all Swift-async `WebPage`
+  members (`callJavaScript`, dialog/policy handlers, media capture/playback,
+  `exported(as:)`, `navigations`, `transferRepresentation`/`Representation`
+  needing `UTType`), the async `init(appExtensionBundle:)` /
+  `init(resourceBaseURL:)` overloads, and UIKit/SwiftUI-typed members
+  (`buttonNumber`, `modifierFlags`, `menuItems`, `keyCommand`, `menuItem`,
+  edit-menu/input-suggestion delegate methods) with no formable parameter types
+  on the isolated host. Still deferred: NSAttributedString HTML import,
+  `SecTrust`, `ProxyConfiguration`, `UTType`/`Transferable`, the two
+  SwiftUI-typed `WebPage` members, and the synthesized `Equatable.!=` witness.
+- One `oracle-questions.tsv` row added for the extension completion-handler
+  timing / absence-reporting semantics the sync runner cannot observe.
+
+Validation on this Mac (the sealed Linux gate needs a Linux host):
+
+- `validate_seed.py --phase deliverable` reports no coverage/evidence errors
+  (the only two errors are the pre-existing missing
+  `full/framework-roadmap/framework-roadmap.json`, absent from this worktree).
+- `test_webkit_provenance.py`: 8 tests OK.
+- `tests/test_webkit_host.sh` in a `/tmp` overlay (repo untouched; overlay adds
+  the `import CoreGraphics` lines and the KVO-forwarding shim patch this Mac's
+  SDK needs): `WEBKIT_HOST_GATE_OK`, warnings-as-errors, 17 product sources.
+- All 12 non-overlay `tests/agent/*Tests.swift` typecheck warnings-as-errors;
+  82/82 runnable tests pass (`WEBKIT_ALL82_OK`), including the 8 new ones.
+  The 3 excluded tests assert the `document.title` error-code spelling, which
+  expects the non-`PORTABLE` `javaScriptExceptionOccurred` code — the same
+  pre-existing `PORTABLE`-flag artifact the baseline reports. The 16 overlay
+  tests are Linux-only by design (`!canImport(SwiftUI)` product branch) and
+  were not re-run on this Mac; their files are untouched by this pass.
+
+Only `full/webkit/` changes.
+
 ### SwiftUI overlay conversion (pi-wave7 webkit)
 
 This pass converts **all 813 `not-applicable` SwiftUI overlay rows to

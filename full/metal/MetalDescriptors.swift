@@ -268,6 +268,7 @@ open class MTLRenderPassDescriptor: NSObject, @unchecked Sendable {
     public var tileWidth: Int = 0
     public var tileHeight: Int = 0
     public var supportColorAttachmentMapping: Bool = false
+    public let sampleBufferAttachments = MTLRenderPassSampleBufferAttachmentDescriptorArray()
     private var samplePositions: [MTLSamplePosition] = []
 
     public override init() {
@@ -956,11 +957,133 @@ open class MTLLinkedFunctions: NSObject, @unchecked Sendable {
 }
 
 open class MTLStageInputOutputDescriptor: NSObject, @unchecked Sendable {
+    public let attributes = MTLAttributeDescriptorArray()
+    public let layouts = MTLBufferLayoutDescriptorArray()
+    public var indexType: MTLIndexType = .uint16
+    public var indexBufferIndex: Int = 0
+
     public override init() {
         super.init()
     }
 
-    public func reset() {}
+    public func reset() {
+        for index in 0..<31 {
+            attributes[index].format = .invalid
+            attributes[index].offset = 0
+            attributes[index].bufferIndex = 0
+            layouts[index].stride = 0
+            layouts[index].stepFunction = .constant
+            layouts[index].stepRate = 1
+        }
+        indexType = .uint16
+        indexBufferIndex = 0
+    }
+}
+
+open class MTLAttributeDescriptor: NSObject, @unchecked Sendable {
+    public var format: MTLAttributeFormat = .invalid
+    public var offset: Int = 0
+    public var bufferIndex: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLAttributeDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLAttributeDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(index: Int) -> MTLAttributeDescriptor! {
+        get {
+            if let existing = storage[index] {
+                return existing
+            }
+            let created = MTLAttributeDescriptor()
+            storage[index] = created
+            return created
+        }
+        set {
+            storage[index] = newValue
+        }
+    }
+}
+
+open class MTLBufferLayoutDescriptor: NSObject, @unchecked Sendable {
+    public var stride: Int = 0
+    public var stepFunction: MTLStepFunction = .constant
+    public var stepRate: Int = 1
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLBufferLayoutDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLBufferLayoutDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(index: Int) -> MTLBufferLayoutDescriptor! {
+        get {
+            if let existing = storage[index] {
+                return existing
+            }
+            let created = MTLBufferLayoutDescriptor()
+            storage[index] = created
+            return created
+        }
+        set {
+            storage[index] = newValue
+        }
+    }
+}
+
+open class MTLRenderPassSampleBufferAttachmentDescriptor: NSObject, @unchecked Sendable {
+    public var sampleBuffer: (any MTLCounterSampleBuffer)?
+    public var startOfVertexSampleIndex: Int = 0
+    public var endOfVertexSampleIndex: Int = 0
+    public var startOfFragmentSampleIndex: Int = 0
+    public var endOfFragmentSampleIndex: Int = 0
+
+    public override init() {
+        super.init()
+    }
+}
+
+open class MTLRenderPassSampleBufferAttachmentDescriptorArray: NSObject, @unchecked Sendable {
+    private var storage: [Int: MTLRenderPassSampleBufferAttachmentDescriptor] = [:]
+
+    public override init() {
+        super.init()
+    }
+
+    public subscript(attachmentIndex: Int) -> MTLRenderPassSampleBufferAttachmentDescriptor! {
+        get {
+            if let existing = storage[attachmentIndex] {
+                return existing
+            }
+            let created = MTLRenderPassSampleBufferAttachmentDescriptor()
+            storage[attachmentIndex] = created
+            return created
+        }
+        set {
+            storage[attachmentIndex] = newValue
+        }
+    }
+}
+
+open class MTLType: NSObject, @unchecked Sendable {
+    public var dataType: MTLDataType { .none }
+
+    public override init() {
+        super.init()
+    }
 }
 
 open class MTLFunctionConstant: NSObject, @unchecked Sendable {
@@ -1033,9 +1156,55 @@ open class MTLFunctionStitchingGraph: NSObject, @unchecked Sendable {
     }
 }
 
-open class MTLFunctionStitchingFunctionNode: NSObject, @unchecked Sendable {}
+open class MTLFunctionStitchingFunctionNode: NSObject, MTLFunctionStitchingNode, @unchecked Sendable {
+    public var name: String
+    public var arguments: [any MTLFunctionStitchingNode]
+    public var controlDependencies: [MTLFunctionStitchingFunctionNode]
+
+    public init(
+        name: String,
+        arguments: [any MTLFunctionStitchingNode],
+        controlDependencies: [MTLFunctionStitchingFunctionNode]
+    ) {
+        self.name = name
+        self.arguments = arguments
+        self.controlDependencies = controlDependencies
+        super.init()
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return MTLFunctionStitchingFunctionNode(
+            name: name,
+            arguments: arguments,
+            controlDependencies: controlDependencies
+        )
+    }
+}
+
+open class MTLFunctionStitchingInputNode: NSObject, MTLFunctionStitchingNode, @unchecked Sendable {
+    public var argumentIndex: Int
+
+    public init(argumentIndex argument: Int) {
+        self.argumentIndex = argument
+        super.init()
+    }
+
+    public func copy(with zone: NSZone? = nil) -> Any {
+        _ = zone
+        return MTLFunctionStitchingInputNode(argumentIndex: argumentIndex)
+    }
+}
+
+open class MTLFunctionStitchingAttributeAlwaysInline: NSObject, MTLFunctionStitchingAttribute, @unchecked Sendable {
+    public override init() {
+        super.init()
+    }
+}
 
 public protocol MTLFunctionStitchingAttribute: NSObjectProtocol {}
+
+public protocol MTLFunctionStitchingNode: NSCopying, NSObjectProtocol {}
 
 public typealias MTLAutoreleasedComputePipelineReflection = MTLComputePipelineReflection
 public typealias MTLAutoreleasedRenderPipelineReflection = MTLRenderPipelineReflection

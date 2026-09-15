@@ -382,12 +382,12 @@ c:objc(cs)CAAnimation(py)animationEvents	implemented	test:full/scenekit/tests/ag
 c:objc(cs)CAAnimation(py)fadeInDuration	implemented	test:full/scenekit/tests/agent/SceneKitAnimationTests.swift#testCAAnimationBridge	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)CAAnimation(py)fadeOutDuration	implemented	test:full/scenekit/tests/agent/SceneKitAnimationTests.swift#testCAAnimationBridge	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)CAAnimation(py)usesSceneTimeBase	implemented	test:full/scenekit/tests/agent/SceneKitAnimationTests.swift#testCAAnimationBridge	Linux CPU assertion in focused test; not claimed Apple-identical
-c:objc(cs)NSValue(cm)valueWithSCNMatrix4:	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-c:objc(cs)NSValue(cm)valueWithSCNVector3:	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-c:objc(cs)NSValue(cm)valueWithSCNVector4:	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-c:objc(cs)NSValue(py)SCNMatrix4Value	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-c:objc(cs)NSValue(py)SCNVector3Value	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-c:objc(cs)NSValue(py)SCNVector4Value	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
+c:objc(cs)NSValue(cm)valueWithSCNMatrix4:	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testNSValueBoxing	Linux CPU assertion in focused test; not claimed Apple-identical
+c:objc(cs)NSValue(cm)valueWithSCNVector3:	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testNSValueBoxing	Linux CPU assertion in focused test; not claimed Apple-identical
+c:objc(cs)NSValue(cm)valueWithSCNVector4:	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testNSValueBoxing	Linux CPU assertion in focused test; not claimed Apple-identical
+c:objc(cs)NSValue(py)SCNMatrix4Value	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testNSValueBoxing	Linux CPU assertion in focused test; not claimed Apple-identical
+c:objc(cs)NSValue(py)SCNVector3Value	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testNSValueBoxing	Linux CPU assertion in focused test; not claimed Apple-identical
+c:objc(cs)NSValue(py)SCNVector4Value	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testNSValueBoxing	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAccelerationConstraint	implemented	test:full/scenekit/tests/agent/SceneKitConstraintTests.swift#testLookAtDistanceBillboard	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAccelerationConstraint(py)damping	implemented	test:full/scenekit/tests/agent/SceneKitConstraintTests.swift#testLookAtDistanceBillboard	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAccelerationConstraint(py)decelerationDistance	implemented	test:full/scenekit/tests/agent/SceneKitConstraintTests.swift#testIKAndAccelerationConstraints	Linux CPU assertion in focused test; not claimed Apple-identical
@@ -415,7 +415,7 @@ c:objc(cs)SCNAction(cm)rotateToAxisAngle:duration:	implemented	test:full/sceneki
 c:objc(cs)SCNAction(cm)rotateToX:y:z:duration:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testActionEasing	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAction(cm)rotateToX:y:z:duration:shortestUnitArc:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testActionEasing	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAction(cm)runBlock:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testActionEasing	Linux CPU assertion in focused test; not claimed Apple-identical
-c:objc(cs)SCNAction(cm)runBlock:queue:	deferred		dispatch_queue_t overlay is unavailable in this Swift overlay
+c:objc(cs)SCNAction(cm)runBlock:queue:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testRunBlockWithQueue	Linux runs the block inline on the CPU action clock; queue stored as bookkeeping, hop not performed
 c:objc(cs)SCNAction(cm)scaleBy:duration:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testActionEasing	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAction(cm)scaleTo:duration:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testActionEasing	Linux CPU assertion in focused test; not claimed Apple-identical
 c:objc(cs)SCNAction(cm)sequence:	implemented	test:full/scenekit/tests/agent/SceneKitActionTests.swift#testActionClock	Linux CPU assertion in focused test; not claimed Apple-identical
@@ -2255,7 +2255,7 @@ s:7SwiftUI4ViewPAAE9onReceive_7performQrqd___y6OutputQyd__ct7Combine9PublisherRd
 s:7SwiftUI4ViewPAAE9statusBar6hiddenQrSb_tF::SYNTHESIZED::s:17_SceneKit_SwiftUI0A4ViewV	implemented	test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch02	identity View overlay; renders EmptyView
 s:7SwiftUI4ViewPAAE9textScale_9isEnabledQrAA4TextV0E0V_SbtF::SYNTHESIZED::s:17_SceneKit_SwiftUI0A4ViewV	implemented	test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch01	identity View overlay; renders EmptyView
 s:7SwiftUI4ViewPAAE9underline_7pattern5colorQrSb_AA4TextV9LineStyleV7PatternVAA5ColorVSgtF::SYNTHESIZED::s:17_SceneKit_SwiftUI0A4ViewV	implemented	test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch02	identity View overlay; renders EmptyView
-s:8SceneKit8SCNFloata	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
+s:8SceneKit8SCNFloata	implemented	test:full/scenekit/tests/agent/SceneKitSurfaceTests.swift#testProtocolAndTypealiasSurface	Apple-oracle probe (Xcode 26.1): SCNFloat.self == CGFloat, size 8; Linux typealias is CGFloat
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SCNActionTimingMode	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SCNAntialiasingMode	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@SCNBillboardAxis	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
@@ -2551,10 +2551,10 @@ s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNT
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SCNSceneSourceLoadingOption	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SCNShaderModifierEntryPoint	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@SCNViewOption	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
-s:s5SIMD3V8SceneKitSdRszrlEyABySdGSo10SCNVector3Vcfc	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-s:s5SIMD3V8SceneKitSfRszrlEyABySfGSo10SCNVector3Vcfc	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-s:s5SIMD4V8SceneKitSdRszrlEyABySdGSo10SCNVector4Vcfc	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
-s:s5SIMD4V8SceneKitSfRszrlEyABySfGSo10SCNVector4Vcfc	deferred		Not part of the isolated CPU scene-graph/math/action scaffold; unobserved or dependency-gated
+s:s5SIMD3V8SceneKitSdRszrlEyABySdGSo10SCNVector3Vcfc	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath	Linux CPU assertion in focused test; not claimed Apple-identical
+s:s5SIMD3V8SceneKitSfRszrlEyABySfGSo10SCNVector3Vcfc	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath	Linux CPU assertion in focused test; not claimed Apple-identical
+s:s5SIMD4V8SceneKitSdRszrlEyABySdGSo10SCNVector4Vcfc	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath	Linux CPU assertion in focused test; not claimed Apple-identical
+s:s5SIMD4V8SceneKitSfRszrlEyABySfGSo10SCNVector4Vcfc	implemented	test:full/scenekit/tests/agent/SceneKitMathTests.swift#testVectorMath	Linux CPU assertion in focused test; not claimed Apple-identical
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@SCNBillboardAxis	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@SCNColorMask	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical
 s:s9OptionSetPs7ElementQzRszrlE6insertySb8inserted_x17memberAfterInserttxF::SYNTHESIZED::c:@E@SCNDebugOptions	implemented	test:full/scenekit/tests/agent/SceneKitEnumTests.swift#testEnumOptionSetAndConstantValues	Linux CPU assertion in focused test; not claimed Apple-identical

@@ -547,6 +547,17 @@ final class LinuxMTLBlitCommandEncoder: NSObject, MTLBlitCommandEncoder, @unchec
     func optimizeIndirectCommandBuffer(_ buffer: any MTLIndirectCommandBuffer, range: Range<Int>) {
         _ = (buffer, range)
     }
+
+    func resolveCounters(
+        _ sampleBuffer: any MTLCounterSampleBuffer,
+        range: Range<Int>,
+        destinationBuffer: any MTLBuffer,
+        destinationOffset: Int
+    ) {
+        // The CPU reference has no GPU counters; resolution is inert and
+        // leaves the destination buffer unchanged.
+        _ = (sampleBuffer, range, destinationBuffer, destinationOffset)
+    }
 }
 
 final class LinuxMTLComputeCommandEncoder: NSObject, MTLComputeCommandEncoder, @unchecked Sendable {
@@ -626,6 +637,80 @@ final class LinuxMTLComputeCommandEncoder: NSObject, MTLComputeCommandEncoder, @
 
     func setTexture(_ texture: (any MTLTexture)?, index: Int) {
         _ = (texture, index)
+    }
+
+    func setBuffers(_ buffers: [(any MTLBuffer)?], offsets: [Int], range: Range<Int>) {
+        var destination = range.lowerBound
+        for (position, buffer) in buffers.enumerated() where destination < range.upperBound {
+            let offset = position < offsets.count ? offsets[position] : 0
+            setBuffer(buffer, offset: offset, index: destination)
+            destination += 1
+        }
+    }
+
+    func setBuffers(
+        _ buffers: [(any MTLBuffer)?],
+        offsets: [Int],
+        attributeStrides: [Int],
+        range: Range<Int>
+    ) {
+        _ = attributeStrides
+        setBuffers(buffers, offsets: offsets, range: range)
+    }
+
+    func setTextures(_ textures: [(any MTLTexture)?], range: Range<Int>) {
+        for (offset, texture) in textures.enumerated() {
+            let index = range.lowerBound + offset
+            if index < range.upperBound {
+                setTexture(texture, index: index)
+            }
+        }
+    }
+
+    func setSamplerStates(_ samplers: [(any MTLSamplerState)?], range: Range<Int>) {
+        for (offset, sampler) in samplers.enumerated() {
+            let index = range.lowerBound + offset
+            if index < range.upperBound {
+                setSamplerState(sampler, index: index)
+            }
+        }
+    }
+
+    func setSamplerStates(
+        _ samplers: [(any MTLSamplerState)?],
+        lodMinClamps: [Float],
+        lodMaxClamps: [Float],
+        range: Range<Int>
+    ) {
+        for (offset, sampler) in samplers.enumerated() {
+            let index = range.lowerBound + offset
+            guard index < range.upperBound else { continue }
+            let minClamp = offset < lodMinClamps.count ? lodMinClamps[offset] : 0
+            let maxClamp = offset < lodMaxClamps.count ? lodMaxClamps[offset] : Float.greatestFiniteMagnitude
+            setSamplerState(sampler, lodMinClamp: minClamp, lodMaxClamp: maxClamp, index: index)
+        }
+    }
+
+    func setVisibleFunctionTables(
+        _ visibleFunctionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        _ = (visibleFunctionTables, bufferRange)
+    }
+
+    func setIntersectionFunctionTables(
+        _ intersectionFunctionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        _ = (intersectionFunctionTables, bufferRange)
+    }
+
+    func useResources(_ resources: [any MTLResource], usage: MTLResourceUsage) {
+        _ = (resources, usage)
+    }
+
+    func useHeaps(_ heaps: [any MTLHeap]) {
+        _ = heaps
     }
 
     func setSamplerState(_ sampler: (any MTLSamplerState)?, index: Int) {
@@ -1405,6 +1490,73 @@ final class LinuxMTLRenderCommandEncoder: NSObject, MTLRenderCommandEncoder, @un
         let viewport = viewMappings?.pointee.viewportArrayIndexOffset ?? 0
         recordedState.append("amplify:\(count):\(viewport)")
     }
+
+    func setTileVisibleFunctionTables(
+        _ functionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        recordedState.append("tvfts:\(bufferRange.lowerBound):\(functionTables.count)")
+    }
+
+    func setVertexVisibleFunctionTables(
+        _ functionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        recordedState.append("vvfts:\(bufferRange.lowerBound):\(functionTables.count)")
+    }
+
+    func setFragmentVisibleFunctionTables(
+        _ functionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        recordedState.append("fvfts:\(bufferRange.lowerBound):\(functionTables.count)")
+    }
+
+    func setTileIntersectionFunctionTables(
+        _ functionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        recordedState.append("tifts:\(bufferRange.lowerBound):\(functionTables.count)")
+    }
+
+    func setVertexIntersectionFunctionTables(
+        _ functionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        recordedState.append("vifts:\(bufferRange.lowerBound):\(functionTables.count)")
+    }
+
+    func setFragmentIntersectionFunctionTables(
+        _ functionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    ) {
+        recordedState.append("fifts:\(bufferRange.lowerBound):\(functionTables.count)")
+    }
+
+    func use(
+        _ resources: UnsafePointer<any MTLResource>,
+        count: Int,
+        usage: MTLResourceUsage,
+        stages: MTLRenderStages
+    ) {
+        var seen = 0
+        for index in 0..<max(count, 0) {
+            if resources.advanced(by: index).pointee.allocatedSize >= 0 {
+                seen += 1
+            }
+        }
+        recordedState.append("use:\(seen):\(usage.rawValue):\(stages.rawValue)")
+    }
+
+    func use(_ heaps: UnsafePointer<any MTLHeap>, count: Int, stages: MTLRenderStages) {
+        var seen = 0
+        for index in 0..<max(count, 0) {
+            if heaps.advanced(by: index).pointee.allocatedSize >= 0 {
+                seen += 1
+            }
+        }
+        recordedState.append("useHeaps:\(seen):\(stages.rawValue)")
+    }
 }
 
 final class LinuxMTLLibrary: NSObject, MTLLibrary, @unchecked Sendable {
@@ -1516,6 +1668,14 @@ final class LinuxMTLComputePipelineState: NSObject, MTLComputePipelineState, @un
         _ = imageblockDimensions
         return 0
     }
+
+    func makeVisibleFunctionTable(descriptor: MTLVisibleFunctionTableDescriptor) -> (any MTLVisibleFunctionTable)? {
+        LinuxMTLVisibleFunctionTable(device: owningDevice, functionCount: descriptor.functionCount)
+    }
+
+    func makeIntersectionFunctionTable(descriptor: MTLIntersectionFunctionTableDescriptor) -> (any MTLIntersectionFunctionTable)? {
+        LinuxMTLIntersectionFunctionTable(device: owningDevice, functionCount: descriptor.functionCount)
+    }
 }
 
 final class LinuxMTLRenderPipelineState: NSObject, MTLRenderPipelineState, @unchecked Sendable {
@@ -1575,6 +1735,22 @@ final class LinuxMTLRenderPipelineState: NSObject, MTLRenderPipelineState, @unch
 
     func makeRenderPipelineDescriptorForSpecialization() -> MTL4PipelineDescriptor {
         MTL4PipelineDescriptor()
+    }
+
+    func makeVisibleFunctionTable(
+        descriptor: MTLVisibleFunctionTableDescriptor,
+        stage: MTLRenderStages
+    ) -> (any MTLVisibleFunctionTable)? {
+        _ = stage
+        return LinuxMTLVisibleFunctionTable(device: owningDevice, functionCount: descriptor.functionCount)
+    }
+
+    func makeIntersectionFunctionTable(
+        descriptor: MTLIntersectionFunctionTableDescriptor,
+        stage: MTLRenderStages
+    ) -> (any MTLIntersectionFunctionTable)? {
+        _ = stage
+        return LinuxMTLIntersectionFunctionTable(device: owningDevice, functionCount: descriptor.functionCount)
     }
 }
 
@@ -1662,6 +1838,83 @@ final class LinuxMTLArgumentEncoder: NSObject, MTLArgumentEncoder, @unchecked Se
     func setDepthStencilState(_ depthStencilState: (any MTLDepthStencilState)?, index: Int) {
         guard let slot = slot(index) else { return }
         slot.storeBytes(of: depthStencilState?.gpuResourceID._impl ?? 0, as: UInt64.self)
+    }
+
+    func setBuffers(_ buffers: [(any MTLBuffer)?], offsets: [Int], range: Range<Int>) {
+        var destination = range.lowerBound
+        for (position, buffer) in buffers.enumerated() where destination < range.upperBound {
+            let offset = position < offsets.count ? offsets[position] : 0
+            setBuffer(buffer, offset: offset, index: destination)
+            destination += 1
+        }
+    }
+
+    func setTextures(_ textures: [(any MTLTexture)?], range: Range<Int>) {
+        var destination = range.lowerBound
+        for texture in textures where destination < range.upperBound {
+            setTexture(texture, index: destination)
+            destination += 1
+        }
+    }
+
+    func setSamplerStates(_ samplers: [(any MTLSamplerState)?], range: Range<Int>) {
+        var destination = range.lowerBound
+        for sampler in samplers where destination < range.upperBound {
+            setSamplerState(sampler, index: destination)
+            destination += 1
+        }
+    }
+
+    func setDepthStencilStates(_ depthStencilStates: [(any MTLDepthStencilState)?], range: Range<Int>) {
+        var destination = range.lowerBound
+        for state in depthStencilStates where destination < range.upperBound {
+            setDepthStencilState(state, index: destination)
+            destination += 1
+        }
+    }
+
+    func setRenderPipelineStates(_ pipelines: [(any MTLRenderPipelineState)?], range: Range<Int>) {
+        var destination = range.lowerBound
+        for pipeline in pipelines where destination < range.upperBound {
+            setRenderPipelineState(pipeline, index: destination)
+            destination += 1
+        }
+    }
+
+    func setComputePipelineStates(_ pipelines: [(any MTLComputePipelineState)?], range: Range<Int>) {
+        var destination = range.lowerBound
+        for pipeline in pipelines where destination < range.upperBound {
+            setComputePipelineState(pipeline, index: destination)
+            destination += 1
+        }
+    }
+
+    func setComputePipelineStates(
+        _ pipelines: UnsafePointer<(any MTLComputePipelineState)?>,
+        with range: NSRange
+    ) {
+        for offset in 0..<range.length {
+            setComputePipelineState(pipelines.advanced(by: offset).pointee, index: range.location + offset)
+        }
+    }
+
+    func setVisibleFunctionTables(_ visibleFunctionTables: [(any MTLVisibleFunctionTable)?], range: Range<Int>) {
+        _ = (visibleFunctionTables, range)
+    }
+
+    func setIndirectCommandBuffers(_ buffers: [(any MTLIndirectCommandBuffer)?], range: Range<Int>) {
+        var destination = range.lowerBound
+        for buffer in buffers where destination < range.upperBound {
+            setIndirectCommandBuffer(buffer, index: destination)
+            destination += 1
+        }
+    }
+
+    func setIntersectionFunctionTables(
+        _ intersectionFunctionTables: [(any MTLIntersectionFunctionTable)?],
+        range: Range<Int>
+    ) {
+        _ = (intersectionFunctionTables, range)
     }
 
     func constantData(at index: Int) -> UnsafeMutableRawPointer {

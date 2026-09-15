@@ -32,9 +32,9 @@ public protocol ModelActor: Actor {
 }
 
 public extension ModelActor {
-    var modelContext: ModelContext { modelExecutor.modelContext }
+    nonisolated var modelContext: ModelContext { modelExecutor.modelContext }
 
-    subscript<T>(id: PersistentIdentifier, as type: T.Type) -> T? where T: PersistentModel {
+    nonisolated subscript<T>(id: PersistentIdentifier, as type: T.Type) -> T? where T: PersistentModel {
         modelContext.registeredModel(for: id)
     }
 

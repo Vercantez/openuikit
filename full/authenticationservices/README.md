@@ -206,3 +206,36 @@ marker when the runner is built against the macOS SDK equivalent. The
 unresolved Apple-oracle questions remain in `oracle-questions.tsv`; this
 wave does not infer service success, callback semantics, UI behavior, or
 cryptographic key representations.
+
+## Re-examination pass 2026-09 (pi wave 8)
+
+Ledger before this pass: **2052 implemented / 0 declared / 44 deferred /
+0 unavailable / 0 not-applicable**. Ledger after this pass: **2052
+implemented / 0 declared / 44 deferred / 0 unavailable / 0
+not-applicable** (2096 precise IDs). Implemented gain: **0** — there are no
+declared rows to convert, and none of the 44 deferred rows can move to
+implemented in-process on the isolated host:
+
+- 24 UIKit `UIViewController` subclasses (`ASCredentialProviderViewController`
+  x17, `ASAccountAuthenticationModificationViewController` x7) plus 1
+  `UIWindow`-typed `ASCredentialExportManager` presentation-anchor initializer:
+  `no such module 'UIKit'` on the gate toolchain, and a framework-local
+  substitute superclass is forbidden.
+- 5 FoundationNetworking `HTTPURLResponse` members
+  (`completeWithHTTPResponse:httpBody:`, both `initWithHTTPResponse:httpBody:`
+  rows, `httpResponse`, `authenticatedResponse`):
+  `no such module 'FoundationNetworking'` on the gate toolchain.
+- 6 CryptoKit `SymmetricKey` PRF outputs: the declared dependency list is
+  Foundation-only and the Linux gate has no CryptoKit module; importing it
+  would break the sealed-gate product compile.
+- 6 SwiftUI `AuthorizationController` async request methods: success would
+  claim Apple-daemon authorization (fail-closed), and cited tests cannot
+  `await`.
+- 2 WebKit overlay `clientData` facets: no browser module on the isolated
+  host and the owning protocol is dependency-owned.
+
+Product sources still compile warning-free under the macOS SDK, and every
+`tests/agent/*Tests.swift` file typechecks (the overlay tests, guarded by
+`#if !canImport(SwiftUI)`, were verified with the guard forced true to
+simulate the SwiftUI-absent Linux gate). No product, test, coverage, or
+manifest file needed changes for this pass.

@@ -494,3 +494,33 @@ Remaining deferred rows are async-only APIs, unconstructible multicast
 state, declarations with no source-compatible form, stdlib/Combine/
 Foundation witnesses with no in-process behavior, and one deprecated
 witness.
+
+## Depth pass 2026-09-15 (wave 8 leftover sweep)
+
+Before: **2974 implemented / 20 declared / 53 deferred / 0 unavailable /
+0 not-applicable** (2994 nondeferred).
+
+Zero `View` overlay rows exist in this framework, so the overlay override
+does not apply. All 20 `declared` rows are `async` (19 `NetworkChannel`
+send/receive/ping/pong/close overloads plus async
+`NWPathMonitor.Iterator.next()`); a synchronous sealed test cannot call
+them without `await`, which the gate forbids, and zero `async` rows are
+`implemented` anywhere in this coverage, so they stay `declared` at
+their maximum honest status. The product still compiles warning-clean
+(`swiftc -warnings-as-errors`, `libNetwork.dylib` produced) and every
+`declared` anchor remains present in its cited product source. The 53
+`deferred` rows stay deferred: async-only typed-overlay APIs
+(`withNetworkConnection`, QUIC `openStream`/`inboundStreams`, `Browser`/
+`Listener` `run`, channel reports, WebSocket `startSend`/`startReceive`),
+the `async throws` QUIC `datagrams` getter, unconstructible
+`NWMulticastGroup` state (both public inits fail closed, so the sync
+`sourceFilter`/`isUnicastDisabled`/`members` getters have no instance to
+exercise; succeeding would fabricate a daemon join), one deprecated
+`flatMap` witness (warnings-as-errors), and stdlib/Combine/Foundation/
+Concurrency witnesses that are not Network-owned declarations.
+
+After: **2974 implemented / 20 declared / 53 deferred / 0 unavailable /
+0 not-applicable** (2994 nondeferred). Implemented gain **+0**.
+
+No non-exempt test is cited by more than 40% of implemented rows
+(largest share 191/2974 = 6.4%).

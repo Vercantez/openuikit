@@ -291,3 +291,99 @@ func testFrequentPushEnablementUpdatesReduceInto() {
         }
     }
 }
+
+func testActivityEnablementUpdatesMaxBy() {
+    activityKitReset()
+    activityKitRunAsync {
+        let info = ActivityAuthorizationInfo()
+        let sequence = info.activityEnablementUpdates
+        let pumper = Task {
+            var value = false
+            while !Task.isCancelled {
+                OpenUIKitActivityKitTesting.setAreActivitiesEnabled(value)
+                value.toggle()
+                await Task.yield()
+            }
+        }
+        do {
+            _ = try await sequence.max(by: { _, _ -> Bool in
+                throw ActivityTerminalProbeError()
+            })
+            fatalError("max should throw")
+        } catch is ActivityTerminalProbeError {
+        }
+        pumper.cancel()
+    }
+}
+
+func testActivityEnablementUpdatesMinBy() {
+    activityKitReset()
+    activityKitRunAsync {
+        let info = ActivityAuthorizationInfo()
+        let sequence = info.activityEnablementUpdates
+        let pumper = Task {
+            var value = false
+            while !Task.isCancelled {
+                OpenUIKitActivityKitTesting.setAreActivitiesEnabled(value)
+                value.toggle()
+                await Task.yield()
+            }
+        }
+        do {
+            _ = try await sequence.min(by: { _, _ -> Bool in
+                throw ActivityTerminalProbeError()
+            })
+            fatalError("min should throw")
+        } catch is ActivityTerminalProbeError {
+        }
+        pumper.cancel()
+    }
+}
+
+func testFrequentPushEnablementUpdatesMaxBy() {
+    activityKitReset()
+    activityKitRunAsync {
+        let info = ActivityAuthorizationInfo()
+        let sequence = info.frequentPushEnablementUpdates
+        let pumper = Task {
+            var value = true
+            while !Task.isCancelled {
+                OpenUIKitActivityKitTesting.setFrequentPushesEnabled(value)
+                value.toggle()
+                await Task.yield()
+            }
+        }
+        do {
+            _ = try await sequence.max(by: { _, _ -> Bool in
+                throw ActivityTerminalProbeError()
+            })
+            fatalError("max should throw")
+        } catch is ActivityTerminalProbeError {
+        }
+        pumper.cancel()
+    }
+}
+
+func testFrequentPushEnablementUpdatesMinBy() {
+    activityKitReset()
+    activityKitRunAsync {
+        let info = ActivityAuthorizationInfo()
+        let sequence = info.frequentPushEnablementUpdates
+        let pumper = Task {
+            var value = true
+            while !Task.isCancelled {
+                OpenUIKitActivityKitTesting.setFrequentPushesEnabled(value)
+                value.toggle()
+                await Task.yield()
+            }
+        }
+        do {
+            _ = try await sequence.min(by: { _, _ -> Bool in
+                throw ActivityTerminalProbeError()
+            })
+            fatalError("min should throw")
+        } catch is ActivityTerminalProbeError {
+        }
+        pumper.cancel()
+    }
+}

@@ -352,3 +352,50 @@ this macOS snapshot cannot link the Linux-only module paths — the sealed
 `FRAMEWORK_FANOUT_REFERENCE_OK` ledger/manifest checks pass here and the
 overlay sources plus all 7 overlay tests compile warning-free and pass at
 runtime under a Linux-faithful no-SwiftUI build).
+
+## Depth pass 2026-09 (wave 8 follow-up: deferred triage)
+
+SDK depth for `SceneKit` in `full/scenekit/` (2611 IDs). There were no
+`declared` rows left; this pass triaged the 74 `deferred` rows for anything
+implementable in-process without hardware, daemons, or unavailable modules.
+
+**Coverage before this pass:** **2537 implemented / 0 declared / 74 deferred /
+0 unavailable / 0 not-applicable**.
+
+**Coverage after this pass:** **2549 implemented / 0 declared / 62 deferred /
+0 unavailable / 0 not-applicable**.
+
+Implemented gain: **+12**. New evidence (all synchronous, no `await`, no waits;
+`testRunBlockWithQueue` uses `DispatchQueue(label:)` — never `.main`):
+
+- `s:8SceneKit8SCNFloata` → `testProtocolAndTypealiasSurface`. Apple-oracle
+  probe (Xcode 26.1, macOS arm64): `SCNFloat.self == CGFloat`, size 8, so the
+  Linux typealias changed from `Float` to `CGFloat`; the test now pins
+  `MemoryLayout<SCNFloat>.size == MemoryLayout<CGFloat>.size`.
+- 4 `SIMD3`/`SIMD4` reverse initializers → `testVectorMath` (code already
+  existed; `Float` reverse calls were already exercised, `Double` round-trip
+  assertions added).
+- 6 `NSValue` boxing rows → new `testNSValueBoxing`. This caught a real bug:
+  the old `objCType` strings (`"SCNVector3"` …) store zero bytes because
+  `NSValue` derives length from the type string; product code now uses
+  `@encode` strings (`"{SCNVector3=fff}"`, `"{SCNVector4=ffff}"`,
+  `"{SCNMatrix4=ffffffffffffffff}"`) and the round-trip passes.
+- `c:objc(cs)SCNAction(cm)runBlock:queue:` → new `testRunBlockWithQueue`.
+  `SCNAction.run(_:queue:)` stores the `DispatchQueue` and runs the block
+  inline on the CPU action clock (queue hop not performed on Linux).
+
+**Still deferred (62):** Metal/EAGL/GPU, GLKit conversions, Darwin
+`simd_float4x4`/`simd_quatf`/`simd_double4x4`, UIKit/CoreImage/AVAudio
+overlays, `CAMediaTimingFunction`, `JSContext` export, SpriteKit async
+`present`, UIFocus witnesses.
+
+**Validation on this macOS snapshot:** the sealed
+`FRAMEWORK_FANOUT_REFERENCE_OK` ledger/manifest checks pass. The full
+`swiftc` gate cannot link here for pre-existing host reasons unrelated to
+this pass (missing `import simd` in the guarded blocks and
+`SCNTransaction.setValue/value(forKey:)` colliding with Darwin-only NSObject
+KVC — both fail identically at HEAD; the Linux guest skips the `simd`
+blocks and corelibs NSObject lacks those KVC class members). All product
+sources plus the concatenated runtime were additionally compiled
+warning-free and run to `SCENEKIT_AGENT_RUNTIME_OK` in `/tmp` with only
+host-shim patches (simd import, KVC rename) applied to the copies.

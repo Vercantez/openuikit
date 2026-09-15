@@ -428,6 +428,13 @@ extension CMSampleBuffer {
         let status = CMSampleBufferTrackDataReadiness(self, sampleBufferToTrack: sampleBufferToTrack)
         if status != 0 { throw cmNSError(code: Int(status)) }
     }
+
+    /// Apple oracle 2026-09-15 (Xcode macOS SDK 26.1 probe): the Swift overlay
+    /// exposes these exact notification names, including the unguessable `Fig`
+    /// prefix on `dataBecameReady`. Pure string constants; posting and delivery
+    /// timing stay unobserved.
+    public static let dataFailed = Notification.Name("CMSampleBufferDataFailed")
+    public static let dataBecameReady = Notification.Name("FigSampleBufferDataBecameReady")
 }
 
 extension CMSampleBuffer {

@@ -388,6 +388,18 @@ open class WKWebExtension: NSObject {
             _ = message
             throw WKWebExtension.MessagePort.Error(.notConnected)
         }
+
+        /// Synchronous overlay for Apple's `sendMessage:completionHandler:`.
+        /// There is no extension process on this host, so the handler runs
+        /// synchronously before return with the same `.notConnected` error
+        /// the throwing sibling raises.
+        public func sendMessage(
+            _ message: Any?,
+            completionHandler: @escaping (Any?, (any Swift.Error)?) -> Void
+        ) {
+            _ = message
+            completionHandler(nil, WKWebExtension.MessagePort.Error(.notConnected))
+        }
     }
 
     public final class Action: NSObject {
@@ -1275,6 +1287,52 @@ open class WKWebExtensionController: NSObject {
         _ = (dataTypes, dataRecords)
     }
 
+    // MARK: - Synchronous completionHandler overlays (wave 8)
+    //
+    // The Swift overlays for these Apple `completionHandler:` entry points
+    // are async and cannot be awaited on the sealed synchronous runner.
+    // Each overload invokes its handler synchronously before return with the
+    // same in-process value the async sibling computes, so synchronous agent
+    // tests can observe the portable behavior. No Apple extension process,
+    // renderer, or network fetch is implied.
+    open func dataRecord(
+        ofTypes dataTypes: Set<WKWebExtension.DataType>,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping (WKWebExtension.DataRecord?) -> Void
+    ) {
+        completionHandler(
+            WKWebExtension.DataRecord(
+                displayName: extensionContext.webExtension.displayName ?? "",
+                uniqueIdentifier: extensionContext.uniqueIdentifier,
+                containedDataTypes: dataTypes
+            )
+        )
+    }
+
+    open func dataRecords(
+        ofTypes dataTypes: Set<WKWebExtension.DataType>,
+        completionHandler: @escaping ([WKWebExtension.DataRecord]) -> Void
+    ) {
+        completionHandler(
+            loadedContexts.map {
+                WKWebExtension.DataRecord(
+                    displayName: $0.webExtension.displayName ?? "",
+                    uniqueIdentifier: $0.uniqueIdentifier,
+                    containedDataTypes: dataTypes
+                )
+            }
+        )
+    }
+
+    open func removeData(
+        ofTypes dataTypes: Set<WKWebExtension.DataType>,
+        from dataRecords: [WKWebExtension.DataRecord],
+        completionHandler: @escaping () -> Void
+    ) {
+        _ = (dataTypes, dataRecords)
+        completionHandler()
+    }
+
     @MainActor
     public final class Configuration: NSObject {
         public var webViewConfiguration: WKWebViewConfiguration
@@ -1480,5 +1538,271 @@ public extension WKWebExtensionControllerDelegate {
     ) -> [any WKWebExtensionWindow] {
         _ = (controller, extensionContext)
         return []
+    }
+}
+
+// MARK: - Synchronous delegate completionHandler overlays (wave 8)
+//
+// Apple's `WKWebExtensionControllerDelegate` entry points below take
+// completion handlers in ObjC and are overlaid as Swift async methods,
+// which cannot be awaited on the sealed synchronous runner. These overloads
+// use Apple's Swift overlay labels and invoke the handler synchronously
+// before return with the same fail-closed value the async default
+// produces (unknown error, or the echoed prompt request). No Apple
+// extension process, tab, window, popup, or permission prompt is implied.
+@MainActor
+public extension WKWebExtensionControllerDelegate {
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        openNewTabUsing configuration: WKWebExtension.TabConfiguration,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping ((any WKWebExtensionTab)?, (any Error)?) -> Void
+    ) {
+        _ = (controller, configuration, extensionContext)
+        completionHandler(nil, WKPortableUnknown("WKWebExtensionControllerDelegate.openNewTab"))
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        openNewWindowUsing configuration: WKWebExtension.WindowConfiguration,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping ((any WKWebExtensionWindow)?, (any Error)?) -> Void
+    ) {
+        _ = (controller, configuration, extensionContext)
+        completionHandler(nil, WKPortableUnknown("WKWebExtensionControllerDelegate.openNewWindow"))
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        openOptionsPageFor extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (controller, extensionContext)
+        completionHandler(WKPortableUnknown("WKWebExtensionControllerDelegate.openOptionsPage"))
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        promptForPermissions permissions: Set<WKWebExtension.Permission>,
+        in tab: (any WKWebExtensionTab)?,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping (Set<WKWebExtension.Permission>, Date?) -> Void
+    ) {
+        _ = (controller, tab, extensionContext)
+        completionHandler(permissions, nil)
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        promptForPermissionMatchPatterns matchPatterns: Set<WKWebExtension.MatchPattern>,
+        in tab: (any WKWebExtensionTab)?,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping (Set<WKWebExtension.MatchPattern>, Date?) -> Void
+    ) {
+        _ = (controller, tab, extensionContext)
+        completionHandler(matchPatterns, nil)
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        promptForPermissionToAccess urls: Set<URL>,
+        in tab: (any WKWebExtensionTab)?,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping (Set<URL>, Date?) -> Void
+    ) {
+        _ = (controller, tab, extensionContext)
+        completionHandler(urls, nil)
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        presentActionPopup action: WKWebExtension.Action,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (controller, action, extensionContext)
+        completionHandler(WKPortableUnknown("WKWebExtensionControllerDelegate.presentPopup"))
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        sendMessage message: Any,
+        toApplicationWithIdentifier applicationIdentifier: String?,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping (Any?, (any Error)?) -> Void
+    ) {
+        _ = (controller, message, applicationIdentifier, extensionContext)
+        completionHandler(nil, WKPortableUnknown("WKWebExtensionControllerDelegate.sendMessage"))
+    }
+    func webExtensionController(
+        _ controller: WKWebExtensionController,
+        connectUsing port: WKWebExtension.MessagePort,
+        for extensionContext: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (controller, port, extensionContext)
+        completionHandler(WKPortableUnknown("WKWebExtensionControllerDelegate.connectUsingMessagePort"))
+    }
+}
+
+// MARK: - Synchronous tab completionHandler overlays (wave 8)
+//
+// Apple's `WKWebExtensionTab` mutations arrive in ObjC with a
+// `(NSError * _Nullable error)` completion handler and are overlaid as
+// Swift async throws. These overloads deliver the same fail-closed
+// `WKError.unknown` the async defaults throw, synchronously before return,
+// so synchronous agent tests can observe them. Value-returning overlays
+// deliver `(nil, unknown)`: no locale detection, duplication, or snapshot
+// pixels exist on this host. `setReaderModeActive`, `setSelected`, and
+// `snapshot(using:for:)` have no other portable spelling; they exist only
+// as these fail-closed overlays.
+@MainActor
+public extension WKWebExtensionTab {
+    func activate(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.activate"))
+    }
+    func close(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.close"))
+    }
+    func detectWebpageLocale(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping (Locale?, (any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(nil, WKPortableUnknown("WKWebExtensionTab.detectWebpageLocale"))
+    }
+    func duplicate(
+        using configuration: WKWebExtension.TabConfiguration,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any WKWebExtensionTab)?, (any Error)?) -> Void
+    ) {
+        _ = (configuration, context)
+        completionHandler(nil, WKPortableUnknown("WKWebExtensionTab.duplicate"))
+    }
+    func goBack(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.goBack"))
+    }
+    func goForward(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.goForward"))
+    }
+    func loadURL(
+        _ url: URL,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (url, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.loadURL"))
+    }
+    func reload(
+        fromOrigin: Bool,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (fromOrigin, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.reload"))
+    }
+    func setMuted(
+        _ muted: Bool,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (muted, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.setMuted"))
+    }
+    func setParentTab(
+        _ parentTab: (any WKWebExtensionTab)?,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (parentTab, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.setParentTab"))
+    }
+    func setPinned(
+        _ pinned: Bool,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (pinned, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.setPinned"))
+    }
+    func setReaderModeActive(
+        _ active: Bool,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (active, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.setReaderModeActive"))
+    }
+    func setSelected(
+        _ selected: Bool,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (selected, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.setSelected"))
+    }
+    func setZoomFactor(
+        _ zoomFactor: Double,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (zoomFactor, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionTab.setZoomFactor"))
+    }
+    func snapshot(
+        using configuration: WKSnapshotConfiguration,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping (UIImage?, (any Error)?) -> Void
+    ) {
+        _ = (configuration, context)
+        completionHandler(nil, WKPortableUnknown("WKWebExtensionTab.snapshot"))
+    }
+}
+
+// MARK: - Synchronous window completionHandler overlays (wave 8)
+//
+// Same fail-closed contract as the tab overlays above: the handler runs
+// synchronously before return with `WKError.unknown`, matching the async
+// defaults. No window focus, frame, state, or close is performed.
+@MainActor
+public extension WKWebExtensionWindow {
+    func close(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(WKPortableUnknown("WKWebExtensionWindow.close"))
+    }
+    func focus(
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = context
+        completionHandler(WKPortableUnknown("WKWebExtensionWindow.focus"))
+    }
+    func setFrame(
+        _ frame: CGRect,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (frame, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionWindow.setFrame"))
+    }
+    func setWindowState(
+        _ state: WKWebExtension.WindowState,
+        for context: WKWebExtensionContext,
+        completionHandler: @escaping ((any Error)?) -> Void
+    ) {
+        _ = (state, context)
+        completionHandler(WKPortableUnknown("WKWebExtensionWindow.setWindowState"))
     }
 }

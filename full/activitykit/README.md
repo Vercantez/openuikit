@@ -92,6 +92,7 @@ This coverage repair keeps the registry and rewrites the ledger:
 | Before (`fe1738b`) | 298 | 0 | 17 | 5 | 298 |
 | After (repair) | 244 | 54 | 17 | 5 | 298 |
 | After (pi-wave6) | 280 | 18 | 17 | 5 | 298 |
+| After (pi-wave8) | 284 | 14 | 17 | 5 | 298 |
 
 `implemented` rows now cite a real top-level `func test*()` that exercises
 that identifier. Enum members share table-driven value tests
@@ -102,8 +103,8 @@ this host does not call) are `declared` with
 `source:full/activitykit/ActivityKit.swift#<SequenceType>`.
 `AlertConfiguration` stays deferred on guest Foundation.
 
-Top-5 implemented evidence (280 rows). No test exceeds 2.9%
-(40% cap would be 112 rows):
+Top-5 implemented evidence (284 rows). No test exceeds 2.9%
+(40% cap would be 113 rows):
 
 | rows | share | evidence |
 | ---: | ---: | --- |
@@ -124,14 +125,26 @@ that overload unambiguously), and `max(by:)` / `min(by:)` / `reduce` /
 `reduce(into:)` (20, cited by the new `ActivityTerminalOperatorTests`:
 throwing predicates/closures complete deterministically over the `.log`
 replay buffers instead of hanging on the infinite stream). All 36 cited
-tests were executed against the isolated build (`ALL_36_OK`).
+tests were executed against the isolated build (`ALL_36_OK`). The pi-wave8
+pass converts the last 4 eligible rows: `max(by:)` / `min(by:)` on the two
+enablement sequences, cited 1:1 by four new `ActivityTerminalOperatorTests`
+(`testActivityEnablementUpdatesMaxBy/MinBy`,
+`testFrequentPushEnablementUpdatesMaxBy/MinBy`). Each test pumps the
+host flag on a background task so the `.latest` replay's single buffered
+value gains the second element the two-argument throwing predicate needs,
+then cancels the pumper. All 208 agent tests (204 existing + 4 new) were
+executed against the isolated macOS toolchain build (`AK_ALL_OK`).
 
-Still `declared` (18): `max(by:)` / `min(by:)` on the two enablement
-sequences (`.latest` replay keeps a single value, so the two-argument
-predicate never fires and the call would hang), and the 14 non-throwing
-`flatMap` overloads (a call-site test cannot prove which of the two
-remaining same-name overloads the compiler selected, so the ledger keeps
-the honest `declared` note rather than guessing).
+Still `declared` (14): the non-throwing `flatMap` overloads
+(`A1.Failure == Never` only, and generic `A.Failure == A1.Failure`) can
+never be selected by the compiler for these sequence types: `Self.Failure`
+is the defaulted `Never`, so any call whose transform returns a
+`Never`-failure sequence resolves to the strictly more constrained
+doubly-`Never` overload (already `implemented` via `test*FlatMap`), while
+a non-`Never`-failure transform satisfies neither leftover overload. A
+call-site test therefore cannot prove which of the two remaining
+same-name overloads the compiler selected, so the ledger keeps the honest
+`declared` note rather than guessing.
 
 The isolated host cannot compile `AlertConfiguration`, so 300
 `implemented` and a fully nondeferred table remain blocked on guest

@@ -139,6 +139,8 @@ internal final class ATMusicTrackObject: ATObject {
     var offsetTime: MusicTimeStamp = 0
     var length: MusicTimeStamp = 0
     var timeResolution: UInt16 = 480
+    var destNode: AUNode = 0
+    var hasDestNode = false
 
     init(sequence: ATMusicSequenceObject, isTempo: Bool) {
         self.sequence = sequence
@@ -153,6 +155,8 @@ internal final class ATMusicSequenceObject: ATObject {
     var tempoTrack: ATMusicTrackObject!
     var tempoHandle: MusicTrack?
     var graph: AUGraph?
+    var userCallback: MusicSequenceUserCallback?
+    var userCallbackData: UnsafeMutableRawPointer?
 
     override init() {
         super.init()

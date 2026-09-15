@@ -22,6 +22,21 @@ public extension GKGameActivityListener {
     func player(_ player: GKPlayer, wantsToPlay activity: GKGameActivity) async -> Bool {
         false
     }
+
+    /// Synchronous fail-closed companion for the Objective-C
+    /// `player:wantsToPlayGameActivity:completionHandler:` selector.
+    /// The isolated host cannot `await`, so the handler is invoked
+    /// synchronously with `false`: no Game Center activity is adopted
+    /// without a daemon or user intent.
+    func player(
+        _ player: GKPlayer,
+        wantsToPlay activity: GKGameActivity,
+        completionHandler: @escaping (Bool) -> Void
+    ) {
+        _ = player
+        _ = activity
+        completionHandler(false)
+    }
 }
 
 public protocol GKInviteEventListener: AnyObject {
@@ -140,6 +155,21 @@ public extension GKMatchmakerViewControllerDelegate {
         [:]
     }
     func matchmakerViewController(_ viewController: GKMatchmakerViewController, hostedPlayerDidAccept player: GKPlayer) {}
+
+    /// Synchronous fail-closed companion for the Objective-C
+    /// `matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:`
+    /// selector. The handler is invoked synchronously with empty
+    /// properties: no matchmaking daemon supplies recipient properties
+    /// on the isolated host.
+    func matchmakerViewController(
+        _ viewController: GKMatchmakerViewController,
+        getMatchPropertiesForRecipient recipient: GKPlayer,
+        withCompletionHandler completionHandler: @escaping ([String: Any]) -> Void
+    ) {
+        _ = viewController
+        _ = recipient
+        completionHandler([:])
+    }
 }
 
 public protocol GKTurnBasedMatchmakerViewControllerDelegate: AnyObject {

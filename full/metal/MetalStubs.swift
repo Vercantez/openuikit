@@ -11,10 +11,22 @@ public protocol MTLAccelerationStructure: MTLResource {
 
 public protocol MTLVisibleFunctionTable: MTLResource {
     var gpuResourceID: MTLResourceID { get }
+    func setFunction(_ function: (any MTLFunctionHandle)?, index: Int)
+    func setFunctions(_ functions: [(any MTLFunctionHandle)?], range: Range<Int>)
 }
 
 public protocol MTLIntersectionFunctionTable: MTLResource {
     var gpuResourceID: MTLResourceID { get }
+    func setFunction(_ function: (any MTLFunctionHandle)?, index: Int)
+    func setFunctions(_ functions: [(any MTLFunctionHandle)?], range: Range<Int>)
+    func setBuffer(_ buffer: (any MTLBuffer)?, offset: Int, index: Int)
+    func setBuffers(_ buffers: [(any MTLBuffer)?], offsets: [Int], range: Range<Int>)
+    func setVisibleFunctionTable(_ functionTable: (any MTLVisibleFunctionTable)?, bufferIndex: Int)
+    func setVisibleFunctionTables(_ functionTables: [(any MTLVisibleFunctionTable)?], bufferRange: Range<Int>)
+    func setOpaqueCurveIntersectionFunction(signature: MTLIntersectionFunctionSignature, index: Int)
+    func setOpaqueCurveIntersectionFunction(signature: MTLIntersectionFunctionSignature, range: NSRange)
+    func setOpaqueTriangleIntersectionFunction(signature: MTLIntersectionFunctionSignature, index: Int)
+    func setOpaqueTriangleIntersectionFunction(signature: MTLIntersectionFunctionSignature, range: NSRange)
 }
 
 public protocol MTLCounterSampleBuffer: NSObjectProtocol, Sendable {
@@ -182,6 +194,7 @@ open class MTL4RenderPipelineBinaryFunctionsDescriptor: NSObject, @unchecked Sen
 
 public protocol MTLIndirectComputeCommand: NSObjectProtocol {
     func reset()
+    func setStageIn(_ region: MTLRegion)
     func setComputePipelineState(_ pipelineState: any MTLComputePipelineState)
     func setKernelBuffer(_ buffer: any MTLBuffer, offset: Int, at index: Int)
     func setKernelBuffer(_ buffer: any MTLBuffer, offset: Int, attributeStride stride: Int, at index: Int)

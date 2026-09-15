@@ -101,6 +101,16 @@ to it. The 12 lazy (non-suspending) combinators (`map`, `compactMap`,
 are implemented via sync
 construction probes in `tests/agent/NFCEventStreamTests.swift`.
 
+Wave-8 recount (2026-09): **554 implemented / 9 declared / 24 deferred**
+(unchanged). The 9 `declared` rows are async-terminal `AsyncSequence`
+operators plus the uncallable `Failure == Never` `flatMap` overload: every
+resolvable one requires `await`, which cited tests forbid, so none can be
+promoted to `implemented`. The 24 `deferred` rows (13 UIKit overlay,
+8 Darwin `_BridgedStoredNSError` bridging, 1 `NSUserActivity`, 2
+return-type-overloaded ISO 7816 `sendCommand` overlays) all need a missing
+platform dependency or violate Swift overloading rules. CoreNFC has no
+SwiftUI `View` types, so the identity-overlay override does not apply.
+
 Top-5 implemented evidence distribution:
 
 | rows | evidence |

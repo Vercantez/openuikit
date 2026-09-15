@@ -380,3 +380,37 @@ be cited without `await` — catalog/library `response()`, player
 plus sync-but-uninventable `currentCountryCode` and
 `MusicSubscription.current` defaults), 337 stdlib/Foundation protocol
 syntheses, and 1 stdlib `Options.hashValue` overlay witness.
+
+## Depth pass 2026-09 (pi-wave8, sync-leftover sweep)
+
+Re-counted coverage.tsv (2116 implemented / 80 declared / 0 deferred /
+338 n/a of 2534) and audited all 80 `declared` rows for sync-convertible
+leftovers:
+
+- 78 carry the `Ya` async mangling (`response()`, player
+  `play`/`prepareToPlay`/skip, async `Queue.insert`, `with()`
+  requirements + witnesses, library add/create/edit, token providers,
+  `authorization request`, `nextBatch`, `subscriptionUpdates.next()`).
+  Sealed-gate `implemented` citations require top-level synchronous
+  no-argument `func test*()` with no `await`/semaphore waits, so none
+  can move without inventing network/hardware/service success.
+- The 2 sync-mangled rows (`MusicDataRequest.currentCountryCode`,
+  `MusicSubscription.current`) are `get async throws` fail-closed
+  properties in product sources; same bar applies.
+- Overlay OVERRIDE checked: zero `declared` rows are SwiftUI `View`
+  modifiers (all are `s:8MusicKit…`); all 338 `not-applicable` rows are
+  stdlib/Foundation protocol witnesses or the stdlib `Options.hashValue`
+  overlay witness — none convertible per contract.
+
+| status | before | after |
+| --- | --- | --- |
+| implemented | 2116 | 2116 |
+| declared | 80 | 80 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 338 | 338 |
+
+Nondeferred: **2196** (floor 1267). Gain is **+0 implemented**: the
+sync-testable surface is fully converted; the declared remainder is the
+async/network/hardware floor. Files changed: `README.md` (this section
+only).

@@ -122,6 +122,12 @@ public protocol MTLCommandEncoder: NSObjectProtocol {
 
 public protocol MTLBlitCommandEncoder: MTLCommandEncoder {
     func fill(buffer: any MTLBuffer, range: Range<Int>, value: UInt8)
+    func resolveCounters(
+        _ sampleBuffer: any MTLCounterSampleBuffer,
+        range: Range<Int>,
+        destinationBuffer: any MTLBuffer,
+        destinationOffset: Int
+    )
     func copy(
         from sourceBuffer: any MTLBuffer,
         sourceOffset: Int,
@@ -226,6 +232,26 @@ public protocol MTLComputeCommandEncoder: MTLCommandEncoder {
     func setTexture(_ texture: (any MTLTexture)?, index: Int)
     func setSamplerState(_ sampler: (any MTLSamplerState)?, index: Int)
     func setSamplerState(_ sampler: (any MTLSamplerState)?, lodMinClamp: Float, lodMaxClamp: Float, index: Int)
+    func setBuffers(_ buffers: [(any MTLBuffer)?], offsets: [Int], range: Range<Int>)
+    func setBuffers(_ buffers: [(any MTLBuffer)?], offsets: [Int], attributeStrides: [Int], range: Range<Int>)
+    func setTextures(_ textures: [(any MTLTexture)?], range: Range<Int>)
+    func setSamplerStates(_ samplers: [(any MTLSamplerState)?], range: Range<Int>)
+    func setSamplerStates(
+        _ samplers: [(any MTLSamplerState)?],
+        lodMinClamps: [Float],
+        lodMaxClamps: [Float],
+        range: Range<Int>
+    )
+    func setVisibleFunctionTables(
+        _ visibleFunctionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func setIntersectionFunctionTables(
+        _ intersectionFunctionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func useResources(_ resources: [any MTLResource], usage: MTLResourceUsage)
+    func useHeaps(_ heaps: [any MTLHeap])
     func setThreadgroupMemoryLength(_ length: Int, index: Int)
     func setImageblockWidth(_ width: Int, height: Int)
     func setStageInRegion(_ region: MTLRegion)
@@ -339,6 +365,37 @@ public protocol MTLRenderCommandEncoder: MTLCommandEncoder {
     func updateFence(_ fence: any MTLFence, after stages: MTLRenderStages)
     func waitForFence(_ fence: any MTLFence, before stages: MTLRenderStages)
     func memoryBarrier(scope: MTLBarrierScope, after: MTLRenderStages, before: MTLRenderStages)
+    func setTileVisibleFunctionTables(
+        _ functionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func setVertexVisibleFunctionTables(
+        _ functionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func setFragmentVisibleFunctionTables(
+        _ functionTables: [(any MTLVisibleFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func setTileIntersectionFunctionTables(
+        _ functionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func setVertexIntersectionFunctionTables(
+        _ functionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func setFragmentIntersectionFunctionTables(
+        _ functionTables: [(any MTLIntersectionFunctionTable)?],
+        bufferRange: Range<Int>
+    )
+    func use(
+        _ resources: UnsafePointer<any MTLResource>,
+        count: Int,
+        usage: MTLResourceUsage,
+        stages: MTLRenderStages
+    )
+    func use(_ heaps: UnsafePointer<any MTLHeap>, count: Int, stages: MTLRenderStages)
     func executeCommandsInBuffer(_ buffer: any MTLIndirectCommandBuffer, range: Range<Int>)
     func executeCommandsInBuffer(
         _ buffer: any MTLIndirectCommandBuffer,
@@ -628,6 +685,11 @@ public protocol MTLRenderPipelineState: MTLAllocation, Sendable {
         additionalBinaryFunctions: MTLRenderPipelineFunctionsDescriptor
     ) throws -> any MTLRenderPipelineState
     func makeRenderPipelineDescriptorForSpecialization() -> MTL4PipelineDescriptor
+    func makeVisibleFunctionTable(descriptor: MTLVisibleFunctionTableDescriptor, stage: MTLRenderStages) -> (any MTLVisibleFunctionTable)?
+    func makeIntersectionFunctionTable(
+        descriptor: MTLIntersectionFunctionTableDescriptor,
+        stage: MTLRenderStages
+    ) -> (any MTLIntersectionFunctionTable)?
 }
 
 public protocol MTLComputePipelineState: MTLAllocation, Sendable {
@@ -641,6 +703,8 @@ public protocol MTLComputePipelineState: MTLAllocation, Sendable {
     var shaderValidation: MTLShaderValidation { get }
     var requiredThreadsPerThreadgroup: MTLSize { get }
     func imageblockMemoryLength(forDimensions imageblockDimensions: MTLSize) -> Int
+    func makeVisibleFunctionTable(descriptor: MTLVisibleFunctionTableDescriptor) -> (any MTLVisibleFunctionTable)?
+    func makeIntersectionFunctionTable(descriptor: MTLIntersectionFunctionTableDescriptor) -> (any MTLIntersectionFunctionTable)?
 }
 
 public protocol MTLDrawable: NSObjectProtocol {
@@ -709,6 +773,11 @@ public protocol MTLCommandBufferEncoderInfo: NSObjectProtocol {
 
 public protocol MTLCounterSet: NSObjectProtocol {
     var name: String { get }
+    var counters: [any MTLCounter] { get }
+}
+
+extension MTLCounterSet {
+    public var counters: [any MTLCounter] { [] }
 }
 
 public protocol MTLArgumentEncoder: NSObjectProtocol {
@@ -725,6 +794,19 @@ public protocol MTLArgumentEncoder: NSObjectProtocol {
     func setComputePipelineState(_ pipeline: (any MTLComputePipelineState)?, index: Int)
     func setIndirectCommandBuffer(_ indirectCommandBuffer: (any MTLIndirectCommandBuffer)?, index: Int)
     func setDepthStencilState(_ depthStencilState: (any MTLDepthStencilState)?, index: Int)
+    func setBuffers(_ buffers: [(any MTLBuffer)?], offsets: [Int], range: Range<Int>)
+    func setTextures(_ textures: [(any MTLTexture)?], range: Range<Int>)
+    func setSamplerStates(_ samplers: [(any MTLSamplerState)?], range: Range<Int>)
+    func setDepthStencilStates(_ depthStencilStates: [(any MTLDepthStencilState)?], range: Range<Int>)
+    func setRenderPipelineStates(_ pipelines: [(any MTLRenderPipelineState)?], range: Range<Int>)
+    func setComputePipelineStates(_ pipelines: [(any MTLComputePipelineState)?], range: Range<Int>)
+    func setComputePipelineStates(_ pipelines: UnsafePointer<(any MTLComputePipelineState)?>, with range: NSRange)
+    func setVisibleFunctionTables(_ visibleFunctionTables: [(any MTLVisibleFunctionTable)?], range: Range<Int>)
+    func setIndirectCommandBuffers(_ buffers: [(any MTLIndirectCommandBuffer)?], range: Range<Int>)
+    func setIntersectionFunctionTables(
+        _ intersectionFunctionTables: [(any MTLIntersectionFunctionTable)?],
+        range: Range<Int>
+    )
     func constantData(at index: Int) -> UnsafeMutableRawPointer
     func makeArgumentEncoderForBuffer(atIndex index: Int) -> (any MTLArgumentEncoder)?
 }
@@ -733,6 +815,7 @@ public protocol MTLIndirectCommandBuffer: MTLResource {
     var size: Int { get }
     var gpuResourceID: MTLResourceID { get }
     func indirectComputeCommandAt(_ commandIndex: Int) -> any MTLIndirectComputeCommand
+    func indirectComputeCommand(at index: Int) -> any MTLIndirectComputeCommand
     func indirectRenderCommandAt(_ commandIndex: Int) -> any MTLIndirectRenderCommand
 }
 

@@ -136,4 +136,5 @@ public enum MTLPixelFormat: UInt, Equatable, Hashable, Sendable {
     case bgra10_xr_srgb = 553
     case bgr10_xr = 554
     case bgr10_xr_srgb = 555
+    case unspecialized = 263
 }

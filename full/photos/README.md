@@ -283,3 +283,63 @@ Local evidence logs: `/tmp/fw-photos-r-baseline-current.log`,
 `/tmp/fw-photos-r-independent.log`.
 The temporary oracle is `/tmp/fw-photos-r-invalid-oracle.swift`; the committed
 three-test source above is the reproducible behavioral oracle fixture.
+
+### Wave 8 leftover audit 2026-09-15 (pi-wave8, isolated worktree)
+
+At task start `coverage.tsv` holds 752 implemented / 0 declared / 34 deferred /
+1 not-applicable of 787. There are no `declared` rows left to convert and no
+SwiftUI View-overlay rows in this framework (zero `SwiftUI` references in
+product sources or coverage), so the overlay override has no Photos target.
+The single `not-applicable` row is the compiler-`SYNTHESIZED` Foundation
+`Sequence.compare` witness, which the contract explicitly keeps as-is.
+
+All 34 deferred rows were re-examined for in-process implementation. Each one
+needs a type owned by another Apple module, and `AGENTS.md` forbids
+framework-local substitutes for dependency-owned types while the declared
+dependency set is Foundation only:
+
+- `UTType` (7): `PHAsset.contentType`, `PHAssetResource.contentType`,
+  `PHAssetResourceCreationOptions.contentType`,
+  `PHContentEditingInput.contentType`,
+  `PHContentEditingOutput.renderedContentURLForType:error:`,
+  `.defaultRenderedContentType`, `.supportedRenderedContentTypes`.
+- `CLLocation` (4): `PHAsset.location`, `PHAssetChangeRequest.location`,
+  `PHAssetCollection.approximateLocation`, `PHContentEditingInput.location`.
+- `CIImage` / `CMTime` / `PHLivePhotoFrame` (9):
+  `PHLivePhotoFrameProcessingBlock`, `PHLivePhotoEditingContext.duration`,
+  `.frameProcessor`, `.fullSizeImage`, `.photoTime`, `PHLivePhotoFrame` plus its
+  `.image` / `.renderScale` / `.time` / `.type`.
+- `AVAsset` / `AVPlayerItem` (5): `PHContentEditingInput.audiovisualAsset`,
+  `.avAsset`, `PHImageManager.requestAVAssetForVideo`,
+  `.requestExportSessionForVideo`, `.requestPlayerItemForVideo`.
+- `URLRequest` via FoundationNetworking (3): `PHAssetResourceUploadJob.destination`,
+  `PHAssetResourceUploadJobChangeRequest.createJobWithDestination:resource:`,
+  `.retryWithDestination:` — host sources import Foundation only.
+- `AppExtension` (4): `PHBackgroundResourceUploadExtension` protocol members.
+- Combine (1): synthesized `publisher` on `PHPersistentChangeFetchResult`.
+
+No row can move without a new declared dependency or a forbidden substitute,
+so the counts are unchanged: **+0 implemented**.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 752 | 752 |
+| declared | 0 | 0 |
+| deferred | 34 | 34 |
+| unavailable | 0 | 0 |
+| not-applicable | 1 | 1 |
+
+Verification on macOS (Swift, Darwin): product sources compile clean with
+warnings-as-errors to `libPhotos.dylib`; all 752 implemented rows cite valid
+`test:full/photos/tests/agent/*Tests.swift#testName` anchors (58 distinct sync
+no-argument tests, largest share 96 rows / 12.8%, below the 40% limit; no
+`DispatchQueue.main` or `RunLoop` in test files). A locally generated runner
+invoking all 58 cited tests prints `PHOTOS_AGENT_RUNTIME_OK` (55 tests under
+warnings-as-errors; the 3 `PhotosInvalidErrorTests` use Apple-deprecated
+spellings whose warnings are macOS-only and silent on the Linux gate, run
+separately with the same runtime result). The sealed
+`bash tests/acceptance/test_host.sh` still stops at the pre-existing shared
+validator error (`full/framework-roadmap/framework-roadmap.json` missing or
+unsafe), which is outside `full/photos/` scope on the untouched tree; no
+sealed inputs, scripts, or shared files were modified. Files changed: this
+`README.md` section only; no product, test, or coverage edits.

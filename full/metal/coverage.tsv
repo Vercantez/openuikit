@@ -183,7 +183,7 @@ c:@E@MTLBlendFactor@MTLBlendFactorSource1Color	implemented	test:full/metal/tests
 c:@E@MTLBlendFactor@MTLBlendFactorSourceAlpha	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlendFactor@MTLBlendFactorSourceAlphaSaturated	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlendFactor@MTLBlendFactorSourceColor	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-c:@E@MTLBlendFactor@MTLBlendFactorUnspecialized	deferred		Metal 4 unspecialized raw value not in graph
+c:@E@MTLBlendFactor@MTLBlendFactorUnspecialized	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	Metal 4 unspecialized raw value not in graph
 c:@E@MTLBlendFactor@MTLBlendFactorZero	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlendOperation	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlendOperation@MTLBlendOperationAdd	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -191,7 +191,7 @@ c:@E@MTLBlendOperation@MTLBlendOperationMax	implemented	test:full/metal/tests/ag
 c:@E@MTLBlendOperation@MTLBlendOperationMin	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlendOperation@MTLBlendOperationReverseSubtract	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlendOperation@MTLBlendOperationSubtract	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-c:@E@MTLBlendOperation@MTLBlendOperationUnspecialized	deferred		Metal 4 unspecialized raw value not in graph
+c:@E@MTLBlendOperation@MTLBlendOperationUnspecialized	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	Metal 4 unspecialized raw value not in graph
 c:@E@MTLBlitOption	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlitOption@MTLBlitOptionDepthFromDepthStencil	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLBlitOption@MTLBlitOptionRowLinearPVRTC	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -710,7 +710,7 @@ c:@E@MTLPixelFormat@MTLPixelFormatRGBA8Uint	implemented	test:full/metal/tests/ag
 c:@E@MTLPixelFormat@MTLPixelFormatRGBA8Unorm	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLPixelFormat@MTLPixelFormatRGBA8Unorm_sRGB	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLPixelFormat@MTLPixelFormatStencil8	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-c:@E@MTLPixelFormat@MTLPixelFormatUnspecialized	deferred		Metal 4 unspecialized raw value not in graph
+c:@E@MTLPixelFormat@MTLPixelFormatUnspecialized	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	Metal 4 unspecialized raw value not in graph
 c:@E@MTLPixelFormat@MTLPixelFormatX32_Stencil8	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLPrimitiveTopologyClass	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@E@MTLPrimitiveTopologyClass@MTLPrimitiveTopologyClassLine	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -982,9 +982,9 @@ c:@F@MTLClearColorMake	implemented	test:full/metal/tests/agent/MetalGeometryTest
 c:@F@MTLCoordinate2DMake	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@F@MTLCopyAllDevices	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	-
 c:@F@MTLCreateSystemDefaultDevice	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	-
-c:@F@MTLIOCompressionContextAppendData	deferred		not in the Linux starting slice
-c:@F@MTLIOCompressionContextDefaultChunkSize	deferred		not in the Linux starting slice
-c:@F@MTLIOFlushAndDestroyCompressionContext	deferred		not in the Linux starting slice
+c:@F@MTLIOCompressionContextAppendData	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
+c:@F@MTLIOCompressionContextDefaultChunkSize	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
+c:@F@MTLIOFlushAndDestroyCompressionContext	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
 c:@F@MTLIndirectCommandBufferExecutionRangeMake	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@F@MTLOriginMake	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@F@MTLPackedFloat3Make	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
@@ -1037,8 +1037,8 @@ c:@S@MTLPackedFloatQuaternion@FI@x	implemented	test:full/metal/tests/agent/Metal
 c:@S@MTLPackedFloatQuaternion@FI@y	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 c:@S@MTLPackedFloatQuaternion@FI@z	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 c:@S@MTLResourceID	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
-c:@S@_MTLAxisAlignedBoundingBox@FI@max::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	deferred		not implemented on the Linux CPU reference
-c:@S@_MTLAxisAlignedBoundingBox@FI@min::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	deferred		not implemented on the Linux CPU reference
+c:@S@_MTLAxisAlignedBoundingBox@FI@max::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+c:@S@_MTLAxisAlignedBoundingBox@FI@min::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 c:@S@_MTLPackedFloat3@Ua::SYNTHESIZED::c:@T@MTLPackedFloat3	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@S@_MTLPackedFloat3@Ua@FI@elements::SYNTHESIZED::c:@T@MTLPackedFloat3	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@S@_MTLPackedFloat3@Ua@Sa::SYNTHESIZED::c:@T@MTLPackedFloat3	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
@@ -1063,8 +1063,8 @@ c:@SA@MTL4CopySparseTextureMappingOperation@FI@destinationSlice	implemented	test
 c:@SA@MTL4CopySparseTextureMappingOperation@FI@sourceLevel	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:@SA@MTL4CopySparseTextureMappingOperation@FI@sourceRegion	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:@SA@MTL4CopySparseTextureMappingOperation@FI@sourceSlice	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-c:@SA@MTL4TimestampHeapEntry	deferred		not in the Linux starting slice
-c:@SA@MTL4TimestampHeapEntry@FI@timestamp	deferred		not in the Linux starting slice
+c:@SA@MTL4TimestampHeapEntry	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTL4TimestampHeapEntry@FI@timestamp	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
 c:@SA@MTL4UpdateSparseBufferMappingOperation	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:@SA@MTL4UpdateSparseBufferMappingOperation@FI@bufferRange	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:@SA@MTL4UpdateSparseBufferMappingOperation@FI@heapOffset	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
@@ -1133,11 +1133,11 @@ c:@SA@MTLCounterResultStatistic@FI@tessellationInputPatches	implemented	test:ful
 c:@SA@MTLCounterResultStatistic@FI@vertexInvocations	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@SA@MTLCounterResultTimestamp	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@SA@MTLCounterResultTimestamp@FI@timestamp	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-c:@SA@MTLDispatchThreadgroupsIndirectArguments	deferred		not in the Linux starting slice
-c:@SA@MTLDispatchThreadgroupsIndirectArguments@FI@threadgroupsPerGrid	deferred		not implemented on the Linux CPU reference
-c:@SA@MTLDispatchThreadsIndirectArguments	deferred		not in the Linux starting slice
-c:@SA@MTLDispatchThreadsIndirectArguments@FI@threadsPerGrid	deferred		not implemented on the Linux CPU reference
-c:@SA@MTLDispatchThreadsIndirectArguments@FI@threadsPerThreadgroup	deferred		not implemented on the Linux CPU reference
+c:@SA@MTLDispatchThreadgroupsIndirectArguments	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLDispatchThreadgroupsIndirectArguments@FI@threadgroupsPerGrid	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+c:@SA@MTLDispatchThreadsIndirectArguments	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLDispatchThreadsIndirectArguments@FI@threadsPerGrid	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+c:@SA@MTLDispatchThreadsIndirectArguments@FI@threadsPerThreadgroup	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 c:@SA@MTLDrawIndexedPrimitivesIndirectArguments	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 c:@SA@MTLDrawIndexedPrimitivesIndirectArguments@FI@baseInstance	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 c:@SA@MTLDrawIndexedPrimitivesIndirectArguments@FI@baseVertex	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
@@ -1176,10 +1176,10 @@ c:@SA@MTLIndirectAccelerationStructureMotionInstanceDescriptor@FI@userID	impleme
 c:@SA@MTLIndirectCommandBufferExecutionRange	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLIndirectCommandBufferExecutionRange@FI@length	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLIndirectCommandBufferExecutionRange@FI@location	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
-c:@SA@MTLIntersectionFunctionBufferArguments	deferred		not in the Linux starting slice
-c:@SA@MTLIntersectionFunctionBufferArguments@FI@intersectionFunctionBuffer	deferred		not in the Linux starting slice
-c:@SA@MTLIntersectionFunctionBufferArguments@FI@intersectionFunctionBufferSize	deferred		not in the Linux starting slice
-c:@SA@MTLIntersectionFunctionBufferArguments@FI@intersectionFunctionStride	deferred		not in the Linux starting slice
+c:@SA@MTLIntersectionFunctionBufferArguments	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLIntersectionFunctionBufferArguments@FI@intersectionFunctionBuffer	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLIntersectionFunctionBufferArguments@FI@intersectionFunctionBufferSize	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLIntersectionFunctionBufferArguments@FI@intersectionFunctionStride	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
 c:@SA@MTLMapIndirectArguments	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 c:@SA@MTLMapIndirectArguments@FI@mipMapLevel	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 c:@SA@MTLMapIndirectArguments@FI@regionOriginX	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
@@ -1193,9 +1193,9 @@ c:@SA@MTLOrigin	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift
 c:@SA@MTLOrigin@FI@x	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLOrigin@FI@y	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLOrigin@FI@z	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
-c:@SA@MTLQuadTessellationFactorsHalf	deferred		not in the Linux starting slice
-c:@SA@MTLQuadTessellationFactorsHalf@FI@edgeTessellationFactor	deferred		not in the Linux starting slice
-c:@SA@MTLQuadTessellationFactorsHalf@FI@insideTessellationFactor	deferred		not in the Linux starting slice
+c:@SA@MTLQuadTessellationFactorsHalf	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLQuadTessellationFactorsHalf@FI@edgeTessellationFactor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLQuadTessellationFactorsHalf@FI@insideTessellationFactor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
 c:@SA@MTLRegion	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLRegion@FI@origin	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLRegion@FI@size	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
@@ -1214,17 +1214,17 @@ c:@SA@MTLSize@FI@width	implemented	test:full/metal/tests/agent/MetalGeometryTest
 c:@SA@MTLSizeAndAlign	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLSizeAndAlign@FI@align	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLSizeAndAlign@FI@size	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
-c:@SA@MTLStageInRegionIndirectArguments	deferred		not in the Linux starting slice
-c:@SA@MTLStageInRegionIndirectArguments@FI@stageInOrigin	deferred		not in the Linux starting slice
-c:@SA@MTLStageInRegionIndirectArguments@FI@stageInSize	deferred		not in the Linux starting slice
+c:@SA@MTLStageInRegionIndirectArguments	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLStageInRegionIndirectArguments@FI@stageInOrigin	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLStageInRegionIndirectArguments@FI@stageInSize	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
 c:@SA@MTLTextureSwizzleChannels	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLTextureSwizzleChannels@FI@alpha	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLTextureSwizzleChannels@FI@blue	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLTextureSwizzleChannels@FI@green	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLTextureSwizzleChannels@FI@red	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
-c:@SA@MTLTriangleTessellationFactorsHalf	deferred		not in the Linux starting slice
-c:@SA@MTLTriangleTessellationFactorsHalf@FI@edgeTessellationFactor	deferred		not in the Linux starting slice
-c:@SA@MTLTriangleTessellationFactorsHalf@FI@insideTessellationFactor	deferred		not in the Linux starting slice
+c:@SA@MTLTriangleTessellationFactorsHalf	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLTriangleTessellationFactorsHalf@FI@edgeTessellationFactor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
+c:@SA@MTLTriangleTessellationFactorsHalf@FI@insideTessellationFactor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
 c:@SA@MTLVertexAmplificationViewMapping	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLVertexAmplificationViewMapping@FI@renderTargetArrayIndexOffset	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLVertexAmplificationViewMapping@FI@viewportArrayIndexOffset	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
@@ -1236,13 +1236,13 @@ c:@SA@MTLViewport@FI@width	implemented	test:full/metal/tests/agent/MetalGeometry
 c:@SA@MTLViewport@FI@zfar	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@SA@MTLViewport@FI@znear	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@T@MTL4CommitFeedbackHandler	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-c:@T@MTL4NewBinaryFunctionCompletionHandler	deferred		not in the Linux starting slice
-c:@T@MTL4NewMachineLearningPipelineStateCompletionHandler	deferred		not in the Linux starting slice
+c:@T@MTL4NewBinaryFunctionCompletionHandler	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
+c:@T@MTL4NewMachineLearningPipelineStateCompletionHandler	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
 c:@T@MTLArgumentAccess	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:@T@MTLAutoreleasedArgument	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testArgumentEncoderAndICB	exercised by focused synchronous software-surface test
 c:@T@MTLAutoreleasedComputePipelineReflection	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testPipelineDescriptorValidation	exercised by focused synchronous software-surface test
 c:@T@MTLAutoreleasedRenderPipelineReflection	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testPipelineDescriptorValidation	exercised by focused synchronous software-surface test
-c:@T@MTLAxisAlignedBoundingBox	deferred		not in the Linux starting slice
+c:@T@MTLAxisAlignedBoundingBox	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not in the Linux starting slice
 c:@T@MTLCommandBufferHandler	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testCommandBufferLifecycle	exercised by focused synchronous software-surface test
 c:@T@MTLCommonCounter	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 c:@T@MTLCommonCounterSet	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -1250,13 +1250,13 @@ c:@T@MTLCoordinate2D	implemented	test:full/metal/tests/agent/MetalGeometryTests.
 c:@T@MTLDrawablePresentedHandler	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testCommandBufferLifecycle	exercised by focused synchronous software-surface test
 c:@T@MTLGPUAddress	implemented	test:full/metal/tests/agent/MetalBufferTests.swift#testBufferStorage	exercised by focused synchronous software-surface test
 c:@T@MTLIOCommandBufferHandler	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testIOCommandBufferFailClosed	-
-c:@T@MTLIOCompressionContext	deferred		not in the Linux starting slice
+c:@T@MTLIOCompressionContext	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
 c:@T@MTLNewComputePipelineStateCompletionHandler	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
-c:@T@MTLNewComputePipelineStateWithReflectionCompletionHandler	deferred		not in the Linux starting slice
-c:@T@MTLNewDynamicLibraryCompletionHandler	deferred		not in the Linux starting slice
+c:@T@MTLNewComputePipelineStateWithReflectionCompletionHandler	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
+c:@T@MTLNewDynamicLibraryCompletionHandler	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
 c:@T@MTLNewLibraryCompletionHandler	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
 c:@T@MTLNewRenderPipelineStateCompletionHandler	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
-c:@T@MTLNewRenderPipelineStateWithReflectionCompletionHandler	deferred		not in the Linux starting slice
+c:@T@MTLNewRenderPipelineStateWithReflectionCompletionHandler	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
 c:@T@MTLPackedFloat3	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 c:@T@MTLPackedFloat4x3	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testAccelerationStructureDescriptors	-
 c:@T@MTLSharedEventNotificationBlock	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testSharedEventHostClock	-
@@ -1404,14 +1404,14 @@ c:objc(cs)MTL4LibraryDescriptor(py)source	implemented	test:full/metal/tests/agen
 c:objc(cs)MTL4LibraryFunctionDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:objc(cs)MTL4LibraryFunctionDescriptor(py)library	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:objc(cs)MTL4LibraryFunctionDescriptor(py)name	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
-c:objc(cs)MTL4MachineLearningPipelineDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTL4MachineLearningPipelineDescriptor(im)inputDimensionsAtBufferIndex:	deferred		not in the Linux starting slice
-c:objc(cs)MTL4MachineLearningPipelineDescriptor(im)reset	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
-c:objc(cs)MTL4MachineLearningPipelineDescriptor(im)setInputDimensions:atBufferIndex:	deferred		not in the Linux starting slice
-c:objc(cs)MTL4MachineLearningPipelineDescriptor(py)label	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTL4MachineLearningPipelineDescriptor(py)machineLearningFunctionDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTL4MachineLearningPipelineReflection	deferred		not in the Linux starting slice
-c:objc(cs)MTL4MachineLearningPipelineReflection(py)bindings	deferred		not in the Linux starting slice
+c:objc(cs)MTL4MachineLearningPipelineDescriptor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4MachineLearningPipelineDescriptor(im)inputDimensionsAtBufferIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4MachineLearningPipelineDescriptor(im)reset	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	-
+c:objc(cs)MTL4MachineLearningPipelineDescriptor(im)setInputDimensions:atBufferIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4MachineLearningPipelineDescriptor(py)label	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTL4MachineLearningPipelineDescriptor(py)machineLearningFunctionDescriptor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4MachineLearningPipelineReflection	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4MachineLearningPipelineReflection(py)bindings	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
 c:objc(cs)MTL4MeshRenderPipelineDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:objc(cs)MTL4MeshRenderPipelineDescriptor(im)reset	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTL4MeshRenderPipelineDescriptor(py)alphaToCoverageState	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
@@ -1527,9 +1527,9 @@ c:objc(cs)MTL4StaticLinkingDescriptor	implemented	test:full/metal/tests/agent/Me
 c:objc(cs)MTL4StaticLinkingDescriptor(py)functionDescriptors	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:objc(cs)MTL4StaticLinkingDescriptor(py)groups	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:objc(cs)MTL4StaticLinkingDescriptor(py)privateFunctionDescriptors	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
-c:objc(cs)MTL4StitchedFunctionDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTL4StitchedFunctionDescriptor(py)functionDescriptors	deferred		not in the Linux starting slice
-c:objc(cs)MTL4StitchedFunctionDescriptor(py)functionGraph	deferred		not in the Linux starting slice
+c:objc(cs)MTL4StitchedFunctionDescriptor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4StitchedFunctionDescriptor(py)functionDescriptors	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTL4StitchedFunctionDescriptor(py)functionGraph	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
 c:objc(cs)MTL4TileRenderPipelineDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
 c:objc(cs)MTL4TileRenderPipelineDescriptor(im)reset	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTL4TileRenderPipelineDescriptor(py)colorAttachments	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMetal4PipelineDescriptors	-
@@ -1668,12 +1668,12 @@ c:objc(cs)MTLAttribute(py)attributeType	implemented	test:full/metal/tests/agent/
 c:objc(cs)MTLAttribute(py)name	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLAttribute(py)patchControlPointData	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLAttribute(py)patchData	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(cs)MTLAttributeDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTLAttributeDescriptor(py)bufferIndex	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLAttributeDescriptor(py)format	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLAttributeDescriptor(py)offset	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLAttributeDescriptorArray	deferred		not in the Linux starting slice
-c:objc(cs)MTLAttributeDescriptorArray(im)objectAtIndexedSubscript:	deferred		not implemented on the Linux CPU reference
+c:objc(cs)MTLAttributeDescriptor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLAttributeDescriptor(py)bufferIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLAttributeDescriptor(py)format	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLAttributeDescriptor(py)offset	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLAttributeDescriptorArray	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLAttributeDescriptorArray(im)objectAtIndexedSubscript:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
 c:objc(cs)MTLBinaryArchiveDescriptor	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(cs)MTLBinaryArchiveDescriptor(py)url	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(cs)MTLBlitPassDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
@@ -1684,12 +1684,12 @@ c:objc(cs)MTLBlitPassSampleBufferAttachmentDescriptor(py)sampleBuffer	implemente
 c:objc(cs)MTLBlitPassSampleBufferAttachmentDescriptor(py)startOfEncoderSampleIndex	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLBlitPassSampleBufferAttachmentDescriptorArray	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLBlitPassSampleBufferAttachmentDescriptorArray(im)objectAtIndexedSubscript:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(cs)MTLBufferLayoutDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTLBufferLayoutDescriptor(py)stepFunction	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLBufferLayoutDescriptor(py)stepRate	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLBufferLayoutDescriptor(py)stride	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLBufferLayoutDescriptorArray	deferred		not in the Linux starting slice
-c:objc(cs)MTLBufferLayoutDescriptorArray(im)objectAtIndexedSubscript:	deferred		not implemented on the Linux CPU reference
+c:objc(cs)MTLBufferLayoutDescriptor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLBufferLayoutDescriptor(py)stepFunction	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLBufferLayoutDescriptor(py)stepRate	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLBufferLayoutDescriptor(py)stride	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLBufferLayoutDescriptorArray	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLBufferLayoutDescriptorArray(im)objectAtIndexedSubscript:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
 c:objc(cs)MTLCaptureDescriptor	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCaptureFailClosed	-
 c:objc(cs)MTLCaptureDescriptor(py)captureObject	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCaptureFailClosed	exercised by focused synchronous software-surface test
 c:objc(cs)MTLCaptureDescriptor(py)destination	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCaptureFailClosed	exercised by focused synchronous software-surface test
@@ -1788,21 +1788,21 @@ c:objc(cs)MTLFunctionDescriptor(py)specializedName	implemented	test:full/metal/t
 c:objc(cs)MTLFunctionReflection	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLFunctionReflection(py)bindings	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
 c:objc(cs)MTLFunctionReflection(py)userAnnotation	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(cs)MTLFunctionStitchingAttributeAlwaysInline	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingFunctionNode	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingFunctionNode(im)initWithName:arguments:controlDependencies:	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingFunctionNode(py)arguments	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingFunctionNode(py)controlDependencies	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingFunctionNode(py)name	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingGraph	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingGraph(im)initWithFunctionName:nodes:outputNode:attributes:	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingGraph(py)attributes	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingGraph(py)functionName	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingGraph(py)nodes	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingGraph(py)outputNode	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingInputNode	deferred		not in the Linux starting slice
-c:objc(cs)MTLFunctionStitchingInputNode(im)initWithArgumentIndex:	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLFunctionStitchingInputNode(py)argumentIndex	deferred		not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingAttributeAlwaysInline	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingFunctionNode	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingFunctionNode(im)initWithName:arguments:controlDependencies:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingFunctionNode(py)arguments	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingFunctionNode(py)controlDependencies	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingFunctionNode(py)name	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingGraph	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingGraph(im)initWithFunctionName:nodes:outputNode:attributes:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingGraph(py)attributes	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingGraph(py)functionName	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingGraph(py)nodes	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingGraph(py)outputNode	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingInputNode	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(cs)MTLFunctionStitchingInputNode(im)initWithArgumentIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not implemented on the Linux CPU reference
+c:objc(cs)MTLFunctionStitchingInputNode(py)argumentIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
 c:objc(cs)MTLHeapDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLHeapDescriptor(py)cpuCacheMode	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLHeapDescriptor(py)hazardTrackingMode	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
@@ -1977,7 +1977,7 @@ c:objc(cs)MTLRenderPassDescriptor(py)rasterizationRateMap	implemented	test:full/
 c:objc(cs)MTLRenderPassDescriptor(py)renderTargetArrayLength	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLRenderPassDescriptor(py)renderTargetHeight	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLRenderPassDescriptor(py)renderTargetWidth	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
-c:objc(cs)MTLRenderPassDescriptor(py)sampleBufferAttachments	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
+c:objc(cs)MTLRenderPassDescriptor(py)sampleBufferAttachments	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	-
 c:objc(cs)MTLRenderPassDescriptor(py)stencilAttachment	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLRenderPassDescriptor(py)supportColorAttachmentMapping	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLRenderPassDescriptor(py)threadgroupMemoryLength	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
@@ -1985,14 +1985,14 @@ c:objc(cs)MTLRenderPassDescriptor(py)tileHeight	implemented	test:full/metal/test
 c:objc(cs)MTLRenderPassDescriptor(py)tileWidth	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLRenderPassDescriptor(py)visibilityResultBuffer	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLRenderPassDescriptor(py)visibilityResultType	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor	deferred		not in the Linux starting slice
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)endOfFragmentSampleIndex	deferred		not in the Linux starting slice
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)endOfVertexSampleIndex	deferred		not in the Linux starting slice
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)sampleBuffer	deferred		not implemented on the Linux CPU reference
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)startOfFragmentSampleIndex	deferred		not in the Linux starting slice
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)startOfVertexSampleIndex	deferred		not in the Linux starting slice
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptorArray	deferred		not in the Linux starting slice
-c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptorArray(im)objectAtIndexedSubscript:	deferred		not implemented on the Linux CPU reference
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)endOfFragmentSampleIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)endOfVertexSampleIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)sampleBuffer	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)startOfFragmentSampleIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptor(py)startOfVertexSampleIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptorArray	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLRenderPassSampleBufferAttachmentDescriptorArray(im)objectAtIndexedSubscript:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
 c:objc(cs)MTLRenderPassStencilAttachmentDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLRenderPassStencilAttachmentDescriptor(py)clearStencil	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLRenderPassStencilAttachmentDescriptor(py)stencilResolveFilter	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
@@ -2101,10 +2101,10 @@ c:objc(cs)MTLSharedTextureHandle(py)device	implemented	test:full/metal/tests/age
 c:objc(cs)MTLSharedTextureHandle(py)label	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(cs)MTLStageInputOutputDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLStageInputOutputDescriptor(im)reset	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
-c:objc(cs)MTLStageInputOutputDescriptor(py)attributes	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
-c:objc(cs)MTLStageInputOutputDescriptor(py)indexBufferIndex	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(cs)MTLStageInputOutputDescriptor(py)indexType	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(cs)MTLStageInputOutputDescriptor(py)layouts	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
+c:objc(cs)MTLStageInputOutputDescriptor(py)attributes	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	-
+c:objc(cs)MTLStageInputOutputDescriptor(py)indexBufferIndex	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	Linux host behavior exercised by focused synchronous family test
+c:objc(cs)MTLStageInputOutputDescriptor(py)indexType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	exercised by focused synchronous software-surface test
+c:objc(cs)MTLStageInputOutputDescriptor(py)layouts	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	-
 c:objc(cs)MTLStencilDescriptor	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLStencilDescriptor(py)depthFailureOperation	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLStencilDescriptor(py)depthStencilPassOperation	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
@@ -2196,8 +2196,8 @@ c:objc(cs)MTLTileRenderPipelineDescriptor(py)supportAddingBinaryFunctions	implem
 c:objc(cs)MTLTileRenderPipelineDescriptor(py)threadgroupSizeMatchesTileSize	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMeshAndTilePipelineDescriptors	-
 c:objc(cs)MTLTileRenderPipelineDescriptor(py)tileBuffers	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMeshAndTilePipelineDescriptors	-
 c:objc(cs)MTLTileRenderPipelineDescriptor(py)tileFunction	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testMeshAndTilePipelineDescriptors	-
-c:objc(cs)MTLType	deferred		not in the Linux starting slice
-c:objc(cs)MTLType(py)dataType	deferred		not implemented on the Linux CPU reference
+c:objc(cs)MTLType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not in the Linux starting slice
+c:objc(cs)MTLType(py)dataType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverVertexAndSampleDescriptors	not implemented on the Linux CPU reference
 c:objc(cs)MTLVertexAttribute	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
 c:objc(cs)MTLVertexAttribute(py)active	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)MTLVertexAttribute(py)attributeIndex	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
@@ -2225,9 +2225,9 @@ c:objc(cs)MTLVisibleFunctionTableDescriptor	implemented	test:full/metal/tests/ag
 c:objc(cs)MTLVisibleFunctionTableDescriptor(py)functionCount	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(cs)NSProcessInfo(im)hasPerformanceProfile:	unavailable		requires Apple hardware device-certification service; unavailable on Linux
 c:objc(cs)NSProcessInfo(im)isDeviceCertifiedFor:	unavailable		requires Apple hardware device-certification service; unavailable on Linux
-c:objc(pl)MTL4Archive	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTL4Archive(im)newBinaryFunctionWithDescriptor:error:	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTL4Archive(py)label	deferred		not exercised on the Linux CPU reference
+c:objc(pl)MTL4Archive	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not exercised on the Linux CPU reference
+c:objc(pl)MTL4Archive(im)newBinaryFunctionWithDescriptor:error:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not exercised on the Linux CPU reference
+c:objc(pl)MTL4Archive(py)label	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not exercised on the Linux CPU reference
 c:objc(pl)MTL4ArgumentTable	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4ArgumentTable(im)setAddress:atIndex:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4ArgumentTable(im)setAddress:attributeStride:atIndex:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
@@ -2249,7 +2249,7 @@ c:objc(pl)MTL4CommandBuffer(im)beginCommandBufferWithAllocator:	implemented	test
 c:objc(pl)MTL4CommandBuffer(im)beginCommandBufferWithAllocator:options:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4CommandBuffer(im)computeCommandEncoder	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4CommandBuffer(im)endCommandBuffer	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-c:objc(pl)MTL4CommandBuffer(im)machineLearningCommandEncoder	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTL4CommandBuffer(im)machineLearningCommandEncoder	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTL4CommandBuffer(im)popDebugGroup	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4CommandBuffer(im)pushDebugGroup:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4CommandBuffer(im)renderCommandEncoderWithDescriptor:options:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPassClearAndLoad	-
@@ -2317,15 +2317,15 @@ c:objc(pl)MTL4CounterHeap	implemented	test:full/metal/tests/agent/MetalCommandTe
 c:objc(pl)MTL4CounterHeap(py)count	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4CounterHeap(py)label	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4CounterHeap(py)type	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-c:objc(pl)MTL4MachineLearningCommandEncoder	deferred		not in the Linux starting slice
-c:objc(pl)MTL4MachineLearningCommandEncoder(im)dispatchNetworkWithIntermediatesHeap:	deferred		not in the Linux starting slice
-c:objc(pl)MTL4MachineLearningCommandEncoder(im)setArgumentTable:	deferred		not in the Linux starting slice
-c:objc(pl)MTL4MachineLearningCommandEncoder(im)setPipelineState:	deferred		not in the Linux starting slice
-c:objc(pl)MTL4MachineLearningPipelineState	deferred		not in the Linux starting slice
-c:objc(pl)MTL4MachineLearningPipelineState(py)device	deferred		not implemented on the Linux CPU reference
-c:objc(pl)MTL4MachineLearningPipelineState(py)intermediatesHeapSize	deferred		not in the Linux starting slice
-c:objc(pl)MTL4MachineLearningPipelineState(py)label	deferred		not implemented on the Linux CPU reference
-c:objc(pl)MTL4MachineLearningPipelineState(py)reflection	deferred		not implemented on the Linux CPU reference
+c:objc(pl)MTL4MachineLearningCommandEncoder	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+c:objc(pl)MTL4MachineLearningCommandEncoder(im)dispatchNetworkWithIntermediatesHeap:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+c:objc(pl)MTL4MachineLearningCommandEncoder(im)setArgumentTable:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+c:objc(pl)MTL4MachineLearningCommandEncoder(im)setPipelineState:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+c:objc(pl)MTL4MachineLearningPipelineState	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+c:objc(pl)MTL4MachineLearningPipelineState(py)device	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
+c:objc(pl)MTL4MachineLearningPipelineState(py)intermediatesHeapSize	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+c:objc(pl)MTL4MachineLearningPipelineState(py)label	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
+c:objc(pl)MTL4MachineLearningPipelineState(py)reflection	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
 c:objc(pl)MTL4PipelineDataSetSerializer	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4PipelineDataSetSerializer(im)serializeAsArchiveAndFlushToURL:error:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 c:objc(pl)MTL4PipelineDataSetSerializer(im)serializeAsPipelinesScriptWithError:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
@@ -2554,8 +2554,8 @@ c:objc(pl)MTLComputePipelineState(im)functionHandleWithName:	implemented	test:fu
 c:objc(pl)MTLComputePipelineState(im)imageblockMemoryLengthForDimensions:	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 c:objc(pl)MTLComputePipelineState(im)newComputePipelineStateWithAdditionalBinaryFunctions:error:	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLComputePipelineState(im)newComputePipelineStateWithBinaryFunctions:error:	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
-c:objc(pl)MTLComputePipelineState(im)newIntersectionFunctionTableWithDescriptor:	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	Linux host behavior exercised by focused synchronous family test
-c:objc(pl)MTLComputePipelineState(im)newVisibleFunctionTableWithDescriptor:	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLComputePipelineState(im)newIntersectionFunctionTableWithDescriptor:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLComputePipelineState(im)newVisibleFunctionTableWithDescriptor:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLComputePipelineState(py)device	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 c:objc(pl)MTLComputePipelineState(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 c:objc(pl)MTLComputePipelineState(py)label	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
@@ -2566,14 +2566,14 @@ c:objc(pl)MTLComputePipelineState(py)shaderValidation	implemented	test:full/meta
 c:objc(pl)MTLComputePipelineState(py)staticThreadgroupMemoryLength	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 c:objc(pl)MTLComputePipelineState(py)supportIndirectCommandBuffers	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 c:objc(pl)MTLComputePipelineState(py)threadExecutionWidth	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
-c:objc(pl)MTLCounter	deferred		not in the Linux starting slice
-c:objc(pl)MTLCounter(py)name	deferred		not implemented on the Linux CPU reference
+c:objc(pl)MTLCounter	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLCounter(py)name	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not implemented on the Linux CPU reference
 c:objc(pl)MTLCounterSampleBuffer	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
 c:objc(pl)MTLCounterSampleBuffer(py)device	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
 c:objc(pl)MTLCounterSampleBuffer(py)label	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
 c:objc(pl)MTLCounterSampleBuffer(py)sampleCount	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testDeviceFailClosedFactories	-
 c:objc(pl)MTLCounterSet	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	exercised by focused synchronous software-surface test
-c:objc(pl)MTLCounterSet(py)counters	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	exercised by focused synchronous software-surface test
+c:objc(pl)MTLCounterSet(py)counters	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	exercised by focused synchronous software-surface test
 c:objc(pl)MTLCounterSet(py)name	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	exercised by focused synchronous software-surface test
 c:objc(pl)MTLDepthStencilState	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testParallelRenderEncoderAndSamplerState	-
 c:objc(pl)MTLDepthStencilState(py)device	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testParallelRenderEncoderAndSamplerState	-
@@ -2739,18 +2739,18 @@ c:objc(pl)MTLFunctionHandle(py)device	implemented	test:full/metal/tests/agent/Me
 c:objc(pl)MTLFunctionHandle(py)functionType	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLFunctionHandle(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLFunctionHandle(py)name	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
-c:objc(pl)MTLFunctionLog	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(pl)MTLFunctionLog(py)debugLocation	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLFunctionLog	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	exercised by focused synchronous software-surface test
+c:objc(pl)MTLFunctionLog(py)debugLocation	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLFunctionLog(py)encoderLabel	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLFunctionLog(py)function	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(pl)MTLFunctionLog(py)type	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(pl)MTLFunctionLogDebugLocation	deferred		not in the Linux starting slice
-c:objc(pl)MTLFunctionLogDebugLocation(py)URL	deferred		not implemented on the Linux CPU reference
-c:objc(pl)MTLFunctionLogDebugLocation(py)column	deferred		not in the Linux starting slice
-c:objc(pl)MTLFunctionLogDebugLocation(py)functionName	deferred		not implemented on the Linux CPU reference
-c:objc(pl)MTLFunctionLogDebugLocation(py)line	deferred		not implemented on the Linux CPU reference
-c:objc(pl)MTLFunctionStitchingAttribute	deferred		not in the Linux starting slice
-c:objc(pl)MTLFunctionStitchingNode	deferred		not in the Linux starting slice
+c:objc(pl)MTLFunctionLogDebugLocation	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLFunctionLogDebugLocation(py)URL	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not implemented on the Linux CPU reference
+c:objc(pl)MTLFunctionLogDebugLocation(py)column	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLFunctionLogDebugLocation(py)functionName	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not implemented on the Linux CPU reference
+c:objc(pl)MTLFunctionLogDebugLocation(py)line	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not implemented on the Linux CPU reference
+c:objc(pl)MTLFunctionStitchingAttribute	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
+c:objc(pl)MTLFunctionStitchingNode	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionStitching	not in the Linux starting slice
 c:objc(pl)MTLHeap	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testHeapFenceAndEvent	exercised by focused synchronous software-surface test
 c:objc(pl)MTLHeap(im)maxAvailableSizeWithAlignment:	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testHeapFenceAndEvent	-
 c:objc(pl)MTLHeap(im)newAccelerationStructureWithDescriptor:	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testHeapFenceAndEvent	Linux host behavior exercised by focused synchronous family test
@@ -2797,10 +2797,10 @@ c:objc(pl)MTLIOCommandQueue(im)enqueueBarrier	implemented	test:full/metal/tests/
 c:objc(pl)MTLIOCommandQueue(py)label	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testIOCommandBufferFailClosed	-
 c:objc(pl)MTLIOFileHandle	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testIOCommandBufferFailClosed	-
 c:objc(pl)MTLIOFileHandle(py)label	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testIOCommandBufferFailClosed	-
-c:objc(pl)MTLIOScratchBuffer	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTLIOScratchBuffer(py)buffer	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTLIOScratchBufferAllocator	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTLIOScratchBufferAllocator(im)newScratchBufferWithMinimumSize:	deferred		not exercised on the Linux CPU reference
+c:objc(pl)MTLIOScratchBuffer	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
+c:objc(pl)MTLIOScratchBuffer(py)buffer	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
+c:objc(pl)MTLIOScratchBufferAllocator	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
+c:objc(pl)MTLIOScratchBufferAllocator(im)newScratchBufferWithMinimumSize:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
 c:objc(pl)MTLIndirectCommandBuffer	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 c:objc(pl)MTLIndirectCommandBuffer(im)indirectComputeCommandAtIndex:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 c:objc(pl)MTLIndirectCommandBuffer(im)indirectRenderCommandAtIndex:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
@@ -2842,13 +2842,13 @@ c:objc(pl)MTLIndirectRenderCommand(im)setTriangleFillMode:	implemented	test:full
 c:objc(pl)MTLIndirectRenderCommand(im)setVertexBuffer:offset:atIndex:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 c:objc(pl)MTLIndirectRenderCommand(im)setVertexBuffer:offset:attributeStride:atIndex:	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 c:objc(pl)MTLIntersectionFunctionTable	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(pl)MTLIntersectionFunctionTable(im)setBuffer:offset:atIndex:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(pl)MTLIntersectionFunctionTable(im)setFunction:atIndex:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueCurveIntersectionFunctionWithSignature:atIndex:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueCurveIntersectionFunctionWithSignature:withRange:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueTriangleIntersectionFunctionWithSignature:atIndex:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueTriangleIntersectionFunctionWithSignature:withRange:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
-c:objc(pl)MTLIntersectionFunctionTable(im)setVisibleFunctionTable:atBufferIndex:	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLIntersectionFunctionTable(im)setBuffer:offset:atIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	exercised by focused synchronous software-surface test
+c:objc(pl)MTLIntersectionFunctionTable(im)setFunction:atIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueCurveIntersectionFunctionWithSignature:atIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueCurveIntersectionFunctionWithSignature:withRange:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueTriangleIntersectionFunctionWithSignature:atIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLIntersectionFunctionTable(im)setOpaqueTriangleIntersectionFunctionWithSignature:withRange:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLIntersectionFunctionTable(im)setVisibleFunctionTable:atBufferIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLIntersectionFunctionTable(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(pl)MTLLibrary	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	exercised by focused synchronous software-surface test
 c:objc(pl)MTLLibrary(im)newFunctionWithDescriptor:completionHandler:	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
@@ -2866,9 +2866,9 @@ c:objc(pl)MTLLibrary(py)label	implemented	test:full/metal/tests/agent/MetalCompu
 c:objc(pl)MTLLibrary(py)type	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 c:objc(pl)MTLLogState	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLLogState(im)addLogHandler:	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
-c:objc(pl)MTLObjectPayloadBinding	deferred		not in the Linux starting slice
-c:objc(pl)MTLObjectPayloadBinding(py)objectPayloadAlignment	deferred		not in the Linux starting slice
-c:objc(pl)MTLObjectPayloadBinding(py)objectPayloadDataSize	deferred		not in the Linux starting slice
+c:objc(pl)MTLObjectPayloadBinding	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLObjectPayloadBinding(py)objectPayloadAlignment	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLObjectPayloadBinding(py)objectPayloadDataSize	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
 c:objc(pl)MTLParallelRenderCommandEncoder	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testParallelRenderEncoderAndSamplerState	-
 c:objc(pl)MTLParallelRenderCommandEncoder(im)renderCommandEncoder	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testParallelRenderEncoderAndSamplerState	-
 c:objc(pl)MTLParallelRenderCommandEncoder(im)setColorStoreAction:atIndex:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testParallelRenderEncoderAndSamplerState	-
@@ -2987,11 +2987,11 @@ c:objc(pl)MTLRenderPipelineState(im)functionHandleWithBinaryFunction:stage:	impl
 c:objc(pl)MTLRenderPipelineState(im)functionHandleWithFunction:stage:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPipelineStateMeshProperties	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLRenderPipelineState(im)functionHandleWithName:stage:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPipelineStateMeshProperties	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLRenderPipelineState(im)imageblockMemoryLengthForDimensions:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPassClearAndLoad	-
-c:objc(pl)MTLRenderPipelineState(im)newIntersectionFunctionTableWithDescriptor:stage:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPipelineStateMeshProperties	Linux host behavior exercised by focused synchronous family test
+c:objc(pl)MTLRenderPipelineState(im)newIntersectionFunctionTableWithDescriptor:stage:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	Linux host behavior exercised by focused synchronous family test
 c:objc(pl)MTLRenderPipelineState(im)newRenderPipelineDescriptorForSpecialization	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPipelineStateMeshProperties	-
 c:objc(pl)MTLRenderPipelineState(im)newRenderPipelineStateWithAdditionalBinaryFunctions:error:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPipelineStateMeshProperties	-
 c:objc(pl)MTLRenderPipelineState(im)newRenderPipelineStateWithBinaryFunctions:error:	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPipelineStateMeshProperties	-
-c:objc(pl)MTLRenderPipelineState(im)newVisibleFunctionTableWithDescriptor:stage:	deferred		not implemented on the Linux CPU reference
+c:objc(pl)MTLRenderPipelineState(im)newVisibleFunctionTableWithDescriptor:stage:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
 c:objc(pl)MTLRenderPipelineState(py)device	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPassClearAndLoad	-
 c:objc(pl)MTLRenderPipelineState(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPassClearAndLoad	-
 c:objc(pl)MTLRenderPipelineState(py)imageblockSampleLength	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderPassClearAndLoad	-
@@ -3066,10 +3066,10 @@ c:objc(pl)MTLTensor(py)dimensions	implemented	test:full/metal/tests/agent/MetalF
 c:objc(pl)MTLTensor(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLTensor(py)strides	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLTensor(py)usage	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
-c:objc(pl)MTLTensorBinding	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTLTensorBinding(py)dimensions	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTLTensorBinding(py)indexType	deferred		not exercised on the Linux CPU reference
-c:objc(pl)MTLTensorBinding(py)tensorDataType	deferred		not exercised on the Linux CPU reference
+c:objc(pl)MTLTensorBinding	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
+c:objc(pl)MTLTensorBinding(py)dimensions	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
+c:objc(pl)MTLTensorBinding(py)indexType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
+c:objc(pl)MTLTensorBinding(py)tensorDataType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not exercised on the Linux CPU reference
 c:objc(pl)MTLTexture	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	exercised by focused synchronous software-surface test
 c:objc(pl)MTLTexture(im)getBytes:bytesPerRow:bytesPerImage:fromRegion:mipmapLevel:slice:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
 c:objc(pl)MTLTexture(im)getBytes:bytesPerRow:fromRegion:mipmapLevel:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
@@ -3106,20 +3106,20 @@ c:objc(pl)MTLTexture(py)tailSizeInBytes	implemented	test:full/metal/tests/agent/
 c:objc(pl)MTLTexture(py)textureType	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
 c:objc(pl)MTLTexture(py)usage	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
 c:objc(pl)MTLTexture(py)width	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
-c:objc(pl)MTLTextureBinding	deferred		not in the Linux starting slice
-c:objc(pl)MTLTextureBinding(py)arrayLength	deferred		not implemented on the Linux CPU reference
-c:objc(pl)MTLTextureBinding(py)depthTexture	deferred		not in the Linux starting slice
-c:objc(pl)MTLTextureBinding(py)textureDataType	deferred		not in the Linux starting slice
-c:objc(pl)MTLTextureBinding(py)textureType	deferred		not implemented on the Linux CPU reference
+c:objc(pl)MTLTextureBinding	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLTextureBinding(py)arrayLength	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not implemented on the Linux CPU reference
+c:objc(pl)MTLTextureBinding(py)depthTexture	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLTextureBinding(py)textureDataType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLTextureBinding(py)textureType	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not implemented on the Linux CPU reference
 c:objc(pl)MTLTextureViewPool	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLTextureViewPool(im)setTextureView:atIndex:	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLTextureViewPool(im)setTextureView:descriptor:atIndex:	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 c:objc(pl)MTLTextureViewPool(im)setTextureViewFromBuffer:descriptor:offset:bytesPerRow:atIndex:	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
-c:objc(pl)MTLThreadgroupBinding	deferred		not in the Linux starting slice
-c:objc(pl)MTLThreadgroupBinding(py)threadgroupMemoryAlignment	deferred		not in the Linux starting slice
-c:objc(pl)MTLThreadgroupBinding(py)threadgroupMemoryDataSize	deferred		not in the Linux starting slice
+c:objc(pl)MTLThreadgroupBinding	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLThreadgroupBinding(py)threadgroupMemoryAlignment	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
+c:objc(pl)MTLThreadgroupBinding(py)threadgroupMemoryDataSize	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverBindingReflection	not in the Linux starting slice
 c:objc(pl)MTLVisibleFunctionTable	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(pl)MTLVisibleFunctionTable(im)setFunction:atIndex:	deferred		not in the Linux starting slice
+c:objc(pl)MTLVisibleFunctionTable(im)setFunction:atIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not in the Linux starting slice
 c:objc(pl)MTLVisibleFunctionTable(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MTLSharedEventHandle	deferred		NSCoder round-trip for shared-event handles is not exercised on Linux
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MTLSharedTextureHandle	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
@@ -3149,11 +3149,11 @@ s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MTLLibraryErr
 s:10Foundation13CustomNSErrorPAAE9errorCodeSivp::SYNTHESIZED::c:@E@MTLTensorError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLBinaryArchiveError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLCommandBufferError	deferred		not implemented on the Linux CPU reference
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLCommandBufferError	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testComputeDispatchFailClosed	not implemented on the Linux CPU reference
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLCounterSampleBufferError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLDynamicLibraryError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLIOError	deferred		not implemented on the Linux CPU reference
-s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLLibraryError	deferred		not implemented on the Linux CPU reference
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLIOError	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testIOCommandBufferFailClosed	not implemented on the Linux CPU reference
+s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLLibraryError	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testLibraryFailClosed	not implemented on the Linux CPU reference
 s:10Foundation18_ErrorCodeProtocolPAAE2teoiySbx_s0B0_ptFZ::SYNTHESIZED::c:@E@MTLTensorError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MTLBinaryArchiveError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3165,11 +3165,11 @@ s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED:
 s:10Foundation21_BridgedStoredNSErrorPAAE13errorUserInfoSDySSypGvp::SYNTHESIZED::c:@E@MTLTensorError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLBinaryArchiveError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandBufferError	deferred		not implemented on the Linux CPU reference
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandBufferError	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCounterSampleBufferError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLDynamicLibraryError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLIOError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLibraryError	deferred		not implemented on the Linux CPU reference
+s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLibraryError	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testLibraryFailClosed	not implemented on the Linux CPU reference
 s:10Foundation21_BridgedStoredNSErrorPAAE2eeoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLTensorError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE4code4CodeQzvp::SYNTHESIZED::c:@E@MTLBinaryArchiveError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3208,7 +3208,7 @@ s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLBi
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLCommandBufferError	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testComputeDispatchFailClosed	-
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLCounterSampleBufferError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLDynamicLibraryError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLIOError	deferred		not implemented on the Linux CPU reference
+s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLIOError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	not implemented on the Linux CPU reference
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLLibraryError	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testLibraryFailClosed	-
 s:10Foundation21_BridgedStoredNSErrorPAAE9hashValueSivp::SYNTHESIZED::c:@E@MTLTensorError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation21_BridgedStoredNSErrorPAAE_8userInfox4CodeQz_SDySSypGtcfc::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3225,7 +3225,7 @@ s:5Metal15MTLLogContainerV7Elementa	implemented	test:full/metal/tests/agent/Meta
 s:5Metal15MTLLogContainerV8IteratorV	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	exercised by focused synchronous software-surface test
 s:5Metal15MTLLogContainerV8IteratorV4nextSo14MTLFunctionLog_pSgyF	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 s:5Metal15MTLLogContainerV8IteratorV7Elementa	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	exercised by focused synchronous software-surface test
-s:5Metal29MTLIOCreateCompressionContextySvSgSS_So22MTLIOCompressionMethodVSitF	deferred		not in the Linux starting slice
+s:5Metal29MTLIOCreateCompressionContextySvSgSS_So22MTLIOCompressionMethodVSitF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverCompletionHandlersAndCompression	not in the Linux starting slice
 s:SC10MTLIOErrorLeV	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testLibraryFailClosed	exercised by focused synchronous software-surface test
 s:SC10MTLIOErrorLeV10urlInvalidSoAAVvpZ	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testLibraryFailClosed	exercised by focused synchronous software-surface test
 s:SC10MTLIOErrorLeV11errorDomainSSvpZ	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testLibraryFailClosed	exercised by focused synchronous software-surface test
@@ -3318,7 +3318,7 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCPUCacheMode	implemented	test:full/me
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCaptureDestination	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCaptureError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLColorWriteMask	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandBufferError	deferred		not implemented on the Linux CPU reference
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandBufferError	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandBufferErrorOption	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandBufferStatus	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLCommandEncoderErrorState	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3351,7 +3351,7 @@ s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLIndexType	implemented	test:full/metal
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLIndirectCommandType	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLIntersectionFunctionSignature	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLanguageVersion	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLibraryError	deferred		not implemented on the Linux CPU reference
+s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLibraryError	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLibraryOptimizationLevel	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLibraryType	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::c:@E@MTLLoadAction	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3654,8 +3654,8 @@ s:So10MTLIOErrorV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/Me
 s:So10MTLTextureP5MetalE15makeTextureView11pixelFormat11textureType6levels6slices7swizzleSoAA_pSgSo08MTLPixelG0V_So0aI0VSnySiGAOSo0A15SwizzleChannelsatF	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureViewsAndDimensionalLayouts	-
 s:So10MTLTextureP5MetalE15makeTextureView11pixelFormat11textureType6levels6slicesSoAA_pSgSo08MTLPixelG0V_So0aI0VSnySiGANtF	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureViewsAndDimensionalLayouts	-
 s:So10MTLWindingV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So11MTL4ArchiveP5MetalE23makeRenderPipelineState10descriptor24dynamicLinkingDescriptorSo09MTLRenderfG0_pSo0afK0C_So0aef7DynamicjK0CSgtKF	deferred		no Metal 4 pipeline archive on Linux; makeArchive fails closed
-s:So11MTL4ArchiveP5MetalE24makeComputePipelineState10descriptor24dynamicLinkingDescriptorSo010MTLComputefG0_pSo0aefK0C_So0af12StageDynamicjK0CSgtKF	deferred		no Metal 4 pipeline archive on Linux; makeArchive fails closed
+s:So11MTL4ArchiveP5MetalE23makeRenderPipelineState10descriptor24dynamicLinkingDescriptorSo09MTLRenderfG0_pSo0afK0C_So0aef7DynamicjK0CSgtKF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	no Metal 4 pipeline archive on Linux; makeArchive fails closed
+s:So11MTL4ArchiveP5MetalE24makeComputePipelineState10descriptor24dynamicLinkingDescriptorSo010MTLComputefG0_pSo0aefK0C_So0af12StageDynamicjK0CSgtKF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	no Metal 4 pipeline archive on Linux; makeArchive fails closed
 s:So11MTLCullModeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So11MTLDataTypeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So11MTLHeapTypeV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3673,7 +3673,7 @@ s:So12MTL4CompilerP5MetalE23makeRenderPipelineState10descriptor24dynamicLinkingD
 s:So12MTL4CompilerP5MetalE23makeRenderPipelineState10descriptor24dynamicLinkingDescriptor19compilerTaskOptionsSo09MTLRenderfG0_pSo0afK0C_So0aef7DynamicjK0CSgSo0abmN0CSgtYaKF	deferred		async overlay; Linux tests are synchronous
 s:So12MTL4CompilerP5MetalE24makeComputePipelineState10descriptor24dynamicLinkingDescriptor19compilerTaskOptionsSo010MTLComputefG0_pSo0aefK0C_So0af12StageDynamicjK0CSgSo0abmN0CSgtKF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 s:So12MTL4CompilerP5MetalE24makeComputePipelineState10descriptor24dynamicLinkingDescriptor19compilerTaskOptionsSo010MTLComputefG0_pSo0aefK0C_So0af12StageDynamicjK0CSgSo0abmN0CSgtYaKF	deferred		async overlay; Linux tests are synchronous
-s:So12MTL4CompilerP5MetalE32makeMachineLearningPipelineState10descriptorSo0aefgH0_pSo0aefG10DescriptorC_tKF	deferred		not in the Linux starting slice
+s:So12MTL4CompilerP5MetalE32makeMachineLearningPipelineState10descriptorSo0aefgH0_pSo0aefG10DescriptorC_tKF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
 s:So12MTL4CompilerP5MetalE32makeMachineLearningPipelineState10descriptorSo0aefgH0_pSo0aefG10DescriptorC_tYaKF	deferred		not in the Linux starting slice
 s:So12MTL4CompilerP5MetalE39makeRenderPipelineStateBySpecialization10descriptor8pipelineSo09MTLRenderfG0_pSo0aF10DescriptorC_SoAG_ptKF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 s:So12MTL4CompilerP5MetalE39makeRenderPipelineStateBySpecialization10descriptor8pipelineSo09MTLRenderfG0_pSo0aF10DescriptorC_SoAG_ptYaKF	deferred		not in the Linux starting slice
@@ -3767,17 +3767,17 @@ s:So17MTLTextureSwizzleV8rawValueABSgs5UInt8V_tcfc	implemented	test:full/metal/t
 s:So18MTL4CommandEncoderP5MetalE7barrier05afterC6Stages06beforecG017visibilityOptionsySo9MTLStagesV_AISo0a10VisibilityJ0VtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 s:So18MTL4CommandEncoderP5MetalE7barrier11afterStages011beforeQueueG017visibilityOptionsySo9MTLStagesV_AISo0a10VisibilityK0VtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 s:So18MTL4CommandEncoderP5MetalE7barrier16afterQueueStages06beforeH017visibilityOptionsySo9MTLStagesV_AISo0a10VisibilityK0VtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-s:So18MTLArgumentEncoderP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE11setTextures_5rangeySaySo10MTLTexture_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE16setSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE21setDepthStencilStates_5rangeySaySo08MTLDepthF5State_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE11setTextures_5rangeySaySo10MTLTexture_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE16setSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE21setDepthStencilStates_5rangeySaySo08MTLDepthF5State_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
 s:So18MTLArgumentEncoderP5MetalE23setComputePipelineState_2atySo010MTLComputefG0_pSg_SitF	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testArgumentEncoderAndICB	-
-s:So18MTLArgumentEncoderP5MetalE23setRenderPipelineStates_5rangeySaySo09MTLRenderF5State_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE24setComputePipelineStates_4withySPySo010MTLComputeF5State_pSgG_So8_NSRangeVtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE24setComputePipelineStates_5rangeySaySo010MTLComputeF5State_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE24setVisibleFunctionTables_5rangeySaySo010MTLVisibleF5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE25setIndirectCommandBuffers_5rangeySaySo011MTLIndirectF6Buffer_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So18MTLArgumentEncoderP5MetalE29setIntersectionFunctionTables_5rangeySaySo015MTLIntersectionF5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE23setRenderPipelineStates_5rangeySaySo09MTLRenderF5State_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE24setComputePipelineStates_4withySPySo010MTLComputeF5State_pSgG_So8_NSRangeVtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE24setComputePipelineStates_5rangeySaySo010MTLComputeF5State_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE24setVisibleFunctionTables_5rangeySaySo010MTLVisibleF5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE25setIndirectCommandBuffers_5rangeySaySo011MTLIndirectF6Buffer_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So18MTLArgumentEncoderP5MetalE29setIntersectionFunctionTables_5rangeySaySo015MTLIntersectionF5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
 s:So18MTLAttributeFormatV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So18MTLCompareFunctionV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So18MTLFunctionLogTypeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3803,7 +3803,7 @@ s:So21MTL4VisibilityOptionsV8rawValueABSu_tcfc	implemented	test:full/metal/tests
 s:So21MTLBinaryArchiveErrorV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So21MTLBlitCommandEncoderP5MetalE012copyIndirectB6Buffer_11sourceRange11destination0J5IndexySo011MTLIndirectbG0_p_SnySiGSoAH_pSitF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 s:So21MTLBlitCommandEncoderP5MetalE016optimizeIndirectB6Buffer_5rangeySo011MTLIndirectbG0_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
-s:So21MTLBlitCommandEncoderP5MetalE15resolveCounters_5range17destinationBuffer0H6OffsetySo016MTLCounterSampleI0_p_SnySiGSo9MTLBuffer_pSitF	deferred		not implemented on the Linux CPU reference
+s:So21MTLBlitCommandEncoderP5MetalE15resolveCounters_5range17destinationBuffer0H6OffsetySo016MTLCounterSampleI0_p_SnySiGSo9MTLBuffer_pSitF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
 s:So21MTLBlitCommandEncoderP5MetalE21resetCommandsInBuffer_5rangeySo011MTLIndirectbH0_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 s:So21MTLBlitCommandEncoderP5MetalE4fill6buffer5range5valueySo9MTLBuffer_p_SnySiGs5UInt8VtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testBlitCopyFillMipmaps	-
 s:So21MTLCaptureDestinationV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3819,11 +3819,11 @@ s:So21MTLStoreActionOptionsV8rawValueABSu_tcfc	implemented	test:full/metal/tests
 s:So21MTLVertexStepFunctionV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So21NSDeviceCertificationa8rawValueABSi_tcfc	deferred		not implemented on the Linux CPU reference
 s:So22MTL4CompilerTaskStatusV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So22MTL4TimestampHeapEntrya9timestampABs6UInt64V_tcfc	deferred		not implemented on the Linux CPU reference
-s:So22MTL4TimestampHeapEntryaABycfc	deferred		not implemented on the Linux CPU reference
+s:So22MTL4TimestampHeapEntrya9timestampABs6UInt64V_tcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So22MTL4TimestampHeapEntryaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So22MTLArgumentBuffersTierV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So22MTLCommandBufferStatusV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So22MTLCounterSampleBufferP5MetalE19resolveCounterRangey10Foundation4DataVSgSnySiGKF	deferred		not in the Linux starting slice
+s:So22MTLCounterSampleBufferP5MetalE19resolveCounterRangey10Foundation4DataVSgSnySiGKF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not in the Linux starting slice
 s:So22MTLDynamicLibraryErrorV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So22MTLIOCompressionMethodV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So22MTLIOCompressionStatusV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3858,18 +3858,18 @@ s:So23MTLRenderCommandEncoderP5MetalE22setObjectSamplerStates_12lodMinClamps0i3M
 s:So23MTLRenderCommandEncoderP5MetalE22setObjectSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
 s:So23MTLRenderCommandEncoderP5MetalE22setVertexSamplerStates_12lodMinClamps0i3MaxK05rangeySaySo15MTLSamplerState_pSgG_SaySfGAKSnySiGtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
 s:So23MTLRenderCommandEncoderP5MetalE22setVertexSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
-s:So23MTLRenderCommandEncoderP5MetalE23executeCommandsInBuffer_08indirectH06offsetySo011MTLIndirectbH0_p_So9MTLBuffer_pSitF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE23executeCommandsInBuffer_5rangeySo011MTLIndirectbH0_p_SnySiGtF	deferred		not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE23executeCommandsInBuffer_08indirectH06offsetySo011MTLIndirectbH0_p_So9MTLBuffer_pSitF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE23executeCommandsInBuffer_5rangeySo011MTLIndirectbH0_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
 s:So23MTLRenderCommandEncoderP5MetalE24setFragmentSamplerStates_12lodMinClamps0i3MaxK05rangeySaySo15MTLSamplerState_pSgG_SaySfGAKSnySiGtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
 s:So23MTLRenderCommandEncoderP5MetalE24setFragmentSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
-s:So23MTLRenderCommandEncoderP5MetalE28setTileVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleH5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE30setVertexVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleH5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE32setFragmentVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleH5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE33setTileIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionH5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE35setVertexIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionH5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE37setFragmentIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionH5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE3use_5count5usage6stagesySPySo11MTLResource_pG_SiSo0I5UsageVSo0A6StagesVtF	deferred		UnsafePointer overlay not implemented on the Linux CPU reference
-s:So23MTLRenderCommandEncoderP5MetalE3use_5count6stagesySPySo7MTLHeap_pG_SiSo0A6StagesVtF	deferred		UnsafePointer overlay not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE28setTileVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleH5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE30setVertexVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleH5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE32setFragmentVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleH5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE33setTileIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionH5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE35setVertexIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionH5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE37setFragmentIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionH5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE3use_5count5usage6stagesySPySo11MTLResource_pG_SiSo0I5UsageVSo0A6StagesVtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	UnsafePointer overlay not implemented on the Linux CPU reference
+s:So23MTLRenderCommandEncoderP5MetalE3use_5count6stagesySPySo7MTLHeap_pG_SiSo0A6StagesVtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	UnsafePointer overlay not implemented on the Linux CPU reference
 s:So23MTLRenderCommandEncoderP5MetalE3use_5usage6stagesySo11MTLResource_p_So0H5UsageVSo0A6StagesVtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
 s:So23MTLRenderCommandEncoderP5MetalE3use_6stagesySo7MTLHeap_p_So0A6StagesVtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
 s:So23MTLRenderCommandEncoderP5MetalE8useHeaps_6stagesySaySo7MTLHeap_pG_So0A6StagesVtF	implemented	test:full/metal/tests/agent/MetalRenderTests.swift#testRenderEncoderStageBindings	-
@@ -3879,51 +3879,51 @@ s:So23MTLRenderPassDescriptorC5MetalE18setSamplePositionsyySaySo17MTLSamplePosit
 s:So23MTLSamplerReductionModeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So23MTLVisibilityResultModeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So23MTLVisibilityResultTypeV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So23MTLVisibleFunctionTableP5MetalE12setFunctions_5rangeySaySo17MTLFunctionHandle_pSgG_SnySiGtF	deferred		not in the Linux starting slice
+s:So23MTLVisibleFunctionTableP5MetalE12setFunctions_5rangeySaySo17MTLFunctionHandle_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not in the Linux starting slice
 s:So24MTL4AlphaToCoverageStateV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So24MTL4RenderCommandEncoderP5MetalE12setViewportsyySaySo11MTLViewportaGF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-s:So24MTL4RenderCommandEncoderP5MetalE15executeCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	deferred		not in the Linux starting slice
+s:So24MTL4RenderCommandEncoderP5MetalE15executeCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
 s:So24MTL4RenderCommandEncoderP5MetalE15setScissorRectsyySaySo14MTLScissorRectaGF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
-s:So24MTL4RenderCommandEncoderP5MetalE18setDepthTestBoundsyySNySfGF	deferred		not exercised on the Linux CPU reference
-s:So24MTL4RenderCommandEncoderP5MetalE27setVertexAmplificationCountyySaySo09MTLVertexH11ViewMappingaGF	deferred		not exercised on the Linux CPU reference
-s:So24MTL4RenderCommandEncoderP5MetalE27setVertexAmplificationCountyySiF	deferred		not exercised on the Linux CPU reference
+s:So24MTL4RenderCommandEncoderP5MetalE18setDepthTestBoundsyySNySfGF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not exercised on the Linux CPU reference
+s:So24MTL4RenderCommandEncoderP5MetalE27setVertexAmplificationCountyySaySo09MTLVertexH11ViewMappingaGF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not exercised on the Linux CPU reference
+s:So24MTL4RenderCommandEncoderP5MetalE27setVertexAmplificationCountyySiF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not exercised on the Linux CPU reference
 s:So24MTL4RenderEncoderOptionsV8rawValueABSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So24MTL4RenderPassDescriptorC5MetalE15samplePositionsSaySo17MTLSamplePositionaGvp	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 s:So24MTL4TimestampGranularityV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So24MTLComputeCommandEncoderP5MetalE10setBuffers_7offsets16attributeStrides5rangeySaySo9MTLBuffer_pSgG_SaySiGAKSnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So24MTLComputeCommandEncoderP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So24MTLComputeCommandEncoderP5MetalE11setTextures_5rangeySaySo10MTLTexture_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So24MTLComputeCommandEncoderP5MetalE12useResources_5usageySaySo11MTLResource_pG_So0H5UsageVtF	deferred		not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE10setBuffers_7offsets16attributeStrides5rangeySaySo9MTLBuffer_pSgG_SaySiGAKSnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE11setTextures_5rangeySaySo10MTLTexture_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE12useResources_5usageySaySo11MTLResource_pG_So0H5UsageVtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
 s:So24MTLComputeCommandEncoderP5MetalE13memoryBarrier9resourcesySaySo11MTLResource_pG_tF	implemented	test:full/metal/tests/agent/MetalComputeTests.swift#testCPUBuiltinCompute	-
 s:So24MTLComputeCommandEncoderP5MetalE15executeCommands2in14indirectBuffer0hI6OffsetySo011MTLIndirectbI0_p_So9MTLBuffer_pSitF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 s:So24MTLComputeCommandEncoderP5MetalE15executeCommands2in4withySo011MTLIndirectB6Buffer_p_So8_NSRangeVtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
-s:So24MTLComputeCommandEncoderP5MetalE16setSamplerStates_12lodMinClamps0h3MaxJ05rangeySaySo15MTLSamplerState_pSgG_SaySfGAKSnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So24MTLComputeCommandEncoderP5MetalE16setSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE16setSamplerStates_12lodMinClamps0h3MaxJ05rangeySaySo15MTLSamplerState_pSgG_SaySfGAKSnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE16setSamplerStates_5rangeySaySo15MTLSamplerState_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
 s:So24MTLComputeCommandEncoderP5MetalE23executeCommandsInBuffer_08indirectH06offsetySo011MTLIndirectbH0_p_So9MTLBuffer_pSitF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
 s:So24MTLComputeCommandEncoderP5MetalE23executeCommandsInBuffer_5rangeySo011MTLIndirectbH0_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testIndirectCommandBufferAsData	-
-s:So24MTLComputeCommandEncoderP5MetalE24setVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleG5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So24MTLComputeCommandEncoderP5MetalE29setIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionG5Table_pSgG_SnySiGtF	deferred		not implemented on the Linux CPU reference
-s:So24MTLComputeCommandEncoderP5MetalE8useHeapsyySaySo7MTLHeap_pGF	deferred		not implemented on the Linux CPU reference
-s:So24MTLIndirectCommandBufferP5MetalE015indirectComputeB02atSo0afB0_pSi_tF	deferred		not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE24setVisibleFunctionTables_11bufferRangeySaySo010MTLVisibleG5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE29setIntersectionFunctionTables_11bufferRangeySaySo015MTLIntersectionG5Table_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not implemented on the Linux CPU reference
+s:So24MTLComputeCommandEncoderP5MetalE8useHeapsyySaySo7MTLHeap_pGF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
+s:So24MTLIndirectCommandBufferP5MetalE015indirectComputeB02atSo0afB0_pSi_tF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not implemented on the Linux CPU reference
 s:So24MTLIndirectCommandBufferP5MetalE5resetyySnySiGF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testCommandBufferLifecycle	exercised by focused synchronous software-surface test
 s:So24MTLPackedFloatQuaternionV1x1y1z1wABSf_S3ftcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So24MTLPackedFloatQuaternionVABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So24MTLTextureViewDescriptorC5MetalE10levelRangeSnySiGvp	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureViewsAndDimensionalLayouts	-
 s:So24MTLTextureViewDescriptorC5MetalE10sliceRangeSnySiGvp	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureViewsAndDimensionalLayouts	-
 s:So25MTL4BinaryFunctionOptionsV8rawValueABSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So25MTL4ComputeCommandEncoderP5MetalE12copyCommands12sourceBuffer0H5Range011destinationI00K5IndexySo011MTLIndirectcI0_p_SnySiGSoAI_pSitF	deferred		not in the Linux starting slice
-s:So25MTL4ComputeCommandEncoderP5MetalE13resetCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	deferred		not in the Linux starting slice
-s:So25MTL4ComputeCommandEncoderP5MetalE15executeCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	deferred		not in the Linux starting slice
-s:So25MTL4ComputeCommandEncoderP5MetalE16optimizeCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	deferred		not in the Linux starting slice
-s:So25MTL4ComputeCommandEncoderP5MetalE4copy12sourceBuffer0G6Offset0G11BytesPerRow0gjK5Image0G4Size18destinationTexture0O5Slice0O5Level0O6Origin7optionsySo9MTLBuffer_p_S3iSo7MTLSizeaSo10MTLTexture_pS2iSo9MTLOriginaSo13MTLBlitOptionVtF	deferred		not implemented on the Linux CPU reference
-s:So25MTL4ComputeCommandEncoderP5MetalE4copy13sourceTexture0G5Slice0G5Level0G6Origin0G4Size17destinationBuffer0M6Offset0M11BytesPerRow0mpQ5Image7optionsySo10MTLTexture_p_S2iSo9MTLOriginaSo7MTLSizeaSo9MTLBuffer_pS3iSo13MTLBlitOptionVtF	deferred		not implemented on the Linux CPU reference
-s:So25MTL4ComputeCommandEncoderP5MetalE4fill6buffer5range5valueySo9MTLBuffer_p_SnySiGs5UInt8VtF	deferred		not implemented on the Linux CPU reference
+s:So25MTL4ComputeCommandEncoderP5MetalE12copyCommands12sourceBuffer0H5Range011destinationI00K5IndexySo011MTLIndirectcI0_p_SnySiGSoAI_pSitF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+s:So25MTL4ComputeCommandEncoderP5MetalE13resetCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+s:So25MTL4ComputeCommandEncoderP5MetalE15executeCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+s:So25MTL4ComputeCommandEncoderP5MetalE16optimizeCommands6buffer5rangeySo011MTLIndirectC6Buffer_p_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not in the Linux starting slice
+s:So25MTL4ComputeCommandEncoderP5MetalE4copy12sourceBuffer0G6Offset0G11BytesPerRow0gjK5Image0G4Size18destinationTexture0O5Slice0O5Level0O6Origin7optionsySo9MTLBuffer_p_S3iSo7MTLSizeaSo10MTLTexture_pS2iSo9MTLOriginaSo13MTLBlitOptionVtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
+s:So25MTL4ComputeCommandEncoderP5MetalE4copy13sourceTexture0G5Slice0G5Level0G6Origin0G4Size17destinationBuffer0M6Offset0M11BytesPerRow0mpQ5Image7optionsySo10MTLTexture_p_S2iSo9MTLOriginaSo7MTLSizeaSo9MTLBuffer_pS3iSo13MTLBlitOptionVtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
+s:So25MTL4ComputeCommandEncoderP5MetalE4fill6buffer5range5valueySo9MTLBuffer_p_SnySiGs5UInt8VtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
 s:So25MTLCounterResultStatistica24tessellationInputPatches17vertexInvocations022postTessellationVertexH007clipperH00L13PrimitivesOut08fragmentH015fragmentsPassed013computeKernelH0ABs6UInt64V_A7Ltcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So25MTLCounterResultStatisticaABycfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So25MTLCounterResultTimestampa9timestampABs6UInt64V_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So25MTLCounterResultTimestampaABycfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So25MTLFunctionConstantValuesC5MetalE03setbC0_4type5rangeySV_So11MTLDataTypeVSnySiGtF	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	-
-s:So25MTLIndirectComputeCommandP5MetalE10setStageInyySo9MTLRegionaF	deferred		not in the Linux starting slice
+s:So25MTLIndirectComputeCommandP5MetalE10setStageInyySo9MTLRegionaF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverEncoderOverloads	not in the Linux starting slice
 s:So25MTLIndirectComputeCommandP5MetalE26setThreadgroupMemoryLength_2atySi_SitF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testCommandBufferLifecycle	exercised by focused synchronous software-surface test
 s:So25MTLPrimitiveTopologyClassV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So25MTLStitchedLibraryOptionsV8rawValueABSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3931,8 +3931,8 @@ s:So25MTLTextureCompressionTypeV8rawValueABSgSi_tcfc	implemented	test:full/metal
 s:So25MTLTextureSwizzleChannelsa3red5green4blue5alphaABSo0aB0V_A3Htcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 s:So25MTLTextureSwizzleChannelsaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 s:So26MTLCompileSymbolVisibilityV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So26_MTLAxisAlignedBoundingBoxV3min3maxABSo16_MTLPackedFloat3V_AFtcfc::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	deferred		not implemented on the Linux CPU reference
-s:So26_MTLAxisAlignedBoundingBoxVABycfc::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	deferred		not implemented on the Linux CPU reference
+s:So26_MTLAxisAlignedBoundingBoxV3min3maxABSo16_MTLPackedFloat3V_AFtcfc::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So26_MTLAxisAlignedBoundingBoxVABycfc::SYNTHESIZED::c:@T@MTLAxisAlignedBoundingBox	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So27MTLCommandBufferErrorOptionV8rawValueABSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So27MTLCommandEncoderErrorStateV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So27MTLCounterSampleBufferErrorV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3940,9 +3940,9 @@ s:So27MTLLibraryOptimizationLevelV8rawValueABSgSi_tcfc	implemented	test:full/met
 s:So27MTLSparseTextureMappingModeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So27MTLTessellationFactorFormatV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So27NSProcessPerformanceProfilea8rawValueABSi_tcfc	deferred		not implemented on the Linux CPU reference
-s:So28MTLIntersectionFunctionTableP5MetalE010setVisibleB6Tables_11bufferRangeySaySo010MTLVisiblebC0_pSgG_SnySiGtF	deferred		not in the Linux starting slice
-s:So28MTLIntersectionFunctionTableP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	deferred		not in the Linux starting slice
-s:So28MTLIntersectionFunctionTableP5MetalE12setFunctions_5rangeySaySo17MTLFunctionHandle_pSgG_SnySiGtF	deferred		not in the Linux starting slice
+s:So28MTLIntersectionFunctionTableP5MetalE010setVisibleB6Tables_11bufferRangeySaySo010MTLVisiblebC0_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not in the Linux starting slice
+s:So28MTLIntersectionFunctionTableP5MetalE10setBuffers_7offsets5rangeySaySo9MTLBuffer_pSgG_SaySiGSnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not in the Linux starting slice
+s:So28MTLIntersectionFunctionTableP5MetalE12setFunctions_5rangeySaySo17MTLFunctionHandle_pSgG_SnySiGtF	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not in the Linux starting slice
 s:So28MTLTessellationPartitionModeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So29MTLAccelerationStructureSizesa012accelerationB4Size018buildScratchBufferE005refitghE0ABSi_S2itcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testAccelerationStructureDescriptors	-
 s:So29MTLAccelerationStructureSizesaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testAccelerationStructureDescriptors	-
@@ -3950,8 +3950,8 @@ s:So29MTLAccelerationStructureUsageV8rawValueABSu_tcfc	implemented	test:full/met
 s:So29MTLDrawPatchIndirectArgumentsa10patchCount08instanceF00E5Start12baseInstanceABs6UInt32V_A3Htcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So29MTLDrawPatchIndirectArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So29MTLMathFloatingPointFunctionsV8rawValueABSgSi_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So30MTLQuadTessellationFactorsHalfa04edgeB6Factor06insidebF0ABs6UInt16V_A3Ft_AF_AFttcfc	deferred		not implemented on the Linux CPU reference
-s:So30MTLQuadTessellationFactorsHalfaABycfc	deferred		not implemented on the Linux CPU reference
+s:So30MTLQuadTessellationFactorsHalfa04edgeB6Factor06insidebF0ABs6UInt16V_A3Ft_AF_AFttcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So30MTLQuadTessellationFactorsHalfaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So31MTLRasterizationRateSampleArrayC5MetalEySfSicip	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testResidencySetAndRasterizationRateMap	-
 s:So32MTLCounterResultStageUtilizationa11totalCycles06vertexF0012tessellationF0022postTessellationVertexF008fragmentF0012renderTargetF0ABs6UInt64V_A5Jtcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So32MTLCounterResultStageUtilizationaABycfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -3960,18 +3960,18 @@ s:So32MTLMultisampleDepthResolveFilterV8rawValueABSgSu_tcfc	implemented	test:ful
 s:So33MTLRasterizationRateMapDescriptorC5MetalE10screenSize5labelABSo7MTLSizea_SSSgtcfc	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testResidencySetAndRasterizationRateMap	-
 s:So33MTLRasterizationRateMapDescriptorC5MetalE10screenSize5layer5labelABSo7MTLSizea_So0ab5LayerD0CSSSgtcfc	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testResidencySetAndRasterizationRateMap	-
 s:So33MTLRasterizationRateMapDescriptorC5MetalE10screenSize6layers5labelABSo7MTLSizea_SaySo0ab5LayerD0CGSSSgtcfc	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testResidencySetAndRasterizationRateMap	-
-s:So33MTLStageInRegionIndirectArgumentsa05stageB6Origin0fB4SizeABs6UInt32V_A2Ft_AF_A2Fttcfc	deferred		not implemented on the Linux CPU reference
-s:So33MTLStageInRegionIndirectArgumentsaABycfc	deferred		not implemented on the Linux CPU reference
+s:So33MTLStageInRegionIndirectArgumentsa05stageB6Origin0fB4SizeABs6UInt32V_A2Ft_AF_A2Fttcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So33MTLStageInRegionIndirectArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So33MTLTessellationFactorStepFunctionV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So33MTLVertexAmplificationViewMappinga24viewportArrayIndexOffset012renderTargetfgH0ABs6UInt32V_AFtcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 s:So33MTLVertexAmplificationViewMappingaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 s:So34MTLDrawPrimitivesIndirectArgumentsa11vertexCount08instanceF00E5Start12baseInstanceABs6UInt32V_A3Htcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So34MTLDrawPrimitivesIndirectArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So34MTLMultisampleStencilResolveFilterV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So34MTLTriangleTessellationFactorsHalfa04edgeB6Factor06insidebF0ABs6UInt16V_A2Ft_AFtcfc	deferred		not implemented on the Linux CPU reference
-s:So34MTLTriangleTessellationFactorsHalfaABycfc	deferred		not implemented on the Linux CPU reference
-s:So35MTLDispatchThreadsIndirectArgumentsa14threadsPerGrid0eF11ThreadgroupABs6UInt32V_A2Ft_AF_A2Fttcfc	deferred		not implemented on the Linux CPU reference
-s:So35MTLDispatchThreadsIndirectArgumentsaABycfc	deferred		not implemented on the Linux CPU reference
+s:So34MTLTriangleTessellationFactorsHalfa04edgeB6Factor06insidebF0ABs6UInt16V_A2Ft_AFtcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So34MTLTriangleTessellationFactorsHalfaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So35MTLDispatchThreadsIndirectArgumentsa14threadsPerGrid0eF11ThreadgroupABs6UInt32V_A2Ft_AF_A2Fttcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So35MTLDispatchThreadsIndirectArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So35MTLRasterizationRateLayerDescriptorC5MetalE10horizontal8verticalABSaySfG_AFtcfc	implemented	test:full/metal/tests/agent/MetalHeapTests.swift#testResidencySetAndRasterizationRateMap	-
 s:So35MTLSparseTextureRegionAlignmentModeV8rawValueABSgSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:So36MTL4CopySparseBufferMappingOperationa11sourceRange17destinationOffsetABSo8_NSRangeV_Sitcfc	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
@@ -3988,14 +3988,14 @@ s:So38MTLAccelerationStructureCommandEncoderP5MetalE12useResources_5usageySaySo1
 s:So38MTLAccelerationStructureCommandEncoderP5MetalE8useHeapsyySaySo7MTLHeap_pGF	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testAccelerationStructureCommandEncoder	-
 s:So38MTLIndirectCommandBufferExecutionRangea8location6lengthABs6UInt32V_AFtcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
 s:So38MTLIndirectCommandBufferExecutionRangeaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testGeometryHelpers	-
-s:So38MTLIntersectionFunctionBufferArgumentsa012intersectionbC00ebC4Size0eB6StrideABs6UInt64V_A2Gtcfc	deferred		not implemented on the Linux CPU reference
-s:So38MTLIntersectionFunctionBufferArgumentsaABycfc	deferred		not implemented on the Linux CPU reference
+s:So38MTLIntersectionFunctionBufferArgumentsa012intersectionbC00ebC4Size0eB6StrideABs6UInt64V_A2Gtcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So38MTLIntersectionFunctionBufferArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So38MTLLogicalToPhysicalColorAttachmentMapC5MetalEyS2icip	implemented	test:full/metal/tests/agent/MetalDeviceTests.swift#testCPUDevice	exercised by focused synchronous software-surface test
 s:So39MTL4UpdateSparseTextureMappingOperationa4mode13textureRegion0H5Level0H5Slice10heapOffsetABSo09MTLSparsedE4ModeV_So9MTLRegionaS3itcfc	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 s:So39MTL4UpdateSparseTextureMappingOperationaABycfc	implemented	test:full/metal/tests/agent/MetalCommandTests.swift#testMetal4CommandEncoders	-
 s:So39MTLAccelerationStructureInstanceOptionsV8rawValueABs6UInt32V_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:So40MTLDispatchThreadgroupsIndirectArgumentsa19threadgroupsPerGridABs6UInt32V_A2Et_tcfc	deferred		not implemented on the Linux CPU reference
-s:So40MTLDispatchThreadgroupsIndirectArgumentsaABycfc	deferred		not implemented on the Linux CPU reference
+s:So40MTLDispatchThreadgroupsIndirectArgumentsa19threadgroupsPerGridABs6UInt32V_A2Et_tcfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
+s:So40MTLDispatchThreadgroupsIndirectArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverIndirectStructs	not implemented on the Linux CPU reference
 s:So41MTLDrawIndexedPrimitivesIndirectArgumentsa10indexCount08instanceG00F5Start10baseVertex0J8InstanceABs6UInt32V_A2Is5Int32VAItcfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So41MTLDrawIndexedPrimitivesIndirectArgumentsaABycfc	implemented	test:full/metal/tests/agent/MetalGeometryTests.swift#testTriangleAndInstanceAccelerationDescriptors	-
 s:So42MTL4PipelineDataSetSerializerConfigurationV8rawValueABSu_tcfc	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
@@ -4276,7 +4276,7 @@ s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNT
 s:s20_SwiftNewtypeWrapperPsSHRzSH8RawValueSYRpzrlE4hash4intoys6HasherVz_tF::SYNTHESIZED::c:@T@NSProcessPerformanceProfile	deferred		not implemented on the Linux CPU reference
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTLBinaryArchiveError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
-s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTLCommandBufferError	deferred		not implemented on the Linux CPU reference
+s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTLCommandBufferError	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverMetal4Surface	not implemented on the Linux CPU reference
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTLCounterSampleBufferError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTLDynamicLibraryError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:s5ErrorP10FoundationE20localizedDescriptionSSvp::SYNTHESIZED::c:@E@MTLIOError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-

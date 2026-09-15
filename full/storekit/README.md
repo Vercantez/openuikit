@@ -651,3 +651,53 @@ collisions, Foundation `FormatStyle` synthesis, async
 The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`
 (Linux Swift 6.2.4; macOS hosts cannot link the Foundation-only gate because
 `View`/`EnvironmentValues` lookalikes compile only when SwiftUI is absent).
+
+## Depth pass 14 (pi wave-8 storekit sync leftovers)
+
+Follow-on over the depth-pass-13 tree. Current 15478 implemented / 52 declared
+/ 165 deferred / 0 n/a of 15695 (leftover 217). This pass audits every
+leftover row for a synchronous compiling conversion and implements the two
+rows that have one, with focused tests in
+`tests/agent/StoreKitWave8Tests.swift` (2 tests, one family each, no `await`
+/ `DispatchQueue.main` / `RunLoop` / semaphores):
+
+- `StoreDownloaderExtension` protocol: a local conforming struct passes
+  through a `some StoreDownloaderExtension` generic and an `any`
+  existential (`testStoreDownloaderExtensionProtocol`), mirroring the
+  `StoreContent`/control-style protocol-surface precedent.
+- Synthesized `!=` on `Product.SubscriptionPeriod.Unit.FormatStyle`:
+  the unit-type values are all equal, so `!=` returns false and `==`
+  returns true (`testSubscriptionUnitFormatStyleInequality`), mirroring
+  the `testStoreKitEquatableInequality` synthesized-`!=` precedent.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before wave-8 sync pass | 15478 | 52 | 165 | 0 | 0 |
+| after wave-8 sync pass | 15480 | 50 | 165 | 0 | 0 |
+
+Nondeferred stays **15530** (floor 7848): every converted row stays
+nondeferred. Unique `implemented` evidence tests: 194. Largest evidence,
+`testViewOverlayBatch17`, cites 595 rows (3.8% of 15480); no cited test
+covers more than 40% of implemented rows. Each new test cites 1 row.
+Leftover `declared` (50) is honestly non-convertible without `await`:
+async-getter Bool properties (`ExternalPurchase.canPresent`,
+`ExternalLinkAccount.canOpen`, `ExternalPurchaseLink.canOpen`,
+`ExternalPurchaseCustomLink.isEligible`, all `get async` over fail-closed
+`*Now` shims), async Apple-service entry points (`presentNoticeSheet`,
+`open`, `bind`, `purchase`, `token`, `showNotice`, async `init`s, async
+iterator `next`), and async-sequence synthesized witnesses (`max`/`min`/
+`first`/`contains` and friends). Leftover `deferred` (165) is unchanged:
+Optional/Never `StoreContent` witnesses (stdlib witnesses, never converted),
+`SwiftUI.Transaction` collisions, Foundation `FormatStyle` synthesis,
+async `EntitlementTaskState.map`/`flatMap`, `PurchaseAction`
+`callAsFunction` overloads, CryptoKit `P256` signatures, and the async
+`AdvancedCommerceProduct.latestTransaction`. Purchase / Apple Pay success
+stays fail-closed. The sealed host gate is
+`bash full/storekit/tests/acceptance/test_host.sh`; in this worktree the
+shared deliverable validator refuses before the framework stages because
+`full/framework-roadmap/framework-roadmap.json` (referenced by
+`reference/framework.json`) is absent from the isolated checkout, and the
+macOS host cannot link the Foundation-only module. The two new rows were
+validated against the gate's own evidence rules (header, unique IDs,
+evidence path/anchor regexes, top-level sync no-arg `func` patterns,
+forbidden-pattern scan, 7848 floor, 40% rule) plus `swiftc -parse`.

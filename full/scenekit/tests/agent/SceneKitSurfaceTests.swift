@@ -27,6 +27,7 @@ func testProtocolAndTypealiasSurface() {
     let _: SCNFieldForceEvaluator = { _, _, _, _, _ in SCNVector3Zero }
     _ = SCNQuaternion.self
     _ = SCNFloat.self
+    precondition(MemoryLayout<SCNFloat>.size == MemoryLayout<CGFloat>.size)
 }
 
 func testSkinnerAndProgramAndFloorExtras() {

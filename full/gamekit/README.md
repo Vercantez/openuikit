@@ -8,10 +8,19 @@ The isolated host gate (`bash tests/acceptance/test_host.sh`) compiles
 against toolchain Foundation only. It is not evidence of an integrated
 Linux guest stack with UIKit.
 
+## Depth pass 2026-09 (wave 8)
+
+**898 implemented** / **0 declared** / **21 deferred** (919 IDs).
+Nondeferred 898 is above the medium-full floor of 460. Wave 8 converted
+the last 2 declared rows (was 896 / 2 / 21): sync fail-closed
+completion-handler companions for the two `async`-only listener
+callbacks in `GKProtocols.swift`, covered by
+`GKListenerTests.swift#testGKListenerSyncCompletions`.
+
 ## Depth pass 2026-09 (wave 2)
 
-**896 implemented** / **2 declared** / **21 deferred** (919 IDs).
-Nondeferred 898 is above the medium-full floor of 460. Wave 2 converted
+Wave 2 reached 896 implemented / 2 declared / 21 deferred (919 IDs).
+It converted
 67 declared rows: 51 sync fail-closed completion-handler companions in
 `GKFailClosedCompletions.swift`, 13 `GKError` NSError-bridging members,
 2 duplicate `GKAccessPoint` trigger selectors, and 1
@@ -45,15 +54,21 @@ of the remaining non-table rows would be 208).
 - Fail-closed completions for Game Center loads, reports, matchmaking,
   identity signatures, iCloud saved games, and game sessions.
 - Sync completion-handler companions (`GKFailClosedCompletions.swift`)
-  for every `async` overlay except the two `async`-only listener
-  callbacks: achievement/score reports, leaderboard loads and entries,
+  for every `async` overlay, plus the two `async`-only listener
+  callbacks in `GKProtocols.swift`: achievement/score reports,
+  leaderboard loads and entries,
   saved-game CRUD, matchmaking, game sessions, turn-based
   exchanges/matches, cloud-player sign-in, activity-definition loads,
-  banner shows, and `GKAccessPoint` challenge-definition triggers.
+  banner shows, `GKAccessPoint` challenge-definition triggers,
+  `GKGameActivityListener.player:wantsToPlay:completionHandler:`
+  (synchronously answers `false`), and
+  `GKMatchmakerViewControllerDelegate.matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:`
+  (synchronously answers `[:]`).
   Each companion invokes its handler synchronously with
   `GKError.notAuthenticated` (or the specific `GKGameSessionError` /
-  turn-based / iCloud code) and is covered by a focused test in
-  `GKFailClosedCompletionsTests.swift`.
+  turn-based / iCloud code, or the inert listener default) and is covered
+  by a focused test in `GKFailClosedCompletionsTests.swift` (listener
+  callbacks: `GKListenerTests.swift#testGKListenerSyncCompletions`).
 - `GKError` NSError bridging (`errorDomain`, `errorCode`,
   `errorUserInfo`, `userInfo`, `code`, `hash`/`hashValue`, `==`/`!=`,
   `init`, `localizedDescription`) exercised by `testGKErrorBehavior`.
@@ -73,10 +88,10 @@ of the remaining non-table rows would be 208).
   `UIViewController` are omitted (`deferred`). View-controller classes
   exist as `NSObject` holders of local state and never present.
 - Async `async throws` overlays are kept alongside the sync
-  fail-closed companions; the two `async`-only listener callbacks
+  fail-closed companions, including the listener callbacks
   (`GKGameActivityListener.player:wantsToPlay:completionHandler:` and
-  `GKMatchmakerViewControllerDelegate.matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:`)
-  stay `declared` because the isolated runner has no run loop and
+  `GKMatchmakerViewControllerDelegate.matchmakerViewController:getMatchPropertiesForRecipient:withCompletionHandler:`),
+  whose sync companions answer `false` / `[:]` synchronously because the isolated runner has no run loop and
   cannot await them.
 
 ## Gates and markers

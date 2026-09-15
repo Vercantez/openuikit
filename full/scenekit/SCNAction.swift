@@ -1,3 +1,4 @@
+import Dispatch
 import Foundation
 
 enum _SCNActionKind {
@@ -53,6 +54,9 @@ open class SCNAction: NSObject, NSCopying, NSSecureCoding {
     public var speed: CGFloat
     public var timingMode: SCNActionTimingMode
     public var timingFunction: SCNActionTimingFunction?
+    /// Linux bookkeeping for `run(_:queue:)`. The block runs inline on the
+    /// CPU action clock; the queue hop is not performed on this host.
+    var runQueue: DispatchQueue?
     var kind: _SCNActionKind
 
     public override init() {
@@ -71,6 +75,7 @@ open class SCNAction: NSObject, NSCopying, NSSecureCoding {
         copy.speed = speed
         copy.timingMode = timingMode
         copy.timingFunction = timingFunction
+        copy.runQueue = runQueue
         switch kind {
         case .moveBy(let d):
             copy.kind = .moveBy(SCNVector3(x: -d.x, y: -d.y, z: -d.z))
@@ -98,6 +103,7 @@ open class SCNAction: NSObject, NSCopying, NSSecureCoding {
         copy.speed = speed
         copy.timingMode = timingMode
         copy.timingFunction = timingFunction
+        copy.runQueue = runQueue
         copy.kind = kind
         return copy
     }
@@ -231,6 +237,16 @@ open class SCNAction: NSObject, NSCopying, NSSecureCoding {
         let action = SCNAction()
         action.duration = 0
         action.kind = .run(block)
+        return action
+    }
+
+    /// Linux runs the block inline on the CPU action clock (same timing as
+    /// `run(_:)`); `queue` is stored as bookkeeping only.
+    public class func run(_ block: @escaping (SCNNode) -> Void, queue: DispatchQueue) -> SCNAction {
+        let action = SCNAction()
+        action.duration = 0
+        action.kind = .run(block)
+        action.runQueue = queue
         return action
     }
 

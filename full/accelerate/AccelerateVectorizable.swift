@@ -1,5 +1,7 @@
 import Foundation
 
+extension vDSP.VectorizableFloat: vDSP_DFTFunctions, vDSP_BiquadFunctions {}
+
 extension vDSP.VectorizableFloat {
     public static func makeDFTSetup<T>(
         previous: vDSP.DFT<T>? = nil,
@@ -100,6 +102,8 @@ extension vDSP.VectorizableFloat {
         }
     }
 }
+
+extension vDSP.VectorizableDouble: vDSP_DFTFunctions, vDSP_BiquadFunctions {}
 
 extension vDSP.VectorizableDouble {
     public static func makeDFTSetup<T>(

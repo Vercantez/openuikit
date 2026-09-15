@@ -146,6 +146,9 @@ func testOvRemABNNSLayers() {
     _ = BNNS.LossReduction.none
     _ = \BNNS.LossReduction.bnnsLossReductionFunction
     _ = BNNS.SparseLayout.self
+    _ = BNNS.SparseLayout.coo(indices: BNNSNDArrayDescriptor())
+    _ = BNNS.SparseLayout.csr(
+        columnIndices: BNNSNDArrayDescriptor(), rowStarts: BNNSNDArrayDescriptor())
 }
 
 func testOvRemAAdamOptimizer() {
@@ -244,6 +247,22 @@ func testOvRemAStatics() {
     _ = BNNSActivationFunctionLeakyRectifiedLinear
     _ = BNNSActivationFunctionLeakyRectifiedLinear.rawValue
     _ = BNNSOptimizerRegularizationL1
+    // macOS 26.1 / Xcode 26.1 oracle values (xcrun swiftc probe).
+    precondition(BNNSDataTypeInt8.rawValue == 131080)
+    precondition(BNNSDataTypeInt16.rawValue == 131088)
+    precondition(BNNSDataTypeInt32.rawValue == 131104)
+    precondition(BNNSDataTypeFloat16.rawValue == 65552)
+    precondition(BNNSDataTypeIndexed8.rawValue == 524296)
+    precondition(BNNSFlagsUseClientPtr.rawValue == 1)
+    precondition(BNNSPoolingFunctionMax.rawValue == 0)
+    precondition(BNNSActivationFunctionAbs.rawValue == 6)
+    precondition(BNNSActivationFunctionTanh.rawValue == 4)
+    precondition(BNNSPoolingFunctionAverage.rawValue == 1)
+    precondition(BNNSActivationFunctionSigmoid.rawValue == 3)
+    precondition(BNNSActivationFunctionIdentity.rawValue == 0)
+    precondition(BNNSActivationFunctionScaledTanh.rawValue == 5)
+    precondition(BNNSActivationFunctionRectifiedLinear.rawValue == 1)
+    precondition(BNNSActivationFunctionLeakyRectifiedLinear.rawValue == 2)
 }
 
 func testOvRemAQuadrature() {
@@ -253,4 +272,22 @@ func testOvRemAQuadrature() {
     _ = Quadrature.QAGPointsPerInterval.self
     _ = Quadrature.Error.self
     _ = QUADRATURE_SUCCESS
+    let quad = Quadrature(integrator: .qng)
+    switch quad.integrate(over: 0...1, integrand: { $0 * $0 }) {
+    case .success(let result):
+        precondition(abs(result.integralResult - 1.0 / 3.0) < 1e-6)
+    case .failure:
+        preconditionFailure("qng integrate")
+    }
+    let adaptive = Quadrature(
+        integrator: .adaptive(pointsPerInterval: .fifteen, maxIntervals: 8))
+    switch adaptive.integrate(over: 0...1, integrand: { $0 }) {
+    case .success(let result):
+        precondition(abs(result.integralResult - 0.5) < 1e-6)
+    case .failure:
+        preconditionFailure("qag integrate")
+    }
+    _ = Quadrature.Integrator.nonAdaptive
+    _ = Quadrature.QAGPointsPerInterval.twentyOne.points
+    _ = Quadrature.Error.invalidArgument.errorDescription
 }

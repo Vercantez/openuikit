@@ -12,28 +12,35 @@ Coverage of the 89 exact public identifiers:
 
 | | implemented | declared | deferred | unavailable | not-applicable |
 |---|---:|---:|---:|---:|---:|
-| Before | 42 | 14 | 33 | 0 | 0 |
-| After | 56 | 0 | 33 | 0 | 0 |
+| Before | 56 | 0 | 33 | 0 | 0 |
+| After | 66 | 0 | 23 | 0 | 0 |
 
-Raised `implemented` on the Foundation-only surface: styles, concepts,
-personalization-policy raw values, `ImageCreator` fail-closed init, and
-`ImageCreator.Error` cases plus Linux-host `CustomNSError` / `LocalizedError`
-payloads. The 20-app corpus ranks WordPress-iOS first (three files under
+Wave 8 converted the 10 deferred SwiftUI-owned identifiers to `implemented`
+with Linux-host identity lookalikes (FamilyControls overlay playbook):
+`ImagePlaygroundViewOverlays.swift` defines `View`, `EmptyView`,
+`Binding`, `Image`, and `EnvironmentValues` under `#if !canImport(SwiftUI)`
+plus the 6 `View` modifiers (`imagePlaygroundGenerationStyle`,
+`imagePlaygroundPersonalizationPolicy`, 4 `imagePlaygroundSheet` overloads)
+as no-op `Self` returns and the 4 environment values as host defaults
+(`.automatic`, `.all`, `.illustration`, `false`). The 3 new
+`testViewOverlayBatchNN` tests call every modifier on a probe `View` plus
+`EmptyView` and pin the environment defaults; no sheet is presented and the
+completion closures never fire. The 20-app corpus ranks WordPress-iOS first (three files under
 Gutenberg / MediaPicker). `scratch/ladder-corpus/focus-ios` has **zero**
 `ImagePlayground` tokens. WordPress exercises `ImagePlaygroundViewController`,
 `isAvailable`, concepts, `sourceImage`, and the delegate — all UIKit and
 therefore still deferred on this isolated host (no UIViewController substitute).
 
-Top-5 evidence distribution among 56 implemented rows (17 focused tests;
-largest non-enum-member test is 12.5%):
+Top-5 evidence distribution among 66 implemented rows (20 focused tests;
+largest non-enum-member test is 10.6%):
 
 | rows | share | evidence |
 |---:|---:|---|
-| 12 | 21.4% | `ImageCreatorErrorTests.swift#testCreatorErrorCases` (enum cases / `allCases`) |
-| 7 | 12.5% | `ImagePlaygroundStyleTests.swift#testStyleCatalog` |
-| 5 | 8.9% | `ImagePlaygroundStyleTests.swift#testStyleEqualityAndHashing` |
-| 5 | 8.9% | `ImageCreatorErrorPayloadTests.swift#testCreatorErrorLocalizedPayload` |
-| 4 | 7.1% | `ImagePlaygroundPersonalizationPolicyTests.swift#testPersonalizationPolicyCases` |
+| 12 | 18.2% | `ImageCreatorErrorTests.swift#testCreatorErrorCases` (enum cases / `allCases`) |
+| 7 | 10.6% | `ImagePlaygroundStyleTests.swift#testStyleCatalog` |
+| 5 | 7.6% | `ImageCreatorErrorPayloadTests.swift#testCreatorErrorLocalizedPayload` |
+| 5 | 7.6% | `ImagePlaygroundStyleTests.swift#testStyleEqualityAndHashing` |
+| 4 | 6.1% | `ImagePlaygroundViewOverlayTests.swift#testViewOverlayBatch01` (tied) |
 
 ## Reference dossier
 
@@ -58,6 +65,15 @@ Kept the **monorepo** `full/imageplayground/reference/` from the seed.
   unobserved. The documented “automatic equals enabled by default” applies to
   UI personalization, not to enum identity — the cases stay distinct.
 - `ImageCreator.init()` always throws `ImageCreator.Error.unavailable`.
+- SwiftUI identity overlays (`ImagePlaygroundViewOverlays.swift`, isolated host
+  only): `imagePlaygroundGenerationStyle`,
+  `imagePlaygroundPersonalizationPolicy`, and the four
+  `imagePlaygroundSheet` overloads return `self`; no sheet presentation, no
+  style/policy propagation, completion closures never invoked.
+- SwiftUI environment lookalikes: `imagePlaygroundPersonalizationPolicy`
+  (`.automatic`), `imagePlaygroundAllowedGenerationStyles` (`.all`),
+  `imagePlaygroundSelectedGenerationStyle` (`.illustration`), and
+  `supportsImagePlayground` (`false`, fail-closed). Darwin values unobserved.
 - `ImageCreator.Error` cases, `Equatable` / `Hashable` / `CaseIterable`.
   `errorDomain` is the Linux-host string `ImagePlayground.ImageCreator.Error`.
   `errorCode` follows `allCases` order from 0. `errorDescription` /
@@ -71,14 +87,13 @@ PencilKit. Those dependency-bearing APIs are compiled only under
 `#if canImport(...)`. There is no NSObject, CGImage, UIViewController, View,
 or PKDrawing substitute.
 
-Deferred on this host (33 identifiers):
+Deferred on this host (23 identifiers):
 
 - `ImagePlaygroundViewController` (must subclass `UIKit.UIViewController`)
 - `CreatedImage.cgImage` (must be real `CGImage`)
 - `ImageCreator.images(for:style:limit:)`
 - `ImagePlaygroundConcept.image(CGImage)` and `drawing(PKDrawing)`
-- SwiftUI `View` / `EnvironmentValues` overlays, including
-  `imagePlaygroundSheet` and `supportsImagePlayground`
+- `ImageCreator.images(for:style:limit:)` (must yield real `CGImage` frames)
 
 No Apple Image Playground service, Photos personalization, or generated image
 bytes. Completions never invent a created-image URL.

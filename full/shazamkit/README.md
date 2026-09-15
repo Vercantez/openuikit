@@ -56,6 +56,7 @@ rather than awaited.
 Coverage: **183 implemented** / 28 declared / 6 deferred / 0 unavailable /
 2 not-applicable (211 nondeferred, floor 176). Wave 2026-09-15 recount: counts
 unchanged (183/28/6/2 of 219). pi-wave6 2026-09-15 recount: before 183/28/6/2,
+after 183/28/6/2 (gain 0). pi-wave8 2026-09-15 recount: before 183/28/6/2,
 after 183/28/6/2 (gain 0). All 28 declared rows are `async` product APIs
 (`fetch`, library `add`/`addItems`/`removeItems`, `prepare`/`result`,
 `SHSession.result(from:)`, both `Iterator.next` variants) or `async`
