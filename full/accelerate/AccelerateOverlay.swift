@@ -51,6 +51,7 @@ public enum BNNS {
     public class ActivationLayer: UnaryLayer {
     }
     public struct AdamOptimizer {
+        public init() {}
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
         public var usesAMSGrad: Bool {
             get { preconditionFailure("Accelerate Linux: unread property") }
@@ -99,6 +100,7 @@ public enum BNNS {
         }
     }
     public struct AdamWOptimizer {
+        public init() {}
         public var weightDecay: Float {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }
@@ -519,6 +521,7 @@ public enum BNNS {
         case huber(huberDelta: Float)
         public var bnnsLossFunction: BNNSLossFunction { preconditionFailure("Accelerate Linux: unread property") }
         public struct YoloParameters {
+            public init() {}
             public var huberDelta: Float {
                 get { preconditionFailure("Accelerate Linux: unread property") }
                 set { _ = newValue }
@@ -588,6 +591,7 @@ public enum BNNS {
         public var bnnsLossReductionFunction: BNNSLossReductionFunction { preconditionFailure("Accelerate Linux: unread property") }
     }
     public struct NearestNeighbors {
+        public init() {}
     }
     @frozen public struct Norm: Equatable, Hashable, Sendable {
         public var rawValue: Float
@@ -631,6 +635,7 @@ public enum BNNS {
         public var bnnsPoolingFunction: BNNSPoolingFunction { preconditionFailure("Accelerate Linux: unread property") }
     }
     public struct RMSPropOptimizer {
+        public init() {}
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
         public var learningRate: Float {
             get { preconditionFailure("Accelerate Linux: unread property") }
@@ -727,6 +732,7 @@ public enum BNNS {
     public class ResizeLayer: UnaryLayer {
     }
     public struct SGDMomentumOptimizer {
+        public init() {}
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
         public var learningRate: Float {
             get { preconditionFailure("Accelerate Linux: unread property") }
@@ -1685,6 +1691,7 @@ public enum vImage {
         public var height: vImagePixelCount { preconditionFailure("Accelerate Linux: unread property") }
     }
     public struct MultidimensionalLookupTable {
+        public init() {}
         public var sourceChannelCount: Int {
             get { preconditionFailure("Accelerate Linux: unread property") }
             set { _ = newValue }

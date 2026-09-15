@@ -401,6 +401,13 @@ extension CMSampleBuffer {
         return .dataBuffer
     }
 
+    /// Swift overlay for the `taggedBuffers` getter. This Linux port never
+    /// constructs tagged-content sample buffers (`contentType` never reports
+    /// `.taggedBuffers`), so the truthful value is always `nil`.
+    public var taggedBuffers: [CMTaggedBuffer]? {
+        nil
+    }
+
     public var dataReadiness: DataReadiness {
         if let failed = currentDataFailedStatus() { return .failed(failed) }
         return dataIsReady ? .ready : .notReady

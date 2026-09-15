@@ -42,14 +42,17 @@ named-range catalogs share table-driven value tests.
 Coverage of the 1035 exact public identifiers:
 
 - **before:** 178 implemented / 1 declared / 5 deferred / 851 unavailable / 0 not-applicable
-- **after:** 213 implemented / 0 declared / 5 deferred / 25 unavailable / 792 not-applicable
+- **after (foundation):** 213 implemented / 0 declared / 5 deferred / 25 unavailable / 792 not-applicable
+- **after (overlay):** 1005 implemented / 0 declared / 5 deferred / 25 unavailable / 0 not-applicable
 
 This second pass keeps the first-pass Foundation engine and tests. It adds a
 real JSON datastore, public `Tips.Rule(parameter/event, predicate)` evaluation,
 display-frequency arithmetic against a fixed clock, persisted
 `Tips.Parameter` values, and `TipView` / `TipViewStyle` / `TipUI*`
 configuration models. SwiftUI `View` overlay re-exports (`s:7SwiftUI4View…`)
-are `not-applicable` (owned by the SwiftUI lane). Only members that need
+were `not-applicable` (owned by the SwiftUI lane) after this pass; the pi
+wave 7 overlay pass below converts them to implemented identity overlays.
+Only members that need
 `UIColor`, `Edge`, `ShapeStyle`, `Binding`, or a `View` body stay
 `unavailable`. `#Rule` / `@Event` macros are not separate public-surface rows;
 the expanded Rule spelling is implemented.
@@ -64,6 +67,37 @@ Top-5 evidence distribution (share of the 213 implemented rows):
 
 No non-enum test is cited by more than 40% of implemented rows. Display
 frequency cases share `testDisplayFrequencyHourlyWeeklyMonthlyImmediate`.
+
+## Overlay pass 2026-09 (pi wave 7)
+
+Coverage of the 1035 exact public identifiers:
+
+- **before:** 213 implemented / 0 declared / 5 deferred / 25 unavailable / 792 not-applicable
+- **after:** 1005 implemented / 0 declared / 5 deferred / 25 unavailable / 0 not-applicable
+
+Following the PassKit 100% / StoreKit overlay conversions on main, the 792
+`not-applicable` SwiftUI cross-import overlay rows (`s:7SwiftUI4ViewP6TipKitE…`
+TipKit modifiers plus the synthesized `s:7SwiftUI4ViewPAAE…` View surface)
+are implemented as identity View overlays. `TipKitLookalikes.swift` defines
+the isolated-host `View` / `EmptyView` / `ViewBuilder` lookalikes (compiled
+out when real SwiftUI is present) and conforms `TipView` to `View` with an
+`EmptyView` body. `TipKitViewSurface.swift` exposes the 409 distinct
+modifier base names as no-op `Self` returns callable with zero arguments.
+`tests/agent/TipKitViewOverlayTests.swift` pins each modifier on
+`TipView(TipKitOverlayHostTip())` plus `EmptyView` across ten
+`testViewOverlayBatchNN` functions.
+
+Top-5 evidence distribution (share of the 1005 implemented rows):
+
+1. `testViewOverlayBatch09` — 103 (10.2%)
+2. `testViewOverlayBatch02` — 102 (10.1%)
+3. `testViewOverlayBatch04` — 101 (10.0%)
+4. `testViewOverlayBatch10` — 83 (8.3%)
+5. `testViewOverlayBatch03` — 76 (7.6%)
+
+No test is cited by more than 40% of implemented rows. The 5 deferred rows
+need `SwiftUI.Text` labels; the 25 unavailable rows need `UIColor`, `Edge`,
+`ShapeStyle`, `Binding`, or a `View` body.
 
 Environment: `git rev-parse HEAD` was `dd4c8bca7e8735289928bbd1abd44f4b35815308`.
 `swiftc` is Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
@@ -124,7 +158,8 @@ The public Foundation engine compiles to `libTipKit.dylib`.
 - `MaxDisplayDuration` is stored and does not expire a tip without a displayed-
   duration clock.
 - SwiftUI `View` modifiers (`popoverTip`, `tipViewStyle`, and the synthesized
-  `View` overlay) are not-applicable; they belong to the SwiftUI lane.
+  `View` overlay) are identity overlays: each returns `Self` and renders
+  `EmptyView` on Linux. They do not perform layout.
 
 ## Still open
 

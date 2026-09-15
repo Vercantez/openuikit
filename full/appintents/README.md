@@ -35,6 +35,34 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 14 | 3125 | 677 | 1196 | 0 | 1588 | 3802 |
 | After wave 15 | 3231 | 571 | 1196 | 0 | 1588 | 3802 |
 | After wave 16 | 3331 | 537 | 1130 | 0 | 1588 | 3868 |
+| After wave 17 | 4933 | 505 | 1130 | 0 | 18 | 5438 |
+
+Wave 17 (this increment) converts the 1,588-row SwiftUI overlay
+`not-applicable` block to `implemented` following the PassKit/StoreKit
+playbook, plus 32 declared-depth rows, with twelve synchronous batches in
+`tests/agent/AppIntentsViewOverlayTests.swift` (1,570 rows, largest batch
+cites 293) and six synchronous tests in
+`tests/agent/AppIntentsDeclaredDepthTests.swift` (32 rows). Each leftover
+`View` modifier is invoked on `SiriTipView`, `ShortcutsLink`, and
+`EmptyView`; Linux renders `EmptyView` and the modifiers are identity
+`Self` returns already compiling in `AppIntentsViewStubs.swift`, which this
+pass collapses from 569 generic overloads to one `Any?`-parameter overload
+per each of the 404 modifier names so no-argument calls are unambiguous
+(the max-arity label sets are kept, preserving the `file` and
+`configuration` declared anchors). The 18 remaining `not-applicable` rows
+are `Button`/`Toggle` `intent:` initializers: constructing an
+intent-executing control would claim Siri execution, so they stay
+fail-closed. Depth tests pin inert UIKit overlay state (`ShortcutsUIButton`
+/ `SiriTipUIView` construction, defaults, echoing `sizeThatFits`,
+`setIntent`), overlay `body`/`Style` identities (`ShortcutsLinkStyle`
+`dark`/`light` do not exist and stay declared), the fail-closed
+`SetFocusFilterIntentError` catalog, placeholder builders, empty prediction
+containers, and stored `@Parameter` title/optionality plus default
+`parameterSummary` / `systemContext`. Async `requestValue` /
+`requestConfirmation` / `donate`, View-taking result factories, macros,
+Siri daemon behavior, and service success stay fail-closed or declared.
+This pass also repairs one stale declared anchor (`#widgetFamily` →
+`#WidgetFamily`; the member never existed, only the enum).
 
 Wave 16 (this increment) implements remaining portable data-model
 surface with nine synchronous tests in
@@ -130,16 +158,17 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 176 | 6.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
-| 174 | 6.4% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
-| 157 | 5.8% | `AppIntentsWave12Tests.swift#testIntentParameterRemainingMeasurementDefaultUnitInits` |
-| 153 | 5.6% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueStorageMatrix` |
-| 147 | 5.4% | `AppIntentsWave11Tests.swift#testEntityPropertyConcreteValueAccessorMatrix` |
+| 293 | 5.9% | `AppIntentsViewOverlayTests.swift#testViewOverlayBatch01` |
+| 176 | 3.6% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
+| 174 | 3.5% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
+| 170 | 3.4% | `AppIntentsViewOverlayTests.swift#testViewOverlayBatch09` |
+| 157 | 3.2% | `AppIntentsWave12Tests.swift#testIntentParameterRemainingMeasurementDefaultUnitInits` |
 
-No test is cited by more than 176 rows (5.3% of implemented rows, well
+No test is cited by more than 293 rows (5.9% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
 Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
-each.
+each. Wave-17 overlay batches cite at most 293 rows each; depth tests cite
+at most 12 rows each.
 New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.

@@ -89,8 +89,9 @@ entitlements, or hardware. They never invent success:
 - `CLRegion`, `NSXPCConnection`, `NSComparisonPredicate.Operator`, and
   `MTRSetupPayload` signatures are `unavailable` (Foundation-only
   dependencies).
-- SwiftUI `CameraView` and `_HomeKit_SwiftUI` View modifiers are
-  `not-applicable`.
+- SwiftUI `CameraView` and `_HomeKit_SwiftUI` View modifiers were
+  `not-applicable` through wave 10; the pi-wave7 overlay pass converts all
+  776 to `implemented` as identity no-op overlays (see below).
 
 ### Declared
 
@@ -239,5 +240,54 @@ Environment: `swiftc` on this Mac reports Swift 6.2.4. The sealed
 `tests/acceptance/test_host.sh` runner phase generates `import Glibc`, which
 cannot compile on macOS; instead the product dylib plus all `*Tests.swift`
 were compiled with `-warnings-as-errors` and a local runner invoked all 45
+unique cited tests, exited 0, and printed only
+`HOMEKIT_AGENT_RUNTIME_OK`.
+
+## Overlay pass 2026-09 (pi-wave7)
+
+This pass converts the 776 leftover `not-applicable` rows (the
+`_HomeKit_SwiftUI.CameraView` struct, its `init(source:)` / `Body` / `body`,
+and 772 SwiftUI `View` modifiers synthesized onto it) to `implemented`,
+following the PassKit 100% / StoreKit / FamilyControls overlay playbook.
+Coverage moved from **1508 implemented / 3 declared / 0 deferred / 8
+unavailable / 776 not-applicable** to **2284 implemented / 3 declared / 0
+deferred / 8 unavailable / 0 not-applicable**. The implemented gain is
+**+776**.
+
+Product addition (`full/homekit/HMViewSurface.swift`, in the guest manifest):
+
+- Linux-host `View` / `EmptyView` / `ViewBuilder` lookalikes, compiled only
+  when SwiftUI cannot be imported (isolated host).
+- `CameraView: View` storing its `HMCameraSource` with an `EmptyView` body.
+  Darwin marks it `@MainActor @preconcurrency`; Linux omits the actor
+  annotation so synchronous tests can construct it (its `init` is
+  `nonisolated` upstream). It never presents camera UI; RTP/HAP sessions
+  stay fail-closed as documented above.
+- 401 identity `View` modifiers (one per distinct demangled base name behind
+  the 772 overloads), each a no-op `Self` return callable with zero
+  arguments.
+
+Tests (`tests/agent/HomeKitViewOverlayTests.swift`):
+
+- `testCameraViewIdentity` constructs `CameraView(source:)` and reads
+  `body` / `Body` (4 rows).
+- `testViewOverlayBatch01`–`testViewOverlayBatch08` call every modifier on
+  `CameraView` plus `EmptyView` (72–130 rows each; largest share is
+  130/2284 = 5.7%, far under the 40% cap). No `DispatchQueue`,
+  `RunLoop`, semaphore waits, or `await`.
+
+The 3 remaining `declared` rows are unchanged: `HMCameraView`, its `init`,
+and its `cameraSource` are `@MainActor`-isolated, so no synchronous
+nonisolated agent test can construct the class or touch its members.
+
+Environment: `swiftc` on this Mac reports Swift 6.2.1. The sealed
+`tests/acceptance/test_host.sh` runner phase generates `import Glibc`, which
+cannot compile on macOS, and macOS resolves real SwiftUI (compiling the
+`#if !canImport(SwiftUI)` lookalikes out, as in the PassKit/StoreKit lanes).
+Verification therefore used two local builds, both with
+`-warnings-as-errors`: (1) the real tree (product dylib compiles clean
+against Apple SwiftUI); (2) a scratch copy with the `canImport(SwiftUI)`
+branches flipped to simulate the SwiftUI-less Linux host, where the product
+dylib plus all `*Tests.swift` compiled and a local runner invoked all 54
 unique cited tests, exited 0, and printed only
 `HOMEKIT_AGENT_RUNTIME_OK`.

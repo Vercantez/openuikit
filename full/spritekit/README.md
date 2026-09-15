@@ -26,6 +26,9 @@ are a secondary cross-check for raw values; their implementations are not copied
 - Physics: Euler integration, AABB contacts/bitmasks, joints, field sampling
   (Linux PhysicsKit stand-in, not bit-identical to Apple)
 - Sprites, labels, shapes, textures (data / noise / `CGImage` lookalike), atlases
+- SwiftUI `SpriteView` overlay: inert `View` with scene/transition/fps/options
+  inits, `Options` / `DebugOptions` option sets, and 401 identity View
+  modifiers (no-op `Self` returns; Linux renders `EmptyView`)
 - Emitters + keyframe sequences (linear/step; spline uses linear mix)
 - Tile definitions / groups / sets / maps; named and URL tile sets return `nil`
 - Constraints, ranges, regions, warp grids, attributes, uniforms, shaders
@@ -41,7 +44,8 @@ build (`SpriteKitDependencyIdentity.swift`).
 
 - No `.sks` / named-action / named-tile-set archives (`nil` or `SKArchiveError`)
 - No Metal `SKRenderer`, GPU frame loop, or shader compilation
-- No SwiftUI `SpriteView` overlay (843 identifiers)
+- `SpriteView` renders `EmptyView`; 44 stdlib SetAlgebra/OptionSet/Sequence
+  witnesses on its option sets stay `not-applicable`
 - No AVPlayer / AVAudioEngine success, no CIFilter, no UIImage texture loader
 - No GLKit vector/matrix uniform overloads
 - No SceneKit `SK3DNode` scene / hit-test types
@@ -104,6 +108,55 @@ Metal/SceneKit/AVFoundation/GLKit/CIFilter/UIKit-touch/Playground rows are
 The enum/option-set table is the allowed shared value test (200). Of the remaining
 791 implemented rows, the largest non-enum citation is
 `testConstraintsRangeRegionWarp` at 95 (12.0%, under the 40% bulk-relabel ceiling).
+
+## Overlay pass 2026-09 (pi wave 7)
+
+Identity `SwiftUI.View` modifier overlay conversion (PassKit / StoreKit /
+FamilyControls playbook). `SpriteView` becomes a real inert overlay type and
+every synthesized `s:7SwiftUI4ViewPAAE…::s:18_SpriteKit_SwiftUI0A4ViewV`
+modifier becomes an `implemented` no-op `Self` identity call, pinned by
+`tests/agent/SpriteKitViewOverlayTests.swift` batches on `SpriteView` plus
+`EmptyView`. 44 stdlib SetAlgebra/OptionSet/Sequence witnesses stay
+`not-applicable` per the coverage contract (not SpriteKit-owned).
+
+| status | before (wave 8) | after (overlay) |
+| --- | ---: | ---: |
+| implemented | 991 | 1790 |
+| declared | 0 | 0 |
+| deferred | 0 | 0 |
+| unavailable | 49 | 49 |
+| not-applicable | 843 | 44 |
+
+Implemented gain: **+799** (772 View-modifier specializations across 401 base
+names in 9 `testViewOverlayBatchNN` functions, plus 27 `SpriteView` /
+`Options` / `DebugOptions` / init / body rows in `testSpriteViewOverlay`).
+Notes read `identity View overlay; renders EmptyView`.
+
+**Top-5 implemented evidence (of 1790):**
+
+| citations | evidence |
+| ---: | --- |
+| 200 | `test:full/spritekit/tests/agent/SpriteKitEnumTests.swift#testEnumAndOptionSetValues` |
+| 113 | `test:full/spritekit/tests/agent/SpriteKitViewOverlayTests.swift#testViewOverlayBatch03` |
+| 99 | `test:full/spritekit/tests/agent/SpriteKitViewOverlayTests.swift#testViewOverlayBatch08` |
+| 96 | `test:full/spritekit/tests/agent/SpriteKitViewOverlayTests.swift#testViewOverlayBatch02` |
+| 95 | `test:full/spritekit/tests/agent/SpriteKitParticleTests.swift#testConstraintsRangeRegionWarp` |
+
+The largest citation is the enum table at 200 (11.2%, under the 40%
+bulk-relabel ceiling). New product files: `SpriteKitLookalikes.swift`
+(`View`/`EmptyView`/`ViewBuilder` host stand-ins), `SpriteKitViewOverlay.swift`
+(`SpriteView` + option sets), `SpriteKitViewSurface.swift` (401 identity
+modifiers). `SpriteView.Options` / `DebugOptions` raw values are Linux-host
+bit assignments; an oracle question records the unobserved Apple values.
+
+Environment: this pod runs macOS `swiftc` (Swift 6.2.1 /
+`arm64-apple-macosx26.0`), where `canImport(CoreGraphics)` / `canImport(SwiftUI)`
+are true, so the sealed Linux host gate cannot link here (its runner imports
+`Glibc`, and the product tree targets the Linux lookalike path). The pristine
+tree fails `tests/acceptance/test_host.sh` identically in this pod
+(pre-existing environmental failure, unrelated to this pass). Overlay code was
+validated by compiling the three new product files plus the new test file with
+the SwiftUI-absent path forced and executing all 10 cited tests (`SKMINI_OK`).
 
 Environment: `git rev-parse HEAD` matched
 `bff8535c68425cc39fb45cb00d447b0981b57242`.

@@ -815,6 +815,11 @@ func testAVCaptureDeviceFormatFailClosedModel() {
     precondition(format.supportedDepthDataFormats.isEmpty)
     precondition(format.unsupportedCaptureOutputClasses.isEmpty)
     precondition(!format.isAutoVideoFrameRateSupported)
+    precondition(format.secondaryNativeResolutionZoomFactors.isEmpty)
+    precondition(format.supportedVideoZoomFactorsForDepthDataDelivery.isEmpty)
+    precondition(format.supportedVideoZoomRangesForDepthDataDelivery.isEmpty)
+    precondition(format.systemRecommendedVideoZoomRange == nil)
+    precondition(format.systemRecommendedExposureBiasRange == nil)
 }
 
 func testAVCaptureConnectionAndDeviceInputModel() {

@@ -594,3 +594,60 @@ collisions, Foundation `FormatStyle` synthesis, async
 `callAsFunction` overloads. Apple Pay / purchase success stays
 fail-closed. The sealed host gate is
 `bash full/storekit/tests/acceptance/test_host.sh`.
+
+## Depth pass 13 (pi wave-7 storekit overlay conversion)
+
+Overlay conversion over the depth-pass-12 tree. All 7,301 leftover
+`s:7SwiftUI4ViewP...` rows marked `not-applicable` (`SwiftUI
+cross-import overlay; owned by the SwiftUI lane`) are now `implemented`
+via the same identity-overlay playbook (PassKit 100% / StoreKit pass 12):
+
+- `StoreKitViewOverlayIdentity.swift` gains 216 new public no-op identity
+overlaps (`public func <name>(_ p0: Any? = nil) -> Self { self }`,
+compiled only when SwiftUI is absent), covering all 217 distinct Swift
+method base names in the leftover census (430 mangled bases: 38
+StoreKit-owned `010_StoreKit` modifiers such as
+`subscriptionStoreButtonLabel`, `productViewStyle`, `appStoreOverlay`,
+`refundRequestSheet`, `manageSubscriptionsSheet`, `currentEntitlementTask`,
+`subscriptionStatusTask`, `storeProductTask`, plus 392 generic SwiftUI
+`ViewPAAE` modifiers such as `searchable`, `background`, `confirmationDialog`,
+`accessibilityRotor`). The 217th name, `navigationSubtitle`, reuses the
+pass-12 overload, so no new method was needed for its 45 rows.
+- `tests/agent/StoreKitViewOverlayTests.swift` gains 24 new top-level
+synchronous no-argument `testViewOverlayBatch17`...`testViewOverlayBatch40`
+functions (40 batches total). Each batch calls its assigned base names with
+an explicit `nil` argument on `ProductView<EmptyView, EmptyView>`,
+`StoreView<EmptyView, EmptyView>`, `SubscriptionStoreButton`, and
+`EmptyView` (4 calls per modifier, no `await` / `DispatchQueue.main` /
+`RunLoop` / semaphores). The explicit `nil` pins resolution to the safe
+identity overloads: several real signatures carry defaults or take no
+arguments (e.g. `bold(_:_:)`, `colorInvert()`, `hidden()`), where a bare
+zero-argument call would be ambiguous or would resolve to the `EmptyView`
+returning surface overloads instead of the identity `Self` returns. Neither
+form can reach the `fatalError` `ModifiedContent` legacy overloads, which
+require arguments.
+- Every converted row cites its batch test with note `identity View
+overlay; renders EmptyView`.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before overlay conversion (pass 12) | 8177 | 52 | 165 | 0 | 7301 |
+| after pi wave-7 conversion | 15478 | 52 | 165 | 0 | 0 |
+
+Nondeferred is **15530** (floor 7848). Unique `implemented` evidence tests:
+192. Largest evidence, `testViewOverlayBatch17` (`searchable`, 35 bases),
+cites 595 rows (3.8% of 15478); no cited test covers more than 40% of
+implemented rows. Leftover `declared` (52) is unchanged and honestly
+non-convertible: StoreKit-owned async Apple-service entry points the
+synchronous harness cannot execute (`ExternalPurchase`, `ExternalLinkAccount`,
+`ExternalPurchaseLink`, `ExternalPurchaseCustomLink`, `PaymentMethodBinding`,
+`AdvancedCommerceProduct` purchase/token), dependency-owned
+`StoreDownloaderExtension`, async-sequence synthesized witnesses, and the
+CryptoKit/FormatStyle synthesis witnesses. Leftover `deferred` (165) is
+unchanged: Optional/Never `StoreContent` witnesses, `SwiftUI.Transaction`
+collisions, Foundation `FormatStyle` synthesis, async
+`EntitlementTaskState.map`/`flatMap`, and `PurchaseAction`
+`callAsFunction` overloads. Purchase / Apple Pay success stays fail-closed.
+The sealed host gate is `bash full/storekit/tests/acceptance/test_host.sh`
+(Linux Swift 6.2.4; macOS hosts cannot link the Foundation-only gate because
+`View`/`EnvironmentValues` lookalikes compile only when SwiftUI is absent).

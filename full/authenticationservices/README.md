@@ -9,7 +9,7 @@ is a later central-review step.
 The isolated host compile imports **Foundation only**. There is no UIKit,
 SwiftUI, CryptoKit, or FoundationNetworking module on this Linux gate.
 
-Coverage for this pass: **1248 implemented / 0 declared / 848 deferred**
+Coverage for this pass: **2052 implemented / 0 declared / 44 deferred**
 of 2096 public precise IDs. The
 `ASWebAuthenticationSession`, `ASAuthorizationController`,
 `ASAuthorizationAppleIDProvider` / `Request` / `Credential`, and
@@ -148,7 +148,7 @@ to implemented; the requested 200-row behavioral gain is not representable in
 this input without falsely claiming cross-import overlays or dependency-owned
 APIs.
 
-Top-five implemented evidence distribution after this wave:
+Top-five implemented evidence distribution after wave 8:
 
 1. `testImportableCredentialAllCasesRoundTrip` — 273 rows (21.65%).
 2. `testImportableCredentialCodableRoundTrip` — 112 rows (8.88%).
@@ -156,7 +156,53 @@ Top-five implemented evidence distribution after this wave:
 4. `testPasskeyAssertionAndRegistrationCredentials` — 52 rows (4.12%).
 5. `testSettingsHelperVerificationAndErrorWitnesses` — 48 rows (3.81%).
 
-The sealed host gate completed with the environment, deliverable, reference,
-agent-runtime, and dylib host markers. The unresolved Apple-oracle questions
-remain in `oracle-questions.tsv`; this wave does not infer service success,
-callback semantics, UI behavior, or cryptographic key representations.
+## Overlay pass 2026-09 (pi wave 7)
+
+Ledger before this wave: **1261 implemented / 0 declared / 38 deferred /
+0 unavailable / 797 not-applicable**. Ledger after this wave: **2052
+implemented / 0 declared / 44 deferred / 0 unavailable / 0
+not-applicable**.
+
+This wave converts the 797 SwiftUI cross-import overlay rows per the
+coverage-contract override (identity `View` overlays compile as no-op
+`Self` returns; the SwiftUI lane does not implement them). New product
+source `AuthenticationServicesViewOverlay.swift` (in the guest manifest)
+provides the inert `_AuthenticationServices_SwiftUI` surface for the
+isolated host behind `#if !canImport(SwiftUI)`: `SignInWithAppleButton`
+(+ `Label` / `Style`, `Body` / `body`, the synchronous
+`onRequest:onCompletion:` initializer), `AuthorizationController` with
+fail-closed `async throws` request methods, the four overlay
+`EnvironmentValues` properties, and 395 identity `View` modifiers
+covering every `s:7SwiftUI4ViewP*` base name in the census. New tests in
+`tests/agent/AuthenticationServicesViewOverlayTests.swift` call each
+leftover modifier on the button plus the empty view across eight
+`testViewOverlayBatchNN` functions (96–97 rows each, ≤4.73% of
+implemented rows), with focused witnesses for the button family, the
+environment values, and the controller identity. Notes read `identity
+View overlay; renders EmptyView`.
+
+Six `AuthorizationController.perform*` async rows move to deferred:
+request success would claim Apple-daemon authorization, which stays
+fail-closed on Linux, and cited tests cannot `await`. The remaining 38
+deferred rows are unchanged (UIKit view-controller/anchor identity,
+FoundationNetworking response identity, CryptoKit key identity, WebKit
+request facets). Passkey / web-authentication session success stays
+fail-closed; no `await`, `DispatchQueue.main`, `RunLoop`, or semaphore
+waits appear in the cited overlay tests.
+
+Top-five implemented evidence distribution after this wave:
+
+1. `testImportableCredentialAllCasesRoundTrip` — 273 rows (13.30%).
+2. `testImportableCredentialCodableRoundTrip` — 112 rows (5.46%).
+3. `testPublicKeyCredentialParametersAndPRF` — 107 rows (5.21%).
+4. `testViewOverlayBatch06` — 97 rows (4.73%).
+5. `testViewOverlayBatch01` — 97 rows (4.73%).
+
+The shared deliverable/reference validators pass on the Linux-gate code
+path; the sealed gate's final runner step requires a Linux toolchain
+(`import Glibc` does not compile under the macOS SDK). Product and test
+sources compile warning-free and the runner emits only the exact success
+marker when the runner is built against the macOS SDK equivalent. The
+unresolved Apple-oracle questions remain in `oracle-questions.tsv`; this
+wave does not infer service success, callback semantics, UI behavior, or
+cryptographic key representations.

@@ -640,3 +640,86 @@ still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionA
 prints marker-only stdout (`COREMEDIA_MACOS_PROBE_OK`, debug lines on stderr).
 The sealed gate's final stage remains Linux-only (`import Glibc` in the generated
 runner). No new product files; the guest sources manifest is unchanged.
+
+## Depth pass 2026-09-15 (coremedia prompt: concrete witnesses / family aliases / timing arrays)
+
+No SwiftUI/View overlay rows exist in this module's public surface (zero
+`coverage.tsv` IDs mention SwiftUI or View), so the overlay-override clause
+has nothing to convert. This pass converts honestly exercisable declared
+witnesses with concrete (non-generic) calls plus a small set of deferred
+family members:
+
+- `CMWitnessDepthTests.swift#testCMDataBlockBufferConcreteWitnesses` (34 rows)
+  and `#testCMDataBlockBufferRegionWitnesses` (52 rows) call `difference`
+  (both overloads), `max` / `min` / `sorted` / `contains`,
+  `index(offsetBy:limitedBy:)`, `removingSubranges`, `drop(while:)`, both
+  `split` forms, `shuffled` / `randomElement` (shape-only assertions),
+  `_StringProcessing` `firstRange` / `ranges` / `trimmingPrefix` (both forms),
+  Foundation `DataProtocol` `firstRange` / `lastRange` (both arities), and —
+  on the read-only host only — `count`, `subscript(...)`,
+  `removeFirst` / `removeLast` / `popFirst` / `popLast` (value semantics
+  preserved: mutation replaces the shared storage), and mutating
+  `trimPrefix` (both forms) on all three byte projections.
+- `#testCMOptionSetArrayLiteralWitnesses` forms `EqualityMask`,
+  `TimeCode.Flag`, and `FontFace` through array literals (3 rows).
+- `#testCMTagAndSampleReferenceInequality` asserts `!=` on `CMTag`,
+  `CMTag.Value`, and `CMSampleDataReference` (3 rows; hosts exist in this
+  port — prior "host absent" notes were stale).
+- `#testCMSampleBufferFamilyWitnesses` names the four `T` typealiases
+  (`CMTimebase.T`, `CMBlockBuffer.T`, `CMSampleBuffer.T`,
+  `CMFormatDescription.T` — already present in product, previously uncited),
+  plus new product members `sampleTimingInfos()` /
+  `outputSampleTimingInfos()` (uniform single entry expands across all
+  samples, mirroring `sampleTimingInfo(at:)`; output equals sample timings
+  — the port stores no trim/derive state) and `taggedBuffers` (always `nil`:
+  the port never constructs tagged content). Existing
+  `testCMSampleBufferContentTypeAndNotificationKey` and
+  `testCMSampleBufferDataReadinessStateMachine` now also cite the matching
+  `contentType` / `dataReadiness` property rows (2 rows; members already
+  existed and were already exercised).
+
+Kept out (stay declared/deferred as recorded): Foundation
+`DataProtocol.copyBytes` / `ContiguousBytes.copy` (keep-list), Combine
+`publisher`, Foundation `sorted(using:)` / `compare` / `formatted` (no
+`SortComparator` / `FormatStyle` exists for these hosts), the deprecated
+optional-`flatMap` on `Buffers` (warns under `-warnings-as-errors`),
+DispatchSource timer overloads (live `DispatchSource` aborts libdispatch in
+the sealed gate), `CVBufferRef` attachment members (host absent on Linux),
+audio/image/pixel/tagged-dynamic APIs (need CoreAudioTypes/CoreVideo),
+`simd` calibration matrix, and notification-name string values (unobserved;
+guessing is fabrication). `indices(where:)` / `indices(of:)` on
+`CMReadOnlyDataBlockBuffer` itself stay declared: the port's
+`subscript(range:)` copies into a fresh buffer rebased to zero, so slicing
+breaks index stability — verified 2026-09-15 (match at index 1 yields
+`1..<1`; trailing matches trap with `Range requires lowerBound <=
+upperBound`). The `BlockRegion` projections slice via `Slice` and are exact
+(their 4 rows convert). Recorded as a new `oracle-questions.tsv` row; the
+fix (view-based slicing) would redesign Collection semantics without an
+Apple oracle, so it stays untouched.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3129 | 3230 |
+| declared | 131 | 45 |
+| deferred | 244 | 229 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +101 (86 declared, 15 deferred).
+
+Top-5 `implemented` evidence distribution after this pass:
+
+1. `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` — 180 (5.6%)
+2. `CMCollectionDepthTests.swift#testCMDataBlockBufferCollectionAlgorithms` — 149 (4.6%)
+3. `CMFormatDescriptionSurfaceTests.swift#testCMFormatDescriptionMediaSubTypeTable` — 115 (3.6%)
+4. `CMCollectionDepthTests.swift#testCMSampleAttachmentsArrayCollectionAlgorithms` — 110 (3.4%)
+5. `CMTimebaseAndAlgebraTests.swift#testCMOptionSetAlgebra` — 89 (2.8%)
+
+No test owns more than 40% of implemented rows (`testCMDataBlockBufferRegionWitnesses`
+is the largest new citation at 52 rows, 1.6%). Verified on this Mac:
+`FRAMEWORK_FANOUT_DELIVERABLE_OK` via the shared validator, product plus all
+31 test files compile warnings-clean, and a macOS runner over all 191 cited
+tests prints `COREMEDIA_ALL_CITED_MACOS_PROBE_OK` (ObjC duplicate-class notes
+on stderr from the system `libswiftCoreMedia.dylib`, as in prior passes). The
+sealed gate's final stage remains Linux-only (`import Glibc` in the generated
+runner). No new product files; the guest sources manifest is unchanged.

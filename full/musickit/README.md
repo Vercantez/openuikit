@@ -325,3 +325,58 @@ Environment: Swift 6.2.4, target `x86_64-unknown-linux-gnu`.
 `.cursor/verify-cloud-environment.sh` did not emit
 `CURSOR_SWIFT_ENVIRONMENT_OK` because `scratch/ladder-corpus/focus-ios`
 is absent. The sealed gate compiles a clean product tree (`products=clean`).
+
+## Overlay pass 2026-09 (pi wave 7, ArtworkImage View synthesis)
+
+Per the coverage-contract overlay override, the 771 `not-applicable`
+`s:7SwiftUI4ViewPAAE...::SYNTHESIZED::s:17_MusicKit_SwiftUI12ArtworkImageV`
+rows (note: "SwiftUI View protocol synthesis on ArtworkImage") plus the one
+`musicSubscriptionOffer` synthesis on ArtworkImage are identity View
+overlays, matching the PassKit 100% / StoreKit overlay conversions already
+on main. Each mangled base decodes to a real SwiftUI modifier base name
+(`C` is the `View` word substitution, e.g.
+`015navigationSplitC11ColumnWidth` -> `navigationSplitViewColumnWidth`);
+all 401 decoded bases already exist in the FamilyControls/StoreKit/PassKit
+playbook universe.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 1344 | 2116 |
+| declared | 80 | 80 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 1110 | 338 |
+
+Nondeferred: **2196** (floor 1267). Gain is **+772 implemented** rows.
+
+This pass adds:
+
+- **MusicKitViewOverlayIdentity.swift** (in
+  `musickit_guest_sources.txt`): 401 no-op `Self`-returning `View`
+  extension methods, one per synthesized base name, compiled wherever the
+  local lookalike `View` is in effect (`#if !canImport(SwiftUI) ||
+  os(macOS)`, mirroring `MusicKitLookalikes`).
+- **tests/agent/MusicKitViewOverlayTests.swift**: 21
+  `testViewOverlayBatchNN` functions calling every modifier on
+  `ArtworkImage` plus `EmptyView` (batch 01 also pins
+  `musicSubscriptionOffer` on `ArtworkImage`). No `await`,
+  `DispatchQueue.main`, `RunLoop`, or semaphore waits in cited tests.
+
+Top-5 evidence distribution (2116 implemented rows):
+
+1. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testPlaylistAndVideo` — 169 (8.0%)
+2. `test:full/musickit/tests/agent/MusicKitEnumTests.swift#testEnumRawValues` — 158 (7.5%)
+3. `test:full/musickit/tests/agent/MusicKitItemTests.swift#testSupportingTypes` — 99 (4.7%)
+4. `test:full/musickit/tests/agent/MusicKitViewOverlayTests.swift#testViewOverlayBatch02` — 83 (3.9%)
+5. `test:full/musickit/tests/agent/MusicKitViewOverlayTests.swift#testViewOverlayBatch01` — 76 (3.6%)
+
+No single test is cited by more than 40% of implemented rows
+(40% of 2116 = 846.4).
+
+Still leftover: 80 `declared` (76 async service/hardware APIs that cannot
+be cited without `await` — catalog/library `response()`, player
+`play`/`prepareToPlay`/skip, async `Queue.insert`, `with()`,
+`authorization request`, `subscriptionUpdates.next()`, token providers —
+plus sync-but-uninventable `currentCountryCode` and
+`MusicSubscription.current` defaults), 337 stdlib/Foundation protocol
+syntheses, and 1 stdlib `Options.hashValue` overlay witness.

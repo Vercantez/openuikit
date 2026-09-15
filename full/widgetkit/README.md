@@ -28,9 +28,10 @@ Apple widget daemon:
 - `PreviewActivityBuilder` / `PreviewTimelineBuilder` array concatenators;
 - process-local `WidgetPushHandler` token delivery into `WidgetCenter`.
 
-Coverage of the 2876 iPhoneOS 26.1 public identifiers after the wave-8 depth
-pass: **2074 implemented**, 8 declared, 17 deferred, 777 not-applicable
-(SwiftUI `View` overlay re-exports converted to identity-overlaid tests;
+Coverage of the 2876 iPhoneOS 26.1 public identifiers after the pi wave-7
+leftover-overlay pass: **2851 implemented**, 8 declared, 17 deferred,
+0 not-applicable (all 777 remaining SwiftUI `View` cross-import overlays on
+`ControlWidgetToggleDefaultLabel` converted to identity-overlaid tests;
 8 `Body`/`body` witnesses stay declared as fail-closed).
 The first pass marked 2389 SwiftUI `View` lookalikes `implemented` off one
 inert test; those rows were `declared` again, and this pass marks 777 of them
@@ -227,6 +228,10 @@ batch cites more than 9.8% of the 2074 implemented rows):
 | testViewOverlayBatch06 | 200 |
 | testViewOverlayBatch07 | 200 |
 | testViewOverlayBatch08 | 200 |
+| testViewOverlayBatch09 | 195 |
+| testViewOverlayBatch10 | 194 |
+| testViewOverlayBatch11 | 194 |
+| testViewOverlayBatch12 | 192 |
 
 The 8 remaining `declared` rows are the `Body == Never` aliases and `body`
 witnesses of `ControlWidgetButton`, `ControlWidgetToggle`,
@@ -234,7 +239,28 @@ witnesses of `ControlWidgetButton`, `ControlWidgetToggle`,
 getters stay fatal because Linux has no Control Center presentation host.
 Timeline/reload daemon success, `#Preview` macros,
 DeveloperToolsSupport preview inits, and the `NSUserActivityTypeLiveActivity`
-payload stay deferred/fail-closed. The Linux host gate
+payload stay deferred/fail-closed. No non-enum test exceeds the 40% bulk-relabel
+ceiling (largest batch cites 202 of 2851 implemented rows, 7.1%).
+
+### Leftover-overlay pass 2026-09 (pi wave-7)
+
+This pass started from 2074 implemented, 8 declared, 17 deferred, and
+777 not-applicable identifiers. It ends at 2851 implemented, 8 declared,
+17 deferred, and 0 not-applicable identifiers.
+
+All 777 remaining `not-applicable` rows — SwiftUI `View` cross-import
+overlays synthesized onto `ControlWidgetToggleDefaultLabel` (569 distinct
+modifier signatures, all already present as no-op `Self` stubs in
+`WidgetKitViewStubs.swift`) — are converted from `not-applicable` to
+`implemented` following the PassKit 100% / StoreKit overlay conversions:
+`tests/agent/WidgetKitViewOverlayLeftoverTests.swift` adds
+`testViewOverlayBatch09`–`testViewOverlayBatch12`; each batch invokes its
+modifiers on all three WidgetKit `View` types plus `EmptyView` and pins the
+no-op `Self` pass-through (notes: `identity View overlay; renders EmptyView`).
+No product source changes were needed. No `DispatchQueue.main`, `RunLoop`,
+semaphore wait, or `await` appears in the batches.
+
+The Linux host gate
 (`bash tests/acceptance/test_host.sh`, also verified under Docker
 `swift:6.0-jammy`) compiles the dylib warnings-as-errors, runs every cited
 test, and emits only `WIDGETKIT_AGENT_RUNTIME_OK`.

@@ -288,6 +288,27 @@ public final class CMSampleBuffer: CMAttachmentBearerProtocol, @unchecked Sendab
         }
     }
 
+    /// Swift overlay for `CMSampleBufferGetSampleTimingInfoArray`: every stored
+    /// per-sample timing entry. A single uniform entry expands across all
+    /// samples, mirroring `sampleTimingInfo(at:)`.
+    public func sampleTimingInfos() throws -> [CMSampleTimingInfo] {
+        try lock.locked {
+            if !valid { throw Error.invalidated }
+            if timings.isEmpty { throw Error.bufferHasNoSampleTimingInfo }
+            if timings.count == 1 && sampleCount > 1 {
+                return Array(repeating: timings[0], count: sampleCount)
+            }
+            return timings
+        }
+    }
+
+    /// Swift overlay for `CMSampleBufferGetOutputSampleTimingInfoArray`. This
+    /// Linux port stores no trim/derive state, so output timings are the
+    /// sample timings.
+    public func outputSampleTimingInfos() throws -> [CMSampleTimingInfo] {
+        try sampleTimingInfos()
+    }
+
     public func sampleSize(at index: Int) throws -> Int {
         try lock.locked {
             if !valid { throw Error.invalidated }

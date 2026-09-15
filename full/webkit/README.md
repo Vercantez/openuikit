@@ -47,6 +47,9 @@ There is no Web Content process, network fetch, or renderer on this host.
   `WKWebExtensionContext` tracks grant/deny permission status and URL access
   from granted patterns. `WKWebExtensionController` loads contexts and
   forwards tab/window registry events.
+- SwiftUI overlay `WebView` (`init(url:)` / `init(_:)` / `body`, behavior
+  discriminants, `ActivatedElementInfo` payloads) is an inert value; all
+  `View` modifiers are no-op `Self` returns rendering `EmptyView`.
 
 ## Fail-closed
 
@@ -77,14 +80,68 @@ forbidden:
   context-menu configuration / animator UIKit types, `UIInputSuggestion`,
   `UIEditMenuInteractionAnimating`, `UIKeyModifierFlags`
 
-SwiftUI `_WebKit_SwiftUI` / `View` overlay identifiers are `not-applicable`
-(owned by the SwiftUI lane). The synthesized stdlib witness
+SwiftUI `_WebKit_SwiftUI` / `View` overlay identifiers were `not-applicable`
+(owned by the SwiftUI lane) until pi-wave7 below converted all 813 to
+`implemented` as identity overlays. The synthesized stdlib witness
 `Equatable.!=` on `WebView.ActivatedElementInfo`
 (`s:SQsE2neoiySbx_xtFZ::SYNTHESIZED::s:15_WebKit_SwiftUI0A4ViewV20ActivatedElementInfoV`)
-is `deferred`, not `not-applicable`: its precise ID is not a SwiftUI
+stays `deferred`, not `not-applicable`: its precise ID is not a SwiftUI
 overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
+
+### SwiftUI overlay conversion (pi-wave7 webkit)
+
+This pass converts **all 813 `not-applicable` SwiftUI overlay rows to
+`implemented`** (1326 → 2139 implemented; declared 68, deferred 26,
+unavailable 0, `not-applicable` 0, total 2233), following the PassKit 100% /
+StoreKit / FamilyControls overlay playbook. The prior refusal ("product
+defines no SwiftUI View types") is superseded by the coverage-contract
+overlay override: identity `View` modifiers that compile as no-op `Self`
+returns are `implemented`, with EmptyView tests as evidence.
+
+- New product sources `WebKitSwiftUIOverlay.swift` (unguarded inert `WebView`
+  with `init(url:)` / `init(_:)` / `body`, the four behavior discriminant
+  structs with `enabled` / `disabled` / `automatic`, and
+  `ActivatedElementInfo` with its `linkURL` payload; plus `View` /
+  `EmptyView` / `ViewBuilder` lookalikes under `#if !canImport(SwiftUI)`)
+  and `WebKitViewSurface.swift` (`extension View` with one identity member
+  per unique overlay base name, 411 members, each
+  `(_ p0: Any? = nil) -> Self { self }`). `webkit_guest_sources.txt` now
+  lists 17 sources; `webkit-provenance.json` attests the 17 digests and
+  `tests/test_webkit_provenance.py` asserts the 17-source contract.
+- New `tests/agent/WebKitViewOverlayTests.swift` holds **16 synchronous,
+  self-contained `testViewOverlayBatchNN` functions**; each modifier is
+  invoked on `WebView(url: nil)` plus `EmptyView()`, and batch 01 pins the
+  struct surface (`body`, behavior statics, `ActivatedElementInfo`
+  equality/hash/`linkURL`/`hashValue`, `init(_:)` via
+  `MainActor.assumeIsolated`). None awaits, waits on a queue or semaphore,
+  or touches `DispatchQueue.main`/`RunLoop`. The largest new evidence group
+  is 76/813 rows (9.34%); the largest share of the 2139 implemented rows is
+  7.25% (`testOptionSetRawValues`, 155 rows) — no test exceeds 40%.
+- Still declared (not convertible synchronously): ~30 ObjC
+  `completionHandler:` / `replyHandler:` async overlays, `WebPage` async
+  members (`callJavaScript`, dialog/policy handlers, media capture/playback
+  setters, `exported(as:)`, `navigations`, `mediaPlaybackState`, `appBundle`
+  / `resourceBaseURL`), `TransferRepresentation` / `Representation` rows
+  (need `UTType`), and UIKit-typed members (`buttonNumber`,
+  `modifierFlags`, `menuItems`, `keyCommand`, `menuItem`, edit-menu /
+  input-suggestion delegate methods) with no formable parameter types on
+  the isolated host. Still deferred: NSAttributedString HTML import,
+  `SecTrust`, `ProxyConfiguration`, `UTType`/`Transferable`, the two
+  SwiftUI-typed `WebPage` members (`themeColor`, `modifierFlags`), and the
+  synthesized `Equatable.!=` witness.
+- Validation on this Mac: `validate_seed.py --phase deliverable` reports
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK module=WebKit lane=medium-full
+  symbols=2233`; `test_webkit_provenance.py` 8 tests OK; the 17 product
+  sources typecheck and the 16 overlay tests typecheck plus run green in a
+  Linux-like `/tmp` harness (`WEBKIT_OVERLAY_SMOKE_OK`). Full-module macOS
+  compilation still stops at the pre-existing Darwin-guard
+  `addObserver` override mismatch in untouched `WebKitWebView.swift`
+  (Linux-gate-only surface); the sealed Linux gate owns the final
+  `FRAMEWORK_FANOUT_HOST_OK` verdict.
+
+Only `full/webkit/` changes.
 
 ### Leftover re-examination (pi-wave6 webkit)
 

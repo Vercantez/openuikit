@@ -76,10 +76,42 @@ Coverage after this continuation: **136 implemented / 0 declared / 21 deferred /
 (136 nondeferred, floor 85). The 78 walked `View` modifiers now record their
 arguments on `ContactAccessButton`; each identifier has its own synchronous
 `testModifier…` function. 690 remaining SwiftUI.View PAAE members stay
-`not-applicable`. 21 TipKit/AppIntents members stay deferred.
+`not-applicable` at that point. 21 TipKit/AppIntents members stay deferred.
 
-Top-5 implemented evidence (enum members share one table-driven
-test; no other single test exceeds 40% of the remaining 126 implemented rows):
+### Overlay conversion (pi wave-7)
+
+Coverage before: **136 implemented / 0 declared / 21 deferred / 0 unavailable / 690 not-applicable**
+(136 nondeferred, floor 85).
+
+Coverage after: **826 implemented / 0 declared / 21 deferred / 0 unavailable / 0 not-applicable**
+(826 nondeferred, floor 85). All 690 leftover `s:7SwiftUI4ViewPAAE…` rows are
+`implemented`: every one already compiled as a no-op `Self` return in
+`ContactsUIViewSurface.swift` (all parameters `Any?` with defaults; no product
+change needed), and each is now pinned by a synchronous `testViewOverlayBatchNN`
+call on `ContactAccessButton` plus `EmptyView` in
+`tests/agent/ContactsUIViewOverlayTests.swift` (new file, also inlined into
+`tests/agent/ContactsUIRuntime.swift`). The 690 rows span 346 base modifier names
+backed by 499 no-op overloads; the 10 batches carry 69 rows each (8.4%), so no
+single test is cited by more than 40% of implemented rows. Notes read
+`identity View overlay; renders EmptyView`. 21 TipKit/AppIntents members stay
+deferred; no stdlib/Foundation witness row was converted.
+
+Top-5 implemented evidence after the overlay conversion (826 implemented rows;
+69 rows per overlay batch; no single test exceeds 40%):
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 69 | 8.4% | `ContactsUIViewOverlayTests.swift#testViewOverlayBatch01` (identity View overlays; renders EmptyView) |
+| 69 | 8.4% | `ContactsUIViewOverlayTests.swift#testViewOverlayBatch02` (identity View overlays; renders EmptyView) |
+| 69 | 8.4% | `ContactsUIViewOverlayTests.swift#testViewOverlayBatch03` (identity View overlays; renders EmptyView) |
+| 69 | 8.4% | `ContactsUIViewOverlayTests.swift#testViewOverlayBatch04` (identity View overlays; renders EmptyView) |
+| 69 | 8.4% | `ContactsUIViewOverlayTests.swift#testViewOverlayBatch05` (identity View overlays; renders EmptyView) |
+
+Batches 06-10 carry 69 rows each (8.4%). `ContactsUICaptionTests.swift#testCaptionCases`
+carries 10 rows (1.2%). Every other test carries 2 rows or 1.
+
+The table below records the pre-overlay-conversion shares (136 implemented rows).
+It is kept for history; the paragraph above is authoritative.
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
@@ -176,9 +208,11 @@ The campaign inventory stamp `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=lin
   contact identifier. It does not produce Apple shortcut artwork.
 - Linux identity `View` modifiers on `ContactAccessButton` compile as
   argument-recording lookalikes (`ContactsUIViewSurface.swift`). The 78
-  walked modifiers are `implemented` with per-identifier tests. Remaining
-  synthesized SwiftUI.View PAAE members are **not-applicable** (owned by
-  the SwiftUI lane). None of those remaining overlay rows are `implemented`.
+  walked modifiers are `implemented` with per-identifier tests. All 690
+  remaining synthesized SwiftUI.View PAAE members are now `implemented` as
+  identity overlays pinned by `testViewOverlayBatchNN` calls on
+  `ContactAccessButton` plus `EmptyView`; Linux renders `EmptyView`.
+  21 TipKit/AppIntents members stay deferred.
 
 ### Fail-closed boundaries
 

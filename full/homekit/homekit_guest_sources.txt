@@ -7,3 +7,4 @@ full/homekit/HMLocalSupport.swift
 full/homekit/HMObjects.swift
 full/homekit/HMProtocols.swift
 full/homekit/HomeKit.swift
+full/homekit/HMViewSurface.swift

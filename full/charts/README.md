@@ -867,3 +867,92 @@ cited tests linked and ran with marker-only stdout
 `CHARTS_AGENT_RUNTIME_OK`. `validate_seed.py --phase deliverable`
 prints `FRAMEWORK_FANOUT_DELIVERABLE_OK module=Charts lane=medium-full
 symbols=9474`.
+
+### Wave-7 overlay conversion (pi agent, leftover `View` overlays)
+
+This pass converts the leftover SwiftUI `View`-modifier census per the
+pi-wave7 contract override: identity `View` modifiers that compile as
+no-op `Self` returns are `implemented` with identity EmptyView tests,
+including rows previously marked `not-applicable` as SwiftUI
+cross-import overlays (the SwiftUI lane does not implement these).
+It starts from the wave-6 overlay ledger (`implemented` 4814,
+`declared` 101, `deferred` 905, `unavailable` 0, `not-applicable`
+3654) and ends at `implemented` 8410, `declared` 101, `deferred`
+905, `unavailable` 0, `not-applicable` 58: an implemented gain of
+3596. Nondeferred (`implemented` + `declared`) is 8511, above the
+medium-full floor (4737).
+
+Converted rows:
+
+- 3595 `s:7SwiftUI4View` rows (all leftover `ViewPAAE` plus the 13
+  Charts-owned `ViewPChartsE` `chartXAxis` / `chartYAxis` /
+  `chartLegend` / `chartXScale` / `chartYScale` /
+  `chartForegroundStyleScale` overloads). 302 rows cite the existing
+  `testViewOverlayBatch01-08` functions, which already call those
+  modifiers on all eight bases including `Circle()` and `EmptyView()`.
+  13 Charts-owned rows cite the existing `ChartsViewModifiersTests`
+  functions that call those exact overloads on `Circle()` and
+  `EmptyView()` (`testChartViewXAxisContent`, `testChartViewYAxisContent`,
+  `testChartViewLegend`, `testChartViewXScale`, `testChartViewYScale`,
+  `testChartViewForegroundStyleScale`). The remaining 3280 rows (235
+  new modifier bases) are pinned by 15 new `testViewOverlayBatch09-23`
+  functions in `tests/agent/ChartsViewOverlayWave7Tests.swift`, each
+  calling every modifier on the same eight bases. Notes read
+  `identity View overlay; renders EmptyView`.
+- 1 Charts-owned unit-rect row
+  (`s:7SwiftUI6CircleV6ChartsE18perceptualUnitRect`): `Circle` gets the
+  `ChartSymbolShape` default `0,0,1,1` rect, now asserted alongside the
+  concrete/erased symbols in `testSymbolPerceptualUnitRects`.
+
+Stub shape: 225 new bases get pure zero-argument `() -> Self` overloads
+in `ChartsViewOverlay.swift` (`#if !canImport(SwiftUI)`). Ten bases
+reuse existing zero-argument stubs with no new overload (`colorInvert`,
+`compositingGroup`, `geometryGroup`, `labelsHidden`,
+`luminanceToAlpha`, `monospacedDigit`, `scaledToFill`, `scaledToFit`,
+`unredacted`, plus the lookalike `accessibilityElement(children:)`
+default). The pure-`()` form (rather than the earlier
+`(_ p0: Any? = nil)` form) keeps with-argument calls resolving to the
+pre-existing generic/concrete overloads: the 225-overload addition
+otherwise pushes the 30-call `chartApplyModifierCatalog` chain in
+`ChartsPlotEngineTests.swift` past the Swift solver limit on Linux
+(`unable to type-check ... in reasonable time`). With pure-`()` stubs
+the chain compiles unchanged.
+
+Not converted, deliberately: the 58 remaining `not-applicable` rows are
+SwiftUI `Shape` / `Animatable` / `ScrollTargetBehavior` protocol
+members (`union` / `subtracting` / `intersection` / `trim` / `scale` /
+`rotation` / `sizeThatFits` / `fill` / `stroke` / `size` / `offset` /
+`transform` / `body` / `role` / `layoutDirectionBehavior` on the symbol
+shapes and `Circle`, `animatableData` x3, `circle` static, and
+`ScrollTargetBehavior.properties(context:)`), which are not `View`
+modifiers and have no no-op `Self` stubs on Linux. The 101 `declared`
+rows (40 `Shape` members on Charts-owned shapes, 61 `Never` /
+`ModifiedContent` / `PrimitivePlottable` / `SurfacePlot.body`
+witnesses) and all 905 `deferred` rows (stdlib operators,
+Combine/FormatStyle overlays, GPU/image renderer, `symbolRotation`
+with no RealityKit type, scroll/gesture timing) are untouched.
+Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed.
+No `DispatchQueue.main`, `RunLoop`, semaphore waits, or `await` in
+cited tests.
+
+Top implemented evidence after this pass (8410 rows; cap 40% = 3364):
+
+| rows | share | test |
+| ---: | ---: | --- |
+| 267 | 3.2% | `ChartsViewOverlayTests.swift#testViewOverlayBatch04` |
+| 266 | 3.2% | `ChartsViewOverlayTests.swift#testViewOverlayBatch02` |
+| 266 | 3.2% | `ChartsViewOverlayTests.swift#testViewOverlayBatch03` |
+| 266 | 3.2% | `ChartsViewOverlayTests.swift#testViewOverlayBatch01` |
+| 259 | 3.1% | `ChartsViewOverlayTests.swift#testViewOverlayBatch05` |
+
+No single test exceeds 40% of implemented rows.
+
+Linux verification for this pass (host `swiftc` is macOS-only here, so
+the sealed gate was replicated manually): `Charts` dylib compiled with
+`swiftc -warnings-as-errors` under `swift:6.2-noble` (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`), all 312 unique cited tests linked and
+ran with marker-only stdout `CHARTS_AGENT_RUNTIME_OK`.
+`validate_seed.py --phase deliverable` prints
+`FRAMEWORK_FANOUT_DELIVERABLE_OK module=Charts lane=medium-full
+symbols=9474`. No `.build`, `build`, or `scratch` products remain
+under `full/charts/`.

@@ -84,7 +84,7 @@
   "schema": 1,
   "source_manifest": {
     "path": "full/webkit/webkit_guest_sources.txt",
-    "sha256": "b7f34f83bd678866d99a1a17040a46231cc912c17bfb842ad20a64080f11f84f"
+    "sha256": "0896df30d5dcf5665ecf6fed940674f5ee63153e6ad6c3d6e050c62a94c0a35a"
   },
   "sources": [
     {
@@ -142,6 +142,14 @@
     {
       "path": "full/webkit/WebKitSupport.swift",
       "sha256": "b15bc048336fd71050a60510570a5504c56c4cbc59a12b2315f3c940e2b9846f"
+    },
+    {
+      "path": "full/webkit/WebKitSwiftUIOverlay.swift",
+      "sha256": "60ae33ee2766750c2a3f1194ce2e798be8f3c65aa9489a09488ed45ba76c1345"
+    },
+    {
+      "path": "full/webkit/WebKitViewSurface.swift",
+      "sha256": "d9d828d972058064e652353a106befc5b2b2764cd792b25a33f6bf527b313bd4"
     },
     {
       "path": "full/webkit/WebKitWebView.swift",

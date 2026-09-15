@@ -12,4 +12,6 @@ full/webkit/WebKitPageNavigation.swift
 full/webkit/WebKitPageValues.swift
 full/webkit/WebKitPortableModel.swift
 full/webkit/WebKitSupport.swift
+full/webkit/WebKitSwiftUIOverlay.swift
+full/webkit/WebKitViewSurface.swift
 full/webkit/WebKitWebView.swift

@@ -284,3 +284,71 @@ requires `swiftc`. Active Cursor Build on this VM was
 `bld-20260906-253cd433-7a30-4d11-aad2-8b209b7b2d21` (campaign listed
 `bld-20260901-d3266600-d87b-438f-94c1-d1aa48036e87`). HEAD at start was
 `39dc25a2769fb88a50f0853964137a4f96d50322`.
+
+## Depth pass 2026-09 (wave 10: SwiftUI overlay identity)
+
+SDK depth for `SceneKit` in `full/scenekit/` (2611 IDs). This pass converts
+the 809 `not-applicable` SwiftUI cross-import overlay rows to `implemented`
+as identity `View` overlays, following the PassKit 100% / StoreKit /
+FamilyControls overlay playbook. No Apple UI behavior is invented: every
+modifier is a no-op `Self` return and Linux renders `EmptyView`.
+
+**Coverage before this pass:** **1728 implemented / 0 declared / 74 deferred /
+0 unavailable / 809 not-applicable**.
+
+**Coverage after this pass:** **2537 implemented / 0 declared / 74 deferred /
+0 unavailable / 0 not-applicable**.
+
+Implemented gain vs wave 9: **+809**. Remaining deferred are unchanged
+(Metal, GLKit, Darwin `simd_float4x4`/`simd_quatf`, UIKit/CoreImage, AVAudio,
+`UIImage` snapshot, `SCNFloat`, SIMD bridging, focus protocols).
+
+**New overlay evidence (809 citations across 7 tests, each under 6.4% of
+implemented — no test exceeds the 40% ceiling):**
+
+| citations | evidence |
+| ---: | --- |
+| 153 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch01` |
+| 153 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch02` |
+| 153 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch03` |
+| 152 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch04` |
+| 161 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testViewOverlayBatch05` |
+| 15 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testSceneViewOverlay` |
+| 22 | `test:full/scenekit/tests/agent/SceneKitViewOverlayTests.swift#testSceneViewOptionsWitnesses` |
+
+**Behaviour added in this pass:**
+
+- `SceneView` identity `View` overlay (`SceneKitOverlay.swift`): `Body =
+  EmptyView`, initializer mirrors the Apple parameter names and defaults
+  (`scene`, `pointOfView`, `options`, `preferredFramesPerSecond`,
+  `antialiasingMode`, `delegate`, `technique`); stored values are
+  bookkeeping only, `delegate` is accepted and ignored, `body` renders
+  `EmptyView`.
+- `SceneView.Options` as a working Linux `OptionSet` (`RawValue = Int`)
+  with `rendersContinuously`, `allowsCameraControl`, `jitteringEnabled`,
+  `temporalAntialiasingEnabled`, `autoenablesDefaultLighting`; all 22
+  stdlib `Equatable`/`SetAlgebra`/`OptionSet` synthesized witnesses are
+  exercised for real (not just identity).
+- `SceneKitViewSurface.swift`: 401 no-op `Self`-returning `View` members
+  (one per distinct `s:7SwiftUI4ViewPAAE…` base name, single optional `Any`
+  parameter so zero-argument identity calls compile), active only when
+  SwiftUI cannot be imported; plus a minimal Linux `View` / `EmptyView` /
+  `ViewBuilder` shim in the same guard.
+- `tests/agent/SceneKitViewOverlayTests.swift`: five
+  `testViewOverlayBatchNN` functions call each of the 401 modifiers on
+  `SceneView()` plus `EmptyView()`; `testSceneViewOverlay` pins the
+  struct/init/body/Options surface; `testSceneViewOptionsWitnesses` pins
+  the 22 protocol witnesses. Every cited func is top-level, synchronous,
+  and argument-free with no `DispatchQueue`, `RunLoop`, semaphore, or
+  `await` usage.
+
+**Fail-closed (unchanged):** Metal/EAGL/GPU render and snapshot,
+`.scn`/USD/DAE decode, async SpriteKit `present`, JavaScript actions, audio
+playback, Darwin `simd_float4x4`/`simd_quatf`, GLKit, precomputed lighting
+environments. The 74 deferred rows are untouched.
+
+**Tests:** `bash full/scenekit/tests/acceptance/test_host.sh` (Linux guest;
+this macOS snapshot cannot link the Linux-only module paths — the sealed
+`FRAMEWORK_FANOUT_REFERENCE_OK` ledger/manifest checks pass here and the
+overlay sources plus all 7 overlay tests compile warning-free and pass at
+runtime under a Linux-faithful no-SwiftUI build).

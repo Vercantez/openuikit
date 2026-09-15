@@ -775,3 +775,45 @@ FRAMEWORK_FANOUT_REFERENCE_OK
 AVFOUNDATION_AGENT_RUNTIME_OK
 FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
 ```
+
+### Depth pass 2026-09-15 (wave 7 declared conversion)
+
+Wave 7 converts the five remaining synchronous `AVCaptureDevice.Format`
+zoom properties (`secondaryNativeResolutionZoomFactors`,
+`supportedVideoZoomFactorsForDepthDataDelivery`,
+`supportedVideoZoomRangesForDepthDataDelivery`,
+`systemRecommendedVideoZoomRange`, `systemRecommendedExposureBiasRange`)
+from `declared` to `implemented`. All five already compiled with
+fail-closed bodies (empty arrays / nil: no capture hardware on Linux);
+`testAVCaptureDeviceFormatFailClosedModel` in
+`tests/agent/AVFailClosedTests.swift` now asserts those values alongside
+the 53 sibling format rows it already cited. No SwiftUI cross-import
+overlay rows exist in this seed, so the overlay playbook does not apply.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5213 | 5218 |
+| `declared` | 174 | 169 |
+| `deferred` | 245 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The remaining 169 `declared` rows are async `AsyncSequence`/`next()`
+witnesses (calling them needs `await`, which the sealed gate forbids),
+`NSCoding` `init(coder:)` witnesses, `Combine` publishers (no Combine on
+the isolated host), `FormatStyle` / `compare` witnesses, and
+`Element`-constrained (`Equatable`) or deprecated-optional-`flatMap`
+witnesses that cannot be exercised synchronously without inventing Apple
+API or tripping `-warnings-as-errors` deprecation errors. The 245
+`deferred` rows are unchanged
+(hardware/daemon/URLSession/`CALayer`/async-service).

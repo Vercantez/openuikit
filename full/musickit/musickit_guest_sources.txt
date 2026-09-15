@@ -9,3 +9,4 @@ full/musickit/MusicKitMedia.swift
 full/musickit/MusicKitPlayer.swift
 full/musickit/MusicKitProtocols.swift
 full/musickit/MusicKitSubscription.swift
+full/musickit/MusicKitViewOverlayIdentity.swift

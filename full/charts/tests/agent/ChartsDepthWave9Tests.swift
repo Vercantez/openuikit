@@ -42,6 +42,7 @@ func testSymbolPerceptualUnitRects() {
     let expected = CGRect(x: 0, y: 0, width: 1, height: 1)
     precondition(BasicChartSymbolShape.circle.perceptualUnitRect == expected)
     precondition(AnyChartSymbolShape(.triangle).perceptualUnitRect == expected)
+    precondition(Circle().perceptualUnitRect == expected)
 }
 
 func testAnnotationContextTargetSize() {

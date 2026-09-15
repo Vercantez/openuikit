@@ -8,3 +8,6 @@ full/spritekit/SKScene.swift
 full/spritekit/SKSprites.swift
 full/spritekit/SKTiles.swift
 full/spritekit/SpriteKit.swift
+full/spritekit/SpriteKitLookalikes.swift
+full/spritekit/SpriteKitViewOverlay.swift
+full/spritekit/SpriteKitViewSurface.swift

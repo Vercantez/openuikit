@@ -9,575 +9,409 @@ enum _AppIntentsViewStubsMarker {}
 
 #if !canImport(SwiftUI)
 extension View {
-    public func accentColor<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(activationPoint p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(addTraits p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(hidden p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(hint p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(identifier p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(inputLabels p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(label p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(removeTraits p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(selectionIdentifier p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(sortPriority p0: T0? = nil) -> Self { self }
-    public func accessibility<T0>(value p0: T0? = nil) -> Self { self }
-    public func accessibilityAction<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func accessibilityAction<T0, T1>(_ p0: T0? = nil, intent p1: T1? = nil) -> Self { self }
-    public func accessibilityAction<T0, T1>(action p0: T0? = nil, label p1: T1? = nil) -> Self { self }
-    public func accessibilityAction<T0, T1>(intent p0: T0? = nil, label p1: T1? = nil) -> Self { self }
-    public func accessibilityAction<T0, T1>(named p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func accessibilityAction<T0, T1>(named p0: T0? = nil, intent p1: T1? = nil) -> Self { self }
-    public func accessibilityActions<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityActions<T0, T1>(category p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func accessibilityActivationPoint<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityActivationPoint<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityAddTraits<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityAdjustableAction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityChartDescriptor<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityChildren<T0>(children p0: T0? = nil) -> Self { self }
-    public func accessibilityCustomContent<T0, T1, T2>(_ p0: T0? = nil, _ p1: T1? = nil, importance p2: T2? = nil) -> Self { self }
-    public func accessibilityDefaultFocus<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func accessibilityDirectTouch<T0, T1>(_ p0: T0? = nil, options p1: T1? = nil) -> Self { self }
-    public func accessibilityDragPoint<T0, T1>(_ p0: T0? = nil, description p1: T1? = nil) -> Self { self }
-    public func accessibilityDragPoint<T0, T1, T2>(_ p0: T0? = nil, description p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func accessibilityDropPoint<T0, T1>(_ p0: T0? = nil, description p1: T1? = nil) -> Self { self }
-    public func accessibilityDropPoint<T0, T1, T2>(_ p0: T0? = nil, description p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func accessibilityElement<T0>(children p0: T0? = nil) -> Self { self }
-    public func accessibilityFocused<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityFocused<T0, T1>(_ p0: T0? = nil, equals p1: T1? = nil) -> Self { self }
-    public func accessibilityHeading<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityHidden<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityHidden<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityHint<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityHint<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityIdentifier<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityIdentifier<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityIgnoresInvertColors<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityInputLabels<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityInputLabels<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityLabel<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityLabel<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityLabel<T0>(content p0: T0? = nil) -> Self { self }
-    public func accessibilityLabeledPair<T0, T1, T2>(role p0: T0? = nil, id p1: T1? = nil, `in` p2: T2? = nil) -> Self { self }
-    public func accessibilityLinkedGroup<T0, T1>(id p0: T0? = nil, `in` p1: T1? = nil) -> Self { self }
-    public func accessibilityRemoveTraits<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityRepresentation<T0>(representation p0: T0? = nil) -> Self { self }
-    public func accessibilityRespondsToUserInteraction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityRespondsToUserInteraction<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityRotor<T0, T1>(_ p0: T0? = nil, entries p1: T1? = nil) -> Self { self }
-    public func accessibilityRotor<T0, T1, T2, T3>(_ p0: T0? = nil, entries p1: T1? = nil, entryID p2: T2? = nil, entryLabel p3: T3? = nil) -> Self { self }
-    public func accessibilityRotor<T0, T1, T2>(_ p0: T0? = nil, entries p1: T1? = nil, entryLabel p2: T2? = nil) -> Self { self }
-    public func accessibilityRotor<T0, T1>(_ p0: T0? = nil, textRanges p1: T1? = nil) -> Self { self }
-    public func accessibilityRotorEntry<T0, T1>(id p0: T0? = nil, `in` p1: T1? = nil) -> Self { self }
-    public func accessibilityScrollAction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityScrollStatus<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityShowsLargeContentViewer() -> Self { self }
-    public func accessibilityShowsLargeContentViewer<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilitySortPriority<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityTextContentType<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityValue<T0>(_ p0: T0? = nil) -> Self { self }
-    public func accessibilityValue<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func accessibilityZoomAction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func actionSheet<T0, T1>(isPresented p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func actionSheet<T0, T1>(item p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func alert<T0, T1, T2>(_ p0: T0? = nil, isPresented p1: T1? = nil, actions p2: T2? = nil) -> Self { self }
-    public func alert<T0, T1, T2, T3>(_ p0: T0? = nil, isPresented p1: T1? = nil, actions p2: T2? = nil, message p3: T3? = nil) -> Self { self }
-    public func alert<T0, T1, T2, T3>(_ p0: T0? = nil, isPresented p1: T1? = nil, presenting p2: T2? = nil, actions p3: T3? = nil) -> Self { self }
-    public func alert<T0, T1, T2, T3, T4>(_ p0: T0? = nil, isPresented p1: T1? = nil, presenting p2: T2? = nil, actions p3: T3? = nil, message p4: T4? = nil) -> Self { self }
-    public func alert<T0, T1>(isPresented p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func alert<T0, T1, T2>(isPresented p0: T0? = nil, error p1: T1? = nil, actions p2: T2? = nil) -> Self { self }
-    public func alert<T0, T1, T2, T3>(isPresented p0: T0? = nil, error p1: T1? = nil, actions p2: T2? = nil, message p3: T3? = nil) -> Self { self }
-    public func alert<T0, T1>(item p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func alignmentGuide<T0, T1>(_ p0: T0? = nil, computeValue p1: T1? = nil) -> Self { self }
-    public func allowedDynamicRange<T0>(_ p0: T0? = nil) -> Self { self }
-    public func allowsHitTesting<T0>(_ p0: T0? = nil) -> Self { self }
-    public func allowsTightening<T0>(_ p0: T0? = nil) -> Self { self }
-    public func allowsWindowActivationEvents() -> Self { self }
-    public func allowsWindowActivationEvents<T0>(_ p0: T0? = nil) -> Self { self }
-    public func anchorPreference<T0, T1, T2>(key p0: T0? = nil, value p1: T1? = nil, transform p2: T2? = nil) -> Self { self }
-    public func animation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func animation<T0, T1>(_ p0: T0? = nil, body p1: T1? = nil) -> Self { self }
-    public func animation<T0, T1>(_ p0: T0? = nil, value p1: T1? = nil) -> Self { self }
-    public func aspectRatio<T0, T1>(_ p0: T0? = nil, contentMode p1: T1? = nil) -> Self { self }
-    public func assistiveAccessNavigationIcon<T0>(_ p0: T0? = nil) -> Self { self }
-    public func assistiveAccessNavigationIcon<T0>(systemImage p0: T0? = nil) -> Self { self }
-    public func attributedTextFormattingDefinition<T0>(_ p0: T0? = nil) -> Self { self }
-    public func autocapitalization<T0>(_ p0: T0? = nil) -> Self { self }
-    public func autocorrectionDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func background<T0, T1>(_ p0: T0? = nil, alignment p1: T1? = nil) -> Self { self }
-    public func background<T0, T1>(_ p0: T0? = nil, ignoresSafeAreaEdges p1: T1? = nil) -> Self { self }
-    public func background<T0, T1, T2>(_ p0: T0? = nil, `in` p1: T1? = nil, fillStyle p2: T2? = nil) -> Self { self }
-    public func background<T0, T1>(alignment p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func background<T0>(ignoresSafeAreaEdges p0: T0? = nil) -> Self { self }
-    public func background<T0, T1>(`in` p0: T0? = nil, fillStyle p1: T1? = nil) -> Self { self }
-    public func backgroundExtensionEffect() -> Self { self }
-    public func backgroundExtensionEffect<T0>(isEnabled p0: T0? = nil) -> Self { self }
-    public func backgroundPreferenceValue<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func backgroundPreferenceValue<T0, T1, T2>(_ p0: T0? = nil, alignment p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func backgroundStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func badge<T0>(_ p0: T0? = nil) -> Self { self }
-    public func badgeProminence<T0>(_ p0: T0? = nil) -> Self { self }
-    public func baselineOffset<T0>(_ p0: T0? = nil) -> Self { self }
-    public func blendMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func blur<T0, T1>(radius p0: T0? = nil, opaque p1: T1? = nil) -> Self { self }
-    public func bold<T0>(_ p0: T0? = nil) -> Self { self }
-    public func border<T0, T1>(_ p0: T0? = nil, width p1: T1? = nil) -> Self { self }
-    public func brightness<T0>(_ p0: T0? = nil) -> Self { self }
-    public func buttonBorderShape<T0>(_ p0: T0? = nil) -> Self { self }
-    public func buttonRepeatBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func buttonSizing<T0>(_ p0: T0? = nil) -> Self { self }
-    public func buttonStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func clipShape<T0, T1>(_ p0: T0? = nil, style p1: T1? = nil) -> Self { self }
-    public func clipped<T0>(antialiased p0: T0? = nil) -> Self { self }
-    public func colorEffect<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
+    public func accentColor(_ p0: Any? = nil) -> Self { self }
+    public func accessibility(activationPoint p0: Any? = nil) -> Self { self }
+    public func accessibilityAction(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func accessibilityActions(category p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func accessibilityActivationPoint(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityAddTraits(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityAdjustableAction(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityChartDescriptor(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityChildren(children p0: Any? = nil) -> Self { self }
+    public func accessibilityCustomContent(_ p0: Any? = nil, _ p1: Any? = nil, importance p2: Any? = nil) -> Self { self }
+    public func accessibilityDefaultFocus(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func accessibilityDirectTouch(_ p0: Any? = nil, options p1: Any? = nil) -> Self { self }
+    public func accessibilityDragPoint(_ p0: Any? = nil, description p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func accessibilityDropPoint(_ p0: Any? = nil, description p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func accessibilityElement(children p0: Any? = nil) -> Self { self }
+    public func accessibilityFocused(_ p0: Any? = nil, equals p1: Any? = nil) -> Self { self }
+    public func accessibilityHeading(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityHidden(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityHint(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityIdentifier(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityIgnoresInvertColors(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityInputLabels(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityLabel(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityLabeledPair(role p0: Any? = nil, id p1: Any? = nil, `in` p2: Any? = nil) -> Self { self }
+    public func accessibilityLinkedGroup(id p0: Any? = nil, `in` p1: Any? = nil) -> Self { self }
+    public func accessibilityRemoveTraits(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityRepresentation(representation p0: Any? = nil) -> Self { self }
+    public func accessibilityRespondsToUserInteraction(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityRotor(_ p0: Any? = nil, entries p1: Any? = nil, entryID p2: Any? = nil, entryLabel p3: Any? = nil) -> Self { self }
+    public func accessibilityRotorEntry(id p0: Any? = nil, `in` p1: Any? = nil) -> Self { self }
+    public func accessibilityScrollAction(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityScrollStatus(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityShowsLargeContentViewer(_ p0: Any? = nil) -> Self { self }
+    public func accessibilitySortPriority(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityTextContentType(_ p0: Any? = nil) -> Self { self }
+    public func accessibilityValue(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func accessibilityZoomAction(_ p0: Any? = nil) -> Self { self }
+    public func actionSheet(isPresented p0: Any? = nil, content p1: Any? = nil) -> Self { self }
+    public func alert(_ p0: Any? = nil, isPresented p1: Any? = nil, presenting p2: Any? = nil, actions p3: Any? = nil, message p4: Any? = nil) -> Self { self }
+    public func alignmentGuide(_ p0: Any? = nil, computeValue p1: Any? = nil) -> Self { self }
+    public func allowedDynamicRange(_ p0: Any? = nil) -> Self { self }
+    public func allowsHitTesting(_ p0: Any? = nil) -> Self { self }
+    public func allowsTightening(_ p0: Any? = nil) -> Self { self }
+    public func allowsWindowActivationEvents(_ p0: Any? = nil) -> Self { self }
+    public func anchorPreference(key p0: Any? = nil, value p1: Any? = nil, transform p2: Any? = nil) -> Self { self }
+    public func animation(_ p0: Any? = nil, body p1: Any? = nil) -> Self { self }
+    public func aspectRatio(_ p0: Any? = nil, contentMode p1: Any? = nil) -> Self { self }
+    public func assistiveAccessNavigationIcon(_ p0: Any? = nil) -> Self { self }
+    public func attributedTextFormattingDefinition(_ p0: Any? = nil) -> Self { self }
+    public func autocapitalization(_ p0: Any? = nil) -> Self { self }
+    public func autocorrectionDisabled(_ p0: Any? = nil) -> Self { self }
+    public func background(_ p0: Any? = nil, `in` p1: Any? = nil, fillStyle p2: Any? = nil) -> Self { self }
+    public func backgroundExtensionEffect(isEnabled p0: Any? = nil) -> Self { self }
+    public func backgroundPreferenceValue(_ p0: Any? = nil, alignment p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func backgroundStyle(_ p0: Any? = nil) -> Self { self }
+    public func badge(_ p0: Any? = nil) -> Self { self }
+    public func badgeProminence(_ p0: Any? = nil) -> Self { self }
+    public func baselineOffset(_ p0: Any? = nil) -> Self { self }
+    public func blendMode(_ p0: Any? = nil) -> Self { self }
+    public func blur(radius p0: Any? = nil, opaque p1: Any? = nil) -> Self { self }
+    public func bold(_ p0: Any? = nil) -> Self { self }
+    public func border(_ p0: Any? = nil, width p1: Any? = nil) -> Self { self }
+    public func brightness(_ p0: Any? = nil) -> Self { self }
+    public func buttonBorderShape(_ p0: Any? = nil) -> Self { self }
+    public func buttonRepeatBehavior(_ p0: Any? = nil) -> Self { self }
+    public func buttonSizing(_ p0: Any? = nil) -> Self { self }
+    public func buttonStyle(_ p0: Any? = nil) -> Self { self }
+    public func clipShape(_ p0: Any? = nil, style p1: Any? = nil) -> Self { self }
+    public func clipped(antialiased p0: Any? = nil) -> Self { self }
+    public func colorEffect(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
     public func colorInvert() -> Self { self }
-    public func colorMultiply<T0>(_ p0: T0? = nil) -> Self { self }
-    public func colorScheme<T0>(_ p0: T0? = nil) -> Self { self }
+    public func colorMultiply(_ p0: Any? = nil) -> Self { self }
+    public func colorScheme(_ p0: Any? = nil) -> Self { self }
     public func compositingGroup() -> Self { self }
-    public func confirmationDialog<T0, T1, T2, T3>(_ p0: T0? = nil, isPresented p1: T1? = nil, titleVisibility p2: T2? = nil, actions p3: T3? = nil) -> Self { self }
-    public func confirmationDialog<T0, T1, T2, T3, T4>(_ p0: T0? = nil, isPresented p1: T1? = nil, titleVisibility p2: T2? = nil, actions p3: T3? = nil, message p4: T4? = nil) -> Self { self }
-    public func confirmationDialog<T0, T1, T2, T3, T4>(_ p0: T0? = nil, isPresented p1: T1? = nil, titleVisibility p2: T2? = nil, presenting p3: T3? = nil, actions p4: T4? = nil) -> Self { self }
-    public func confirmationDialog<T0, T1, T2, T3, T4, T5>(_ p0: T0? = nil, isPresented p1: T1? = nil, titleVisibility p2: T2? = nil, presenting p3: T3? = nil, actions p4: T4? = nil, message p5: T5? = nil) -> Self { self }
-    public func containerBackground<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func containerBackground<T0, T1, T2>(`for` p0: T0? = nil, alignment p1: T1? = nil, content p2: T2? = nil) -> Self { self }
-    public func containerCornerOffset<T0, T1>(_ p0: T0? = nil, sizeToFit p1: T1? = nil) -> Self { self }
-    public func containerRelativeFrame<T0, T1>(_ p0: T0? = nil, alignment p1: T1? = nil) -> Self { self }
-    public func containerRelativeFrame<T0, T1, T2>(_ p0: T0? = nil, alignment p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func containerRelativeFrame<T0, T1, T2, T3, T4>(_ p0: T0? = nil, count p1: T1? = nil, span p2: T2? = nil, spacing p3: T3? = nil, alignment p4: T4? = nil) -> Self { self }
-    public func containerShape<T0>(_ p0: T0? = nil) -> Self { self }
-    public func containerValue<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func contentMargins<T0, T1, T2>(_ p0: T0? = nil, _ p1: T1? = nil, `for` p2: T2? = nil) -> Self { self }
-    public func contentMargins<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func contentShape<T0, T1, T2>(_ p0: T0? = nil, _ p1: T1? = nil, eoFill p2: T2? = nil) -> Self { self }
-    public func contentShape<T0, T1>(_ p0: T0? = nil, eoFill p1: T1? = nil) -> Self { self }
-    public func contentToolbar<T0, T1>(`for` p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func contentTransition<T0>(_ p0: T0? = nil) -> Self { self }
-    public func contextMenu<T0>(_ p0: T0? = nil) -> Self { self }
-    public func contextMenu<T0, T1, T2>(forSelectionType p0: T0? = nil, menu p1: T1? = nil, primaryAction p2: T2? = nil) -> Self { self }
-    public func contextMenu<T0>(menuItems p0: T0? = nil) -> Self { self }
-    public func contextMenu<T0, T1>(menuItems p0: T0? = nil, preview p1: T1? = nil) -> Self { self }
-    public func contrast<T0>(_ p0: T0? = nil) -> Self { self }
-    public func controlGroupStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func controlSize<T0>(_ p0: T0? = nil) -> Self { self }
-    public func coordinateSpace<T0>(_ p0: T0? = nil) -> Self { self }
-    public func coordinateSpace<T0>(name p0: T0? = nil) -> Self { self }
-    public func cornerRadius<T0, T1>(_ p0: T0? = nil, antialiased p1: T1? = nil) -> Self { self }
-    public func datePickerStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func defaultAdaptableTabBarPlacement<T0>(_ p0: T0? = nil) -> Self { self }
-    public func defaultAppStorage<T0>(_ p0: T0? = nil) -> Self { self }
-    public func defaultFocus<T0, T1, T2>(_ p0: T0? = nil, _ p1: T1? = nil, priority p2: T2? = nil) -> Self { self }
-    public func defaultHoverEffect<T0>(_ p0: T0? = nil) -> Self { self }
-    public func defaultScrollAnchor<T0>(_ p0: T0? = nil) -> Self { self }
-    public func defaultScrollAnchor<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func defersSystemGestures<T0>(on p0: T0? = nil) -> Self { self }
-    public func deleteDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func dialogIcon<T0>(_ p0: T0? = nil) -> Self { self }
-    public func dialogSuppressionToggle<T0, T1>(_ p0: T0? = nil, isSuppressed p1: T1? = nil) -> Self { self }
-    public func dialogSuppressionToggle<T0>(isSuppressed p0: T0? = nil) -> Self { self }
-    public func disableAutocorrection<T0>(_ p0: T0? = nil) -> Self { self }
-    public func disabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func disclosureGroupStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func distortionEffect<T0, T1, T2>(_ p0: T0? = nil, maxSampleOffset p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func documentBrowserContextMenu<T0>(_ p0: T0? = nil) -> Self { self }
-    public func draggable<T0>(_ p0: T0? = nil) -> Self { self }
-    public func draggable<T0, T1>(_ p0: T0? = nil, preview p1: T1? = nil) -> Self { self }
-    public func drawingGroup<T0, T1>(opaque p0: T0? = nil, colorMode p1: T1? = nil) -> Self { self }
-    public func dropDestination<T0, T1, T2>(`for` p0: T0? = nil, action p1: T1? = nil, isTargeted p2: T2? = nil) -> Self { self }
-    public func dropDestination<T0, T1, T2>(`for` p0: T0? = nil, isEnabled p1: T1? = nil, action p2: T2? = nil) -> Self { self }
-    public func dynamicTypeSize<T0>(_ p0: T0? = nil) -> Self { self }
-    public func edgesIgnoringSafeArea<T0>(_ p0: T0? = nil) -> Self { self }
-    public func environment<T0>(_ p0: T0? = nil) -> Self { self }
-    public func environment<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func environmentObject<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogBrowserOptions<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogConfirmationLabel<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogCustomizationID<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogDefaultDirectory<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogImportsUnresolvedAliases<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogMessage<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileDialogURLEnabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileExporter<T0, T1, T2, T3, T4>(isPresented p0: T0? = nil, document p1: T1? = nil, contentType p2: T2? = nil, defaultFilename p3: T3? = nil, onCompletion p4: T4? = nil) -> Self { self }
-    public func fileExporter<T0, T1, T2, T3, T4, T5>(isPresented p0: T0? = nil, document p1: T1? = nil, contentTypes p2: T2? = nil, defaultFilename p3: T3? = nil, onCompletion p4: T4? = nil, onCancellation p5: T5? = nil) -> Self { self }
-    public func fileExporter<T0, T1, T2, T3>(isPresented p0: T0? = nil, documents p1: T1? = nil, contentType p2: T2? = nil, onCompletion p3: T3? = nil) -> Self { self }
-    public func fileExporter<T0, T1, T2, T3, T4>(isPresented p0: T0? = nil, documents p1: T1? = nil, contentTypes p2: T2? = nil, onCompletion p3: T3? = nil, onCancellation p4: T4? = nil) -> Self { self }
-    public func fileExporter<T0, T1, T2, T3, T4, T5>(isPresented p0: T0? = nil, item p1: T1? = nil, contentTypes p2: T2? = nil, defaultFilename p3: T3? = nil, onCompletion p4: T4? = nil, onCancellation p5: T5? = nil) -> Self { self }
-    public func fileExporter<T0, T1, T2, T3, T4>(isPresented p0: T0? = nil, items p1: T1? = nil, contentTypes p2: T2? = nil, onCompletion p3: T3? = nil, onCancellation p4: T4? = nil) -> Self { self }
-    public func fileExporterFilenameLabel<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fileImporter<T0, T1, T2, T3>(isPresented p0: T0? = nil, allowedContentTypes p1: T1? = nil, allowsMultipleSelection p2: T2? = nil, onCompletion p3: T3? = nil) -> Self { self }
-    public func fileImporter<T0, T1, T2, T3, T4>(isPresented p0: T0? = nil, allowedContentTypes p1: T1? = nil, allowsMultipleSelection p2: T2? = nil, onCompletion p3: T3? = nil, onCancellation p4: T4? = nil) -> Self { self }
-    public func fileImporter<T0, T1, T2>(isPresented p0: T0? = nil, allowedContentTypes p1: T1? = nil, onCompletion p2: T2? = nil) -> Self { self }
-    public func fileMover<T0, T1, T2>(isPresented p0: T0? = nil, file p1: T1? = nil, onCompletion p2: T2? = nil) -> Self { self }
-    public func fileMover<T0, T1, T2, T3>(isPresented p0: T0? = nil, file p1: T1? = nil, onCompletion p2: T2? = nil, onCancellation p3: T3? = nil) -> Self { self }
-    public func fileMover<T0, T1, T2>(isPresented p0: T0? = nil, files p1: T1? = nil, onCompletion p2: T2? = nil) -> Self { self }
-    public func fileMover<T0, T1, T2, T3>(isPresented p0: T0? = nil, files p1: T1? = nil, onCompletion p2: T2? = nil, onCancellation p3: T3? = nil) -> Self { self }
-    public func findDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func findNavigator<T0>(isPresented p0: T0? = nil) -> Self { self }
-    public func fixedSize() -> Self { self }
-    public func fixedSize<T0, T1>(horizontal p0: T0? = nil, vertical p1: T1? = nil) -> Self { self }
-    public func flipsForRightToLeftLayoutDirection<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusEffectDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusable<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusable<T0, T1>(_ p0: T0? = nil, interactions p1: T1? = nil) -> Self { self }
-    public func focused<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focused<T0, T1>(_ p0: T0? = nil, equals p1: T1? = nil) -> Self { self }
-    public func focusedObject<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusedSceneObject<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusedSceneValue<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusedSceneValue<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func focusedValue<T0>(_ p0: T0? = nil) -> Self { self }
-    public func focusedValue<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func font<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fontDesign<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fontWeight<T0>(_ p0: T0? = nil) -> Self { self }
-    public func fontWidth<T0>(_ p0: T0? = nil) -> Self { self }
-    public func foregroundColor<T0>(_ p0: T0? = nil) -> Self { self }
-    public func foregroundStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func foregroundStyle<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func foregroundStyle<T0, T1, T2>(_ p0: T0? = nil, _ p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func formStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func frame() -> Self { self }
-    public func frame<T0, T1, T2, T3, T4, T5, T6>(minWidth p0: T0? = nil, idealWidth p1: T1? = nil, maxWidth p2: T2? = nil, minHeight p3: T3? = nil, idealHeight p4: T4? = nil, maxHeight p5: T5? = nil, alignment p6: T6? = nil) -> Self { self }
-    public func frame<T0, T1, T2>(width p0: T0? = nil, height p1: T1? = nil, alignment p2: T2? = nil) -> Self { self }
-    public func fullScreenCover<T0, T1, T2>(isPresented p0: T0? = nil, onDismiss p1: T1? = nil, content p2: T2? = nil) -> Self { self }
-    public func fullScreenCover<T0, T1, T2>(item p0: T0? = nil, onDismiss p1: T1? = nil, content p2: T2? = nil) -> Self { self }
-    public func gaugeStyle<T0>(_ p0: T0? = nil) -> Self { self }
+    public func confirmationDialog(_ p0: Any? = nil, isPresented p1: Any? = nil, titleVisibility p2: Any? = nil, presenting p3: Any? = nil, actions p4: Any? = nil, message p5: Any? = nil) -> Self { self }
+    public func containerBackground(`for` p0: Any? = nil, alignment p1: Any? = nil, content p2: Any? = nil) -> Self { self }
+    public func containerCornerOffset(_ p0: Any? = nil, sizeToFit p1: Any? = nil) -> Self { self }
+    public func containerRelativeFrame(_ p0: Any? = nil, count p1: Any? = nil, span p2: Any? = nil, spacing p3: Any? = nil, alignment p4: Any? = nil) -> Self { self }
+    public func containerShape(_ p0: Any? = nil) -> Self { self }
+    public func containerValue(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func contentMargins(_ p0: Any? = nil, _ p1: Any? = nil, `for` p2: Any? = nil) -> Self { self }
+    public func contentShape(_ p0: Any? = nil, _ p1: Any? = nil, eoFill p2: Any? = nil) -> Self { self }
+    public func contentToolbar(`for` p0: Any? = nil, content p1: Any? = nil) -> Self { self }
+    public func contentTransition(_ p0: Any? = nil) -> Self { self }
+    public func contextMenu(forSelectionType p0: Any? = nil, menu p1: Any? = nil, primaryAction p2: Any? = nil) -> Self { self }
+    public func contrast(_ p0: Any? = nil) -> Self { self }
+    public func controlGroupStyle(_ p0: Any? = nil) -> Self { self }
+    public func controlSize(_ p0: Any? = nil) -> Self { self }
+    public func coordinateSpace(_ p0: Any? = nil) -> Self { self }
+    public func cornerRadius(_ p0: Any? = nil, antialiased p1: Any? = nil) -> Self { self }
+    public func datePickerStyle(_ p0: Any? = nil) -> Self { self }
+    public func defaultAdaptableTabBarPlacement(_ p0: Any? = nil) -> Self { self }
+    public func defaultAppStorage(_ p0: Any? = nil) -> Self { self }
+    public func defaultFocus(_ p0: Any? = nil, _ p1: Any? = nil, priority p2: Any? = nil) -> Self { self }
+    public func defaultHoverEffect(_ p0: Any? = nil) -> Self { self }
+    public func defaultScrollAnchor(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func defersSystemGestures(on p0: Any? = nil) -> Self { self }
+    public func deleteDisabled(_ p0: Any? = nil) -> Self { self }
+    public func dialogIcon(_ p0: Any? = nil) -> Self { self }
+    public func dialogSuppressionToggle(_ p0: Any? = nil, isSuppressed p1: Any? = nil) -> Self { self }
+    public func disableAutocorrection(_ p0: Any? = nil) -> Self { self }
+    public func disabled(_ p0: Any? = nil) -> Self { self }
+    public func disclosureGroupStyle(_ p0: Any? = nil) -> Self { self }
+    public func distortionEffect(_ p0: Any? = nil, maxSampleOffset p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func documentBrowserContextMenu(_ p0: Any? = nil) -> Self { self }
+    public func draggable(_ p0: Any? = nil, preview p1: Any? = nil) -> Self { self }
+    public func drawingGroup(opaque p0: Any? = nil, colorMode p1: Any? = nil) -> Self { self }
+    public func dropDestination(`for` p0: Any? = nil, action p1: Any? = nil, isTargeted p2: Any? = nil) -> Self { self }
+    public func dynamicTypeSize(_ p0: Any? = nil) -> Self { self }
+    public func edgesIgnoringSafeArea(_ p0: Any? = nil) -> Self { self }
+    public func environment(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func environmentObject(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogBrowserOptions(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogConfirmationLabel(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogCustomizationID(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogDefaultDirectory(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogImportsUnresolvedAliases(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogMessage(_ p0: Any? = nil) -> Self { self }
+    public func fileDialogURLEnabled(_ p0: Any? = nil) -> Self { self }
+    public func fileExporter(isPresented p0: Any? = nil, document p1: Any? = nil, contentTypes p2: Any? = nil, defaultFilename p3: Any? = nil, onCompletion p4: Any? = nil, onCancellation p5: Any? = nil) -> Self { self }
+    public func fileExporterFilenameLabel(_ p0: Any? = nil) -> Self { self }
+    public func fileImporter(isPresented p0: Any? = nil, allowedContentTypes p1: Any? = nil, allowsMultipleSelection p2: Any? = nil, onCompletion p3: Any? = nil, onCancellation p4: Any? = nil) -> Self { self }
+    public func fileMover(isPresented p0: Any? = nil, file p1: Any? = nil, onCompletion p2: Any? = nil, onCancellation p3: Any? = nil) -> Self { self }
+    public func findDisabled(_ p0: Any? = nil) -> Self { self }
+    public func findNavigator(isPresented p0: Any? = nil) -> Self { self }
+    public func fixedSize(horizontal p0: Any? = nil, vertical p1: Any? = nil) -> Self { self }
+    public func flipsForRightToLeftLayoutDirection(_ p0: Any? = nil) -> Self { self }
+    public func focusEffectDisabled(_ p0: Any? = nil) -> Self { self }
+    public func focusable(_ p0: Any? = nil, interactions p1: Any? = nil) -> Self { self }
+    public func focused(_ p0: Any? = nil, equals p1: Any? = nil) -> Self { self }
+    public func focusedObject(_ p0: Any? = nil) -> Self { self }
+    public func focusedSceneObject(_ p0: Any? = nil) -> Self { self }
+    public func focusedSceneValue(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func focusedValue(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func font(_ p0: Any? = nil) -> Self { self }
+    public func fontDesign(_ p0: Any? = nil) -> Self { self }
+    public func fontWeight(_ p0: Any? = nil) -> Self { self }
+    public func fontWidth(_ p0: Any? = nil) -> Self { self }
+    public func foregroundColor(_ p0: Any? = nil) -> Self { self }
+    public func foregroundStyle(_ p0: Any? = nil, _ p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func formStyle(_ p0: Any? = nil) -> Self { self }
+    public func frame(minWidth p0: Any? = nil, idealWidth p1: Any? = nil, maxWidth p2: Any? = nil, minHeight p3: Any? = nil, idealHeight p4: Any? = nil, maxHeight p5: Any? = nil, alignment p6: Any? = nil) -> Self { self }
+    public func fullScreenCover(isPresented p0: Any? = nil, onDismiss p1: Any? = nil, content p2: Any? = nil) -> Self { self }
+    public func gaugeStyle(_ p0: Any? = nil) -> Self { self }
     public func geometryGroup() -> Self { self }
-    public func gesture<T0>(_ p0: T0? = nil) -> Self { self }
-    public func gesture<T0, T1>(_ p0: T0? = nil, including p1: T1? = nil) -> Self { self }
-    public func gesture<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func gesture<T0, T1, T2>(_ p0: T0? = nil, name p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func glassEffect<T0, T1>(_ p0: T0? = nil, `in` p1: T1? = nil) -> Self { self }
-    public func glassEffectID<T0, T1>(_ p0: T0? = nil, `in` p1: T1? = nil) -> Self { self }
-    public func glassEffectTransition<T0>(_ p0: T0? = nil) -> Self { self }
-    public func glassEffectUnion<T0, T1>(id p0: T0? = nil, namespace p1: T1? = nil) -> Self { self }
-    public func grayscale<T0>(_ p0: T0? = nil) -> Self { self }
-    public func gridCellAnchor<T0>(_ p0: T0? = nil) -> Self { self }
-    public func gridCellColumns<T0>(_ p0: T0? = nil) -> Self { self }
-    public func gridCellUnsizedAxes<T0>(_ p0: T0? = nil) -> Self { self }
-    public func gridColumnAlignment<T0>(_ p0: T0? = nil) -> Self { self }
-    public func groupBoxStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func handGestureShortcut<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func handlesExternalEvents<T0, T1>(preferring p0: T0? = nil, allowing p1: T1? = nil) -> Self { self }
-    public func headerProminence<T0>(_ p0: T0? = nil) -> Self { self }
-    public func help<T0>(_ p0: T0? = nil) -> Self { self }
+    public func gesture(_ p0: Any? = nil, name p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func glassEffect(_ p0: Any? = nil, `in` p1: Any? = nil) -> Self { self }
+    public func glassEffectID(_ p0: Any? = nil, `in` p1: Any? = nil) -> Self { self }
+    public func glassEffectTransition(_ p0: Any? = nil) -> Self { self }
+    public func glassEffectUnion(id p0: Any? = nil, namespace p1: Any? = nil) -> Self { self }
+    public func grayscale(_ p0: Any? = nil) -> Self { self }
+    public func gridCellAnchor(_ p0: Any? = nil) -> Self { self }
+    public func gridCellColumns(_ p0: Any? = nil) -> Self { self }
+    public func gridCellUnsizedAxes(_ p0: Any? = nil) -> Self { self }
+    public func gridColumnAlignment(_ p0: Any? = nil) -> Self { self }
+    public func groupBoxStyle(_ p0: Any? = nil) -> Self { self }
+    public func handGestureShortcut(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func handlesExternalEvents(preferring p0: Any? = nil, allowing p1: Any? = nil) -> Self { self }
+    public func headerProminence(_ p0: Any? = nil) -> Self { self }
+    public func help(_ p0: Any? = nil) -> Self { self }
     public func hidden() -> Self { self }
-    public func highPriorityGesture<T0, T1>(_ p0: T0? = nil, including p1: T1? = nil) -> Self { self }
-    public func highPriorityGesture<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func highPriorityGesture<T0, T1, T2>(_ p0: T0? = nil, name p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func hoverEffect<T0>(_ p0: T0? = nil) -> Self { self }
-    public func hoverEffect<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func hoverEffectDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func hueRotation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func id<T0>(_ p0: T0? = nil) -> Self { self }
-    public func ignoresSafeArea<T0, T1>(_ p0: T0? = nil, edges p1: T1? = nil) -> Self { self }
-    public func imageScale<T0>(_ p0: T0? = nil) -> Self { self }
-    public func indexViewStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func inspector<T0, T1>(isPresented p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func inspectorColumnWidth<T0>(_ p0: T0? = nil) -> Self { self }
-    public func inspectorColumnWidth<T0, T1, T2>(min p0: T0? = nil, ideal p1: T1? = nil, max p2: T2? = nil) -> Self { self }
-    public func interactionActivityTrackingTag<T0>(_ p0: T0? = nil) -> Self { self }
-    public func interactiveDismissDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func invalidatableContent<T0>(_ p0: T0? = nil) -> Self { self }
-    public func italic<T0>(_ p0: T0? = nil) -> Self { self }
-    public func itemProvider<T0>(_ p0: T0? = nil) -> Self { self }
-    public func kerning<T0>(_ p0: T0? = nil) -> Self { self }
-    public func keyboardShortcut<T0>(_ p0: T0? = nil) -> Self { self }
-    public func keyboardShortcut<T0, T1>(_ p0: T0? = nil, modifiers p1: T1? = nil) -> Self { self }
-    public func keyboardShortcut<T0, T1, T2>(_ p0: T0? = nil, modifiers p1: T1? = nil, localization p2: T2? = nil) -> Self { self }
-    public func keyboardType<T0>(_ p0: T0? = nil) -> Self { self }
-    public func keyframeAnimator<T0, T1, T2, T3>(initialValue p0: T0? = nil, repeating p1: T1? = nil, content p2: T2? = nil, keyframes p3: T3? = nil) -> Self { self }
-    public func keyframeAnimator<T0, T1, T2, T3>(initialValue p0: T0? = nil, trigger p1: T1? = nil, content p2: T2? = nil, keyframes p3: T3? = nil) -> Self { self }
-    public func labelIconToTitleSpacing<T0>(_ p0: T0? = nil) -> Self { self }
-    public func labelReservedIconWidth<T0>(_ p0: T0? = nil) -> Self { self }
-    public func labelStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func labeledContentStyle<T0>(_ p0: T0? = nil) -> Self { self }
+    public func highPriorityGesture(_ p0: Any? = nil, name p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func hoverEffect(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func hoverEffectDisabled(_ p0: Any? = nil) -> Self { self }
+    public func hueRotation(_ p0: Any? = nil) -> Self { self }
+    public func id(_ p0: Any? = nil) -> Self { self }
+    public func ignoresSafeArea(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
+    public func imageScale(_ p0: Any? = nil) -> Self { self }
+    public func indexViewStyle(_ p0: Any? = nil) -> Self { self }
+    public func inspector(isPresented p0: Any? = nil, content p1: Any? = nil) -> Self { self }
+    public func inspectorColumnWidth(min p0: Any? = nil, ideal p1: Any? = nil, max p2: Any? = nil) -> Self { self }
+    public func interactionActivityTrackingTag(_ p0: Any? = nil) -> Self { self }
+    public func interactiveDismissDisabled(_ p0: Any? = nil) -> Self { self }
+    public func invalidatableContent(_ p0: Any? = nil) -> Self { self }
+    public func italic(_ p0: Any? = nil) -> Self { self }
+    public func itemProvider(_ p0: Any? = nil) -> Self { self }
+    public func kerning(_ p0: Any? = nil) -> Self { self }
+    public func keyboardShortcut(_ p0: Any? = nil, modifiers p1: Any? = nil, localization p2: Any? = nil) -> Self { self }
+    public func keyboardType(_ p0: Any? = nil) -> Self { self }
+    public func keyframeAnimator(initialValue p0: Any? = nil, repeating p1: Any? = nil, content p2: Any? = nil, keyframes p3: Any? = nil) -> Self { self }
+    public func labelIconToTitleSpacing(_ p0: Any? = nil) -> Self { self }
+    public func labelReservedIconWidth(_ p0: Any? = nil) -> Self { self }
+    public func labelStyle(_ p0: Any? = nil) -> Self { self }
+    public func labeledContentStyle(_ p0: Any? = nil) -> Self { self }
     public func labelsHidden() -> Self { self }
-    public func labelsVisibility<T0>(_ p0: T0? = nil) -> Self { self }
-    public func layerEffect<T0, T1, T2>(_ p0: T0? = nil, maxSampleOffset p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func layoutDirectionBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func layoutPriority<T0>(_ p0: T0? = nil) -> Self { self }
-    public func layoutValue<T0, T1>(key p0: T0? = nil, value p1: T1? = nil) -> Self { self }
-    public func lineHeight<T0>(_ p0: T0? = nil) -> Self { self }
-    public func lineLimit<T0>(_ p0: T0? = nil) -> Self { self }
-    public func lineLimit<T0, T1>(_ p0: T0? = nil, reservesSpace p1: T1? = nil) -> Self { self }
-    public func lineSpacing<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listItemTint<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listRowBackground<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listRowInsets<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listRowInsets<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func listRowSeparator<T0, T1>(_ p0: T0? = nil, edges p1: T1? = nil) -> Self { self }
-    public func listRowSeparatorTint<T0, T1>(_ p0: T0? = nil, edges p1: T1? = nil) -> Self { self }
-    public func listRowSpacing<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listSectionIndexVisibility<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listSectionMargins<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func listSectionSeparator<T0, T1>(_ p0: T0? = nil, edges p1: T1? = nil) -> Self { self }
-    public func listSectionSeparatorTint<T0, T1>(_ p0: T0? = nil, edges p1: T1? = nil) -> Self { self }
-    public func listSectionSpacing<T0>(_ p0: T0? = nil) -> Self { self }
-    public func listStyle<T0>(_ p0: T0? = nil) -> Self { self }
+    public func labelsVisibility(_ p0: Any? = nil) -> Self { self }
+    public func layerEffect(_ p0: Any? = nil, maxSampleOffset p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func layoutDirectionBehavior(_ p0: Any? = nil) -> Self { self }
+    public func layoutPriority(_ p0: Any? = nil) -> Self { self }
+    public func layoutValue(key p0: Any? = nil, value p1: Any? = nil) -> Self { self }
+    public func lineHeight(_ p0: Any? = nil) -> Self { self }
+    public func lineLimit(_ p0: Any? = nil, reservesSpace p1: Any? = nil) -> Self { self }
+    public func lineSpacing(_ p0: Any? = nil) -> Self { self }
+    public func listItemTint(_ p0: Any? = nil) -> Self { self }
+    public func listRowBackground(_ p0: Any? = nil) -> Self { self }
+    public func listRowInsets(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func listRowSeparator(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
+    public func listRowSeparatorTint(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
+    public func listRowSpacing(_ p0: Any? = nil) -> Self { self }
+    public func listSectionIndexVisibility(_ p0: Any? = nil) -> Self { self }
+    public func listSectionMargins(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func listSectionSeparator(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
+    public func listSectionSeparatorTint(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
+    public func listSectionSpacing(_ p0: Any? = nil) -> Self { self }
+    public func listStyle(_ p0: Any? = nil) -> Self { self }
     public func luminanceToAlpha() -> Self { self }
-    public func mask<T0>(_ p0: T0? = nil) -> Self { self }
-    public func mask<T0, T1>(alignment p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func matchedGeometryEffect<T0, T1, T2, T3, T4>(id p0: T0? = nil, `in` p1: T1? = nil, properties p2: T2? = nil, anchor p3: T3? = nil, isSource p4: T4? = nil) -> Self { self }
-    public func matchedTransitionSource<T0, T1>(id p0: T0? = nil, `in` p1: T1? = nil) -> Self { self }
-    public func matchedTransitionSource<T0, T1, T2>(id p0: T0? = nil, `in` p1: T1? = nil, configuration p2: T2? = nil) -> Self { self }
-    public func materialActiveAppearance<T0>(_ p0: T0? = nil) -> Self { self }
-    public func menuActionDismissBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func menuIndicator<T0>(_ p0: T0? = nil) -> Self { self }
-    public func menuOrder<T0>(_ p0: T0? = nil) -> Self { self }
-    public func menuStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func minimumScaleFactor<T0>(_ p0: T0? = nil) -> Self { self }
-    public func modifier<T0>(_ p0: T0? = nil) -> Self { self }
-    public func monospaced<T0>(_ p0: T0? = nil) -> Self { self }
+    public func mask(alignment p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func matchedGeometryEffect(id p0: Any? = nil, `in` p1: Any? = nil, properties p2: Any? = nil, anchor p3: Any? = nil, isSource p4: Any? = nil) -> Self { self }
+    public func matchedTransitionSource(id p0: Any? = nil, `in` p1: Any? = nil, configuration p2: Any? = nil) -> Self { self }
+    public func materialActiveAppearance(_ p0: Any? = nil) -> Self { self }
+    public func menuActionDismissBehavior(_ p0: Any? = nil) -> Self { self }
+    public func menuIndicator(_ p0: Any? = nil) -> Self { self }
+    public func menuOrder(_ p0: Any? = nil) -> Self { self }
+    public func menuStyle(_ p0: Any? = nil) -> Self { self }
+    public func minimumScaleFactor(_ p0: Any? = nil) -> Self { self }
+    public func modifier(_ p0: Any? = nil) -> Self { self }
+    public func monospaced(_ p0: Any? = nil) -> Self { self }
     public func monospacedDigit() -> Self { self }
-    public func moveDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func multilineTextAlignment<T0>(_ p0: T0? = nil) -> Self { self }
-    public func multilineTextAlignment<T0>(strategy p0: T0? = nil) -> Self { self }
-    public func navigationBarBackButtonHidden<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationBarHidden<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationBarItems<T0>(leading p0: T0? = nil) -> Self { self }
-    public func navigationBarItems<T0, T1>(leading p0: T0? = nil, trailing p1: T1? = nil) -> Self { self }
-    public func navigationBarItems<T0>(trailing p0: T0? = nil) -> Self { self }
-    public func navigationBarTitle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationBarTitle<T0, T1>(_ p0: T0? = nil, displayMode p1: T1? = nil) -> Self { self }
-    public func navigationBarTitleDisplayMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationDestination<T0, T1>(`for` p0: T0? = nil, destination p1: T1? = nil) -> Self { self }
-    public func navigationDestination<T0, T1>(isPresented p0: T0? = nil, destination p1: T1? = nil) -> Self { self }
-    public func navigationDestination<T0, T1>(item p0: T0? = nil, destination p1: T1? = nil) -> Self { self }
-    public func navigationDocument<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationDocument<T0, T1>(_ p0: T0? = nil, preview p1: T1? = nil) -> Self { self }
-    public func navigationLinkIndicatorVisibility<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationSplitViewColumnWidth<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationSplitViewColumnWidth<T0, T1, T2>(min p0: T0? = nil, ideal p1: T1? = nil, max p2: T2? = nil) -> Self { self }
-    public func navigationSplitViewStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationSubtitle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationTitle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationTransition<T0>(_ p0: T0? = nil) -> Self { self }
-    public func navigationViewStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func offset<T0>(_ p0: T0? = nil) -> Self { self }
-    public func offset<T0, T1>(x p0: T0? = nil, y p1: T1? = nil) -> Self { self }
-    public func onAppIntentExecution<T0, T1>(_ p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func onAppear<T0>(perform p0: T0? = nil) -> Self { self }
-    public func onChange<T0, T1, T2>(of p0: T0? = nil, initial p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func onChange<T0, T1>(of p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func onContinueUserActivity<T0, T1>(_ p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func onContinuousHover<T0, T1>(coordinateSpace p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func onDisappear<T0>(perform p0: T0? = nil) -> Self { self }
-    public func onDrag<T0>(_ p0: T0? = nil) -> Self { self }
-    public func onDrag<T0, T1>(_ p0: T0? = nil, preview p1: T1? = nil) -> Self { self }
-    public func onDrop<T0, T1>(of p0: T0? = nil, delegate p1: T1? = nil) -> Self { self }
-    public func onDrop<T0, T1, T2>(of p0: T0? = nil, isTargeted p1: T1? = nil, perform p2: T2? = nil) -> Self { self }
-    public func onGeometryChange<T0, T1, T2>(`for` p0: T0? = nil, of p1: T1? = nil, action p2: T2? = nil) -> Self { self }
-    public func onHover<T0>(perform p0: T0? = nil) -> Self { self }
-    public func onInteractiveResizeChange<T0>(_ p0: T0? = nil) -> Self { self }
-    public func onKeyPress<T0, T1>(_ p0: T0? = nil, action p1: T1? = nil) -> Self { self }
-    public func onKeyPress<T0, T1, T2>(_ p0: T0? = nil, phases p1: T1? = nil, action p2: T2? = nil) -> Self { self }
-    public func onKeyPress<T0, T1, T2>(characters p0: T0? = nil, phases p1: T1? = nil, action p2: T2? = nil) -> Self { self }
-    public func onKeyPress<T0, T1, T2>(keys p0: T0? = nil, phases p1: T1? = nil, action p2: T2? = nil) -> Self { self }
-    public func onKeyPress<T0, T1>(phases p0: T0? = nil, action p1: T1? = nil) -> Self { self }
-    public func onLongPressGesture<T0, T1, T2, T3>(minimumDuration p0: T0? = nil, maximumDistance p1: T1? = nil, perform p2: T2? = nil, onPressingChanged p3: T3? = nil) -> Self { self }
-    public func onLongPressGesture<T0, T1, T2, T3>(minimumDuration p0: T0? = nil, maximumDistance p1: T1? = nil, pressing p2: T2? = nil, perform p3: T3? = nil) -> Self { self }
-    public func onLongPressGesture<T0, T1, T2>(minimumDuration p0: T0? = nil, perform p1: T1? = nil, onPressingChanged p2: T2? = nil) -> Self { self }
-    public func onLongPressGesture<T0, T1, T2>(minimumDuration p0: T0? = nil, pressing p1: T1? = nil, perform p2: T2? = nil) -> Self { self }
-    public func onOpenURL<T0>(perform p0: T0? = nil) -> Self { self }
-    public func onOpenURL<T0>(prefersInApp p0: T0? = nil) -> Self { self }
-    public func onPencilDoubleTap<T0>(perform p0: T0? = nil) -> Self { self }
-    public func onPencilSqueeze<T0>(perform p0: T0? = nil) -> Self { self }
-    public func onPreferenceChange<T0, T1>(_ p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func onReceive<T0, T1>(_ p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func onScrollGeometryChange<T0, T1, T2>(`for` p0: T0? = nil, of p1: T1? = nil, action p2: T2? = nil) -> Self { self }
-    public func onScrollPhaseChange<T0>(_ p0: T0? = nil) -> Self { self }
-    public func onScrollTargetVisibilityChange<T0, T1, T2>(idType p0: T0? = nil, threshold p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func onScrollVisibilityChange<T0, T1>(threshold p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func onSubmit<T0, T1>(of p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func onTapGesture<T0, T1, T2>(count p0: T0? = nil, coordinateSpace p1: T1? = nil, perform p2: T2? = nil) -> Self { self }
-    public func onTapGesture<T0, T1>(count p0: T0? = nil, perform p1: T1? = nil) -> Self { self }
-    public func opacity<T0>(_ p0: T0? = nil) -> Self { self }
-    public func overlay<T0, T1>(_ p0: T0? = nil, alignment p1: T1? = nil) -> Self { self }
-    public func overlay<T0, T1>(_ p0: T0? = nil, ignoresSafeAreaEdges p1: T1? = nil) -> Self { self }
-    public func overlay<T0, T1, T2>(_ p0: T0? = nil, `in` p1: T1? = nil, fillStyle p2: T2? = nil) -> Self { self }
-    public func overlay<T0, T1>(alignment p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func overlayPreferenceValue<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func overlayPreferenceValue<T0, T1, T2>(_ p0: T0? = nil, alignment p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func padding<T0>(_ p0: T0? = nil) -> Self { self }
-    public func padding<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func paletteSelectionEffect<T0>(_ p0: T0? = nil) -> Self { self }
-    public func persistentSystemOverlays<T0>(_ p0: T0? = nil) -> Self { self }
-    public func phaseAnimator<T0, T1, T2>(_ p0: T0? = nil, content p1: T1? = nil, animation p2: T2? = nil) -> Self { self }
-    public func phaseAnimator<T0, T1, T2, T3>(_ p0: T0? = nil, trigger p1: T1? = nil, content p2: T2? = nil, animation p3: T3? = nil) -> Self { self }
-    public func pickerStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func popover<T0, T1, T2, T3>(isPresented p0: T0? = nil, attachmentAnchor p1: T1? = nil, arrowEdge p2: T2? = nil, content p3: T3? = nil) -> Self { self }
-    public func popover<T0, T1, T2, T3>(item p0: T0? = nil, attachmentAnchor p1: T1? = nil, arrowEdge p2: T2? = nil, content p3: T3? = nil) -> Self { self }
-    public func position<T0>(_ p0: T0? = nil) -> Self { self }
-    public func position<T0, T1>(x p0: T0? = nil, y p1: T1? = nil) -> Self { self }
-    public func preference<T0, T1>(key p0: T0? = nil, value p1: T1? = nil) -> Self { self }
-    public func preferredColorScheme<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationBackground<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationBackground<T0, T1>(alignment p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func presentationBackgroundInteraction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationCompactAdaptation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationCompactAdaptation<T0, T1>(horizontal p0: T0? = nil, vertical p1: T1? = nil) -> Self { self }
-    public func presentationContentInteraction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationCornerRadius<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationDetents<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationDetents<T0, T1>(_ p0: T0? = nil, selection p1: T1? = nil) -> Self { self }
-    public func presentationDragIndicator<T0>(_ p0: T0? = nil) -> Self { self }
-    public func presentationSizing<T0>(_ p0: T0? = nil) -> Self { self }
-    public func previewContext<T0>(_ p0: T0? = nil) -> Self { self }
-    public func previewDevice<T0>(_ p0: T0? = nil) -> Self { self }
-    public func previewDisplayName<T0>(_ p0: T0? = nil) -> Self { self }
-    public func previewInterfaceOrientation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func previewLayout<T0>(_ p0: T0? = nil) -> Self { self }
-    public func privacySensitive<T0>(_ p0: T0? = nil) -> Self { self }
-    public func progressViewStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func projectionEffect<T0>(_ p0: T0? = nil) -> Self { self }
-    public func redacted<T0>(reason p0: T0? = nil) -> Self { self }
-    public func refreshable<T0>(action p0: T0? = nil) -> Self { self }
-    public func renameAction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func replaceDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func rotation3DEffect<T0, T1, T2, T3, T4>(_ p0: T0? = nil, axis p1: T1? = nil, anchor p2: T2? = nil, anchorZ p3: T3? = nil, perspective p4: T4? = nil) -> Self { self }
-    public func rotationEffect<T0, T1>(_ p0: T0? = nil, anchor p1: T1? = nil) -> Self { self }
-    public func safeAreaBar<T0, T1, T2, T3>(edge p0: T0? = nil, alignment p1: T1? = nil, spacing p2: T2? = nil, content p3: T3? = nil) -> Self { self }
-    public func safeAreaInset<T0, T1, T2, T3>(edge p0: T0? = nil, alignment p1: T1? = nil, spacing p2: T2? = nil, content p3: T3? = nil) -> Self { self }
-    public func safeAreaPadding<T0>(_ p0: T0? = nil) -> Self { self }
-    public func safeAreaPadding<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func saturation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scaleEffect<T0, T1>(_ p0: T0? = nil, anchor p1: T1? = nil) -> Self { self }
-    public func scaleEffect<T0, T1, T2>(x p0: T0? = nil, y p1: T1? = nil, anchor p2: T2? = nil) -> Self { self }
+    public func moveDisabled(_ p0: Any? = nil) -> Self { self }
+    public func multilineTextAlignment(_ p0: Any? = nil) -> Self { self }
+    public func navigationBarBackButtonHidden(_ p0: Any? = nil) -> Self { self }
+    public func navigationBarHidden(_ p0: Any? = nil) -> Self { self }
+    public func navigationBarItems(leading p0: Any? = nil, trailing p1: Any? = nil) -> Self { self }
+    public func navigationBarTitle(_ p0: Any? = nil, displayMode p1: Any? = nil) -> Self { self }
+    public func navigationBarTitleDisplayMode(_ p0: Any? = nil) -> Self { self }
+    public func navigationDestination(`for` p0: Any? = nil, destination p1: Any? = nil) -> Self { self }
+    public func navigationDocument(_ p0: Any? = nil, preview p1: Any? = nil) -> Self { self }
+    public func navigationLinkIndicatorVisibility(_ p0: Any? = nil) -> Self { self }
+    public func navigationSplitViewColumnWidth(min p0: Any? = nil, ideal p1: Any? = nil, max p2: Any? = nil) -> Self { self }
+    public func navigationSplitViewStyle(_ p0: Any? = nil) -> Self { self }
+    public func navigationSubtitle(_ p0: Any? = nil) -> Self { self }
+    public func navigationTitle(_ p0: Any? = nil) -> Self { self }
+    public func navigationTransition(_ p0: Any? = nil) -> Self { self }
+    public func navigationViewStyle(_ p0: Any? = nil) -> Self { self }
+    public func offset(x p0: Any? = nil, y p1: Any? = nil) -> Self { self }
+    public func onAppIntentExecution(_ p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
+    public func onAppear(perform p0: Any? = nil) -> Self { self }
+    public func onChange(of p0: Any? = nil, initial p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func onContinueUserActivity(_ p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
+    public func onContinuousHover(coordinateSpace p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
+    public func onDisappear(perform p0: Any? = nil) -> Self { self }
+    public func onDrag(_ p0: Any? = nil, preview p1: Any? = nil) -> Self { self }
+    public func onDrop(of p0: Any? = nil, isTargeted p1: Any? = nil, perform p2: Any? = nil) -> Self { self }
+    public func onGeometryChange(`for` p0: Any? = nil, of p1: Any? = nil, action p2: Any? = nil) -> Self { self }
+    public func onHover(perform p0: Any? = nil) -> Self { self }
+    public func onInteractiveResizeChange(_ p0: Any? = nil) -> Self { self }
+    public func onKeyPress(_ p0: Any? = nil, phases p1: Any? = nil, action p2: Any? = nil) -> Self { self }
+    public func onLongPressGesture(minimumDuration p0: Any? = nil, maximumDistance p1: Any? = nil, perform p2: Any? = nil, onPressingChanged p3: Any? = nil) -> Self { self }
+    public func onOpenURL(perform p0: Any? = nil) -> Self { self }
+    public func onPencilDoubleTap(perform p0: Any? = nil) -> Self { self }
+    public func onPencilSqueeze(perform p0: Any? = nil) -> Self { self }
+    public func onPreferenceChange(_ p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
+    public func onReceive(_ p0: Any? = nil, perform p1: Any? = nil) -> Self { self }
+    public func onScrollGeometryChange(`for` p0: Any? = nil, of p1: Any? = nil, action p2: Any? = nil) -> Self { self }
+    public func onScrollPhaseChange(_ p0: Any? = nil) -> Self { self }
+    public func onScrollTargetVisibilityChange(idType p0: Any? = nil, threshold p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func onScrollVisibilityChange(threshold p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func onSubmit(of p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func onTapGesture(count p0: Any? = nil, coordinateSpace p1: Any? = nil, perform p2: Any? = nil) -> Self { self }
+    public func opacity(_ p0: Any? = nil) -> Self { self }
+    public func overlay(_ p0: Any? = nil, `in` p1: Any? = nil, fillStyle p2: Any? = nil) -> Self { self }
+    public func overlayPreferenceValue(_ p0: Any? = nil, alignment p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func padding(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func paletteSelectionEffect(_ p0: Any? = nil) -> Self { self }
+    public func persistentSystemOverlays(_ p0: Any? = nil) -> Self { self }
+    public func phaseAnimator(_ p0: Any? = nil, trigger p1: Any? = nil, content p2: Any? = nil, animation p3: Any? = nil) -> Self { self }
+    public func pickerStyle(_ p0: Any? = nil) -> Self { self }
+    public func popover(isPresented p0: Any? = nil, attachmentAnchor p1: Any? = nil, arrowEdge p2: Any? = nil, content p3: Any? = nil) -> Self { self }
+    public func position(x p0: Any? = nil, y p1: Any? = nil) -> Self { self }
+    public func preference(key p0: Any? = nil, value p1: Any? = nil) -> Self { self }
+    public func preferredColorScheme(_ p0: Any? = nil) -> Self { self }
+    public func presentationBackground(alignment p0: Any? = nil, content p1: Any? = nil) -> Self { self }
+    public func presentationBackgroundInteraction(_ p0: Any? = nil) -> Self { self }
+    public func presentationCompactAdaptation(horizontal p0: Any? = nil, vertical p1: Any? = nil) -> Self { self }
+    public func presentationContentInteraction(_ p0: Any? = nil) -> Self { self }
+    public func presentationCornerRadius(_ p0: Any? = nil) -> Self { self }
+    public func presentationDetents(_ p0: Any? = nil, selection p1: Any? = nil) -> Self { self }
+    public func presentationDragIndicator(_ p0: Any? = nil) -> Self { self }
+    public func presentationSizing(_ p0: Any? = nil) -> Self { self }
+    public func previewContext(_ p0: Any? = nil) -> Self { self }
+    public func previewDevice(_ p0: Any? = nil) -> Self { self }
+    public func previewDisplayName(_ p0: Any? = nil) -> Self { self }
+    public func previewInterfaceOrientation(_ p0: Any? = nil) -> Self { self }
+    public func previewLayout(_ p0: Any? = nil) -> Self { self }
+    public func privacySensitive(_ p0: Any? = nil) -> Self { self }
+    public func progressViewStyle(_ p0: Any? = nil) -> Self { self }
+    public func projectionEffect(_ p0: Any? = nil) -> Self { self }
+    public func redacted(reason p0: Any? = nil) -> Self { self }
+    public func refreshable(action p0: Any? = nil) -> Self { self }
+    public func renameAction(_ p0: Any? = nil) -> Self { self }
+    public func replaceDisabled(_ p0: Any? = nil) -> Self { self }
+    public func rotation3DEffect(_ p0: Any? = nil, axis p1: Any? = nil, anchor p2: Any? = nil, anchorZ p3: Any? = nil, perspective p4: Any? = nil) -> Self { self }
+    public func rotationEffect(_ p0: Any? = nil, anchor p1: Any? = nil) -> Self { self }
+    public func safeAreaBar(edge p0: Any? = nil, alignment p1: Any? = nil, spacing p2: Any? = nil, content p3: Any? = nil) -> Self { self }
+    public func safeAreaInset(edge p0: Any? = nil, alignment p1: Any? = nil, spacing p2: Any? = nil, content p3: Any? = nil) -> Self { self }
+    public func safeAreaPadding(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func saturation(_ p0: Any? = nil) -> Self { self }
+    public func scaleEffect(x p0: Any? = nil, y p1: Any? = nil, anchor p2: Any? = nil) -> Self { self }
     public func scaledToFill() -> Self { self }
     public func scaledToFit() -> Self { self }
-    public func scenePadding<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scenePadding<T0, T1>(_ p0: T0? = nil, edges p1: T1? = nil) -> Self { self }
-    public func scrollBounceBehavior<T0, T1>(_ p0: T0? = nil, axes p1: T1? = nil) -> Self { self }
-    public func scrollClipDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scrollContentBackground<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scrollDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scrollDismissesKeyboard<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scrollEdgeEffectHidden<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func scrollEdgeEffectStyle<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func scrollIndicators<T0, T1>(_ p0: T0? = nil, axes p1: T1? = nil) -> Self { self }
-    public func scrollIndicatorsFlash<T0>(onAppear p0: T0? = nil) -> Self { self }
-    public func scrollIndicatorsFlash<T0>(trigger p0: T0? = nil) -> Self { self }
-    public func scrollInputBehavior<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func scrollPosition<T0, T1>(_ p0: T0? = nil, anchor p1: T1? = nil) -> Self { self }
-    public func scrollPosition<T0, T1>(id p0: T0? = nil, anchor p1: T1? = nil) -> Self { self }
-    public func scrollTargetBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func scrollTargetLayout<T0>(isEnabled p0: T0? = nil) -> Self { self }
-    public func scrollTransition<T0, T1, T2>(_ p0: T0? = nil, axis p1: T1? = nil, transition p2: T2? = nil) -> Self { self }
-    public func scrollTransition<T0, T1, T2, T3>(topLeading p0: T0? = nil, bottomTrailing p1: T1? = nil, axis p2: T2? = nil, transition p3: T3? = nil) -> Self { self }
-    public func searchCompletion<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchDictationBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchFocused<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchFocused<T0, T1>(_ p0: T0? = nil, equals p1: T1? = nil) -> Self { self }
-    public func searchPresentationToolbarBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchScopes<T0, T1, T2>(_ p0: T0? = nil, activation p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func searchScopes<T0, T1>(_ p0: T0? = nil, scopes p1: T1? = nil) -> Self { self }
-    public func searchSelection<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchSuggestions<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchSuggestions<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func searchToolbarBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3, T4, T5>(text p0: T0? = nil, editableTokens p1: T1? = nil, isPresented p2: T2? = nil, placement p3: T3? = nil, prompt p4: T4? = nil, token p5: T5? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3, T4>(text p0: T0? = nil, editableTokens p1: T1? = nil, placement p2: T2? = nil, prompt p3: T3? = nil, token p4: T4? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3>(text p0: T0? = nil, isPresented p1: T1? = nil, placement p2: T2? = nil, prompt p3: T3? = nil) -> Self { self }
-    public func searchable<T0, T1, T2>(text p0: T0? = nil, placement p1: T1? = nil, prompt p2: T2? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3>(text p0: T0? = nil, placement p1: T1? = nil, prompt p2: T2? = nil, suggestions p3: T3? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3, T4, T5>(text p0: T0? = nil, tokens p1: T1? = nil, isPresented p2: T2? = nil, placement p3: T3? = nil, prompt p4: T4? = nil, token p5: T5? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3, T4>(text p0: T0? = nil, tokens p1: T1? = nil, placement p2: T2? = nil, prompt p3: T3? = nil, token p4: T4? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3, T4, T5, T6>(text p0: T0? = nil, tokens p1: T1? = nil, suggestedTokens p2: T2? = nil, isPresented p3: T3? = nil, placement p4: T4? = nil, prompt p5: T5? = nil, token p6: T6? = nil) -> Self { self }
-    public func searchable<T0, T1, T2, T3, T4, T5>(text p0: T0? = nil, tokens p1: T1? = nil, suggestedTokens p2: T2? = nil, placement p3: T3? = nil, prompt p4: T4? = nil, token p5: T5? = nil) -> Self { self }
-    public func sectionActions<T0>(content p0: T0? = nil) -> Self { self }
-    public func sectionIndexLabel<T0>(_ p0: T0? = nil) -> Self { self }
-    public func selectionDisabled<T0>(_ p0: T0? = nil) -> Self { self }
-    public func sensoryFeedback<T0, T1>(_ p0: T0? = nil, trigger p1: T1? = nil) -> Self { self }
-    public func sensoryFeedback<T0, T1, T2>(_ p0: T0? = nil, trigger p1: T1? = nil, condition p2: T2? = nil) -> Self { self }
-    public func sensoryFeedback<T0, T1>(trigger p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func shadow<T0, T1, T2, T3>(color p0: T0? = nil, radius p1: T1? = nil, x p2: T2? = nil, y p3: T3? = nil) -> Self { self }
-    public func sheet<T0, T1, T2>(isPresented p0: T0? = nil, onDismiss p1: T1? = nil, content p2: T2? = nil) -> Self { self }
-    public func sheet<T0, T1, T2>(item p0: T0? = nil, onDismiss p1: T1? = nil, content p2: T2? = nil) -> Self { self }
-    public func shortcutsLinkStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func simultaneousGesture<T0, T1>(_ p0: T0? = nil, including p1: T1? = nil) -> Self { self }
-    public func simultaneousGesture<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func simultaneousGesture<T0, T1, T2>(_ p0: T0? = nil, name p1: T1? = nil, isEnabled p2: T2? = nil) -> Self { self }
-    public func siriTipViewStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func sliderThumbVisibility<T0>(_ p0: T0? = nil) -> Self { self }
-    public func speechAdjustedPitch<T0>(_ p0: T0? = nil) -> Self { self }
-    public func speechAlwaysIncludesPunctuation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func speechAnnouncementsQueued<T0>(_ p0: T0? = nil) -> Self { self }
-    public func speechSpellsOutCharacters<T0>(_ p0: T0? = nil) -> Self { self }
-    public func springLoadingBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func statusBar<T0>(hidden p0: T0? = nil) -> Self { self }
-    public func statusBarHidden<T0>(_ p0: T0? = nil) -> Self { self }
-    public func strikethrough<T0, T1, T2>(_ p0: T0? = nil, pattern p1: T1? = nil, color p2: T2? = nil) -> Self { self }
-    public func submitLabel<T0>(_ p0: T0? = nil) -> Self { self }
-    public func submitScope<T0>(_ p0: T0? = nil) -> Self { self }
-    public func swipeActions<T0, T1, T2>(edge p0: T0? = nil, allowsFullSwipe p1: T1? = nil, content p2: T2? = nil) -> Self { self }
-    public func symbolColorRenderingMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func symbolEffect<T0, T1, T2>(_ p0: T0? = nil, options p1: T1? = nil, isActive p2: T2? = nil) -> Self { self }
-    public func symbolEffect<T0, T1, T2>(_ p0: T0? = nil, options p1: T1? = nil, value p2: T2? = nil) -> Self { self }
-    public func symbolEffectsRemoved<T0>(_ p0: T0? = nil) -> Self { self }
-    public func symbolRenderingMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func symbolVariableValueMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func symbolVariant<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tabBarMinimizeBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tabItem<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tabViewBottomAccessory<T0>(content p0: T0? = nil) -> Self { self }
-    public func tabViewCustomization<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tabViewSearchActivation<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tabViewSidebarBottomBar<T0>(content p0: T0? = nil) -> Self { self }
-    public func tabViewSidebarFooter<T0>(content p0: T0? = nil) -> Self { self }
-    public func tabViewSidebarHeader<T0>(content p0: T0? = nil) -> Self { self }
-    public func tabViewStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tableColumnHeaders<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tableStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tag<T0, T1>(_ p0: T0? = nil, includeOptional p1: T1? = nil) -> Self { self }
-    public func task<T0, T1, T2, T3, T4, T5, T6>(id p0: T0? = nil, name p1: T1? = nil, executorPreference p2: T2? = nil, priority p3: T3? = nil, file p4: T4? = nil, line p5: T5? = nil, _ p6: T6? = nil) -> Self { self }
-    public func task<T0, T1, T2>(id p0: T0? = nil, priority p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func task<T0, T1>(priority p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func textCase<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textContentType<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textEditorStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textFieldStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textInputAutocapitalization<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textInputFormattingControlVisibility<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func textRenderer<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textScale<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func textSelection<T0>(_ p0: T0? = nil) -> Self { self }
-    public func textSelectionAffinity<T0>(_ p0: T0? = nil) -> Self { self }
-    public func tint<T0>(_ p0: T0? = nil) -> Self { self }
-    public func toggleStyle<T0>(_ p0: T0? = nil) -> Self { self }
-    public func toolbar<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func toolbar<T0>(content p0: T0? = nil) -> Self { self }
-    public func toolbar<T0, T1>(id p0: T0? = nil, content p1: T1? = nil) -> Self { self }
-    public func toolbar<T0>(removing p0: T0? = nil) -> Self { self }
-    public func toolbarBackground<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func toolbarBackgroundVisibility<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func toolbarColorScheme<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func toolbarForegroundStyle<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func toolbarRole<T0>(_ p0: T0? = nil) -> Self { self }
-    public func toolbarTitleDisplayMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func toolbarTitleMenu<T0>(content p0: T0? = nil) -> Self { self }
-    public func toolbarVisibility<T0, T1>(_ p0: T0? = nil, `for` p1: T1? = nil) -> Self { self }
-    public func tracking<T0>(_ p0: T0? = nil) -> Self { self }
-    public func transaction<T0>(_ p0: T0? = nil) -> Self { self }
-    public func transaction<T0, T1>(_ p0: T0? = nil, body p1: T1? = nil) -> Self { self }
-    public func transaction<T0, T1>(value p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func transformAnchorPreference<T0, T1, T2>(key p0: T0? = nil, value p1: T1? = nil, transform p2: T2? = nil) -> Self { self }
-    public func transformEffect<T0>(_ p0: T0? = nil) -> Self { self }
-    public func transformEnvironment<T0, T1>(_ p0: T0? = nil, transform p1: T1? = nil) -> Self { self }
-    public func transformPreference<T0, T1>(_ p0: T0? = nil, _ p1: T1? = nil) -> Self { self }
-    public func transition<T0>(_ p0: T0? = nil) -> Self { self }
-    public func truncationMode<T0>(_ p0: T0? = nil) -> Self { self }
-    public func typeSelectEquivalent<T0>(_ p0: T0? = nil) -> Self { self }
-    public func typesettingLanguage<T0, T1>(_ p0: T0? = nil, isEnabled p1: T1? = nil) -> Self { self }
-    public func underline<T0, T1, T2>(_ p0: T0? = nil, pattern p1: T1? = nil, color p2: T2? = nil) -> Self { self }
+    public func scenePadding(_ p0: Any? = nil, edges p1: Any? = nil) -> Self { self }
+    public func scrollBounceBehavior(_ p0: Any? = nil, axes p1: Any? = nil) -> Self { self }
+    public func scrollClipDisabled(_ p0: Any? = nil) -> Self { self }
+    public func scrollContentBackground(_ p0: Any? = nil) -> Self { self }
+    public func scrollDisabled(_ p0: Any? = nil) -> Self { self }
+    public func scrollDismissesKeyboard(_ p0: Any? = nil) -> Self { self }
+    public func scrollEdgeEffectHidden(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func scrollEdgeEffectStyle(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func scrollIndicators(_ p0: Any? = nil, axes p1: Any? = nil) -> Self { self }
+    public func scrollIndicatorsFlash(onAppear p0: Any? = nil) -> Self { self }
+    public func scrollInputBehavior(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func scrollPosition(_ p0: Any? = nil, anchor p1: Any? = nil) -> Self { self }
+    public func scrollTargetBehavior(_ p0: Any? = nil) -> Self { self }
+    public func scrollTargetLayout(isEnabled p0: Any? = nil) -> Self { self }
+    public func scrollTransition(topLeading p0: Any? = nil, bottomTrailing p1: Any? = nil, axis p2: Any? = nil, transition p3: Any? = nil) -> Self { self }
+    public func searchCompletion(_ p0: Any? = nil) -> Self { self }
+    public func searchDictationBehavior(_ p0: Any? = nil) -> Self { self }
+    public func searchFocused(_ p0: Any? = nil, equals p1: Any? = nil) -> Self { self }
+    public func searchPresentationToolbarBehavior(_ p0: Any? = nil) -> Self { self }
+    public func searchScopes(_ p0: Any? = nil, activation p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func searchSelection(_ p0: Any? = nil) -> Self { self }
+    public func searchSuggestions(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func searchToolbarBehavior(_ p0: Any? = nil) -> Self { self }
+    public func searchable(text p0: Any? = nil, tokens p1: Any? = nil, suggestedTokens p2: Any? = nil, isPresented p3: Any? = nil, placement p4: Any? = nil, prompt p5: Any? = nil, token p6: Any? = nil) -> Self { self }
+    public func sectionActions(content p0: Any? = nil) -> Self { self }
+    public func sectionIndexLabel(_ p0: Any? = nil) -> Self { self }
+    public func selectionDisabled(_ p0: Any? = nil) -> Self { self }
+    public func sensoryFeedback(_ p0: Any? = nil, trigger p1: Any? = nil, condition p2: Any? = nil) -> Self { self }
+    public func shadow(color p0: Any? = nil, radius p1: Any? = nil, x p2: Any? = nil, y p3: Any? = nil) -> Self { self }
+    public func sheet(isPresented p0: Any? = nil, onDismiss p1: Any? = nil, content p2: Any? = nil) -> Self { self }
+    public func shortcutsLinkStyle(_ p0: Any? = nil) -> Self { self }
+    public func simultaneousGesture(_ p0: Any? = nil, name p1: Any? = nil, isEnabled p2: Any? = nil) -> Self { self }
+    public func siriTipViewStyle(_ p0: Any? = nil) -> Self { self }
+    public func sliderThumbVisibility(_ p0: Any? = nil) -> Self { self }
+    public func speechAdjustedPitch(_ p0: Any? = nil) -> Self { self }
+    public func speechAlwaysIncludesPunctuation(_ p0: Any? = nil) -> Self { self }
+    public func speechAnnouncementsQueued(_ p0: Any? = nil) -> Self { self }
+    public func speechSpellsOutCharacters(_ p0: Any? = nil) -> Self { self }
+    public func springLoadingBehavior(_ p0: Any? = nil) -> Self { self }
+    public func statusBar(hidden p0: Any? = nil) -> Self { self }
+    public func statusBarHidden(_ p0: Any? = nil) -> Self { self }
+    public func strikethrough(_ p0: Any? = nil, pattern p1: Any? = nil, color p2: Any? = nil) -> Self { self }
+    public func submitLabel(_ p0: Any? = nil) -> Self { self }
+    public func submitScope(_ p0: Any? = nil) -> Self { self }
+    public func swipeActions(edge p0: Any? = nil, allowsFullSwipe p1: Any? = nil, content p2: Any? = nil) -> Self { self }
+    public func symbolColorRenderingMode(_ p0: Any? = nil) -> Self { self }
+    public func symbolEffect(_ p0: Any? = nil, options p1: Any? = nil, isActive p2: Any? = nil) -> Self { self }
+    public func symbolEffectsRemoved(_ p0: Any? = nil) -> Self { self }
+    public func symbolRenderingMode(_ p0: Any? = nil) -> Self { self }
+    public func symbolVariableValueMode(_ p0: Any? = nil) -> Self { self }
+    public func symbolVariant(_ p0: Any? = nil) -> Self { self }
+    public func tabBarMinimizeBehavior(_ p0: Any? = nil) -> Self { self }
+    public func tabItem(_ p0: Any? = nil) -> Self { self }
+    public func tabViewBottomAccessory(content p0: Any? = nil) -> Self { self }
+    public func tabViewCustomization(_ p0: Any? = nil) -> Self { self }
+    public func tabViewSearchActivation(_ p0: Any? = nil) -> Self { self }
+    public func tabViewSidebarBottomBar(content p0: Any? = nil) -> Self { self }
+    public func tabViewSidebarFooter(content p0: Any? = nil) -> Self { self }
+    public func tabViewSidebarHeader(content p0: Any? = nil) -> Self { self }
+    public func tabViewStyle(_ p0: Any? = nil) -> Self { self }
+    public func tableColumnHeaders(_ p0: Any? = nil) -> Self { self }
+    public func tableStyle(_ p0: Any? = nil) -> Self { self }
+    public func tag(_ p0: Any? = nil, includeOptional p1: Any? = nil) -> Self { self }
+    public func task(id p0: Any? = nil, name p1: Any? = nil, executorPreference p2: Any? = nil, priority p3: Any? = nil, file p4: Any? = nil, line p5: Any? = nil, _ p6: Any? = nil) -> Self { self }
+    public func textCase(_ p0: Any? = nil) -> Self { self }
+    public func textContentType(_ p0: Any? = nil) -> Self { self }
+    public func textEditorStyle(_ p0: Any? = nil) -> Self { self }
+    public func textFieldStyle(_ p0: Any? = nil) -> Self { self }
+    public func textInputAutocapitalization(_ p0: Any? = nil) -> Self { self }
+    public func textInputFormattingControlVisibility(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func textRenderer(_ p0: Any? = nil) -> Self { self }
+    public func textScale(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func textSelection(_ p0: Any? = nil) -> Self { self }
+    public func textSelectionAffinity(_ p0: Any? = nil) -> Self { self }
+    public func tint(_ p0: Any? = nil) -> Self { self }
+    public func toggleStyle(_ p0: Any? = nil) -> Self { self }
+    public func toolbar(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func toolbarBackground(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func toolbarBackgroundVisibility(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func toolbarColorScheme(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func toolbarForegroundStyle(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func toolbarRole(_ p0: Any? = nil) -> Self { self }
+    public func toolbarTitleDisplayMode(_ p0: Any? = nil) -> Self { self }
+    public func toolbarTitleMenu(content p0: Any? = nil) -> Self { self }
+    public func toolbarVisibility(_ p0: Any? = nil, `for` p1: Any? = nil) -> Self { self }
+    public func tracking(_ p0: Any? = nil) -> Self { self }
+    public func transaction(_ p0: Any? = nil, body p1: Any? = nil) -> Self { self }
+    public func transformAnchorPreference(key p0: Any? = nil, value p1: Any? = nil, transform p2: Any? = nil) -> Self { self }
+    public func transformEffect(_ p0: Any? = nil) -> Self { self }
+    public func transformEnvironment(_ p0: Any? = nil, transform p1: Any? = nil) -> Self { self }
+    public func transformPreference(_ p0: Any? = nil, _ p1: Any? = nil) -> Self { self }
+    public func transition(_ p0: Any? = nil) -> Self { self }
+    public func truncationMode(_ p0: Any? = nil) -> Self { self }
+    public func typeSelectEquivalent(_ p0: Any? = nil) -> Self { self }
+    public func typesettingLanguage(_ p0: Any? = nil, isEnabled p1: Any? = nil) -> Self { self }
+    public func underline(_ p0: Any? = nil, pattern p1: Any? = nil, color p2: Any? = nil) -> Self { self }
     public func unredacted() -> Self { self }
-    public func userActivity<T0, T1, T2>(_ p0: T0? = nil, element p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func userActivity<T0, T1, T2>(_ p0: T0? = nil, isActive p1: T1? = nil, _ p2: T2? = nil) -> Self { self }
-    public func visualEffect<T0>(_ p0: T0? = nil) -> Self { self }
-    public func windowToolbarFullScreenVisibility<T0>(_ p0: T0? = nil) -> Self { self }
-    public func writingDirection<T0>(strategy p0: T0? = nil) -> Self { self }
-    public func writingToolsAffordanceVisibility<T0>(_ p0: T0? = nil) -> Self { self }
-    public func writingToolsBehavior<T0>(_ p0: T0? = nil) -> Self { self }
-    public func zIndex<T0>(_ p0: T0? = nil) -> Self { self }
+    public func userActivity(_ p0: Any? = nil, element p1: Any? = nil, _ p2: Any? = nil) -> Self { self }
+    public func visualEffect(_ p0: Any? = nil) -> Self { self }
+    public func windowToolbarFullScreenVisibility(_ p0: Any? = nil) -> Self { self }
+    public func writingDirection(strategy p0: Any? = nil) -> Self { self }
+    public func writingToolsAffordanceVisibility(_ p0: Any? = nil) -> Self { self }
+    public func writingToolsBehavior(_ p0: Any? = nil) -> Self { self }
+    public func zIndex(_ p0: Any? = nil) -> Self { self }
 }
 #endif
-
