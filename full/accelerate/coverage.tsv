@@ -306,102 +306,102 @@ c:@EA@SparseFactorization_t	implemented	test:full/accelerate/tests/agent/CEnumHa
 c:@EA@SparseFactorization_t@SparseFactorizationCholesky	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationCholesky=0.
 c:@EA@SparseFactorization_t@SparseFactorizationCholeskyAtA	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationCholeskyAtA=41.
 c:@EA@SparseFactorization_t@SparseFactorizationLDLT	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationLDLT=1.
-c:@EA@SparseFactorization_t@SparseFactorizationLDLTSBK	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLDLTSBK	
-c:@EA@SparseFactorization_t@SparseFactorizationLDLTTPP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLDLTTPP	
+c:@EA@SparseFactorization_t@SparseFactorizationLDLTSBK	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleFactorizationExtraValues	Apple-measured SparseFactorizationLDLTSBK=3.
+c:@EA@SparseFactorization_t@SparseFactorizationLDLTTPP	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleFactorizationExtraValues	Apple-measured SparseFactorizationLDLTTPP=4.
 c:@EA@SparseFactorization_t@SparseFactorizationLDLTUnpivoted	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationLDLTUnpivoted=2.
 c:@EA@SparseFactorization_t@SparseFactorizationLU	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseFactorSolveFloatVector	
-c:@EA@SparseFactorization_t@SparseFactorizationLUSPP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLUSPP	
-c:@EA@SparseFactorization_t@SparseFactorizationLUTPP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLUTPP	
-c:@EA@SparseFactorization_t@SparseFactorizationLUUnpivoted	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationLUUnpivoted	
+c:@EA@SparseFactorization_t@SparseFactorizationLUSPP	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleFactorizationExtraValues	Apple-measured SparseFactorizationLUSPP=82.
+c:@EA@SparseFactorization_t@SparseFactorizationLUTPP	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleFactorizationExtraValues	Apple-measured SparseFactorizationLUTPP=83.
+c:@EA@SparseFactorization_t@SparseFactorizationLUUnpivoted	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleFactorizationExtraValues	Apple-measured SparseFactorizationLUUnpivoted=81.
 c:@EA@SparseFactorization_t@SparseFactorizationQR	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testOraclePinnedEnumRawValues	Apple-measured SparseFactorizationQR=40.
 c:@EA@SparseGMRESVariant_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseGMRESVariant_t@SparseVariantDQGMRES	declared	source:full/accelerate/AccelerateCTypes.swift#SparseVariantDQGMRES	
-c:@EA@SparseGMRESVariant_t@SparseVariantFGMRES	declared	source:full/accelerate/AccelerateCTypes.swift#SparseVariantFGMRES	
-c:@EA@SparseGMRESVariant_t@SparseVariantGMRES	declared	source:full/accelerate/AccelerateCTypes.swift#SparseVariantGMRES	
+c:@EA@SparseGMRESVariant_t@SparseVariantDQGMRES	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseVariantDQGMRES=0.
+c:@EA@SparseGMRESVariant_t@SparseVariantFGMRES	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseVariantFGMRES=2.
+c:@EA@SparseGMRESVariant_t@SparseVariantGMRES	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseVariantGMRES=1.
 c:@EA@SparseIterativeStatus_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
 c:@EA@SparseIterativeStatus_t@SparseIterativeConverged	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseSolveFloatVector	
-c:@EA@SparseIterativeStatus_t@SparseIterativeIllConditioned	declared	source:full/accelerate/AccelerateCTypes.swift#SparseIterativeIllConditioned	
-c:@EA@SparseIterativeStatus_t@SparseIterativeInternalError	declared	source:full/accelerate/AccelerateCTypes.swift#SparseIterativeInternalError	
-c:@EA@SparseIterativeStatus_t@SparseIterativeMaxIterations	declared	source:full/accelerate/AccelerateCTypes.swift#SparseIterativeMaxIterations	
+c:@EA@SparseIterativeStatus_t@SparseIterativeIllConditioned	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseIterativeIllConditioned=-2.
+c:@EA@SparseIterativeStatus_t@SparseIterativeInternalError	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseIterativeInternalError=-99.
+c:@EA@SparseIterativeStatus_t@SparseIterativeMaxIterations	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseIterativeMaxIterations=1.
 c:@EA@SparseIterativeStatus_t@SparseIterativeParameterError	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseSolveComplexFailClosed	
 c:@EA@SparseKind_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseKind_t@SparseHermitian	declared	source:full/accelerate/AccelerateCTypes.swift#SparseHermitian	
-c:@EA@SparseKind_t@SparseOrdinary	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrdinary	
-c:@EA@SparseKind_t@SparseSymmetric	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSymmetric	
-c:@EA@SparseKind_t@SparseTriangular	declared	source:full/accelerate/AccelerateCTypes.swift#SparseTriangular	
-c:@EA@SparseKind_t@SparseUnitTriangular	declared	source:full/accelerate/AccelerateCTypes.swift#SparseUnitTriangular	
+c:@EA@SparseKind_t@SparseHermitian	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseHermitian=7.
+c:@EA@SparseKind_t@SparseOrdinary	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrdinary=0.
+c:@EA@SparseKind_t@SparseSymmetric	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseSymmetric=3.
+c:@EA@SparseKind_t@SparseTriangular	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseTriangular=1.
+c:@EA@SparseKind_t@SparseUnitTriangular	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseUnitTriangular=2.
 c:@EA@SparseLSMRConvergenceTest_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseLSMRConvergenceTest_t@SparseLSMRCTDefault	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLSMRCTDefault	
-c:@EA@SparseLSMRConvergenceTest_t@SparseLSMRCTFongSaunders	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLSMRCTFongSaunders	
+c:@EA@SparseLSMRConvergenceTest_t@SparseLSMRCTDefault	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseLSMRCTDefault=0.
+c:@EA@SparseLSMRConvergenceTest_t@SparseLSMRCTFongSaunders	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparseLSMRCTFongSaunders=1.
 c:@EA@SparseOrder_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseOrder_t@SparseOrderAMD	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrderAMD	
-c:@EA@SparseOrder_t@SparseOrderCOLAMD	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrderCOLAMD	
-c:@EA@SparseOrder_t@SparseOrderDefault	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrderDefault	
-c:@EA@SparseOrder_t@SparseOrderMTMetis	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrderMTMetis	
-c:@EA@SparseOrder_t@SparseOrderMetis	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrderMetis	
-c:@EA@SparseOrder_t@SparseOrderUser	declared	source:full/accelerate/AccelerateCTypes.swift#SparseOrderUser	
+c:@EA@SparseOrder_t@SparseOrderAMD	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrderAMD=2.
+c:@EA@SparseOrder_t@SparseOrderCOLAMD	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrderCOLAMD=4.
+c:@EA@SparseOrder_t@SparseOrderDefault	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrderDefault=0.
+c:@EA@SparseOrder_t@SparseOrderMTMetis	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrderMTMetis=5.
+c:@EA@SparseOrder_t@SparseOrderMetis	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrderMetis=3.
+c:@EA@SparseOrder_t@SparseOrderUser	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseOrderUser=1.
 c:@EA@SparsePreconditioner_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparsePreconditioner_t@SparsePreconditionerDiagScaling	declared	source:full/accelerate/AccelerateCTypes.swift#SparsePreconditionerDiagScaling	
-c:@EA@SparsePreconditioner_t@SparsePreconditionerDiagonal	declared	source:full/accelerate/AccelerateCTypes.swift#SparsePreconditionerDiagonal	
+c:@EA@SparsePreconditioner_t@SparsePreconditionerDiagScaling	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparsePreconditionerDiagScaling=3.
+c:@EA@SparsePreconditioner_t@SparsePreconditionerDiagonal	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparsePreconditionerDiagonal=2.
 c:@EA@SparsePreconditioner_t@SparsePreconditionerNone	implemented	test:full/accelerate/tests/agent/SparseSolveTests.swift#testSparseSolveFloatVector	
-c:@EA@SparsePreconditioner_t@SparsePreconditionerUser	declared	source:full/accelerate/AccelerateCTypes.swift#SparsePreconditionerUser	
+c:@EA@SparsePreconditioner_t@SparsePreconditionerUser	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleIterativePreconditionerValues	Apple-measured SparsePreconditionerUser=1.
 c:@EA@SparseScaling_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseScaling_t@SparseScalingDefault	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScalingDefault	
-c:@EA@SparseScaling_t@SparseScalingEquilibriationInf	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScalingEquilibriationInf	
-c:@EA@SparseScaling_t@SparseScalingHungarianScalingAndOrdering	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScalingHungarianScalingAndOrdering	
-c:@EA@SparseScaling_t@SparseScalingHungarianScalingOnly	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScalingHungarianScalingOnly	
-c:@EA@SparseScaling_t@SparseScalingUser	declared	source:full/accelerate/AccelerateCTypes.swift#SparseScalingUser	
+c:@EA@SparseScaling_t@SparseScalingDefault	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseScalingDefault=0.
+c:@EA@SparseScaling_t@SparseScalingEquilibriationInf	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseScalingEquilibriationInf=2.
+c:@EA@SparseScaling_t@SparseScalingHungarianScalingAndOrdering	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseScalingHungarianScalingAndOrdering=4.
+c:@EA@SparseScaling_t@SparseScalingHungarianScalingOnly	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseScalingHungarianScalingOnly=3.
+c:@EA@SparseScaling_t@SparseScalingUser	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleKindOrderScalingValues	Apple-measured SparseScalingUser=1.
 c:@EA@SparseStatus_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseStatus_t@SparseFactorizationFailed	declared	source:full/accelerate/AccelerateCTypes.swift#SparseFactorizationFailed	
-c:@EA@SparseStatus_t@SparseInternalError	declared	source:full/accelerate/AccelerateCTypes.swift#SparseInternalError	
-c:@EA@SparseStatus_t@SparseMatrixIsSingular	declared	source:full/accelerate/AccelerateCTypes.swift#SparseMatrixIsSingular	
-c:@EA@SparseStatus_t@SparseParameterError	declared	source:full/accelerate/AccelerateCTypes.swift#SparseParameterError	
-c:@EA@SparseStatus_t@SparseStatusOK	declared	source:full/accelerate/AccelerateCTypes.swift#SparseStatusOK	
-c:@EA@SparseStatus_t@SparseStatusReleased	declared	source:full/accelerate/AccelerateCTypes.swift#SparseStatusReleased	
+c:@EA@SparseStatus_t@SparseFactorizationFailed	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleStatusValues	Apple-measured SparseFactorizationFailed=-1.
+c:@EA@SparseStatus_t@SparseInternalError	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleStatusValues	Apple-measured SparseInternalError=-3.
+c:@EA@SparseStatus_t@SparseMatrixIsSingular	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleStatusValues	Apple-measured SparseMatrixIsSingular=-2.
+c:@EA@SparseStatus_t@SparseParameterError	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleStatusValues	Apple-measured SparseParameterError=-4.
+c:@EA@SparseStatus_t@SparseStatusOK	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleStatusValues	Apple-measured SparseStatusOK=0.
+c:@EA@SparseStatus_t@SparseStatusReleased	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleStatusValues	Apple-measured SparseStatusReleased=-2147483647.
 c:@EA@SparseSubfactor_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseSubfactor_t@SparseSubfactorD	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorD	
-c:@EA@SparseSubfactor_t@SparseSubfactorInvalid	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorInvalid	
-c:@EA@SparseSubfactor_t@SparseSubfactorL	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorL	
-c:@EA@SparseSubfactor_t@SparseSubfactorP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorP	
-c:@EA@SparseSubfactor_t@SparseSubfactorPLPS	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorPLPS	
-c:@EA@SparseSubfactor_t@SparseSubfactorQ	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorQ	
-c:@EA@SparseSubfactor_t@SparseSubfactorR	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorR	
-c:@EA@SparseSubfactor_t@SparseSubfactorRP	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorRP	
-c:@EA@SparseSubfactor_t@SparseSubfactorS	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorS	
-c:@EA@SparseSubfactor_t@SparseSubfactorSc	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorSc	
-c:@EA@SparseSubfactor_t@SparseSubfactorSr	declared	source:full/accelerate/AccelerateCTypes.swift#SparseSubfactorSr	
+c:@EA@SparseSubfactor_t@SparseSubfactorD	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorD=4.
+c:@EA@SparseSubfactor_t@SparseSubfactorInvalid	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorInvalid=0.
+c:@EA@SparseSubfactor_t@SparseSubfactorL	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorL=3.
+c:@EA@SparseSubfactor_t@SparseSubfactorP	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorP=1.
+c:@EA@SparseSubfactor_t@SparseSubfactorPLPS	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorPLPS=5.
+c:@EA@SparseSubfactor_t@SparseSubfactorQ	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorQ=6.
+c:@EA@SparseSubfactor_t@SparseSubfactorR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorR=7.
+c:@EA@SparseSubfactor_t@SparseSubfactorRP	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorRP=8.
+c:@EA@SparseSubfactor_t@SparseSubfactorS	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorS=2.
+c:@EA@SparseSubfactor_t@SparseSubfactorSc	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorSc=10.
+c:@EA@SparseSubfactor_t@SparseSubfactorSr	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseSubfactorSr=9.
 c:@EA@SparseTriangle_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseTriangle_t@SparseLowerTriangle	declared	source:full/accelerate/AccelerateCTypes.swift#SparseLowerTriangle	
-c:@EA@SparseTriangle_t@SparseUpperTriangle	declared	source:full/accelerate/AccelerateCTypes.swift#SparseUpperTriangle	
+c:@EA@SparseTriangle_t@SparseLowerTriangle	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseLowerTriangle=1.
+c:@EA@SparseTriangle_t@SparseUpperTriangle	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseUpperTriangle=0.
 c:@EA@SparseUpdate_t	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@SparseUpdate_t@SparseUpdatePartialRefactor	declared	source:full/accelerate/AccelerateCTypes.swift#SparseUpdatePartialRefactor	
+c:@EA@SparseUpdate_t@SparseUpdatePartialRefactor	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleSubfactorTriangleUpdateValues	Apple-measured SparseUpdatePartialRefactor=0.
 c:@EA@quadrature_integrator	declared	source:full/accelerate/AccelerateCTypes.swift#quadrature_integrator	
-c:@EA@quadrature_integrator@QUADRATURE_INTEGRATE_QAG	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_QAG	
-c:@EA@quadrature_integrator@QUADRATURE_INTEGRATE_QAGS	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_QAGS	
-c:@EA@quadrature_integrator@QUADRATURE_INTEGRATE_QNG	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_QNG	
+c:@EA@quadrature_integrator@QUADRATURE_INTEGRATE_QAG	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INTEGRATE_QAG=1.
+c:@EA@quadrature_integrator@QUADRATURE_INTEGRATE_QAGS	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INTEGRATE_QAGS=2.
+c:@EA@quadrature_integrator@QUADRATURE_INTEGRATE_QNG	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INTEGRATE_QNG=0.
 c:@EA@quadrature_status	declared	source:full/accelerate/AccelerateCTypes.swift#quadrature_status	
-c:@EA@quadrature_status@QUADRATURE_ALLOC_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_ALLOC_ERROR	
-c:@EA@quadrature_status@QUADRATURE_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_ERROR	
-c:@EA@quadrature_status@QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR	
-c:@EA@quadrature_status@QUADRATURE_INTEGRATE_MAX_EVAL_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_MAX_EVAL_ERROR	
-c:@EA@quadrature_status@QUADRATURE_INTERNAL_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTERNAL_ERROR	
-c:@EA@quadrature_status@QUADRATURE_INVALID_ARG_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INVALID_ARG_ERROR	
-c:@EA@quadrature_status@QUADRATURE_SUCCESS	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_SUCCESS	
+c:@EA@quadrature_status@QUADRATURE_ALLOC_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_ALLOC_ERROR=-3.
+c:@EA@quadrature_status@QUADRATURE_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_ERROR=-1.
+c:@EA@quadrature_status@QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR=-102.
+c:@EA@quadrature_status@QUADRATURE_INTEGRATE_MAX_EVAL_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INTEGRATE_MAX_EVAL_ERROR=-101.
+c:@EA@quadrature_status@QUADRATURE_INTERNAL_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INTERNAL_ERROR=-99.
+c:@EA@quadrature_status@QUADRATURE_INVALID_ARG_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_INVALID_ARG_ERROR=-2.
+c:@EA@quadrature_status@QUADRATURE_SUCCESS	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testQuadratureOracleValues	Apple-measured QUADRATURE_SUCCESS=0.
 c:@EA@sparse_matrix_property	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
-c:@EA@sparse_matrix_property@SPARSE_LOWER_SYMMETRIC	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_LOWER_SYMMETRIC	
-c:@EA@sparse_matrix_property@SPARSE_LOWER_TRIANGULAR	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_LOWER_TRIANGULAR	
-c:@EA@sparse_matrix_property@SPARSE_UPPER_SYMMETRIC	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_UPPER_SYMMETRIC	
-c:@EA@sparse_matrix_property@SPARSE_UPPER_TRIANGULAR	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_UPPER_TRIANGULAR	
+c:@EA@sparse_matrix_property@SPARSE_LOWER_SYMMETRIC	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_LOWER_SYMMETRIC=8.
+c:@EA@sparse_matrix_property@SPARSE_LOWER_TRIANGULAR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_LOWER_TRIANGULAR=2.
+c:@EA@sparse_matrix_property@SPARSE_UPPER_SYMMETRIC	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_UPPER_SYMMETRIC=4.
+c:@EA@sparse_matrix_property@SPARSE_UPPER_TRIANGULAR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_UPPER_TRIANGULAR=1.
 c:@EA@sparse_norm	implemented	test:full/accelerate/tests/agent/CEnumHashableTests.swift#testCEnumHashableSparse	
 c:@EA@sparse_norm@SPARSE_NORM_INF	implemented	test:full/accelerate/tests/agent/SparseLegacyTests.swift#testSparseLegacyDoubleCreateMultiply	
 c:@EA@sparse_norm@SPARSE_NORM_ONE	implemented	test:full/accelerate/tests/agent/SparseLegacyTests.swift#testSparseLegacyFloatCreateMultiply	
-c:@EA@sparse_norm@SPARSE_NORM_R1	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_NORM_R1	
+c:@EA@sparse_norm@SPARSE_NORM_R1	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_NORM_R1=179.
 c:@EA@sparse_norm@SPARSE_NORM_TWO	implemented	test:full/accelerate/tests/agent/SparseLegacyTests.swift#testSparseLegacyFloatCreateMultiply	
 c:@EA@sparse_status	declared	source:full/accelerate/AccelerateCTypes.swift#sparse_status	
-c:@EA@sparse_status@SPARSE_CANNOT_SET_PROPERTY	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_CANNOT_SET_PROPERTY	
-c:@EA@sparse_status@SPARSE_ILLEGAL_PARAMETER	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_ILLEGAL_PARAMETER	
-c:@EA@sparse_status@SPARSE_SUCCESS	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_SUCCESS	
-c:@EA@sparse_status@SPARSE_SYSTEM_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#SPARSE_SYSTEM_ERROR	
+c:@EA@sparse_status@SPARSE_CANNOT_SET_PROPERTY	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_CANNOT_SET_PROPERTY=-1001.
+c:@EA@sparse_status@SPARSE_ILLEGAL_PARAMETER	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_ILLEGAL_PARAMETER=-1000.
+c:@EA@sparse_status@SPARSE_SUCCESS	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_SUCCESS=0.
+c:@EA@sparse_status@SPARSE_SYSTEM_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testSparseOracleLegacyStatusValues	Apple-measured SPARSE_SYSTEM_ERROR=-1002.
 c:@EA@vImageARGBType	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	
 c:@EA@vImageARGBType@kvImageARGB16Q12	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@EA@vImageARGBType@kvImageARGB16U	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
@@ -426,16 +426,16 @@ c:@EA@vImage_InterpolationMethod	implemented	test:full/accelerate/tests/agent/VI
 c:@EA@vImage_InterpolationMethod@kvImageFullInterpolation	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@EA@vImage_InterpolationMethod@kvImageHalfInterpolation	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@EA@vImage_InterpolationMethod@kvImageNoInterpolation	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
-c:@Ea@FFT_FORWARD@FFT_FORWARD	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_FORWARD	
-c:@Ea@FFT_FORWARD@FFT_INVERSE	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_INVERSE	
-c:@Ea@FFT_RADIX2@FFT_RADIX2	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_RADIX2	
-c:@Ea@FFT_RADIX2@FFT_RADIX3	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_RADIX3	
-c:@Ea@FFT_RADIX2@FFT_RADIX5	declared	source:full/accelerate/AccelerateCTypes.swift#FFT_RADIX5	
-c:@Ea@kFFTDirection_Forward@kFFTDirection_Forward	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTDirection_Forward	
-c:@Ea@kFFTDirection_Forward@kFFTDirection_Inverse	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTDirection_Inverse	
-c:@Ea@kFFTRadix2@kFFTRadix2	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTRadix2	
-c:@Ea@kFFTRadix2@kFFTRadix3	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTRadix3	
-c:@Ea@kFFTRadix2@kFFTRadix5	declared	source:full/accelerate/AccelerateCTypes.swift#kFFTRadix5	
+c:@Ea@FFT_FORWARD@FFT_FORWARD	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured FFT_FORWARD=1.
+c:@Ea@FFT_FORWARD@FFT_INVERSE	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured FFT_INVERSE=-1.
+c:@Ea@FFT_RADIX2@FFT_RADIX2	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured FFT_RADIX2=0.
+c:@Ea@FFT_RADIX2@FFT_RADIX3	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured FFT_RADIX3=1.
+c:@Ea@FFT_RADIX2@FFT_RADIX5	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured FFT_RADIX5=2.
+c:@Ea@kFFTDirection_Forward@kFFTDirection_Forward	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured kFFTDirection_Forward=1.
+c:@Ea@kFFTDirection_Forward@kFFTDirection_Inverse	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured kFFTDirection_Inverse=-1.
+c:@Ea@kFFTRadix2@kFFTRadix2	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured kFFTRadix2=0.
+c:@Ea@kFFTRadix2@kFFTRadix3	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured kFFTRadix3=1.
+c:@Ea@kFFTRadix2@kFFTRadix5	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured kFFTRadix5=2.
 c:@Ea@kRotate0DegreesClockwise@kRotate0DegreesClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@Ea@kRotate0DegreesClockwise@kRotate0DegreesCounterClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
 c:@Ea@kRotate0DegreesClockwise@kRotate180DegreesClockwise	implemented	test:full/accelerate/tests/agent/VImageConstantValueTests.swift#testVImagePinnedConstantValues0	Pinned vImage constant is exercised against its SDK-derived numeric value.
@@ -554,9 +554,9 @@ c:@Ea@kvImage_PNG_FILTER_VALUE_NONE@kvImage_PNG_FILTER_VALUE_NONE	implemented	te
 c:@Ea@kvImage_PNG_FILTER_VALUE_NONE@kvImage_PNG_FILTER_VALUE_PAETH	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	
 c:@Ea@kvImage_PNG_FILTER_VALUE_NONE@kvImage_PNG_FILTER_VALUE_SUB	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	
 c:@Ea@kvImage_PNG_FILTER_VALUE_NONE@kvImage_PNG_FILTER_VALUE_UP	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	
-c:@Ea@vDSP_HALF_WINDOW@vDSP_HALF_WINDOW	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_HALF_WINDOW	
-c:@Ea@vDSP_HALF_WINDOW@vDSP_HANN_DENORM	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_HANN_DENORM	
-c:@Ea@vDSP_HALF_WINDOW@vDSP_HANN_NORM	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_HANN_NORM	
+c:@Ea@vDSP_HALF_WINDOW@vDSP_HALF_WINDOW	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured vDSP_HALF_WINDOW=1.
+c:@Ea@vDSP_HALF_WINDOW@vDSP_HANN_DENORM	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured vDSP_HANN_DENORM=0.
+c:@Ea@vDSP_HALF_WINDOW@vDSP_HANN_NORM	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured vDSP_HANN_NORM=2.
 c:@F@BLASGetThreading	implemented	test:full/accelerate/tests/agent/AccelerateTests.swift#testBLASThreading	
 c:@F@BLASSetThreading	implemented	test:full/accelerate/tests/agent/AccelerateTests.swift#testBLASThreading	
 c:@F@BNNSApplyMultiheadAttention	implemented	test:full/accelerate/tests/agent/BNNSApplyFailClosedTests.swift#testBNNSMoreApplyFailClosed	
@@ -2821,35 +2821,35 @@ c:@kvImage_ARGBToYpCbCrMatrix_ITU_R_709_2	declared	source:full/accelerate/Accele
 c:@kvImage_YpCbCrToARGBMatrix_ITU_R_601_4	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage_YpCbCrToARGBMatrix_ITU_R_601_4	
 c:@kvImage_YpCbCrToARGBMatrix_ITU_R_709_2	declared	source:full/accelerate/AccelerateCTypes.swift#kvImage_YpCbCrToARGBMatrix_ITU_R_709_2	
 c:@macro@BNNS_MAX_TENSOR_DIMENSION	implemented	test:full/accelerate/tests/agent/BNNSConstantValueTests.swift#testBNNSPinnedConstantValues2	Pinned BNNS enum/option constant is exercised against its SDK-derived raw value.
-c:@macro@LA_ATTRIBUTE_ENABLE_LOGGING	declared	source:full/accelerate/AccelerateCTypes.swift#LA_ATTRIBUTE_ENABLE_LOGGING	
-c:@macro@LA_DEFAULT_ATTRIBUTES	declared	source:full/accelerate/AccelerateCTypes.swift#LA_DEFAULT_ATTRIBUTES	
-c:@macro@LA_DIMENSION_MISMATCH_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_DIMENSION_MISMATCH_ERROR	
-c:@macro@LA_FEATURE_DIAGONALLY_DOMINANT	declared	source:full/accelerate/AccelerateCTypes.swift#LA_FEATURE_DIAGONALLY_DOMINANT	
-c:@macro@LA_FEATURE_POSITIVE_DEFINITE	declared	source:full/accelerate/AccelerateCTypes.swift#LA_FEATURE_POSITIVE_DEFINITE	
-c:@macro@LA_FEATURE_SYMMETRIC	declared	source:full/accelerate/AccelerateCTypes.swift#LA_FEATURE_SYMMETRIC	
-c:@macro@LA_INTERNAL_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_INTERNAL_ERROR	
-c:@macro@LA_INVALID_PARAMETER_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_INVALID_PARAMETER_ERROR	
-c:@macro@LA_L1_NORM	declared	source:full/accelerate/AccelerateCTypes.swift#LA_L1_NORM	
-c:@macro@LA_L2_NORM	declared	source:full/accelerate/AccelerateCTypes.swift#LA_L2_NORM	
-c:@macro@LA_LINF_NORM	declared	source:full/accelerate/AccelerateCTypes.swift#LA_LINF_NORM	
-c:@macro@LA_NO_HINT	declared	source:full/accelerate/AccelerateCTypes.swift#LA_NO_HINT	
-c:@macro@LA_PRECISION_MISMATCH_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_PRECISION_MISMATCH_ERROR	
-c:@macro@LA_SCALAR_TYPE_DOUBLE	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SCALAR_TYPE_DOUBLE	
-c:@macro@LA_SCALAR_TYPE_FLOAT	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SCALAR_TYPE_FLOAT	
-c:@macro@LA_SHAPE_DIAGONAL	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SHAPE_DIAGONAL	
-c:@macro@LA_SHAPE_LOWER_TRIANGULAR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SHAPE_LOWER_TRIANGULAR	
-c:@macro@LA_SHAPE_UPPER_TRIANGULAR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SHAPE_UPPER_TRIANGULAR	
-c:@macro@LA_SINGULAR_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SINGULAR_ERROR	
-c:@macro@LA_SLICE_OUT_OF_BOUNDS_ERROR	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SLICE_OUT_OF_BOUNDS_ERROR	
-c:@macro@LA_SUCCESS	declared	source:full/accelerate/AccelerateCTypes.swift#LA_SUCCESS	
-c:@macro@LA_WARNING_POORLY_CONDITIONED	declared	source:full/accelerate/AccelerateCTypes.swift#LA_WARNING_POORLY_CONDITIONED	
-c:@macro@QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL	
-c:@macro@QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL	declared	source:full/accelerate/AccelerateCTypes.swift#QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL	
-c:@macro@USE_NON_APPLE_STANDARD_DATATYPES	declared	source:full/accelerate/AccelerateCTypes.swift#USE_NON_APPLE_STANDARD_DATATYPES	
-c:@macro@VIMAGE_AFFINETRANSFORM_DOUBLE_IS_AVAILABLE	declared	source:full/accelerate/AccelerateCTypes.swift#VIMAGE_AFFINETRANSFORM_DOUBLE_IS_AVAILABLE	
-c:@macro@VIMAGE_CGAFFINETRANSFORM_IS_AVAILABLE	declared	source:full/accelerate/AccelerateCTypes.swift#VIMAGE_CGAFFINETRANSFORM_IS_AVAILABLE	
-c:@macro@vDSP_Version0	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_Version0	
-c:@macro@vDSP_Version1	declared	source:full/accelerate/AccelerateCTypes.swift#vDSP_Version1	
+c:@macro@LA_ATTRIBUTE_ENABLE_LOGGING	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_ATTRIBUTE_ENABLE_LOGGING=1.
+c:@macro@LA_DEFAULT_ATTRIBUTES	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_DEFAULT_ATTRIBUTES=0.
+c:@macro@LA_DIMENSION_MISMATCH_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_DIMENSION_MISMATCH_ERROR=-1002.
+c:@macro@LA_FEATURE_DIAGONALLY_DOMINANT	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_FEATURE_DIAGONALLY_DOMINANT=262144.
+c:@macro@LA_FEATURE_POSITIVE_DEFINITE	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_FEATURE_POSITIVE_DEFINITE=131072.
+c:@macro@LA_FEATURE_SYMMETRIC	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_FEATURE_SYMMETRIC=65536.
+c:@macro@LA_INTERNAL_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_INTERNAL_ERROR=-1000.
+c:@macro@LA_INVALID_PARAMETER_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_INVALID_PARAMETER_ERROR=-1001.
+c:@macro@LA_L1_NORM	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_L1_NORM=1.
+c:@macro@LA_L2_NORM	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_L2_NORM=2.
+c:@macro@LA_LINF_NORM	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_LINF_NORM=3.
+c:@macro@LA_NO_HINT	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_NO_HINT=0.
+c:@macro@LA_PRECISION_MISMATCH_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_PRECISION_MISMATCH_ERROR=-1003.
+c:@macro@LA_SCALAR_TYPE_DOUBLE	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_SCALAR_TYPE_DOUBLE=16384.
+c:@macro@LA_SCALAR_TYPE_FLOAT	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_SCALAR_TYPE_FLOAT=32768.
+c:@macro@LA_SHAPE_DIAGONAL	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_SHAPE_DIAGONAL=1.
+c:@macro@LA_SHAPE_LOWER_TRIANGULAR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_SHAPE_LOWER_TRIANGULAR=2.
+c:@macro@LA_SHAPE_UPPER_TRIANGULAR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleHintAttributeValues	Apple-measured LA_SHAPE_UPPER_TRIANGULAR=4.
+c:@macro@LA_SINGULAR_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_SINGULAR_ERROR=-1004.
+c:@macro@LA_SLICE_OUT_OF_BOUNDS_ERROR	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_SLICE_OUT_OF_BOUNDS_ERROR=-1005.
+c:@macro@LA_SUCCESS	implemented	test:full/accelerate/tests/agent/VImageFamilyTests.swift#testDocumentedVImageConstants	Apple-measured LA_SUCCESS=0.
+c:@macro@LA_WARNING_POORLY_CONDITIONED	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testLAOracleStatusValues	Apple-measured LA_WARNING_POORLY_CONDITIONED=1000.
+c:@macro@QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL=152.
+c:@macro@QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL=32.
+c:@macro@USE_NON_APPLE_STANDARD_DATATYPES	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured USE_NON_APPLE_STANDARD_DATATYPES=1.
+c:@macro@VIMAGE_AFFINETRANSFORM_DOUBLE_IS_AVAILABLE	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured VIMAGE_AFFINETRANSFORM_DOUBLE_IS_AVAILABLE=1.
+c:@macro@VIMAGE_CGAFFINETRANSFORM_IS_AVAILABLE	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured VIMAGE_CGAFFINETRANSFORM_IS_AVAILABLE=1.
+c:@macro@vDSP_Version0	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured vDSP_Version0=1123.
+c:@macro@vDSP_Version1	implemented	test:full/accelerate/tests/agent/OracleValueTests.swift#testOracleWorkspaceVersionValues	Apple-measured vDSP_Version1=40.
 c:objc(pl)OS_la_object	declared	source:full/accelerate/AccelerateCTypes.swift#OS_la_object	
 s:10Accelerate0A11MatrixOrderO	declared	source:full/accelerate/Accelerate.swift#AccelerateMatrixOrder	
 s:10Accelerate0A11MatrixOrderO11columnMajoryA2CmF	implemented	test:full/accelerate/tests/agent/EnumCasesTests.swift#testBNNSEnumCases	

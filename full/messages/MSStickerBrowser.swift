@@ -24,14 +24,14 @@ open class MSStickerBrowserView: NSObject {
     public init(frame: CGRect) {
         self.frame = frame
         self.stickerSize = .regular
-        self.contentOffset = .zero
+        self.contentOffset = CGPoint(x: 0, y: 0)
         super.init()
     }
 
     public init(frame: CGRect, stickerSize: MSStickerSize) {
         self.frame = frame
         self.stickerSize = stickerSize
-        self.contentOffset = .zero
+        self.contentOffset = CGPoint(x: 0, y: 0)
         super.init()
     }
 
@@ -71,7 +71,10 @@ open class MSStickerBrowserViewController: NSObject, MSStickerBrowserViewDataSou
     public init(stickerSize: MSStickerSize) {
         self.stickerSize = stickerSize
         self.stickerBrowserView = MSStickerBrowserView(
-            frame: .zero,
+            frame: CGRect(
+                origin: CGPoint(x: 0, y: 0),
+                size: CGSize(width: 0, height: 0)
+            ),
             stickerSize: stickerSize
         )
         super.init()

@@ -1421,6 +1421,8 @@ public struct EntityQuerySortingOptions<Entity>: @unchecked Sendable {
 
 public struct EmptyResolverSpecification<Value>: ResolverSpecification {
     public typealias Element = any Resolver
+    /// Oracle: `EmptyResolverSpecification<String>.Output == String`.
+    public typealias Output = Value
     public init() {}
     public static func == (
         lhs: EmptyResolverSpecification<Value>,
@@ -1470,9 +1472,7 @@ public struct ParameterSummarySwitchCondition<Intent, Value, CaseCondition>: @un
     public init(evaluatedDisplayString: String) {
         self.evaluatedDisplayString = evaluatedDisplayString
     }
-    public enum WidgetFamily: Hashable, Sendable {
-        case widgetFamily
-    }
+    public enum WidgetFamily: Hashable, Sendable {}
 }
 
 extension ParameterSummarySwitchCondition: ParameterSummary where Intent: AppIntent, Value: _IntentValue, CaseCondition: _ParameterSummarySwitchCase {}

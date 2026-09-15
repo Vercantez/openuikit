@@ -86,6 +86,79 @@ overlay re-export.
 
 ## Depth pass 2026-09 (wave 8)
 
+### Export/sensor/protocol declared conversion (pi-wave3 webkit)
+
+This pass converts **11 declared rows to implemented** (1315 → 1326
+implemented, 79 → 68 declared; deferred 26, not-applicable 813
+unchanged, total 2233). The behavior is `WebPage` value surface plus
+protocol-conformance surface, exercised by **four synchronous,
+self-contained tests** in the new `tests/agent/WebKitPageDataTests.swift`;
+none awaits, waits on a queue or semaphore, or touches
+`DispatchQueue.main`/`RunLoop`. The largest new evidence group is 3/11
+rows (27.27%). No existing evidence was relabeled; no new product source
+was added (all declarations live in the existing `WebKitPage.swift`, so
+`webkit_guest_sources.txt` still lists 15 sources and only its digest in
+`webkit-provenance.json` was refreshed).
+
+- `WebPage.ExportedContentConfiguration` (struct, `pdf` / `image` factories
+  with Apple's default arguments, `Region` with `rect(_:)` / `contents`)
+  round-trips request records with equality/hash. There is no renderer, so
+  `exported(as:)` stays fail-closed. `Kind` / `rectValue` are host-visible
+  payloads (Apple has no such members), documented as such.
+- `WebPage.DeviceSensorAuthorization` gains Apple's two value inits:
+  `init(decision:)` maps grant/deny/prompt onto the host permission policy
+  and `init(decisionHandler:)` records registration (observable via the
+  host-only `usesDecisionHandler`; the async closure is stored, never
+  invoked). No camera, microphone, motion sensor, entitlement, or renderer
+  is enabled. The pre-existing `permissionPolicy` default (`.prompt`) and
+  `Permission` payloads are unchanged.
+- `WebPage.DialogPresenting` / `WebPage.NavigationDeciding` protocols are
+  declared with Apple's async requirements, with fail-closed extension
+  defaults (dialogs cancel, policy denies, challenges cancel) so the eight
+  `AAE` rows genuinely compile. Tests hold a test-local `@MainActor` stub
+  as `any` existentials; async bodies are never invoked on the sync runner.
+- Still declared (not convertible synchronously): all Swift-async methods
+  (`callJavaScript`, dialog/policy handlers, media capture/playback,
+  `exported(as:)`, `navigations`), all ObjC `completionHandler:` overlays
+  (Swift-async in disguise), UIKit-typed members (`buttonNumber`,
+  `modifierFlags`, `menuItems`, `keyCommand`, `menuItem`, UIDelegate edit-
+  menu/input-suggestion), `TransferRepresentation` rows, and the async
+  `appBundle` / `resourceBaseURL` extension properties.
+
+Top-5 implemented evidence distribution after this pass (1326 rows):
+
+| Test | Rows | Share |
+| --- | ---: | ---: |
+| testOptionSetRawValues | 155 | 11.69% |
+| testContextPermissionGrantDenyAndURLAccess | 98 | 7.39% |
+| testControllerTabAndWindowRegistry | 89 | 6.71% |
+| testActionCommandDataRecordAndMessagePort | 76 | 5.73% |
+| testHTMLStringLoadCommitsAndParsesTitle | 67 | 5.05% |
+
+Validation on this Mac (the sealed Linux gate needs a Linux host):
+
+- `python3 -B full/framework-fanout/validate_seed.py --framework
+  full/webkit --phase deliverable`:
+  `FRAMEWORK_FANOUT_DELIVERABLE_OK module=WebKit lane=medium-full
+  symbols=2233`.
+- Product (15 sources, no manifest change) compiles warnings-as-errors;
+  all `tests/agent/*Tests.swift` compile warnings-as-errors; the four new
+  tests run green (`WEBKIT_SPLIT_OK`). macOS verification uses a `/tmp`
+  overlay shim (repo untouched) because this Mac's SDK requires an explicit
+  CoreGraphics import the Linux gate does not, the untouched host UIKit
+  shim needs the same overlay, and product macOS compilation requires the
+  first-pass `-D PORTABLE_WEBKIT_HOST` flag. The full cited-test run stops
+  at the pre-existing `testSnapshotPDFAndWebArchiveFailClosed`
+  `document.title` spelling assertion, which expects the non-`PORTABLE`
+  `javaScriptExceptionOccurred` code; the pristine baseline stops at the
+  identical line, so this is a `PORTABLE`-flag artifact, not a regression.
+- `python3 -B full/webkit/tests/test_webkit_provenance.py`: 8 tests OK
+  (only the `WebKitPage.swift` digest refreshed).
+- One `oracle-questions.tsv` row added for the sensor-handler invocation
+  timing / export-sizing semantics the sync runner cannot observe.
+
+Only `full/webkit/` changes.
+
 ### Policy/data declared conversion (pi-wave2 webkit)
 
 This pass converts **36 declared rows to implemented** (1279 → 1315

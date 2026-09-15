@@ -275,7 +275,14 @@ public class PHASEStreamNode: NSObject {
         gain: PHASENumberMetaParameter? = nil,
         rate: PHASENumberMetaParameter? = nil
     ) -> PHASEStreamNode {
-        PHASEStreamNode(mixer: mixer, gainMetaParameter: gain, rateMetaParameter: rate)
+#if canImport(AVFAudio)
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2) else {
+            preconditionFailure("host stream nodes require a standard audio format")
+        }
+        return PHASEStreamNode(mixer: mixer, gainMetaParameter: gain, rateMetaParameter: rate, format: format)
+#else
+        return PHASEStreamNode(mixer: mixer, gainMetaParameter: gain, rateMetaParameter: rate)
+#endif
     }
 }
 
@@ -349,7 +356,14 @@ public final class PHASEPushStreamNode: PHASEStreamNode {
 
     @_spi(OpenUIKitHost)
     public static func hostMake(mixer: PHASEMixer) -> PHASEPushStreamNode {
-        PHASEPushStreamNode(mixer: mixer, gainMetaParameter: nil, rateMetaParameter: nil)
+#if canImport(AVFAudio)
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2) else {
+            preconditionFailure("host stream nodes require a standard audio format")
+        }
+        return PHASEPushStreamNode(mixer: mixer, gainMetaParameter: nil, rateMetaParameter: nil, format: format)
+#else
+        return PHASEPushStreamNode(mixer: mixer, gainMetaParameter: nil, rateMetaParameter: nil)
+#endif
     }
 }
 
@@ -391,6 +405,13 @@ public final class PHASEPullStreamNode: PHASEStreamNode {
 
     @_spi(OpenUIKitHost)
     public static func hostMake(mixer: PHASEMixer) -> PHASEPullStreamNode {
-        PHASEPullStreamNode(mixer: mixer, gainMetaParameter: nil, rateMetaParameter: nil)
+#if canImport(AVFAudio)
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 2) else {
+            preconditionFailure("host stream nodes require a standard audio format")
+        }
+        return PHASEPullStreamNode(mixer: mixer, gainMetaParameter: nil, rateMetaParameter: nil, format: format)
+#else
+        return PHASEPullStreamNode(mixer: mixer, gainMetaParameter: nil, rateMetaParameter: nil)
+#endif
     }
 }

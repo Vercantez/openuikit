@@ -999,3 +999,505 @@ func visionOpticalFlowSearchRadius(accuracy: Int) -> Int {
     default: return 16
     }
 }
+
+/// Classical Harris corner detection on a grayscale raster. Returns pixel
+/// coordinates sorted by response (strongest first) with a minimum separation
+/// of 4 pixels, capped at `maxCount`. A documented Linux-local helper shared by
+/// homographic registration and trajectory tracklets; not an Apple detector.
+func visionHarrisCorners(
+    gray: [UInt8],
+    width: Int,
+    height: Int,
+    maxCount: Int
+) -> [(x: Int, y: Int, response: Float)] {
+    guard width >= 8, height >= 8, maxCount > 0 else { return [] }
+    var gx = [Float](repeating: 0, count: width * height)
+    var gy = [Float](repeating: 0, count: width * height)
+    for y in 1..<(height - 1) {
+        for x in 1..<(width - 1) {
+            let index = y * width + x
+            gx[index] = Float(gray[index + 1]) - Float(gray[index - 1])
+            gy[index] = Float(gray[index + width]) - Float(gray[index - width])
+        }
+    }
+    var candidates: [(x: Int, y: Int, response: Float)] = []
+    var maxResponse: Float = 0
+    var responses = [Float](repeating: 0, count: width * height)
+    for y in 1..<(height - 1) {
+        for x in 1..<(width - 1) {
+            var sxx: Float = 0
+            var syy: Float = 0
+            var sxy: Float = 0
+            for dy in -1...1 {
+                for dx in -1...1 {
+                    let index = (y + dy) * width + (x + dx)
+                    sxx += gx[index] * gx[index]
+                    syy += gy[index] * gy[index]
+                    sxy += gx[index] * gy[index]
+                }
+            }
+            let determinant = sxx * syy - sxy * sxy
+            let trace = sxx + syy
+            let response = determinant - 0.04 * trace * trace
+            if response > 0 {
+                responses[y * width + x] = response
+                if response > maxResponse { maxResponse = response }
+            }
+        }
+    }
+    guard maxResponse > 0 else { return [] }
+    let floor = maxResponse * 0.01
+    for y in 1..<(height - 1) {
+        for x in 1..<(width - 1) {
+            let response = responses[y * width + x]
+            if response >= floor {
+                candidates.append((x, y, response))
+            }
+        }
+    }
+    candidates.sort { $0.response > $1.response }
+    var accepted: [(x: Int, y: Int, response: Float)] = []
+    for candidate in candidates {
+        var clear = true
+        for other in accepted {
+            let dx = candidate.x - other.x
+            let dy = candidate.y - other.y
+            if dx * dx + dy * dy < 16 {
+                clear = false
+                break
+            }
+        }
+        if clear {
+            accepted.append(candidate)
+            if accepted.count >= maxCount { break }
+        }
+    }
+    return accepted
+}
+
+/// Zero-mean normalized cross-correlation of two square patches of radius
+/// `radius` centred at `a` in `first` and `b` in `second`. Returns -2 when
+/// either patch leaves the raster. Range is -1...1 for valid patches.
+func visionPatchNCC(
+    first: [UInt8],
+    second: [UInt8],
+    width: Int,
+    height: Int,
+    a: (x: Int, y: Int),
+    b: (x: Int, y: Int),
+    radius: Int
+) -> Float {
+    guard a.x - radius >= 0, a.y - radius >= 0, a.x + radius < width, a.y + radius < height,
+        b.x - radius >= 0, b.y - radius >= 0, b.x + radius < width, b.y + radius < height
+    else { return -2 }
+    var sumA = 0.0
+    var sumB = 0.0
+    var count = 0.0
+    for dy in -radius...radius {
+        for dx in -radius...radius {
+            sumA += Double(first[(a.y + dy) * width + (a.x + dx)])
+            sumB += Double(second[(b.y + dy) * width + (b.x + dx)])
+            count += 1
+        }
+    }
+    let meanA = sumA / count
+    let meanB = sumB / count
+    var num = 0.0
+    var denA = 0.0
+    var denB = 0.0
+    for dy in -radius...radius {
+        for dx in -radius...radius {
+            let da = Double(first[(a.y + dy) * width + (a.x + dx)]) - meanA
+            let db = Double(second[(b.y + dy) * width + (b.x + dx)]) - meanB
+            num += da * db
+            denA += da * da
+            denB += db * db
+        }
+    }
+    let denominator = (denA * denB).squareRoot()
+    guard denominator > 1e-9 else { return -2 }
+    return Float(num / denominator)
+}
+
+/// Best NCC match for source point `a` inside `second` within `searchRadius`
+/// pixels. Returns nil when no candidate reaches `threshold`.
+func visionMatchCorner(
+    first: [UInt8],
+    second: [UInt8],
+    width: Int,
+    height: Int,
+    a: (x: Int, y: Int),
+    searchRadius: Int,
+    patchRadius: Int,
+    threshold: Float
+) -> (x: Int, y: Int, score: Float)? {
+    var best: (x: Int, y: Int, score: Float)?
+    for dy in -searchRadius...searchRadius {
+        for dx in -searchRadius...searchRadius {
+            let b = (x: a.x + dx, y: a.y + dy)
+            let score = visionPatchNCC(
+                first: first, second: second, width: width, height: height,
+                a: a, b: b, radius: patchRadius
+            )
+            if score >= threshold, best == nil || score > best!.score {
+                best = (b.x, b.y, score)
+            }
+        }
+    }
+    return best
+}
+
+/// Least-squares 3x3 homography from `pairs` (source -> destination) with
+/// Hartley normalization, solved with h[8] fixed to 1 via 8x8 normal
+/// equations. Returns 9 row-major doubles, or nil when degenerate.
+func visionDLTHomography(_ pairs: [(src: SIMD2<Double>, dst: SIMD2<Double>)]) -> [Double]? {
+    let count = pairs.count
+    guard count >= 4 else { return nil }
+    var srcMean = SIMD2<Double>(0, 0)
+    var dstMean = SIMD2<Double>(0, 0)
+    for pair in pairs {
+        srcMean += pair.src
+        dstMean += pair.dst
+    }
+    srcMean /= Double(count)
+    dstMean /= Double(count)
+    var srcSpread = 0.0
+    var dstSpread = 0.0
+    for pair in pairs {
+        let a = pair.src - srcMean
+        let b = pair.dst - dstMean
+        srcSpread += (a.x * a.x + a.y * a.y).squareRoot()
+        dstSpread += (b.x * b.x + b.y * b.y).squareRoot()
+    }
+    srcSpread /= Double(count)
+    dstSpread /= Double(count)
+    guard srcSpread > 1e-9, dstSpread > 1e-9 else { return nil }
+    let srcScale = 1.4142135623730951 / srcSpread
+    let dstScale = 1.4142135623730951 / dstSpread
+    var lhs = [[Double]](repeating: [Double](repeating: 0, count: 8), count: 8)
+    var rhs = [Double](repeating: 0, count: 8)
+    for pair in pairs {
+        let sx = (pair.src.x - srcMean.x) * srcScale
+        let sy = (pair.src.y - srcMean.y) * srcScale
+        let dx = (pair.dst.x - dstMean.x) * dstScale
+        let dy = (pair.dst.y - dstMean.y) * dstScale
+        let rows: [([Double], Double)] = [
+            ([sx, sy, 1, 0, 0, 0, -dx * sx, -dx * sy], dx),
+            ([0, 0, 0, sx, sy, 1, -dy * sx, -dy * sy], dy),
+        ]
+        for (row, value) in rows {
+            for i in 0..<8 {
+                rhs[i] += row[i] * value
+                for j in 0..<8 {
+                    lhs[i][j] += row[i] * row[j]
+                }
+            }
+        }
+    }
+    var matrix = lhs
+    var vector = rhs
+    for column in 0..<8 {
+        var pivot = column
+        for row in (column + 1)..<8 {
+            if abs(matrix[row][column]) > abs(matrix[pivot][column]) { pivot = row }
+        }
+        guard abs(matrix[pivot][column]) > 1e-12 else { return nil }
+        if pivot != column {
+            matrix.swapAt(pivot, column)
+            vector.swapAt(pivot, column)
+        }
+        let divisor = matrix[column][column]
+        for row in (column + 1)..<8 {
+            let factor = matrix[row][column] / divisor
+            if factor != 0 {
+                for k in column..<8 { matrix[row][k] -= factor * matrix[column][k] }
+                vector[row] -= factor * vector[column]
+            }
+        }
+    }
+    var solution = [Double](repeating: 0, count: 8)
+    for row in stride(from: 7, through: 0, by: -1) {
+        var sum = vector[row]
+        for k in (row + 1)..<8 { sum -= matrix[row][k] * solution[k] }
+        solution[row] = sum / matrix[row][row]
+    }
+    var normalized = solution
+    normalized.append(1)
+    func translation(_ tx: Double, _ ty: Double) -> [Double] {
+        [1, 0, tx, 0, 1, ty, 0, 0, 1]
+    }
+    func scaled(_ s: Double) -> [Double] {
+        [s, 0, 0, 0, s, 0, 0, 0, 1]
+    }
+    func multiply(_ a: [Double], _ b: [Double]) -> [Double] {
+        var out = [Double](repeating: 0, count: 9)
+        for r in 0..<3 {
+            for c in 0..<3 {
+                out[r * 3 + c] = a[r * 3] * b[c] + a[r * 3 + 1] * b[3 + c] + a[r * 3 + 2] * b[6 + c]
+            }
+        }
+        return out
+    }
+    let tSrc = multiply(scaled(srcScale), translation(-srcMean.x, -srcMean.y))
+    let invDst = multiply(translation(dstMean.x, dstMean.y), scaled(1 / dstScale))
+    let denormalized = multiply(invDst, multiply(normalized, tSrc))
+    guard abs(denormalized[8]) > 1e-12 else { return nil }
+    return denormalized.map { $0 / denormalized[8] }
+}
+
+/// Row-major 3x3 homography mapping `source` pixels to `target` pixels using
+/// Harris corners, NCC matching, and deterministic exhaustive RANSAC over the
+/// 12 best matches. Falls back to the phase-correlation translation embedded
+/// in a 3x3 matrix when too few inliers survive. Returns the matrix and an
+/// inlier-ratio confidence in 0...1.
+///
+/// Linux-local convention (documented, not Apple-observed): `warpTransform`
+/// maps targeted-image (floating/source) pixel coordinates to reference-image
+/// (target) pixel coordinates, column-major (`p' = H * p` with `p = (x, y, 1)`).
+func visionHomographyMatrix(source: VisionRaster, target: VisionRaster) -> (matrix: [Double], confidence: Float) {
+    let fallback: () -> (matrix: [Double], confidence: Float) = {
+        let shift = visionTranslationalAlignment(source: source, target: target).alignmentTransform
+        let tx = Double(shift.tx)
+        let ty = Double(shift.ty)
+        return ([1, 0, tx, 0, 1, ty, 0, 0, 1], 0.35)
+    }
+    let work = 64
+    guard source.width >= 16, source.height >= 16, target.width >= 16, target.height >= 16 else {
+        return fallback()
+    }
+    let gridWidth = work
+    let gridHeight = max(1, work * source.height / max(1, source.width))
+    let smallSource = source.resized(width: gridWidth, height: gridHeight)
+    let smallTarget = target.resized(width: gridWidth, height: gridHeight)
+    let graySource = smallSource.grayscale()
+    let grayTarget = smallTarget.grayscale()
+    let corners = visionHarrisCorners(gray: graySource, width: gridWidth, height: gridHeight, maxCount: 48)
+    guard corners.count >= 4 else { return fallback() }
+    var matches: [(src: SIMD2<Double>, dst: SIMD2<Double>, score: Float)] = []
+    for corner in corners {
+        if let hit = visionMatchCorner(
+            first: graySource, second: grayTarget, width: gridWidth, height: gridHeight,
+            a: (corner.x, corner.y), searchRadius: 12, patchRadius: 3, threshold: 0.75
+        ) {
+            matches.append((
+                SIMD2<Double>(Double(corner.x), Double(corner.y)),
+                SIMD2<Double>(Double(hit.x), Double(hit.y)),
+                hit.score
+            ))
+        }
+        if matches.count >= 24 { break }
+    }
+    guard matches.count >= 4 else { return fallback() }
+    matches.sort { $0.score > $1.score }
+    let pool = Array(matches.prefix(12))
+    func reprojectionError(_ h: [Double], src: SIMD2<Double>, dst: SIMD2<Double>) -> Double {
+        let w = h[6] * src.x + h[7] * src.y + h[8]
+        guard abs(w) > 1e-9 else { return Double.greatestFiniteMagnitude }
+        let px = (h[0] * src.x + h[1] * src.y + h[2]) / w
+        let py = (h[3] * src.x + h[4] * src.y + h[5]) / w
+        let dx = px - dst.x
+        let dy = py - dst.y
+        return (dx * dx + dy * dy).squareRoot()
+    }
+    var bestMatrix: [Double]?
+    var bestInliers: [Int] = []
+    var bestError = Double.greatestFiniteMagnitude
+    let n = pool.count
+    for a in 0..<(n - 3) {
+        for b in (a + 1)..<(n - 2) {
+            for c in (b + 1)..<(n - 1) {
+                for d in (c + 1)..<n {
+                    let subset = [pool[a], pool[b], pool[c], pool[d]]
+                    guard let h = visionDLTHomography(subset.map({ (src: $0.src, dst: $0.dst) })) else { continue }
+                    var inliers: [Int] = []
+                    var total = 0.0
+                    for (index, pair) in pool.enumerated() {
+                        let error = reprojectionError(h, src: pair.src, dst: pair.dst)
+                        if error <= 2.0 {
+                            inliers.append(index)
+                            total += error
+                        }
+                    }
+                    if inliers.count > bestInliers.count
+                        || (inliers.count == bestInliers.count && total < bestError)
+                    {
+                        bestInliers = inliers
+                        bestMatrix = h
+                        bestError = total
+                    }
+                }
+            }
+        }
+    }
+    guard bestMatrix != nil, bestInliers.count >= 6,
+        Double(bestInliers.count) >= Double(pool.count) * 0.5,
+        let refined = visionDLTHomography(bestInliers.map({
+            (src: pool[$0].src, dst: pool[$0].dst)
+        }))
+    else { return fallback() }
+    let scaleX = Double(source.width) / Double(gridWidth)
+    let scaleY = Double(source.height) / Double(gridHeight)
+    let toFull: [Double] = [scaleX, 0, 0, 0, scaleY, 0, 0, 0, 1]
+    let toGrid: [Double] = [1 / scaleX, 0, 0, 0, 1 / scaleY, 0, 0, 0, 1]
+    func rescale(_ a: [Double], _ b: [Double]) -> [Double] {
+        var out = [Double](repeating: 0, count: 9)
+        for r in 0..<3 {
+            for c in 0..<3 {
+                out[r * 3 + c] = a[r * 3] * b[c] + a[r * 3 + 1] * b[3 + c] + a[r * 3 + 2] * b[6 + c]
+            }
+        }
+        return out
+    }
+    var full = rescale(toFull, rescale(refined, toGrid))
+    guard abs(full[8]) > 1e-12 else { return fallback() }
+    full = full.map { $0 / full[8] }
+    let ratio = Float(bestInliers.count) / Float(max(1, pool.count))
+    return (full, 0.5 + 0.5 * min(1, ratio))
+}
+
+/// Classical homographic alignment observation for `source` (targeted/floating)
+/// onto `target` (reference). Documented non-Apple heuristic: Harris corners +
+/// NCC matching + normalized DLT with exhaustive deterministic RANSAC, falling
+/// back to the phase-correlation translation when too few inliers survive.
+func visionHomographicAlignment(
+    source: VisionRaster,
+    target: VisionRaster
+) -> VNImageHomographicAlignmentObservation {
+    let result = visionHomographyMatrix(source: source, target: target)
+    let h = result.matrix
+    let observation = VNImageHomographicAlignmentObservation(confidence: result.confidence)
+    observation.warpTransform = matrix_float3x3(columns: (
+        SIMD3<Float>(Float(h[0]), Float(h[3]), Float(h[6])),
+        SIMD3<Float>(Float(h[1]), Float(h[4]), Float(h[7])),
+        SIMD3<Float>(Float(h[2]), Float(h[5]), Float(h[8]))
+    ))
+    return observation
+}
+
+/// Classical generic-foreground instance mask. Reuses the port's center-surround
+/// contrast heat map, thresholds at half-maximum, flood-fills interior holes,
+/// and labels the largest connected foreground blob as instance 1 (everything
+/// else is background 0). Uniform images yield an empty mask with confidence 0.
+/// This is generic contrast foreground, not Apple person segmentation.
+func visionForegroundInstanceMask(in raster: VisionRaster) -> VNInstanceMaskObservation {
+    let width = raster.width
+    let height = raster.height
+    func empty(_ confidence: VNConfidence) -> VNInstanceMaskObservation {
+        VNInstanceMaskObservation(
+            instanceMask: CVPixelBuffer(width: max(width, 0), height: max(height, 0)),
+            confidence: confidence
+        )
+    }
+    guard width >= 2, height >= 2 else { return empty(0) }
+    let grid = 32
+    let small = raster.resized(width: grid, height: grid).grayscale().map { Double($0) }
+    var blur = [Double](repeating: 0, count: grid * grid)
+    for y in 0..<grid {
+        for x in 0..<grid {
+            var sum = 0.0
+            var count = 0.0
+            for dy in -1...1 {
+                for dx in -1...1 {
+                    let nx = x + dx
+                    let ny = y + dy
+                    if nx >= 0 && ny >= 0 && nx < grid && ny < grid {
+                        sum += small[ny * grid + nx]
+                        count += 1
+                    }
+                }
+            }
+            blur[y * grid + x] = sum / max(count, 1)
+        }
+    }
+    var contrast = [Double](repeating: 0, count: grid * grid)
+    var maxContrast = 0.0
+    for index in 0..<contrast.count {
+        contrast[index] = abs(small[index] - blur[index])
+        if contrast[index] > maxContrast { maxContrast = contrast[index] }
+    }
+    guard maxContrast > 1 else { return empty(0) }
+    let threshold = maxContrast * 0.5
+    var foreground = [Bool](repeating: false, count: grid * grid)
+    for index in 0..<foreground.count {
+        foreground[index] = contrast[index] >= threshold
+    }
+    do {
+        var visited = [Bool](repeating: false, count: grid * grid)
+        var stack: [(x: Int, y: Int)] = []
+        for x in 0..<grid {
+            if !foreground[x] { stack.append((x, 0)) }
+            if !foreground[(grid - 1) * grid + x] { stack.append((x, grid - 1)) }
+        }
+        for y in 0..<grid {
+            if !foreground[y * grid] { stack.append((0, y)) }
+            if !foreground[y * grid + grid - 1] { stack.append((grid - 1, y)) }
+        }
+        while let cell = stack.popLast() {
+            let index = cell.y * grid + cell.x
+            if visited[index] || foreground[index] { continue }
+            visited[index] = true
+            for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1)] {
+                let nx = cell.x + dx
+                let ny = cell.y + dy
+                if nx >= 0 && ny >= 0 && nx < grid && ny < grid {
+                    stack.append((nx, ny))
+                }
+            }
+        }
+        for index in 0..<foreground.count {
+            if !visited[index] && !foreground[index] {
+                foreground[index] = true
+            }
+        }
+    }
+    var labels = [Int](repeating: 0, count: grid * grid)
+    var sizes: [Int] = [0]
+    var nextLabel = 0
+    for y in 0..<grid {
+        for x in 0..<grid {
+            let index = y * grid + x
+            guard foreground[index], labels[index] == 0 else { continue }
+            nextLabel += 1
+            sizes.append(0)
+            var stack = [(x, y)]
+            while let cell = stack.popLast() {
+                if cell.0 < 0 || cell.1 < 0 || cell.0 >= grid || cell.1 >= grid { continue }
+                let cellIndex = cell.1 * grid + cell.0
+                if !foreground[cellIndex] || labels[cellIndex] != 0 { continue }
+                labels[cellIndex] = nextLabel
+                sizes[nextLabel] += 1
+                stack.append((cell.0 + 1, cell.1))
+                stack.append((cell.0 - 1, cell.1))
+                stack.append((cell.0, cell.1 + 1))
+                stack.append((cell.0, cell.1 - 1))
+            }
+        }
+    }
+    var bestLabel = 0
+    var bestSize = 0
+    for label in 1...max(1, nextLabel) {
+        if sizes[label] > bestSize {
+            bestSize = sizes[label]
+            bestLabel = label
+        }
+    }
+    guard bestLabel > 0 else { return empty(0) }
+    var pixels = [UInt8](repeating: 0, count: width * height * 4)
+    for y in 0..<height {
+        let gridY = min(grid - 1, (y * grid) / height)
+        for x in 0..<width {
+            let gridX = min(grid - 1, (x * grid) / width)
+            let offset = (y * width + x) * 4
+            if labels[gridY * grid + gridX] == bestLabel {
+                pixels[offset] = 1
+                pixels[offset + 3] = 255
+            } else {
+                pixels[offset + 3] = 255
+            }
+        }
+    }
+    return VNInstanceMaskObservation(
+        instanceMask: CVPixelBuffer(width: width, height: height, pixels: pixels),
+        confidence: VNConfidence(min(1, maxContrast / 64))
+    )
+}

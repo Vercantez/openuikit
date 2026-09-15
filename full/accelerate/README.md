@@ -427,3 +427,38 @@ Top-5 evidence distribution for the 67 newly implemented rows:
 5. `testSparseSubfactorTranspose` — 2 (3.0%) — Float/Double subfactor transpose multiply+solve
 
 Largest test is 21/67 = 31.3%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. All 208 agent tests pass together. Complex sparse, `SparseIterate`, `SparseConvertFromOpaque`, BNNS graph execute, and vImage CG/CV paths stay declared/deferred/fail-closed.
+
+## Depth pass 2026-09-15 (sparse/quadrature/LA oracle values)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Probes `import Accelerate` on macOS 26.1 / Xcode 26.1 via `xcrun swiftc` (transcripts `scratch/oracle-2026-09-14/sparse-enum-2026-09-15.txt` and `scratch/oracle-2026-09-14/la-hint-2026-09-15.txt`) and corrects Linux placeholder raw values to the Apple-measured numbers:
+
+- Sparse factorization LU family: LU=80, LUUnpivoted=81, LUSPP=82, LUTPP=83 (were 6/9/7/8); LDLTSBK=3 and LDLTTPP=4 confirmed.
+- `SparseStatus_t`: Failed=-1, Singular=-2, Internal=-3, ParameterError=-4, OK=0, Released=-2147483647 (were sequential 0–5).
+- `SparseSubfactor_t`: Invalid=0, P=1, S=2, L=3, D=4, PLPS=5, Q=6, R=7, RP=8, Sr=9, Sc=10 (were sequential); triangle Lower=1/Upper=0 (were swapped).
+- `SparseKind_t` (Ordinary=0, Triangular=1, UnitTriangular=2, Symmetric=3, Hermitian=7), `SparseOrder_t` (Default=0, User=1, AMD=2, Metis=3, COLAMD=4, MTMetis=5), `SparseScaling_t` (Default=0, User=1, EquilibriationInf=2, HungarianOnly=3, HungarianAndOrdering=4), preconditioners (None=0, User=1, Diagonal=2, DiagScaling=3), GMRES variants (DQ=0, GMRES=1, FGMRES=2), iterative status (Converged=0, MaxIterations=1, IllConditioned=-2, ParameterError=-1, InternalError=-99), LSMR tests (0/1).
+- SparseBLAS legacy: `SPARSE_SUCCESS=0`, `ILLEGAL_PARAMETER=-1000`, `CANNOT_SET_PROPERTY=-1001`, `SYSTEM_ERROR=-1002`; properties UpperTri=1/LowerTri=2/UpperSym=4/LowerSym=8; norms ONE=171/TWO=173/INF=175/R1=179.
+- Quadrature: QNG=0, QAG=1, QAGS=2; statuses SUCCESS=0/ERROR=-1/INVALID_ARG=-2/ALLOC=-3/INTERNAL=-99/MAX_EVAL=-101/BAD_BEHAVIOUR=-102; workspaces QAG=32/QAGS=152 per interval.
+- vDSP window flags: HALF_WINDOW=1, HANN_DENORM=0, HANN_NORM=2 (Linux had NORM/HALF swapped; `testDocumentedVImageConstants` now pins Apple values).
+- FFT legacy constants confirmed (FORWARD=1, INVERSE=-1, RADIX 0/1/2) and promoted.
+- LA macros: SUCCESS=0, WARNING=1000, INTERNAL=-1000, INVALID_PARAM=-1001, DIM_MISMATCH=-1002, PRECISION_MISMATCH=-1003, SINGULAR=-1004, SLICE_OOB=-1005, norms 1/2/3; hints NO_HINT=0/ENABLE_LOGGING=1/DEFAULT_ATTRIBUTES=0; features 65536/131072/262144; scalar types 32768/16384; shapes 1/2/4; `vDSP_Version0=1123`/`vDSP_Version1=40`; VIMAGE availability and `USE_NON_APPLE_STANDARD_DATATYPES` are 1.
+
+All corrected identifiers are exercised by table-driven raw-value tests in `tests/agent/OracleValueTests.swift` (one test per enum family, as allowed) plus the pre-existing `testDocumentedVImageConstants` for FFT/window/`LA_SUCCESS`. Previously implemented rows that use these identifiers symbolically (`SparseFactorizationLU`, `SparseIterativeParameterError`, `SparsePreconditionerNone`, `SPARSE_NORM_*`, `SparseIterativeConverged`) keep passing unchanged. The two answered oracle questions (LU family, LA status values) are removed from `oracle-questions.tsv`.
+
+- Implemented before: **4291**
+- Implemented after: **4404**
+- Declared before: **1310**
+- Declared after: **1197**
+- Deferred before/after: **1252**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **113**
+
+Top-5 evidence distribution for the 113 newly implemented rows:
+
+1. `testSparseOracleKindOrderScalingValues` — 16 (14.2%) — kind/order/scaling raw values
+2. `testSparseOracleSubfactorTriangleUpdateValues` — 14 (12.4%) — subfactor/triangle/update raw values
+3. `testDocumentedVImageConstants` — 14 (12.4%) — FFT/window/`LA_SUCCESS` constants already asserted there
+4. `testSparseOracleIterativePreconditionerValues` — 11 (9.7%) — GMRES/iterative/preconditioner/LSMR raw values
+5. `testLAOracleHintAttributeValues` — 11 (9.7%) — LA hint/attribute raw values
+
+Largest test is 16/113 = 14.2%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. All 208 agent tests pass together and the 11 touched tests pass in isolation on macOS. Complex sparse, `SparseIterate`, `SparseConvertFromOpaque`, BNNS graph execute, and vImage CG/CV paths stay declared/deferred/fail-closed.

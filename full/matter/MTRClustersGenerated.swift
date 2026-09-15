@@ -11342,6 +11342,151 @@ open class MTRClusterUnitTesting: MTRGenericCluster {
         _ = (dataValueDictionary, expectedValueIntervalMs, params)
         mtrHostWrite("WriteOnlyInt8u", value: dataValueDictionary, expectedValueInterval: expectedValueIntervalMs, params: params)
     }
+        open func simpleStructEchoRequest(with params: MTRUnitTestingClusterSimpleStructEchoRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterSimpleStructResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testAddArguments(with params: MTRUnitTestingClusterTestAddArgumentsParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestAddArgumentsResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testComplexNullableOptionalRequest(with params: MTRUnitTestingClusterTestComplexNullableOptionalRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestComplexNullableOptionalResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testEmitTestEventRequest(with params: MTRUnitTestingClusterTestEmitTestEventRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestEmitTestEventResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testEmitTestFabricScopedEventRequest(with params: MTRUnitTestingClusterTestEmitTestFabricScopedEventRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestEmitTestFabricScopedEventResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testEnumsRequest(with params: MTRUnitTestingClusterTestEnumsRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestEnumsResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testListInt8UArgumentRequest(with params: MTRUnitTestingClusterTestListInt8UArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterBooleanResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testListInt8UReverseRequest(with params: MTRUnitTestingClusterTestListInt8UReverseRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestListInt8UReverseResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testListNestedStructListArgumentRequest(with params: MTRUnitTestingClusterTestListNestedStructListArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterBooleanResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testListStructArgumentRequest(with params: MTRUnitTestingClusterTestListStructArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterBooleanResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testNestedStructArgumentRequest(with params: MTRUnitTestingClusterTestNestedStructArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterBooleanResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testNestedStructListArgumentRequest(with params: MTRUnitTestingClusterTestNestedStructListArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterBooleanResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testNotHandled(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testNotHandled(with params: MTRUnitTestingClusterTestNotHandledParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testNullableOptionalRequest(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestNullableOptionalResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testNullableOptionalRequest(with params: MTRUnitTestingClusterTestNullableOptionalRequestParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestNullableOptionalResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testSimpleArgumentRequest(with params: MTRUnitTestingClusterTestSimpleArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestSimpleArgumentResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testSimpleOptionalArgumentRequest(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testSimpleOptionalArgumentRequest(with params: MTRUnitTestingClusterTestSimpleOptionalArgumentRequestParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testSpecific(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestSpecificResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testSpecific(with params: MTRUnitTestingClusterTestSpecificParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestSpecificResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testStructArgumentRequest(with params: MTRUnitTestingClusterTestStructArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterBooleanResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testStructArrayArgumentRequest(with params: MTRUnitTestingClusterTestStructArrayArgumentRequestParams, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping (MTRUnitTestingClusterTestStructArrayArgumentResponseParams?, (any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testUnknownCommand(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func testUnknownCommand(with params: MTRUnitTestingClusterTestUnknownCommandParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func test(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func test(with params: MTRUnitTestingClusterTestParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func timedInvokeRequest(withExpectedValues expectedValues: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (expectedValues, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
+        open func timedInvokeRequest(with params: MTRUnitTestingClusterTimedInvokeRequestParams?, expectedValues expectedDataValueDictionaries: [[String : Any]]?, expectedValueInterval expectedValueIntervalMs: NSNumber?, completion: @escaping ((any Error)?) -> Void)
+        {
+            _ = (params, expectedDataValueDictionaries, expectedValueIntervalMs, completion)
+            mtrFailClosed(completion)
+        }
 }
 
 open class MTRBaseClusterPowerSource: MTRGenericBaseCluster {

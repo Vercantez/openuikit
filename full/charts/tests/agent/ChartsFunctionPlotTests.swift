@@ -609,6 +609,16 @@ func testAxisContentCompositingLayer() {
     _ = optional.compositingLayer()
 }
 
+func testAxisContentBuilderConditionalCompositingLayer() {
+    let conditional = AxisContentBuilder.buildEither(first: AxisMarks()) as BuilderConditional<
+        AxisMarks<_EmptyAxisMark>, AnyAxisContent
+    >
+    let layered = conditional.compositingLayer()
+    precondition(layered.compositing == "layer")
+    let styled = conditional.compositingLayer { _ in Color.blue }
+    precondition(styled.compositing == "style")
+}
+
 func testAnyAxisContentErase() {
     let any = AnyAxisContent(AxisMarks())
     _ = any

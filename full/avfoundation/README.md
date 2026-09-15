@@ -623,3 +623,79 @@ is present but uncited by coverage; two one-word compile fixes were applied
 so the shared gate builds it (`@unchecked Sendable` on its writer witness,
 matching the delegate protocol's `Sendable` bound). Its rows are untouched
 and remain that pass's to cite.
+
+### Depth pass 2026-09-15 (wave 3 non-UI asset/caption models)
+
+Wave 3 cites the concurrent pass's 11 focused tests in
+`tests/agent/AVDepthPass12Tests.swift` (present but uncited until now) and
+adds one new test in `tests/agent/AVDepthPass14Tests.swift`. Converted
+remaining declared non-capture data models that already compile:
+`AVMutableAudioMixInputParameters` track factory (`init(track:)`, the Swift
+spelling of `+audioMixInputParametersWithTrack:`) plus the inherited stored
+`audioTimePitchAlgorithm`; four `AVMutableVideoCompositionLayerInstruction`
+ramp setters; `AVTextStyleRule` stored attributes with property-list round
+trip; `AVSampleBufferGenerator` / batch fail-closed creation; zeroed
+`AVVideoPerformanceMetrics` counters; recording-witness coverage for
+`AVAssetReaderCaptionValidationHandling`, `AVAssetResourceLoaderDelegate`,
+and `AVAssetWriterDelegate` segment callbacks; `AVFragmentMinding` protocol
+and its `isAssociatedWithFragmentMinder` projection of ObjC
+`associatedWithFragmentMinder`; `AVAssetReaderOutput.SupportedPayload` /
+`Provider` / `Provider<AVCaptionGroup>.captionsNotPresentInPreviousGroups`
+(`AVCaptionGroup` now declares the Apple-mirroring `SupportedPayload`
+conformance behind Apple's `outputCaptionProvider` return type);
+table-driven `init(rawValue:)` witnesses plus the newly added
+`AVCoordinatedPlaybackSuspension.Reason.init(_:)`; and empty
+`loadedTimeRanges` on the variant-switch / likely-to-keep-up metric events.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 4785 | 4833 |
+| `declared` | 603 | 554 |
+| `deferred` | 244 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+This pass added 48 `implemented` rows (largest new citation group is 9 rows
+for the table-driven `init(rawValue:)`/`init(_:)` witnesses, explicitly
+permitted; largest non-table group is 7). The largest evidence group overall
+is 315 rows, well below 40% of the 4,833 implemented rows.
+
+Two behavior corrections came with the citations, both staying fail-closed.
+Citing the batch test exposed that
+`AVSampleBufferGenerator.makeSampleBuffer(for:addTo:)` returned a blank
+`CMSampleBuffer` while its single-request sibling throws; it now throws
+`mediaServiceUnavailable` like the rest of the generator surface (no media
+service on Linux). `AVMutableAudioMixInputParameters.audioTapProcessor`
+moved to `deferred`: `MTAudioProcessingTap` is a Darwin-only type on the
+isolated host, matching its already-deferred base-class twin. AVCapture*,
+AVPlayer UI/outputs, async `load(...)` (YaKF), FairPlay/content-key service
+paths, PiP, AirPlay, CIImage filtering, `CALayer`-typed CoreAnimationTool
+factories, and `NSCoding` round trips stay deferred or fail-closed.
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`,
+run under `swift:6.2-noble`, Swift 6.2.4, aarch64) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```
+
+Note: on this Mac's Xcode 26.1 toolchain (`swiftc` targeting
+`arm64-apple-macosx`, where `canImport(CoreMedia)`/`canImport(QuartzCore)`
+resolve to the real Darwin SDKs) the same gate stops at host compilation of
+pre-existing lookalike-guarded lines (e.g. `CMFormatDescription()`,
+`CMTimebase()`, `CALayer` in `AVAssetSurface`/`AVPlayerLayerSurface`/
+`AVCaptureSurface`); that is a host-SDK condition, not a product regression,
+and the Linux-container run above is the authoritative sealed result.

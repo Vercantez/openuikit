@@ -109,9 +109,9 @@ deterministic stand-in model. It is not on-device Apple Intelligence.
 - `LanguageModelFeedback` sentiment/issue value types. Attachment logging
   remains empty `Data`.
 
-Coverage after this pass: implemented ≥ 660 of 754 IDs; remaining declared
-rows are macros, Combine publishers, and uninhabited `Never` witnesses.
-`Adapter.isCompatible` stays deferred.
+Coverage: 664 implemented / 8 declared / 1 deferred / 81 not-applicable
+of 754 IDs; remaining declared rows are macros, Combine publishers, and
+uninhabited `Never` witnesses. `Adapter.isCompatible` stays deferred.
 
 ### Linux stand-in contract
 

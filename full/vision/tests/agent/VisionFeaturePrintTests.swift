@@ -49,19 +49,6 @@ func testTranslationalRegistration() {
     visionExpect(abs(align!.alignmentTransform.ty - 4) < 3, "ty")
 }
 
-func testHomographicRegistrationFailClosed() {
-    let base = VisionRaster(width: 32, height: 32, filled: (255, 255, 255, 255))
-    let moving = VNImageRequestHandler(cgImage: base.makeCGImage())
-    let homo = VNHomographicImageRegistrationRequest(targetedCGImage: base.makeCGImage())
-    do {
-        try moving.perform([homo])
-        visionExpect(false, "homography should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.unsupportedRequest.rawValue, "homography unsupported")
-        visionExpect(homo.results == nil, "homography results nil")
-    }
-}
-
 func testObjectTracker() {
     var frame1 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))
     var frame2 = VisionRaster(width: 60, height: 60, filled: (0, 0, 0, 255))

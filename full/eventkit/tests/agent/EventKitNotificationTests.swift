@@ -170,20 +170,24 @@ func testEventStoreChangedPostedOnCommit() {
         precondition(
             Notification.Name.EKEventStoreChanged.rawValue == "EKEventStoreChangedNotification"
         )
-        let typed = EKEventStore.EventStoreChanged()
         precondition(EKEventStore.EventStoreChanged.name == .EKEventStoreChanged)
-        precondition(
-            EKEventStore.EventStoreChanged.makeMessage(
+        // makeMessage/makeNotification are MainActor-isolated on Darwin
+        // (MainActorMessage) and plain on Linux; assumeIsolated runs them
+        // synchronously on the main thread on both platforms.
+        MainActor.assumeIsolated {
+            let matched = EKEventStore.EventStoreChanged.makeMessage(
                 Notification(name: .EKEventStoreChanged)
-            ) != nil
-        )
-        precondition(
-            EKEventStore.EventStoreChanged.makeMessage(
+            )
+            precondition(matched != nil)
+            let unmatched = EKEventStore.EventStoreChanged.makeMessage(
                 Notification(name: Notification.Name("other"))
-            ) == nil
-        )
-        let note = EKEventStore.EventStoreChanged.makeNotification(typed)
-        precondition(note.name == .EKEventStoreChanged)
+            )
+            precondition(unmatched == nil)
+            let note = EKEventStore.EventStoreChanged.makeNotification(
+                EKEventStore.EventStoreChanged()
+            )
+            precondition(note.name == .EKEventStoreChanged)
+        }
         let _: EKEventStore.EventStoreChanged.Subject.Type = EKEventStore.self
 
         let posted = EventKitPostedCounter()

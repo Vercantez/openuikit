@@ -73,17 +73,35 @@ rows cited `tests/agent/CarPlayRuntime.swift`, which is not
   completion variants, `dismissNavigationAlert(animated:)`, and async list /
   search delegate requirements) that a no-argument synchronous test cannot
   await.
+- Wave 3 (2026-09-15): 985 implemented / 3 declared. The 7
+  `CPInterfaceController` completion-selector overloads
+  (`setRootTemplate(_:animated:completion:)`,
+  `pushTemplate(_:animated:completion:)`,
+  `popTemplate(animated:completion:)`,
+  `popToRootTemplate(animated:completion:)`,
+  `pop(to:animated:completion:)`,
+  `presentTemplate(_:animated:completion:)`,
+  `dismissTemplate(animated:completion:)`) and
+  `CPMapTemplate.dismissNavigationAlert(animated:completion:)` are now
+  implemented as synchronous completion-handler methods sharing the apply
+  core with the async overlays, matching Apple's ObjC selectors verified in
+  the Xcode 26.1 SDK headers, and are exercised by 8 focused tests in
+  `tests/agent/CarPlayCompletionTests.swift` (success plus fail-closed
+  `CarPlayHostError` paths through the completion). The 3 remaining declared
+  rows are the async list / search delegate protocol requirements, which a
+  no-argument synchronous test cannot await.
 
-Top-5 implemented evidence citations (977 implemented rows):
+Top-5 implemented evidence citations (985 implemented rows):
 
-1. `CarPlayEnumTests.swift#testEnumOptionSetAndConstantValues` — 353 (36.1%).
+1. `CarPlayEnumTests.swift#testEnumOptionSetAndConstantValues` — 353 (35.8%).
    Table-driven enum / OptionSet / C-constant values (allowed to share).
 2. `CarPlayMapTests.swift#testMapTemplateTripPreviewAndPanning` — 51 (5.2%).
 3. `CarPlayListImageTests.swift#testListImageRowItemElements` — 48 (4.9%).
 4. `CarPlayMapTests.swift#testManeuverLaneAndRouteInformation` — 36 (3.7%).
 5. `CarPlayNowPlayingTests.swift#testNowPlayingSportsMode` — 32 (3.3%).
 
-No other single test exceeds 40% of implemented rows (cap 390.8).
+No other single test exceeds 40% of non-table implemented rows (cap 252.8
+on 985 − 353 table rows).
 
 - `CPTemplateApplicationScene` / `CPTemplateApplicationSceneDelegate`: the
   documented `@_spi(OpenUIKitHost)` hook `openuikit_connectSimulatedSession`
@@ -94,6 +112,9 @@ No other single test exceeds 40% of implemented rows (cap 390.8).
   `popToRootTemplate` / `pop(to:)` / `presentTemplate` / `dismissTemplate`
   with stack depth 5, `CarPlayErrorDomain` errors, `templates` / `topTemplate` /
   `rootTemplate` / `presentedTemplate`, and ordered appear/disappear callbacks.
+  Each also has a synchronous `completion:` overload matching Apple's ObjC
+  selector; completions report `(true, nil)` on success and
+  `(false, CarPlayHostError)` fail-closed errors.
 - Template validation from documentation: list sections/items via
   `CPListTemplate.maximumItemCount` (12) and `maximumSectionCount` (12);
   `CPGridTemplate` ≤ 8 buttons (`CPGridTemplateMaximumItems`);
@@ -103,7 +124,8 @@ No other single test exceeds 40% of implemented rows (cap 390.8).
 - `CPMapTemplate` with `CPMapButton` stores, trip previews, panning, navigation
   alerts, and `CPNavigationSession` state machine (navigating / paused /
   finished / cancelled) plus `CPTrip` / `CPRouteChoice` / `CPManeuver` /
-  `CPTravelEstimates` value stores.
+  `CPTravelEstimates` value stores. `dismissNavigationAlert` also has a
+  synchronous `completion:` overload matching Apple's ObjC selector.
 - `CPListItem` / `CPListImageRowItem` / `CPMessageListItem` handler invocation
   with completion; images via the port `UIImage`; `CPListItem.maximumImageSize`
   is 90×90.

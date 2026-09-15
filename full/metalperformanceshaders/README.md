@@ -77,7 +77,8 @@ real host data. `MPSAccelerationStructure.rebuild` / `encodeRefit` leave
 status `.unbuilt` and refuse GPU work. `MPSKeyedUnarchiver` returns nil.
 RNN inference, EDLines, guided-filter, instance/group-norm, and SVGF
 denoiser encode record `MPSHostBoundary.lastRefusedAPI`. `MPSHandle` and
-`MPSHeapProvider` remain declared stubs.
+`MPSHeapProvider` are implemented host stub protocols; their `MTLHeap`-shaped
+overlay members stay deferred.
 
 ## Tests
 
@@ -405,3 +406,37 @@ remaining 251 rows stay deferred where the pinned surface does not support an
 honest host behavior or where a focused identifier-level probe is still absent.
 No row was classified unavailable or not-applicable, and no Apple-only result
 is fabricated.
+
+## Depth pass 2026-09 (pi wave 4)
+
+Coverage before this pass: **3,129 implemented / 2 declared / 251 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **3,131 implemented / 0 declared / 251 deferred /
+0 unavailable / 0 not-applicable**. The implemented gain is **+2**.
+
+This pass converts the last two declared rows: the `MPSHandle` and
+`MPSHeapProvider` stub protocols are now `implemented`, exercised by the
+pre-existing focused test
+`MPSWave11DescriptorTests.swift#testMPSWave11HandleAndHeapProvider` (conforming
+handle with label round-trip through `MPSNNImageNode`, nil-returning provider
+wired through `MPSCommandBuffer`). No product source changed. Their three
+overlay members (`label()`, `newHeap(with:)`, `retire(_:cacheDelay:)`) stay
+deferred: the host stub exposes `label` as a property rather than the
+overlay's method, and `MTLHeap`/`MTLHeapDescriptor` are GPU-only with no host
+equivalent (see `oracle-questions.tsv`). The remaining 248 deferred rows are
+the established CNN/NN-graph/ray-intersector/GPU-only surface and stay
+fail-closed. No row was classified unavailable or not-applicable.
+
+Top-5 implemented evidence distribution after this pass:
+
+| citations | share | evidence |
+| ---: | ---: | --- |
+| 377 | 12.0% | `MPSTypesTests.swift#testMPSOptionSetAlgebra` (table-driven option-set values) |
+| 343 | 11.0% | `MPSTypesTests.swift#testMPSEnumRawValues` (table-driven enum values) |
+| 243 | 7.8% | `MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels` |
+| 135 | 4.3% | `MPSGeometryTests.swift#testMPSGeometryStructs` |
+| 107 | 3.4% | `MPSGeometryTests.swift#testMPSPackedAndRayStructs` |
+
+The newly cited test holds 2 citations. No non-enum/option-set test cites
+more than 40% of the remaining implemented rows.

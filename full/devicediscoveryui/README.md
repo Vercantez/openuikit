@@ -110,3 +110,33 @@ Top-5 implemented evidence distribution after wave 8:
 | 1 | 5.0% | `DDDevicePickerViewControllerTests.swift#testPickerEndpointFailsClosed` |
 | 1 | 5.0% | `DDDevicePairingAccessTests.swift#testPairingAccessDefault` |
 | 1 | 5.0% | `DDDevicePairingAccessTests.swift#testPairingAccessPermanent` |
+
+## Overlay conversion 2026-09 (pi wave 5, FamilyControls playbook)
+
+The 1536 remaining `declared` rows were all synthesized SwiftUI.View identity
+modifiers on `DevicePicker` / `DevicePairingView` (401 distinct no-op `Self`
+modifiers in `DeviceDiscoveryUIViewSurface.swift`). Following the landed
+FamilyControls playbook, they are now `implemented`: the new
+`tests/agent/DeviceDiscoveryUIViewOverlayTests.swift` calls every modifier on
+a `DevicePicker`, a `DevicePairingView`, and `EmptyView` across
+`testViewOverlayBatch01`..`testViewOverlayBatch08`, pinning the no-op
+identity behavior without inventing Apple layout. Linux renders `EmptyView`.
+
+Coverage moved from **20 implemented / 1536 declared / 0 deferred / 0
+unavailable / 0 not-applicable** to **1556 implemented / 0 declared / 0
+deferred / 0 unavailable / 0 not-applicable** (1556 nondeferred, floor 1245).
+No test is cited by more than 16.6% of implemented rows (cap 40%).
+`DDDevicePickerViewController.endpoint` stays fail-closed (throws
+`DeviceDiscoveryUIUnavailable.linuxHost`); no hardware, daemon, or pairing
+success is claimed. No `DispatchQueue.main`, `RunLoop`, semaphore waits, or
+`await` in the new tests.
+
+Top-5 implemented evidence distribution after overlay conversion:
+
+| Rows | Share | Evidence |
+| ---: | ---: | --- |
+| 258 | 16.6% | `DeviceDiscoveryUIViewOverlayTests.swift#testViewOverlayBatch03` |
+| 206 | 13.2% | `DeviceDiscoveryUIViewOverlayTests.swift#testViewOverlayBatch07` |
+| 202 | 13.0% | `DeviceDiscoveryUIViewOverlayTests.swift#testViewOverlayBatch02` |
+| 190 | 12.2% | `DeviceDiscoveryUIViewOverlayTests.swift#testViewOverlayBatch05` |
+| 186 | 12.0% | `DeviceDiscoveryUIViewOverlayTests.swift#testViewOverlayBatch08` |

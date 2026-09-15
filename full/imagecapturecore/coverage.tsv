@@ -194,7 +194,7 @@ c:objc(cs)ICCameraDevice(im)requestDeleteFiles:	implemented	test:full/imagecaptu
 c:objc(cs)ICCameraDevice(im)requestDeleteFiles:deleteFailed:completion:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraDeviceDeleteFilesFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraDevice(im)requestDownloadFile:options:downloadDelegate:didDownloadSelector:contextInfo:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraDeviceDownloadFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraDevice(im)requestReadDataFromFile:atOffset:length:readDelegate:didReadDataSelector:contextInfo:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraDeviceReadAndPTPSelectorFailClosed	Linux runtime evidence
-c:objc(cs)ICCameraDevice(im)requestSendPTPCommand:outData:completion:	declared	source:full/imagecapturecore/ICCameraDevice.swift#requestSendPTPCommand	async overlay; sealed runner has no run loop
+c:objc(cs)ICCameraDevice(im)requestSendPTPCommand:outData:completion:	implemented	test:full/imagecapturecore/tests/agent/ICAsyncOverlayTests.swift#testICCameraDeviceSendPTPCommandCompletionFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraDevice(im)requestSendPTPCommand:outData:sendCommandDelegate:didSendCommandSelector:contextInfo:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraDeviceReadAndPTPSelectorFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraDevice(py)accessRestrictedAppleDevice	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraDeviceHostProperties	Linux runtime evidence
 c:objc(cs)ICCameraDevice(py)batteryLevel	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraDeviceHostProperties	Linux runtime evidence
@@ -213,10 +213,10 @@ c:objc(cs)ICCameraFile	implemented	test:full/imagecapturecore/tests/agent/ICCame
 c:objc(cs)ICCameraFile(cm)fingerprintForFileAtURL:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileDownloadAndFingerprintFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraFile(im)requestDownloadWithOptions:completion:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileDownloadAndFingerprintFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraFile(im)requestFingerprintWithCompletion:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileDownloadAndFingerprintFailClosed	Linux runtime evidence
-c:objc(cs)ICCameraFile(im)requestMetadataDictionaryWithOptions:completion:	declared	source:full/imagecapturecore/ICCameraItem.swift#requestMetadataDictionary	async overlay; sealed runner has no run loop
-c:objc(cs)ICCameraFile(im)requestReadDataAtOffset:length:completion:	declared	source:full/imagecapturecore/ICCameraItem.swift#requestReadData	async overlay; sealed runner has no run loop
+c:objc(cs)ICCameraFile(im)requestMetadataDictionaryWithOptions:completion:	implemented	test:full/imagecapturecore/tests/agent/ICAsyncOverlayTests.swift#testICCameraFileMetadataDictionaryCompletionFailClosed	Linux runtime evidence
+c:objc(cs)ICCameraFile(im)requestReadDataAtOffset:length:completion:	implemented	test:full/imagecapturecore/tests/agent/ICAsyncOverlayTests.swift#testICCameraFileReadDataCompletionFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraFile(im)requestSecurityScopedURLWithCompletion:	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileSecurityScopedURLFailClosed	Linux runtime evidence
-c:objc(cs)ICCameraFile(im)requestThumbnailDataWithOptions:completion:	declared	source:full/imagecapturecore/ICCameraItem.swift#requestThumbnailData	async overlay; sealed runner has no run loop
+c:objc(cs)ICCameraFile(im)requestThumbnailDataWithOptions:completion:	implemented	test:full/imagecapturecore/tests/agent/ICAsyncOverlayTests.swift#testICCameraFileThumbnailDataCompletionFailClosed	Linux runtime evidence
 c:objc(cs)ICCameraFile(py)burstFavorite	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileRemainingProperties	Linux runtime evidence
 c:objc(cs)ICCameraFile(py)burstPicked	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileRemainingProperties	Linux runtime evidence
 c:objc(cs)ICCameraFile(py)burstUUID	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraFileRemainingProperties	Linux runtime evidence
@@ -267,11 +267,11 @@ c:objc(cs)ICCameraItem(py)thumbnailIfAvailable	implemented	test:full/imagecaptur
 c:objc(cs)ICCameraItem(py)userData	implemented	test:full/imagecapturecore/tests/agent/ICCameraTests.swift#testICCameraItemHostPropertiesAndCache	Linux runtime evidence
 c:objc(cs)ICDevice	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceHostProperties	Linux runtime evidence
 c:objc(cs)ICDevice(im)requestCloseSession	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceCloseSessionFailClosed	Linux runtime evidence
-c:objc(cs)ICDevice(im)requestCloseSessionWithOptions:completion:	declared	source:full/imagecapturecore/ICDevice.swift#requestCloseSession	async overlay; sealed runner has no run loop
+c:objc(cs)ICDevice(im)requestCloseSessionWithOptions:completion:	implemented	test:full/imagecapturecore/tests/agent/ICAsyncOverlayTests.swift#testICDeviceCloseSessionOptionsCompletionFailClosed	Linux runtime evidence
 c:objc(cs)ICDevice(im)requestEject	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceEjectFailClosed	Linux runtime evidence
 c:objc(cs)ICDevice(im)requestEjectWithCompletion:	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceEjectFailClosed	Linux runtime evidence
 c:objc(cs)ICDevice(im)requestOpenSession	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceOpenSessionFailClosed	Linux runtime evidence
-c:objc(cs)ICDevice(im)requestOpenSessionWithOptions:completion:	declared	source:full/imagecapturecore/ICDevice.swift#requestOpenSession	async overlay; sealed runner has no run loop
+c:objc(cs)ICDevice(im)requestOpenSessionWithOptions:completion:	implemented	test:full/imagecapturecore/tests/agent/ICAsyncOverlayTests.swift#testICDeviceOpenSessionOptionsCompletionFailClosed	Linux runtime evidence
 c:objc(cs)ICDevice(py)UUIDString	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceHostProperties	Linux runtime evidence
 c:objc(cs)ICDevice(py)capabilities	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceHostProperties	Linux runtime evidence
 c:objc(cs)ICDevice(py)delegate	implemented	test:full/imagecapturecore/tests/agent/ICDeviceTests.swift#testICDeviceHostProperties	Linux runtime evidence

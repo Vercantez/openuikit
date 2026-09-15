@@ -64,7 +64,9 @@ func testMerchantCapability() {
 func testAddressAndContactFields() {
     precondition(PKAddressField.all.contains(.postalAddress))
     precondition(PKAddressField.all.contains(.name))
-    precondition(PKContactField.emailAddress.rawValue == "emailAddress")
+    precondition(PKContactField.emailAddress.rawValue == "email")
+    precondition(PKContactField.postalAddress.rawValue == "post")
+    precondition(PKContactField.phoneNumber.rawValue == "phone")
     precondition(PKContactField.phoneticName.rawValue == "phoneticName")
     let contact = PKContact()
     contact.emailAddress = "a@example.com"
@@ -201,7 +203,7 @@ func testPaymentErrors() {
 }
 
 func testEncryptionAndRadio() {
-    precondition(PKEncryptionScheme.ECC_V2.rawValue == "ECC_V2")
+    precondition(PKEncryptionScheme.ECC_V2.rawValue == "EV_ECC_v2")
     precondition(PKRadioTechnology.NFC.contains(.NFC))
     precondition(PKPassType.barcode.rawValue == 0)
     precondition(PKShippingType.shipping.rawValue == 0)

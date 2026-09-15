@@ -723,3 +723,78 @@ func testOSLogCFormat() {
     precondition(info.level == .info)
     precondition(info.formatString == "%@")
 }
+
+/// Bare `NSCoder` satisfying the `init(coder:)` parameter. Every entry class
+/// in this port returns `nil` from `init(coder:)` (fail-closed: Apple's
+/// keyed-archive keys are unobserved), so no decoding behavior is needed.
+final class OSLogActivityProbeCoder: NSCoder {
+}
+
+func testOSLogEntryActivityIdentity() {
+    let activity = OSLogEntryActivity(
+        composedMessage: "ACT identity",
+        date: Date(timeIntervalSince1970: 1_000),
+        storeCategory: .undefined,
+        parentActivityIdentifier: 7,
+        activityIdentifier: 9,
+        process: "oslogprobe",
+        processIdentifier: 123,
+        sender: "oslogprobe",
+        threadIdentifier: 456
+    )
+    precondition(String(describing: type(of: activity)) == "OSLogEntryActivity")
+    precondition(
+        String(describing: OSLogEntryActivity.self).hasSuffix("OSLogEntryActivity")
+    )
+    let asEntry: OSLogEntry = activity
+    precondition(asEntry.composedMessage == "ACT identity")
+    precondition(asEntry.date == Date(timeIntervalSince1970: 1_000))
+    precondition(asEntry.storeCategory == .undefined)
+    let fromProcess: OSLogEntryFromProcess = activity
+    precondition(fromProcess.activityIdentifier == 9)
+    precondition(fromProcess.process == "oslogprobe")
+    precondition(fromProcess.processIdentifier == 123)
+    precondition(fromProcess.sender == "oslogprobe")
+    precondition(fromProcess.threadIdentifier == 456)
+    precondition(OSLogEntryActivity.supportsSecureCoding)
+    precondition(OSLogEntryActivity(coder: OSLogActivityProbeCoder()) == nil)
+}
+
+func testOSLogEntryActivityParentIdentifier() {
+    let activity = OSLogEntryActivity(
+        composedMessage: "ACT parent",
+        date: Date(timeIntervalSince1970: 2_000),
+        storeCategory: .shortTerm,
+        parentActivityIdentifier: 7,
+        activityIdentifier: 9,
+        process: "oslogprobe",
+        processIdentifier: 123,
+        sender: "oslogprobe",
+        threadIdentifier: 456
+    )
+    precondition(activity.parentActivityIdentifier == 7)
+    precondition(activity.parentActivityIdentifier != activity.activityIdentifier)
+    let root = OSLogEntryActivity(
+        composedMessage: "ACT root",
+        date: Date(timeIntervalSince1970: 3_000),
+        storeCategory: .undefined,
+        parentActivityIdentifier: 0,
+        activityIdentifier: 11,
+        process: "oslogprobe",
+        processIdentifier: 123,
+        sender: "oslogprobe",
+        threadIdentifier: 456
+    )
+    precondition(root.parentActivityIdentifier == 0)
+    precondition(root.activityIdentifier == 11)
+}
+
+func testOSLogEntryBoundaryIdentity() {
+    precondition(
+        String(describing: OSLogEntryBoundary.self).hasSuffix("OSLogEntryBoundary")
+    )
+    let asEntryType: OSLogEntry.Type = OSLogEntryBoundary.self
+    precondition(String(describing: asEntryType).hasSuffix("OSLogEntryBoundary"))
+    precondition(OSLogEntryBoundary.supportsSecureCoding)
+    precondition(OSLogEntryBoundary(coder: OSLogActivityProbeCoder()) == nil)
+}

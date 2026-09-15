@@ -597,6 +597,16 @@ open class MTRDeviceAttestationDeviceInfo: NSObject {
     public var productID: NSNumber?
     public var dacVendorID: NSNumber?
     public var dacProductID: NSNumber?
+    public var attestationChallenge: Data = Data()
+    public var attestationNonce: Data = Data()
+    public var basicInformationVendorID: NSNumber = 0
+    public var basicInformationProductID: NSNumber = 0
+    public var certificateDeclaration: Data?
+    public var certificationDeclaration: Data?
+    public var dacCertificate: Data = Data()
+    public var dacPAICertificate: Data = Data()
+    public var elementsSignature: Data = Data()
+    public var elementsTLV: Data = Data()
 }
 
 open class MTRDeviceAttestationInfo: NSObject {
@@ -608,11 +618,66 @@ open class MTRDeviceAttestationInfo: NSObject {
     public var pai: Data = Data()
     public var certificationDeclaration: Data = Data()
     public var firmwareInfo: Data?
+    public var deviceAttestationCertificate: Data = Data()
+    public var productAttestationIntermediateCertificate: Data = Data()
+    public var elementsTLV: Data = Data()
+
+    public override init() { super.init() }
+
+    public init(
+        deviceAttestationChallenge challenge: Data,
+        nonce: Data,
+        elementsTLV: Data,
+        elementsSignature: Data,
+        deviceAttestationCertificate: Data,
+        productAttestationIntermediateCertificate: Data,
+        certificationDeclaration: Data,
+        firmwareInfo: Data?
+    ) {
+        self.challenge = challenge
+        self.nonce = nonce
+        self.elementsTLV = elementsTLV
+        self.elementsSignature = elementsSignature
+        self.deviceAttestationCertificate = deviceAttestationCertificate
+        self.productAttestationIntermediateCertificate = productAttestationIntermediateCertificate
+        self.certificationDeclaration = certificationDeclaration
+        self.firmwareInfo = firmwareInfo
+        super.init()
+    }
 }
 
 open class MTROperationalCSRInfo: NSObject {
     public var csr: Data = Data()
     public var csrNonce: Data = Data()
+    public var csrElementsTLV: Data = Data()
+    public var attestationSignature: Data = Data()
+
+    public init(csr: Data, csrNonce: Data, csrElementsTLV: Data, attestationSignature: Data) {
+        self.csr = csr
+        self.csrNonce = csrNonce
+        self.csrElementsTLV = csrElementsTLV
+        self.attestationSignature = attestationSignature
+        super.init()
+    }
+
+    public init?(csrNonce: Data, csrElementsTLV: Data, attestationSignature: Data) {
+        self.csrNonce = csrNonce
+        self.csrElementsTLV = csrElementsTLV
+        self.attestationSignature = attestationSignature
+        super.init()
+    }
+
+    public init?(csrElementsTLV: Data, attestationSignature: Data) {
+        self.csrElementsTLV = csrElementsTLV
+        self.attestationSignature = attestationSignature
+        super.init()
+    }
+
+    public init?(csrResponseParams responseParams: MTROperationalCredentialsClusterCSRResponseParams) {
+        self.csrElementsTLV = responseParams.nocsrElements
+        self.attestationSignature = responseParams.attestationSignature
+        super.init()
+    }
 }
 
 open class MTROperationalCertificateChain: NSObject {
@@ -620,12 +685,35 @@ open class MTROperationalCertificateChain: NSObject {
     public var intermediateCertificate: Data?
     public var rootCertificate: Data = Data()
     public var adminVendorID: NSNumber?
+    public var adminSubject: NSNumber?
+
+    public init(
+        operationalCertificate: Data,
+        intermediateCertificate: Data?,
+        rootCertificate: Data,
+        adminSubject: NSNumber?
+    ) {
+        self.operationalCertificate = operationalCertificate
+        self.intermediateCertificate = intermediateCertificate
+        self.rootCertificate = rootCertificate
+        self.adminSubject = adminSubject
+        super.init()
+    }
 }
 
 open class MTRCommandWithRequiredResponse: NSObject {
     public var path: MTRCommandPath?
     public var commandFields: [String: Any]?
     public var requiredResponse: [NSNumber: [String: Any]]?
+
+    public override init() { super.init() }
+
+    public init(path: MTRCommandPath, commandFields: [String: Any]?, requiredResponse: [NSNumber: [String: Any]]?) {
+        self.path = path
+        self.commandFields = commandFields
+        self.requiredResponse = requiredResponse
+        super.init()
+    }
 }
 
 open class MTRCertificateInfo: NSObject {
@@ -653,11 +741,15 @@ open class MTRDistinguishedNameInfo: NSObject {
     public var nodeID: NSNumber?
     public var fabricID: NSNumber?
     public var fabricCAID: NSNumber?
+    public var rootCACertificateID: NSNumber?
+    public var intermediateCACertificateID: NSNumber?
     public var matterRCACID: NSNumber?
 }
 
 open class MTRMetricData: NSObject {
     public var value: NSNumber?
+    public var duration: NSNumber?
+    public var errorCode: NSNumber?
 }
 
 open class MTRMetrics: NSObject {
@@ -667,11 +759,50 @@ open class MTRMetrics: NSObject {
 }
 
 open class MTRAttributeValueWaiter: NSObject {
+    public var uuid: UUID = UUID()
     public func cancel() {}
 }
 
 open class MTRDeviceStorageBehaviorConfiguration: NSObject {
     public var disableStorageBehaviorOptimization: Bool = false
+    public var reportToPersistenceDelayTime: TimeInterval = 0
+    public var reportToPersistenceDelayTimeMax: TimeInterval = 0
+    public var recentReportTimesMaxCount: Int = 0
+    public var timeBetweenReportsTooShortThreshold: TimeInterval = 0
+    public var timeBetweenReportsTooShortMinThreshold: TimeInterval = 0
+    public var reportToPersistenceDelayMaxMultiplier: Double = 0
+    public var deviceReportingExcessivelyIntervalThreshold: TimeInterval = 0
+
+    public required override init() { super.init() }
+
+    public convenience init(
+        reportToPersistenceDelayTime: TimeInterval,
+        reportToPersistenceDelayTimeMax: TimeInterval,
+        recentReportTimesMaxCount: Int,
+        timeBetweenReportsTooShortThreshold: TimeInterval,
+        timeBetweenReportsTooShortMinThreshold: TimeInterval,
+        reportToPersistenceDelayMaxMultiplier: Double,
+        deviceReportingExcessivelyIntervalThreshold: TimeInterval
+    ) {
+        self.init()
+        self.reportToPersistenceDelayTime = reportToPersistenceDelayTime
+        self.reportToPersistenceDelayTimeMax = reportToPersistenceDelayTimeMax
+        self.recentReportTimesMaxCount = recentReportTimesMaxCount
+        self.timeBetweenReportsTooShortThreshold = timeBetweenReportsTooShortThreshold
+        self.timeBetweenReportsTooShortMinThreshold = timeBetweenReportsTooShortMinThreshold
+        self.reportToPersistenceDelayMaxMultiplier = reportToPersistenceDelayMaxMultiplier
+        self.deviceReportingExcessivelyIntervalThreshold = deviceReportingExcessivelyIntervalThreshold
+    }
+
+    open class func withDefaultStorageBehavior() -> Self {
+        self.init()
+    }
+
+    open class func withStorageBehaviorOptimizationDisabled() -> Self {
+        let config = self.init()
+        config.disableStorageBehaviorOptimization = true
+        return config
+    }
 }
 
 open class MTROTAHeader: NSObject {
@@ -714,5 +845,6 @@ open class MTRCommissionableBrowserResult: NSObject {
 open class MTRCommissioneeInfo: NSObject {
     public var productIdentity: MTRProductIdentity?
     public var endpointsById: [NSNumber: MTREndpointInfo]?
+    public var rootEndpoint: MTREndpointInfo?
 }
 

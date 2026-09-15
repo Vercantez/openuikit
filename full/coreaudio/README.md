@@ -58,26 +58,39 @@ See `oracle-questions.tsv` for questions that need a central Apple-oracle probe.
 
 Coverage of the 347 exact overlay IDs:
 
-| status | before | after |
-| --- | --- | --- |
-| implemented | 102 | 317 |
-| declared | 241 | 26 |
-| unavailable | 4 | 4 |
-| deferred | 0 | 0 |
-| not-applicable | 0 | 0 |
+| status | depth start | depth pass | wave-4 |
+| --- | --- | --- | --- |
+| implemented | 102 | 317 | 335 |
+| declared | 241 | 26 | 8 |
+| unavailable | 4 | 4 | 4 |
+| deferred | 0 | 0 | 0 |
+| not-applicable | 0 | 0 | 0 |
 
 Raised `implemented` first for the overlay types the Home Assistant corpus
 reaches through `AudioBuffer` / channel-layout helpers, then for documented
 Swift `Sequence` / `Collection` / `BidirectionalCollection` /
 `MutableCollection` semantics on the four overlay collections. HAL C entry
 points used by `HACoreAudioObjectSystem` remain fail-closed extras (not in the
-347 overlay IDs). Foundation `SortComparator` / `FormatStyle` members stay
-`declared` because `AudioBuffer` / `AudioChannelDescription` are not a
-documented `Compared` / `FormatInput` match. Optional-returning
+347 overlay IDs). Foundation `sort(using:)` / `sorted(using:)` (single and
+comparator-sequence overloads) and `formatted(_:)` are `implemented` via
+test-only custom `SortComparator` types (`Compared == AudioBuffer` /
+`AudioChannelDescription`) and custom `FormatStyle` types with the overlay
+collection as `FormatInput`, following the Photos/TabularData/WeatherKit
+precedent. `Sequence.compare(_:_:)` stays `declared` because its constraint
+(`Comparator == Self.Element`) requires the element itself to be a
+`SortComparator`, which the fixed C-struct stand-ins are not.
+Optional-returning
 `Sequence.flatMap` stays `declared` because Swift 6 deprecates that overload
 under warnings-as-errors. Combine `publisher` stays `unavailable`.
 
-Top-5 implemented evidence distribution (of 317 implemented rows; no test
+Wave-4 (2026-09-14): converted 18 `declared` rows (6 `sort(using:)`,
+8 `sorted(using:)`, 4 `formatted(_:)`) with five focused tests in
+`tests/agent/FoundationComparatorTests.swift`, each citing at most 4 rows.
+Leftover `declared`: 4 `compare(_:_:)` (unsatisfiable without inventing a
+`SortComparator` conformance on Apple's C structs) and 4 `flatMap`
+(deprecated overload, `compactMap` covers the documented replacement).
+
+Top-5 implemented evidence distribution (of 335 implemented rows; no test
 exceeds 4%):
 
 1. `testLayoutPointerTypealiases` — 12

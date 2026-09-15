@@ -360,3 +360,46 @@ Top-5 `implemented` evidence distribution (of 2753):
 5. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (3.2%)
 
 No non-exempt test is cited by more than 40% of implemented rows.
+
+## Depth pass 2026-09-15 (declared storage sweep)
+
+Before: **2753 implemented / 20 declared / 274 deferred / 0 unavailable /
+0 not-applicable** (2773 nondeferred).
+
+This pass converts the synchronous storage / fail-closed rows the sealed
+gate can actually exercise, and leaves every async row untouched:
+
+- `ProxyConfiguration.matchDomains` / `excludedDomains` / `allowFailover`
+  plus `applyCredential(username:password:)` are stored locally only; Linux
+  performs no proxy failover or credential handshake.
+- `NWConnectionGroup.setReceiveHandler(maximumMessageSize:rejectOversizedMessages:handler:)`
+  retains the handler without a group transport daemon driving it.
+- `NWConnectionGroup.Message.extractConnection()` returns nil,
+  `reply(content:message:)` is a no-op, `extract(connectionTo:using:)`
+  returns nil, and `reinsert(connection:)` returns false (fail-closed, no
+  group transport to extract from or rejoin).
+- `NWProtocolFramerImplementation.label` defaults to
+  `String(describing: Self.self)`; existing conformers inherit it.
+- New evidence lives in `tests/agent/NetworkStorageModelTests.swift`; each
+  test actually calls the identifiers it cites and performs no `await`,
+  queue hop, or semaphore wait.
+- The 20 `declared` rows stay declared: 19 async `NetworkChannel`
+  send/receive/ping/pong/close overloads plus async
+  `NWPathMonitor.Iterator.next()` cannot be cited by a synchronous test
+  without hanging the sealed gate.
+- Also retargeted one `oracle-questions.tsv` row to the exact graph ID
+  `NWError.posix` case (`...6Darwin14POSIXErrorCodeOc...`), which the
+  deliverable validator requires.
+
+After: **2763 implemented / 20 declared / 264 deferred / 0 unavailable /
+0 not-applicable** (2783 nondeferred). Implemented gain **+10**.
+
+Top-5 `implemented` evidence distribution (of 2763):
+
+1. `NetworkTests.swift#testCEnumRawValuesFromMacios` — 191 (6.9%)
+2. `NetworkCAPITests.swift#testCObjectTypealiasesAndOSProtocols` — 113 (4.1%)
+3. `NetworkIntegerWitnessTests.swift#testIntegerBasicArithmeticWitnesses` — 96 (3.5%)
+4. `NetworkIntegerWitnessTests.swift#testFixedWidthIntegerComparableWitnesses` — 88 (3.2%)
+5. `NetworkTests.swift#testNWInterfaceAndPathFromGetifaddrs` — 87 (3.1%)
+
+No non-exempt test is cited by more than 40% of implemented rows.

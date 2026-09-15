@@ -175,6 +175,64 @@ All 45 agent test functions (including the four newly cited ones) were
 compiled with `-warnings-as-errors` and executed green locally against
 the edited sources.
 
+## Depth pass 2026-09 (wave 10, declared-ceiling audit + host-portability fix)
+
+Audited all 80 remaining `declared` rows identifier by identifier
+(demangled via length-prefixed-word scan of each precise ID and checked
+against product sources): every one is an `async`/`async throws` API or an
+async `PropertyContainer.with` requirement/witness, so none can move to
+`implemented` under the sealed-gate rules (no `await`, no semaphore waits,
+no invented network/hardware/service success):
+
+- 11× `response()` (catalog/library/charts/search/suggestions/
+  resource/recently-played/personal-recommendations/data) — network.
+- `MusicPlayer.play` / `prepareToPlay` / `skipToNextEntry` /
+  `skipToPreviousEntry` + 4× async `Queue.insert` — playback hardware.
+- 6× `MusicLibrary.add` / `createPlaylist` / `edit` — service.
+- `DefaultMusicTokenProvider.developerToken`,
+  `MusicUserTokenProvider.userToken`, the `DeveloperTokenProvider`
+  protocol requirement — service identity.
+- `MusicAuthorization.request()`, `MusicItemCollection.nextBatch`,
+  `MusicDataRequest.currentCountryCode`, `MusicSubscription.current`,
+  `Subscription.Updates.Iterator.next()` — service/async.
+- 4× `PropertyContainer.with` requirements + ~42 synthesized `with`
+  witnesses — async.
+
+Also verified coverage integrity by script: all 1344 `implemented` rows
+cite an existing top-level synchronous `func test*()` (45 distinct tests,
+zero missing, zero `await` in cited bodies); all 80 `declared` rows cite
+an existing `source:` anchor in the guest manifest; the enum-table test
+sits at 158 rows and the largest non-enum test at 169, under the 40% cap
+(474.4). Spot-checked the 17 apparent identifier/call mismatches — all
+are exercised via helper probes or `Music`-prefixed names, not misses.
+
+Host-portability fix (no coverage change): `MusicKitLookalikes.swift`
+stand-ins (`CGColor`, `AnyPublisher`/`ObservableObject`, `View` et al.)
+are now also used on Apple hosts (`|| os(macOS)`). Previously the macOS
+`swiftc` host build failed because `canImport(CoreGraphics/Combine/
+SwiftUI)` is true there while no product file imports those modules —
+and the code cannot compile against the real modules (`Artwork: Hashable,
+Codable` vs non-Hashable/non-Codable `CGColor`; zero-argument
+`AnyPublisher()` vs real Combine). Linux semantics are unchanged. The
+sealed `test_host.sh` runner itself is Linux-only (`import Glibc`), so
+validation on this Mac ran the gate's exact steps with the mechanical
+`Glibc` → `Darwin` substitution: 11 product sources and 17 test files
+compile under `-warnings-as-errors`, all 45 cited tests execute, and the
+runner prints only `MUSICKIT_AGENT_RUNTIME_OK`.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 1344 | 1344 |
+| declared | 80 | 80 |
+| deferred | 0 | 0 |
+| unavailable | 0 | 0 |
+| not-applicable | 1110 | 1110 |
+
+Nondeferred: **1424** (floor 1267). Gain is **+0 implemented**: the
+sync-testable surface is fully converted; the declared remainder is the
+async/network/hardware floor. Files changed: `MusicKitLookalikes.swift`
+(3 guard lines + comments), `README.md` (this section).
+
 ## Public surface implemented
 
 - **MusicItemID** string wrapper: `init(_:)`, `init(rawValue:)`, string

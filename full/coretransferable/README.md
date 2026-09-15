@@ -224,3 +224,36 @@ Top-5 implemented evidence distribution after this pass:
 | 11 | 3.7% | `testURLTransferableExportImport` |
 
 No single test exceeds 40% of implemented rows.
+
+## Depth pass 2026-09 (pi wave 4)
+
+Coverage before this pass: **297 implemented / 3 declared / 5 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after this pass: **300 implemented / 0 declared / 5 deferred /
+0 unavailable / 0 not-applicable** (300 nondeferred, floor 153).
+
+This pass converts the last three declared rows, all `Never` witnesses that
+cannot be invoked because `Never` is uninhabited. New
+`tests/agent/CoreTransferableNeverWitnessTests.swift` pins each one with a
+typed witness reference, matching the existing
+`testNeverProtocolWitnessesExist` standard used by the other twelve `Never`
+witness rows:
+
+- `testNeverSuggestedFileNameStringWitness`: helper parameter types select
+  the `String` overload of `TransferRepresentation.suggestedFileName` on
+  `Never`.
+- `testNeverSuggestedFileNameClosureWitness`: helper parameter types select
+  the `@Sendable (Never) -> String?` overload on `Never`.
+- `testNeverWithExportedFileWitness`: typed curried reference
+  `(Never) -> (UTType?, (URL) async throws -> Data) async throws -> Data`
+  to `Transferable.withExportedFile` on `Never`. Calling it would trap in
+  the `Never.transferRepresentation` getter, so it stays a reference, like
+  the sibling async witnesses (`exported(as:)`, `export(to:)`,
+  `init(importing:)`).
+
+Still deferred (unchanged, not hardware; callable constraints):
+`Data.publisher` (no Combine), `Sequence.compare` (`UInt8` is not a
+`SortComparator`), deprecated `Collection.index(of:)` and optional
+`flatMap` (`-warnings-as-errors`), and `MutableCollection.subscript(Range)`
+(unavailable in stdlib).

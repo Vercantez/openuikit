@@ -114,6 +114,13 @@ public final class RPScreenRecorder: NSObject {
         startRecording(handler: handler)
     }
 
+    public func stopRecording(withOutput url: URL, completionHandler handler: @escaping ((any Error)?) -> Void) {
+        _ = url
+        replayKitDeliverPrivate {
+            handler(replayKitNotRecordingError())
+        }
+    }
+
     public func stopRecording(withOutput url: URL) async throws {
         _ = url
         throw replayKitNotRecordingError()
@@ -137,6 +144,14 @@ public final class RPScreenRecorder: NSObject {
             } else {
                 completionHandler?(replayKitDisabledError())
             }
+        }
+    }
+
+    public func exportClip(to url: URL, duration: TimeInterval, completionHandler handler: @escaping ((any Error)?) -> Void) {
+        _ = url
+        _ = duration
+        replayKitDeliverPrivate {
+            handler(replayKitDisabledError())
         }
     }
 

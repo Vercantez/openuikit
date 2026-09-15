@@ -2695,90 +2695,92 @@ public var BNNSShuffleTypeSpaceToDepthNCHW: BNNSShuffleType { BNNSShuffleType(ra
 public var BNNSSparsityTypeUnstructured: BNNSSparsityType { BNNSSparsityType(rawValue: 0) }
 public var BNNSTargetSystemGeneric: BNNSTargetSystem { BNNSTargetSystem(rawValue: 0) }
 public var SparseDefaultControl: SparseControl_t { SparseControl_t(rawValue: 0) }
-// Apple-measured 2026-09-14: Cholesky=0, LDLT=1, LDLTUnpivoted=2, QR=40, CholeskyAtA=41.
+// Apple-measured 2026-09-14/15 (scratch/oracle-2026-09-14/sparse-enum-2026-09-15.txt):
+// Cholesky=0, LDLT=1, LDLTUnpivoted=2, LDLTSBK=3, LDLTTPP=4, LU=80,
+// LUUnpivoted=81, LUSPP=82, LUTPP=83, QR=40, CholeskyAtA=41.
 public var SparseFactorizationCholesky: SparseFactorization_t { SparseFactorization_t(rawValue: 0) }
 public var SparseFactorizationLDLT: SparseFactorization_t { SparseFactorization_t(rawValue: 1) }
 public var SparseFactorizationLDLTUnpivoted: SparseFactorization_t { SparseFactorization_t(rawValue: 2) }
 public var SparseFactorizationLDLTSBK: SparseFactorization_t { SparseFactorization_t(rawValue: 3) }
 public var SparseFactorizationLDLTTPP: SparseFactorization_t { SparseFactorization_t(rawValue: 4) }
-public var SparseFactorizationLU: SparseFactorization_t { SparseFactorization_t(rawValue: 6) }
-public var SparseFactorizationLUSPP: SparseFactorization_t { SparseFactorization_t(rawValue: 7) }
-public var SparseFactorizationLUTPP: SparseFactorization_t { SparseFactorization_t(rawValue: 8) }
-public var SparseFactorizationLUUnpivoted: SparseFactorization_t { SparseFactorization_t(rawValue: 9) }
+public var SparseFactorizationLU: SparseFactorization_t { SparseFactorization_t(rawValue: 80) }
+public var SparseFactorizationLUSPP: SparseFactorization_t { SparseFactorization_t(rawValue: 82) }
+public var SparseFactorizationLUTPP: SparseFactorization_t { SparseFactorization_t(rawValue: 83) }
+public var SparseFactorizationLUUnpivoted: SparseFactorization_t { SparseFactorization_t(rawValue: 81) }
 public var SparseFactorizationQR: SparseFactorization_t { SparseFactorization_t(rawValue: 40) }
 public var SparseFactorizationCholeskyAtA: SparseFactorization_t { SparseFactorization_t(rawValue: 41) }
 public var SparseVariantDQGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 0) }
-public var SparseVariantFGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 1) }
-public var SparseVariantGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 2) }
+public var SparseVariantFGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 2) }
+public var SparseVariantGMRES: SparseGMRESVariant_t { SparseGMRESVariant_t(rawValue: 1) }
 public var SparseIterativeConverged: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: 0) }
-public var SparseIterativeIllConditioned: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: 1) }
-public var SparseIterativeInternalError: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: 2) }
-public var SparseIterativeMaxIterations: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: 3) }
-public var SparseIterativeParameterError: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: 4) }
-public var SparseHermitian: SparseKind_t { SparseKind_t(rawValue: 0) }
-public var SparseOrdinary: SparseKind_t { SparseKind_t(rawValue: 1) }
-public var SparseSymmetric: SparseKind_t { SparseKind_t(rawValue: 2) }
-public var SparseTriangular: SparseKind_t { SparseKind_t(rawValue: 3) }
-public var SparseUnitTriangular: SparseKind_t { SparseKind_t(rawValue: 4) }
+public var SparseIterativeIllConditioned: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: -2) }
+public var SparseIterativeInternalError: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: -99) }
+public var SparseIterativeMaxIterations: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: 1) }
+public var SparseIterativeParameterError: SparseIterativeStatus_t { SparseIterativeStatus_t(rawValue: -1) }
+public var SparseHermitian: SparseKind_t { SparseKind_t(rawValue: 7) }
+public var SparseOrdinary: SparseKind_t { SparseKind_t(rawValue: 0) }
+public var SparseSymmetric: SparseKind_t { SparseKind_t(rawValue: 3) }
+public var SparseTriangular: SparseKind_t { SparseKind_t(rawValue: 1) }
+public var SparseUnitTriangular: SparseKind_t { SparseKind_t(rawValue: 2) }
 public var SparseLSMRCTDefault: SparseLSMRConvergenceTest_t { SparseLSMRConvergenceTest_t(rawValue: 0) }
 public var SparseLSMRCTFongSaunders: SparseLSMRConvergenceTest_t { SparseLSMRConvergenceTest_t(rawValue: 1) }
-public var SparseOrderAMD: SparseOrder_t { SparseOrder_t(rawValue: 0) }
-public var SparseOrderCOLAMD: SparseOrder_t { SparseOrder_t(rawValue: 1) }
-public var SparseOrderDefault: SparseOrder_t { SparseOrder_t(rawValue: 2) }
-public var SparseOrderMTMetis: SparseOrder_t { SparseOrder_t(rawValue: 3) }
-public var SparseOrderMetis: SparseOrder_t { SparseOrder_t(rawValue: 4) }
-public var SparseOrderUser: SparseOrder_t { SparseOrder_t(rawValue: 5) }
-public var SparsePreconditionerDiagScaling: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 0) }
-public var SparsePreconditionerDiagonal: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 1) }
-public var SparsePreconditionerNone: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 2) }
-public var SparsePreconditionerUser: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 3) }
+public var SparseOrderAMD: SparseOrder_t { SparseOrder_t(rawValue: 2) }
+public var SparseOrderCOLAMD: SparseOrder_t { SparseOrder_t(rawValue: 4) }
+public var SparseOrderDefault: SparseOrder_t { SparseOrder_t(rawValue: 0) }
+public var SparseOrderMTMetis: SparseOrder_t { SparseOrder_t(rawValue: 5) }
+public var SparseOrderMetis: SparseOrder_t { SparseOrder_t(rawValue: 3) }
+public var SparseOrderUser: SparseOrder_t { SparseOrder_t(rawValue: 1) }
+public var SparsePreconditionerDiagScaling: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 3) }
+public var SparsePreconditionerDiagonal: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 2) }
+public var SparsePreconditionerNone: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 0) }
+public var SparsePreconditionerUser: SparsePreconditioner_t { SparsePreconditioner_t(rawValue: 1) }
 public var SparseScalingDefault: SparseScaling_t { SparseScaling_t(rawValue: 0) }
-public var SparseScalingEquilibriationInf: SparseScaling_t { SparseScaling_t(rawValue: 1) }
-public var SparseScalingHungarianScalingAndOrdering: SparseScaling_t { SparseScaling_t(rawValue: 2) }
+public var SparseScalingEquilibriationInf: SparseScaling_t { SparseScaling_t(rawValue: 2) }
+public var SparseScalingHungarianScalingAndOrdering: SparseScaling_t { SparseScaling_t(rawValue: 4) }
 public var SparseScalingHungarianScalingOnly: SparseScaling_t { SparseScaling_t(rawValue: 3) }
-public var SparseScalingUser: SparseScaling_t { SparseScaling_t(rawValue: 4) }
-public var SparseFactorizationFailed: SparseStatus_t { SparseStatus_t(rawValue: 0) }
-public var SparseInternalError: SparseStatus_t { SparseStatus_t(rawValue: 1) }
-public var SparseMatrixIsSingular: SparseStatus_t { SparseStatus_t(rawValue: 2) }
-public var SparseParameterError: SparseStatus_t { SparseStatus_t(rawValue: 3) }
-public var SparseStatusOK: SparseStatus_t { SparseStatus_t(rawValue: 4) }
-public var SparseStatusReleased: SparseStatus_t { SparseStatus_t(rawValue: 5) }
-public var SparseSubfactorD: SparseSubfactor_t { SparseSubfactor_t(rawValue: 0) }
-public var SparseSubfactorInvalid: SparseSubfactor_t { SparseSubfactor_t(rawValue: 1) }
-public var SparseSubfactorL: SparseSubfactor_t { SparseSubfactor_t(rawValue: 2) }
-public var SparseSubfactorP: SparseSubfactor_t { SparseSubfactor_t(rawValue: 3) }
-public var SparseSubfactorPLPS: SparseSubfactor_t { SparseSubfactor_t(rawValue: 4) }
-public var SparseSubfactorQ: SparseSubfactor_t { SparseSubfactor_t(rawValue: 5) }
-public var SparseSubfactorR: SparseSubfactor_t { SparseSubfactor_t(rawValue: 6) }
-public var SparseSubfactorRP: SparseSubfactor_t { SparseSubfactor_t(rawValue: 7) }
-public var SparseSubfactorS: SparseSubfactor_t { SparseSubfactor_t(rawValue: 8) }
-public var SparseSubfactorSc: SparseSubfactor_t { SparseSubfactor_t(rawValue: 9) }
-public var SparseSubfactorSr: SparseSubfactor_t { SparseSubfactor_t(rawValue: 10) }
-public var SparseLowerTriangle: SparseTriangle_t { SparseTriangle_t(rawValue: 0) }
-public var SparseUpperTriangle: SparseTriangle_t { SparseTriangle_t(rawValue: 1) }
+public var SparseScalingUser: SparseScaling_t { SparseScaling_t(rawValue: 1) }
+public var SparseFactorizationFailed: SparseStatus_t { SparseStatus_t(rawValue: -1) }
+public var SparseInternalError: SparseStatus_t { SparseStatus_t(rawValue: -3) }
+public var SparseMatrixIsSingular: SparseStatus_t { SparseStatus_t(rawValue: -2) }
+public var SparseParameterError: SparseStatus_t { SparseStatus_t(rawValue: -4) }
+public var SparseStatusOK: SparseStatus_t { SparseStatus_t(rawValue: 0) }
+public var SparseStatusReleased: SparseStatus_t { SparseStatus_t(rawValue: -2147483647) }
+public var SparseSubfactorD: SparseSubfactor_t { SparseSubfactor_t(rawValue: 4) }
+public var SparseSubfactorInvalid: SparseSubfactor_t { SparseSubfactor_t(rawValue: 0) }
+public var SparseSubfactorL: SparseSubfactor_t { SparseSubfactor_t(rawValue: 3) }
+public var SparseSubfactorP: SparseSubfactor_t { SparseSubfactor_t(rawValue: 1) }
+public var SparseSubfactorPLPS: SparseSubfactor_t { SparseSubfactor_t(rawValue: 5) }
+public var SparseSubfactorQ: SparseSubfactor_t { SparseSubfactor_t(rawValue: 6) }
+public var SparseSubfactorR: SparseSubfactor_t { SparseSubfactor_t(rawValue: 7) }
+public var SparseSubfactorRP: SparseSubfactor_t { SparseSubfactor_t(rawValue: 8) }
+public var SparseSubfactorS: SparseSubfactor_t { SparseSubfactor_t(rawValue: 2) }
+public var SparseSubfactorSc: SparseSubfactor_t { SparseSubfactor_t(rawValue: 10) }
+public var SparseSubfactorSr: SparseSubfactor_t { SparseSubfactor_t(rawValue: 9) }
+public var SparseLowerTriangle: SparseTriangle_t { SparseTriangle_t(rawValue: 1) }
+public var SparseUpperTriangle: SparseTriangle_t { SparseTriangle_t(rawValue: 0) }
 public var SparseUpdatePartialRefactor: SparseUpdate_t { SparseUpdate_t(rawValue: 0) }
-public var QUADRATURE_INTEGRATE_QAG: quadrature_integrator { quadrature_integrator(rawValue: 0) }
-public var QUADRATURE_INTEGRATE_QAGS: quadrature_integrator { quadrature_integrator(rawValue: 1) }
-public var QUADRATURE_INTEGRATE_QNG: quadrature_integrator { quadrature_integrator(rawValue: 2) }
-public var QUADRATURE_ALLOC_ERROR: quadrature_status { quadrature_status(rawValue: 0) }
-public var QUADRATURE_ERROR: quadrature_status { quadrature_status(rawValue: 1) }
-public var QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR: quadrature_status { quadrature_status(rawValue: 2) }
-public var QUADRATURE_INTEGRATE_MAX_EVAL_ERROR: quadrature_status { quadrature_status(rawValue: 3) }
-public var QUADRATURE_INTERNAL_ERROR: quadrature_status { quadrature_status(rawValue: 4) }
-public var QUADRATURE_INVALID_ARG_ERROR: quadrature_status { quadrature_status(rawValue: 5) }
-public var QUADRATURE_SUCCESS: quadrature_status { quadrature_status(rawValue: 6) }
-public var SPARSE_LOWER_SYMMETRIC: sparse_matrix_property { sparse_matrix_property(rawValue: 0) }
-public var SPARSE_LOWER_TRIANGULAR: sparse_matrix_property { sparse_matrix_property(rawValue: 1) }
-public var SPARSE_UPPER_SYMMETRIC: sparse_matrix_property { sparse_matrix_property(rawValue: 2) }
-public var SPARSE_UPPER_TRIANGULAR: sparse_matrix_property { sparse_matrix_property(rawValue: 3) }
-public var SPARSE_NORM_INF: sparse_norm { sparse_norm(rawValue: 0) }
-public var SPARSE_NORM_ONE: sparse_norm { sparse_norm(rawValue: 1) }
-public var SPARSE_NORM_R1: sparse_norm { sparse_norm(rawValue: 2) }
-public var SPARSE_NORM_TWO: sparse_norm { sparse_norm(rawValue: 3) }
-public var SPARSE_CANNOT_SET_PROPERTY: sparse_status { sparse_status(rawValue: 0) }
-public var SPARSE_ILLEGAL_PARAMETER: sparse_status { sparse_status(rawValue: 1) }
-public var SPARSE_SUCCESS: sparse_status { sparse_status(rawValue: 2) }
-public var SPARSE_SYSTEM_ERROR: sparse_status { sparse_status(rawValue: 3) }
+public var QUADRATURE_INTEGRATE_QAG: quadrature_integrator { quadrature_integrator(rawValue: 1) }
+public var QUADRATURE_INTEGRATE_QAGS: quadrature_integrator { quadrature_integrator(rawValue: 2) }
+public var QUADRATURE_INTEGRATE_QNG: quadrature_integrator { quadrature_integrator(rawValue: 0) }
+public var QUADRATURE_ALLOC_ERROR: quadrature_status { quadrature_status(rawValue: -3) }
+public var QUADRATURE_ERROR: quadrature_status { quadrature_status(rawValue: -1) }
+public var QUADRATURE_INTEGRATE_BAD_BEHAVIOUR_ERROR: quadrature_status { quadrature_status(rawValue: -102) }
+public var QUADRATURE_INTEGRATE_MAX_EVAL_ERROR: quadrature_status { quadrature_status(rawValue: -101) }
+public var QUADRATURE_INTERNAL_ERROR: quadrature_status { quadrature_status(rawValue: -99) }
+public var QUADRATURE_INVALID_ARG_ERROR: quadrature_status { quadrature_status(rawValue: -2) }
+public var QUADRATURE_SUCCESS: quadrature_status { quadrature_status(rawValue: 0) }
+public var SPARSE_LOWER_SYMMETRIC: sparse_matrix_property { sparse_matrix_property(rawValue: 8) }
+public var SPARSE_LOWER_TRIANGULAR: sparse_matrix_property { sparse_matrix_property(rawValue: 2) }
+public var SPARSE_UPPER_SYMMETRIC: sparse_matrix_property { sparse_matrix_property(rawValue: 4) }
+public var SPARSE_UPPER_TRIANGULAR: sparse_matrix_property { sparse_matrix_property(rawValue: 1) }
+public var SPARSE_NORM_INF: sparse_norm { sparse_norm(rawValue: 175) }
+public var SPARSE_NORM_ONE: sparse_norm { sparse_norm(rawValue: 171) }
+public var SPARSE_NORM_R1: sparse_norm { sparse_norm(rawValue: 179) }
+public var SPARSE_NORM_TWO: sparse_norm { sparse_norm(rawValue: 173) }
+public var SPARSE_CANNOT_SET_PROPERTY: sparse_status { sparse_status(rawValue: -1001) }
+public var SPARSE_ILLEGAL_PARAMETER: sparse_status { sparse_status(rawValue: -1000) }
+public var SPARSE_SUCCESS: sparse_status { sparse_status(rawValue: 0) }
+public var SPARSE_SYSTEM_ERROR: sparse_status { sparse_status(rawValue: -1002) }
 public var kvImageARGB16Q12: vImageARGBType { vImageARGBType(rawValue: 0) }
 public var kvImageARGB16U: vImageARGBType { vImageARGBType(rawValue: 1) }
 public var kvImageARGB8888: vImageARGBType { vImageARGBType(rawValue: 2) }
@@ -2918,9 +2920,11 @@ public var kvImage_PNG_FILTER_VALUE_NONE: Int { 0 }
 public var kvImage_PNG_FILTER_VALUE_PAETH: Int { 4 }
 public var kvImage_PNG_FILTER_VALUE_SUB: Int { 1 }
 public var kvImage_PNG_FILTER_VALUE_UP: Int { 2 }
-public var vDSP_HALF_WINDOW: Int { 2 }
+// Apple-measured 2026-09-15 (scratch/oracle-2026-09-14/sparse-enum-2026-09-15.txt):
+// HALF_WINDOW=1, HANN_DENORM=0, HANN_NORM=2.
+public var vDSP_HALF_WINDOW: Int { 1 }
 public var vDSP_HANN_DENORM: Int { 0 }
-public var vDSP_HANN_NORM: Int { 1 }
+public var vDSP_HANN_NORM: Int { 2 }
 public var kvImageDecodeArray_16Q12Format: Int { 64 }
 public var kvImage_ARGBToYpCbCrMatrix_ITU_R_601_4: Int { 65 }
 public var kvImage_ARGBToYpCbCrMatrix_ITU_R_709_2: Int { 66 }
@@ -2934,33 +2938,34 @@ public var kvImageConvert_DitherOrderedReproducible: UInt32 { 2 }
 public var kvImageConvert_OrderedGaussianBlue: UInt32 { 0 }
 public var kvImageConvert_OrderedNoiseShapeMask: UInt32 { 1 }
 public var kvImageConvert_OrderedUniformBlue: UInt32 { 2 }
-public var LA_ATTRIBUTE_ENABLE_LOGGING: UInt32 { 3 }
-public var LA_FEATURE_DIAGONALLY_DOMINANT: UInt32 { 4 }
-public var LA_FEATURE_POSITIVE_DEFINITE: UInt32 { 5 }
-public var LA_FEATURE_SYMMETRIC: UInt32 { 6 }
-public var LA_NO_HINT: UInt32 { 7 }
-public var LA_SHAPE_DIAGONAL: UInt32 { 8 }
-public var LA_SHAPE_LOWER_TRIANGULAR: UInt32 { 9 }
-public var LA_SHAPE_UPPER_TRIANGULAR: UInt32 { 10 }
+// Apple-measured 2026-09-15 (scratch/oracle-2026-09-14/la-hint-2026-09-15.txt).
+public var LA_ATTRIBUTE_ENABLE_LOGGING: UInt32 { 1 }
+public var LA_FEATURE_DIAGONALLY_DOMINANT: UInt32 { 262144 }
+public var LA_FEATURE_POSITIVE_DEFINITE: UInt32 { 131072 }
+public var LA_FEATURE_SYMMETRIC: UInt32 { 65536 }
+public var LA_NO_HINT: UInt32 { 0 }
+public var LA_SHAPE_DIAGONAL: UInt32 { 1 }
+public var LA_SHAPE_LOWER_TRIANGULAR: UInt32 { 2 }
+public var LA_SHAPE_UPPER_TRIANGULAR: UInt32 { 4 }
 public var BNNS_MAX_TENSOR_DIMENSION: Int32 { 0 }
-public var LA_DEFAULT_ATTRIBUTES: Int32 { 1 }
-public var LA_DIMENSION_MISMATCH_ERROR: Int32 { 2 }
-public var LA_INTERNAL_ERROR: Int32 { 3 }
-public var LA_INVALID_PARAMETER_ERROR: Int32 { 4 }
-public var LA_L1_NORM: Int32 { 5 }
-public var LA_L2_NORM: Int32 { 6 }
-public var LA_LINF_NORM: Int32 { 7 }
-public var LA_PRECISION_MISMATCH_ERROR: Int32 { 8 }
-public var LA_SCALAR_TYPE_DOUBLE: Int32 { 9 }
-public var LA_SCALAR_TYPE_FLOAT: Int32 { 10 }
-public var LA_SINGULAR_ERROR: Int32 { 11 }
-public var LA_SLICE_OUT_OF_BOUNDS_ERROR: Int32 { 12 }
+public var LA_DEFAULT_ATTRIBUTES: Int32 { 0 }
+public var LA_DIMENSION_MISMATCH_ERROR: Int32 { -1002 }
+public var LA_INTERNAL_ERROR: Int32 { -1000 }
+public var LA_INVALID_PARAMETER_ERROR: Int32 { -1001 }
+public var LA_L1_NORM: Int32 { 1 }
+public var LA_L2_NORM: Int32 { 2 }
+public var LA_LINF_NORM: Int32 { 3 }
+public var LA_PRECISION_MISMATCH_ERROR: Int32 { -1003 }
+public var LA_SCALAR_TYPE_DOUBLE: Int32 { 16384 }
+public var LA_SCALAR_TYPE_FLOAT: Int32 { 32768 }
+public var LA_SINGULAR_ERROR: Int32 { -1004 }
+public var LA_SLICE_OUT_OF_BOUNDS_ERROR: Int32 { -1005 }
 public var LA_SUCCESS: Int32 { 0 }
-public var LA_WARNING_POORLY_CONDITIONED: Int32 { 14 }
-public var QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL: Int32 { 15 }
-public var QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL: Int32 { 16 }
-public var USE_NON_APPLE_STANDARD_DATATYPES: Int32 { 17 }
-public var VIMAGE_AFFINETRANSFORM_DOUBLE_IS_AVAILABLE: Int32 { 18 }
-public var VIMAGE_CGAFFINETRANSFORM_IS_AVAILABLE: Int32 { 19 }
-public var vDSP_Version0: Int32 { 20 }
-public var vDSP_Version1: Int32 { 21 }
+public var LA_WARNING_POORLY_CONDITIONED: Int32 { 1000 }
+public var QUADRATURE_INTEGRATE_QAGS_WORKSPACE_PER_INTERVAL: Int32 { 152 }
+public var QUADRATURE_INTEGRATE_QAG_WORKSPACE_PER_INTERVAL: Int32 { 32 }
+public var USE_NON_APPLE_STANDARD_DATATYPES: Int32 { 1 }
+public var VIMAGE_AFFINETRANSFORM_DOUBLE_IS_AVAILABLE: Int32 { 1 }
+public var VIMAGE_CGAFFINETRANSFORM_IS_AVAILABLE: Int32 { 1 }
+public var vDSP_Version0: Int32 { 1123 }
+public var vDSP_Version1: Int32 { 40 }

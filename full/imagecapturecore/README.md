@@ -5,7 +5,7 @@ OpenUIKit Linux platform. It reconstructs the public Xcode 26.1 iPhoneOS
 Swift surface from the sealed symbol graph. It is not wired into the shared
 guest package; that integration is a separate central review step.
 
-Coverage: **649 implemented / 6 declared / 655 total** (above the medium-full
+Coverage: **655 implemented / 0 declared / 655 total** (above the medium-full
 floor of 328).
 
 ## What is real
@@ -49,14 +49,30 @@ service.
   are always `nil`. Objective-C `Selector` is a string overlay and is
   never performed.
 
-Six async overlays are `declared` only: the sealed runner has no run loop,
-so those methods are not invoked. Equivalent completion/selector entry
-points are exercised synchronously.
+Six async overlays (`requestOpenSession(options:)`,
+`requestCloseSession(options:)`, `requestSendPTPCommand(_:outData:)`,
+`requestMetadataDictionary(options:)`, `requestReadData(atOffset:length:)`,
+`requestThumbnailData(options:)`) each have a synchronous
+completion-handler twin with the Apple `...:completion:` selector that runs
+the completion on the caller thread with the same fail-closed error. The
+async overlay cannot run without a run loop, so the cited tests exercise
+the completion-handler spelling synchronously.
 
 ## Depth pass 2026-09
 
 Fresh seed: no prior sources, coverage, or agent tests. After this pass:
 **649 implemented / 6 declared / 0 deferred**.
+
+Wave 4 (2026-09-15): the six async overlays gained synchronous
+completion-handler twins (`requestOpenSession(options:completion:)`,
+`requestCloseSession(options:completion:)`,
+`requestSendPTPCommand(_:outData:completion:)`,
+`requestMetadataDictionary(options:completion:)`,
+`requestReadData(atOffset:length:completion:)`,
+`requestThumbnailData(options:completion:)`), each fail-closed with the same
+error as its async twin. New `ICAsyncOverlayTests.swift` exercises all six
+synchronously. After this pass: **655 implemented / 0 declared /
+0 deferred**.
 
 The six `declared` rows are the async overlays of session open/close, PTP
 send, metadata dictionary, read-data, and thumbnail-data.

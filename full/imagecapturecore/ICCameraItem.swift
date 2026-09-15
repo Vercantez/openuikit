@@ -229,6 +229,18 @@ open class ICCameraFile: ICCameraItem {
         throw ICReturnMetadataError(.notAvailable)
     }
 
+    /// Synchronous completion-handler spelling of the Apple
+    /// `requestMetadataDictionaryWithOptions:completion:` method.
+    /// Fail-closed: no metadata pipeline, so the completion runs on the
+    /// caller thread with `notAvailable`.
+    open func requestMetadataDictionary(
+        options: [ICCameraItemMetadataOption: Any]? = nil,
+        completion: @escaping ([AnyHashable: Any]?, (any Error)?) -> Void
+    ) {
+        _ = options
+        completion(nil, ICReturnMetadataError(.notAvailable))
+    }
+
     /// Validates offset/length, then fail-closes: no camera bytes.
     open func requestReadData(atOffset offset: off_t, length: off_t) async throws -> Data {
         if offset < 0 {
@@ -238,6 +250,27 @@ open class ICCameraFile: ICCameraItem {
             throw ICReturnObjectError(.codeObjectDataEmpty)
         }
         throw ICReturnObjectError(.codeObjectCouldNotBeRead)
+    }
+
+    /// Synchronous completion-handler spelling of the Apple
+    /// `requestReadDataAtOffset:length:completion:` method. Same
+    /// offset/length validation as the async overlay, then fail-closed
+    /// with `codeObjectCouldNotBeRead`. The completion runs on the
+    /// caller thread.
+    open func requestReadData(
+        atOffset offset: off_t,
+        length: off_t,
+        completion: @escaping (Data?, (any Error)?) -> Void
+    ) {
+        if offset < 0 {
+            completion(nil, ICReturnObjectError(.codeObjectDataOffsetInvalid))
+            return
+        }
+        if length <= 0 {
+            completion(nil, ICReturnObjectError(.codeObjectDataEmpty))
+            return
+        }
+        completion(nil, ICReturnObjectError(.codeObjectCouldNotBeRead))
     }
 
     /// Synchronous validation used by tests (the async overlay cannot
@@ -260,5 +293,17 @@ open class ICCameraFile: ICCameraItem {
     open func requestThumbnailData(options: [ICCameraItemThumbnailOption: Any]? = nil) async throws -> Data {
         _ = options
         throw ICReturnThumbnailError(.notAvailable)
+    }
+
+    /// Synchronous completion-handler spelling of the Apple
+    /// `requestThumbnailDataWithOptions:completion:` method. Fail-closed:
+    /// no thumbnail pipeline, so the completion runs on the caller
+    /// thread with `notAvailable`.
+    open func requestThumbnailData(
+        options: [ICCameraItemThumbnailOption: Any]? = nil,
+        completion: @escaping (Data?, (any Error)?) -> Void
+    ) {
+        _ = options
+        completion(nil, ICReturnThumbnailError(.notAvailable))
     }
 }

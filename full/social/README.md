@@ -43,8 +43,23 @@ share-extension host.
   counters and do not complete an `NSExtensionContext`.
 - `SLRequest.perform` hops once onto `Social.SLRequest.perform` and delivers
   `NSError` domain `Social.linux.fail-closed` with nil data/response.
-- Service-type constant **payloads** are the commonly documented
-  `com.apple.social.*` strings and remain `declared` pending oracle.
+- Service-type constant **payloads** are oracle-pinned: a macOS probe on
+  2026-09-15 printed `com.apple.social.twitter|facebook|sinaweibo|
+  tencentweibo|linkedin`, matching the Linux values exactly (transcript:
+  `scratch/oracle-2026-09-14/social-service-types-2026-09-15.txt`).
+  Covered by `tests/agent/SocialServiceTypesTests.swift`.
+
+## Coverage status (pi-wave4, 2026-09-15)
+
+Before: 61 implemented / 6 declared / 0 deferred / 0 not-applicable of 67.
+After: 66 implemented / 1 declared / 0 deferred / 0 not-applicable of 67
+(+5: the `SLServiceType*` constants, oracle-pinned and tested in
+`tests/agent/SocialServiceTypesTests.swift`).
+
+The one leftover `declared` row is the Swift-3-obsoleted
+`SLRequest.init(forServiceType:requestMethod:URL:parameters:)` synthesized
+variant (`...URL:parameters:::SYNTHESIZED::...`): it compiles but is not
+callable from Swift 6, so no calling test can exist. Nothing is deferred.
 
 ## Still open
 

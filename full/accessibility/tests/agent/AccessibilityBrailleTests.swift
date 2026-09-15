@@ -2,7 +2,7 @@ import Foundation
 import Accessibility
 
 private final class BrailleHost: NSObject, AXBrailleMapRenderer {
-    var accessibilityBrailleMapRenderRegion = CGRect.zero
+    var accessibilityBrailleMapRenderRegion = CGRect()
     var accessibilityBrailleMapRenderer: (AXBrailleMap) -> Void = { _ in }
 }
 
@@ -26,8 +26,8 @@ func testBrailleMapHeights() {
 
 func testBrailleMapRenderer() {
     let host = BrailleHost()
-    host.accessibilityBrailleMapRenderRegion = CGRect(x: 0, y: 0, width: 10, height: 10)
-    precondition(host.accessibilityBrailleMapRenderRegion.width == 10)
+    host.accessibilityBrailleMapRenderRegion = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 10, height: 10))
+    precondition(host.accessibilityBrailleMapRenderRegion.size.width == 10)
     var seen = false
     host.accessibilityBrailleMapRenderer = { map in
         seen = true

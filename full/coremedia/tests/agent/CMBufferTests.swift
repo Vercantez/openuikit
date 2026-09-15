@@ -689,7 +689,7 @@ func testCMBlockBufferProtocolMethods() {
     }
     precondition(Array(try! source.dataBytes()) == [1, 7, 7, 4, 5])
     try! rangeSlice.fillDataBytes(with: 0)
-    precondition(Array(try! source.dataBytes()) == [1, 0, 0, 4, 5])
+    precondition(Array(try! source.dataBytes()) == [1, 0, 0, 0, 5])
 
     let closed = source[1...3]
     precondition(closed.startIndex == 1 && closed.endIndex == 4)

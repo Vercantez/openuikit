@@ -61,14 +61,17 @@ The isolated Linux host gate compiles Foundation only and does not import
   and catalog chunk layout are not in the public seed.
 - `OSLogEntry` / `OSLogMessageComponent` `init(coder:)` returns `nil`.
   Apple's keyed-archive keys are unobserved, so no payload is invented.
-- `OSLogEntryActivity` / `OSLogEntryBoundary` compile but were not
-  produced by Logger/OSSignposter on the iOS 26.1 probe (0 activity /
-  boundary rows). They stay `declared`.
+- `OSLogEntryActivity` / `OSLogEntryBoundary` are never produced by
+  Logger/OSSignposter on the iOS 26.1 probe (0 activity / boundary rows),
+  and the in-process ring synthesizes neither. `OSLogEntryActivity` has a
+  Linux-only public initializer so the type and its fields are
+  constructible and tested; `OSLogEntryBoundary` keeps Apple's
+  no-public-init shape and its tests pin identity, `OSLogEntry`
+  inheritance, secure-coding conformance, and fail-closed `init(coder:)`.
 
 ## Deferred
 
-None. 125 identifiers are `implemented`, 3 `declared` (activity class +
-parent id, boundary class). No `deferred` rows.
+None. All 128 identifiers are `implemented`. No `declared` or `deferred` rows.
 
 ## Overlay vs `uikit/Sources/os`
 

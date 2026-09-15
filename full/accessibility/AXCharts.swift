@@ -350,7 +350,7 @@ public class AXChartDescriptor: NSObject, NSCopying {
         self.additionalAxes = additionalAxes.compactMap { $0.copy() as? any AXDataAxisDescriptor }
         self.series = series
         self.contentDirection = .leftToRight
-        self.contentFrame = .zero
+        self.contentFrame = CGRect()
         super.init()
     }
 

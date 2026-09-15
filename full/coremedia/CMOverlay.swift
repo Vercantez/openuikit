@@ -709,6 +709,11 @@ extension CMFormatDescription.Extensions.Value {
         }
 
         public struct Calibration {
+            // Same-module constant: Swift 6 rejects CoreGraphics members in default
+            // argument values when CoreGraphics is not directly imported (Linux has
+            // no CoreGraphics module; CGSize arrives via Foundation).
+            @usableFromInline static let zeroReferenceDimensions = CGSize(width: 0, height: 0)
+
             public typealias RawValue = CFDictionary
             public var algorithmKind: AlgorithmKind
             public var identifier: Int32
@@ -733,7 +738,7 @@ extension CMFormatDescription.Extensions.Value {
                 yFrameAdjustmentsPolynomial: SIMD3<Float> = .zero,
                 radialAngleLimit: Float = 0,
                 intrinsicMatrixProjectionOffset: Float = 0,
-                intrinsicMatrixReferenceDimensions: CGSize = .zero,
+                intrinsicMatrixReferenceDimensions: CGSize = Calibration.zeroReferenceDimensions,
                 extrinsicOriginSource: ExtrinsicOriginSource = .stereoCameraSystemBaseline,
                 extrinsicOrientationQuaternion: SIMD3<Float> = .zero
             ) {

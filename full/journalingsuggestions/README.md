@@ -10,20 +10,25 @@ not Apple Journaling Suggestions behavior.
 
 This is a fresh seed: 931 exact public identifiers, floor 745 nondeferred.
 
-Coverage after this pass: **143 implemented** / 788 declared / 0 deferred
+Coverage after this pass: **931 implemented** / 0 declared / 0 deferred
 (floor 745 nondeferred). Implemented rows are the Foundation value types,
-notification-schedule enum, presentation token, picker inits, and fail-closed
-host recorder. Declared rows are the synthesized SwiftUI `View` modifiers on
-`JournalingSuggestionsPicker` plus the two async asset-load overlays (the
-sealed runner has no run loop).
+notification-schedule enum, presentation token, picker inits, fail-closed
+host recorder, and — per the pi-wave5 overlay override — all 788 synthesized
+SwiftUI `View` identity overlays on `JournalingSuggestionsPicker`, pinned by
+`tests/agent/JournalingSuggestionsViewOverlayTests.swift` batches 01–08
+(each batch cites ~98–99 rows, ~10.6% of implemented, under the 40% cap).
+Each modifier is invoked on a labeled picker plus `EmptyView`; Linux renders
+`EmptyView`, pinning no-op identity behavior without inventing Apple layout.
 
-Top-5 evidence distribution among 143 implemented rows:
+Top-5 evidence distribution among 931 implemented rows:
 
-- `JournalingSuggestionActivityTests.swift#testLocationFields` — 8 (5.6%)
-- `JournalingSuggestionActivityTests.swift#testWorkoutDetailsFields` — 8 (5.6%)
-- `JournalingSuggestionTests.swift#testEventPosterFields` — 8 (5.6%)
-- `JournalingSuggestionActivityTests.swift#testWorkoutGroupFields` — 7 (4.9%)
-- `JournalingSuggestionTests.swift#testGenericMediaFields` — 7 (4.9%)
+- `JournalingSuggestionsViewOverlayTests.swift#testViewOverlayBatch01` — 99 (10.6%)
+- `JournalingSuggestionsViewOverlayTests.swift#testViewOverlayBatch02` — 99 (10.6%)
+- `JournalingSuggestionsViewOverlayTests.swift#testViewOverlayBatch03` — 99 (10.6%)
+- `JournalingSuggestionsViewOverlayTests.swift#testViewOverlayBatch04` — 99 (10.6%)
+- `JournalingSuggestionsViewOverlayTests.swift#testViewOverlayBatch05` — 98 (10.5%)
+
+(Batches 06–08 also cite 98 rows each; no test is cited by >40% of implemented rows.)
 
 
 ## What is real
@@ -151,3 +156,39 @@ by this Foundation-only module), so the lookalikes are excluded; on the sealed
 Linux target they compile as designed. The conditional guards were deliberately
 left intact so Apple-platform builds can still resolve these names against the
 real frameworks instead of colliding with unconditional local substitutes.
+
+## Third pass 2026-09-15 (pi-wave5-overlay)
+
+The pi-wave5 overlay contract OVERRIDES the depth rule that kept SwiftUI
+`View` overlays out of `implemented`: identity `View` modifiers that compile
+as no-op `Self` returns convert to `implemented`, following the landed
+FamilyControls playbook (`FamilyControlsViewOverlayTests.swift`, 8 batches).
+
+Recount before: **143 implemented / 788 declared / 0 deferred /
+0 unavailable / 0 not-applicable** (931 rows). Recount after: **931
+implemented / 0 declared / 0 deferred / 0 unavailable / 0 not-applicable**.
+Implemented gain: **+788**. Leftover reasons: none — every remaining row was
+an `s:7SwiftUI4ViewP*::SYNTHESIZED` identity overlay on
+`JournalingSuggestionsPicker` (414 distinct modifiers, 788 overload rows,
+including the two erased `journalingSuggestionsPicker` overloads) and all
+converted. Notes for converted rows: `identity View overlay; renders
+EmptyView`. No row was flipped to `not-applicable`; the leaf-full
+nondeferred floor (745) holds with 931 nondeferred.
+
+New file `tests/agent/JournalingSuggestionsViewOverlayTests.swift` defines
+top-level synchronous no-argument `testViewOverlayBatch01`..`08`. Each batch
+constructs `JournalingSuggestionsPicker("T", onCompletion: { _ in })` and
+calls ~51–53 modifiers on it plus `EmptyView()`, using each first-overload
+label set with `nil` arguments so erased overloads stay unambiguous.
+Overload rows sharing a modifier cite the batch that calls it (greedy
+row-balanced packing: 99/99/99/99/98/98/98/98 rows = ~10.5–10.6% each, under
+the 40% single-test cap). No `await`, no `DispatchQueue.main`, no `RunLoop`,
+no semaphore waits, no commit.
+
+Validation: shared deliverable validator reports
+`FRAMEWORK_FANOUT_DELIVERABLE_OK module=JournalingSuggestions lane=leaf-full
+symbols=931`; a shadow Linux-simulated build (all `!canImport` guards forced
+on) compiles the dylib warning-clean, compiles all six `tests/agent/*Tests.swift`
+files warning-clean, and runs all 42 cited tests to the exact
+`JOURNALINGSUGGESTIONS_AGENT_RUNTIME_OK` marker. Product sources, manifest,
+and `canImport` guards are untouched apart from the coverage flip.

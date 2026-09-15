@@ -7,11 +7,11 @@ c:@E@SLRequestMethod@SLRequestMethodDELETE	implemented	Social.swift;SocialRuntim
 c:@E@SLRequestMethod@SLRequestMethodGET	implemented	Social.swift;SocialRuntime.swift:assertEnums	case GET; rawValue 0 by NS_ENUM order.
 c:@E@SLRequestMethod@SLRequestMethodPOST	implemented	Social.swift;SocialRuntime.swift:assertEnums	case POST; rawValue 1 by NS_ENUM order.
 c:@E@SLRequestMethod@SLRequestMethodPUT	implemented	Social.swift;SocialRuntime.swift:assertEnums	case PUT; rawValue 3 by NS_ENUM order.
-c:@SLServiceTypeFacebook	declared	Social.swift	Provisional com.apple.social.facebook; Darwin bytes unobserved.
-c:@SLServiceTypeLinkedIn	declared	Social.swift	Provisional com.apple.social.linkedin; Darwin bytes unobserved.
-c:@SLServiceTypeSinaWeibo	declared	Social.swift	Provisional com.apple.social.sinaweibo; Darwin bytes unobserved.
-c:@SLServiceTypeTencentWeibo	declared	Social.swift	Provisional com.apple.social.tencentweibo; Darwin bytes unobserved.
-c:@SLServiceTypeTwitter	declared	Social.swift	Provisional com.apple.social.twitter; Darwin bytes unobserved.
+c:@SLServiceTypeFacebook	implemented	test:full/social/tests/agent/SocialServiceTypesTests.swift#testSLServiceTypeFacebook	Oracle-pinned com.apple.social.facebook; macOS probe 2026-09-15 printed identical bytes.
+c:@SLServiceTypeLinkedIn	implemented	test:full/social/tests/agent/SocialServiceTypesTests.swift#testSLServiceTypeLinkedIn	Oracle-pinned com.apple.social.linkedin; macOS probe 2026-09-15 printed identical bytes.
+c:@SLServiceTypeSinaWeibo	implemented	test:full/social/tests/agent/SocialServiceTypesTests.swift#testSLServiceTypeSinaWeibo	Oracle-pinned com.apple.social.sinaweibo; macOS probe 2026-09-15 printed identical bytes.
+c:@SLServiceTypeTencentWeibo	implemented	test:full/social/tests/agent/SocialServiceTypesTests.swift#testSLServiceTypeTencentWeibo	Oracle-pinned com.apple.social.tencentweibo; macOS probe 2026-09-15 printed identical bytes.
+c:@SLServiceTypeTwitter	implemented	test:full/social/tests/agent/SocialServiceTypesTests.swift#testSLServiceTypeTwitter	Oracle-pinned com.apple.social.twitter; macOS probe 2026-09-15 printed identical bytes.
 c:@T@SLComposeSheetConfigurationItemTapHandler	implemented	Social.swift;SocialRuntime.swift:assertConfigurationItem	typealias () -> Void; invoked from tapHandler.
 c:@T@SLComposeViewControllerCompletionHandler	implemented	Social.swift;SocialRuntime.swift:assertComposeViewController	typealias (SLComposeViewControllerResult) -> Void; cleared after invoke.
 c:@T@SLRequestHandler	implemented	Social.swift;SocialRuntime.swift:assertPerformFailClosed	typealias (Data?, HTTPURLResponse?, Error?) -> Void; fail-closed perform.

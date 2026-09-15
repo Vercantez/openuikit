@@ -68,6 +68,18 @@ func testChart3DMaterialAttributes() {
     precondition(SurfacePlot().roughness(0.2).roughness == 0.2)
 }
 
+func testChart3DMaterialForEachOptional() {
+    struct Item: Identifiable {
+        var id: String
+    }
+    let each = ForEach([Item(id: "a")], id: \.id) { _ in SurfacePlot() }
+    precondition(each.metalness(0.5).metalness == 0.5)
+    precondition(each.roughness(0.25).roughness == 0.25)
+    let present: SurfacePlot? = SurfacePlot()
+    precondition(present.metalness(0.75).metalness == 0.75)
+    precondition(present.roughness(0.125).roughness == 0.125)
+}
+
 func testSynthesizedInequalityWitnesses() {
     precondition(Chart3DPose.front != .back)
     precondition(AnnotationPosition.top != .bottom)

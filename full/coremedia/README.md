@@ -523,3 +523,55 @@ reaches `FRAMEWORK_FANOUT_DELIVERABLE_OK` and `FRAMEWORK_FANOUT_REFERENCE_OK`
 on this Mac; its final stage is Linux-only (`import Glibc` in the generated
 runner). No product Swift or test files changed in this pass; the guest
 sources manifest is unchanged.
+
+## Depth pass 2026-09-15 (coremedia prompt: witnesses / block-buffer / keep-list)
+
+Audit result: no declared Hashable/Equatable/OptionSet/NewtypeWrapper witnesses
+remain (exact-match audit finds no `2eeoiy` / `4hash` / `9hashValue` / `Newtype` /
+`rawValue` synthesized rows and no `c:@E` declared rows), so that category has
+nothing left to convert. The keep-list stays untouched: `CMAudioFormatDescription*`
+and image-buffer sample APIs remain deferred, and Foundation
+`DataProtocol.copyBytes` / `sorted(using: SortComparator)` (plus `compare`,
+`formatted`, `lastRange`/`firstRange`) remain declared. DispatchSource timer
+overloads, `CMSyncProtocol` / clock-extension overlays, and custom-block-source
+fields stay declared/deferred as instructed.
+
+This pass repairs three latent breaks instead of reclassifying rows:
+
+1. `testCMTimeRangeExpressionOperators` was cited by 5 implemented rows
+   (the `..<` / `...` / `PartialRangeFrom/UpTo/Through` witnesses over `CMTime`)
+   but the function did not exist, so the deliverable validator rejected the
+   framework (5 errors). The focused synchronous test is now defined in
+   `CMTimeTests.swift` and forms/asserts all five range expressions.
+2. `CMBlockBufferProtocol.makeContiguous(allocator:deallocator:flags:)`,
+   `makeContiguous(allocator:flags:)`, and `withContiguousStorage(_:)` were
+   cited as implemented (9 rows via
+   `testCMBlockBufferMakeContiguousAndContiguousStorage`) but missing from the
+   product, so no test binary could compile. They are now honest extension
+   defaults in `CMBlockBuffer.swift`: Linux storage is always one contiguous
+   copy, so compacting copies the bytes (the custom-allocator path allocates
+   scratch, copies in, builds the buffer, then hands the scratch block back;
+   empty input returns an empty buffer without touching the allocator).
+3. `Calibration.init` used `CGSize.zero` in a default argument, which Swift 6
+   rejects without a direct CoreGraphics import (absent on Linux). The default
+   now names a same-module `@usableFromInline` constant.
+4. One test typo fixed: slice fill `source[1..<4]` with `0` yields
+   `[1, 0, 0, 0, 5]`, not `[1, 0, 0, 4, 5]` (the author replaced two `7`s and
+   forgot the fill covers all three slice bytes).
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3003 | 3003 |
+| declared | 237 | 237 |
+| deferred | 264 | 264 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +0 rows reclassified (claims repaired, not relabeled). Top test
+still `CMCollectionDepthTests.swift#testCMFormatDescriptionExtensionsCollectionAlgorithms` —
+180 (6.0%). No test owns more than 40% of implemented rows. Verified on this Mac:
+`FRAMEWORK_FANOUT_DELIVERABLE_OK` (was 5 errors before fix 1), product plus all
+27 test files compile warnings-clean, and a macOS runner over all 181 cited tests
+prints marker-only stdout (`COREMEDIA_MACOS_PROBE_OK`, debug lines on stderr).
+The sealed gate's final stage remains Linux-only (`import Glibc` in the generated
+runner). No new product files; the guest sources manifest is unchanged.

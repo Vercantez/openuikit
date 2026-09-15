@@ -59,6 +59,16 @@ This is a fresh seed: 81 exact public identifiers, floor 65 nondeferred.
 Coverage after this pass: **77 implemented / 4 declared / 0 deferred /
 0 unavailable / 0 not-applicable**.
 
+Wave-4 recount (2026-09-14): before 77 implemented / 4 declared / 0 deferred,
+after 77 implemented / 4 declared / 0 deferred, implemented gain 0. The four
+`declared` rows are `async` (`Monitor.addAppExtensionPoint`,
+`Monitor.init(appExtensionPoint:)`, `Monitor.removeAppExtensionPoint`,
+`AppExtensionProcess.init(configuration:)` async) and cannot be cited from the
+sealed runner's top-level synchronous no-argument tests: calling them needs
+`await`, and blocking waits (`DispatchQueue.main`, `RunLoop`, semaphores)
+would hang the gate. Both are forbidden by the depth contract, so the rows
+stay `declared` with compiling source anchors.
+
 Top-5 `implemented` evidence distribution:
 
 1. `AppExtensionPointErrorTests.swift#testAppExtensionPointErrorCases` — 6 rows (enum table)

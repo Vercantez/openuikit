@@ -799,7 +799,9 @@ open class MTRDeviceControllerStartupParams: NSObject {
 
 open class MTRDeviceControllerExternalCertificateParameters: MTRDeviceControllerParameters {}
 
-open class MTRXPCDeviceControllerParameters: MTRDeviceControllerAbstractParameters {}
+open class MTRXPCDeviceControllerParameters: MTRDeviceControllerAbstractParameters {
+    public var uniqueIdentifier: UUID = UUID()
+}
 
 open class MTRDeviceControllerFactoryParams: NSObject {
     public var storage: (any MTRStorage)?
@@ -971,7 +973,18 @@ open class MTRCertificates: NSObject {
 }
 
 open class MTRAttributeCacheContainer: NSObject {}
-open class MTRClusterStateCacheContainer: NSObject {}
+open class MTRClusterStateCacheContainer: NSObject {
+    open func readAttributes(
+        withEndpointID endpointID: NSNumber?,
+        clusterID: NSNumber?,
+        attributeID: NSNumber?,
+        queue: dispatch_queue_t,
+        completion: @escaping ([[String: Any]]?, (any Error)?) -> Void
+    ) {
+        _ = (endpointID, clusterID, attributeID, queue)
+        mtrInvokeFailClosed(completion)
+    }
+}
 
 open class MTRAsyncCallbackQueueWorkItem: NSObject {
     public var readyHandler: MTRAsyncCallbackReadyHandler?
@@ -1018,16 +1031,104 @@ open class MTRAsyncCallbackWorkQueue: NSObject {
 
 open class MTRServerAttribute: NSObject {
     public var attributeID: NSNumber = 0
-    public var value: Any?
+    public var value: [String: Any] = [:]
+    public var requiredReadPrivilege: MTRAccessControlEntryPrivilege = .view
+    public var isWritable: Bool = false
+
+    public required override init() { super.init() }
+
+    public init?(
+        readonlyAttributeWithID attributeID: NSNumber,
+        initialValue value: [String: Any],
+        requiredPrivilege: MTRAccessControlEntryPrivilege
+    ) {
+        self.attributeID = attributeID
+        self.value = value
+        self.requiredReadPrivilege = requiredPrivilege
+        self.isWritable = false
+        super.init()
+    }
+
+    open func setValue(_ value: [String: Any]) -> Bool {
+        if !isWritable {
+            return false
+        }
+        self.value = value
+        return true
+    }
+
+    open class func newFeatureMapAttribute(withInitialValue value: NSNumber) -> Self {
+        let attr = self.init()
+        attr.attributeID = 65532
+        attr.value = ["type": MTRUnsignedIntegerValueType, "value": value]
+        attr.requiredReadPrivilege = .view
+        return attr
+    }
 }
 
 open class MTRServerCluster: NSObject {
     public var clusterID: NSNumber = 0
     public var attributes: [MTRServerAttribute] = []
+    public var accessGrants: [MTRAccessGrant] = []
+    public var clusterRevision: NSNumber = 1
+
+    public required override init() { super.init() }
+
+    public init?(clusterID: NSNumber, revision: NSNumber) {
+        self.clusterID = clusterID
+        self.clusterRevision = revision
+        super.init()
+    }
+
+    open class func newDescriptor() -> Self {
+        let cluster = self.init()
+        cluster.clusterID = 29
+        cluster.clusterRevision = 1
+        return cluster
+    }
+
+    open func addAccessGrant(_ accessGrant: MTRAccessGrant) {
+        accessGrants.append(accessGrant)
+    }
+
+    open func removeAccessGrant(_ accessGrant: MTRAccessGrant) {
+        accessGrants.removeAll { $0 === accessGrant }
+    }
+
+    open func addAttribute(_ attribute: MTRServerAttribute) -> Bool {
+        attributes.append(attribute)
+        return true
+    }
 }
 
 open class MTRServerEndpoint: NSObject {
     public var endpointID: NSNumber = 0
     public var clusters: [MTRServerCluster] = []
     public var deviceTypes: [MTRDeviceTypeRevision] = []
+    public var accessGrants: [MTRAccessGrant] = []
+    public var serverClusters: [MTRServerCluster] = []
+
+    public required override init() { super.init() }
+
+    public init?(endpointID: NSNumber, deviceTypes: [MTRDeviceTypeRevision]) {
+        self.endpointID = endpointID
+        self.deviceTypes = deviceTypes
+        super.init()
+    }
+
+    open func addAccessGrant(_ accessGrant: MTRAccessGrant) {
+        accessGrants.append(accessGrant)
+    }
+
+    open func removeAccessGrant(_ accessGrant: MTRAccessGrant) {
+        accessGrants.removeAll { $0 === accessGrant }
+    }
+
+    open func addServerCluster(_ serverCluster: MTRServerCluster) -> Bool {
+        serverClusters.append(serverCluster)
+        if !clusters.contains(where: { $0 === serverCluster }) {
+            clusters.append(serverCluster)
+        }
+        return true
+    }
 }

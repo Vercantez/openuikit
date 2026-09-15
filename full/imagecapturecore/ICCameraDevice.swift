@@ -124,6 +124,20 @@ open class ICCameraDevice: ICDevice {
         throw ICReturnPTPDeviceError(.failedToSendCommand)
     }
 
+    /// Synchronous completion-handler spelling of the Apple
+    /// `requestSendPTPCommand:outData:completion:` method. Fail-closed:
+    /// Linux never attaches a PTP camera, so the completion runs on the
+    /// caller thread with `failedToSendCommand`.
+    open func requestSendPTPCommand(
+        _ ptpCommand: Data,
+        outData ptpData: Data?,
+        completion: @escaping (Data?, Data?, (any Error)?) -> Void
+    ) {
+        _ = ptpCommand
+        _ = ptpData
+        completion(nil, nil, ICReturnPTPDeviceError(.failedToSendCommand))
+    }
+
     open func requestSendPTPCommand(
         _ command: Data,
         outData data: Data?,

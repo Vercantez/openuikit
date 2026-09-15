@@ -744,3 +744,73 @@ Fail-closed (unchanged): the converted modifiers are identity stubs or
 Chart-local storage; they do not perform layout, hit-testing, scrolling,
 gesture delivery, or 3D rendering. `Chart3D` / `SurfacePlot` still do not
 render.
+
+### Aggressive-coverage follow-up (pi wave-3 charts prompt)
+
+This follow-up starts from the View-modifier ledger (`implemented` 3009,
+`declared` 1902, `deferred` 909, `unavailable` 0, `not-applicable` 3654)
+and ends at `implemented` 3015, `declared` 1900, `deferred` 905,
+`unavailable` 0, `not-applicable` 3654: an honest implemented gain of 6.
+Nondeferred coverage is 4915, above the medium-full floor.
+
+Converted rows (each cited test constructs that type and asserts the
+stamped metadata for that identifier family):
+
+- `metalness` / `roughness` synthesized on `ForEach` and `Optional`
+  (`Chart3DContent`) — 4 deferred rows. The base protocol-extension
+  declarations and the `ForEach` / `Optional` `Chart3DContent`
+  conformances already exist, mirroring the implemented `symbolSize`
+  precedent; `testChart3DMaterialForEachOptional` stamps and asserts
+  the retained ratios.
+- `AxisContent.compositingLayer()` / `compositingLayer(style:)`
+  synthesized on `BuilderConditional` — 2 declared rows. The
+  `BuilderConditional: AxisContent` conformance and both base overloads
+  already exist; `testAxisContentBuilderConditionalCompositingLayer`
+  asserts the stamped `"layer"` / `"style"` values, which rules out
+  lookalike-`View` overload stealing.
+
+Not converted, deliberately: the ~1900 remaining declared rows are
+generic SwiftUI `View` extension modifiers (`.padding`, `.alert`, drag /
+drop, toolbars, …) synthesized onto Chart types plus uninhabited
+`Never` witnesses and one `SurfacePlot.body: Never` row whose product
+body is intentionally a different (fail-closed `EmptyView`) symbol.
+The Linux lookalike `View` declares none of those modifiers, so no test
+can honestly call those identifiers without inventing SwiftUI behavior
+(contract: no bulk-relabel; SwiftUI overlays stay out of `implemented`).
+Remaining deferred rows are stdlib integer/collection operators,
+Foundation `FormatStyle` / `SortComparator` / Combine overlays, 3D
+`Body` witnesses, `symbolRotation` (no RealityKit `Rotation3D` in the
+pinned Linux set), and `valueAligned` on SwiftUI-owned
+`PagingScrollTargetBehavior` — none honestly claimable as Charts
+behavior. The requested huge gain is not reachable from this ledger
+without dishonest relabeling.
+
+Top-five implemented evidence is unchanged (3015 rows; 40% cap = 1206).
+The two new tests are cited by 4 and 2 rows respectively. No single
+test exceeds 40% of implemented rows.
+
+Gate repair in this pass: `tests/agent/ChartsViewModifiersTests.swift`
+did not compile under the pinned Linux Swift 6.2.4 because the
+`ChartsModifiers.swift` stubs are fully generic (`position: T0`,
+`content: T3`), leaving enum literals (`.hidden`, `.top`, `.bottom`,
+`.leading`, `.automatic`, `.center`, `.visible`) and `{ _ in … }`
+overlay/background closures without contextual types. The tests are
+unchanged in name, count, and called identifiers; literals now carry
+their Apple-intended explicit types (`Visibility`,
+`AxisMarkPosition`, `AnnotationPosition`, `Alignment`, and
+`(_: ChartProxy)` closures mirroring the concrete `Chart.chartOverlay`
+shape). With that repair the full Linux gate passes:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=Charts lane=medium-full symbols=9474
+FRAMEWORK_FANOUT_REFERENCE_OK
+CHARTS_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=Charts dylib=libCharts.dylib
+```
+
+run as `python3 -B full/framework-fanout/validate_seed.py --framework
+full/charts --phase deliverable` plus
+`bash full/charts/tests/acceptance/test_host.sh` inside
+`swift:6.2-noble` (Swift 6.2.4, `aarch64-unknown-linux-gnu`). The macOS
+host `swiftc` cannot run this gate: the lookalikes are
+`#if !canImport(SwiftUI)` and macOS sees real SwiftUI.

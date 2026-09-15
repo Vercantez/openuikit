@@ -44,7 +44,7 @@ open class AVSampleBufferGenerator: NSObject, @unchecked Sendable {
   public convenience init(asset: AVAsset, timebase: CMTimebase?) { self.init() }
   public func makeSampleBuffer(for request: AVSampleBufferRequest) throws -> sending CMSampleBuffer { throw AVFoundationPortableError.mediaServiceUnavailable }
   public func makeBatch() -> AVSampleBufferGeneratorBatch { AVSampleBufferGeneratorBatch() }
-  public func makeSampleBuffer(for request: AVSampleBufferRequest, addTo batch: AVSampleBufferGeneratorBatch) throws -> CMSampleBuffer { return CMSampleBuffer() }
+  public func makeSampleBuffer(for request: AVSampleBufferRequest, addTo batch: AVSampleBufferGeneratorBatch) throws -> CMSampleBuffer { throw AVFoundationPortableError.mediaServiceUnavailable }
   public class func notifyOfDataReady(for sbuf: CMSampleBuffer) async throws { throw AVFoundationPortableError.mediaServiceUnavailable }
 }
 

@@ -599,9 +599,9 @@ open class PKPaymentRequest: NSObject, @unchecked Sendable {
 public struct PKContactField: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
-    public static let postalAddress = PKContactField(rawValue: "postalAddress")
-    public static let emailAddress = PKContactField(rawValue: "emailAddress")
-    public static let phoneNumber = PKContactField(rawValue: "phoneNumber")
+    public static let postalAddress = PKContactField(rawValue: "post")
+    public static let emailAddress = PKContactField(rawValue: "email")
+    public static let phoneNumber = PKContactField(rawValue: "phone")
     public static let name = PKContactField(rawValue: "name")
     public static let phoneticName = PKContactField(rawValue: "phoneticName")
 }

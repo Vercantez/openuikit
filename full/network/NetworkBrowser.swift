@@ -142,6 +142,9 @@ public final class NWConnectionGroup: @unchecked Sendable {
     public var stateUpdateHandler: ((State) -> Void)?
     public var newConnectionHandler: ((NWConnection) -> Void)?
     public private(set) var state: State = .setup
+    private var receiveHandler: ((Message, Data?, Bool) -> Void)?
+    private var receiveMaximumMessageSize: Int = .max
+    private var receiveRejectOversizedMessages = true
 
     public init(with descriptor: any NWGroupDescriptor, using parameters: NWParameters) {
         self.descriptor = descriptor
@@ -172,6 +175,34 @@ public final class NWConnectionGroup: @unchecked Sendable {
         completion(.unsupported)
     }
 
+    /// Stored locally only. Linux has no group transport daemon, so the
+    /// handler is retained and never driven by incoming traffic.
+    public func setReceiveHandler(
+        maximumMessageSize: Int = .max,
+        rejectOversizedMessages: Bool = true,
+        handler: ((Message, Data?, Bool) -> Void)?
+    ) {
+        receiveMaximumMessageSize = maximumMessageSize
+        receiveRejectOversizedMessages = rejectOversizedMessages
+        receiveHandler = handler
+    }
+
+    /// Fail-closed: Linux cannot extract a live connection from a group.
+    public func extract(
+        connectionTo endpoint: NWEndpoint? = nil,
+        using options: NWProtocolOptions? = nil
+    ) -> NWConnection? {
+        _ = endpoint
+        _ = options
+        return nil
+    }
+
+    /// Fail-closed: nothing was ever extracted, so nothing can rejoin.
+    public func reinsert(connection: NWConnection) -> Bool {
+        _ = connection
+        return false
+    }
+
     public func metadata(definition: NWProtocolDefinition) -> NWProtocolMetadata? {
         _ = definition
         return nil
@@ -183,6 +214,13 @@ extension NWConnectionGroup.Message {
     public var localEndpoint: NWEndpoint? { nil }
     public var remoteEndpoint: NWEndpoint? { nil }
     public var path: NWPath? { nil }
+    /// Fail-closed: Linux has no group transport to extract from.
+    public func extractConnection() -> NWConnection? { nil }
+    /// No-op: with no group transport there is nothing to reply through.
+    public func reply(content: Data?, message: NWConnectionGroup.Message = .default) {
+        _ = content
+        _ = message
+    }
     public func metadata(definition: NWProtocolDefinition) -> NWProtocolMetadata? {
         _ = definition
         return nil

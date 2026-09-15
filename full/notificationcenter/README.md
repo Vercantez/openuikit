@@ -79,12 +79,29 @@ coverage evidence.
 
 ## Coverage honesty
 
-Twenty identifiers are `implemented` from the standalone runtime (enums,
-controller, protocol core, `widgetPerformUpdate`,
-`widgetActiveDisplayModeDidChange`, synthesized Equatable/Hashable/rawValue).
-Four `UIVibrancyEffect` factories and `widgetMarginInsets` are `declared`
-compile-only UIKit surface. Three `NSExtensionContext` rows are `deferred`
-because guest Foundation does not expose `Foundation.NSExtensionContext`.
+Twenty-five identifiers are `implemented`, zero `declared`, three `deferred`.
+Before pi-wave4 the split was 20 implemented / 5 declared / 3 deferred.
+The five UIKit-gated rows (four `UIVibrancyEffect` factories plus the
+default `widgetMarginInsets` pass-through) moved from `declared` compile-only
+to `implemented`: `tests/agent/NotificationCenterUIKitTests.swift` calls each
+factory and the margin-inset default inside `#if canImport(UIKit)` and
+asserts the fail-closed boundary (`systemWidgetHostAvailable == false`,
+default update `.noData`) where UIKit is absent.
+
+The twenty portable rows are covered by
+`tests/agent/NotificationCenterEnumTests.swift`
+(`testNCUpdateResultRawValues` cites 8 rows, `testNCWidgetDisplayModeRawValues`
+cites 7) and `tests/agent/NotificationCenterWidgetTests.swift`
+(`testNCWidgetProvidingDefaults` cites 3, `testNCWidgetControllerHasContent`
+cites 2). No cited test covers more than 8 of the 25 implemented rows.
+All cited tests are top-level synchronous no-argument `func test*()` with no
+`await`, `DispatchQueue.main`, `RunLoop`, or semaphore waits.
+
+Three `NSExtensionContext` rows stay `deferred`: the extension compiles only
+with `-D NOTIFICATIONCENTER_HAS_FOUNDATION_EXTENSION_CONTEXT` against a real
+staged Foundation module exposing `Foundation.NSExtensionContext`, which the
+sealed standalone gate (toolchain Foundation only) cannot provide, so the
+geometry surface cannot be exercised in-process there.
 Nondeferred count is 25 (lane floor 23). All 28 exact IDs remain.
 
 ## Still deferred / for the Apple oracle

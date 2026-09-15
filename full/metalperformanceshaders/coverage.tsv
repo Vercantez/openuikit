@@ -2827,11 +2827,11 @@ c:objc(pl)MPSCNNInstanceNormalizationDataSource(im)updateGammaAndBetaWithInstanc
 c:objc(pl)MPSCNNInstanceNormalizationDataSource(py)numberOfFeatureChannels	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave9SurfaceTests.swift#testMPSCNNWave9Kernels	Linux host implementation exercised by a focused agent test
 c:objc(pl)MPSDeviceProvider	implemented	test:full/metalperformanceshaders/tests/agent/MPSTypesTests.swift#testMPSConstantVars	Linux host implementation exercised by a focused agent test
 c:objc(pl)MPSDeviceProvider(im)mpsMTLDevice	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSKernelAndState	Linux host implementation exercised by a focused agent test
-c:objc(pl)MPSHandle	declared	source:full/metalperformanceshaders/MPSKernel.swift#MPSHandle	Stub protocol only; graph handle members remain deferred
-c:objc(pl)MPSHandle(im)label	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(pl)MPSHeapProvider	declared	source:full/metalperformanceshaders/MPSKernel.swift#MPSHeapProvider	Stub protocol only; command-buffer heap providers remain deferred
-c:objc(pl)MPSHeapProvider(im)newHeapWithDescriptor:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
-c:objc(pl)MPSHeapProvider(im)retireHeap:cacheDelay:	deferred		CNN/NN-graph/ray-intersector/GPU-only surface remains fail-closed and unexercised
+c:objc(pl)MPSHandle	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave11DescriptorTests.swift#testMPSWave11HandleAndHeapProvider	Host stub protocol exercised by a focused agent test (conforming handle, NNImageNode wiring); overlay label() member stays deferred
+c:objc(pl)MPSHandle(im)label	deferred		Host stub exposes label as a property while the pinned overlay declares label() as a method; member stays deferred (see oracle-questions.tsv)
+c:objc(pl)MPSHeapProvider	implemented	test:full/metalperformanceshaders/tests/agent/MPSWave11DescriptorTests.swift#testMPSWave11HandleAndHeapProvider	Host stub protocol exercised by a focused agent test (nil-returning provider wired through MPSCommandBuffer); MTLHeap member shapes stay deferred
+c:objc(pl)MPSHeapProvider(im)newHeapWithDescriptor:	deferred		Host stub takes an Int size and returns nil; the overlay takes MTLHeapDescriptor and returns MTLHeap (GPU-only). Member stays deferred (see oracle-questions.tsv)
+c:objc(pl)MPSHeapProvider(im)retireHeap:cacheDelay:	deferred		Optional overlay method over MTLHeap (GPU-only) with no host equivalent; stays deferred (see oracle-questions.tsv)
 c:objc(pl)MPSImageAllocator	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSImageHostIO	Linux host implementation exercised by a focused agent test
 c:objc(pl)MPSImageAllocator(im)imageBatchForCommandBuffer:imageDescriptor:kernel:count:	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSImageHostIO	Linux host implementation exercised by a focused agent test
 c:objc(pl)MPSImageAllocator(im)imageForCommandBuffer:imageDescriptor:kernel:	implemented	test:full/metalperformanceshaders/tests/agent/MPSImageTests.swift#testMPSImageHostIO	Linux host implementation exercised by a focused agent test

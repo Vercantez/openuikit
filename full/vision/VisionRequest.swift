@@ -278,9 +278,14 @@ open class VNGenerateForegroundInstanceMaskRequest: VNImageBasedRequest {
     }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNGenerateForegroundInstanceMaskRequest")
+        [visionForegroundInstanceMask(in: context.rasterForROI(regionOfInterest))]
     }
+}
+
+/// A classical corner tracklet: Harris point history in working-grid pixels.
+struct VisionTracklet {
+    var points: [CGPoint]
+    var score: Float
 }
 
 open class VNDetectDocumentSegmentationRequest: VNImageBasedRequest {
@@ -543,9 +548,123 @@ open class VNDetectTrajectoriesRequest: VNStatefulRequest {
         super.init(frameAnalysisSpacing: .zero, completionHandler: completionHandler)
     }
 
+    var previousTrackRaster: VisionRaster?
+    var tracklets: [VisionTracklet] = []
+
+    /// Classical sparse trajectory detection. Harris corners are tracked across
+    /// frames with NCC block matching; tracklets with at least
+    /// `max(2, trajectoryLength)` points and net motion inside the normalized
+    /// radius bounds are reported as `VNTrajectoryObservation` with a linear
+    /// least-squares velocity in `equationCoefficients` and up to 3 extrapolated
+    /// `projectedPoints`. Static points and radius outliers are dropped. This is
+    /// a documented Linux-local stand-in, not Apple's trajectory model.
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw visionUnavailableModel("VNDetectTrajectoriesRequest")
+        let raster = context.rasterForROI(regionOfInterest)
+        let maxDim = max(1, max(raster.width, raster.height))
+        let scale = min(1, 64 / Double(maxDim))
+        let gridWidth = max(8, Int((Double(raster.width) * scale).rounded()))
+        let gridHeight = max(8, Int((Double(raster.height) * scale).rounded()))
+        let work = raster.resized(width: gridWidth, height: gridHeight)
+        let gray = work.grayscale()
+        let needed = max(2, trajectoryLength)
+        defer { previousTrackRaster = work }
+        let corners = visionHarrisCorners(gray: gray, width: gridWidth, height: gridHeight, maxCount: 24)
+        guard let previous = previousTrackRaster,
+            previous.width == gridWidth, previous.height == gridHeight
+        else {
+            tracklets = corners.map {
+                VisionTracklet(points: [CGPoint(x: $0.x, y: $0.y)], score: 1)
+            }
+            return []
+        }
+        let previousGray = previous.grayscale()
+        var next: [VisionTracklet] = []
+        for var tracklet in tracklets {
+            guard let head = tracklet.points.last else { continue }
+            let anchor = (x: Int(head.x.rounded()), y: Int(head.y.rounded()))
+            guard let hit = visionMatchCorner(
+                first: previousGray, second: gray,
+                width: gridWidth, height: gridHeight,
+                a: anchor, searchRadius: 8, patchRadius: 3, threshold: 0.6
+            ) else { continue }
+            tracklet.points.append(CGPoint(x: hit.x, y: hit.y))
+            if tracklet.points.count > needed {
+                tracklet.points.removeFirst(tracklet.points.count - needed)
+            }
+            tracklet.score = min(1, (tracklet.score + hit.score) / 2)
+            next.append(tracklet)
+        }
+        for corner in corners {
+            if next.count >= 32 { break }
+            var clear = true
+            for tracklet in next {
+                guard let head = tracklet.points.last else { continue }
+                let dx = Double(corner.x) - head.x
+                let dy = Double(corner.y) - head.y
+                if dx * dx + dy * dy < 36 {
+                    clear = false
+                    break
+                }
+            }
+            if clear {
+                next.append(VisionTracklet(points: [CGPoint(x: corner.x, y: corner.y)], score: 1))
+            }
+        }
+        tracklets = Array(next.prefix(32))
+        func normalized(_ point: CGPoint) -> VNPoint {
+            let nx = min(1, max(0, (Double(point.x) / scale) / Double(max(1, raster.width))))
+            let ny = min(1, max(0, 1 - (Double(point.y) / scale) / Double(max(1, raster.height))))
+            return VNPoint(x: nx, y: ny)
+        }
+        var observations: [VNObservation] = []
+        let ordered = tracklets.sorted {
+            let aFirst = $0.points.first ?? .zero
+            let aLast = $0.points.last ?? .zero
+            let bFirst = $1.points.first ?? .zero
+            let bLast = $1.points.last ?? .zero
+            let aDx = aLast.x - aFirst.x
+            let aDy = aLast.y - aFirst.y
+            let bDx = bLast.x - bFirst.x
+            let bDy = bLast.y - bFirst.y
+            return aDx * aDx + aDy * aDy > bDx * bDx + bDy * bDy
+        }
+        for tracklet in ordered {
+            if observations.count >= 16 { break }
+            guard tracklet.points.count >= needed,
+                let first = tracklet.points.first, let last = tracklet.points.last
+            else { continue }
+            let dx = last.x - first.x
+            let dy = last.y - first.y
+            let distance = (dx * dx + dy * dy).squareRoot()
+            guard distance >= 0.5 else { continue }
+            let radius = distance / Double(max(gridWidth, gridHeight))
+            guard radius >= Double(objectMinimumNormalizedRadius),
+                radius <= Double(objectMaximumNormalizedRadius)
+            else { continue }
+            let steps = Double(max(1, tracklet.points.count - 1))
+            let velocity = SIMD2<Double>(dx / steps, dy / steps)
+            let detected = tracklet.points.map { normalized($0) }
+            var projected: [VNPoint] = []
+            for step in 1...min(3, needed) {
+                let px = min(Double(gridWidth - 1), max(0, last.x + velocity.x * Double(step)))
+                let py = min(Double(gridHeight - 1), max(0, last.y + velocity.y * Double(step)))
+                projected.append(normalized(CGPoint(x: px, y: py)))
+            }
+            observations.append(
+                VNTrajectoryObservation(
+                    detectedPoints: detected,
+                    projectedPoints: projected,
+                    equationCoefficients: SIMD3<Float>(
+                        Float(velocity.x / scale / Double(max(1, raster.width))),
+                        Float(-velocity.y / scale / Double(max(1, raster.height))),
+                        0
+                    ),
+                    movingAverageRadius: CGFloat(radius),
+                    confidence: tracklet.score
+                )
+            )
+        }
+        return observations
     }
 }
 
@@ -863,12 +982,15 @@ open class VNTrackHomographicImageRegistrationRequest: VNStatefulRequest {
         super.init(completionHandler: completionHandler)
     }
 
+    var previousHomographyRaster: VisionRaster?
+
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw vnMakeError(
-            .unsupportedRequest,
-            description: "homographic tracking is fail-closed on Linux; no 3x3 warp is invented"
-        )
+        let current = context.rasterForROI(regionOfInterest)
+        defer { previousHomographyRaster = current }
+        guard let previous = previousHomographyRaster else {
+            return [VNImageHomographicAlignmentObservation(confidence: 1)]
+        }
+        return [visionHomographicAlignment(source: previous, target: current)]
     }
 }
 
@@ -973,11 +1095,15 @@ open class VNHomographicImageRegistrationRequest: VNImageRegistrationRequest {
     public override class var defaultRevision: Int { VNHomographicImageRegistrationRequestRevision1 }
 
     open override func perform(on context: VisionImageContext) throws -> [VNObservation] {
-        _ = context
-        throw vnMakeError(
-            .unsupportedRequest,
-            description: "homographic registration is fail-closed on Linux; no 3x3 warp is invented"
-        )
+        guard let targetedRaster else {
+            throw vnMakeError(.missingOption, description: "targeted image is required")
+        }
+        return [
+            visionHomographicAlignment(
+                source: targetedRaster,
+                target: context.rasterForROI(regionOfInterest)
+            )
+        ]
     }
 }
 

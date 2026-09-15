@@ -66,6 +66,22 @@ Top-5 `implemented` evidence distribution:
 
 No non-enum test is cited by more than 7 implemented rows.
 
+## Wave-4 recount 2026-09-15
+
+Recount: **174** implemented / **3** declared / **3** deferred of 180 —
+unchanged. The 3 declared rows are the `async` Critical Messaging methods
+(`requestAuthorization`, `checkAuthorizationStatus`, `send`); calling any of
+them requires `await`, which the sealed gate forbids in cited tests, and they
+guard a daemon/entitlement path that stays fail-closed, so they remain
+declared. The 3 deferred rows are UIKit-typed properties (`UIImage.image`,
+`UIEdgeInsets.contentInset`, `UIColor.messageTintColor`); UIKit is not on the
+isolated link line and public lookalikes are forbidden, so they remain
+deferred. Host-toolchain repair only: `CGPoint`/`CGSize`/`CGRect` `.zero` and
+`CGRect(x:y:width:height:)` now require CoreGraphics on the current SDK, so
+product and test code uses the Foundation-visible `origin:size:` /
+`CGPoint(x:y:)` / `CGSize(width:height:)` spellings with no new imports and no
+behavior change.
+
 ## Tests
 
 `tests/agent/MessagesLoadSmoke.swift` is the schema-v2 load marker.

@@ -161,6 +161,47 @@ func testMessageFilterExtensionConstructs() {
     precondition(type(of: ext) == ILMessageFilterExtension.self)
 }
 
+func testMessageFilterQueryHandlingCompletionHandler() {
+    final class Handler: NSObject, ILMessageFilterQueryHandling {
+        var receivedSender: String?
+        func handle(
+            _ queryRequest: ILMessageFilterQueryRequest,
+            context: ILMessageFilterExtensionContext,
+            completion: @escaping (ILMessageFilterQueryResponse) -> Void
+        ) {
+            _ = context
+            receivedSender = queryRequest.sender
+            let response = ILMessageFilterQueryResponse()
+            response.action = .junk
+            response.subAction = .transactionalFinance
+            completion(response)
+        }
+        func handle(
+            _ queryRequest: ILMessageFilterQueryRequest,
+            context: ILMessageFilterExtensionContext
+        ) async -> ILMessageFilterQueryResponse {
+            _ = queryRequest
+            _ = context
+            return ILMessageFilterQueryResponse()
+        }
+    }
+    let handler = Handler()
+    let request = ILMessageFilterQueryRequest(
+        sender: "+15555550100",
+        messageBody: "Claim your prize",
+        receiverISOCountryCode: "US"
+    )
+    let context = ILMessageFilterExtensionContext()
+    var delivered: ILMessageFilterQueryResponse?
+    handler.handle(request, context: context) { response in
+        delivered = response
+    }
+    precondition(delivered != nil)
+    precondition(delivered?.action == .junk)
+    precondition(delivered?.subAction == .transactionalFinance)
+    precondition(handler.receivedSender == "+15555550100")
+}
+
 func testMessageFilterQueryHandlingConformance() {
     final class Handler: NSObject, ILMessageFilterQueryHandling {
         func handle(
@@ -191,4 +232,41 @@ func testMessageFilterCapabilitiesQueryHandlingConformance() {
     }
     let handler: any ILMessageFilterCapabilitiesQueryHandling = Handler()
     precondition(handler is NSObject)
+}
+
+func testMessageFilterCapabilitiesQueryHandlingCompletionHandler() {
+    final class Handler: NSObject, ILMessageFilterCapabilitiesQueryHandling {
+        var callCount = 0
+        func handle(
+            _ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest,
+            context: ILMessageFilterExtensionContext,
+            completion: @escaping (ILMessageFilterCapabilitiesQueryResponse) -> Void
+        ) {
+            _ = capabilitiesQueryRequest
+            _ = context
+            callCount += 1
+            let response = ILMessageFilterCapabilitiesQueryResponse()
+            response.transactionalSubActions = [.transactionalOrders]
+            response.promotionalSubActions = [.promotionalOffers]
+            completion(response)
+        }
+        func handle(
+            _ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest,
+            context: ILMessageFilterExtensionContext
+        ) async -> ILMessageFilterCapabilitiesQueryResponse {
+            _ = capabilitiesQueryRequest
+            _ = context
+            return ILMessageFilterCapabilitiesQueryResponse()
+        }
+    }
+    let handler = Handler()
+    let request = ILMessageFilterCapabilitiesQueryRequest()
+    let context = ILMessageFilterExtensionContext()
+    var delivered: ILMessageFilterCapabilitiesQueryResponse?
+    handler.handle(request, context: context) { response in
+        delivered = response
+    }
+    precondition(handler.callCount == 1)
+    precondition(delivered?.transactionalSubActions == [.transactionalOrders])
+    precondition(delivered?.promotionalSubActions == [.promotionalOffers])
 }

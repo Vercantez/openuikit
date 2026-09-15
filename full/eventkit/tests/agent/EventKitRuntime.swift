@@ -748,9 +748,17 @@ func testLocalSourceAndDefaultCalendars() {
         precondition(empty.calendar(withIdentifier: identifier)?.title == eventCalendars[0].title)
         precondition(empty.source(withIdentifier: empty.sources[0].sourceIdentifier) === empty.sources[0])
         #if canImport(CoreGraphics)
-        let components = empty.defaultCalendarForNewEvents!.cgColor.components
+        let defaultCalendar = empty.defaultCalendarForNewEvents!
+        let components = defaultCalendar.cgColor.components
         precondition(components != nil)
+        precondition(components!.count == 4)
         precondition(abs(Double(components![1]) - 0.478) < 0.001)
+        precondition(abs(Double(components![3]) - 1) < 0.001)
+        defaultCalendar.cgColor = CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+        let repainted = defaultCalendar.cgColor.components
+        precondition(repainted != nil)
+        precondition(abs(Double(repainted![0]) - 1) < 0.001)
+        precondition(abs(Double(repainted![1])) < 0.001)
         #endif
     }
 }
@@ -1366,6 +1374,9 @@ func testReminderAlarmAndLocationValueSemantics() {
     #if canImport(CoreLocation)
     namedLocation.geoLocation = CLLocation(latitude: 37.3349, longitude: -122.009)
     precondition(abs((namedLocation.geoLocation?.coordinate.latitude ?? 0) - 37.3349) < 0.0001)
+    precondition(abs((namedLocation.geoLocation?.coordinate.longitude ?? 0) + 122.009) < 0.0001)
+    namedLocation.geoLocation = nil
+    precondition(namedLocation.geoLocation == nil)
     #endif
     #if canImport(MapKit) && canImport(CoreLocation)
     let mapItem = MKMapItem(
@@ -1375,6 +1386,7 @@ func testReminderAlarmAndLocationValueSemantics() {
     mapItem.name = "Apple Park"
     let fromMap = EKStructuredLocation(mapItem: mapItem)
     precondition(fromMap.title == "Apple Park")
+    precondition(abs((fromMap.geoLocation?.coordinate.latitude ?? 0) - 37.3349) < 0.0001)
     #endif
 }
 
@@ -1425,20 +1437,24 @@ func testEventStoreChangedPostedOnCommit() {
         precondition(
             Notification.Name.EKEventStoreChanged.rawValue == "EKEventStoreChangedNotification"
         )
-        let typed = EKEventStore.EventStoreChanged()
         precondition(EKEventStore.EventStoreChanged.name == .EKEventStoreChanged)
-        precondition(
-            EKEventStore.EventStoreChanged.makeMessage(
+        // makeMessage/makeNotification are MainActor-isolated on Darwin
+        // (MainActorMessage) and plain on Linux; assumeIsolated runs them
+        // synchronously on the main thread on both platforms.
+        MainActor.assumeIsolated {
+            let matched = EKEventStore.EventStoreChanged.makeMessage(
                 Notification(name: .EKEventStoreChanged)
-            ) != nil
-        )
-        precondition(
-            EKEventStore.EventStoreChanged.makeMessage(
+            )
+            precondition(matched != nil)
+            let unmatched = EKEventStore.EventStoreChanged.makeMessage(
                 Notification(name: Notification.Name("other"))
-            ) == nil
-        )
-        let note = EKEventStore.EventStoreChanged.makeNotification(typed)
-        precondition(note.name == .EKEventStoreChanged)
+            )
+            precondition(unmatched == nil)
+            let note = EKEventStore.EventStoreChanged.makeNotification(
+                EKEventStore.EventStoreChanged()
+            )
+            precondition(note.name == .EKEventStoreChanged)
+        }
         let _: EKEventStore.EventStoreChanged.Subject.Type = EKEventStore.self
 
         let posted = EventKitPostedCounter()

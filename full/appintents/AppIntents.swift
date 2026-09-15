@@ -2130,6 +2130,7 @@ public extension EntityQuery {
 }
 
 public protocol EnumerableEntityQuery: EntityQuery {
+    static var findIntentDescription: IntentDescription? { get }
     func allEntities() async throws -> [Entity]
 }
 
@@ -2246,9 +2247,15 @@ public protocol IndexedEntity: AppEntity {}
 public protocol AssistantEntity: AppEntity {}
 public protocol AssistantEnum: AppEnum {}
 public protocol AssistantIntent: AppIntent {}
-public protocol AssistantSchemaEnum: AssistantEnum {}
-public protocol AssistantSchemaEntity: AssistantEntity {}
-public protocol AssistantSchemaIntent: AssistantIntent {}
+public protocol AssistantSchemaEnum: AssistantEnum {
+    static var isAssistantOnly: Bool { get }
+}
+public protocol AssistantSchemaEntity: AssistantEntity {
+    static var isAssistantOnly: Bool { get }
+}
+public protocol AssistantSchemaIntent: AssistantIntent {
+    static var isAssistantOnly: Bool { get }
+}
 
 // MARK: - Widgets and shortcuts
 

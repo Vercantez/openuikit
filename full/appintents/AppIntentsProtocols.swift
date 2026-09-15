@@ -24,7 +24,9 @@ public protocol AppShortcutsContent {
     static var appShortcuts: [AppShortcut] { get }
 }
 
-public protocol AppEntityAnnotatable {}
+public protocol AppEntityAnnotatable {
+    var appEntityIdentifier: EntityIdentifier? { get set }
+}
 
 public protocol AppShortcutOptionsCollectionProtocol {
     associatedtype Provider: DynamicOptionsProvider
@@ -76,17 +78,29 @@ public protocol SetValueIntent: AppIntent {
 
 public protocol UndoableIntent: SystemIntent {}
 
-public protocol PlayVideoIntent: SystemIntent {}
+public protocol PlayVideoIntent: SystemIntent {
+    var term: String { get }
+    static var supportedCategories: [VideoCategory] { get }
+}
 
-public protocol IntentValueQuery: PersistentlyIdentifiable, _SupportsAppDependencies, Sendable {}
+public protocol IntentValueQuery: PersistentlyIdentifiable, _SupportsAppDependencies, Sendable {
+    associatedtype Input
+}
 
-public protocol PredictableIntent: AppIntent {}
+public protocol PredictableIntent: AppIntent {
+    associatedtype Prediction
+    static var predictionConfiguration: Prediction { get }
+}
 
 public protocol LiveActivityIntent: SystemIntent {}
 
 public protocol PauseWorkoutIntent: SystemIntent {}
 
-public protocol StartWorkoutIntent: InstanceDisplayRepresentable, SystemIntent {}
+public protocol StartWorkoutIntent: InstanceDisplayRepresentable, SystemIntent {
+    associatedtype WorkoutStyle
+    var workoutStyle: WorkoutStyle { get }
+    static var suggestedWorkouts: [Self] { get }
+}
 
 public protocol AudioPlaybackIntent: SystemIntent {}
 
@@ -160,7 +174,9 @@ public protocol URLRepresentableEnum: AppEnum, CustomURLRepresentationParameterC
 
 public protocol RangeCheckingResolver: Resolver {}
 
-public protocol ResolverSpecification: Hashable, Sendable, Sequence where Element == any Resolver {}
+public protocol ResolverSpecification: Hashable, Sendable, Sequence where Element == any Resolver {
+    associatedtype Output = Never
+}
 
 public protocol URLRepresentableEntity: AppEntity, CustomURLRepresentationParameterConvertible {}
 

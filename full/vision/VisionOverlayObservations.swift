@@ -1870,13 +1870,63 @@ public struct ImageTranslationAlignmentObservation: VisionObservation {
     }
 }
 
-public struct ImageHomographicAlignmentObservation: VisionObservation {
+public struct ImageHomographicAlignmentObservation: VisionObservation, Codable {
     public var warpTransform: matrix_float3x3
     public let confidence: Float
     public let uuid: UUID
     public let timeRange: CMTimeRange?
     public let originatingRequestDescriptor: RequestDescriptor?
     public var description: String { "ImageHomographicAlignmentObservation" }
+    public func applyTransform(to ciImage: CIImage) -> CIImage { ciImage }
+
+    public init(_ observation: VNImageHomographicAlignmentObservation) {
+        self.warpTransform = observation.warpTransform
+        self.confidence = observation.confidence
+        self.uuid = observation.uuid
+        self.timeRange = observation.timeRange
+        self.originatingRequestDescriptor = nil
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case warp, confidence, uuid, timeRange, originatingRequestDescriptor
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let warp = try container.decode([Float].self, forKey: .warp)
+        guard warp.count == 9 else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .warp, in: container,
+                debugDescription: "warpTransform needs 9 column-major floats"
+            )
+        }
+        warpTransform = matrix_float3x3(columns: (
+            SIMD3<Float>(warp[0], warp[1], warp[2]),
+            SIMD3<Float>(warp[3], warp[4], warp[5]),
+            SIMD3<Float>(warp[6], warp[7], warp[8])
+        ))
+        confidence = try container.decode(Float.self, forKey: .confidence)
+        uuid = try container.decode(UUID.self, forKey: .uuid)
+        timeRange = try container.decodeIfPresent(CMTimeRange.self, forKey: .timeRange)
+        originatingRequestDescriptor = try container.decodeIfPresent(
+            RequestDescriptor.self, forKey: .originatingRequestDescriptor
+        )
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(
+            [
+                warpTransform.columns.0.x, warpTransform.columns.0.y, warpTransform.columns.0.z,
+                warpTransform.columns.1.x, warpTransform.columns.1.y, warpTransform.columns.1.z,
+                warpTransform.columns.2.x, warpTransform.columns.2.y, warpTransform.columns.2.z,
+            ], forKey: .warp
+        )
+        try container.encode(confidence, forKey: .confidence)
+        try container.encode(uuid, forKey: .uuid)
+        try container.encodeIfPresent(timeRange, forKey: .timeRange)
+        try container.encodeIfPresent(originatingRequestDescriptor, forKey: .originatingRequestDescriptor)
+    }
 
     public init(
         warpTransform: matrix_float3x3 = .identity,

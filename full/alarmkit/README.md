@@ -75,21 +75,39 @@ recurrence, `AlarmButton`, default-stop `AlarmPresentation.Alert`,
 AlarmKit symbols. Those corpus APIs now have dedicated tests, including
 `testCorpusVLCRadioAlarmConstruction`. Empty `AsyncSequence` stdlib algorithms
 (`map`, `filter`, `reduce`, throwing `flatMap`, …) are exercised on the
-fail-closed streams. Four overlapping `flatMap` protocol witnesses stay
-`declared` because Linux Swift selects the throwing and Never/Never overloads
-and does not uniquely bind the remaining two.
+fail-closed streams. The four overlapping `flatMap` protocol witnesses are now
+`implemented`: concrete Never-failure bases always resolve to the Never/Never
+overload, so `AlarmKitFlatMapTests.swift` binds the remaining two (`Self.Failure
+== Segment.Failure` and `Segment.Failure == Never`) through constrained generic
+helpers that keep `Failure == Never` unprovable — successful compilation proves
+the binding — and collects the empty-stream results.
 
 Implemented evidence is `test:full/alarmkit/tests/agent/<File>Tests.swift#testName`.
 The v1 sealed gate still compiles `AlarmKitRuntime.swift`, which inlines those
 tests and prints `ALARMKIT_AGENT_RUNTIME_OK`.
 
-Top-5 implemented evidence distribution (258 implemented rows; no test exceeds
+Top-5 implemented evidence distribution (262 implemented rows; no test exceeds
 40%):
 
 | rows | share | evidence |
 | ---: | ---: | --- |
-| 16 | 6.2% | `AlarmKitPresentationStateTests.swift#testPresentationStateIdentity` |
+| 16 | 6.1% | `AlarmKitPresentationStateTests.swift#testPresentationStateIdentity` |
 | 13 | 5.0% | `AlarmKitPresentationTests.swift#testAlarmPresentationCodable` |
-| 10 | 3.9% | `AlarmKitPresentationStateTests.swift#testPresentationStateCountdownMode` |
-| 10 | 3.9% | `AlarmKitUpdatesTests.swift#testAuthorizationUpdatesTypesAndEmptyNext` |
-| 9 | 3.5% | `AlarmKitUpdatesTests.swift#testAlarmUpdatesTypesAndEmptyNext` |
+| 10 | 3.8% | `AlarmKitPresentationStateTests.swift#testPresentationStateCountdownMode` |
+| 10 | 3.8% | `AlarmKitUpdatesTests.swift#testAuthorizationUpdatesTypesAndEmptyNext` |
+| 9 | 3.4% | `AlarmKitUpdatesTests.swift#testAlarmUpdatesTypesAndEmptyNext` |
+
+## Wave 2026-09-15 (declared-to-implemented sweep)
+
+Coverage before this wave: **258 implemented / 4 declared / 0 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after: **262 implemented / 0 declared / 0 deferred / 0 unavailable /
+0 not-applicable** (262 exact IDs). The last four `declared` rows — the two
+less-specific synthesized `flatMap` witnesses on each fail-closed update stream
+— are now exercised by `testAlarmUpdatesFlatMapSpecializedOverloads` and
+`testAuthorizationUpdatesFlatMapSpecializedOverloads` (2 rows each, empty-stream
+collect through the bound overload). No deferred rows remain to re-examine:
+remaining boundaries (entitlement prompt, authorized scheduling, Live Activity /
+App Intent execution, SwiftUI presentation) all require hardware, a daemon, or
+Apple services and stay fail-closed.

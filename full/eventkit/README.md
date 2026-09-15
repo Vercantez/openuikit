@@ -81,15 +81,23 @@ The on-disk local store remains Application Support
 implemented `coverage.tsv` row cited `tests/agent/EventKitRuntime.swift`
 rather than a focused test.
 
-**Ledger.** 511 exact IDs: 504 `implemented`, 7 `declared`. Implemented
+**Ledger.** 511 exact IDs: 511 `implemented`, 0 `declared`, 0 `deferred`.
+Implemented
 evidence uses `test:full/eventkit/tests/agent/<Family>Tests.swift#testFunction`.
-Declared rows are Linux-host compile-outs, cited as product sources:
-
-- `EKCalendar.cgColor` — needs CoreGraphics
-- `EKStructuredLocation.geoLocation` / `init(mapItem:)` — needs
-  CoreLocation / MapKit
-- `NotificationCenter.MainActorMessage` witnesses and
-  `MessageIdentifier.changed` — Darwin Foundation only
+The third pass (2026-09, macOS host) converted the last 7 declared rows:
+`EKCalendar.cgColor` is covered by `testLocalSourceAndDefaultCalendars`
+(default sRGB components plus a setter round-trip under
+`canImport(CoreGraphics)`); `EKStructuredLocation.geoLocation` and
+`init(mapItem:)` are covered by
+`testReminderAlarmAndLocationValueSemantics` (set/read/clear and
+name-plus-coordinate copy under `canImport(CoreLocation)` /
+`canImport(MapKit)`); the three `MainActorMessage` witnesses and
+`MessageIdentifier.changed` are covered by
+`testEventStoreChangedPostedOnCommit`, which drives `makeMessage` /
+`makeNotification` through `MainActor.assumeIsolated` (synchronous,
+main thread, no await) so the Darwin `@MainActor` requirement and the
+Linux plain lookalike share one test body. The `canImport` / `os()`
+guards compile out on Linux, where those Apple SDK types do not exist.
 
 **Family tests** (sealed gate still compiles only `EventKitRuntime.swift`,
 which invokes every `test*` function):

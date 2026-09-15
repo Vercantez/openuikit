@@ -5,6 +5,9 @@ import CoreMedia
 
 extension AttributeScopes {
     public struct SpeechAttributes: AttributeScope {
+        public typealias DecodingConfiguration = AttributeScopeCodableConfiguration
+        public typealias EncodingConfiguration = AttributeScopeCodableConfiguration
+
         public let transcriptionConfidence: ConfidenceAttribute
         public let audioTimeRange: TimeRangeAttribute
 
@@ -14,6 +17,13 @@ extension AttributeScopes {
         ) {
             self.transcriptionConfidence = transcriptionConfidence
             self.audioTimeRange = audioTimeRange
+        }
+
+        public static var attributeKeys: some Sequence<any AttributedStringKey.Type> {
+            [
+                ConfidenceAttribute.self,
+                TimeRangeAttribute.self,
+            ]
         }
 
         public struct ConfidenceAttribute: CodableAttributedStringKey {
@@ -46,6 +56,10 @@ extension AttributeScopes {
                 #endif
             }
         }
+    }
+
+    public var speech: AttributeScopes.SpeechAttributes.Type {
+        AttributeScopes.SpeechAttributes.self
     }
 }
 

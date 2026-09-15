@@ -55,7 +55,11 @@ real; presentation, provisioning, and PKCS#7 verification fail closed.
   exported `PKPaymentNetwork*` identifiers (AmEx, Visa, MasterCard, …).
   `PKMerchantCapability` bits match pinned macios (`threeDSecure = 1<<0`,
   `instantFundsOut = 1<<7`). `PKAddressField` and `PKRadioTechnology` are
-  OptionSets with those pinned bits.
+  OptionSets with those pinned bits. `PKContactField` raw strings are the
+  Apple-runtime values pinned by `xcrun` oracle probe 2026-09-15
+  (`post` / `email` / `phone` / `name` / `phoneticName`), as are the
+  `PKEncryptionScheme` values (`EV_ECC_v2` / `EV_RSA_v2`); the SDK headers
+  declare only the constant names, so the runtime probe is authoritative.
 - **Enums and errors.** Payment button type/style, authorization status, pass
   type, shipping type, Pay Later display style, and error codes use the macios
   native raw values. `PKPassKitError` codes are `unknownError = -1`,
@@ -143,6 +147,32 @@ Top-5 evidence distribution (1320 implemented rows):
 No non-enum/option-set test is cited by more than 40% of the remaining
 implemented rows. The focused nested-payment-request test now supports 25 rows
 (1.7%).
+
+## Depth pass 2026-09 (pi wave 3)
+
+Coverage **before** this continuation: 1369 implemented / 3904 declared / 0
+deferred / 0 unavailable / 0 not-applicable.
+
+Coverage **after**: 1369 implemented / 3904 declared / 0 deferred / 0 unavailable /
+0 not-applicable (implemented gain 0: every non-SwiftUI symbol was already
+implemented; all 3904 remaining `declared` rows are `s:7SwiftUI4ViewP…`
+cross-import overlay synthetics owned by the SwiftUI lane, which must stay
+`declared` per the wave 8 gate-floor note above).
+
+This continuation contributes Apple-oracle correctness instead of coverage
+movement. `xcrun` runtime probes against Xcode 26.1 (transcript:
+`scratch/oracle-2026-09-14/passkit-contact-encryption-probe.txt`) confirmed
+all enum raw values, merchant-capability bits, network strings, and error
+domains, but exposed five drifted string constants whose SDK headers declare
+only names, not values: `PKContactField` (`post` / `email` / `phone`, not
+`postalAddress` / `emailAddress` / `phoneNumber`) and `PKEncryptionScheme`
+(`EV_ECC_v2` / `EV_RSA_v2`, not `ECC_V2` / `RSA_V2`). The product sources and
+the three citing tests (`testAddressAndContactFields`,
+`testMerchantCapabilityAndAddressOptionSets`,
+`testAddPaymentPassValueStores`) now assert the Apple-runtime values. All
+earlier behavior and tests are intact; Apple Pay presentation, eligibility,
+provisioning, secure-element, identity-document, and remote Wallet operations
+remain fail-closed.
 
 ## Depth pass 2026-09 (pi wave 2)
 

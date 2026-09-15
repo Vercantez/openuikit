@@ -70,6 +70,17 @@ import Foundation
         return true
     }
 
+    /// Apple's `setRootTemplate:animated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func setRootTemplate(_ rootTemplate: CPTemplate, animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyRoot(rootTemplate, animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
+    }
+
     private func applyPush(_ templateToPush: CPTemplate, animated: Bool) throws {
         try requireConnected()
         if stack.isEmpty {
@@ -104,6 +115,17 @@ import Foundation
         return true
     }
 
+    /// Apple's `pushTemplate:animated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func pushTemplate(_ templateToPush: CPTemplate, animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyPush(templateToPush, animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
+    }
+
     private func applyPop(animated: Bool) throws {
         try requireConnected()
         if stack.count <= 1 {
@@ -120,6 +142,17 @@ import Foundation
     public func popTemplate(animated: Bool) async throws -> Bool {
         try applyPop(animated: animated)
         return true
+    }
+
+    /// Apple's `popTemplateAnimated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func popTemplate(animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyPop(animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
     }
 
     private func applyPopToRoot(animated: Bool) throws {
@@ -144,6 +177,17 @@ import Foundation
         return true
     }
 
+    /// Apple's `popToRootTemplateAnimated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func popToRootTemplate(animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyPopToRoot(animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
+    }
+
     private func applyPop(to targetTemplate: CPTemplate, animated: Bool) throws {
         try requireConnected()
         guard let idx = stack.firstIndex(where: { $0 === targetTemplate }) else {
@@ -164,6 +208,17 @@ import Foundation
     public func pop(to targetTemplate: CPTemplate, animated: Bool) async throws -> Bool {
         try applyPop(to: targetTemplate, animated: animated)
         return true
+    }
+
+    /// Apple's `popToTemplate:animated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func pop(to targetTemplate: CPTemplate, animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyPop(to: targetTemplate, animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
     }
 
     private func applyPresent(_ templateToPresent: CPTemplate, animated: Bool) throws {
@@ -190,6 +245,17 @@ import Foundation
         return true
     }
 
+    /// Apple's `presentTemplate:animated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func presentTemplate(_ templateToPresent: CPTemplate, animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyPresent(templateToPresent, animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
+    }
+
     private func applyDismiss(animated: Bool) throws {
         try requireConnected()
         guard let presented = presentedTemplate else {
@@ -206,6 +272,17 @@ import Foundation
     public func dismissTemplate(animated: Bool) async throws -> Bool {
         try applyDismiss(animated: animated)
         return true
+    }
+
+    /// Apple's `dismissTemplateAnimated:completion:` selector. The completion
+    /// runs synchronously: there is no vehicle round-trip on Linux.
+    public func dismissTemplate(animated: Bool, completion: ((Bool, (any Error)?) -> Void)?) {
+        do {
+            try applyDismiss(animated: animated)
+            completion?(true, nil)
+        } catch {
+            completion?(false, error)
+        }
     }
 }
 

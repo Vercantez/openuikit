@@ -12,14 +12,17 @@ Refused `c80188dc` claimed **563 implemented / 6 declared / 33 unavailable / 0 d
 but the merge runner hung: cited tests waited on `DispatchQueue.main` /
 `RunLoop` (the sealed guest-runtime has no run loop).
 
-This repair: **563 implemented / 6 declared / 33 unavailable / 0 deferred**.
+This repair: **569 implemented / 0 declared / 33 unavailable / 0 deferred**.
 Handlers now run on the calling thread; async probes use `Task.detached` plus a
-timed semaphore (no `RunLoop`). `AttributeDynamicLookup.subscript(dynamicMember:)`
-stays `declared`. There is still **no speech engine**. Recognition succeeds only
+timed semaphore (no `RunLoop`). `AttributeScopes.SpeechAttributes` now declares
+`attributeKeys`, `DecodingConfiguration` / `EncodingConfiguration`, and an
+`AttributeScopes.speech` accessor, so the former synthesized-witness and
+dynamic-member rows are covered by `testSpeechAttributesScope` and
+`testAttributeDynamicLookup`. There is still **no speech engine**. Recognition succeeds only
 when a documented `@_spi(OpenUIKitHost)` hook registers a scripted recognizer.
 
-Top-5 `implemented` evidence (563 rows; no non-enum test exceeds 40% of the
-397 remaining non-enum/constant rows):
+Top-5 `implemented` evidence (569 rows; no non-enum test exceeds 40% of the
+403 remaining non-enum/constant rows):
 
 | Rows | Evidence |
 | ---: | --- |

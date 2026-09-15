@@ -175,3 +175,44 @@ This pass started at **343 implemented / 1543 declared / 0 deferred /
   per-identifier evidence rule.
 - No other single test exceeds 40% of implemented rows (largest citation
   remains `testAssignableDocumentInit` at 30/350 ≈ 8.6%).
+
+## Depth pass 2026-09-14 (pi-wave3)
+
+This pass started at **350 implemented / 1536 declared / 0 deferred /
+0 unavailable / 0 not-applicable** and ends at **350 implemented /
+1536 declared / 0 deferred / 0 unavailable / 0 not-applicable**
+(implemented gain **+0**).
+
+- No declared rows were convertible. All 1536 `declared` rows are
+  `s:7SwiftUI4View...` synthesized overlay overloads (401 distinct base
+  modifier names, each backed by a compiling no-arg identity shim in
+  `AssignablesViewSurface.swift` with valid `source:` evidence). Zero
+  framework-owned rows remain unimplemented: every non-overlay precise ID
+  in the sealed census is already `implemented` with a runner-executed
+  test that actually calls it. Citing the no-arg shims for Apple's 1536
+  specific overloads would violate the per-identifier evidence rule
+  (a `view.background()` call does not call 16 distinct `background`
+  overloads), and batch dummy tests would collide with the 40% single-test
+  citation cap at this scale, so no bulk citation was applied. Moving the
+  overlays to `not-applicable` would drop nondeferred rows to 350, below
+  the sealed 943-row `medium-full` floor; they stay `declared` (same
+  conclusion as the pi-wave2 note above; left for central review).
+- Host-portability fix (no coverage change): on Apple SDK hosts
+  `canImport(PDFKit)` / `canImport(SwiftUI)` are true, so the inert
+  lookalikes compile out. `AssignableDocument.swift`,
+  `AssignedWorkDocument.swift`, and `MergeableParts.swift` now use
+  `#if canImport(PDFKit) import PDFKit #endif`, and
+  `tests/agent/AssignablesViewTests.swift` uses the same pattern for
+  SwiftUI, mirroring the existing `DocumentViews.swift` precedent. This is
+  Linux-neutral (both blocks compile out where the modules are absent).
+- Verified on the macOS host with real PDFKit/SwiftUI linked: the module
+  builds with `-warnings-as-errors`, `validate_seed.py --phase
+  deliverable` reports `FRAMEWORK_FANOUT_DELIVERABLE_OK ... symbols=1886`,
+  and all 61 unique runner-executed tests print only the success marker
+  (fail-closed rendering holds: real `PDFDocument()` reports `pageCount`
+  0). The sealed `test_host.sh` itself still stops at its own hardcoded
+  `import Glibc` runner line, which cannot compile on macOS (sealed file,
+  Linux-only); the equivalent Darwin-driver run above exercises the same
+  compile-and-run-every-implemented-test sequence.
+- Citation concentration unchanged: largest single-test share remains
+  `testAssignableDocumentInit` at 30/350 ≈ 8.6%, under the 40% cap.

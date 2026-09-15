@@ -280,8 +280,8 @@ func testAddPaymentPassValueStores() {
     precondition(config?.cardholderName == "Jane")
     precondition(config?.cardDetails[0].label == "PAN")
     precondition(config?.cardDetails[0].value == "••••1234")
-    precondition(PKEncryptionScheme.RSA_V2.rawValue == "RSA_V2")
-    precondition(PKEncryptionScheme(rawValue: "ECC_V2") == .ECC_V2)
+    precondition(PKEncryptionScheme.RSA_V2.rawValue == "EV_RSA_v2")
+    precondition(PKEncryptionScheme(rawValue: "EV_ECC_v2") == .ECC_V2)
 
     let request = PKAddPaymentPassRequest()
     request.activationData = Data([1])

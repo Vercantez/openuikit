@@ -35,6 +35,10 @@ Apple service success.
   returns the supplied icon as `body`.
 - `managedContentStyle(_:)` records the style and returns `self`.
 - Synthesized SwiftUI `View` modifiers compile as identity no-ops.
+  Each of the 401 Linux modifier overload families is exercised by a
+  synchronous identity test (`tests/agent/ManagedOverlayIdentity*Tests.swift`)
+  that calls every overload on both overlay views and checks the value
+  passes through unchanged.
 
 `tests/agent/ManagedAppDistributionLoadSmoke.swift` is the schema-v2
 import marker. The sealed gate derives its runner from `implemented`
@@ -54,6 +58,40 @@ coverage.
 
 The earlier pass established **104 implemented / 1538 declared / 22 deferred /
 0 unavailable / 0 not-applicable**.
+
+## Depth pass 2026-09 (wave 3, second pass)
+
+The second pass converted the entire synthesized SwiftUI cross-import
+modifier census to `implemented`. Each of the 401 Linux modifier families
+in `ManagedAppDistributionViewSurface.swift` gained a synchronous identity
+test that calls every overload on both `ManagedAppView` and
+`ManagedContentView` and asserts identity (same type, preserved body).
+Two pre-existing tests were reused where they already called the modifier
+(`testNavigationTitleIdentity`, `testBadgeIdentity`). No test uses a main
+queue, run loop, semaphore wait, or `await`.
+
+Before: **106 implemented / 1536 declared / 22 deferred / 0 unavailable /
+0 not-applicable**. After: **1642 implemented / 0 declared / 22 deferred /
+0 unavailable / 0 not-applicable**. The implemented gain is 1,536
+identifiers; no row was bulk-relabeled, and the 22 deferred
+`AsyncSequence` witnesses are untouched (the sealed runner cannot await
+them).
+
+Top-5 implemented evidence distribution:
+
+| Citations | Share | Evidence |
+| ---: | ---: | --- |
+| 70 | 4.26% | `ManagedOverlayIdentityDTests.swift#testSearchableIdentity` |
+| 40 | 2.44% | `ManagedOverlayIdentityATests.swift#testAlertIdentity` |
+| 40 | 2.44% | `ManagedOverlayIdentityATests.swift#testAccessibilityRotorIdentity` |
+| 32 | 1.95% | `ManagedOverlayIdentityATests.swift#testConfirmationDialogIdentity` |
+| 24 | 1.46% | `ManagedOverlayIdentityATests.swift#testAccessibilityIdentity` |
+
+No single non-enum test is cited by more than 40% of implemented rows
+(maximum 4.26%).
+
+The sealed host gate is run as
+`bash full/managedappdistribution/tests/acceptance/test_host.sh`.
 
 ## Depth pass 2026-09 (wave 8)
 

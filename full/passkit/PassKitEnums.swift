@@ -152,8 +152,8 @@ public struct PKRadioTechnology: OptionSet, Hashable, Sendable {
 public struct PKEncryptionScheme: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
-    public static let ECC_V2 = PKEncryptionScheme(rawValue: "ECC_V2")
-    public static let RSA_V2 = PKEncryptionScheme(rawValue: "RSA_V2")
+    public static let ECC_V2 = PKEncryptionScheme(rawValue: "EV_ECC_v2")
+    public static let RSA_V2 = PKEncryptionScheme(rawValue: "EV_RSA_v2")
 }
 
 public struct PKPaymentErrorKey: RawRepresentable, Hashable, Sendable {

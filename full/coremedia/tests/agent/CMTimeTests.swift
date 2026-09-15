@@ -283,6 +283,29 @@ func testCMTimeComparableOperators() {
     precondition(CMTimeCompare(a, b) < 0)
 }
 
+func testCMTimeRangeExpressionOperators() {
+    // CMTime is Comparable (CMTimeCompare total order), so range expressions form over it.
+    let a = CMTime(value: 1, timescale: 2)
+    let b = CMTime(value: 1, timescale: 1)
+    let halfOpen: Range<CMTime> = a..<b
+    precondition(halfOpen.lowerBound == a)
+    precondition(halfOpen.upperBound == b)
+    precondition(halfOpen.contains(a))
+    let closed: ClosedRange<CMTime> = a...b
+    precondition(closed.lowerBound == a)
+    precondition(closed.upperBound == b)
+    precondition(closed.contains(b))
+    let from: PartialRangeFrom<CMTime> = a...
+    precondition(from.lowerBound == a)
+    precondition(from.contains(b))
+    let upTo: PartialRangeUpTo<CMTime> = ..<b
+    precondition(upTo.upperBound == b)
+    precondition(upTo.contains(a))
+    let through: PartialRangeThrough<CMTime> = ...b
+    precondition(through.upperBound == b)
+    precondition(through.contains(b))
+}
+
 func testCMTimeDictionaryRoundTrip() {
     let original = CMTimeMakeWithEpoch(value: 9, timescale: 30, epoch: 2)
     let dict = CMTimeCopyAsDictionary(original, allocator: kCFAllocatorDefault)

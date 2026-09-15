@@ -251,6 +251,9 @@ func testReminderAlarmAndLocationValueSemantics() {
     #if canImport(CoreLocation)
     namedLocation.geoLocation = CLLocation(latitude: 37.3349, longitude: -122.009)
     precondition(abs((namedLocation.geoLocation?.coordinate.latitude ?? 0) - 37.3349) < 0.0001)
+    precondition(abs((namedLocation.geoLocation?.coordinate.longitude ?? 0) + 122.009) < 0.0001)
+    namedLocation.geoLocation = nil
+    precondition(namedLocation.geoLocation == nil)
     #endif
     #if canImport(MapKit) && canImport(CoreLocation)
     let mapItem = MKMapItem(
@@ -260,6 +263,7 @@ func testReminderAlarmAndLocationValueSemantics() {
     mapItem.name = "Apple Park"
     let fromMap = EKStructuredLocation(mapItem: mapItem)
     precondition(fromMap.title == "Apple Park")
+    precondition(abs((fromMap.geoLocation?.coordinate.latitude ?? 0) - 37.3349) < 0.0001)
     #endif
 }
 

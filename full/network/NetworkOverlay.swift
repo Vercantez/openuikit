@@ -19,8 +19,21 @@ public struct ProxyConfiguration: Hashable, Sendable, CustomDebugStringConvertib
 
     public var relays: [RelayHop]
 
+    /// Inert proxy-routing data model. Linux performs no proxy failover or
+    /// credential handshake; these values are stored locally only.
+    public var matchDomains: [String] = []
+    public var excludedDomains: [String] = []
+    public var allowFailover: Bool = false
+    public private(set) var credentialUsername: String?
+    public private(set) var credentialPassword: String?
+
     public init(relays: [RelayHop] = []) {
         self.relays = relays
+    }
+
+    public mutating func applyCredential(username: String, password: String) {
+        credentialUsername = username
+        credentialPassword = password
     }
 
     public var debugDescription: String { "ProxyConfiguration(relays: \(relays.count))" }
@@ -633,6 +646,7 @@ fileprivate final class NWHostPlaceholderFramer: NWProtocolFramerImplementation 
 }
 
 public protocol NWProtocolFramerImplementation: AnyObject {
+    static var label: String { get }
     init(framer: NWProtocolFramer.Instance)
     func start(framer: NWProtocolFramer.Instance) -> NWProtocolFramer.StartResult
     func handleInput(framer: NWProtocolFramer.Instance) -> Int
@@ -645,6 +659,10 @@ public protocol NWProtocolFramerImplementation: AnyObject {
     func wakeup(framer: NWProtocolFramer.Instance)
     func stop(framer: NWProtocolFramer.Instance) -> Bool
     func cleanup(framer: NWProtocolFramer.Instance)
+}
+
+extension NWProtocolFramerImplementation {
+    public static var label: String { String(describing: Self.self) }
 }
 
 extension NWConnection.ContentContext {

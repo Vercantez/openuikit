@@ -29,9 +29,156 @@ public final class WebPage {
             case deny = 2
         }
         public var permissionPolicy: PermissionPolicy
+        private var handlerBox: DeviceSensorDecisionBox?
         public init(permissionPolicy: PermissionPolicy = .prompt) {
             self.permissionPolicy = permissionPolicy
+            self.handlerBox = nil
         }
+        // Apple `init(decision:)`. Linux host bridge: a fixed decision is
+        // recorded as the matching host permission policy. No camera,
+        // microphone, motion sensor, entitlement, or renderer is enabled.
+        public init(decision: WKPermissionDecision) {
+            switch decision {
+            case .grant: self.permissionPolicy = .grant
+            case .deny: self.permissionPolicy = .deny
+            case .prompt: self.permissionPolicy = .prompt
+            }
+            self.handlerBox = nil
+        }
+        // Apple `init(decisionHandler:)`. The handler is stored and never
+        // invoked on this host: there is no sensor hardware, entitlement
+        // check, or Web Content process. Synchronous tests only verify that
+        // registration was recorded.
+        public init(
+            decisionHandler: @escaping (Permission, FrameInfo, WKSecurityOrigin) async -> WKPermissionDecision
+        ) {
+            self.permissionPolicy = .prompt
+            self.handlerBox = DeviceSensorDecisionBox(decisionHandler)
+        }
+        /// Host introspection: whether a decision handler was registered.
+        /// Apple has no such member; it exists so synchronous tests can
+        /// observe the value recorded by `init(decisionHandler:)`.
+        public var usesDecisionHandler: Bool { handlerBox != nil }
+    }
+
+    /// Reference box for a stored sensor decision handler. Closures have no
+    /// portable equality, so each registration keeps its own identity while
+    /// copies of one registration stay equal.
+    private final class DeviceSensorDecisionBox: Hashable, @unchecked Sendable {
+        let handler: (DeviceSensorAuthorization.Permission, FrameInfo, WKSecurityOrigin) async -> WKPermissionDecision
+        init(
+            _ handler: @escaping (DeviceSensorAuthorization.Permission, FrameInfo, WKSecurityOrigin) async -> WKPermissionDecision
+        ) {
+            self.handler = handler
+        }
+        static func == (lhs: DeviceSensorDecisionBox, rhs: DeviceSensorDecisionBox) -> Bool {
+            lhs === rhs
+        }
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(ObjectIdentifier(self))
+        }
+    }
+
+    // Apple `ExportedContentConfiguration`: a nonisolated value describing a
+    // PDF/image export request. There is no renderer on this host, so
+    // `exported(as:)` stays fail-closed; these values only record what was
+    // requested. `Kind` and `rectValue` are host-visible payloads (Apple has
+    // no such members) so synchronous tests can observe factory output.
+    public struct ExportedContentConfiguration: Equatable, Hashable, Sendable {
+        public enum Kind: Equatable, Hashable, Sendable {
+            case pdf
+            case image
+        }
+        public struct Region: Equatable, Hashable, Sendable {
+            /// Nil means `.contents` (full page); non-nil is `rect(_:)` input.
+            public let rectValue: CGRect?
+            private init(rectValue: CGRect?) { self.rectValue = rectValue }
+            public static var contents: Region { Region(rectValue: nil) }
+            public static func rect(_ rect: CGRect) -> Region { Region(rectValue: rect) }
+        }
+        public let kind: Kind
+        public let region: Region
+        public let allowTransparentBackground: Bool
+        public let snapshotWidth: CGFloat?
+        public let afterScreenUpdates: Bool
+        private init(
+            kind: Kind,
+            region: Region,
+            allowTransparentBackground: Bool,
+            snapshotWidth: CGFloat?,
+            afterScreenUpdates: Bool
+        ) {
+            self.kind = kind
+            self.region = region
+            self.allowTransparentBackground = allowTransparentBackground
+            self.snapshotWidth = snapshotWidth
+            self.afterScreenUpdates = afterScreenUpdates
+        }
+        public static func pdf(
+            region: Region = .contents,
+            allowTransparentBackground: Bool = false
+        ) -> ExportedContentConfiguration {
+            ExportedContentConfiguration(
+                kind: .pdf,
+                region: region,
+                allowTransparentBackground: allowTransparentBackground,
+                snapshotWidth: nil,
+                afterScreenUpdates: true
+            )
+        }
+        public static func image(
+            region: Region = .contents,
+            allowTransparentBackground: Bool = false,
+            snapshotWidth: CGFloat? = nil,
+            afterScreenUpdates: Bool = true
+        ) -> ExportedContentConfiguration {
+            ExportedContentConfiguration(
+                kind: .image,
+                region: region,
+                allowTransparentBackground: allowTransparentBackground,
+                snapshotWidth: snapshotWidth,
+                afterScreenUpdates: afterScreenUpdates
+            )
+        }
+    }
+
+    // Apple `DialogPresenting`: async dialog hooks for a page. The methods
+    // cannot run on the sealed synchronous runner, so the extension defaults
+    // below fail closed (cancel / no-op) and no sensor, panel, or script
+    // success is claimed.
+    public protocol DialogPresenting {
+        @MainActor func handleFileInputPrompt(
+            parameters: WKOpenPanelParameters,
+            initiatedBy frame: FrameInfo
+        ) async -> FileInputPromptResult
+        @MainActor func handleJavaScriptAlert(
+            message: String,
+            initiatedBy frame: FrameInfo
+        ) async
+        @MainActor func handleJavaScriptPrompt(
+            message: String,
+            defaultText: String?,
+            initiatedBy frame: FrameInfo
+        ) async -> JavaScriptPromptResult
+        @MainActor func handleJavaScriptConfirm(
+            message: String,
+            initiatedBy frame: FrameInfo
+        ) async -> JavaScriptConfirmResult
+    }
+
+    // Apple `NavigationDeciding`: async navigation policy hooks. Extension
+    // defaults deny (cancel) because no Web Content process may start.
+    public protocol NavigationDeciding {
+        @MainActor mutating func decidePolicy(
+            for action: NavigationAction,
+            preferences: inout NavigationPreferences
+        ) async -> WKNavigationActionPolicy
+        @MainActor mutating func decidePolicy(
+            for response: NavigationResponse
+        ) async -> WKNavigationResponsePolicy
+        @MainActor mutating func decideAuthenticationChallengeDisposition(
+            for challenge: URLAuthenticationChallenge
+        ) async -> (URLSession.AuthChallengeDisposition, URLCredential?)
     }
 
     // Exact case names and Hashable conformance: Xcode 26.1 graph and digester.
@@ -292,6 +439,63 @@ public final class WebPage {
 public protocol URLSchemeHandler: AnyObject {
     associatedtype Result
     func reply(for request: URLRequest) async -> Result
+}
+
+// Fail-closed defaults for Apple's async dialog/policy hooks. These exist so
+// the declared extension requirements genuinely compile on the isolated host;
+// they are never invoked by the synchronous sealed runner. Dialogs cancel,
+// navigation policy denies, and authentication challenges are cancelled.
+extension WebPage.DialogPresenting {
+    public func handleFileInputPrompt(
+        parameters: WKOpenPanelParameters,
+        initiatedBy frame: WebPage.FrameInfo
+    ) async -> WebPage.FileInputPromptResult {
+        _ = (parameters, frame)
+        return .cancel
+    }
+    public func handleJavaScriptAlert(
+        message: String,
+        initiatedBy frame: WebPage.FrameInfo
+    ) async {
+        _ = (message, frame)
+    }
+    public func handleJavaScriptPrompt(
+        message: String,
+        defaultText: String?,
+        initiatedBy frame: WebPage.FrameInfo
+    ) async -> WebPage.JavaScriptPromptResult {
+        _ = (message, defaultText, frame)
+        return .cancel
+    }
+    public func handleJavaScriptConfirm(
+        message: String,
+        initiatedBy frame: WebPage.FrameInfo
+    ) async -> WebPage.JavaScriptConfirmResult {
+        _ = (message, frame)
+        return .cancel
+    }
+}
+
+extension WebPage.NavigationDeciding {
+    public func decidePolicy(
+        for action: WebPage.NavigationAction,
+        preferences: inout WebPage.NavigationPreferences
+    ) async -> WKNavigationActionPolicy {
+        _ = (action, preferences)
+        return .cancel
+    }
+    public func decidePolicy(
+        for response: WebPage.NavigationResponse
+    ) async -> WKNavigationResponsePolicy {
+        _ = response
+        return .cancel
+    }
+    public func decideAuthenticationChallengeDisposition(
+        for challenge: URLAuthenticationChallenge
+    ) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
+        _ = challenge
+        return (.cancelAuthenticationChallenge, nil)
+    }
 }
 
 public enum URLSchemeTaskResult: Sendable {

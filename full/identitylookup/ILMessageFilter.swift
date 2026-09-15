@@ -210,21 +210,86 @@ open class ILMessageFilterCapabilitiesQueryResponse: NSObject, NSSecureCoding {
     }
 }
 
-/// Message Filter query handling. Darwin uses an ObjC completion; the Swift
-/// overlay is `async`. Linux declares the overlay signature. There is no
-/// extension host to invoke it.
+/// Message Filter query handling. Darwin exposes both the ObjC
+/// completion-handler selector
+/// `handleQueryRequest:context:completion:` and the Swift `async` overlay.
+/// Linux declares both signatures. There is no extension host to invoke them.
 public protocol ILMessageFilterQueryHandling: NSObjectProtocol {
+    func handle(
+        _ queryRequest: ILMessageFilterQueryRequest,
+        context: ILMessageFilterExtensionContext,
+        completion: @escaping (ILMessageFilterQueryResponse) -> Void
+    )
     func handle(
         _ queryRequest: ILMessageFilterQueryRequest,
         context: ILMessageFilterExtensionContext
     ) async -> ILMessageFilterQueryResponse
 }
 
-/// Message Filter capabilities handling. Same overlay notes as
+extension ILMessageFilterQueryHandling {
+    /// Fail-closed default: completes immediately with a default (`.none`)
+    /// response. Linux has no extension host or filter service.
+    public func handle(
+        _ queryRequest: ILMessageFilterQueryRequest,
+        context: ILMessageFilterExtensionContext,
+        completion: @escaping (ILMessageFilterQueryResponse) -> Void
+    ) {
+        _ = queryRequest
+        _ = context
+        completion(ILMessageFilterQueryResponse())
+    }
+
+    /// Default overlay bridges the completion-handler requirement. A
+    /// conformer that implements only the completion method still satisfies
+    /// the `async` overlay.
+    public func handle(
+        _ queryRequest: ILMessageFilterQueryRequest,
+        context: ILMessageFilterExtensionContext
+    ) async -> ILMessageFilterQueryResponse {
+        await withCheckedContinuation { continuation in
+            handle(queryRequest, context: context) { response in
+                continuation.resume(returning: response)
+            }
+        }
+    }
+}
+
+/// Message Filter capabilities handling. Same twin-signature notes as
 /// `ILMessageFilterQueryHandling`.
 public protocol ILMessageFilterCapabilitiesQueryHandling: NSObjectProtocol {
     func handle(
         _ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest,
+        context: ILMessageFilterExtensionContext,
+        completion: @escaping (ILMessageFilterCapabilitiesQueryResponse) -> Void
+    )
+    func handle(
+        _ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest,
         context: ILMessageFilterExtensionContext
     ) async -> ILMessageFilterCapabilitiesQueryResponse
+}
+
+extension ILMessageFilterCapabilitiesQueryHandling {
+    /// Fail-closed default: completes immediately with an empty capabilities
+    /// response. Linux has no extension host.
+    public func handle(
+        _ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest,
+        context: ILMessageFilterExtensionContext,
+        completion: @escaping (ILMessageFilterCapabilitiesQueryResponse) -> Void
+    ) {
+        _ = capabilitiesQueryRequest
+        _ = context
+        completion(ILMessageFilterCapabilitiesQueryResponse())
+    }
+
+    /// Default overlay bridges the completion-handler requirement.
+    public func handle(
+        _ capabilitiesQueryRequest: ILMessageFilterCapabilitiesQueryRequest,
+        context: ILMessageFilterExtensionContext
+    ) async -> ILMessageFilterCapabilitiesQueryResponse {
+        await withCheckedContinuation { continuation in
+            handle(capabilitiesQueryRequest, context: context) { response in
+                continuation.resume(returning: response)
+            }
+        }
+    }
 }

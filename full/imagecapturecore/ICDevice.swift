@@ -150,6 +150,19 @@ open class ICDevice: NSObject {
         throw ICReturn(.deviceFailedToOpenSession)
     }
 
+    /// Synchronous completion-handler spelling of the Apple
+    /// `requestOpenSessionWithOptions:completion:` method. Fail-closed:
+    /// no Image Capture daemon, so the completion runs on the caller
+    /// thread with `deviceFailedToOpenSession`. The async overlay above
+    /// is the compiler-synthesized Swift spelling of the same method.
+    open func requestOpenSession(options: [ICSessionOptions: Any]? = nil, completion: @escaping ((any Error)?) -> Void) {
+        _ = options
+        _hasOpenSession = false
+        let error = ICReturn(.deviceFailedToOpenSession)
+        delegate?.device(self, didOpenSessionWithError: error)
+        completion(error)
+    }
+
     /// Fail-closed: there is never an open session.
     open func requestCloseSession() {
         _hasOpenSession = false
@@ -160,6 +173,18 @@ open class ICDevice: NSObject {
         _ = options
         _hasOpenSession = false
         throw ICReturn(.sessionNotOpened)
+    }
+
+    /// Synchronous completion-handler spelling of the Apple
+    /// `requestCloseSessionWithOptions:completion:` method. Fail-closed:
+    /// there is never an open session, so the completion runs on the
+    /// caller thread with `sessionNotOpened`.
+    open func requestCloseSession(options: [ICSessionOptions: Any]? = nil, completion: @escaping ((any Error)?) -> Void) {
+        _ = options
+        _hasOpenSession = false
+        let error = ICReturn(.sessionNotOpened)
+        delegate?.device(self, didCloseSessionWithError: error)
+        completion(error)
     }
 
     open func requestEject() {

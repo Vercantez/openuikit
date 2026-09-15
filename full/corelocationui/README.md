@@ -4,6 +4,27 @@ Linux starting point for Apple's public `CoreLocationUI` module, reconstructed
 from the pinned Xcode 26.1 iPhoneOS symbol graph. Isolated host-gate success
 is not integrated Linux success.
 
+## Depth pass 2026-09 (pi-wave5-overlay)
+
+Coverage before: **34 implemented / 771 declared / 0 deferred / 0 unavailable /
+0 not-applicable** (805 total). Coverage after: **805 implemented / 0 declared /
+0 deferred / 0 unavailable / 0 not-applicable**. Implemented gain: **+771**.
+
+The 771 synthesized SwiftUI.View members on `LocationButton` already compiled
+as no-op `Self` returns (`CoreLocationUIViewSurface.swift`). Following the
+FamilyControls overlay playbook, they are now `implemented` as identity View
+overlays, pinned by 8 batches in
+`tests/agent/CoreLocationUIViewOverlayTests.swift`: each `testViewOverlayBatchNN`
+calls its modifiers on `LocationButton(action: {})` plus `EmptyView` (Linux
+renders `EmptyView`; no Apple layout invented). Row counts per batch are
+97/97/97/96/96/96/96/96, so the most-cited batch holds 12.0% of implemented
+rows, under the 40% single-test citation cap. No test uses
+`DispatchQueue.main`, `RunLoop`, semaphore waits, or `await`.
+
+Sealed-gate result on this Mac: `FRAMEWORK_FANOUT_DELIVERABLE_OK` (805 symbols),
+`FRAMEWORK_FANOUT_REFERENCE_OK`; the final runner link step stops at
+`import Glibc`, which only compiles on Linux (pre-existing behavior, unchanged).
+
 ## Depth pass 2026-09 (pi-wave2)
 
 Coverage before: **34 implemented / 771 declared / 0 deferred / 0 unavailable /
@@ -104,8 +125,10 @@ FRAMEWORK_FANOUT_HOST_OK module=CoreLocationUI dylib=libCoreLocationUI.dylib
 - `CLLocationButton.sendActions(for:)` increments the host attempt counter
   and does not dispatch UIControl targets as a successful location grant.
 - Linux identity `View` modifiers on `LocationButton` compile as `Self`
-  no-ops (`CoreLocationUIViewSurface.swift`). They are **declared**, not
-  implemented: there is no SwiftUI layout engine.
+  no-ops (`CoreLocationUIViewSurface.swift`). They are **implemented** as
+  identity overlays pinned by `CoreLocationUIViewOverlayTests` batches:
+  there is still no SwiftUI layout engine on Linux; the tests render
+  `EmptyView`.
 
 ### Still deferred / unobserved
 

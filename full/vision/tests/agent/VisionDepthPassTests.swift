@@ -308,9 +308,8 @@ func testDetectTrajectoriesRequestConfig() {
     _ = request.hashValue
     var hasher = Hasher()
     request.hash(into: &hasher)
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "trajectories")
+    let overlaySeeded = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpect(overlaySeeded.isEmpty, "overlay first frame seeds tracklets")
 
     let vn = VNDetectTrajectoriesRequest(frameAnalysisSpacing: CMTime(value: 1, timescale: 30), trajectoryLength: 6)
     visionExpectEqual(vn.trajectoryLength, 6, "vn length")
@@ -322,13 +321,8 @@ func testDetectTrajectoriesRequestConfig() {
     vn.targetFrameTime = CMTime(value: 2, timescale: 30)
     visionExpectEqual(vn.targetFrameTime.value, 2, "vn target")
     visionExpect(vn.results == nil, "vn results")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn trajectories should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn trajectories")
-        visionExpect(vn.results == nil, "results stay nil")
-    }
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    visionExpect((vn.results ?? []).isEmpty, "vn first frame seeds tracklets")
 }
 
 func testCoreMLRequestConfig() {
@@ -982,16 +976,14 @@ func testGenerateForegroundInstanceMaskRequestConfig() {
     visionExpectRevisionCodable(GenerateForegroundInstanceMaskRequest.Revision.revision1, "revision codable")
     let vn = VNGenerateForegroundInstanceMaskRequest()
     visionExpect(vn.results == nil, "vn results")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "foreground mask overlay")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn foreground mask should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.invalidModel.rawValue, "vn invalidModel")
-        visionExpect(vn.results == nil, "results stay nil")
+    let overlayMask = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpect(overlayMask?.allInstances == IndexSet(integer: 1), "overlay foreground labels")
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    guard let maskObservation = vn.results?.first as? VNInstanceMaskObservation else {
+        visionExpect(false, "vn foreground mask produces an observation")
+        return
     }
+    visionExpect(maskObservation.allInstances == IndexSet(integer: 1), "vn foreground labels")
 }
 
 func testGenerateAttentionBasedSaliencyImageRequestConfig() {
@@ -1070,20 +1062,19 @@ func testTrackHomographicImageRegistrationRequestConfig() {
     var hasher = Hasher()
     request.hash(into: &hasher)
     visionExpectRevisionCodable(TrackHomographicImageRegistrationRequest.Revision.revision1, "revision codable")
-    visionExpectOverlayInvalidModel({
-        try request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
-    }, "homographic track overlay")
+    let overlayTrack = try! request.performOnHandler(VNImageRequestHandler(cgImage: visionRectangleImage()))
+    visionExpect(overlayTrack.warpTransform == .identity, "overlay first track frame is identity")
     let vn = VNTrackHomographicImageRegistrationRequest()
     let withHandler = VNTrackHomographicImageRegistrationRequest(completionHandler: { _, _ in })
     visionExpect(withHandler.completionHandler != nil, "completion")
     visionExpect(vn.results == nil, "vn results")
-    do {
-        try VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
-        visionExpect(false, "vn homographic track should fail closed")
-    } catch let error as NSError {
-        visionExpectEqual(error.code, VNErrorCode.unsupportedRequest.rawValue, "vn unsupportedRequest")
-        visionExpect(vn.results == nil, "results stay nil")
+    try! VNImageRequestHandler(cgImage: visionRectangleImage()).perform([vn])
+    guard let trackObservation = vn.results?.first as? VNImageHomographicAlignmentObservation else {
+        visionExpect(false, "vn homographic track produces an observation")
+        return
     }
+    visionExpect(trackObservation.warpTransform == .identity, "vn first track frame is identity")
+    visionExpectEqual(trackObservation.confidence, 1, "vn first track confidence")
 }
 
 func testTrackTranslationalImageRegistrationRequestConfig() {

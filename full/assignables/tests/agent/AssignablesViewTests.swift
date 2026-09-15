@@ -1,6 +1,10 @@
 import Foundation
 import Assignables
 
+#if canImport(SwiftUI)
+import SwiftUI
+#endif
+
 func testAssignableDocumentViewBody() {
     var document = assignablesMakeDocument("view")
     let view = AssignableDocumentView(document: Binding(get: { document }, set: { document = $0 }))

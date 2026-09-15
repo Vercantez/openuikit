@@ -156,13 +156,13 @@ public enum AppShortcutOptionsCollectionSpecificationBuilder<Value: _IntentValue
     }
 }
 
-public enum VideoCategory: String, Hashable, Sendable {
+public enum VideoCategory: String, Hashable, Sendable, CaseIterable {
     case tv
     case movies
     case freeform
 }
 
-public enum StringSearchScope: String, Hashable, Sendable {
+public enum StringSearchScope: String, Hashable, Sendable, CaseIterable {
     case freeformVideo
     case tv
     case movies

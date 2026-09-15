@@ -363,6 +363,39 @@ extension CMBlockBufferProtocol {
         }
     }
 
+    public func makeContiguous(
+        allocator: @escaping CMBlockBuffer.CustomBlockAllocator,
+        deallocator: @escaping CMBlockBuffer.CustomBlockDeallocator,
+        flags: CMBlockBuffer.Flags = []
+    ) throws -> CMBlockBuffer {
+        _ = flags
+        let bytes = try dataBytes()
+        if bytes.isEmpty { return CMBlockBuffer() }
+        return try bytes.withUnsafeBytes { source -> CMBlockBuffer in
+            guard let scratch = allocator(source.count) else {
+                throw CMBlockBuffer.Error.blockAllocationFailed
+            }
+            defer { deallocator(scratch, source.count) }
+            if let base = source.baseAddress {
+                scratch.copyMemory(from: base, byteCount: source.count)
+            }
+            return CMBlockBuffer(copying: UnsafeRawBufferPointer(start: scratch, count: source.count))
+        }
+    }
+
+    public func makeContiguous(
+        allocator: CFAllocator? = kCFAllocatorDefault,
+        flags: CMBlockBuffer.Flags = []
+    ) throws -> CMBlockBuffer {
+        _ = (allocator, flags)
+        return CMBlockBuffer(data: try dataBytes())
+    }
+
+    public func withContiguousStorage<R>(_ body: (UnsafeRawBufferPointer) throws -> R) throws -> R {
+        let bytes = try dataBytes()
+        return try bytes.withUnsafeBytes { try body($0) }
+    }
+
     public subscript(bounds: Range<Int>) -> CMBlockBuffer.Slice {
         CMBlockBuffer.Slice(owner: owner, startIndex: bounds.lowerBound, endIndex: bounds.upperBound)
     }

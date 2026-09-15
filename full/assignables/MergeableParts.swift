@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(PDFKit)
+import PDFKit
+#endif
+
 /// Stable identifier for one mergeable document part.
 ///
 /// Darwin raw strings for the well-known `PartIDs` constants are not in the

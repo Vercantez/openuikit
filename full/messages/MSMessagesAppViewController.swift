@@ -90,7 +90,7 @@ open class MSMessagesAppViewController: NSObject, MSMessagesAppTranscriptPresent
 
     open func contentSizeThatFits(_ size: CGSize) -> CGSize {
         _ = size
-        return .zero
+        return CGSize(width: 0, height: 0)
     }
 
     open func invalidateMessageTintColor() {}

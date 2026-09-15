@@ -29,6 +29,10 @@ private func ckExpectError<T>(_ body: () throws -> T) -> Error {
     }
 }
 
+private func ckRequire(_ type: Any.Type) {
+    precondition(!String(describing: type).isEmpty)
+}
+
 func testSHA256Vectors() {
     let empty = Data()
     let abc = Data("abc".utf8)
@@ -612,4 +616,40 @@ func testDigestSequenceAndEquality() {
     exercise(Insecure.SHA1.hash(data: Data()))
     exercise(Insecure.MD5.hash(data: Data()))
     exercise(ChaChaPoly.Nonce())
+}
+
+func testSecureEnclaveP256Surface() {
+    precondition(SecureEnclave.isAvailable == false)
+    ckRequire(SecureEnclave.P256.self)
+    ckRequire(SecureEnclave.P256.KeyAgreement.self)
+    ckRequire(SecureEnclave.P256.KeyAgreement.PrivateKey.self)
+    ckRequire(SecureEnclave.P256.KeyAgreement.PrivateKey.PublicKey.self)
+    ckRequire(SecureEnclave.P256.Signing.self)
+    ckRequire(SecureEnclave.P256.Signing.PrivateKey.self)
+}
+
+func testSecureEnclaveMLDSASurface() {
+    precondition(SecureEnclave.isAvailable == false)
+    ckRequire(SecureEnclave.MLDSA65.self)
+    ckRequire(SecureEnclave.MLDSA65.PrivateKey.self)
+    ckRequire(SecureEnclave.MLDSA87.self)
+    ckRequire(SecureEnclave.MLDSA87.PrivateKey.self)
+}
+
+func testSecureEnclaveMLKEMSurface() {
+    precondition(SecureEnclave.isAvailable == false)
+    ckRequire(SecureEnclave.MLKEM768.self)
+    ckRequire(SecureEnclave.MLKEM768.PrivateKey.self)
+    ckRequire(SecureEnclave.MLKEM768.PrivateKey.PublicKey.self)
+    ckRequire(SecureEnclave.MLKEM1024.self)
+    ckRequire(SecureEnclave.MLKEM1024.PrivateKey.self)
+    ckRequire(SecureEnclave.MLKEM1024.PrivateKey.PublicKey.self)
+    let error768 = ckExpectError { try SecureEnclave.MLKEM768.PrivateKey.generate() }
+    guard case CryptoKitError.underlyingCoreCryptoError = error768 else {
+        preconditionFailure("SecureEnclave ML-KEM-768 generate must fail closed")
+    }
+    let error1024 = ckExpectError { try SecureEnclave.MLKEM1024.PrivateKey.generate() }
+    guard case CryptoKitError.underlyingCoreCryptoError = error1024 else {
+        preconditionFailure("SecureEnclave ML-KEM-1024 generate must fail closed")
+    }
 }

@@ -13,6 +13,7 @@ open class AVCoordinatedPlaybackSuspension: NSObject, @unchecked Sendable {
   public struct Reason: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }
+    public init(_ rawValue: String) { self.rawValue = rawValue }
     public init(stringLiteral value: String) { self.init(rawValue: value) }
     public static let audioSessionInterrupted = Reason(rawValue: "audioSessionInterrupted")
     public static let stallRecovery = Reason(rawValue: "stallRecovery")

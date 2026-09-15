@@ -235,7 +235,11 @@ open class OSLogEntryActivity: OSLogEntry, OSLogEntryFromProcess {
     private let _sender: String
     private let _threadIdentifier: UInt64
 
-    init(
+    /// Linux construction affordance. Apple vends activity entries from
+    /// `OSLogStore` (no public initializer in the SDK) and the in-process
+    /// ring never synthesizes activity rows; this initializer exists so the
+    /// type and its fields are constructible and testable on Linux.
+    public init(
         composedMessage: String,
         date: Date,
         storeCategory: StoreCategory,

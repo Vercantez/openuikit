@@ -29,6 +29,11 @@ mutations never report success.
 - Communication, classification, filter-query, capabilities, and network
   response objects store caller fields and round-trip Linux NSSecureCoding
   keys. Darwin archive layouts are unobserved.
+- `ILMessageFilterQueryHandling` and `ILMessageFilterCapabilitiesQueryHandling`
+  expose both the ObjC completion-handler selector and the Swift `async`
+  overlay. The completion twin completes synchronously in-process; the
+  `async` overlay bridges it via checked continuation. Fail-closed defaults
+  answer `.none` / empty capabilities.
 - `ILMessageFilterQueryResponse` defaults `action` and `subAction` to `.none`.
 - `LiveCallerIDLookupExtensionContext` is a `Hashable` / `Codable` value type.
 - `LiveCallerIDLookupManager.status(forExtensionWithIdentifier:)` is always
@@ -56,7 +61,7 @@ mutations never report success.
 
 ## Depth pass 2026-09
 
-Implemented **143** of 150 exact IDs (6 `declared` async methods, 1 CoreData
+Implemented **145** of 150 exact IDs (4 `declared` async methods, 1 CoreData
 `deferred` typealias). Nondeferred count 149, above the medium-full floor of
 75.
 

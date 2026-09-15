@@ -186,9 +186,17 @@ func testLocalSourceAndDefaultCalendars() {
         precondition(empty.calendar(withIdentifier: identifier)?.title == eventCalendars[0].title)
         precondition(empty.source(withIdentifier: empty.sources[0].sourceIdentifier) === empty.sources[0])
         #if canImport(CoreGraphics)
-        let components = empty.defaultCalendarForNewEvents!.cgColor.components
+        let defaultCalendar = empty.defaultCalendarForNewEvents!
+        let components = defaultCalendar.cgColor.components
         precondition(components != nil)
+        precondition(components!.count == 4)
         precondition(abs(Double(components![1]) - 0.478) < 0.001)
+        precondition(abs(Double(components![3]) - 1) < 0.001)
+        defaultCalendar.cgColor = CGColor(red: 1, green: 0, blue: 0, alpha: 1)
+        let repainted = defaultCalendar.cgColor.components
+        precondition(repainted != nil)
+        precondition(abs(Double(repainted![0]) - 1) < 0.001)
+        precondition(abs(Double(repainted![1])) < 0.001)
         #endif
     }
 }

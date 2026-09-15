@@ -1255,6 +1255,14 @@ open class CPSessionConfiguration: NSObject, @unchecked Sendable {
     public private(set) var activeNavigationSession: CPNavigationSession? = nil
     public override init() { super.init() }
     public func dismissNavigationAlert(animated: Bool) async -> Bool {
+        applyDismissNavigationAlert(animated: animated)
+    }
+    /// Apple's `dismissNavigationAlertAnimated:completion:` selector. The
+    /// completion runs synchronously: there is no vehicle round-trip on Linux.
+    public func dismissNavigationAlert(animated: Bool, completion: @escaping (Bool) -> Void) {
+        completion(applyDismissNavigationAlert(animated: animated))
+    }
+    private func applyDismissNavigationAlert(animated: Bool) -> Bool {
         _ = animated
         guard let alert = currentNavigationAlert else { return false }
         mapDelegate?.mapTemplate(self, willDismiss: alert, dismissalContext: .userDismissed)

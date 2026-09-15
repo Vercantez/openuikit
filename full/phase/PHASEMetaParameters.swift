@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(AVFAudio)
+import AVFAudio
+#endif
+
 public class PHASEDefinition: NSObject {
     public let identifier: String
 

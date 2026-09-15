@@ -36,9 +36,9 @@ c:objc(cs)OSLogEntry	implemented	test:full/oslog/tests/agent/OSLogTests.swift#te
 c:objc(cs)OSLogEntry(py)composedMessage	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
 c:objc(cs)OSLogEntry(py)date	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
 c:objc(cs)OSLogEntry(py)storeCategory	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryFromStore	-
-c:objc(cs)OSLogEntryActivity	declared	source:full/oslog/OSLog.swift#OSLogEntryActivity	Probe 2 on SE 2x / iOS 26.1: Logger / OSSignposter produced OSLogEntryLog and (in the port) OSLogEntrySignpost; no OSLogEntryActivity row appeared. No public activity API in this seed.
-c:objc(cs)OSLogEntryActivity(py)parentActivityIdentifier	declared	source:full/oslog/OSLog.swift#parentActivityIdentifier	Same as OSLogEntryActivity: no public API produced an activity row on the iOS 26.1 probe.
-c:objc(cs)OSLogEntryBoundary	declared	source:full/oslog/OSLog.swift#OSLogEntryBoundary	Catalog chunk boundaries are unobserved on currentProcessIdentifier (probe 2 classes=OSLogEntryLog only). Linux does not invent archive markers.
+c:objc(cs)OSLogEntryActivity	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryActivityIdentity	-
+c:objc(cs)OSLogEntryActivity(py)parentActivityIdentifier	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryActivityParentIdentifier	-
+c:objc(cs)OSLogEntryBoundary	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryBoundaryIdentity	-
 c:objc(cs)OSLogEntryLog	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
 c:objc(cs)OSLogEntryLog(py)level	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntryLogFields	-
 c:objc(cs)OSLogEntrySignpost	implemented	test:full/oslog/tests/agent/OSLogTests.swift#testOSLogEntrySignpostFields	-

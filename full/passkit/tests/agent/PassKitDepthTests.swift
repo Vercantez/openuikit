@@ -562,10 +562,10 @@ func testMerchantCapabilityAndAddressOptionSets() {
     precondition(PKAddressField.all.contains(.postalAddress))
     precondition(PKRadioTechnology.NFC.rawValue == 1 << 0)
     precondition(PKRadioTechnology.bluetooth.rawValue == 1 << 1)
-    precondition(PKContactField.emailAddress.rawValue == "emailAddress")
+    precondition(PKContactField.emailAddress.rawValue == "email")
     precondition(PKContactField.phoneticName.rawValue == "phoneticName")
-    precondition(PKEncryptionScheme.ECC_V2.rawValue == "ECC_V2")
-    precondition(PKEncryptionScheme.RSA_V2.rawValue == "RSA_V2")
+    precondition(PKEncryptionScheme.ECC_V2.rawValue == "EV_ECC_v2")
+    precondition(PKEncryptionScheme.RSA_V2.rawValue == "EV_RSA_v2")
 }
 
 func testCorpusRemainingEnumRawValues() {

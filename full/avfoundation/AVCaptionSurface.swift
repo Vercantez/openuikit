@@ -172,6 +172,11 @@ open class AVCaptionGroup: NSObject, @unchecked Sendable {
   public var captions: [AVCaption] { storedCaptions }
 }
 
+// Apple vends AVAssetReaderOutput.Provider<AVCaptionGroup> from
+// AVAssetReader.outputCaptionProvider(for:validationDelegate:), so
+// AVCaptionGroup is a SupportedPayload on this host too.
+extension AVCaptionGroup: AVAssetReaderOutput.SupportedPayload {}
+
 open class AVCaptionGrouper: NSObject, @unchecked Sendable {
   private var added: [AVCaption] = []
   public override init() { super.init() }

@@ -736,3 +736,65 @@ Classify / recognize / faces / humans / poses / Core ML stay fail-closed
 Core ML feature values stay deferred; async overlay `perform(on:orientation:)`
 stays declared. New open questions (flow magnitude gain, first-frame tracking
 semantics, size-mismatch policy) are recorded in `oracle-questions.tsv`.
+
+## Depth pass 2026-09 (pi-wave classical homography + foreground + trajectories)
+
+Campaign `ios26.1-fwdepth-r3`, lane `large-partitioned`, framework `Vision`
+(3584 IDs). Work stays inside `full/vision/`. Starting ledger: 3312
+implemented / 214 declared / 58 deferred.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+|---|---:|---:|---:|---:|---:|
+| Before this pass | 3312 | 214 | 58 | 0 | 0 |
+| After this pass | **3312** | **214** | **58** | **0** | **0** |
+
+Implemented gain: **+0 by count, +3 request families by behaviour**. The ledger
+remains at its honest ceiling: all 214 `declared` rows are async
+`ImageProcessingRequest.perform(on:orientation:)` / `ImageRequestHandler.perform`
+/ targeted-`perform` overloads (`YaKF` / `YaK`) that the sealed Linux gate
+cannot cite without `await`, and all 58 `deferred` rows are `VNVideoProcessor` /
+`VNCoreMLFeatureValueObservation` (no video daemon / no Core ML runtime). This
+pass converts the last three fail-closed synchronous families to documented
+classical behaviour, keeping their `implemented` status with focused
+`test:…#testName` evidence (100 rows re-pointed/re-noted, none relabelled).
+
+Added Linux behaviour this pass (all documented non-Apple heuristics):
+
+- `VNHomographicImageRegistrationRequest` / `VNTrackHomographicImageRegistrationRequest`
+  / overlay `TrackHomographicImageRegistrationRequest`: Harris corners + 7x7
+  NCC matching + Hartley-normalized DLT with exhaustive deterministic RANSAC
+  over the 12 best matches (≥6 inliers at ≥50% ratio), falling back to the
+  phase-correlation translation embedded in a 3x3 matrix. Linux-local
+  convention: `warpTransform` maps source (targeted/previous-frame) pixels to
+  reference (handler/current) pixels, column-major. Stateful tracking returns
+  identity (confidence 1) on the first frame. Missing targeted image throws
+  `missingOption` with `results == nil`.
+- Overlay `ImageHomographicAlignmentObservation` gains the members its coverage
+  rows already claimed: `applyTransform(to:)` (pass-through), `init(_:)`
+  from the VN observation, and explicit `Codable` (9 column-major floats).
+- `VNGenerateForegroundInstanceMaskRequest` / overlay
+  `GenerateForegroundInstanceMaskRequest`: shared center-surround contrast heat
+  map at half-maximum, border flood-fill hole closing, largest 4-connected blob
+  as instance 1 → `VNInstanceMaskObservation` / `InstanceMaskObservation`.
+  Uniform images yield an empty mask with confidence 0. Generic contrast
+  foreground, not person segmentation.
+- `VNDetectTrajectoriesRequest` / overlay `DetectTrajectoriesRequest`:
+  stateful Harris-corner tracklets (NCC block match, 64px working grid) with
+  `max(2, trajectoryLength)`-point latency, sub-pixel-motion filtering, and
+  normalized-radius bounds → `VNTrajectoryObservation` with linear per-frame
+  velocity in `equationCoefficients`, up to 3 extrapolated `projectedPoints`,
+  and net-displacement `movingAverageRadius`.
+- New `VisionClassicalAlignmentTests.swift` (11 focused tests: homography shift
+  recovery ±2.5px, identical-frame ~identity, missing-target error, sequential
+  track, overlay sequential, overlay value/Codable coverage, foreground labels
+  + hole fill + uniform-empty, trajectory direction/velocity, static-empty,
+  overlay trajectories), mirrored into the sealed `VisionRuntime.swift`.
+  `testHomographicRegistrationFailClosed` is removed; its 18 rows are re-pointed
+  to the new anchors. The three `*RequestConfig` tests now assert classical
+  first-frame/empty behaviour instead of fail-closed errors.
+
+Classify / recognize / faces / humans / poses / Core ML stay fail-closed
+(`invalidModel`); video-processor and Core ML feature values stay deferred;
+async overlay `perform(on:orientation:)` stays declared. New open questions
+(warp convention, trajectory coefficient units, foreground mask policy) are
+recorded in `oracle-questions.tsv`.

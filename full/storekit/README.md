@@ -492,3 +492,58 @@ async-sequence witnesses the synchronous harness cannot execute. The sealed
 host gate is `bash full/storekit/tests/acceptance/test_host.sh`; this pass
 was verified with Swift 6.2.4 for Linux (module + runner compile
 warnings-as-errors, all cited tests run, marker-only stdout).
+
+## Depth pass 11 (pi wave-3 storekit)
+
+Follow-on over the depth-pass-10 tree. All Product/Transaction/
+SubscriptionInfo data models, enums, and error codes were already
+`implemented`; the remaining convertible surface was eleven `deferred`
+model-level rows with synchronous Linux meaning. This pass implements
+them with focused tests in
+`tests/agent/StoreKitDepthPass11Tests.swift` (6 tests, one family each,
+no `await` / `DispatchQueue.main` / `RunLoop` / semaphores):
+
+- `RequestReviewAction.callAsFunction()` records a portable request
+  count and presents no UI (mirrors the `SKStoreReviewController`
+  precedent).
+- `DisplayMessageAction.callAsFunction(_:)` throws
+  `StoreKitError.notAvailableInStorefront` (mirrors
+  `Message.display(in:)`; no sheet on Linux).
+- `EntitlementTaskState.map` / `flatMap` synchronous `rethrows`
+  overloads (the `async` overloads stay `deferred`).
+- `SubscriptionOfferViewStyleConfiguration` model members
+  `activeOffer` / `visibleSubscription` / `subscriptions` /
+  `subscriptionStatus` / `subscriptionGroupDisplayName` plus a
+  portable-counter `displayDetails()` (no detail UI on Linux).
+- `ProductIconPhase.promotionalIcon` is `nil` (no Apple image asset).
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before depth pass 11 | 1819 | 6399 | 176 | 0 | 7301 |
+| after depth pass 11 | 1830 | 6399 | 165 | 0 | 7301 |
+
+Nondeferred is **8229** (floor 7848). Largest new evidence,
+`testOfferConfigurationSubscriptionModels`, cites 6 rows (<1% of
+1830). No cited test covers more than 40% of implemented rows.
+Leftover `declared` is `s:7SwiftUI4View…` synthesized modifier
+specializations (kept for the floor, never `implemented`), async
+Apple-service entry points the synchronous harness cannot execute
+(`ExternalPurchase`, `ExternalLinkAccount`, `ExternalPurchaseLink`,
+`ExternalPurchaseCustomLink`, `PaymentMethodBinding`,
+`AdvancedCommerceProduct` purchase/token, async `init`s),
+dependency-owned `StoreDownloaderExtension`, async-sequence
+synthesized witnesses, and the CryptoKit `P256` JWS `signature`
+fields. Leftover `deferred` is Optional/Never `StoreContent`
+witnesses, Foundation `FormatStyle` synthesis, async
+`EntitlementTaskState.map`/`flatMap`, `PurchaseAction`
+`callAsFunction` overloads, and `s:7SwiftUI4View…` transaction
+modifiers. The sealed host gate is
+`bash full/storekit/tests/acceptance/test_host.sh`; this pass was
+verified with Swift 6.2.4 for Linux (aarch64) and ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=StoreKit lane=medium-full symbols=15695
+FRAMEWORK_FANOUT_REFERENCE_OK
+STOREKIT_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=StoreKit dylib=libStoreKit.dylib
+```

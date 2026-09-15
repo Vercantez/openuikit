@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(PDFKit)
+import PDFKit
+#endif
+
 /// Scoring and mark configuration for an assignable document.
 public protocol AssignableDocumentConfiguration: Hashable {
     var correctScoreMarkType: AssignableDocument.CorrectMarkType { get set }

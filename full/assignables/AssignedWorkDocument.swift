@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(PDFKit)
+import PDFKit
+#endif
+
 /// Assigned-work scoring overlay.
 public protocol AssignedWorkDocumentConfiguration: Hashable {
     var manualScore: Double? { get set }

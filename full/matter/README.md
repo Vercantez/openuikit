@@ -345,3 +345,81 @@ FRAMEWORK_FANOUT_HOST_OK module=Matter dylib=libMatter.dylib
 
 Host inventory token expected by the campaign (not printed by the gate):
 `CURSOR_SWIFT_ENVIRONMENT_OK swift=6.2.4 target=linux products=clean`.
+
+## Depth pass 2026-09 (wave 11)
+
+Converts the remaining `MTRBaseCluster*` / `MTRCluster*` data-model surface,
+the stub Params/Response/Event/Struct value types, deprecated enum aliases,
+and the hand-written core data containers to implemented with synchronous
+in-process tests. No Matter fabric, radio, daemon, or `await` is introduced;
+all I/O completions still run synchronously with `MTRError.invalidState`.
+
+**Coverage before:** 22597 implemented / 800 declared / 5025 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28259 implemented / 130 declared / 33 deferred / 40 unavailable / 0 not-applicable
+(+5662 implemented; 28389 nondeferred; floor 150).
+
+**Top-5 implemented evidence distribution**
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 3788 | 13.4% | `test:full/matter/tests/agent/MatterIDTests.swift#testIDRawValues` |
+| 3212 | 11.4% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetAlgebra` |
+| 2541 | 9.0% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumRawValues` |
+| 906 | 3.2% | `test:full/matter/tests/agent/MatterOptionSetTests.swift#testOptionSetRawValues` |
+| 906 | 3.2% | `test:full/matter/tests/agent/MatterEnumTests.swift#testEnumHashable` |
+
+**Top remaining (non table-driven) evidence** — 16906 rows after excluding
+enum/option-set/C-constant table tests; largest share 1.6% (cap 40%):
+
+| rows | share | evidence |
+| ---: | ---: | --- |
+| 277 | 1.6% | `test:full/matter/tests/agent/MatterThreadDiagnosticsClusterTests.swift#testThreadDiagnosticsFailClosed` |
+| 266 | 1.6% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementReadFailClosed` |
+| 266 | 1.6% | `test:full/matter/tests/agent/MatterElectricalMeasurementTests.swift#testElectricalMeasurementSubscribeFailClosed` |
+| 253 | 1.5% | `test:full/matter/tests/agent/MatterUnitTestingClusterTests.swift#testClusterUnitTestingCache` |
+| 245 | 1.4% | `test:full/matter/tests/agent/MatterThermostatClusterTests.swift#testThermostatFailClosed` |
+
+Largest new families this pass (per-cluster/per-class tests, each cited by
+well under 1% of implemented rows): the 64 remaining `MTRBaseCluster*`
+classes (class-func cache readers, inits, instance read/subscribe/write, and
+commands, including the `Ota*`/`WakeOnLan` legacy spellings with their own
+command params types and the `MTRClusterTestCluster` alias), the 69 remaining
+`MTRCluster*` device-cache classes (inits, expected-value reads/writes with a
+write-then-read round trip, fail-closed commands, plus the 29
+`MTRClusterUnitTesting` closure-spelling command twins of the async overlay),
+408 generated Params/Response/Event/Struct value types with typed stored
+properties and throwing `init(responseValue:)` where Apple declares it (88
+more alias classes covered through inheritance), 26 deprecated enum-alias
+statics, and the hand-written core containers (`MTRServerAttribute`,
+`MTRServerCluster`, `MTRServerEndpoint`, `MTRDeviceStorageBehaviorConfiguration`,
+`MTROperationalCSRInfo`, `MTROperationalCertificateChain`,
+`MTRCommandWithRequiredResponse`, attestation/CSR/metric types, and the
+`MTRClusterStateCacheContainer` fail-closed read).
+
+New product files (in `matter_guest_sources.txt`): `MTRClustersWave11.swift`,
+`MTRClusterParamsWave11.swift`, `MTREnumAliasesWave11.swift`. New tests:
+`MatterBaseWave11[A-D]Tests.swift`, `MatterClusterWave11[A-C]Tests.swift`,
+`MatterClusterParamsWave11[A-F]Tests.swift`,
+`MatterDeprecatedEnumAliasTests.swift`, `MatterCoreWave11Tests.swift`,
+`MatterMiscWave11Tests.swift`.
+
+### Leftover deferred (33) and declared (130)
+
+- 19 non-deprecated enum statics whose raw values need an Apple probe
+  (`MTRTimeSynchronizationTimeSource` x10, `MTRThermostatSetpointAdjustMode`
+  x3 cross-enum aliases, `MTRWiFiNetworkDiagnosticsWiFiVersionType` x6
+  cross-enum aliases); see `oracle-questions.tsv`.
+- `MTRSetMessageReliabilityParameters` (would invent radio timing),
+  `MTRAttributeCacheContainer.readAttributeWithEndpointId:...` (generic cache
+  read needs a cache-store design), and 10 `NSCoding.initWithCoder` rows
+  (NSCoder round-trips stay deferred by design).
+- Declared rows are compiling surface that still needs a live fabric/daemon:
+  `MTRDeviceController` pairing/commissioning/XPC members, delegate/keypair/
+  storage protocol members, the 20 callback typealiases, and empty event types
+  already covered where constructible.
+
+Environment: local `swiftc` is Apple Swift 6.2.1 targeting
+`arm64-apple-macosx26.0` (this Mac). The sealed gate was run in the
+`uikit-linux` container (Swift 6.2.4, `aarch64-unknown-linux-gnu`) with a
+clean product tree (`products=clean`).

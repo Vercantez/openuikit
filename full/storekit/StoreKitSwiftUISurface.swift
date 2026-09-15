@@ -229,6 +229,7 @@ extension ProductIconPhase {
         if case .failure(let error) = self { return error }
         return nil
     }
+    public var promotionalIcon: Image? { nil }
 }
 
 public protocol StoreContent {
@@ -528,15 +529,34 @@ public struct SubscriptionOfferViewStyleConfiguration {
         public var body: some View { EmptyView() }
         public init() {}
     }
+    public private(set) static var portableDisplayDetailsCount = 0
     public var icon: Icon
     public var state: Product.CollectionTaskState
+    public var activeOffer: Product.SubscriptionOffer?
+    public var visibleSubscription: Product?
+    public var subscriptions: [Product]?
+    public var subscriptionStatus: [Product.SubscriptionInfo.Status]
+    public var subscriptionGroupDisplayName: String
     public func subscribe() {}
+    public func displayDetails() {
+        Self.portableDisplayDetailsCount += 1
+    }
     public init(
         icon: Icon = Icon(),
-        state: Product.CollectionTaskState = .loading
+        state: Product.CollectionTaskState = .loading,
+        activeOffer: Product.SubscriptionOffer? = nil,
+        visibleSubscription: Product? = nil,
+        subscriptions: [Product]? = nil,
+        subscriptionStatus: [Product.SubscriptionInfo.Status] = [],
+        subscriptionGroupDisplayName: String = ""
     ) {
         self.icon = icon
         self.state = state
+        self.activeOffer = activeOffer
+        self.visibleSubscription = visibleSubscription
+        self.subscriptions = subscriptions
+        self.subscriptionStatus = subscriptionStatus
+        self.subscriptionGroupDisplayName = subscriptionGroupDisplayName
     }
 }
 
@@ -641,8 +661,20 @@ public struct AutomaticSubscriptionOptionGroupStyle: SubscriptionOptionGroupStyl
 public struct SubscriptionOptionGroupStyleOutput { public init() {} }
 
 public struct PurchaseAction { public init() {} }
-public struct RequestReviewAction { public init() {} }
-public struct DisplayMessageAction { public init() {} }
+public struct RequestReviewAction {
+    public private(set) static var portableRequestCount = 0
+    public init() {}
+    public func callAsFunction() {
+        Self.portableRequestCount += 1
+    }
+}
+public struct DisplayMessageAction {
+    public init() {}
+    public func callAsFunction(_ message: Message) throws {
+        _ = message
+        throw StoreKitError.notAvailableInStorefront
+    }
+}
 
 public enum EntitlementTaskState<Value> {
     case loading
@@ -654,6 +686,20 @@ extension EntitlementTaskState {
     public var value: Value? {
         if case .success(let value) = self { return value }
         return nil
+    }
+    public func map<NewValue>(_ transform: (Value) throws -> NewValue) rethrows -> EntitlementTaskState<NewValue> {
+        switch self {
+        case .loading: return .loading
+        case .success(let value): return .success(try transform(value))
+        case .failure(let error): return .failure(error)
+        }
+    }
+    public func flatMap<NewValue>(_ transform: (Value) throws -> EntitlementTaskState<NewValue>) rethrows -> EntitlementTaskState<NewValue> {
+        switch self {
+        case .loading: return .loading
+        case .success(let value): return try transform(value)
+        case .failure(let error): return .failure(error)
+        }
     }
 }
 

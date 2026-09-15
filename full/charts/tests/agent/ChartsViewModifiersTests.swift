@@ -61,57 +61,57 @@ func testChartViewZAxis() {
     _ = AnyChartSymbolShape().chartZAxis(content: AxisMarks())
     _ = BasicChartSymbolShape.circle.chartZAxis(content: AxisMarks())
     _ = Circle().chartZAxis(content: AxisMarks())
-    _ = EmptyView().chartZAxis(.hidden)
-    _ = chartModifierChart().chartZAxis(.hidden)
-    _ = chartModifierChart3D().chartZAxis(.hidden)
-    _ = ChartPlotContent().chartZAxis(.hidden)
-    _ = ChartAxisContent().chartZAxis(.hidden)
-    _ = AnyChartSymbolShape().chartZAxis(.hidden)
-    _ = BasicChartSymbolShape.circle.chartZAxis(.hidden)
-    _ = Circle().chartZAxis(.hidden)
+    _ = EmptyView().chartZAxis(Visibility.hidden)
+    _ = chartModifierChart().chartZAxis(Visibility.hidden)
+    _ = chartModifierChart3D().chartZAxis(Visibility.hidden)
+    _ = ChartPlotContent().chartZAxis(Visibility.hidden)
+    _ = ChartAxisContent().chartZAxis(Visibility.hidden)
+    _ = AnyChartSymbolShape().chartZAxis(Visibility.hidden)
+    _ = BasicChartSymbolShape.circle.chartZAxis(Visibility.hidden)
+    _ = Circle().chartZAxis(Visibility.hidden)
     _ = EmptyView().chartZAxis(AxisMarks())
     _ = Circle().chartZAxis(AxisMarks())
 }
 
 func testChartViewAxisLabels() {
     precondition(AnnotationPosition.top != .bottom)
-    _ = EmptyView().chartXAxisLabel(position: .top, alignment: .center, spacing: 4) {
+    _ = EmptyView().chartXAxisLabel(position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 4) {
         Text("x")
     }
-    _ = chartModifierChart().chartXAxisLabel(position: .top, alignment: .center, spacing: 4) {
+    _ = chartModifierChart().chartXAxisLabel(position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 4) {
         Text("x")
     }
-    _ = ChartPlotContent().chartXAxisLabel(position: .top, alignment: .center, spacing: 4) {
+    _ = ChartPlotContent().chartXAxisLabel(position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 4) {
         Text("x")
     }
-    _ = Circle().chartXAxisLabel(position: .top, alignment: .center, spacing: 4) {
+    _ = Circle().chartXAxisLabel(position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 4) {
         Text("x")
     }
-    _ = EmptyView().chartXAxisLabel("X", position: .bottom, alignment: .center, spacing: 2)
-    _ = Circle().chartXAxisLabel("X", position: .bottom, alignment: .center, spacing: 2)
-    _ = EmptyView().chartXAxisLabel(LocalizedStringKey("x"), position: .bottom, alignment: .center, spacing: 2)
-    _ = EmptyView().chartXAxisLabel(LocalizedStringResource("x"), position: .bottom, alignment: .center, spacing: 2)
-    _ = EmptyView().chartYAxisLabel(position: .leading, alignment: .center, spacing: 4) {
+    _ = EmptyView().chartXAxisLabel("X", position: AxisMarkPosition.bottom, alignment: Alignment.center, spacing: 2)
+    _ = Circle().chartXAxisLabel("X", position: AxisMarkPosition.bottom, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartXAxisLabel(LocalizedStringKey("x"), position: AxisMarkPosition.bottom, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartXAxisLabel(LocalizedStringResource("x"), position: AxisMarkPosition.bottom, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartYAxisLabel(position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 4) {
         Text("y")
     }
-    _ = chartModifierChart().chartYAxisLabel(position: .leading, alignment: .center, spacing: 4) {
+    _ = chartModifierChart().chartYAxisLabel(position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 4) {
         Text("y")
     }
-    _ = ChartPlotContent().chartYAxisLabel(position: .leading, alignment: .center, spacing: 4) {
+    _ = ChartPlotContent().chartYAxisLabel(position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 4) {
         Text("y")
     }
-    _ = Circle().chartYAxisLabel(position: .leading, alignment: .center, spacing: 4) {
+    _ = Circle().chartYAxisLabel(position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 4) {
         Text("y")
     }
-    _ = EmptyView().chartYAxisLabel("Y", position: .leading, alignment: .center, spacing: 2)
-    _ = Circle().chartYAxisLabel("Y", position: .leading, alignment: .center, spacing: 2)
-    _ = EmptyView().chartYAxisLabel(LocalizedStringKey("y"), position: .leading, alignment: .center, spacing: 2)
-    _ = EmptyView().chartYAxisLabel(LocalizedStringResource("y"), position: .leading, alignment: .center, spacing: 2)
-    _ = EmptyView().chartZAxisLabel("Z", position: .top, alignment: .center, spacing: 2)
-    _ = chartModifierChart3D().chartZAxisLabel("Z", position: .top, alignment: .center, spacing: 2)
-    _ = Circle().chartZAxisLabel("Z", position: .top, alignment: .center, spacing: 2)
-    _ = EmptyView().chartZAxisLabel(LocalizedStringKey("z"), position: .top, alignment: .center, spacing: 2)
-    _ = EmptyView().chartZAxisLabel(LocalizedStringResource("z"), position: .top, alignment: .center, spacing: 2)
+    _ = EmptyView().chartYAxisLabel("Y", position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 2)
+    _ = Circle().chartYAxisLabel("Y", position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartYAxisLabel(LocalizedStringKey("y"), position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartYAxisLabel(LocalizedStringResource("y"), position: AxisMarkPosition.leading, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartZAxisLabel("Z", position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 2)
+    _ = chartModifierChart3D().chartZAxisLabel("Z", position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 2)
+    _ = Circle().chartZAxisLabel("Z", position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartZAxisLabel(LocalizedStringKey("z"), position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 2)
+    _ = EmptyView().chartZAxisLabel(LocalizedStringResource("z"), position: AxisMarkPosition.top, alignment: Alignment.center, spacing: 2)
 }
 
 func testChartViewAxisStyle() {
@@ -133,25 +133,25 @@ func testChartViewAxisStyle() {
 
 func testChartViewLegend() {
     precondition(AnnotationPosition.automatic != .overlay)
-    _ = EmptyView().chartLegend(position: .automatic, alignment: .center, spacing: 4) {
+    _ = EmptyView().chartLegend(position: AnnotationPosition.automatic, alignment: Alignment.center, spacing: 4) {
         Text("legend")
     }
-    _ = chartModifierChart().chartLegend(position: .automatic, alignment: .center, spacing: 4) {
+    _ = chartModifierChart().chartLegend(position: AnnotationPosition.automatic, alignment: Alignment.center, spacing: 4) {
         Text("legend")
     }
-    _ = ChartPlotContent().chartLegend(position: .automatic, alignment: .center, spacing: 4) {
+    _ = ChartPlotContent().chartLegend(position: AnnotationPosition.automatic, alignment: Alignment.center, spacing: 4) {
         Text("legend")
     }
-    _ = Circle().chartLegend(position: .automatic, alignment: .center, spacing: 4) {
+    _ = Circle().chartLegend(position: AnnotationPosition.automatic, alignment: Alignment.center, spacing: 4) {
         Text("legend")
     }
-    _ = EmptyView().chartLegend(position: .top, alignment: .center, spacing: 8)
-    _ = ChartPlotContent().chartLegend(position: .top, alignment: .center, spacing: 8)
-    _ = Circle().chartLegend(position: .top, alignment: .center, spacing: 8)
-    _ = EmptyView().chartLegend(.visible)
-    _ = chartModifierChart().chartLegend(.visible)
-    _ = Circle().chartLegend(.hidden)
-    let stored = chartModifierChart().chartLegend(.hidden)
+    _ = EmptyView().chartLegend(position: AnnotationPosition.top, alignment: Alignment.center, spacing: 8)
+    _ = ChartPlotContent().chartLegend(position: AnnotationPosition.top, alignment: Alignment.center, spacing: 8)
+    _ = Circle().chartLegend(position: AnnotationPosition.top, alignment: Alignment.center, spacing: 8)
+    _ = EmptyView().chartLegend(Visibility.visible)
+    _ = chartModifierChart().chartLegend(Visibility.visible)
+    _ = Circle().chartLegend(Visibility.hidden)
+    let stored = chartModifierChart().chartLegend(Visibility.hidden)
     precondition(stored.legendStorage?.visibility == .hidden)
 }
 
@@ -386,23 +386,23 @@ func testChartViewLineStyleScale() {
 }
 
 func testChartViewOverlay() {
-    _ = EmptyView().chartOverlay { _ in Text("overlay") }
-    _ = chartModifierChart().chartOverlay { _ in Text("overlay") }
-    _ = Circle().chartOverlay { _ in Text("overlay") }
-    _ = EmptyView().chartOverlay(alignment: Alignment.center) { _ in Text("overlay") }
-    _ = chartModifierChart().chartOverlay(alignment: Alignment.center) { _ in Text("overlay") }
-    _ = Circle().chartOverlay(alignment: Alignment.center) { _ in Text("overlay") }
-    _ = ChartPlotContent().chartOverlay(alignment: Alignment.center) { _ in Text("overlay") }
+    _ = EmptyView().chartOverlay { (_: ChartProxy) in Text("overlay") }
+    _ = chartModifierChart().chartOverlay { (_: ChartProxy) in Text("overlay") }
+    _ = Circle().chartOverlay { (_: ChartProxy) in Text("overlay") }
+    _ = EmptyView().chartOverlay(alignment: Alignment.center) { (_: ChartProxy) in Text("overlay") }
+    _ = chartModifierChart().chartOverlay(alignment: Alignment.center) { (_: ChartProxy) in Text("overlay") }
+    _ = Circle().chartOverlay(alignment: Alignment.center) { (_: ChartProxy) in Text("overlay") }
+    _ = ChartPlotContent().chartOverlay(alignment: Alignment.center) { (_: ChartProxy) in Text("overlay") }
 }
 
 func testChartViewBackground() {
-    _ = EmptyView().chartBackground(alignment: Alignment.center) { _ in Text("bg") }
-    _ = chartModifierChart().chartBackground(alignment: Alignment.center) { _ in Text("bg") }
-    _ = Circle().chartBackground(alignment: Alignment.center) { _ in Text("bg") }
-    _ = ChartPlotContent().chartBackground(alignment: Alignment.center) { _ in Text("bg") }
-    _ = ChartAxisContent().chartBackground(alignment: Alignment.center) { _ in Text("bg") }
-    _ = AnyChartSymbolShape().chartBackground(alignment: Alignment.center) { _ in Text("bg") }
-    _ = BasicChartSymbolShape.circle.chartBackground(alignment: Alignment.center) { _ in Text("bg") }
+    _ = EmptyView().chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
+    _ = chartModifierChart().chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
+    _ = Circle().chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
+    _ = ChartPlotContent().chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
+    _ = ChartAxisContent().chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
+    _ = AnyChartSymbolShape().chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
+    _ = BasicChartSymbolShape.circle.chartBackground(alignment: Alignment.center) { (_: ChartProxy) in Text("bg") }
 }
 
 func testChartViewPlotStyle() {

@@ -175,7 +175,9 @@ func testFragmentMindingAssociation() {
 struct DepthPass12TestPayload: AVAssetReaderOutput.SupportedPayload {}
 
 func testAssetReaderOutputProviderCaptionQuery() {
-    let provider = AVAssetReaderOutput.Provider<DepthPass12TestPayload>()
+    let payload = DepthPass12TestPayload()
+    let _: any AVAssetReaderOutput.SupportedPayload = payload
+    let provider = AVAssetReaderOutput.Provider<AVCaptionGroup>()
     let group = AVCaptionGroup()
     precondition(provider.captionsNotPresentInPreviousGroups(in: group).isEmpty)
 }
@@ -199,4 +201,5 @@ func testRemainingRawValueInitializers() {
     precondition(AVAssetPlaybackConfigurationOption(rawValue: "stereoVideo") == .stereoVideo)
     precondition(AVAssetImageGenerator.DynamicRangePolicy(rawValue: "forceSDR") == .forceSDR)
     precondition(AVAssetImageGenerator.DynamicRangePolicy(rawValue: "matchSource") == .matchSource)
+    precondition(AVCoordinatedPlaybackSuspension.Reason("stallRecovery") == .stallRecovery)
 }

@@ -30,7 +30,7 @@ Portable Swift implementations that match published test vectors:
 
 `libCryptoKit.dylib` compiles with `-warnings-as-errors`.
 
-Coverage after this round: **1181 implemented / 39 declared / 44 deferred /
+Coverage after this round: **1199 implemented / 21 declared / 44 deferred /
 23 unavailable** of 1287 IDs. Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). 44 Foundation `SortComparator`/`formatted` Sequence
@@ -39,7 +39,13 @@ overlays stay deferred: Darwin comparator defaults are unobserved.
 ## Fail-closed boundaries
 
 - `SecureEnclave.isAvailable == false`; hardware-backed P-256 / ML-KEM / ML-DSA
-  generate and sign throw `CryptoKitError.underlyingCoreCryptoError`. Inits that
+  generate and sign throw `CryptoKitError.underlyingCoreCryptoError`. The
+  SecureEnclave namespace surface (P256 / ML-KEM / ML-DSA enums, private-key
+  types, `PublicKey` aliases, ML-KEM `generate`) is covered by in-process
+  fail-closed tests. Instance members (`publicKey`, `dataRepresentation`,
+  `signature`, `sharedSecretFromKeyAgreement`, `decapsulate`) stay declared:
+  Apple's only initializers require `LAContext`/`SecAccessControl`, so no
+  instance is obtainable on Linux. Inits that
   take `LAContext` or `SecAccessControl` are **unavailable**.
 - ML-KEM / ML-DSA / X-Wing generate, encapsulate, decapsulate, and sign fail
   closed (no Kyber/Dilithium provider).

@@ -121,7 +121,7 @@ func testSelectReceiveSendHooks() {
 func testContentSizeThatFitsZero() {
     let controller = MSMessagesAppViewController()
     let fitted = controller.contentSizeThatFits(CGSize(width: 320, height: 200))
-    precondition(fitted == .zero)
+    precondition(fitted.width == 0 && fitted.height == 0)
 }
 
 func testMessageCornerRadiusZero() {

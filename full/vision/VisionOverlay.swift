@@ -1046,6 +1046,7 @@ public final class DetectTrajectoriesRequest: ImageProcessingRequest, StatefulRe
     public let revision: Revision
     public let trajectoryLength: Int
     public let frameAnalysisSpacing: CMTime
+    private var inner: VNDetectTrajectoriesRequest
     public var regionOfInterest: NormalizedRect = .fullImage
     public var targetFrameTime: CMTime = .zero
     public var objectMinimumNormalizedRadius: Float = 0
@@ -1068,6 +1069,10 @@ public final class DetectTrajectoriesRequest: ImageProcessingRequest, StatefulRe
         self.trajectoryLength = max(1, trajectoryLength)
         self.revision = revision ?? .revision1
         self.frameAnalysisSpacing = frameAnalysisSpacing ?? .zero
+        self.inner = VNDetectTrajectoriesRequest(
+            frameAnalysisSpacing: frameAnalysisSpacing ?? .zero,
+            trajectoryLength: max(1, trajectoryLength)
+        )
     }
 
     public func computeDevice(for computeStage: ComputeStage) -> MLComputeDevice? {
@@ -1109,7 +1114,15 @@ public final class DetectTrajectoriesRequest: ImageProcessingRequest, StatefulRe
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        inner.regionOfInterest = regionOfInterest.cgRect
+        inner.targetFrameTime = targetFrameTime
+        inner.objectMinimumNormalizedRadius = objectMinimumNormalizedRadius
+        inner.objectMaximumNormalizedRadius = objectMaximumNormalizedRadius
+        try handler.perform([inner])
+        return ((inner.results ?? []).compactMap { $0 as? VNTrajectoryObservation }).map {
+            TrajectoryObservation($0)
+        }
     }
 }
 
@@ -1885,7 +1898,14 @@ public struct GenerateForegroundInstanceMaskRequest: ImageProcessingRequest {
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        let request = VNGenerateForegroundInstanceMaskRequest()
+        request.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([request])
+        guard let observation = (request.results ?? []).first as? VNInstanceMaskObservation else {
+            throw VisionError.invalidModel("Linux has no Apple foreground mask model output")
+        }
+        return InstanceMaskObservation(observation)
     }
 
 }
@@ -2436,6 +2456,7 @@ public final class TrackHomographicImageRegistrationRequest: ImageProcessingRequ
     public var description: String { String(describing: descriptor) }
     public var hashValue: Int { descriptor.hashValue }
     private var devices: [ComputeStage: MLComputeDevice] = [:]
+    private var inner = VNTrackHomographicImageRegistrationRequest()
 
     public init(_ revision: Revision? = nil, frameAnalysisSpacing: CMTime? = nil) {
         self.revision = revision ?? .revision1
@@ -2477,7 +2498,13 @@ public final class TrackHomographicImageRegistrationRequest: ImageProcessingRequ
 
     @_spi(OpenUIKitHost)
     public func performOnHandler(_ handler: VNImageRequestHandler) throws -> Result {
-        try visionOverlayFailClosed(handler: handler, roi: regionOfInterest, descriptor: descriptor)
+        try visionPrepareOverlayPerform(handler: handler, roi: regionOfInterest)
+        inner.regionOfInterest = regionOfInterest.cgRect
+        try handler.perform([inner])
+        guard let alignment = inner.results?.first as? VNImageHomographicAlignmentObservation else {
+            throw VisionError.operationFailed("missing homographic alignment")
+        }
+        return ImageHomographicAlignmentObservation(alignment)
     }
 }
 

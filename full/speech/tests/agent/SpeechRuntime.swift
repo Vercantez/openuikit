@@ -1330,6 +1330,15 @@ private struct SpeechAttributeBox: Encodable {
 }
 
 func testSpeechAttributesScope() {
+    _ = AttributeScopes.SpeechAttributes.decodingConfiguration
+    _ = AttributeScopes.SpeechAttributes.encodingConfiguration
+    let keys = Array(AttributeScopes.SpeechAttributes.attributeKeys)
+    precondition(keys.count == 2)
+    _ = AttributeScopes.SpeechAttributes.DecodingConfiguration.self
+    _ = AttributeScopes.SpeechAttributes.EncodingConfiguration.self
+    _ = \AttributeScopes.SpeechAttributes.transcriptionConfidence
+    _ = \AttributeScopes.SpeechAttributes.audioTimeRange
+    _ = \AttributeScopes.speech
     let scope = AttributeScopes.SpeechAttributes()
     _ = scope.transcriptionConfidence
     _ = scope.audioTimeRange
@@ -1400,6 +1409,10 @@ func testAttributeDynamicLookup() {
     var attributed = AttributedString("hello")
     attributed[AttributeScopes.SpeechAttributes.ConfidenceAttribute.self] = 0.8
     precondition(attributed[AttributeScopes.SpeechAttributes.ConfidenceAttribute.self] == 0.8)
+    attributed.transcriptionConfidence = 0.75
+    precondition(attributed.transcriptionConfidence == 0.75)
+    attributed.speech.transcriptionConfidence = 0.6
+    precondition(attributed.speech.transcriptionConfidence == 0.6)
     attributed[AttributeScopes.SpeechAttributes.TimeRangeAttribute.self] = SpeechHostTimeRange(
         start: 0,
         duration: 0.2
