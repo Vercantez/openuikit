@@ -104,20 +104,45 @@ public protocol NWGroupDescriptor: AnyObject, Sendable {
     var members: [NWEndpoint] { get }
 }
 
+extension NWEndpoint {
+    /// Literal IP-multicast membership only (`224.0.0.0/4`, `ff00::/8`).
+    /// Hostnames are not resolved and non-address endpoints never join.
+    var isIPMulticast: Bool {
+        guard case .hostPort(let host, _) = self else { return false }
+        switch host {
+        case .ipv4(let address): return address.isMulticast
+        case .ipv6(let address): return address.isMulticast
+        case .name: return false
+        }
+    }
+}
+
 public class NWMulticastGroup: NWGroupDescriptor, @unchecked Sendable {
-    /// Fail-closed: construction never succeeds on Linux, so the group is
-    /// always empty. Stored only to satisfy the descriptor requirement.
-    public var members: [NWEndpoint] { [] }
+    /// Census shape is `final let` (`NWMulticastGroup.sourceFilter`,
+    /// `NWMulticastGroup.isUnicastDisabled`); both are fixed at construction.
+    /// Oracle (Xcode 26.1, macOS Network): `init(for: [loopback])` throws
+    /// EINVAL, while a literal IP-multicast group succeeds and echoes the
+    /// source filter and unicast flag. No IGMP/MLD join is performed here;
+    /// actual multicast use stays fail-closed at `NWConnectionGroup.start`.
+    public final let sourceFilter: NWEndpoint?
+    public final let isUnicastDisabled: Bool
+    private let storedMembers: [NWEndpoint]
+    public var members: [NWEndpoint] { storedMembers }
 
-    public init?(with endpoint: NWEndpoint) { return nil }
+    public init?(with endpoint: NWEndpoint) {
+        guard endpoint.isIPMulticast else { return nil }
+        storedMembers = [endpoint]
+        sourceFilter = nil
+        isUnicastDisabled = false
+    }
 
-    /// Linux has no multicast group membership daemon. Construction fails
-    /// closed instead of pretending IGMP/MLD joined.
-    public init(for endpoints: [NWEndpoint], from source: NWEndpoint? = nil, disableUnicast: Bool = false) throws {
-        _ = endpoints
-        _ = source
-        _ = disableUnicast
-        throw NWError.posix(.EOPNOTSUPP)
+    public init(for groupAddresses: [NWEndpoint], from source: NWEndpoint? = nil, disableUnicast: Bool = false) throws {
+        guard !groupAddresses.isEmpty, groupAddresses.allSatisfy({ $0.isIPMulticast }) else {
+            throw NWError.posix(.EINVAL)
+        }
+        storedMembers = groupAddresses
+        sourceFilter = source
+        isUnicastDisabled = disableUnicast
     }
 }
 

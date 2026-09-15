@@ -524,3 +524,51 @@ After: **2974 implemented / 20 declared / 53 deferred / 0 unavailable /
 
 No non-exempt test is cited by more than 40% of implemented rows
 (largest share 191/2974 = 6.4%).
+
+## Depth pass 2026-09-15 (wave 9 multicast/datagrams oracle sweep)
+
+Before: **2974 implemented / 20 declared / 53 deferred / 0 unavailable /
+0 not-applicable** (2994 nondeferred).
+
+Zero `View` overlay rows exist in this framework, so the overlay override
+does not apply. All 20 `declared` rows are `async` (19 `NetworkChannel`
+send/receive/ping/pong/close overloads plus async
+`NWPathMonitor.Iterator.next()`); a synchronous sealed test cannot call
+them without `await`, which the gate forbids, and zero `async` rows are
+`implemented` anywhere in this coverage, so they stay `declared`.
+
+This pass overturns two wave-8 deferral reasons with a fresh Apple oracle
+probe (`xcrun swiftc`, macOS 26.1 Network framework):
+
+- `NWMulticastGroup(for: [loopback])` throws `EINVAL` on Apple, while
+  `NWMulticastGroup(for: [224.0.0.1], from: source, disableUnicast: true)`
+  succeeds with `members == [endpoint]`, the source filter echoed, and
+  `isUnicastDisabled == true`. Construction is a pure data model on
+  Apple too; the IGMP/MLD join happens at group use, which stays
+  fail-closed here (`NWConnectionGroup.start` with a multicast
+  descriptor still fails). `init(for:from:disableUnicast:)` is therefore
+  now a validating data-model init: literal IPv4/IPv6 multicast members
+  succeed, everything else (including the empty array) throws `EINVAL`.
+  The census shapes are matched exactly (`final let sourceFilter`,
+  `final let isUnicastDisabled`, get-only `members`), and the non-census
+  `init?(with:)` keeps its loopback-returns-nil contract while
+  succeeding for multicast. Unprobed edges (empty array on Apple,
+  non-address endpoints, hostname resolution) are recorded in
+  `oracle-questions.tsv`.
+- `NetworkConnection<QUIC>.datagrams` is a *synchronous* getter
+  (digester: extension `where ApplicationProtocol == QUIC`, type
+  `QUIC.Datagrams<QUICDatagram>`; the wave-8 note calling it async was
+  wrong, and the declaration already existed in `NetworkTyped.swift`).
+  It cites the existing `testQUICProtocolStackDataModelAndFailClosedStart`
+  call, now with a parent-identity assertion; no product change needed.
+
+New evidence: `testMulticastGroupDataModel` (renamed from
+`testMulticastGroupInitFailsClosed`; the 5 rows citing the old name now
+cite the new one) exercises `members` / `sourceFilter` /
+`isUnicastDisabled` on both inits plus the still-fail-closed group use.
+
+After: **2978 implemented / 20 declared / 49 deferred / 0 unavailable /
+0 not-applicable** (2998 nondeferred). Implemented gain **+4**.
+
+No non-exempt test is cited by more than 40% of implemented rows
+(largest share 191/2978 = 6.4%).

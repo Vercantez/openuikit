@@ -1,5 +1,10 @@
 import Foundation
 
+/// Never dereferenced. Placeholder backing the Linux-only
+/// `BNNS.LossFunction.YoloParameters()` default initializer, which has no
+/// Apple counterpart with a default anchor buffer.
+private var _openUIKitYoloAnchorSentinel: Float = 0
+
 public struct BLAS {
     public static var threadingModel: BLAS.ThreadingModel {
         get { BLAS.ThreadingModel(rawValue: BLASGetThreading().rawValue) }
@@ -52,89 +57,105 @@ public enum BNNS {
     }
     public struct AdamOptimizer {
         public init() {}
+        public init(
+            learningRate: Float = 0.001,
+            beta1: Float = 0.9,
+            beta2: Float = 0.999,
+            timeStep: Float,
+            epsilon: Float = 1e-8,
+            gradientScale: Float,
+            regularizationScale: Float,
+            gradientClipping: BNNS.GradientClipping,
+            regularizationFunction: BNNSOptimizerRegularizationFunction,
+            usesAMSGrad: Bool = false
+        ) {
+            self.learningRate = learningRate
+            self.beta1 = beta1
+            self.beta2 = beta2
+            self.timeStep = timeStep
+            self.epsilon = epsilon
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientClipping = gradientClipping
+            self.gradientBounds = nil
+            self.regularizationFunction = regularizationFunction
+            self.usesAMSGrad = usesAMSGrad
+        }
+        public init(
+            learningRate: Float,
+            beta1: Float,
+            beta2: Float,
+            timeStep: Float,
+            epsilon: Float,
+            gradientScale: Float,
+            regularizationScale: Float,
+            clipsGradientsTo gradientBounds: ClosedRange<Float>? = nil,
+            regularizationFunction: BNNSOptimizerRegularizationFunction
+        ) {
+            self.learningRate = learningRate
+            self.beta1 = beta1
+            self.beta2 = beta2
+            self.timeStep = timeStep
+            self.epsilon = epsilon
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientBounds = gradientBounds
+            if let gradientBounds {
+                self.gradientClipping = .byValue(bounds: gradientBounds)
+            } else {
+                self.gradientClipping = .none
+            }
+            self.regularizationFunction = regularizationFunction
+            self.usesAMSGrad = false
+        }
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
-        public var usesAMSGrad: Bool {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var learningRate: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientBounds: ClosedRange<Float>? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientClipping: BNNS.GradientClipping {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var regularizationScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var regularizationFunction: BNNSOptimizerRegularizationFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var usesAMSGrad: Bool = false
+        public var learningRate: Float = 0.001
+        public var gradientScale: Float = 0
+        public var gradientBounds: ClosedRange<Float>? = nil
+        public var gradientClipping: BNNS.GradientClipping = .none
+        public var regularizationScale: Float = 0
+        public var regularizationFunction: BNNSOptimizerRegularizationFunction = BNNSOptimizerRegularizationL1
         public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var beta1: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var beta2: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var epsilon: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var timeStep: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var beta1: Float = 0.9
+        public var beta2: Float = 0.999
+        public var epsilon: Float = 1e-8
+        public var timeStep: Float = 1
     }
     public struct AdamWOptimizer {
         public init() {}
-        public var weightDecay: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            learningRate: Float = 0.001,
+            beta1: Float = 0.9,
+            beta2: Float = 0.999,
+            timeStep: Float = 1,
+            epsilon: Float = 1e-8,
+            gradientScale: Float,
+            weightDecay: Float = 1e-2,
+            gradientClipping: BNNS.GradientClipping,
+            usesAMSGrad: Bool = false
+        ) {
+            self.learningRate = learningRate
+            self.beta1 = beta1
+            self.beta2 = beta2
+            self.timeStep = timeStep
+            self.epsilon = epsilon
+            self.gradientScale = gradientScale
+            self.weightDecay = weightDecay
+            self.gradientClipping = gradientClipping
+            self.usesAMSGrad = usesAMSGrad
         }
-        public var learningRate: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientClipping: BNNS.GradientClipping {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var weightDecay: Float = 1e-2
+        public var learningRate: Float = 0.001
+        public var gradientScale: Float = 0
+        public var gradientClipping: BNNS.GradientClipping = .none
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
         public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var beta1: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var beta2: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var epsilon: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var timeStep: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var usesAMSGrad: Bool = false
+        public var beta1: Float = 0.9
+        public var beta2: Float = 0.999
+        public var epsilon: Float = 1e-8
+        public var timeStep: Float = 1
     }
     public enum ArithmeticBinaryFunction: Equatable, Hashable {
         case divideNoNaN
@@ -245,6 +266,31 @@ public enum BNNS {
         case standard
     }
     public class CropResizeLayer {
+        public init() {
+            self.coordinatesAreNormalized = false
+            self.spatialScale = 1
+            self.extrapolationValue = 0
+            self.samplingMode = .default
+            self.boxCoordinateMode = .cornersWidthFirst
+        }
+        public init(
+            coordinatesAreNormalized: Bool,
+            spatialScale: Float,
+            extrapolationValue: Float = 0,
+            samplingMode: BNNS.CropResizeLayer.LinearSamplingMode = .default,
+            boxCoordinateMode: BNNS.CropResizeLayer.BoxCoordinateMode
+        ) {
+            self.coordinatesAreNormalized = coordinatesAreNormalized
+            self.spatialScale = spatialScale
+            self.extrapolationValue = extrapolationValue
+            self.samplingMode = samplingMode
+            self.boxCoordinateMode = boxCoordinateMode
+        }
+        public var coordinatesAreNormalized: Bool
+        public var spatialScale: Float
+        public var extrapolationValue: Float
+        public var samplingMode: BNNS.CropResizeLayer.LinearSamplingMode
+        public var boxCoordinateMode: BNNS.CropResizeLayer.BoxCoordinateMode
         public enum BoxCoordinateMode: Equatable, Hashable {
             case cornersWidthFirst
             case cornersHeightFirst
@@ -331,167 +377,145 @@ public enum BNNS {
     }
     public struct FusedBinaryArithmeticParameters {
         public init() {}
-        public var inputADescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            inputADescriptorType: BNNS.DescriptorType,
+            inputBDescriptorType: BNNS.DescriptorType,
+            outputDescriptorType: BNNS.DescriptorType,
+            function: BNNS.ArithmeticBinaryFunction
+        ) {
+            self.inputADescriptorType = inputADescriptorType
+            self.inputBDescriptorType = inputBDescriptorType
+            self.outputDescriptorType = outputDescriptorType
+            self.function = function
         }
-        public var inputBDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var outputDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var function: BNNS.ArithmeticBinaryFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var inputADescriptorType: BNNS.DescriptorType = .sample
+        public var inputBDescriptorType: BNNS.DescriptorType = .sample
+        public var outputDescriptorType: BNNS.DescriptorType = .sample
+        public var function: BNNS.ArithmeticBinaryFunction = .add
     }
     public class FusedConvolutionNormalizationLayer: FusedLayer {
     }
     public struct FusedConvolutionParameters {
         public init() {}
-        public var dilationStride: (x: Int, y: Int) {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            type: BNNS.ConvolutionType,
+            weights: BNNSNDArrayDescriptor,
+            bias: BNNSNDArrayDescriptor?,
+            stride: (x: Int, y: Int),
+            dilationStride: (x: Int, y: Int),
+            groupSize: Int,
+            padding: BNNS.ConvolutionPadding
+        ) {
+            self.type = type
+            self.weights = weights
+            self.bias = bias
+            self.stride = stride
+            self.dilationStride = dilationStride
+            self.groupSize = groupSize
+            self.padding = padding
         }
-        public var bias: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var type: BNNS.ConvolutionType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var stride: (x: Int, y: Int) {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var padding: BNNS.ConvolutionPadding {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var weights: BNNSNDArrayDescriptor {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var groupSize: Int {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var dilationStride: (x: Int, y: Int) = (x: 1, y: 1)
+        public var bias: BNNSNDArrayDescriptor? = nil
+        public var type: BNNS.ConvolutionType = .standard
+        public var stride: (x: Int, y: Int) = (x: 1, y: 1)
+        public var padding: BNNS.ConvolutionPadding = .zero
+        public var weights: BNNSNDArrayDescriptor = BNNSNDArrayDescriptor()
+        public var groupSize: Int = 1
     }
     public struct FusedDequantizationParameters {
         public init() {}
-        public var axis: Int? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(scale: BNNSNDArrayDescriptor?, bias: BNNSNDArrayDescriptor?) {
+            self.scale = scale
+            self.bias = bias
         }
-        public var bias: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var scale: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var axis: Int? = nil
+        public var bias: BNNSNDArrayDescriptor? = nil
+        public var scale: BNNSNDArrayDescriptor? = nil
     }
     public class FusedFullyConnectedNormalizationLayer: FusedLayer {
     }
     public struct FusedFullyConnectedParameters {
         public init() {}
-        public var bias: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(weights: BNNSNDArrayDescriptor, bias: BNNSNDArrayDescriptor?) {
+            self.weights = weights
+            self.bias = bias
         }
-        public var weights: BNNSNDArrayDescriptor {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var bias: BNNSNDArrayDescriptor? = nil
+        public var weights: BNNSNDArrayDescriptor = BNNSNDArrayDescriptor()
     }
     public class FusedLayer: Layer {
     }
     public struct FusedNormalizationParameters {
         public init() {}
-        public var activation: BNNS.ActivationFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            type: BNNS.NormalizationType,
+            beta: BNNSNDArrayDescriptor? = nil,
+            gamma: BNNSNDArrayDescriptor? = nil,
+            momentum: Float = 0,
+            epsilon: Float,
+            activation: BNNS.ActivationFunction
+        ) {
+            self.type = type
+            self.beta = beta
+            self.gamma = gamma
+            self.momentum = momentum
+            self.epsilon = epsilon
+            self.activation = activation
         }
-        public var beta: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var type: BNNS.NormalizationType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gamma: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var epsilon: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var momentum: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var activation: BNNS.ActivationFunction = .identity
+        public var beta: BNNSNDArrayDescriptor? = nil
+        public var type: BNNS.NormalizationType = .group(groupCount: 1)
+        public var gamma: BNNSNDArrayDescriptor? = nil
+        public var epsilon: Float = 0
+        public var momentum: Float = 0
     }
     public class FusedParametersLayer: FusedLayer {
     }
     public struct FusedQuantizationParameters {
         public init() {}
-        public var axis: Int? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(scale: BNNSNDArrayDescriptor?, bias: BNNSNDArrayDescriptor?) {
+            self.scale = scale
+            self.bias = bias
         }
-        public var bias: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var scale: BNNSNDArrayDescriptor? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var axis: Int? = nil
+        public var bias: BNNSNDArrayDescriptor? = nil
+        public var scale: BNNSNDArrayDescriptor? = nil
     }
     public struct FusedTernaryArithmeticParameters {
         public init() {}
-        public var inputADescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            inputADescriptorType: BNNS.DescriptorType,
+            inputBDescriptorType: BNNS.DescriptorType,
+            inputCDescriptorType: BNNS.DescriptorType,
+            outputDescriptorType: BNNS.DescriptorType,
+            function: BNNS.ArithmeticTernaryFunction
+        ) {
+            self.inputADescriptorType = inputADescriptorType
+            self.inputBDescriptorType = inputBDescriptorType
+            self.inputCDescriptorType = inputCDescriptorType
+            self.outputDescriptorType = outputDescriptorType
+            self.function = function
         }
-        public var inputBDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var inputCDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var outputDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var function: BNNS.ArithmeticTernaryFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var inputADescriptorType: BNNS.DescriptorType = .sample
+        public var inputBDescriptorType: BNNS.DescriptorType = .sample
+        public var inputCDescriptorType: BNNS.DescriptorType = .sample
+        public var outputDescriptorType: BNNS.DescriptorType = .sample
+        public var function: BNNS.ArithmeticTernaryFunction = .multiplyAdd
     }
     public struct FusedUnaryArithmeticParameters {
         public init() {}
-        public var inputDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            inputDescriptorType: BNNS.DescriptorType,
+            outputDescriptorType: BNNS.DescriptorType,
+            function: BNNS.ArithmeticUnaryFunction
+        ) {
+            self.inputDescriptorType = inputDescriptorType
+            self.outputDescriptorType = outputDescriptorType
+            self.function = function
         }
-        public var outputDescriptorType: BNNS.DescriptorType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var function: BNNS.ArithmeticUnaryFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var inputDescriptorType: BNNS.DescriptorType = .sample
+        public var outputDescriptorType: BNNS.DescriptorType = .sample
+        public var function: BNNS.ArithmeticUnaryFunction = .abs
     }
     public enum GradientClipping {
         case byGlobalNorm(threshold: Float, globalNorm: Float = 0)
@@ -529,63 +553,60 @@ public enum BNNS {
         case huber(huberDelta: Float)
         public var bnnsLossFunction: BNNSLossFunction { preconditionFailure("Accelerate Linux: unread property") }
         public struct YoloParameters {
-            public init() {}
-            public var huberDelta: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
+            public init() {
+                self.init(
+                    huberDelta: 0, gridColumnCount: 0, gridRowsCount: 0,
+                    anchorBoxCount: 0, anchorBoxSize: 0, rescore: false,
+                    xyScale: 0, whScale: 0, objectScale: 0, noObjectScale: 0,
+                    classificationScale: 0, objectMinimumIoU: 0, noObjectMaximumIoU: 0,
+                    anchorsData: &_openUIKitYoloAnchorSentinel
+                )
             }
-            public var anchorsData: UnsafeMutablePointer<Float> {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
+            public init(
+                huberDelta: Float,
+                gridColumnCount: Int,
+                gridRowsCount: Int,
+                anchorBoxCount: Int,
+                anchorBoxSize: Int,
+                rescore: Bool,
+                xyScale: Float,
+                whScale: Float,
+                objectScale: Float,
+                noObjectScale: Float,
+                classificationScale: Float,
+                objectMinimumIoU: Float,
+                noObjectMaximumIoU: Float,
+                anchorsData: UnsafeMutablePointer<Float>
+            ) {
+                self.huberDelta = huberDelta
+                self.gridColumnCount = gridColumnCount
+                self.gridRowsCount = gridRowsCount
+                self.anchorBoxCount = anchorBoxCount
+                self.anchorBoxSize = anchorBoxSize
+                self.rescore = rescore
+                self.xyScale = xyScale
+                self.whScale = whScale
+                self.objectScale = objectScale
+                self.noObjectScale = noObjectScale
+                self.classificationScale = classificationScale
+                self.objectMinimumIoU = objectMinimumIoU
+                self.noObjectMaximumIoU = noObjectMaximumIoU
+                self.anchorsData = anchorsData
             }
-            public var objectScale: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var anchorBoxSize: Int {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var gridRowsCount: Int {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var noObjectScale: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var anchorBoxCount: Int {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var gridColumnCount: Int {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var objectMinimumIoU: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var noObjectMaximumIoU: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var classificationScale: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var rescore: Bool {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var whScale: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
-            public var xyScale: Float {
-                get { preconditionFailure("Accelerate Linux: unread property") }
-                set { _ = newValue }
-            }
+            public var huberDelta: Float = 0
+            public var anchorsData: UnsafeMutablePointer<Float>
+            public var objectScale: Float = 0
+            public var anchorBoxSize: Int = 0
+            public var gridRowsCount: Int = 0
+            public var noObjectScale: Float = 0
+            public var anchorBoxCount: Int = 0
+            public var gridColumnCount: Int = 0
+            public var objectMinimumIoU: Float = 0
+            public var noObjectMaximumIoU: Float = 0
+            public var classificationScale: Float = 0
+            public var rescore: Bool = false
+            public var whScale: Float = 0
+            public var xyScale: Float = 0
         }
     }
     public class LossLayer: Layer {
@@ -600,6 +621,16 @@ public enum BNNS {
     }
     public struct NearestNeighbors {
         public init() {}
+        public init(capacity: Int, dimensionCount: Int, neighborCount: Int, dataType: BNNSDataType) {
+            self.capacity = capacity
+            self.dimensionCount = dimensionCount
+            self.neighborCount = neighborCount
+            self.dataType = dataType
+        }
+        public var capacity: Int = 0
+        public var dimensionCount: Int = 0
+        public var neighborCount: Int = 0
+        public var dataType: BNNSDataType = BNNSDataType(rawValue: 0)
     }
     @frozen public struct Norm: Equatable, Hashable, Sendable {
         public var rawValue: Float
@@ -644,48 +675,66 @@ public enum BNNS {
     }
     public struct RMSPropOptimizer {
         public init() {}
+        public init(
+            learningRate: Float = 1e-2,
+            alpha: Float = 0.99,
+            epsilon: Float = 1e-8,
+            centered: Bool,
+            momentum: Float = 0,
+            gradientScale: Float,
+            regularizationScale: Float,
+            gradientClipping: BNNS.GradientClipping,
+            regularizationFunction: BNNSOptimizerRegularizationFunction
+        ) {
+            self.learningRate = learningRate
+            self.alpha = alpha
+            self.epsilon = epsilon
+            self.centered = centered
+            self.momentum = momentum
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientClipping = gradientClipping
+            self.gradientBounds = nil
+            self.regularizationFunction = regularizationFunction
+        }
+        public init(
+            learningRate: Float,
+            alpha: Float,
+            epsilon: Float,
+            centered: Bool,
+            momentum: Float,
+            gradientScale: Float,
+            regularizationScale: Float,
+            clipsGradientsTo gradientBounds: ClosedRange<Float>? = nil,
+            regularizationFunction: BNNSOptimizerRegularizationFunction
+        ) {
+            self.learningRate = learningRate
+            self.alpha = alpha
+            self.epsilon = epsilon
+            self.centered = centered
+            self.momentum = momentum
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientBounds = gradientBounds
+            if let gradientBounds {
+                self.gradientClipping = .byValue(bounds: gradientBounds)
+            } else {
+                self.gradientClipping = .none
+            }
+            self.regularizationFunction = regularizationFunction
+        }
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
-        public var learningRate: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientBounds: ClosedRange<Float>? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientClipping: BNNS.GradientClipping {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var regularizationScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var regularizationFunction: BNNSOptimizerRegularizationFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var learningRate: Float = 1e-2
+        public var gradientScale: Float = 0
+        public var gradientBounds: ClosedRange<Float>? = nil
+        public var gradientClipping: BNNS.GradientClipping = .none
+        public var regularizationScale: Float = 0
+        public var regularizationFunction: BNNSOptimizerRegularizationFunction = BNNSOptimizerRegularizationL1
         public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var alpha: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var epsilon: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var centered: Bool {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var momentum: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var alpha: Float = 0.99
+        public var epsilon: Float = 1e-8
+        public var centered: Bool = false
+        public var momentum: Float = 0
     }
     public class RandomGenerator {
         public var state: BNNS.RandomGeneratorState {
@@ -743,48 +792,89 @@ public enum BNNS {
     }
     public struct SGDMomentumOptimizer {
         public init() {}
+        public init(
+            learningRate: Float,
+            momentum: Float = 0,
+            gradientScale: Float,
+            regularizationScale: Float,
+            gradientClipping: BNNS.GradientClipping,
+            usesNesterovMomentum: Bool = false,
+            regularizationFunction: BNNSOptimizerRegularizationFunction,
+            sgdMomentumVariant: BNNSOptimizerSGDMomentumVariant
+        ) {
+            self.learningRate = learningRate
+            self.momentum = momentum
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientClipping = gradientClipping
+            self.gradientBounds = nil
+            self.usesNesterovMomentum = usesNesterovMomentum
+            self.usesNestrovMomentum = usesNesterovMomentum
+            self.regularizationFunction = regularizationFunction
+            self.sgdMomentumVariant = sgdMomentumVariant
+        }
+        public init(
+            learningRate: Float,
+            momentum: Float,
+            gradientScale: Float,
+            regularizationScale: Float,
+            clipsGradientsTo gradientBounds: ClosedRange<Float>? = nil,
+            usesNestrovMomentum: Bool,
+            regularizationFunction: BNNSOptimizerRegularizationFunction,
+            sgdMomentumVariant: BNNSOptimizerSGDMomentumVariant
+        ) {
+            self.learningRate = learningRate
+            self.momentum = momentum
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientBounds = gradientBounds
+            if let gradientBounds {
+                self.gradientClipping = .byValue(bounds: gradientBounds)
+            } else {
+                self.gradientClipping = .none
+            }
+            self.usesNestrovMomentum = usesNestrovMomentum
+            self.usesNesterovMomentum = usesNestrovMomentum
+            self.regularizationFunction = regularizationFunction
+            self.sgdMomentumVariant = sgdMomentumVariant
+        }
+        public init(
+            learningRate: Float,
+            momentum: Float,
+            gradientScale: Float,
+            regularizationScale: Float,
+            clipsGradientsTo gradientBounds: ClosedRange<Float>? = nil,
+            usesNesterovMomentum: Bool,
+            regularizationFunction: BNNSOptimizerRegularizationFunction,
+            sgdMomentumVariant: BNNSOptimizerSGDMomentumVariant
+        ) {
+            self.learningRate = learningRate
+            self.momentum = momentum
+            self.gradientScale = gradientScale
+            self.regularizationScale = regularizationScale
+            self.gradientBounds = gradientBounds
+            if let gradientBounds {
+                self.gradientClipping = .byValue(bounds: gradientBounds)
+            } else {
+                self.gradientClipping = .none
+            }
+            self.usesNesterovMomentum = usesNesterovMomentum
+            self.usesNestrovMomentum = usesNesterovMomentum
+            self.regularizationFunction = regularizationFunction
+            self.sgdMomentumVariant = sgdMomentumVariant
+        }
         public var bnnsOptimizerFunction: BNNSOptimizerFunction { preconditionFailure("Accelerate Linux: unread property") }
-        public var learningRate: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientBounds: ClosedRange<Float>? {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var gradientClipping: BNNS.GradientClipping {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var sgdMomentumVariant: BNNSOptimizerSGDMomentumVariant {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var regularizationScale: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var usesNestrovMomentum: Bool {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var usesNesterovMomentum: Bool {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var regularizationFunction: BNNSOptimizerRegularizationFunction {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var learningRate: Float = 0.01
+        public var gradientScale: Float = 0
+        public var gradientBounds: ClosedRange<Float>? = nil
+        public var gradientClipping: BNNS.GradientClipping = .none
+        public var sgdMomentumVariant: BNNSOptimizerSGDMomentumVariant = BNNSOptimizerSGDMomentumVariant(rawValue: 0)
+        public var regularizationScale: Float = 0
+        public var usesNestrovMomentum: Bool = false
+        public var usesNesterovMomentum: Bool = false
+        public var regularizationFunction: BNNSOptimizerRegularizationFunction = BNNSOptimizerRegularizationL1
         public var accumulatorCountMultiplier: Int { preconditionFailure("Accelerate Linux: unread property") }
-        public var momentum: Float {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var momentum: Float = 0
     }
     public enum Shape: ExpressibleByArrayLiteral {
         case tensor3DNSE(Int, Int, Int, stride: (Int, Int, Int) = (0, 0, 0))
@@ -940,18 +1030,18 @@ public enum BNNS {
     }
     public struct SparseParameters {
         public init() {}
-        public var targetSystem: BNNSTargetSystem {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init(
+            type: BNNS.SparsityType = .unstructured,
+            ratio: (numerator: UInt32, denominator: UInt32),
+            targetSystem: BNNSTargetSystem
+        ) {
+            self.type = type
+            self.ratio = ratio
+            self.targetSystem = targetSystem
         }
-        public var type: BNNS.SparsityType {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var ratio: (numerator: UInt32, denominator: UInt32) {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var targetSystem: BNNSTargetSystem = BNNSTargetSystem(rawValue: 0)
+        public var type: BNNS.SparsityType = .unstructured
+        public var ratio: (numerator: UInt32, denominator: UInt32) = (numerator: 1, denominator: 1)
     }
     public enum SparsityType: Equatable, Hashable {
         case unstructured
@@ -1814,18 +1904,25 @@ public enum vImage {
     }
     public struct MultidimensionalLookupTable {
         public init() {}
-        public var sourceChannelCount: Int {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
+        public init<T>(
+            entryCountPerSourceChannel: [UInt8],
+            destinationChannelCount: Int,
+            data: T
+        ) where T: AccelerateBuffer, T.Element == UInt16 {
+            self.entryCountPerSourceChannel = entryCountPerSourceChannel
+            self.destinationChannelCount = destinationChannelCount
+            self.sourceChannelCount = entryCountPerSourceChannel.count
+            var copied: [UInt16] = []
+            data.withUnsafeBufferPointer { copied = Array($0) }
+            self.tableData = copied
         }
-        public var destinationChannelCount: Int {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
-        public var entryCountPerSourceChannel: [UInt8] {
-            get { preconditionFailure("Accelerate Linux: unread property") }
-            set { _ = newValue }
-        }
+        public var sourceChannelCount: Int = 0
+        public var destinationChannelCount: Int = 0
+        public var entryCountPerSourceChannel: [UInt8] = []
+        /// Linux-side copy of the lookup entries. Apple keeps this table
+        /// inside the vImage object; the stored copy lets host tests verify
+        /// the initializer recorded its inputs.
+        public var tableData: [UInt16] = []
         public enum InterpolationMethod: Equatable, Hashable {
             case full
             case half
@@ -2039,3 +2136,500 @@ public var BNNSActivationFunctionIdentity: BNNSActivationFunction { BNNSActivati
 public var BNNSActivationFunctionScaledTanh: BNNSActivationFunction { BNNSActivationFunction(rawValue: 5) }
 public var BNNSActivationFunctionRectifiedLinear: BNNSActivationFunction { BNNSActivationFunction(rawValue: 1) }
 public var BNNSActivationFunctionLeakyRectifiedLinear: BNNSActivationFunction { BNNSActivationFunction(rawValue: 2) }
+
+// MARK: - BNNS layer fail-closed creation and apply (wave 9)
+
+/// Linux has no BNNS runtime, so every overlay layer designated initializer
+/// below fails closed by returning `nil` (matching the established
+/// "BNNS constructors return nil" behavior), and every `apply` throws
+/// `BNNS.Error.layerApplyFail`. Signatures reproduce the Apple declarations
+/// recorded in `reference/public-surface.tsv`.
+public extension BNNS.ResizeLayer {
+    convenience init?(
+        interpolationMethod: BNNS.InterpolationMethod,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        alignsCorners: Bool,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = interpolationMethod; _ = input; _ = output
+        _ = alignsCorners; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.DropoutLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        rate: Float,
+        seed: UInt32,
+        control: UInt8,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = rate; _ = seed; _ = control
+        _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.PaddingLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        mode: BNNS.PaddingMode,
+        size: [(x: Int, y: Int)],
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = mode; _ = size; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.PermuteLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        permutation: [Int],
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = permutation; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.PoolingLayer {
+    convenience init?(
+        type poolingType: BNNS.PoolingType,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        bias: BNNSNDArrayDescriptor?,
+        activation: BNNS.ActivationFunction,
+        kernelSize: (width: Int, height: Int),
+        stride: (x: Int, y: Int),
+        padding: BNNS.ConvolutionPadding,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = poolingType; _ = input; _ = output; _ = bias; _ = activation
+        _ = kernelSize; _ = stride; _ = padding; _ = filterParameters
+        return nil
+    }
+
+    func apply(batchSize: Int, input: BNNSNDArrayDescriptor, output: BNNSNDArrayDescriptor) throws {
+        _ = batchSize; _ = input; _ = output
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.EmbeddingLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        dictionary: BNNSNDArrayDescriptor,
+        paddingIndex: Int,
+        maximumNorm: Float,
+        normType: BNNS.Norm,
+        scalesGradientByFrequency: Bool,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = dictionary; _ = paddingIndex
+        _ = maximumNorm; _ = normType; _ = scalesGradientByFrequency
+        _ = filterParameters
+        return nil
+    }
+
+    func apply(batchSize: Int, input: BNNSNDArrayDescriptor, output: BNNSNDArrayDescriptor) throws {
+        _ = batchSize; _ = input; _ = output
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.ReductionLayer {
+    convenience init?(
+        function reductionFunction: BNNS.ReductionFunction,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        weights: BNNSNDArrayDescriptor?,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = reductionFunction; _ = input; _ = output; _ = weights
+        _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.ActivationLayer {
+    convenience init?(
+        function activationFunction: BNNS.ActivationFunction,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = activationFunction; _ = input; _ = output; _ = filterParameters
+        return nil
+    }
+
+    convenience init?(
+        function activationFunction: BNNS.ActivationFunction,
+        axes: [Int],
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = activationFunction; _ = axes; _ = input; _ = output
+        _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.ConvolutionLayer {
+    convenience init?(
+        type convolutionType: BNNS.ConvolutionType,
+        input: BNNSNDArrayDescriptor,
+        weights: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        bias: BNNSNDArrayDescriptor?,
+        padding: BNNS.ConvolutionPadding,
+        activation: BNNS.ActivationFunction,
+        groupCount: Int,
+        stride: (x: Int, y: Int),
+        dilationStride: (x: Int, y: Int),
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = convolutionType; _ = input; _ = weights; _ = output; _ = bias
+        _ = padding; _ = activation; _ = groupCount; _ = stride
+        _ = dilationStride; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.NormalizationLayer {
+    convenience init?(
+        type normalization: BNNS.NormalizationType,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        beta: BNNSNDArrayDescriptor,
+        gamma: BNNSNDArrayDescriptor,
+        momentum: Float = 0,
+        epsilon: Float,
+        activation: BNNS.ActivationFunction,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = normalization; _ = input; _ = output; _ = beta; _ = gamma
+        _ = momentum; _ = epsilon; _ = activation; _ = filterParameters
+        return nil
+    }
+
+    func apply(
+        batchSize: Int,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        for learningPhase: BNNS.LearningPhase
+    ) throws {
+        _ = batchSize; _ = input; _ = output; _ = learningPhase
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.FullyConnectedLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        weights: BNNSNDArrayDescriptor,
+        bias: BNNSNDArrayDescriptor?,
+        activation: BNNS.ActivationFunction,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = weights; _ = bias; _ = activation
+        _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.FusedParametersLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        fusedLayerParameters: [any FusableLayerParameters],
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = fusedLayerParameters; _ = filterParameters
+        return nil
+    }
+
+    convenience init?(
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        inputC: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        fusedLayerParameters: [any FusableLayerParameters],
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = inputA; _ = inputB; _ = inputC; _ = output
+        _ = fusedLayerParameters; _ = filterParameters
+        return nil
+    }
+
+    convenience init?(
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        fusedLayerParameters: [any FusableLayerParameters],
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = inputA; _ = inputB; _ = output
+        _ = fusedLayerParameters; _ = filterParameters
+        return nil
+    }
+
+    func apply(
+        batchSize: Int,
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        inputC: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        for learningPhase: BNNS.LearningPhase
+    ) throws {
+        _ = batchSize; _ = inputA; _ = inputB; _ = inputC; _ = output
+        _ = learningPhase
+        throw BNNS.Error.layerApplyFail
+    }
+
+    func apply(
+        batchSize: Int,
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        for learningPhase: BNNS.LearningPhase
+    ) throws {
+        _ = batchSize; _ = inputA; _ = inputB; _ = output; _ = learningPhase
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.TernaryArithmeticLayer {
+    convenience init?(
+        inputA: BNNSNDArrayDescriptor,
+        inputADescriptorType: BNNS.DescriptorType,
+        inputB: BNNSNDArrayDescriptor,
+        inputBDescriptorType: BNNS.DescriptorType,
+        inputC: BNNSNDArrayDescriptor,
+        inputCDescriptorType: BNNS.DescriptorType,
+        output: BNNSNDArrayDescriptor,
+        outputDescriptorType: BNNS.DescriptorType,
+        function: BNNS.ArithmeticTernaryFunction,
+        activation: BNNS.ActivationFunction = .identity,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = inputA; _ = inputADescriptorType; _ = inputB; _ = inputBDescriptorType
+        _ = inputC; _ = inputCDescriptorType; _ = output; _ = outputDescriptorType
+        _ = function; _ = activation; _ = filterParameters
+        return nil
+    }
+
+    func apply(
+        batchSize: Int,
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        inputC: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor
+    ) throws {
+        _ = batchSize; _ = inputA; _ = inputB; _ = inputC; _ = output
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.BroadcastMatrixMultiplyLayer {
+    convenience init?(
+        inputA: BNNSNDArrayDescriptor,
+        transposed transposeA: Bool,
+        isWeights aIsWeights: Bool,
+        inputB: BNNSNDArrayDescriptor,
+        transposed transposeB: Bool,
+        isWeights bIsWeights: Bool,
+        output: BNNSNDArrayDescriptor,
+        alpha: Float,
+        accumulatesToOutput: Bool,
+        isQuadratic: Bool,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = inputA; _ = transposeA; _ = aIsWeights; _ = inputB; _ = transposeB
+        _ = bIsWeights; _ = output; _ = alpha; _ = accumulatesToOutput
+        _ = isQuadratic; _ = filterParameters
+        return nil
+    }
+
+    func apply(
+        batchSize: Int,
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor
+    ) throws {
+        _ = batchSize; _ = inputA; _ = inputB; _ = output
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.FusedConvolutionNormalizationLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        convolutionWeights: BNNSNDArrayDescriptor,
+        convolutionBias: BNNSNDArrayDescriptor?,
+        convolutionStride: (x: Int, y: Int),
+        convolutionDilationStride: (x: Int, y: Int),
+        convolutionPadding: BNNS.ConvolutionPadding,
+        normalization: BNNS.NormalizationType,
+        normalizationBeta: BNNSNDArrayDescriptor,
+        normalizationGamma: BNNSNDArrayDescriptor,
+        normalizationMomentum: Float,
+        normalizationEpsilon: Float,
+        normalizationActivation: BNNS.ActivationFunction,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = convolutionWeights; _ = convolutionBias
+        _ = convolutionStride; _ = convolutionDilationStride; _ = convolutionPadding
+        _ = normalization; _ = normalizationBeta; _ = normalizationGamma
+        _ = normalizationMomentum; _ = normalizationEpsilon
+        _ = normalizationActivation; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.FusedFullyConnectedNormalizationLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        fullyConnectedWeights: BNNSNDArrayDescriptor,
+        fullyConnectedBias: BNNSNDArrayDescriptor?,
+        normalization: BNNS.NormalizationType,
+        normalizationBeta: BNNSNDArrayDescriptor,
+        normalizationGamma: BNNSNDArrayDescriptor,
+        normalizationMomentum: Float,
+        normalizationEpsilon: Float,
+        normalizationActivation: BNNS.ActivationFunction,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = fullyConnectedWeights; _ = fullyConnectedBias
+        _ = normalization; _ = normalizationBeta; _ = normalizationGamma
+        _ = normalizationMomentum; _ = normalizationEpsilon
+        _ = normalizationActivation; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.GramLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        alpha: Float,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = alpha; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.LossLayer {
+    convenience init?(
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        lossFunction: BNNS.LossFunction,
+        lossReduction: BNNS.LossReduction,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = input; _ = output; _ = lossFunction; _ = lossReduction
+        _ = filterParameters
+        return nil
+    }
+
+    func apply(
+        batchSize: Int,
+        input: BNNSNDArrayDescriptor,
+        labels: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        generatingInputGradient inputGradient: BNNSNDArrayDescriptor
+    ) throws {
+        _ = batchSize; _ = input; _ = labels; _ = output; _ = inputGradient
+        throw BNNS.Error.layerApplyFail
+    }
+
+    func apply(
+        batchSize: Int,
+        input: BNNSNDArrayDescriptor,
+        labels: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        weights: BNNSNDArrayDescriptor?,
+        broadcastsWeights: Bool,
+        generatingInputGradient inputGradient: BNNSNDArrayDescriptor
+    ) throws {
+        _ = batchSize; _ = input; _ = labels; _ = output; _ = weights
+        _ = broadcastsWeights; _ = inputGradient
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.RandomGenerator {
+    convenience init?(
+        method: BNNS.RandomGeneratorMethod,
+        seed: UInt64? = nil,
+        filterParameters: BNNSFilterParameters? = nil
+    ) {
+        _ = method; _ = seed; _ = filterParameters
+        return nil
+    }
+}
+
+public extension BNNS.FusedLayer {
+    func apply(
+        batchSize: Int,
+        input: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        for learningPhase: BNNS.LearningPhase
+    ) throws {
+        _ = batchSize; _ = input; _ = output; _ = learningPhase
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.UnaryLayer {
+    func apply(batchSize: Int, input: BNNSNDArrayDescriptor, output: BNNSNDArrayDescriptor) throws {
+        _ = batchSize; _ = input; _ = output
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.BinaryLayer {
+    func apply(
+        batchSize: Int,
+        inputA: BNNSNDArrayDescriptor,
+        inputB: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor
+    ) throws {
+        _ = batchSize; _ = inputA; _ = inputB; _ = output
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNS.CropResizeLayer {
+    func apply(
+        input: BNNSNDArrayDescriptor,
+        regionOfInterest: BNNSNDArrayDescriptor,
+        output: BNNSNDArrayDescriptor,
+        filterParameters: BNNSFilterParameters? = nil
+    ) throws {
+        _ = input; _ = regionOfInterest; _ = output; _ = filterParameters
+        throw BNNS.Error.layerApplyFail
+    }
+}
+
+public extension BNNSGraph.Context {
+    convenience init(
+        compileFromPath path: String,
+        functionName: String? = nil,
+        options: BNNSGraph.CompileOptions = BNNSGraph.CompileOptions()
+    ) throws {
+        _ = path; _ = functionName; _ = options
+        throw BNNSGraph.Error.unableToCreateContext
+    }
+}

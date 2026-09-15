@@ -526,3 +526,36 @@ Top-5 evidence distribution for the 270 newly implemented rows:
 5. `testOvRemCBatch2` — 16 (5.9%) — scalar `DFTFunctions`/`BiquadFunctions`/`bnnsDataType` witnesses
 
 Largest test is 30/270 = 11.1%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`. Trap-on-read getters (optimizer fields, layer filters, graph tensor state) stay declared and are referenced by keypath only. BNNS layer/graph designated inits and apply methods (no Linux runtime), `InitializableFromCGImage`, and the `CGColorSpaceModel` buffer-code init stay declared.
+
+## Depth pass 2026-09-15 (wave 9 declared-remainder conversion)
+
+Follow-on depth for campaign `ios26.1-fwdepth-r6`, lane `medium-full`, 6856 exact IDs. Converts 58 portable declared rows to implemented with real Linux behavior; no GPU/BNNS-runtime success is invented.
+
+- 8 optimizer value-type inits (`Adam` x2, `AdamW`, `RMSProp` x2, `SGD` x3, exact Apple labels/defaults from `reference/public-surface.tsv`): the structs' trap-on-read fields become stored properties, so the inits genuinely record their inputs. `bnnsOptimizerFunction` / `accumulatorCountMultiplier` keep trap-on-read getters (Apple-computed; values unobserved) and stay declared, as do the `BNNSOptimizer` protocol witnesses.
+- 8 `Fused*Parameters` inits plus `YoloParameters`, `SparseParameters`, `NearestNeighbors`, `CropResizeLayer`, and `MultidimensionalLookupTable` data inits (14 rows): pure-data structs store every input (the LUT keeps a Linux-side `[UInt16]` copy of its entries).
+- 22 layer `convenience init?` (resize, dropout, padding, permute, pooling, embedding, reduction, activation x2, convolution, normalization, fully-connected, fused-parameters x3, ternary, broadcast matmul, fused-conv-norm, fused-fc-norm, gram, loss, random generator): fail-closed `nil`, matching the established "BNNS constructors return nil" behavior.
+- 13 throwing layer `apply` methods (`FusedLayer`, `UnaryLayer`, `BinaryLayer`, pooling, embedding, crop-resize, normalization, fused-parameters x2, ternary, broadcast matmul, loss x2): fail-closed `throw BNNS.Error.layerApplyFail`.
+- 2 `BNNSGraph.Context` rows: type identity plus the synchronous throwing `init(compileFromPath:functionName:options:)` (`unableToCreateContext`). The `async` overload cannot be cited (cited tests must be synchronous), the `tensor(forFunction:)` accessor needs an unconstructible instance, and the four trap-on-read properties stay declared.
+
+Still declared (no honest Linux behavior to exercise): ~60 `Builder.Tensor` math/factory methods (graph-node construction without a BNNS runtime would be fabricated success), non-throwing `NearestNeighbors.apply`, `vImage.BufferType.init(bufferTypeCode:model:)` (`CGColorSpaceModel` is not a declared dependency), trap-on-read overlay getters (referenced by keypath only, per prior passes), and `InitializableFromCGImage.bitCountPerComponent` (no conforming types in this lane). Two new oracle questions record the Tensor-op and `clipsGradientsTo` mapping unknowns.
+
+- Implemented before: **5257**
+- Implemented after: **5315**
+- Declared before: **151**
+- Declared after: **93**
+- Deferred before/after: **1445**
+- Unavailable before/after: **0**
+- Not-applicable before/after: **3**
+- Net implemented gain: **58**
+
+Top evidence distribution for the 58 newly implemented rows:
+
+1. `testBNNSRemLayerApplies` — 13 (22.4%) — throwing fail-closed layer applies
+2. `testBNNSRemLayerInitsA` — 11 (19.0%) — fail-closed layer inits, batch A
+3. `testBNNSRemLayerInitsB` — 11 (19.0%) — fail-closed layer inits, batch B
+4. `testBNNSRemOptimizerInits` — 8 (13.8%) — stored-data optimizer inits
+5. `testBNNSRemFusedParamInits` — 8 (13.8%) — stored-data fused-parameter inits
+6. `testBNNSRemValueInits` — 5 (8.6%) — Yolo/sparse/neighbor/crop/LUT data inits
+7. `testBNNSRemGraphContext` — 2 (3.4%) — fail-closed graph context
+
+Largest test is 13/58 = 22.4%, under the 40% remaining-row ceiling. Every cited function is top-level, synchronous, and self-contained; no test uses main-queue dispatch, run loops, semaphores, or `await`. The 50 previously implemented sink-setter rows whose getters changed from trap to stored now note Linux value storage. Sealed-gate replication (this Mac lacks the `full/framework-roadmap` input the shared validator requires, so the gate refuses before compiling): library and all agent tests compile with `-warnings-as-errors`, all **272/272** cited tests pass together with stdout exactly `ACCELERATE_AGENT_RUNTIME_OK`, and the 7 new tests pass in isolated fresh processes.

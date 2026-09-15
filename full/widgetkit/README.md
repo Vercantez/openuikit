@@ -95,16 +95,23 @@ What is real on Linux (and has a focused behavioural test):
 
 What is declared, not implemented:
 
-- inert SwiftUI `View` method names so WidgetKit `View`-conforming types
-  typecheck without Apple SwiftUI. Those identifiers are `declared` with a
-  source anchor; they are not behavioural evidence.
+- the four `body` getters of `ControlWidgetButton`, `ControlWidgetToggle`,
+  `StaticControlConfiguration`, and `AppIntentControlConfiguration`
+  (`Body == Never` / `fatalError`: Control Center is host-driven, so invoking
+  them traps by design and no passing in-process test can call them). Those
+  identifiers are `declared` with a source anchor; they are not behavioural
+  evidence. All former inert SwiftUI `View` overlay declarations are now
+  `implemented` as identity-overlaid tests; `NSUserActivityTypeLiveActivity`
+  is implemented with its Apple-oracle-pinned payload.
 
 What stays deferred:
 
-- `#Preview` macros, DeveloperToolsSupport preview inits, and ActivityKit
-  preview context;
-- `NSUserActivityTypeLiveActivity` string payload (unobserved);
-- Apple `chronod` / Control Center / Live Activity daemon behavior.
+- `#Preview` macros, DeveloperToolsSupport preview inits, `previewContext`
+  witnesses, and ActivityKit preview context (AGENTS.md forbids prioritizing
+  `#Preview`); `PreviewActivityBuilder` / `PreviewTimelineBuilder` remain
+  host-side concatenators, not an Xcode canvas;
+- the two async `currentValue` Control Center daemon getters (no Apple
+  control daemon on Linux; the sealed runner cannot `await`).
 
 The wave-5 deliverable gate is:
 
@@ -294,3 +301,26 @@ This pass started from 2851 implemented, 8 declared, 17 deferred, and
   `ActivityKit` preview context (AGENTS.md forbids prioritizing `#Preview`),
   plus the two async `currentValue` daemon getters (no Apple control daemon
   on Linux; the sealed runner cannot `await`).
+
+### Leftover pass 2026-09 (pi wave-9)
+
+This pass started from 2856 implemented, 4 declared, 16 deferred, and
+0 not-applicable identifiers. It ends at 2856 implemented, 4 declared,
+16 deferred, and 0 not-applicable identifiers (leftover = 20, unchanged).
+
+Re-examination result: none of the 20 leftover rows is convertible
+in-process. The 4 `declared` rows are the `Body == Never` `body` getters of
+`ControlWidgetButton`, `ControlWidgetToggle`, `StaticControlConfiguration`,
+and `AppIntentControlConfiguration`; each traps (`fatalError`) by design
+because Linux has no Control Center presentation host, so no passing
+synchronous test can call them and they stay `declared` fail-closed. The 16
+`deferred` rows stay deferred: 14 `#Preview` / DeveloperToolsSupport /
+`previewContext` / ActivityKit-preview rows (AGENTS.md forbids prioritizing
+`#Preview`, and ActivityKit preview is not a host dependency) plus the two
+async `currentValue` Control Center daemon getters (no Apple control daemon
+on Linux; inventing a live value would violate the fail-closed boundary,
+and the sealed runner cannot `await`). No SwiftUI `View` overlay rows
+remain (`not-applicable` is already 0), so the overlay override has nothing
+left to convert. This pass updates only the README's stale
+declared/deferred summaries to match the wave-8 end state; no product
+source, coverage, or test changes were needed.

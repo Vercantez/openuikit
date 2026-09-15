@@ -220,21 +220,45 @@ func testUnexpectedEndpointAndTXTDecoder() {
     expect(decoded["path"] == "/", "txt json")
 }
 
-func testMulticastGroupInitFailsClosed() {
+func testMulticastGroupDataModel() {
+    let loopback = NWEndpoint.hostPort(host: .ipv4(.loopback), port: .http)
     do {
-        _ = try NWMulticastGroup(
-            for: [.hostPort(host: .ipv4(IPv4Address("224.0.0.1")!), port: 5353)],
-            from: nil,
-            disableUnicast: true
-        )
-        preconditionFailure("multicast must throw")
+        _ = try NWMulticastGroup(for: [loopback])
+        preconditionFailure("loopback group must throw EINVAL")
     } catch {
-        expect((error as? NWError) == .posix(.EOPNOTSUPP), "multicast fail-closed")
+        expect((error as? NWError) == .posix(.EINVAL), "loopback EINVAL")
     }
+    do {
+        _ = try NWMulticastGroup(for: [])
+        preconditionFailure("empty group must throw EINVAL")
+    } catch {
+        expect((error as? NWError) == .posix(.EINVAL), "empty EINVAL")
+    }
+    expect(NWMulticastGroup(with: loopback) == nil, "loopback with nil")
+    let mcast = NWEndpoint.hostPort(host: .ipv4(IPv4Address("224.0.0.1")!), port: 5353)
+    let source = NWEndpoint.hostPort(host: .ipv4(.loopback), port: 1234)
+    let group = try! NWMulticastGroup(for: [mcast], from: source, disableUnicast: true)
+    expect(group.members == [mcast], "members echo")
+    expect(group.sourceFilter == source, "source filter echo")
+    expect(group.isUnicastDisabled == true, "unicast disabled echo")
+    let descriptor: any NWGroupDescriptor = group
+    expect(descriptor.members == [mcast], "descriptor members")
+    let single = NWMulticastGroup(with: mcast)
+    expect(single?.members == [mcast], "single members")
+    expect(single?.sourceFilter == nil, "single no filter")
+    expect(single?.isUnicastDisabled == false, "single unicast on")
+    let useGroup = NWConnectionGroup(with: group, using: .udp)
+    var failed = false
+    useGroup.stateUpdateHandler = { state in
+        if case .failed = state { failed = true }
+    }
+    useGroup.start(queue: DispatchQueue(label: "network.multicast.use"))
+    expect(failed, "multicast use fails closed")
+    useGroup.cancel()
     _ = NWMultiplexGroup(to: .hostPort(host: .ipv4(.loopback), port: .http))
     let multiplex = NWMultiplexGroup(with: .unix(path: "/tmp/openuikit-mux.sock"))
-    let descriptor: any NWGroupDescriptor = multiplex
-    expect(ObjectIdentifier(descriptor as AnyObject) == ObjectIdentifier(multiplex), "multiplex descriptor")
+    let muxDescriptor: any NWGroupDescriptor = multiplex
+    expect(ObjectIdentifier(muxDescriptor as AnyObject) == ObjectIdentifier(multiplex), "multiplex descriptor")
     expect(NWMulticastGroup.self != NWMultiplexGroup.self, "distinct classes")
 }
 

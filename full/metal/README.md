@@ -469,3 +469,40 @@ Still deferred (30): hardware device-certification types
 `async` Metal 4 compiler entry points plus `MTLSharedEvent.valueSignaled`
 (cited tests stay synchronous with no `await`). The three unavailable
 process-info APIs still require Apple's hardware certification service.
+
+## Depth pass 2026-09 (wave 9)
+
+Campaign `ios26.1-fwdepth-r22`, framework `Metal`, lane `large-partitioned`.
+Seventh pass on the existing CPU reference: 0 declared rows remain, so only
+re-examine deferred rows convertible in-process without hardware/daemon.
+Two rows convert with a synchronous host test; the rest stay deferred.
+
+| Status | Before (wave-8 r21 in tree) | After |
+| --- | ---: | ---: |
+| implemented | 4514 | 4516 |
+| declared | 0 | 0 |
+| deferred | 30 | 28 |
+| unavailable | 3 | 3 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **+2**. Evidence is
+`test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverSharedHandles`
+(a real synchronous `test*` function, inlined and called in
+MetalRuntime.swift before `METAL_AGENT_RUNTIME_OK`):
+
+- `MTLTexture.makeSharedTextureHandle()` added as a protocol requirement
+  with a fail-closed default implementation returning `nil` (no IOSurface
+  compositor on the CPU reference, mirroring the nil `makeSharedTexture`
+  factories); the test asserts a CPU texture mints no handle.
+- `MTLSharedEventHandle.init(coder:)` exercised via an `NSKeyedArchiver`
+  round-trip that preserves `label`, plus a direct witness call.
+
+Still deferred (28): hardware device-certification types
+(`NSDeviceCertification`, `NSProcessPerformanceProfile` and witnesses),
+`MTLLogContainer` Foundation/Combine overlay witnesses, `IOSurfaceRef`-typed
+texture properties (`iosurface`, `iosurfacePlane`; the seed `IOSurface`
+dependency is not imported so this module compiles standalone against
+Foundation), and the `async` Metal 4 compiler entry points plus
+`MTLSharedEvent.valueSignaled` (cited tests stay synchronous with no
+`await`). The three unavailable process-info APIs still require Apple's
+hardware certification service.

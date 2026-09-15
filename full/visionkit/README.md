@@ -118,3 +118,21 @@ Top-5 evidence distribution (233 implemented rows):
 
 No single non-enum/OptionSet test exceeds 40% of implemented rows. OptionSet
 members share table-driven bit tests as allowed.
+
+## Wave 9 recount 2026-09-15
+
+Coverage before this pass: **233 implemented / 0 declared / 23 deferred /
+0 unavailable / 0 not-applicable**.
+
+Coverage after: **233 implemented / 0 declared / 23 deferred / 0 unavailable /
+0 not-applicable** (implemented gain +0).
+
+No `declared` rows remained. All 23 `deferred` rows require UIKit, Vision,
+CoreImage, CoreVideo, or ImageIO named types (`UIView` / `UIViewController` /
+`UIImage` / `UIFont` / `UIEdgeInsets` / `CGImage` / `CIImage` /
+`CVPixelBuffer` / `CGImagePropertyOrientation` / `VNBarcodeSymbology` /
+Vision observations) that do not exist on the isolated host, so they cannot
+compile to `declared` here; the sources already carry the fail-closed
+`#if canImport` bodies for a future guest UIKit/Vision build. No SwiftUI
+View-overlay rows exist in this lane, so the overlay override is
+not applicable. `bash tests/acceptance/test_host.sh` passes.

@@ -143,6 +143,30 @@ open class AVVideoComposition: NSObject, @unchecked Sendable {
 
 open class AVVideoCompositionCoreAnimationTool: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Stored layer attachments for the post-processing factories below. Linux
+  // renders nothing: no composited frames are produced and no animation
+  // runs (Apple media-service success is not claimed).
+  var storedVideoLayers: [CALayer] = []
+  var storedAnimationLayer: CALayer?
+  public var portableVideoLayers: [CALayer] { storedVideoLayers }
+  public var portableAnimationLayer: CALayer? { storedAnimationLayer }
+  // Swift spelling of Apple's
+  // +videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayer:inLayer:
+  // (deprecated in Apple's Swift SDK in favor of init(configuration:), but
+  // kept here as a fail-closed Linux constructor that only stores layers).
+  public convenience init(postProcessingAsVideoLayer videoLayer: CALayer, in animationLayer: CALayer) {
+    self.init()
+    storedVideoLayers = [videoLayer]
+    storedAnimationLayer = animationLayer
+  }
+  // Swift spelling of Apple's
+  // +videoCompositionCoreAnimationToolWithPostProcessingAsVideoLayers:inLayer:
+  // (same deprecation and fail-closed storage notes as the singular twin).
+  public convenience init(postProcessingAsVideoLayers videoLayers: [CALayer], in animationLayer: CALayer) {
+    self.init()
+    storedVideoLayers = videoLayers
+    storedAnimationLayer = animationLayer
+  }
   public struct Configuration: Sendable {
     public init() {}
   }
@@ -195,6 +219,9 @@ public protocol AVVideoCompositionInstructionProtocol : AnyObject, Sendable {
 
 open class AVVideoCompositionLayerInstruction: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Linux fail-closed NSCoding witness: no Apple archive decoding exists on
+  // this host, so decoding always yields nil (never Apple round-trip success).
+  public init?(coder: NSCoder) { return nil }
   public struct Configuration: Sendable {
     public init() {}
     public var trackID: CMPersistentTrackID = 0

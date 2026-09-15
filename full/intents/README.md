@@ -521,3 +521,44 @@ implemented anchors resolve to defined top-level synchronous `test*`
 functions, the largest citation is the table-driven `testEnumRawValues` at
 28.9% (under the 40% bound), and no cited test uses DispatchQueue.main,
 RunLoop, semaphores, or await.
+
+### Wave 9 leftover pass
+
+Re-examined the 81 deferred rows with fresh Apple-oracle probes (Xcode 26.1
+simulator SDK) and found the `INIntentSetImageKeyPath` pair convertible
+after all. Before: **4079 implemented / 0 declared / 81 deferred / 0
+unavailable / 0 not-applicable**. After: **4081 implemented / 0 declared /
+79 deferred / 0 unavailable / 0 not-applicable**, an implemented gain of
+**+2**. Nondeferred coverage is now 4081 of 4160 rows.
+
+Oracle pins: `any INIntentSetImageKeyPath` accepts `INIntent` on Apple, and
+the underscored `_INIntentSetImageKeyPath` base has no census row, so the
+lane declares the public marker protocol with the same Self-keyed
+`image(forParameterNamed:)` / `setImage(_:forParameterNamed:)` members,
+retained per key path in-process on `INIntent` (nil clears; archives do not
+round-trip them — see `oracle-questions.tsv`). The iOS-SDK probe also
+showed `\INIntent.identifier` on a subclass-typed value fails on Apple
+itself (KeyPath roots are invariant), so `IntentsWave15Tests.swift` now
+spells the base-class key through an `INIntent`-typed view — the same
+constraint Apple enforces.
+
+This pass also repairs two ledger defects the probes exposed: the
+`image(forParameterNamed:)` row cited `testWave13FailClosedAndValueSurface`,
+which never calls that identifier (now cites
+`testWave15IntentParameterImages`, which does), and that same test file
+called `setImage`/`image` with no product implementation behind it, so the
+agent-test target could not compile. `INIntent` now carries the store.
+The `usesMeteredFare` NSNumber row keeps its deferred note, now pinned: the
+ObjC `NSNumber` spelling is `NS_REFINED_FOR_SWIFT` to the implemented Bool
+overlay and cannot be redeclared beside it.
+
+Still deferred (79): 44 CLPlacemark plus CLLocation/CNPostalAddress/CGColor/
+EKRecurrenceRule/CLRegion members (framework-local substitutes forbidden),
+14 Swift `INShortcut` enum-overlay rows (lane keeps the NSObject class),
+9 synthesis/`!=`/hash witnesses with no writable anchor,
+`NSExtensionContext.intent` (iOS/watchOS-only; absent from corelibs
+Foundation), the NSNumber spelling of `usesMeteredFare`, and other Apple
+overlay/runtime-gated members. The largest citation remains the
+table-driven `testEnumRawValues` at 1178/4081 (28.9%), under the 40% bound;
+the two new Wave 15 tests are cited by 3 rows total. No cited test uses
+DispatchQueue.main, RunLoop, semaphores, or await.

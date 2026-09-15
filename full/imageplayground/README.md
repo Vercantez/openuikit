@@ -14,6 +14,15 @@ Coverage of the 89 exact public identifiers:
 |---|---:|---:|---:|---:|---:|
 | Before | 56 | 0 | 33 | 0 | 0 |
 | After | 66 | 0 | 23 | 0 | 0 |
+| Wave 9 recount | 66 | 0 | 23 | 0 | 0 |
+
+Wave 9 recount (2026-09-15): coverage.tsv holds 66 implemented / 0 declared /
+23 deferred / 0 unavailable / 0 not-applicable of 89. Zero declared rows exist
+to convert, and all 23 deferred rows are dependency-gated with no in-process
+substitute on the isolated host (18 UIKit `ImagePlaygroundViewController`
+members, 4 CoreGraphics `CreatedImage` / `images(for:style:limit:)` /
+`Concept.image(CGImage)` rows, 1 PencilKit `Concept.drawing` row). No status
+changes; host gate re-verified clean.
 
 Wave 8 converted the 10 deferred SwiftUI-owned identifiers to `implemented`
 with Linux-host identity lookalikes (FamilyControls overlay playbook):

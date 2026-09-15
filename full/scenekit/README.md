@@ -399,3 +399,49 @@ blocks and corelibs NSObject lacks those KVC class members). All product
 sources plus the concatenated runtime were additionally compiled
 warning-free and run to `SCENEKIT_AGENT_RUNTIME_OK` in `/tmp` with only
 host-shim patches (simd import, KVC rename) applied to the copies.
+
+## Depth pass 2026-09 (wave 9 triage: declared sweep + deferred review)
+
+SDK depth for `SceneKit` in `full/scenekit/` (2611 IDs). There were no
+`declared` and no `not-applicable` rows left to convert (the wave-10
+overlay pass already moved all 809 SwiftUI cross-import rows to
+`implemented` as identity `View` overlays, and wave 9 cleared `declared`).
+This pass re-examined each of the 62 `deferred` rows for anything
+implementable in-process without hardware, daemons, or unavailable modules.
+
+**Coverage before this pass:** **2549 implemented / 0 declared / 62 deferred /
+0 unavailable / 0 not-applicable**.
+
+**Coverage after this pass:** **2549 implemented / 0 declared / 62 deferred /
+0 unavailable / 0 not-applicable** (no change; nothing convertible).
+
+**Deferred triage (all 62 stay fail-closed):** JavaScriptCore
+(`SCNExportJavaScriptModule`, no JS runtime); 6 GLKit C conversions (no GLKit
+module); AVAudio player/engine nodes and OpenGL `rendererWithContext:` (no
+AVFoundation/EAGL); Metal buffer geometry sources/elements, tessellator
+partition mode, program/technique libraries, renderer device/pixel-format/
+command-queue surface, precomputed-lighting data (no Metal); Darwin
+`simd_float4x4`/`simd_quatf`/`simd_double4x4` initializers, node `simd*`
+properties, and hit-test `simdModelTransform` (guarded by
+`#if canImport(simd)`, false on the Linux guest); `SCNNode.filters`,
+`SCNShape.path`, `SCNText.font`, snapshots, `workingColorSpace`,
+`writeImage:`, UIFocus witnesses (no UIKit/CoreImage); `CAMediaTimingFunction`
+bridging and `animationTimingFunction` (no QuartzCore); SpriteKit async
+`presentScene:withTransition:` (no SpriteKit module; sealed gate forbids
+async waits); `SCNView.eaglContext`/`snapshot` (no renderer surface).
+
+**Evidence hygiene re-verified:** all 2549 `implemented` rows cite a real
+top-level synchronous `func test*()` in `tests/agent/*Tests.swift` (65
+distinct test funcs; largest non-enum citation 161/2549 = 6.3%, under the
+40% ceiling; the 582-citation enum table is the allowed shared value test).
+No cited test uses `DispatchQueue.main`, `RunLoop`, semaphores, or `await`.
+
+**Validation on this macOS snapshot:** sealed
+`FRAMEWORK_FANOUT_REFERENCE_OK` ledger/manifest checks pass. The `swiftc`
+gate still stops at the same pre-existing host-only divergences documented
+above (plus this toolchain's missing `simd_double4x4` -> `simd_float4x4`
+conversion, likewise excluded on the Linux guest by `canImport(simd)`).
+With only host-shim patches on `/tmp` copies (simd import, KVC `override`,
+explicit double->float component conversion), product sources compile
+warning-free and the concatenated runtime prints
+`SCENEKIT_AGENT_RUNTIME_OK`. Repo sources untouched; `/tmp` copies removed.

@@ -3073,7 +3073,7 @@ c:objc(pl)MTLTensorBinding(py)tensorDataType	implemented	test:full/metal/tests/a
 c:objc(pl)MTLTexture	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	exercised by focused synchronous software-surface test
 c:objc(pl)MTLTexture(im)getBytes:bytesPerRow:bytesPerImage:fromRegion:mipmapLevel:slice:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
 c:objc(pl)MTLTexture(im)getBytes:bytesPerRow:fromRegion:mipmapLevel:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
-c:objc(pl)MTLTexture(im)newSharedTextureHandle	deferred		not implemented on the Linux CPU reference
+c:objc(pl)MTLTexture(im)newSharedTextureHandle	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverSharedHandles	fail-closed; CPU reference has no IOSurface compositor so no shared-texture handle is minted (nil)
 c:objc(pl)MTLTexture(im)newTextureViewWithDescriptor:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureViewsAndDimensionalLayouts	-
 c:objc(pl)MTLTexture(im)newTextureViewWithPixelFormat:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureViewsAndDimensionalLayouts	-
 c:objc(pl)MTLTexture(im)replaceRegion:mipmapLevel:slice:withBytes:bytesPerRow:bytesPerImage:	implemented	test:full/metal/tests/agent/MetalTextureTests.swift#testTextureBytesAndMips	-
@@ -3121,7 +3121,7 @@ c:objc(pl)MTLThreadgroupBinding(py)threadgroupMemoryDataSize	implemented	test:fu
 c:objc(pl)MTLVisibleFunctionTable	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
 c:objc(pl)MTLVisibleFunctionTable(im)setFunction:atIndex:	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverFunctionTables	not in the Linux starting slice
 c:objc(pl)MTLVisibleFunctionTable(py)gpuResourceID	implemented	test:full/metal/tests/agent/MetalDescriptorTests.swift#testDescriptorValueSemantics	exercised by focused synchronous software-surface test
-c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MTLSharedEventHandle	deferred		NSCoder round-trip for shared-event handles is not exercised on Linux
+c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MTLSharedEventHandle	implemented	test:full/metal/tests/agent/MetalLeftoverTests.swift#testLeftoverSharedHandles	NSKeyedArchiver round-trip preserves label; direct witness call included
 c:objc(pl)NSCoding(im)initWithCoder:::SYNTHESIZED::c:objc(cs)MTLSharedTextureHandle	implemented	test:full/metal/tests/agent/MetalFailClosedTests.swift#testCPUTensorBinaryArchiveAndHandles	-
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MTL4CommandQueueError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-
 s:10Foundation13CustomNSErrorPAAE11errorDomainSSvpZ::SYNTHESIZED::c:@E@MTLBinaryArchiveError	implemented	test:full/metal/tests/agent/MetalEnumTests.swift#testMetalEnumOptionSetAndConstantValues	-

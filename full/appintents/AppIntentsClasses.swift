@@ -167,34 +167,59 @@ public class IntentProjection<Intent: AppIntent>: NSObject, @unchecked Sendable 
 }
 
 public class EqualToComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class ContainsComparator<Property, PropertyType, InputType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class LessThanComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class EntityQueryProperty<Entity, Subject, Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local property metadata. Never written to a Spotlight index.
+    public var hostKeyPathDescription = ""
+    public var hostComparators: [AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>] = []
+    public var hostEntityProvider: ((Entity) -> Subject)?
     public override init() { super.init() }
 }
 
 public class HasPrefixComparator<Property, PropertyType, InputType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class HasSuffixComparator<Property, PropertyType, InputType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class IsBetweenComparator<Property, PropertyType, InputType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class NotEqualToComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
@@ -203,6 +228,9 @@ public class EntityQueryComparator<Property, PropertyType, InputType, Comparator
 }
 
 public class GreaterThanComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
@@ -239,14 +267,22 @@ public class RelevantIntentManager: NSObject, @unchecked Sendable {
 }
 
 public class LessThanOrEqualToComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 
 public class EntityQueryPropertyDeclaration<Entity, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local declaration metadata. Never written to a Spotlight index.
+    public var hostKeyPathDescription = ""
     public override init() { super.init() }
 }
 
 public class GreaterThanOrEqualToComparator<Property, PropertyType, ComparatorMappingType>: NSObject, @unchecked Sendable {
+    /// Process-local mapping-transform and resolver metadata. Never sent to a query daemon.
+    public var hostMappingTransform: Any?
+    public var hostResolverSpecification: Any?
     public override init() { super.init() }
 }
 

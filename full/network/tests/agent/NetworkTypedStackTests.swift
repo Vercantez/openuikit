@@ -146,6 +146,7 @@ func testQUICProtocolStackDataModelAndFailClosedStart() {
     expect(connection.keepalive == .on, "keepalive")
     _ = connection.securityProtocolMetadata.encodedData
     _ = connection.datagrams.parent
+    expect(connection.datagrams.parent === connection, "datagrams parent")
     do {
         _ = try connection.openStream(directionality: .bidirectional)
         preconditionFailure("openStream must throw")

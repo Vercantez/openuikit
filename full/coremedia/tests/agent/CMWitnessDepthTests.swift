@@ -214,6 +214,45 @@ func testCMTagAndSampleReferenceInequality() {
     precondition(!(firstReference != firstReference))
 }
 
+/// Exercises `!=` on the color-volume and camera-lens value types. The port
+/// hosts Apple's `Role`/`Domain` as `LensRole`/`LensDomain` and Apple's
+/// `DisplayPrimaries`/`DisplayPrimary` as `ColorPrimaries`/`ColorVolume`;
+/// each `!=` below dispatches through the Equatable synthesis on that host.
+func testCMColorVolumeAndLensInequality() {
+    typealias ColorVolume = CMFormatDescription.Extensions.Value.ContentColorVolume
+    typealias LensCollection = CMFormatDescription.Extensions.Value.CameraCalibrationDataLensCollection
+    let firstPrimary = ColorVolume.ColorVolume(green: 1, blue: 2, red: 3)
+    let secondPrimary = ColorVolume.ColorVolume(green: 1, blue: 2, red: 4)
+    precondition(firstPrimary != secondPrimary)
+    precondition(!(firstPrimary != firstPrimary))
+    let firstPrimaries = ColorVolume.ColorPrimaries(x: firstPrimary, y: firstPrimary)
+    let secondPrimaries = ColorVolume.ColorPrimaries(x: firstPrimary, y: secondPrimary)
+    precondition(firstPrimaries != secondPrimaries)
+    precondition(!(firstPrimaries != firstPrimaries))
+    let firstVolume = ColorVolume(
+        colorPrimaries: firstPrimaries,
+        minimumLuminance: 1,
+        maximumLuminance: 1000,
+        averageLuminance: 100
+    )
+    let secondVolume = ColorVolume(
+        colorPrimaries: secondPrimaries,
+        minimumLuminance: 1,
+        maximumLuminance: 1000,
+        averageLuminance: 100
+    )
+    precondition(firstVolume != secondVolume)
+    precondition(!(firstVolume != firstVolume))
+    precondition(LensCollection.LensRole.left != LensCollection.LensRole.right)
+    precondition(!(LensCollection.LensRole.mono != LensCollection.LensRole.mono))
+    precondition(!(LensCollection.LensDomain.color != LensCollection.LensDomain.color))
+    precondition(!(LensCollection.AlgorithmKind.parametric != LensCollection.AlgorithmKind.parametric))
+    precondition(
+        !(LensCollection.ExtrinsicOriginSource.stereoCameraSystemBaseline
+            != LensCollection.ExtrinsicOriginSource.stereoCameraSystemBaseline)
+    )
+}
+
 /// Covers the `T` family typealiases, the per-sample timing arrays, and the
 /// always-nil tagged-buffer getter on buffers this port can construct.
 func testCMSampleBufferFamilyWitnesses() {

@@ -26,6 +26,9 @@ open class AVMetricErrorEvent: AVMetricEvent, @unchecked Sendable {
 
 open class AVMetricEvent: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Linux fail-closed NSCoding witness: no Apple archive decoding exists on
+  // this host, so decoding always yields nil (never Apple round-trip success).
+  public init?(coder: NSCoder) { return nil }
   public var date: Date { Date.distantPast }
   public var mediaTime: CMTime { .zero }
   public var sessionID: String? { nil }
@@ -56,6 +59,9 @@ open class AVMetricHLSPlaylistRequestEvent: AVMetricEvent, @unchecked Sendable {
 
 open class AVMetricMediaRendition: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Linux fail-closed NSCoding witness: no Apple archive decoding exists on
+  // this host, so decoding always yields nil (never Apple round-trip success).
+  public init?(coder: NSCoder) { return nil }
   public var stableID: String? { nil }
   public var url: URL? { nil }
 }

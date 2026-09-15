@@ -594,3 +594,82 @@ The largest anchor covers 6.36% of the 3,146 implemented rows and is a
 permitted table-driven enum/option-set value test. The largest wave-12 test
 (`testWave12AudioUnitProcTypedefs`, 14 rows) covers 0.44%. No SwiftUI overlay
 rows or other rows were reclassified as `not-applicable`.
+
+## Depth pass 2026-09 (wave 14)
+
+Seventh SDK-depth pass on the wave-12 tree (keep existing tests green; do not
+rewrite). No SwiftUI cross-import overlay IDs (`s:7SwiftUI4View…`) appear in
+this census. This pass converts eight deferred rows that run fully
+in-process; everything still deferred needs hardware, daemons, or
+dependency-owned types (see below).
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3146 | 3154 |
+| declared | 0 | 0 |
+| deferred | 87 | 79 |
+| unavailable | 1 | 1 |
+| not-applicable | 0 | 0 |
+
+This pass gains **8 implemented rows** across 6 new focused, synchronous
+tests in `tests/agent/AudioToolboxWave14Tests.swift`
+(`AudioToolboxWave14.swift` product code; `AudioFile.swift` gains only the
+callback-backing fields plus a flush branch) while preserving all earlier
+tests (156 distinct cited tests after this wave).
+
+### Public surface added this pass
+
+- **Callback-backed files.** `AudioFileOpenWithCallbacks` pulls the
+  get-size/read procs into an in-memory snapshot at open (nil client or nil
+  read/get-size procs fail closed; failing reads, empty stores, and garbage
+  bytes map to the same errors as the URL engine). `AudioFileInitializeWithCallbacks`
+  validates PCM/blob/file-type exactly like `AudioFileCreateWithURL`. Reads
+  and writes use the shared in-memory engine; closing a writable file pushes
+  the encoded WAVE/AIFF/CAF container back through the set-size/write procs.
+  A nil write/set-size pair opens read-only (`kAudioFilePermissionsError` on
+  write), matching Apple's documented NULL-proc contract.
+- **Async/dispatch spellings.** `ExtAudioFileWriteAsync` completes
+  synchronously through the `ExtAudioFileWrite` engine (float32 PCM traffic
+  is sample-exact; int16 traffic keeps the engine's ~1-LSB float precision,
+  identical to the synchronous entry point). `AudioQueueNewOutputWithDispatchQueue`
+  / `AudioQueueNewInputWithDispatchQueue` accept the queue for API
+  compatibility and delegate to the runloop constructors, whose runloop
+  arguments are likewise accepted and ignored offline.
+- **Debug output.** `CAShowFile` routes `CAShow` text to the caller's
+  `FILE*` via `fputs`; a nil stream falls back to stderr.
+- **DarwinBoolean inits.** `AUVoiceIOOtherAudioDuckingConfiguration` and
+  `AudioUnitMeterClipping` gain exact-`boolValue` overloads of the Apple
+  `DarwinBoolean` memberwise spellings (probed 1 byte / alignment 1); the
+  `UInt8` spellings stay canonical.
+
+### Still deferred (79)
+
+`AudioComponentGetIcon` (`UIImage`), MIDI-endpoint routing and MIDI-CI plus
+`AUMIDIEventList`/`AUMIDIOutputCallbackStruct`/render/MIDI-list blocks
+(CoreMIDI-owned), `AudioBalanceFade`/`AudioFormatInfo`/`ExtendedAudioFormatInfo`
+and ASBD/channel-layout/timestamp/packet records plus AU render/input/pull
+blocks (CoreAudioTypes-owned), `AURenderEvent.MIDIEventsList` (union member
+over a CoreMIDI type), `AUNodeInteraction.nodeInteraction` and
+`AudioUnitParameterEvent` memberwise inits (unnamed-union layout oracle
+items), CAF packet-table flexible tail, `MusicDeviceNoteParams`
+(dependency USR), `AUListener`/`AUEventListener` dispatch-queue constructors
+(Apple parameter shape needs an oracle probe), the ten `AudioCodec*Proc`
+overlays (typed fail-closed entry points are hosted instead, by design), and
+the two `NSCoding` synthesized witnesses (stdlib protocol witnesses are not
+converted). Hardware/daemon/service success stays fail-closed throughout.
+
+Top-five implemented evidence distribution after this wave:
+
+| rows | test |
+| ---: | --- |
+| 200 | `AudioToolboxWave4Tests.swift#testEnumHashableInequalityCatalog` |
+| 200 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioUnitAndQueue` |
+| 168 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraNewMixerFlags` |
+| 163 | `AudioToolboxWave4Tests.swift#testOptionSetAlgebraAudioFileFamily` |
+| 146 | `AudioToolboxDepthTests.swift#testAudioToolboxConstantCatalog` |
+
+The largest anchor covers 6.34% of the 3,154 implemented rows and is a
+permitted table-driven enum/option-set value test. The largest wave-14 test
+(`testWave14AudioFileOpenWithCallbacks` / `testWave14AudioQueueDispatchQueues`,
+2 rows each) covers 0.06%. No SwiftUI overlay rows or other rows were
+reclassified as `not-applicable`.

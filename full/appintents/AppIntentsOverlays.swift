@@ -104,6 +104,25 @@ public extension IntentResult {
         return IntentResultContainer()
     }
 
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        content: () -> Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, Never>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, Never> {
+        _ = content()
+        return IntentResultContainer(value: value)
+    }
+
+    static func result<Value: _IntentValue, Content: View>(
+        value: Value,
+        dialog: IntentDialog,
+        content: () -> Content
+    ) -> IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog>
+    where Self == IntentResultContainer<Value, Never, _SnippetViewContainer, IntentDialog> {
+        _ = content()
+        return IntentResultContainer(value: value, dialog: dialog)
+    }
+
     static func result<Content: View>(
         opensIntent: some AppIntent,
         view: Content

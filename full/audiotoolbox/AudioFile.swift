@@ -65,6 +65,17 @@ internal final class ATAudioFileObject: ATObject {
     var closed = false
     var deferSizeUpdates = false
     var userData: [UInt32: [Data]] = [:]
+    // Callback-backed storage for AudioFileOpenWithCallbacks /
+    // AudioFileInitializeWithCallbacks (see AudioToolboxWave14.swift).
+    // Reads/writes operate on the in-memory snapshot exactly like URL-backed
+    // files; the procs supply initial bytes at open and receive the encoded
+    // container at flush. No hardware, daemon, or runloop is involved.
+    var callbackBacked = false
+    var callbackClient: UnsafeMutableRawPointer?
+    var callbackRead: AudioFile_ReadProc?
+    var callbackWrite: AudioFile_WriteProc?
+    var callbackGetSize: AudioFile_GetSizeProc?
+    var callbackSetSize: AudioFile_SetSizeProc?
 
     init(
         urlPath: String,
@@ -531,6 +542,9 @@ public func AudioFileClose(_ inAudioFile: AudioFileID?) -> Int32 {
 }
 
 internal func atFlushAudioFile(_ file: ATAudioFileObject) -> Int32 {
+    if file.callbackBacked {
+        return atWave14FlushCallbacks(file)
+    }
 #if canImport(CoreFoundation)
     let encoded: Data
     switch file.fileType {

@@ -28,6 +28,22 @@ No declared row is synchronously callable, so none can gain a synchronous
 stays fail-closed. No SwiftUI View overlay rows exist in this surface.
 Implemented gain this wave: 0.
 
+Wave-9 audit (2026-09-15): recounted **284 implemented / 65 declared /
+0 deferred / 0 not-applicable / 349 total** — unchanged. Re-verified all 65
+declared rows: every mangled ID carries the async marker (`Ya`) — the same 18
+DockKit-level async hardware/camera commands and iterator `next()` methods
+plus the same 47 synthesized stdlib `AsyncSequence`/`AsyncIteratorProtocol` witnesses
+(`next`, `next(isolation:)`, `allSatisfy`, `first(where:)`, `max`, `min`,
+`reduce`, `contains`). None is synchronously callable, so none can gain a
+synchronous `test*` caller under the sealed-runner contract (no `await`,
+`DispatchQueue.main`, `RunLoop`, or semaphore waits allowed), and
+hardware/daemon/camera success stays fail-closed. No SwiftUI View overlay
+rows exist in this surface, so the overlay-conversion playbook does not
+apply. Implemented gain this wave: 0. Host gate could not run to completion
+in this trimmed worktree (shared deliverable validator requires
+`full/framework-roadmap/framework-roadmap.json`, absent here); no product,
+coverage, or test file was modified, so prior gate state is undisturbed.
+
 ## What is real
 
 - `DockKitError` cases in API-digester order (`notSupported` …

@@ -47,7 +47,7 @@ private struct Wave15Score: RangeComparableProperty, Hashable, Comparable {
     static func < (lhs: Wave15Score, rhs: Wave15Score) -> Bool { lhs.points < rhs.points }
 }
 
-private func wave15CollectionItems<R: ResultsCollection>(_ collection: R) -> [R.Result.ValueType] {
+private func wave15CollectionItems<V: _IntentValue>(_ collection: [V]) -> [V.ValueType] {
     collection.items
 }
 
@@ -253,9 +253,9 @@ func testEntityQuerySortingOptionsBuilderAndContainers() {
 
 func testParameterSummaryBuilderIdentity() {
     let summary = Wave15Summary(evaluatedDisplayString: "Run wave")
-    let blocked = ParameterSummaryBuilder<Wave15Intent>.buildBlock(summary)
+    let blocked = ParameterSummaryBuilder.buildBlock(summary)
     precondition(blocked.evaluatedDisplayString == "Run wave")
-    let expressed = ParameterSummaryBuilder<Wave15Intent>.buildExpression(summary)
+    let expressed = ParameterSummaryBuilder.buildExpression(summary)
     precondition(expressed.evaluatedDisplayString == "Run wave")
 }
 

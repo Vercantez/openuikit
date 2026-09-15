@@ -40,6 +40,7 @@ open class INIntent: NSObject, @unchecked Sendable {
     open var intentDescription: String?
     open var donationMetadata: INIntentDonationMetadata?
     open var shortcutAvailability: INShortcutAvailabilityOptions = []
+    internal var _parameterImages: [AnyKeyPath: INImage] = [:]
 
     public override init() {
         super.init()
@@ -54,6 +55,32 @@ open class INIntent: NSObject, @unchecked Sendable {
 
     open func keyImage() -> INImage? {
         nil
+    }
+}
+
+// Apple overlays `setImage(_:forParameterNamed:)` / `image(forParameterNamed:)`
+// as generic `KeyPath<Self, Value>` extension methods on the underscored
+// `_INIntentSetImageKeyPath` base (iOS 12+, unavailable on macOS/tvOS). The
+// underscored base has no census row, so this lane declares the public
+// `INIntentSetImageKeyPath` marker and carries the same Self-keyed members
+// here. Values are retained per key path, in-process only; keyed archives
+// do not round-trip them until an Apple-oracle observation pins the coding.
+
+public protocol INIntentSetImageKeyPath {}
+
+extension INIntent: INIntentSetImageKeyPath {}
+
+extension INIntentSetImageKeyPath where Self: INIntent {
+    public func image<Value>(forParameterNamed parameterName: KeyPath<Self, Value>) -> INImage? {
+        _parameterImages[parameterName]
+    }
+
+    public func setImage<Value>(_ image: INImage?, forParameterNamed parameterName: KeyPath<Self, Value>) {
+        if let image {
+            _parameterImages[parameterName] = image
+        } else {
+            _parameterImages.removeValue(forKey: parameterName)
+        }
     }
 }
 

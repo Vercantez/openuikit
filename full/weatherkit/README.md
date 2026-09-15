@@ -132,3 +132,41 @@ Top-5 evidence distribution (implemented rows citing each test):
 5. `testUVIndexExposureCategoryRawValuesRangesAndOrder` — 25 (2.0%)
 
 No non-enum test exceeds the 40% bulk-relabel ceiling.
+
+## Depth pass 2026-09 (wave 9)
+
+Recount of the 1264 iPhoneOS 26.1 public identifiers:
+
+| status | before | after |
+| --- | --- | --- |
+| implemented | 1222 | 1222 |
+| declared | 1 | 1 |
+| deferred | 34 | 34 |
+| unavailable | 7 | 7 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: **0** — the tree is at its terminal coverage state.
+The single `declared` row (`WeatherService.attribution`, an
+`async throws` getter) cannot move to `implemented`: a synchronous
+no-argument `test*()` citing it fails to typecheck (`'async' property
+access in a function that does not support concurrency`), and the coverage
+contract forbids `await` in cited tests. The declaration compiles clean
+(`swiftc -warnings-as-errors` product build passes) and stays fail-closed
+by throwing `WeatherError.unknown`.
+
+Leftover `deferred` reasons (34, all terminal on this host):
+
+- 20 `CLLocation`-gated rows (`WeatherService.weather(for:...)` overloads,
+  daily/hourly/monthly summary and statistics queries,
+  `WeatherMetadata.location`) — CoreLocation is not importable on the
+  isolated Linux host gate; they compile only under `canImport(CoreLocation)`
+  on the integration toolchain.
+- 7 synthesized `Sequence.flatMap` returning-Optional witnesses — Swift 6
+  rejects that spelling as deprecated under warnings-as-errors
+  (`compactMap` is tested separately).
+- 7 synthesized `Collection.index(of:)` witnesses — likewise deprecated
+  (`firstIndex(of:)` is tested separately).
+
+Seven Combine `publisher` rows stay `unavailable` (no Combine dependency or
+runtime). WeatherKit has no SwiftUI `View` modifiers, so the overlay-override
+playbook does not apply to this framework.

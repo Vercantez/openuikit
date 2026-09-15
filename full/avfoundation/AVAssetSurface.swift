@@ -1337,6 +1337,9 @@ open class AVCompositionTrack: AVAssetTrack, @unchecked Sendable {
 
 open class AVCompositionTrackFormatDescriptionReplacement: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Linux fail-closed NSCoding witness: no Apple archive decoding exists on
+  // this host, so decoding always yields nil (never Apple round-trip success).
+  public init?(coder: NSCoder) { return nil }
   var portableOriginal = CMFormatDescription()
   var portableReplacement = CMFormatDescription()
   public var originalFormatDescription: CMFormatDescription { portableOriginal }

@@ -56,6 +56,33 @@ discriminators, not observed Apple values.
 
 See `oracle-questions.tsv`.
 
+## Wave 9 2026-09-15
+
+Recount: **206 implemented / 10 declared / 21 deferred / 66 not-applicable /
+10 unavailable** of 313 (216 nondeferred). Before: identical counts.
+Implemented gain: **0**.
+
+All 10 declared rows are async witnesses (`Attachment.loadMetadata`,
+`Attachments.Iterator.next`, `Journal.remove`, two messenger `send` overloads,
+`Messages.Iterator.next`, `Sessions.Iterator.next`, async `metadata` getter,
+`prepareForActivation`, `activate`). The sealed runner only invokes top-level
+synchronous no-argument `test*()` with no `await` (and no
+`DispatchQueue.main` / `RunLoop` / semaphore waits), and calling an `async`
+witness from a synchronous context is a compile error — so none can convert
+to `implemented` without weakening the gate. All 21 deferred rows require
+`Combine`, `CoreTransferable`, or `CoreGraphics`, none a declared
+isolated-host dependency. This slug has no SwiftUI View-modifier overlay rows,
+so the identity-overlay override is not applicable; the 66 `not-applicable`
+rows are stdlib/ synthesized witnesses owned outside GroupActivities.
+
+Manual host-equivalent validation on macOS (the shared
+`test_host.sh` validator in this worktree additionally demands a
+`full/framework-roadmap/framework-roadmap.json` file that does not exist
+here, and its runner template targets Linux `Glibc`): product sources compile
+under `swiftc -warnings-as-errors`, the dylib links, and a Darwin-based
+equivalent runner invokes all 61 cited `test*()` functions with sole stdout
+`GROUPACTIVITIES_AGENT_RUNTIME_OK`.
+
 ## Depth pass 2026-09
 
 Implemented count: **206** of 313 public identifiers (216 nondeferred with

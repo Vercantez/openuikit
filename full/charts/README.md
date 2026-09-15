@@ -1026,3 +1026,57 @@ Top implemented evidence after this pass (8450 rows; cap 40% = 3380):
 `testViewOverlayBatch01` grows 266 -> 274 rows (3.2%); no single test
 exceeds 40% of implemented rows. New tests cite 12 / 8 / 6 / 4 / 2 rows
 respectively.
+
+### Wave-9 declared-row audit (pi agent, renderer lane)
+
+This pass audits the leftover ledger per the wave-9 prompt (convert
+remaining declared only if pin-able without inventing GPU output) and
+the overlay override. It starts from the wave-8 Shape-overlay ledger
+(`implemented` 8450, `declared` 61, `deferred` 905, `unavailable` 0,
+`not-applicable` 58) and ends with identical counts: implemented gain
+0. Nondeferred (`implemented` + `declared`) stays 8511, above the
+medium-full floor (4737). Leftover (`declared` + `deferred`) stays 966.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 8450 | 8450 |
+| declared | 61 | 61 |
+| deferred | 905 | 905 |
+| unavailable | 0 | 0 |
+| not-applicable | 58 | 58 |
+
+Why nothing converts:
+
+- All 61 declared rows are uninhabited or lookalike-absent: ~50
+  `ChartContent` / `Chart3DContent` / `AxisContent` / `AxisMark`
+  modifiers synthesized on `Never` (no value can be constructed to
+  call them), `Chart3DContent` modifiers synthesized on
+  lookalike-absent `ModifiedContent`, 2 `PrimitivePlottable` witnesses
+  on `Never`, 1 `AnyChartSymbolShape.AnimatableData` row (no
+  `Animatable` / `VectorArithmetic` in the pinned Linux set), and 1
+  `SurfacePlot.body: Never` row whose product body is intentionally the
+  fail-closed `EmptyView`. Citing any of these from a test that calls
+  a different type's overload would be relabeling, not evidence.
+- The overlay override converts zero rows: none of the 61 declared
+  rows is a `View` modifier (all are `ChartContent` / `Chart3DContent` /
+  `AxisMark` / `Shape` / `PrimitivePlottable`), and none of the 58
+  `not-applicable` rows is a `View` modifier either (all are
+  `Animatable` / `Shape` boolean-combiner / `trim` / `scale` /
+  `rotation` / `sizeThatFits` on `Circle`, or
+  `ScrollTargetBehavior.properties`). No stdlib/Foundation witness was
+  touched.
+- All 905 deferred rows stay deferred: stdlib integer/collection
+  operators Charts does not redeclare, Combine / `FormatStyle` /
+  `SortComparator` overlays, GPU/image renderer rows (`Body`
+  witnesses, `VisualValue`), `symbolRotation` / `metalness` /
+  `roughness` on `Never` (no RealityKit `Rotation3D` in the pinned
+  Linux set), and scroll/gesture timing. Pinning any of these would
+  invent renderer output.
+
+Integrity re-verified by script (no product/test edits, so the Linux
+sealed gate was not re-run): all 317 unique implemented evidence IDs
+resolve to an existing `test*` function in `tests/agent/` (0 malformed,
+0 missing), all 61 declared anchors resolve to a listed guest source
+(0 missing), and the top citation (`testViewOverlayBatch01`, 274 rows,
+3.2%) stays far below the 40% cap (3380). Hardware/daemon/Siri/Apple
+Pay/Screen Time success stays fail-closed.

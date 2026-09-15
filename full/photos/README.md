@@ -284,6 +284,42 @@ Local evidence logs: `/tmp/fw-photos-r-baseline-current.log`,
 The temporary oracle is `/tmp/fw-photos-r-invalid-oracle.swift`; the committed
 three-test source above is the reproducible behavioral oracle fixture.
 
+### Wave 9 leftover audit 2026-09-15 (pi-wave9, isolated worktree)
+
+At task start `coverage.tsv` holds 752 implemented / 0 declared / 34 deferred /
+1 not-applicable of 787. There are no `declared` rows to convert, and the
+overlay override has no Photos target: zero coverage rows name a SwiftUI View
+modifier (the two `overlay` substring hits are `OverlayAlias` test/notes text),
+and the single `not-applicable` row is the compiler-`SYNTHESIZED` Foundation
+`Sequence.compare` witness, which the contract explicitly keeps as-is.
+
+All 34 deferred rows were re-examined for in-process implementation; each needs
+a type owned by another Apple module while the declared dependency set is
+Foundation only, and `AGENTS.md` forbids framework-local substitutes:
+
+- `UTType` (7), `CLLocation` (4), `CIImage` / `CMTime` / `PHLivePhotoFrame` (9),
+  `AVAsset` / `AVPlayerItem` (5), `URLRequest` via FoundationNetworking (3),
+  `AppExtension` (4), Combine (1).
+
+No row can move without a new declared dependency or a forbidden substitute,
+so the counts are unchanged: **+0 implemented**.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 752 | 752 |
+| declared | 0 | 0 |
+| deferred | 34 | 34 |
+| unavailable | 0 | 0 |
+| not-applicable | 1 | 1 |
+
+Verification: all 752 implemented rows cite valid
+`test:full/photos/tests/agent/*Tests.swift#testName` anchors (0 bad anchors,
+58 distinct sync no-argument tests, largest share 96 rows / 12.77%, below the
+40% limit). Product sources compile clean with warnings-as-errors to
+`libPhotos.dylib` (`swiftc` exit 0, products kept in a temp dir outside the
+tree). Files changed: this `README.md` section only; no product, test, or
+coverage edits.
+
 ### Wave 8 leftover audit 2026-09-15 (pi-wave8, isolated worktree)
 
 At task start `coverage.tsv` holds 752 implemented / 0 declared / 34 deferred /

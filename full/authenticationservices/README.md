@@ -6,15 +6,20 @@ symbol graph, API digester, TBD exports, and pinned `dotnet/macios`
 annotations. It is not wired into the shared guest package; that integration
 is a later central-review step.
 
-The isolated host compile imports **Foundation only**. There is no UIKit,
-SwiftUI, CryptoKit, or FoundationNetworking module on this Linux gate.
+The isolated host compile imports **Foundation**, plus `FoundationNetworking`
+behind `#if canImport(FoundationNetworking)` for the `HTTPURLResponse`
+members (the same pattern `webkit` / `linkpresentation` use with a
+Foundation-only declared dependency list). There is no UIKit, SwiftUI, or
+CryptoKit module on this Linux gate.
 
-Coverage for this pass: **2052 implemented / 0 declared / 44 deferred**
+Coverage for this pass: **2057 implemented / 0 declared / 39 deferred**
 of 2096 public precise IDs. The
 `ASWebAuthenticationSession`, `ASAuthorizationController`,
 `ASAuthorizationAppleIDProvider` / `Request` / `Credential`, and
-`ASAuthorizationError` families are nondeferred (SSO
-`authenticatedResponse` stays deferred: it is `HTTPURLResponse`).
+`ASAuthorizationError` families are nondeferred, including the
+`HTTPURLResponse` members (`complete(httpResponse:httpBody:)`, both
+`init(httpResponse:httpBody:)` rows, `httpResponse`, and SSO
+`authenticatedResponse`, which stays fail-closed at `nil`).
 
 ## What is real
 
@@ -102,8 +107,6 @@ extension host, Safari web-auth session, or Sign in with Apple UI.
 - UIKit `UIViewController` subclasses (`ASCredentialProviderViewController`,
   `ASAccountAuthenticationModificationViewController`).
 - CryptoKit `SymmetricKey` members on PRF assertion/registration outputs.
-- FoundationNetworking `HTTPURLResponse` members (`authenticatedResponse`,
-  `httpResponse`, `complete(httpResponse:httpBody:)`).
 - WebKit / Safari web-browser public-key provider overlays.
 - Apple NSString payloads for typed constants; Linux stores C-identifier
   placeholders.
@@ -239,3 +242,44 @@ Product sources still compile warning-free under the macOS SDK, and every
 `#if !canImport(SwiftUI)`, were verified with the guard forced true to
 simulate the SwiftUI-absent Linux gate). No product, test, coverage, or
 manifest file needed changes for this pass.
+
+## HTTPURLResponse pass 2026-09 (pi wave 9)
+
+Ledger before this pass: **2052 implemented / 0 declared / 44 deferred /
+0 unavailable / 0 not-applicable**. Ledger after this pass: **2057
+implemented / 0 declared / 39 deferred / 0 unavailable / 0
+not-applicable** (2096 precise IDs). Implemented gain: **5** — there are no
+declared rows to convert; the only deferred group convertible in-process
+without hardware/daemon is the five `HTTPURLResponse` members:
+
+- `ASAuthorizationProviderExtensionAuthorizationRequest.complete(httpResponse:httpBody:)`
+  (no-op, consistent with its `complete*` siblings),
+- `ASAuthorizationProviderExtensionAuthorizationResult.init(httpResponse:httpBody:)`
+  plus the `init(HTTPResponse:httpBody:)` synthesized ObjC-label overload
+  (mirroring the existing `init(httpAuthorizationHeaders:)` /
+  `init(HTTPAuthorizationHeaders:)` pair) and the stored `httpResponse` property,
+- `ASAuthorizationSingleSignOnCredential.authenticatedResponse`, which stays
+  fail-closed at `nil`: Linux never performs the SSO network exchange, so no
+  HTTP response exists to report.
+
+`AuthenticationServicesCredentials.swift` and
+`AuthenticationServicesAuthorization.swift` import `FoundationNetworking`
+behind `#if canImport(FoundationNetworking)`; on Darwin `HTTPURLResponse`
+resolves via `Foundation`, on the Linux gate via `FoundationNetworking`.
+This matches the `webkit` / `linkpresentation` precedent (Foundation-only
+declared dependencies with the same conditional import), so no guest-manifest
+or dependency change was needed. Four new synchronous tests in
+`tests/agent/AuthenticationServicesCredentialTests.swift`
+(`testProviderExtensionHTTPResponseResult`,
+`testProviderExtensionHTTPResponseSynthesizedInit`,
+`testProviderExtensionCompleteWithHTTPResponse`,
+`testSingleSignOnAuthenticatedResponseFailClosed`) cite the five rows; none
+uses `DispatchQueue.main`, `RunLoop`, semaphore waits, or `await`.
+
+The remaining 39 deferred rows cannot move in-process: 25 need UIKit
+view-controller/anchor identity (a framework-local substitute superclass is
+forbidden), 6 need CryptoKit `SymmetricKey` (no such module on the gate
+toolchain), 6 are SwiftUI `AuthorizationController` async request methods
+(success would claim Apple-daemon authorization and cited tests cannot
+`await`), and 2 are WebKit overlay `clientData` facets owned by the browser
+module.

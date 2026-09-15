@@ -93,26 +93,28 @@ This coverage repair keeps the registry and rewrites the ledger:
 | After (repair) | 244 | 54 | 17 | 5 | 298 |
 | After (pi-wave6) | 280 | 18 | 17 | 5 | 298 |
 | After (pi-wave8) | 284 | 14 | 17 | 5 | 298 |
+| After (pi-wave9) | 298 | 0 | 17 | 5 | 298 |
 
 `implemented` rows now cite a real top-level `func test*()` that exercises
 that identifier. Enum members share table-driven value tests
 (`testActivityStateCases`, `testActivityStyleCases`). Request error cases
 are 1:1 with the throw path that produces them. Synthesized
-`AsyncSequence` overloads that would hang on an infinite stream (or that
-this host does not call) are `declared` with
-`source:full/activitykit/ActivityKit.swift#<SequenceType>`.
+`AsyncSequence` overloads that would hang on an infinite stream were
+covered by focused completing tests (buffered `.log` replay, pumped flag
+changes, or generic-context overload pinning) instead of being left
+`declared`.
 `AlertConfiguration` stays deferred on guest Foundation.
 
-Top-5 implemented evidence (284 rows). No test exceeds 2.9%
-(40% cap would be 113 rows):
+Top-5 implemented evidence (298 rows). No test exceeds 2.7%
+(40% cap would be 119 rows):
 
 | rows | share | evidence |
 | ---: | ---: | --- |
-| 8 | 2.9% | `ActivitySequenceTests.swift#testActivityStateUpdatesIteration` |
-| 8 | 2.9% | `ActivitySequenceTests.swift#testActivityUpdatesIteration` |
-| 8 | 2.9% | `ActivitySequenceTests.swift#testContentUpdatesIteration` |
-| 8 | 2.9% | `ActivitySequenceTests.swift#testPushTokenUpdatesIteration` |
-| 8 | 2.9% | `ActivitySequenceTests.swift#testContentStateUpdatesIteration` |
+| 8 | 2.7% | `ActivitySequenceTests.swift#testActivityStateUpdatesIteration` |
+| 8 | 2.7% | `ActivitySequenceTests.swift#testActivityUpdatesIteration` |
+| 8 | 2.7% | `ActivitySequenceTests.swift#testContentUpdatesIteration` |
+| 8 | 2.7% | `ActivitySequenceTests.swift#testPushTokenUpdatesIteration` |
+| 8 | 2.7% | `ActivitySequenceTests.swift#testContentStateUpdatesIteration` |
 
 This slug has no SwiftUI `View` overlay rows, so the overlay-conversion
 playbook does not apply; every leftover `declared` row is a synthesized
@@ -133,20 +135,25 @@ enablement sequences, cited 1:1 by four new `ActivityTerminalOperatorTests`
 host flag on a background task so the `.latest` replay's single buffered
 value gains the second element the two-argument throwing predicate needs,
 then cancels the pumper. All 208 agent tests (204 existing + 4 new) were
-executed against the isolated macOS toolchain build (`AK_ALL_OK`).
+executed against the isolated macOS toolchain build (`AK_ALL_OK`). The pi-wave9
+pass converts the final 14 `declared` rows: the two leftover non-throwing
+`flatMap` overloads (`Other.Failure == Never`, and generic
+`Other.Failure == Self.Failure`) on all 7 sequence types, cited 1:1 by 14
+new `ActivityFlatMapOverloadTests` (`test*FlatMapSameFailure` /
+`test*FlatMapNeverFailure`). A direct call on a concrete sequence can never
+select these overloads (`Self.Failure` is the defaulted `Never`, so the
+strictly more constrained doubly-`Never` overload always wins), so each test
+calls `flatMap` from a local generic helper whose `where` clause admits
+exactly one overload: `O.Failure == S.Failure` (with `S.Failure`
+unconstrained) pins the generic overload, and `O.Failure == Never` (with
+`S.Failure` unconstrained) pins the single-`Never` overload. Constructing
+the mapped sequence is synchronous, so the cited tests use no `await`,
+semaphore, or dispatch. All 222 agent tests (208 existing + 14 new) were
+executed against the isolated macOS toolchain build (`AK_AGENT_ALL_OK`).
 
-Still `declared` (14): the non-throwing `flatMap` overloads
-(`A1.Failure == Never` only, and generic `A.Failure == A1.Failure`) can
-never be selected by the compiler for these sequence types: `Self.Failure`
-is the defaulted `Never`, so any call whose transform returns a
-`Never`-failure sequence resolves to the strictly more constrained
-doubly-`Never` overload (already `implemented` via `test*FlatMap`), while
-a non-`Never`-failure transform satisfies neither leftover overload. A
-call-site test therefore cannot prove which of the two remaining
-same-name overloads the compiler selected, so the ledger keeps the honest
-`declared` note rather than guessing.
+No `declared` rows remain.
 
-The isolated host cannot compile `AlertConfiguration`, so 300
+The isolated host cannot compile `AlertConfiguration`, so 315
 `implemented` and a fully nondeferred table remain blocked on guest
 Foundation rather than on registry work. SwiftUI `ActivityConfiguration` /
 `DynamicIsland` / `LiveActivityIntent` are not in this seed's public

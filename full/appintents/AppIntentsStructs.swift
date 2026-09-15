@@ -7,7 +7,7 @@ public struct FocusFilterAppContext: @unchecked Sendable {
     public let targetContentIdentifierPrefix: String?
 
     public var hostPredicateFormat: String? {
-        notificationFilterPredicate?.predicateFormat
+        notificationFilterPredicate.map { String(describing: $0) }
     }
 
     public init() {
@@ -1092,6 +1092,8 @@ public struct BoolFromStringResolver: Resolver {
 }
 
 public struct EntityQueryProperties<Entity, ComparatorMappingType>: @unchecked Sendable {
+    /// Process-local property declarations. Never written to a Spotlight index.
+    public var hostDeclarations: [EntityQueryPropertyDeclaration<Entity, ComparatorMappingType>] = []
     public init() {}
 }
 
@@ -1381,6 +1383,8 @@ public struct IntentURLRepresentation<Intent>: Sendable,
 }
 
 public struct AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>: @unchecked Sendable {
+    /// Process-local comparator kind token (`empty`, `contains`, `isBetween`, `entityQuery`).
+    public var hostKind = "empty"
     public init() {}
 }
 
@@ -1416,6 +1420,8 @@ public struct StringFromDoubleResolver: Sendable, Hashable {
 }
 
 public struct EntityQuerySortingOptions<Entity>: @unchecked Sendable {
+    /// Process-local sorting metadata. Never sent to a query daemon.
+    public var hostSorting: [EntityQuerySortableByProperty<Entity>] = []
     public init() {}
 }
 
@@ -1443,6 +1449,8 @@ public struct FocusFilterSuggestionContext: @unchecked Sendable {
 }
 
 public struct EntityQuerySortableByProperty<Entity>: @unchecked Sendable {
+    /// Process-local key-path metadata. Never sent to a query daemon.
+    public var hostKeyPath: AnyKeyPath?
     public init() {}
 }
 
@@ -1472,7 +1480,10 @@ public struct ParameterSummarySwitchCondition<Intent, Value, CaseCondition>: @un
     public init(evaluatedDisplayString: String) {
         self.evaluatedDisplayString = evaluatedDisplayString
     }
-    public enum WidgetFamily: Hashable, Sendable {}
+    public enum WidgetFamily: Hashable, Sendable {
+        /// Host-recorded widget-family switch case. Linux never evaluates a widget family.
+        case widgetFamily
+    }
 }
 
 extension ParameterSummarySwitchCondition: ParameterSummary where Intent: AppIntent, Value: _IntentValue, CaseCondition: _ParameterSummarySwitchCase {}
@@ -1482,6 +1493,8 @@ public struct ParameterSummaryTupleCaseCondition<Intent, Value, ValueType>: @unc
 }
 
 public struct ParameterSummaryDefaultCaseCondition<Intent, Value, Summary>: @unchecked Sendable {
+    /// Process-local display string. Linux never matches a Siri case.
+    public var evaluatedDisplayString = ""
     public init() {}
 }
 

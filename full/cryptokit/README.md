@@ -35,7 +35,11 @@ not-applicable / 23 unavailable** of 1287 IDs. Wave 8 recount: before
 1221/21/0, after 1221/21/0 (gain 0 — all 21 leftover declared rows are
 SecureEnclave PrivateKey instance members whose only Apple initializers
 require LAContext/SecAccessControl, so no instance is obtainable in-process;
-they stay declared fail-closed rather than inventing a synthetic initializer). Implemented ≥ 900. Nondeferred except
+they stay declared fail-closed rather than inventing a synthetic initializer). Wave 9 recount: before
+1221/21/0, after 1221/21/0 (gain 0 — re-examined all 21 declared rows: 12 are
+non-throwing `publicKey`/`dataRepresentation` getters that cannot fail closed
+without changing Apple's signature, and 9 are throwing instance methods with no
+obtainable instance; both stay declared per the hardware fail-closed rule). Implemented ≥ 900. Nondeferred except
 SecureEnclave (declared + LAContext unavailable) and Combine `Sequence.publisher`
 (unavailable on Linux). Foundation `Sequence.compare` / `formatted` overlays are
 not-applicable: their generic constraints (`Element: SortComparator`,

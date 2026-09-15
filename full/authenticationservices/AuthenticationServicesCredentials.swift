@@ -1,5 +1,8 @@
 import Foundation
 import Dispatch
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 open class ASCredentialServiceIdentifier: NSObject, NSCopying, NSSecureCoding {
     public enum IdentifierType: Int, Hashable, Sendable {
@@ -774,6 +777,7 @@ open class ASCredentialProviderExtensionContext: NSObject {
 open class ASAuthorizationProviderExtensionAuthorizationResult: NSObject {
     public var httpAuthorizationHeaders: [String: String]?
     public var httpBody: Data?
+    public var httpResponse: HTTPURLResponse?
 
     public init(httpAuthorizationHeaders: [String: String]) {
         self.httpAuthorizationHeaders = httpAuthorizationHeaders
@@ -782,6 +786,18 @@ open class ASAuthorizationProviderExtensionAuthorizationResult: NSObject {
 
     public init(HTTPAuthorizationHeaders httpAuthorizationHeaders: [String: String]) {
         self.httpAuthorizationHeaders = httpAuthorizationHeaders
+        super.init()
+    }
+
+    public init(httpResponse: HTTPURLResponse, httpBody: Data?) {
+        self.httpResponse = httpResponse
+        self.httpBody = httpBody
+        super.init()
+    }
+
+    public init(HTTPResponse httpResponse: HTTPURLResponse, httpBody: Data?) {
+        self.httpResponse = httpResponse
+        self.httpBody = httpBody
         super.init()
     }
 }
@@ -808,6 +824,10 @@ open class ASAuthorizationProviderExtensionAuthorizationRequest: NSObject {
     public func complete(error: any Error) { _ = error }
     public func complete(httpAuthorizationHeaders: [String: String]) {
         _ = httpAuthorizationHeaders
+    }
+    public func complete(httpResponse: HTTPURLResponse, httpBody: Data?) {
+        _ = httpResponse
+        _ = httpBody
     }
     public func doNotHandle() {}
 

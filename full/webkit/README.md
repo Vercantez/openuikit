@@ -163,6 +163,42 @@ Validation on this Mac (the sealed Linux gate needs a Linux host):
 
 Only `full/webkit/` changes.
 
+### Leftover re-examination (pi-wave9 webkit)
+
+Re-examined all 36 declared rows for synchronous in-process conversion.
+Result: **no conversions** (2171 implemented / 36 declared / 26 deferred /
+0 unavailable / 0 not-applicable, total 2233 — unchanged). The deliverable
+validator reports no coverage/evidence errors (the only two errors are the
+pre-existing missing `full/framework-roadmap/framework-roadmap.json`,
+absent from this worktree).
+
+- 22 `WebPage` async members (`callJavaScript`, eight `DialogPresenting`
+  requirements + extension defaults, six `NavigationDeciding` requirements +
+  defaults, `mediaPlaybackState`, `pauseAllMediaPlayback`,
+  `closeAllMediaPresentations`, `setAllMediaPlaybackSuspended`,
+  `setCameraCaptureState`, `setMicrophoneCaptureState`, `exported(as:)`) and
+  the two async `WKWebExtension` inits (`appExtensionBundle`,
+  `resourceBaseURL` overload) cannot be invoked from top-level synchronous
+  no-argument tests: the contract forbids `await` in cited tests.
+- `navigations` has a synchronous getter but returns an `AsyncSequence`;
+  iterating it needs `await`, so it stays declared rather than being
+  promoted by a trivial property touch.
+- 11 rows have no product member at all (declared anchor is the enclosing
+  type): `WKNavigationAction.buttonNumber` / `modifierFlags`,
+  `WebPage.NavigationAction.buttonNumber` (UIKit `UIEvent` types),
+  `WKWebExtensionAction.menuItems`, `WKWebExtensionCommand.keyCommand` /
+  `menuItem`, three `WKUIDelegate` edit-menu/input-suggestion methods
+  (UIKit animator/suggestion types), and `WebPage.Representation` /
+  `transferRepresentation` (needs `UTType`/`Transferable`). The isolated
+  host has no UIKit module and framework-local substitutes for
+  dependency-owned types are forbidden.
+- Still deferred: NSAttributedString HTML import, `SecTrust`,
+  `ProxyConfiguration`, `UTType`/`Transferable`, the two SwiftUI-typed
+  `WebPage` members, context-menu delegates, and the synthesized
+  `Equatable.!=` witness.
+
+Only this README changes in this pass.
+
 ### SwiftUI overlay conversion (pi-wave7 webkit)
 
 This pass converts **all 813 `not-applicable` SwiftUI overlay rows to

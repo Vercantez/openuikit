@@ -1186,6 +1186,19 @@ public struct IntentDonationManager: Sendable {
         Self.resetLocalDonations()
     }
 
+    /// Linux has no Shortcuts donation daemon. These record the donated intent
+    /// in-process and return a local identifier; nothing is persisted.
+    @discardableResult
+    public func donate(intent: some AppIntent) -> IntentDonationIdentifier {
+        recordLocal(intent)
+    }
+
+    @discardableResult
+    public func donate(intent: some AppIntent, result: some IntentResult) -> IntentDonationIdentifier {
+        _ = result
+        return recordLocal(intent)
+    }
+
     fileprivate func recordLocal(_ intent: any AppIntent) -> IntentDonationIdentifier {
         let identifier = IntentDonationIdentifier(
             "local.\(type(of: intent)).\(Self.identifiers.count)"
@@ -1946,7 +1959,7 @@ public final class IntentParameterDependency<Intent: AppIntent>: @unchecked Send
     }
 }
 
-public struct IntentFile: @unchecked Sendable, Hashable {
+public struct IntentFile: @unchecked Sendable, Hashable, InstanceDisplayRepresentable {
     public let data: Data
     public let filename: String?
     public let fileURL: URL?
@@ -2087,6 +2100,8 @@ public protocol AppEnum: AppValue, StaticDisplayRepresentable, RawRepresentable
 public protocol AppEntity: AppValue, DisplayRepresentable, Identifiable
     where Self.ID: EntityIdentifierConvertible, Self.ID: Sendable
 {
+    /// Entity-property wrapper used by `@Property` declarations.
+    typealias Property = EntityProperty
     associatedtype DefaultQuery: EntityQuery where DefaultQuery.Entity == Self
     static var defaultQuery: DefaultQuery { get }
     static var typeDisplayRepresentation: TypeDisplayRepresentation { get }
@@ -2495,7 +2510,8 @@ public final class File: NSObject, _IntentValue, @unchecked Sendable {
 extension Optional: _IntentValue where Wrapped: _IntentValue {}
 extension Array: _IntentValue where Element: _IntentValue {
     public typealias ValueType = Element
-    public typealias UnwrappedType = Element
+    /// Oracle: `Array<Element>.UnwrappedType == Array<Element>`.
+    public typealias UnwrappedType = Array<Element>
 }
 
 public struct OpenURLIntent: AppIntent {

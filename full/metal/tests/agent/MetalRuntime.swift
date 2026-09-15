@@ -6098,6 +6098,7 @@ testLeftoverBindingReflection()
 testLeftoverFunctionTables()
 testLeftoverEncoderOverloads()
 testLeftoverMetal4Surface()
+testLeftoverSharedHandles()
 
 print("METAL_AGENT_RUNTIME_OK")
 
@@ -6721,4 +6722,27 @@ func testLeftoverMetal4Surface() {
     precondition(copied == [0x88, 0x77, 0x66, 0x55])
     precondition(MTLCommandBufferError(.notPermitted) == MTLCommandBufferError(.notPermitted))
     _ = MTLCommandBufferError(.notPermitted).localizedDescription
+}
+
+/// Covers the shared-event-handle `init(coder:)` witness via an
+/// `NSKeyedArchiver` round-trip, plus the fail-closed
+/// `makeSharedTextureHandle()` (no IOSurface compositor on Linux).
+func testLeftoverSharedHandles() {
+    let handle = MTLSharedEventHandle()
+    handle.label = "leftover-handle"
+    precondition(MTLSharedEventHandle.supportsSecureCoding)
+    let data = try! NSKeyedArchiver.archivedData(withRootObject: handle, requiringSecureCoding: true)
+    let roundTripped = try! NSKeyedUnarchiver.unarchivedObject(ofClass: MTLSharedEventHandle.self, from: data)!
+    precondition(roundTripped.label == "leftover-handle")
+    let reader = try! NSKeyedUnarchiver(forReadingFrom: data)
+    let direct = MTLSharedEventHandle(coder: reader)
+    reader.finishDecoding()
+    precondition(direct != nil)
+
+    let device = MTLCreateSystemDefaultDevice()!
+    let desc = MTLTextureDescriptor.texture2DDescriptor(
+        pixelFormat: .r8Unorm, width: 4, height: 4, mipmapped: false
+    )
+    let texture = device.makeTexture(descriptor: desc)!
+    precondition(texture.makeSharedTextureHandle() == nil)
 }

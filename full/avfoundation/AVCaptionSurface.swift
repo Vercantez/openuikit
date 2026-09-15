@@ -2,6 +2,9 @@ import Foundation
 
 open class AVCaption: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Linux fail-closed NSCoding witness: no Apple archive decoding exists on
+  // this host, so decoding always yields nil (never Apple round-trip success).
+  public init?(coder: NSCoder) { return nil }
   public enum Animation: Int, Hashable, Sendable {
     case none = 0
     case characterReveal = 1
@@ -28,6 +31,9 @@ open class AVCaption: NSObject, @unchecked Sendable {
     var storedPosition = AVCaptionRubyPosition.before
     var storedAlignment = AVCaptionRubyAlignment.start
     public override init() { super.init() }
+    // Linux fail-closed NSCoding witness: no Apple archive decoding exists
+    // on this host, so decoding always yields nil.
+    public init?(coder: NSCoder) { return nil }
     public convenience init(text: String) {
       self.init()
       storedText = text
@@ -210,6 +216,9 @@ public struct AVCaptionPoint: Sendable {
 
 open class AVCaptionRegion: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  // Linux fail-closed NSCoding witness: no Apple archive decoding exists on
+  // this host, so decoding always yields nil (never Apple round-trip success).
+  public init?(coder: NSCoder) { return nil }
   public enum DisplayAlignment: Int, Hashable, Sendable {
     case before = 0
     case center = 1

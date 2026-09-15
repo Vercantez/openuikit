@@ -89,6 +89,14 @@ public protocol MTLTexture: MTLResource {
         swizzle: MTLTextureSwizzleChannels
     ) -> (any MTLTexture)?
     func newTextureView(with descriptor: MTLTextureViewDescriptor) -> (any MTLTexture)?
+    /// Fail-closed on the CPU reference: there is no IOSurface compositor, so
+    /// shared-texture handles cannot be minted. Mirrors the nil
+    /// `makeSharedTexture` factories.
+    func makeSharedTextureHandle() -> MTLSharedTextureHandle?
+}
+
+public extension MTLTexture {
+    func makeSharedTextureHandle() -> MTLSharedTextureHandle? { nil }
 }
 
 public protocol MTLHeap: MTLAllocation {

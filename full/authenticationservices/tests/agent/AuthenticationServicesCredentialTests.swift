@@ -1,5 +1,8 @@
 import Dispatch
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 import AuthenticationServices
 
 func testCredentialServiceIdentifierCoding() {
@@ -706,4 +709,52 @@ func testProviderExtensionAuthorizationRequestFields() {
     let handler = Handler()
     handler.beginAuthorization(with: request)
     handler.cancelAuthorization(with: request)
+}
+
+func testProviderExtensionHTTPResponseResult() {
+    let response = HTTPURLResponse(
+        url: URL(string: "https://example.invalid/sso")!,
+        statusCode: 200,
+        httpVersion: nil,
+        headerFields: ["H": "v"]
+    )!
+    let result = ASAuthorizationProviderExtensionAuthorizationResult(
+        httpResponse: response,
+        httpBody: Data("b".utf8)
+    )
+    precondition(result.httpResponse?.statusCode == 200)
+    precondition(result.httpBody == Data("b".utf8))
+}
+
+func testProviderExtensionHTTPResponseSynthesizedInit() {
+    let response = HTTPURLResponse(
+        url: URL(string: "https://example.invalid/sso")!,
+        statusCode: 302,
+        httpVersion: nil,
+        headerFields: nil
+    )!
+    let result = ASAuthorizationProviderExtensionAuthorizationResult(
+        HTTPResponse: response,
+        httpBody: nil
+    )
+    precondition(result.httpResponse?.statusCode == 302)
+    precondition(result.httpResponse?.url?.absoluteString == "https://example.invalid/sso")
+    precondition(result.httpBody == nil)
+}
+
+func testProviderExtensionCompleteWithHTTPResponse() {
+    let request = ASAuthorizationProviderExtensionAuthorizationRequest()
+    let response = HTTPURLResponse(
+        url: URL(string: "https://example.invalid/sso")!,
+        statusCode: 200,
+        httpVersion: nil,
+        headerFields: nil
+    )!
+    request.complete(httpResponse: response, httpBody: nil)
+    request.complete(httpResponse: response, httpBody: Data())
+}
+
+func testSingleSignOnAuthenticatedResponseFailClosed() {
+    let credential = ASAuthorizationSingleSignOnCredential()
+    precondition(credential.authenticatedResponse == nil)
 }

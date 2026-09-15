@@ -1,5 +1,8 @@
 import Foundation
 import Dispatch
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 public struct ASAuthorizationPublicKeyCredentialAttestationKind: RawRepresentable, Hashable, Sendable {
     public let rawValue: String
@@ -443,6 +446,8 @@ open class ASAuthorizationSingleSignOnCredential: NSObject, ASAuthorizationCrede
     public private(set) var accessToken: Data?
     public private(set) var identityToken: Data?
     public private(set) var authorizedScopes: [ASAuthorization.Scope] = []
+    /// Linux never performs the SSO network exchange, so no HTTP response exists.
+    public var authenticatedResponse: HTTPURLResponse? { nil }
 
     public override init() { super.init() }
 

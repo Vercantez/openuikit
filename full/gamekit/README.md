@@ -8,6 +8,16 @@ The isolated host gate (`bash tests/acceptance/test_host.sh`) compiles
 against toolchain Foundation only. It is not evidence of an integrated
 Linux guest stack with UIKit.
 
+## Depth pass 2026-09 (wave 9)
+
+**898 implemented** / **0 declared** / **21 deferred** (919 IDs) — no change
+from wave 8. All 21 deferred rows name UIKit-only types (`UIViewController`
+challenge-compose returns, `UIImage` image/completion payloads, `UIWindow`
+`parentWindow`) that cannot compile against the Foundation-only isolated host;
+0 declared rows and 0 SwiftUI View-overlay rows exist, so the overlay override
+has no GameKit targets. Top cited test remains `testGKEnumRawValues` at 205/898
+(22.8%), under the 40% cap.
+
 ## Depth pass 2026-09 (wave 8)
 
 **898 implemented** / **0 declared** / **21 deferred** (919 IDs).

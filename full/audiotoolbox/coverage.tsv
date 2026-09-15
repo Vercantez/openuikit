@@ -1462,9 +1462,9 @@ c:@F@AudioFileGetUserData	implemented	test:full/audiotoolbox/tests/agent/AudioTo
 c:@F@AudioFileGetUserDataAtOffset	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AudioFileUserDataAndFailClosed	Focused Linux runtime assertion
 c:@F@AudioFileGetUserDataSize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AudioFileUserDataAndFailClosed	Focused Linux runtime assertion
 c:@F@AudioFileGetUserDataSize64	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AudioFileUserDataAndFailClosed	Focused Linux runtime assertion
-c:@F@AudioFileInitializeWithCallbacks	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioFileInitializeWithCallbacks	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14AudioFileInitializeWithCallbacks	Callback-backed create: PCM/blob validation mirrors CreateWithURL; close pushes encoded container via procs
 c:@F@AudioFileOpenURL	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioFileWAVRoundTrip	Linux runtime asserted in depth/core tests
-c:@F@AudioFileOpenWithCallbacks	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@F@AudioFileOpenWithCallbacks	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14AudioFileOpenWithCallbacks	Snapshot model: pulls get-size/read procs at open, in-memory engine, flush pushes container via set-size/write
 c:@F@AudioFileOptimize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioFileOptimizeReadPacketDataAndGlobalInfo	Focused Linux runtime assertion
 c:@F@AudioFileReadBytes	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioFileOpenMissingAndMalformed	Linux runtime asserted in depth/core tests
 c:@F@AudioFileReadPacketData	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioFileOptimizeReadPacketDataAndGlobalInfo	Focused Linux runtime assertion
@@ -1506,9 +1506,9 @@ c:@F@AudioQueueGetParameter	implemented	test:full/audiotoolbox/tests/agent/Audio
 c:@F@AudioQueueGetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueGetPropertySize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
 c:@F@AudioQueueNewInput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOwnershipZeroOneMany	Linux runtime asserted in depth/core tests
-c:@F@AudioQueueNewInputWithDispatchQueue	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioQueueNewInputWithDispatchQueue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14AudioQueueDispatchQueues	Queue accepted for API compatibility; offline pump stays synchronous like the runloop constructors
 c:@F@AudioQueueNewOutput	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioQueueOfflineCallbackCadence	Linux runtime asserted in depth/core tests
-c:@F@AudioQueueNewOutputWithDispatchQueue	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@AudioQueueNewOutputWithDispatchQueue	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14AudioQueueDispatchQueues	Queue accepted for API compatibility; offline pump stays synchronous like the runloop constructors
 c:@F@AudioQueueOfflineRender	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioQueueEnqueueWithParametersAndOfflineRender	Focused Linux runtime assertion
 c:@F@AudioQueuePause	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioQueueBufferOverflowAndAlias	Linux runtime asserted in depth/core tests
 c:@F@AudioQueuePrime	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testAudioQueueParameterPrimeAndTime	Focused Linux runtime assertion
@@ -1553,7 +1553,7 @@ c:@F@AudioUnitSetParameter	implemented	test:full/audiotoolbox/tests/agent/AudioT
 c:@F@AudioUnitSetProperty	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testAudioUnitMixerOffline	Linux runtime asserted in depth/core tests
 c:@F@AudioUnitUninitialize	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxCoreTests.swift#testAudioUnitHardwareStartFailClosed	Linux runtime asserted in depth/core tests
 c:@F@CAShow	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave12Tests.swift#testWave12CAShowDoesNotThrow	Focused Linux runtime assertion
-c:@F@CAShowFile	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+c:@F@CAShowFile	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14CAShowFile	Routes CAShow text to the caller FILE* via fputs; nil stream falls back to stderr
 c:@F@CopyInstrumentInfoFromSoundBank	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testSoundBankCopyFailClosed	Focused Linux runtime assertion
 c:@F@CopyNameFromSoundBank	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testSoundBankCopyFailClosed	Focused Linux runtime assertion
 c:@F@DisposeAUGraph	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Linux runtime asserted in wave-2 depth tests
@@ -1571,7 +1571,7 @@ c:@F@ExtAudioFileSetProperty	implemented	test:full/audiotoolbox/tests/agent/Audi
 c:@F@ExtAudioFileTell	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testExtAudioFileClientFormat	Linux runtime asserted in depth/core tests
 c:@F@ExtAudioFileWrapAudioFileID	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testExtAudioFileClientFormat	Linux runtime asserted in depth/core tests
 c:@F@ExtAudioFileWrite	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxDepthTests.swift#testExtAudioFileClientFormat	Linux runtime asserted in depth/core tests
-c:@F@ExtAudioFileWriteAsync	deferred		Depends on canonical CoreAudioTypes; omitted rather than redeclared locally
+c:@F@ExtAudioFileWriteAsync	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14ExtAudioFileWriteAsync	Synchronous offline completion through the ExtAudioFileWrite engine; no runloop/hardware
 c:@F@GetAudioUnitParameterDisplayType	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave10Tests.swift#testGetAudioUnitParameterDisplayType	Focused Linux runtime assertion
 c:@F@MusicDeviceMIDIEvent	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
 c:@F@MusicDeviceMIDIEventList	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5AudioFileUserDataAndFailClosed	Focused Linux runtime assertion
@@ -2691,7 +2691,7 @@ s:So21MusicDeviceNoteParamsV8argCount6mPitch9mVelocity9mControlsABs6UInt32V_S2fS
 s:So21MusicDeviceNoteParamsVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave3Tests.swift#testMusicDeviceMIDIFailClosed	Focused Linux runtime assertion
 s:So22AURenderCallbackStructV9inputProc0dE6RefConABs5Int32VSv_SpySo26AudioUnitRenderActionFlagsVGSPySo0I9TimeStampVGs6UInt32VANSpySo0I10BufferListVGSgtXCSg_SvSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave2Tests.swift#testAUGraphMixerToOutput	Exact struct layout and fields asserted on Linux
 s:So22AURenderCallbackStructVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave12Tests.swift#testWave12ZeroInitCatalogB	Focused Linux runtime assertion
-s:So22AudioUnitMeterClippingV22peakValueSinceLastCall11sawInfinity0J10NotANumberABSf_6Darwin0N7BooleanVAHtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So22AudioUnitMeterClippingV22peakValueSinceLastCall11sawInfinity0J10NotANumberABSf_6Darwin0N7BooleanVAHtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14DarwinBooleanInits	1-byte DarwinBoolean overlay storing exact boolValue; UInt8 spelling stays canonical
 s:So22AudioUnitMeterClippingVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave12Tests.swift#testWave12ZeroInitCatalogB	Focused Linux runtime assertion
 s:So22AudioUnitParameterInfoV4name8unitName7clumpID02cfG6String0F08minValue03maxM007defaultM05flagsABs4Int8V_A51Mt_s9UnmanagedVySo11CFStringRefaGSgs6UInt32VASSo0abcB0VS3fSo0abC7OptionsVtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
 s:So22AudioUnitParameterInfoVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testAudioUnitParameterInfoOverlay	Focused Linux runtime assertion
@@ -2784,7 +2784,7 @@ s:So36AudioPacketDependencyInfoTranslationV01mB025mIsIndependentlyDecodable21mNu
 s:So36AudioPacketDependencyInfoTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
 s:So36AudioPacketRangeByteCountTranslationV01mB001mbE001mdE10UpperBoundABs5Int64V_A2Gtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
 s:So36AudioPacketRangeByteCountTranslationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave6Tests.swift#testTranslationOverlays	Focused Linux runtime assertion
-s:So39AUVoiceIOOtherAudioDuckingConfigurationV015mEnableAdvancedD001mD5LevelAB6Darwin0I7BooleanV_So0abcdH0Vtcfc	deferred		Outside the sealed canonical core; no honest runtime or source evidence
+s:So39AUVoiceIOOtherAudioDuckingConfigurationV015mEnableAdvancedD001mD5LevelAB6Darwin0I7BooleanV_So0abcdH0Vtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave14Tests.swift#testWave14DarwinBooleanInits	1-byte DarwinBoolean overlay storing exact boolValue; UInt8 spelling stays canonical
 s:So39AUVoiceIOOtherAudioDuckingConfigurationVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave12Tests.swift#testWave12ZeroInitCatalogB	Focused Linux runtime assertion
 s:So8AUPresetV12presetNumber0B4NameABs5Int32V_s9UnmanagedVySo11CFStringRefaGSgtcfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave5Tests.swift#testWave5OverlayStructLayouts	Focused Linux runtime assertion
 s:So8AUPresetVABycfc	implemented	test:full/audiotoolbox/tests/agent/AudioToolboxWave12Tests.swift#testWave12ZeroInitCatalogB	Focused Linux runtime assertion

@@ -775,3 +775,39 @@ implemented rows. Leftover deferred rows still need CoreAudioTypes/CoreVideo
 single-sample collections), `simd`, DispatchSource timers, hardware/daemons,
 or unobserved family-overlay shapes. No Apple service or hardware success was
 invented.
+
+## Wave 9 pass 2026-09-15 (color-volume / lens `!=` witnesses)
+
+No SwiftUI/View overlay rows exist in this module's public surface (zero
+`coverage.tsv` IDs mention SwiftUI; the 47 `view` matches are the already
+implemented `CMStereoView` media constants), so the overlay-override clause
+has nothing to convert here. This pass converts the 7 deferred `!=`
+witnesses whose hosts exist in this port (prior "host absent" notes were
+stale): `ContentColorVolume`, `ColorPrimaries`, `ColorVolume`,
+`LensRole` (Apple `Role`), `LensDomain` (Apple `Domain`), `AlgorithmKind`,
+and `ExtrinsicOriginSource`, all exercised by the new
+`CMWitnessDepthTests.swift#testCMColorVolumeAndLensInequality`. It also
+corrects the notes on the 10 `RawRepresentable`-constrained hash defaults
+for those hosts (kept deferred): the host exists, but the conditional
+default is shadowed by the concrete `Hashable` synthesis, so no focused
+test can distinctly exercise that default implementation.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 3248 | 3255 |
+| declared | 29 | 29 |
+| deferred | 227 | 220 |
+| unavailable | 0 | 0 |
+| not-applicable | 0 | 0 |
+
+Implemented gain: +7 deferred. The new test owns 7 rows (0.2%); no test
+owns more than 40% of implemented rows. Leftover declared rows are the
+standing keep-list (Foundation `sorted(using:)` / `compare` / `formatted`
+with no concrete `SortComparator` / `FormatStyle`, Combine `publisher`,
+deprecated optional-`flatMap`, trapping `indices` on the read-only host,
+`CVBufferRef` members with no host, DispatchSource timer overloads that
+abort libdispatch in the sealed gate). Leftover deferred rows need
+CoreAudioTypes/CoreVideo (audio/image sample paths, tagged-dynamic pixel
+content, parameter-set and single-sample collections), `simd`, DispatchSource
+timers, hardware/daemons, or unobserved family-overlay shapes. No Apple
+service or hardware success was invented.

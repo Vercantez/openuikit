@@ -51,6 +51,40 @@ absent on this VM. The sealed gate compiles with a clean product tree
 `origin/agent/fw-contactsui` did not exist; this pass publishes that branch
 from the Cursor-created work branch.
 
+## Depth pass 2026-09 (wave 9, pi)
+
+Coverage before: **826 implemented / 0 declared / 21 deferred / 0 unavailable / 0 not-applicable**
+(826 nondeferred, floor 85).
+
+Coverage after: **826 implemented / 0 declared / 21 deferred / 0 unavailable / 0 not-applicable**
+(826 nondeferred, floor 85). Implemented gain **0**: there are no `declared`
+rows left to convert, and none of the 21 deferred rows can be implemented
+in-process. All 21 are `s:7SwiftUI4ViewP…TipKit…` / `…_AppIntents_…`
+synthesized modifiers (`tipAnchor`, `tipBackground*`, `popoverTip*`,
+`tipImageStyle*`, `tipCornerRadius`, `siriTipColorStyle`,
+`shortcutsLinkStyle`, `onAppIntentExecution`, intent-bound
+`accessibilityAction` overloads). They need the Tips daemon / Siri intent
+runtime, have no no-op in `ContactsUIViewSurface.swift` (generic
+`Intent`-constrained signatures cannot be modeled as `Any?` identity
+returns), and fail-closed per the hardware/daemon/Siri rule.
+
+Verification this pass (no product change): header
+`precise\tstatus\tevidence\tnotes`; every precise ID exactly once; all 826
+implemented rows cite
+`test:full/contactsui/tests/agent/<File>Tests.swift#testName` (0 malformed);
+every cited name is a top-level synchronous no-argument `func test*()`
+present in both the cited file and `ContactsUIRuntime.swift`; no
+`await`, `DispatchQueue.main`, `RunLoop`, or semaphore waits in cited
+tests; max citation share 69/826 (8.4%, overlay batch) < 40%.
+
+Gate note: `bash tests/acceptance/test_host.sh` was validated on the
+isolated Linux host (Swift 6.2.4). On this Mac (Apple Swift 6.2.1,
+`canImport(Contacts)`/`canImport(SwiftUI)` true, UIKit absent) the sealed
+gate cannot run as-is: the module compiles its Apple-framework branches
+instead of the isolated lookalikes, and the identity-overlay tests pin the
+`Any?` no-ops that only exist when SwiftUI is absent. No macOS-only
+surgery was made; the Linux evidence design is unchanged.
+
 ## Depth pass 2026-09 (wave 8)
 
 SDK DEPTH second pass. Keeps the first-pass picker / editor / access-button

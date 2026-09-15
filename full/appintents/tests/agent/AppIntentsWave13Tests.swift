@@ -29,6 +29,7 @@ private enum Wave13Kind: String, AppEnum, AppEntity {
     static var defaultQuery = Wave13KindQuery()
     var id: String { rawValue }
     var displayRepresentation: DisplayRepresentation { DisplayRepresentation(title: rawValue) }
+    var localizedStringResource: LocalizedStringResource { displayRepresentation.title }
 }
 
 private struct Wave13KindQuery: EntityQuery {
@@ -144,7 +145,7 @@ func testStringSearchCriteriaTermHashAndParameter() {
     )
     described.wrappedValue = StringSearchCriteria(term: "d")
     precondition(described.wrappedValue.term == "d")
-    let resolved = StringSearchCriteriaFromStringResolverSpecificification().hostResolve(
+    let resolved = try! StringSearchCriteriaFromStringResolverSpecificification().hostResolve(
         from: "resolved",
         context: IntentParameterContext<StringSearchCriteria>(title: "q")
     )
@@ -190,6 +191,7 @@ func testIntentParameterRemainingAppEntityFileAndEnumStorage() {
     precondition(descProvider.hasOptionsProvider == true)
     let titledProvider = IntentParameter<Wave13Entity>(
         title: LocalizedStringResource("Item"),
+        requestDisambiguationDialog: nil,
         optionsProvider: query
     )
     titledProvider.wrappedValue = entity

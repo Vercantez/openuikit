@@ -36,6 +36,44 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 15 | 3231 | 571 | 1196 | 0 | 1588 | 3802 |
 | After wave 16 | 3331 | 537 | 1130 | 0 | 1588 | 3868 |
 | After wave 17 | 4933 | 505 | 1130 | 0 | 18 | 5438 |
+| After wave 18 | 5240 | 198 | 1130 | 0 | 18 | 5438 |
+
+Wave 18 (this increment) converts 307 of the 505 declared rows: 61
+declared-synthesized witnesses repointed at the already-tested base
+spelling (same treatment as the 1,609 existing synthesized rows), and 246
+new synchronous pins across 25 tests in
+`tests/agent/AppIntentsWave18Tests.swift` (largest cites 22). New product
+source lives in `AppIntentsWave18.swift` (builders, prediction/condition
+inits, exotic comparator overloads, fail-closed initializers) plus small
+additions to `AppIntents.swift` (sync `IntentDonationManager.donate`,
+`IntentFile: InstanceDisplayRepresentable`, `AppEntity.Property`,
+`Array.UnwrappedType`), `AppIntentsStructs.swift` (container storage,
+`WidgetFamily` case, default-case display string), `AppIntentsClasses.swift`
+(comparator/property storage), `AppIntentsEnums.swift` (generic query
+builders, `IntentWidgetFamily: _IntentValue`), `AppIntentsProtocols.swift`
+(`IntentValueQuery` result aliases), and `AppIntentsOverlays.swift`
+(`result(value:content:)` overloads). `Array.UnwrappedType` is corrected
+to `Array<Element>` per the oracle. Async `requestValue` /
+`requestConfirmation` / `donate`, `EntityProperty.asyncGetter`, View
+snippet execution, macros, Siri daemon behavior, and service success stay
+fail-closed or declared.
+
+Build repair (this increment): the module did not compile at the start of
+this pass. Wave-15 sources assigned `hostMappingTransform`,
+`hostResolverSpecification`, `hostKind`, `hostComparators`,
+`hostEntityProvider`, `hostKeyPathDescription`, `hostDeclarations`,
+`hostSorting`, and `hostKeyPath` members that were never declared, and
+`FocusFilterAppContext.hostPredicateFormat` used a `predicateFormat` API
+that current swift-corelibs-foundation deprecates (fatal under the
+gate's warnings-as-errors). This pass declares the missing in-process
+storage on the comparator/property/container types and rewords the format
+helper to preserve its nil/non-nil contract. Three latent test defects
+surface once the module compiles and are fixed in the tests: a
+`Wave13Kind` enum conforming to both `AppEnum` and `AppEntity` hit two
+competing `localizedStringResource` defaults (probe now defines one), a
+`hostResolve` call missing `try`, and an `IntentParameter` initializer
+ambiguous between two same-labeled overloads (disambiguated with an
+explicit label).
 
 Wave 17 (this increment) converts the 1,588-row SwiftUI overlay
 `not-applicable` block to `implemented` following the PassKit/StoreKit
@@ -158,7 +196,7 @@ Top-5 implemented evidence:
 
 | Rows | Share | Evidence |
 | ---: | ---: | --- |
-| 293 | 5.9% | `AppIntentsViewOverlayTests.swift#testViewOverlayBatch01` |
+| 293 | 5.6% | `AppIntentsViewOverlayTests.swift#testViewOverlayBatch01` |
 | 176 | 3.6% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteAccessorMatrix` |
 | 174 | 3.5% | `AppIntentsWave10Tests.swift#testEntityPropertyConcreteStorageAndMetadataMatrix` |
 | 170 | 3.4% | `AppIntentsViewOverlayTests.swift#testViewOverlayBatch09` |
@@ -168,7 +206,7 @@ No test is cited by more than 293 rows (5.9% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
 Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
 each. Wave-17 overlay batches cite at most 293 rows each; depth tests cite
-at most 12 rows each.
+at most 12 rows each. Wave-18 tests cite at most 22 rows each.
 New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.

@@ -858,3 +858,59 @@ Combine on the isolated host), `FormatStyle` / `compare` witnesses, and
 exercised synchronously without inventing Apple API. The 245 `deferred`
 rows are unchanged (hardware/daemon/URLSession/`CALayer`/async-service
 bodies that cannot be written without guessing Apple behavior).
+
+### Depth pass 2026-09-15 (wave 9 NSCoding / CoreAnimationTool sweep)
+
+Wave 9 sweep converts the last 9 synchronous `declared` rows into focused
+tests in `tests/agent/AVDepthPass18Tests.swift` (one citation per test).
+Seven `NSCoding` `init(coder:)` witnesses (`AVCaption`, `AVCaption.Ruby`,
+`AVCaptionRegion`, `AVCompositionTrackFormatDescriptionReplacement`,
+`AVMetricEvent`, `AVMetricMediaRendition`,
+`AVVideoCompositionLayerInstruction`) gain fail-closed Linux initializers
+that always return nil: decoding Apple archives is impossible on this
+host, so no round trip is claimed. The two `CALayer`-backed
+`AVVideoCompositionCoreAnimationTool` factories gain Apple-mirroring
+constructors whose Swift spellings (`init(postProcessingAsVideoLayer:in:)`
+/ `init(postProcessingAsVideoLayers:in:)`) were pinned by an Xcode 26.1
+`import AVFoundation` probe (Apple's Swift SDK deprecates both in favor
+of `init(configuration:)`); the Linux bodies only store the video/parent
+layers and render nothing. No SwiftUI cross-import overlay rows exist in
+this seed, so the overlay playbook does not apply.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5226 | 5235 |
+| `declared` | 161 | 152 |
+| `deferred` | 245 | 245 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest new citation group is 1 row per new test):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+The remaining 152 `declared` rows are async witnesses (calling them needs
+`await`, which the sealed gate forbids), `Combine` publishers,
+`FormatStyle` / `compare` / `SortComparator`-element witnesses, and
+`AsyncIterator.Element` associated types that cannot be exercised
+synchronously without inventing Apple API. The 245 `deferred` rows are
+unchanged (completion-handler service calls, Darwin-only types,
+`CALayer`/`URLSession` inheritance, and bodies that cannot be written
+without guessing Apple behavior).
+
+Sealed Linux gate (`bash full/avfoundation/tests/acceptance/test_host.sh`,
+run under `swift:6.2-noble`, Swift 6.2.4, aarch64) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```

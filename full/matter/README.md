@@ -495,3 +495,46 @@ Environment: local `swiftc` is Apple Swift 6.2.1 targeting
 the 13 new `MatterWave8EvidenceTests` functions pass in-process on this Mac.
 The sealed gate runs in the `uikit-linux` container (Swift 6.2.4,
 `aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).
+
+## Depth pass 2026-09 (wave 9, isolated worktree)
+
+Converts the legacy `MTRDeviceController` pairing/commissioning spellings,
+the synchronous XPC params/response codecs, and the already-compiling
+`MTRDeviceControllerParameters` delegate setters to implemented with
+focused fail-closed tests. No fabric, daemon, radio, `await`, or success
+invention: throwing paths raise `MTRError.invalidState` (`.notFound` for
+the commissionee lookup), lookups return nil, browse/start calls return
+false, delegate setters accept-and-ignore, and the XPC codecs are pure
+dictionary transforms.
+
+**Coverage before:** 28320 implemented / 90 declared / 12 deferred / 40 unavailable / 0 not-applicable
+
+**Coverage after:** 28353 implemented / 57 declared / 12 deferred / 40 unavailable / 0 not-applicable
+(+33 implemented; 28410 nondeferred; floor 150).
+
+New product file (in `matter_guest_sources.txt`):
+`MTRControllerPairingWave9.swift`. New tests:
+`tests/agent/MatterWave9PairingTests.swift` (6 functions, max 7 rows each;
+largest share of implemented rows is far below the 40% cap).
+
+### Leftover deferred (12) and declared (57)
+
+- Deferred is unchanged: `MTRSetMessageReliabilityParameters` (would invent
+  radio timing), `MTRAttributeCacheContainer.readAttributeWithEndpointId:...`
+  (generic cache read needs a cache-store design), and 10
+  `NSCoding.initWithCoder` rows (NSCoder round-trips stay deferred by design).
+- Declared rows are live fabric/daemon surface that stays fail-closed:
+  `MTRDeviceController.sharedController` x2 (needs `MTRXPCConnectBlock`,
+  which is unavailable without NSXPCConnection),
+  `xpcInterfaceForServerProtocol` / `xpcInterfaceForClientProtocol`
+  (return NSXPCInterface, unavailable), and 53 delegate/keypair/storage/XPC
+  protocol requirement rows. The requirements are `@objc optional` on Apple
+  and cannot be expressed in portable Swift; per the earlier pass policy,
+  individual requirement rows are not promoted on container evidence alone.
+
+Environment: local `swiftc` is Apple Swift 6.2.1 targeting
+`arm64-apple-macosx26.0` (this Mac). Product `libMatter.dylib` and the full
+`tests/agent/*Tests.swift` set compile clean under `-warnings-as-errors`;
+the 6 new `MatterWave9PairingTests` functions pass in-process on this Mac.
+The sealed gate runs in the `uikit-linux` container (Swift 6.2.4,
+`aarch64-unknown-linux-gnu`) with a clean product tree (`products=clean`).

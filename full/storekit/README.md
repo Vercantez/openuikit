@@ -701,3 +701,47 @@ macOS host cannot link the Foundation-only module. The two new rows were
 validated against the gate's own evidence rules (header, unique IDs,
 evidence path/anchor regexes, top-level sync no-arg `func` patterns,
 forbidden-pattern scan, 7848 floor, 40% rule) plus `swiftc -parse`.
+
+## Wave 9 (pi wave-9 storekit declared-leftover audit)
+
+Recount of `coverage.tsv`: 15480 implemented / 50 declared / 165 deferred /
+0 unavailable / 0 not-applicable of 15695 (leftover 215). Audited all 50
+`declared` rows against the sealed-gate evidence rules (top-level
+synchronous no-argument `func test*()` that calls the identifier, no
+`await` / `DispatchQueue.main` / `RunLoop` / semaphores):
+
+- 16 API rows are inherently `async` and have no synchronous spelling —
+  `get async` Bool properties (`ExternalPurchase.canPresent`,
+  `ExternalLinkAccount.canOpen`, `ExternalPurchaseLink.canOpen`,
+  `ExternalPurchaseCustomLink.isEligible`), async-throws entry points
+  (`presentNoticeSheet`, `open`, `open(url:)`, `bind`, `purchase`,
+  `token(for:)`, `showNotice`), async-throws inits
+  (`PaymentMethodBinding.init(id:)`,
+  `AdvancedCommerceProduct.init(id:)`), and async iterator `next()`
+  (`PurchaseIntent.Intents`, `Message.Messages`). Reading or calling any
+  of them requires `await`, so no cited sync test can call them.
+- 34 `SYNTHESIZED` rows are AsyncSequence witnesses (`next`/`isolation`,
+  `max`/`min`/`first`/`contains`) over `Storefronts`, `Transactions`,
+  `Intents`, `Messages`, and `Statuses`; all are async by protocol.
+
+The fail-closed synchronous behavior behind every async spelling
+(`*Now` shims, `make(id:)`, `eligibleURLs`) is already exercised by
+synchronous depth-pass-3 tests, so behavior coverage is unchanged; only
+the async spellings stay `declared`, which is the honest status.
+Purchase / Apple Pay success stays fail-closed per the lane rule.
+`not-applicable` is 0, so the overlay OVERRIDE has no rows to convert.
+`deferred` (165) is unchanged: Optional/Never `StoreContent` stdlib
+witnesses (never converted per the override), `SwiftUI.Transaction`
+collisions, Foundation `FormatStyle` synthesis, async
+`EntitlementTaskState.map`/`flatMap`, `PurchaseAction`
+`callAsFunction` overloads, CryptoKit `P256` signatures, and async
+`AdvancedCommerceProduct.latestTransaction`.
+
+| | implemented | declared | deferred | unavailable | not-applicable |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| before wave-9 audit | 15480 | 50 | 165 | 0 | 0 |
+| after wave-9 audit | 15480 | 50 | 165 | 0 | 0 |
+
+Nondeferred stays **15530** (floor 7848). Implemented gain: 0 — every
+leftover `declared` row requires `await` to call and purchase success
+stays fail-closed. No product sources, tests, or manifests changed.

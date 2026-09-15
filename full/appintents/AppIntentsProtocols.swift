@@ -85,6 +85,11 @@ public protocol PlayVideoIntent: SystemIntent {
 
 public protocol IntentValueQuery: PersistentlyIdentifiable, _SupportsAppDependencies, Sendable {
     associatedtype Input
+    /// Host defaults keep existing conformers compiling; Apple chains these
+    /// through `Result.Result.ValueType`, which the host toolchain cannot
+    /// express as a default without a concrete anchor.
+    associatedtype Result: ResultsCollection = [String]
+    associatedtype ResultValue = String
 }
 
 public protocol PredictableIntent: AppIntent {

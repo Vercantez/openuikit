@@ -75,6 +75,12 @@ lookalikes.
   deferred: defining an empty `AVAudioSession` namespace here collides with
   the repository's real class (`full/avfaudio/AVAudioSession.swift` already
   `import CoreAudioTypes`) and does not match Apple ordinary-import behavior.
+  Wave 9 re-probe (Xcode 26.1 iPhoneSimulator SDK): `import CoreAudioTypes`
+  alone cannot resolve `AVAudioSession` (`cannot find 'AVAudioSession' in
+  scope`; the header only forward-declares `@class AVAudioSession` for
+  apinotes), while `import AVFoundation` resolves `AVAudioSession.ErrorCode`
+  cleanly — confirming AVFAudio/AVFoundation ownership, so the 20 rows stay
+  deferred.
   The C global `AVAudioSessionErrorInsufficientPriority` remains implemented.
 - Linked CoreFoundation runtime in the central guest package. The portable
   gate typechecks a client importing both `CoreAudioTypes` and

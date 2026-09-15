@@ -169,7 +169,7 @@ public enum StringSearchScope: String, Hashable, Sendable, CaseIterable {
     case general
 }
 
-public enum IntentWidgetFamily: Hashable, Sendable {
+public enum IntentWidgetFamily: Hashable, Sendable, _IntentValue {
     case systemLarge
     case systemSmall
     case systemMedium
@@ -186,6 +186,20 @@ public enum OneOfComparisonOperator: Hashable, Sendable {
 
 public enum ParameterSummaryBuilder: Hashable, Sendable {
     case _appIntentsPlaceholder
+}
+
+extension ParameterSummaryBuilder {
+    /// Identity combination. Linux never matches a Siri case.
+    public static func buildBlock<Intent: AppIntent, Summary: ParameterSummary>(
+        _ summary: Summary
+    ) -> Summary where Summary.Intent == Intent {
+        summary
+    }
+    public static func buildExpression<Intent: AppIntent, Summary: ParameterSummary>(
+        _ summary: Summary
+    ) -> Summary where Summary.Intent == Intent {
+        summary
+    }
 }
 
 public enum IntentPredictionsBuilder: Hashable, Sendable {
@@ -230,8 +244,19 @@ public enum ComparableComparisonOperator: Hashable, Sendable {
     case lessThan
 }
 
-public enum EntityQueryPropertiesBuilder: Hashable, Sendable {
+public enum EntityQueryPropertiesBuilder<Entity, ComparatorMappingType>: Hashable, Sendable {
     case _appIntentsPlaceholder
+    /// Count-preserving in-process combination. Nothing is indexed.
+    public static func buildBlock(
+        _ declarations: EntityQueryPropertyDeclaration<Entity, ComparatorMappingType>...
+    ) -> [EntityQueryPropertyDeclaration<Entity, ComparatorMappingType>] {
+        declarations
+    }
+    public static func buildExpression(
+        _ declaration: EntityQueryPropertyDeclaration<Entity, ComparatorMappingType>
+    ) -> EntityQueryPropertyDeclaration<Entity, ComparatorMappingType> {
+        declaration
+    }
 }
 
 @resultBuilder
@@ -390,12 +415,48 @@ public enum ResolverSpecificationBuilder<Property: _IntentValue>: Hashable, Send
     }
 }
 
-public enum EntityQueryComparatorsBuilder: Hashable, Sendable {
+public enum EntityQueryComparatorsBuilder<Entity, Subject, Property, PropertyType, ComparatorMappingType>: Hashable, Sendable {
     case _appIntentsPlaceholder
+    /// Type-erasing in-process combination. Nothing is sent to a query daemon.
+    public static func buildExpression<InputType: _IntentValue>(
+        _ comparator: ContainsComparator<Property, PropertyType, InputType, ComparatorMappingType>
+    ) -> AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>
+    where Property: EntityProperty<PropertyType>, PropertyType: _IntentValue, PropertyType: Sendable {
+        AnyEntityQueryComparator(erasingContains: comparator)
+    }
+    public static func buildExpression<InputType>(
+        _ comparator: IsBetweenComparator<Property, PropertyType, InputType, ComparatorMappingType>
+    ) -> AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>
+    where Property: EntityProperty<PropertyType>, PropertyType: _IntentValue, PropertyType: Sendable,
+        InputType: Comparable, InputType == PropertyType.UnwrappedType {
+        AnyEntityQueryComparator(erasingIsBetween: comparator)
+    }
+    public static func buildExpression<InputType: _IntentValue>(
+        _ comparator: EntityQueryComparator<Property, PropertyType, InputType, ComparatorMappingType>
+    ) -> AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>
+    where Property: EntityProperty<PropertyType>, PropertyType: _IntentValue, PropertyType: Sendable {
+        AnyEntityQueryComparator(erasingEntityQuery: comparator)
+    }
+    public static func buildBlock(
+        _ components: AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>...
+    ) -> [AnyEntityQueryComparator<Entity, Subject, Property, PropertyType, ComparatorMappingType>] {
+        components
+    }
 }
 
-public enum EntityQuerySortingOptionsBuilder: Hashable, Sendable {
+public enum EntityQuerySortingOptionsBuilder<Entity>: Hashable, Sendable {
     case _appIntentsPlaceholder
+    /// Count-preserving in-process combination. Nothing is sent to a query daemon.
+    public static func buildBlock(
+        _ sortables: EntityQuerySortableByProperty<Entity>...
+    ) -> [EntityQuerySortableByProperty<Entity>] {
+        sortables
+    }
+    public static func buildExpression(
+        _ sortable: EntityQuerySortableByProperty<Entity>
+    ) -> EntityQuerySortableByProperty<Entity> {
+        sortable
+    }
 }
 
 extension VideoCategory: AppEnum {
