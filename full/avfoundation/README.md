@@ -1045,3 +1045,93 @@ because this isolated worktree lacks the shared
 requires): dylib builds `-warnings-as-errors`, all 201 cited tests across
 25 `*Tests.swift` files link and run, and the runner emits only
 `AVFOUNDATION_AGENT_RUNTIME_OK`.
+
+### Depth pass 2026-09-15 (wave 12 sync-twins sweep)
+
+Wave 12 converts 127 synchronous `deferred` rows into focused tests in
+`tests/agent/AVDepthPass21Tests.swift` (24 tests; largest citation group is
+25 rows for the track async-property tokens). New product surface in
+`AVPartialAsyncProperties.swift` (55 `AVPartialAsyncProperty` statics for the
+track / asset / metadata-item / composition / movie families, plus citations
+for the 5 already-declared `AVAsset` tokens) and `AVWave12SyncTwins.swift`
+(synchronous completion-handler twins that invoke the caller's handler
+inline: track loads project stored state, timeline seeks report false,
+renderers/synchronizer/generator/photo fail closed, export
+compatibility/estimates and the video-composition factory mirror the
+oracle-pinned shapes below, reader/writer provider and receiver factories
+vend fail-closed values, caption getters return oracle-pinned defaults, and
+6 variant-qualifier factories return empty-universe predicates). Class-body
+support in `AVCaptionSurface.swift` (internal validator status, warning
+range storage) and `AVCaptureSurface.swift` (required bracket-settings
+inits with stored bias/duration/ISO, stored `rawPhotoPixelFormatType`
+wired through the RAW inits). Two pre-existing tests
+(`AVMediaProbeTests`, `AVPlaybackTests`) now spell three generic-`load`
+arguments as `AVPartialAsyncProperty<AVAsset>.tracks/isPlayable/metadata`
+explicitly: the new per-root tokens otherwise make those inference sites
+ambiguous. The spelled-out static is the same identifier the rows already
+cited, so no evidence changed meaning.
+
+| status | before | after |
+|---|---|---:|
+| `implemented` | 5295 | 5422 |
+| `declared` | 92 | 92 |
+| `deferred` | 245 | 118 |
+| `unavailable` | 0 | 0 |
+| `not-applicable` | 0 | 0 |
+
+Top-5 implemented evidence distribution after this pass (unchanged order;
+largest new citation group is 25 rows, well under 40% of the 5,422
+implemented rows):
+
+| citations | test |
+|---:|---|
+| 315 | `testDepthPass9BehavioralFamilies` (focused family audit) |
+| 293 | `testAVMetadataIdentifierRawValues` (metadata identifier table) |
+| 289 | `testOptionSetAlgebraSynthesis` (option-set algebra table) |
+| 280 | `testAVMetadataKeyRawValues` (metadata key table) |
+| 274 | `testRawRepresentableEnumHashableSynthesis` (enum synthesis table) |
+
+Oracle pins from Xcode 26.1 on this Mac (no service/hardware success
+claimed; transcripts are probe notes, not repo files): an
+`import AVFoundation` run probe recorded fresh-`AVCaption` getter defaults
+(zero raw values / nil colors and ruby, full-text effective range),
+composition-track load shapes (`[]`, `[]`, invalid time, nil segment, all
+with nil error), `insertTimeRange` reporting nil error, the video-composition
+factory failing closed `(nil, error)`, the validator delivering one terminal
+nil and moving validating (empty validation completes), export compatibility
+`false`, `estimateMaximumDuration` zero-valid with nil error,
+`estimateOutputFileLength` zero with nil error, empty playback options,
+audio-renderer flush `true`, video flush / nil metrics / remove-`false`
+delivery, and late-`false` timeline seeks (delivered synchronously as
+`false` on Linux, where the gate forbids waiting). The header for
+`rawPhotoPixelFormatType` pins the 0 default ("Returns 0 if you did not
+specify RAW capture"). A simulator-SDK typecheck probe verified the
+remaining spellings (`requestAccess(completionHandler:)`,
+`setPreparedPhotoSettingsArray(_:completionHandler:)`, exposure factories,
+all 16 provider/receiver factories, `images(for:)`, `setActionQueue`,
+`notifyOfDataReady(for:completionHandler:)`, queue-registration twins, and
+cursor comparison). Six operator-taking variant-qualifier overloads stay
+deferred with a refined note: `NSComparisonPredicate` is unavailable in
+swift-corelibs-foundation, so their Apple operator type cannot be named.
+
+The remaining 92 `declared` rows are unchanged (async witnesses needing
+`await`, ambiguous/deprecated `flatMap`, `Combine` publishers,
+`FormatStyle` / `compare` / `SortComparator` witnesses, and
+`AVAsynchronousKeyValueLoading` witnesses for non-adopting types). The
+remaining 118 `deferred` rows are `CALayer`/`URLSession` inheritance,
+Darwin-only types (UTType, simd matrices, `MTAudioProcessingTap`,
+`NSPredicate` operators, FairPlay/content-key service paths, CIImage
+filtering, image-source/depth-transform constructors returning `Self`
+without a pixel pipeline), `NSCoder`/`NSValue` CoreMedia overlays, opaque
+`some` returns, generic-shadowing methods, and async bodies that cannot be
+exercised without `await`.
+
+Sealed Linux gate (same `swift:6.2-noble` replication as above, Swift
+6.2.4, aarch64) ended:
+
+```
+FRAMEWORK_FANOUT_DELIVERABLE_OK module=AVFoundation lane=medium-full symbols=5632
+FRAMEWORK_FANOUT_REFERENCE_OK
+AVFOUNDATION_AGENT_RUNTIME_OK
+FRAMEWORK_FANOUT_HOST_OK module=AVFoundation dylib=libAVFoundation.dylib
+```

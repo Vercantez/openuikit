@@ -23,8 +23,9 @@ public protocol AVCaptureAudioDataOutputSampleBufferDelegate : AnyObject {
 }
 
 open class AVCaptureAutoExposureBracketedStillImageSettings: AVCaptureBracketedStillImageSettings, @unchecked Sendable {
-  public override init() { super.init() }
-  public var exposureTargetBias: Float { 0 }
+  public required override init() { super.init() }
+  var storedExposureTargetBias: Float = 0
+  public var exposureTargetBias: Float { storedExposureTargetBias }
 }
 
 open class AVCaptureBracketedStillImageSettings: NSObject, @unchecked Sendable {
@@ -874,9 +875,11 @@ open class AVCaptureInput: NSObject, @unchecked Sendable {
 }
 
 open class AVCaptureManualExposureBracketedStillImageSettings: AVCaptureBracketedStillImageSettings, @unchecked Sendable {
-  public override init() { super.init() }
-  public var exposureDuration: CMTime { .zero }
-  public var iso: Float { 0 }
+  public required override init() { super.init() }
+  var storedExposureDuration = CMTime.zero
+  var storedISO: Float = 0
+  public var exposureDuration: CMTime { storedExposureDuration }
+  public var iso: Float { storedISO }
 }
 
 open class AVCaptureMetadataInput: AVCaptureInput, @unchecked Sendable {
@@ -1353,6 +1356,7 @@ open class AVCapturePhotoSettings: NSObject, @unchecked Sendable {
   }
 
   var portableUniqueID: Int64
+  var portableRawPhotoPixelFormatType: OSType = 0
   var portableFormat: [String: Any]?
   var portableRawFileFormat: [String: Any]?
   var portableProcessedFileType: AVFileType?
@@ -1394,6 +1398,9 @@ open class AVCapturePhotoSettings: NSObject, @unchecked Sendable {
 
   public var availablePreviewPhotoPixelFormatTypes: [OSType] { [] }
 
+  // Header-pinned default: 0 when no RAW capture was specified.
+  public var rawPhotoPixelFormatType: OSType { portableRawPhotoPixelFormatType }
+
   public convenience init(format: [String : Any]?) {
     self.init()
     portableFormat = format
@@ -1401,12 +1408,12 @@ open class AVCapturePhotoSettings: NSObject, @unchecked Sendable {
 
   public convenience init(rawPixelFormatType: OSType) {
     self.init()
-    _ = rawPixelFormatType
+    portableRawPhotoPixelFormatType = rawPixelFormatType
   }
 
   public convenience init(rawPixelFormatType: OSType, processedFormat: [String : Any]?) {
     self.init(format: processedFormat)
-    _ = rawPixelFormatType
+    portableRawPhotoPixelFormatType = rawPixelFormatType
   }
 
   public convenience init(
@@ -1416,7 +1423,7 @@ open class AVCapturePhotoSettings: NSObject, @unchecked Sendable {
     processedFileType: AVFileType?
   ) {
     self.init(format: processedFormat)
-    _ = rawPixelFormatType
+    portableRawPhotoPixelFormatType = rawPixelFormatType
     portableRawFileType = rawFileType
     portableProcessedFileType = processedFileType
   }
@@ -1430,6 +1437,7 @@ open class AVCapturePhotoSettings: NSObject, @unchecked Sendable {
     portableAutoRedEyeReductionEnabled = photoSettings.isAutoRedEyeReductionEnabled
     portablePhotoQualityPrioritization = photoSettings.photoQualityPrioritization
     portableHighResolutionPhotoEnabled = photoSettings.isHighResolutionPhotoEnabled
+    portableRawPhotoPixelFormatType = photoSettings.rawPhotoPixelFormatType
     portableMaxPhotoDimensions = photoSettings.maxPhotoDimensions
     portableDepthDataDeliveryEnabled = photoSettings.isDepthDataDeliveryEnabled
     portableMetadata = photoSettings.metadata

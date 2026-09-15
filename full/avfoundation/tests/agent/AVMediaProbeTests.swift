@@ -402,7 +402,7 @@ func testLocalAssetLoadAccessors() {
     let url = avWrite(avMakeFtypMoov(), suffix: "mp4")
     defer { try? FileManager.default.removeItem(at: url) }
     let asset = AVURLAsset(url: url)
-    let loaded = avfAwait { try await asset.load(.duration, .tracks, .isPlayable) }
+    let loaded = avfAwait { try await asset.load(.duration, AVPartialAsyncProperty<AVAsset>.tracks, AVPartialAsyncProperty<AVAsset>.isPlayable) }
     switch loaded {
     case .success(let triple):
         precondition(abs(triple.0.seconds - 3) < 0.01)

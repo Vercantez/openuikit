@@ -18,9 +18,11 @@ full/avfoundation/AVMetadataSurface.swift
 full/avfoundation/AVMetricsSurface.swift
 full/avfoundation/AVMovieSurface.swift
 full/avfoundation/AVOutputSurface.swift
+full/avfoundation/AVPartialAsyncProperties.swift
 full/avfoundation/AVPlaybackRuntime.swift
 full/avfoundation/AVPlayerLayerSurface.swift
 full/avfoundation/AVPlayerSurface.swift
 full/avfoundation/AVRestSurface.swift
 full/avfoundation/AVSampleSurface.swift
 full/avfoundation/AVVideoSurface.swift
+full/avfoundation/AVWave12SyncTwins.swift

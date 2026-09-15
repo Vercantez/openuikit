@@ -36,6 +36,11 @@ public extension ChartScrollTargetBehavior {
     }
 }
 public struct AnyChartSymbolShape: Hashable, Sendable, View, ChartSymbolShape {
+#if !canImport(SwiftUI)
+    /// Matches the Apple oracle (`xcrun swiftc`, Xcode 26.1 Charts):
+    /// non-animatable erased symbols expose `EmptyAnimatableData`.
+    public typealias AnimatableData = EmptyAnimatableData
+#endif
     private let shape: BasicChartSymbolShape
     public init(_ shape: BasicChartSymbolShape = .circle) { self.shape = shape }
     public var body: some View { shape }

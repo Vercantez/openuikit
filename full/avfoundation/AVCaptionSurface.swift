@@ -101,7 +101,7 @@ open class AVCaptionConversionTimeRangeAdjustment: AVCaptionConversionAdjustment
 open class AVCaptionConversionValidator: NSObject, @unchecked Sendable {
   private var storedCaptions: [AVCaption] = []
   private var storedTimeRange = CMTimeRange.zero
-  private var storedStatus = Status.unknown
+  var storedStatus = Status.unknown
   public override init() { super.init() }
   public enum Status: Int, Hashable, Sendable {
     case unknown = 0
@@ -128,6 +128,7 @@ open class AVCaptionConversionValidator: NSObject, @unchecked Sendable {
 
 open class AVCaptionConversionWarning: NSObject, @unchecked Sendable {
   public override init() { super.init() }
+  var storedRangeOfCaptions = NSRange(location: 0, length: 0)
   public struct WarningType: RawRepresentable, Hashable, Sendable, ExpressibleByStringLiteral {
     public let rawValue: String
     public init(rawValue: String) { self.rawValue = rawValue }

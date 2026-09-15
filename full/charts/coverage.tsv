@@ -1602,7 +1602,7 @@ s:6Charts18PositionScaleRangePA2A013PlotDimensioncD0VRszrlE04plotF07paddingAE14C
 s:6Charts18PositionScaleRangePA2A013PlotDimensioncD0VRszrlE04plotF0AEvpZ	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testPlotDimensionPaddingPixels	
 s:6Charts18PositionScaleRangePA2A013PlotDimensioncD0VRszrlE04plotF0AEvpZ::SYNTHESIZED::s:6Charts23PlotDimensionScaleRangeV	implemented	test:full/charts/tests/agent/ChartsFunctionPlotTests.swift#testPlotDimensionPaddingPixels	
 s:6Charts19AnyChartSymbolShapeV	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
-s:6Charts19AnyChartSymbolShapeV14AnimatableDataa	declared	source:full/charts/ChartsSurface.swift#AnyChartSymbolShape	-
+s:6Charts19AnyChartSymbolShapeV14AnimatableDataa	implemented	test:full/charts/tests/agent/ChartsWave12Tests.swift#testAnyChartSymbolShapeAnimatableData	Apple oracle (xcrun swiftc): AnimatableData == EmptyAnimatableData; Linux typealias pins the same identity
 s:6Charts19AnyChartSymbolShapeV18perceptualUnitRectSo6CGRectVvp	implemented	test:full/charts/tests/agent/ChartsDepthWave9Tests.swift#testSymbolPerceptualUnitRects	Wave 8 normalized metadata follow-up behavior.
 s:6Charts19AnyChartSymbolShapeV4Bodya	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
 s:6Charts19AnyChartSymbolShapeV4path2in7SwiftUI4PathVSo6CGRectV_tF	implemented	test:full/charts/tests/agent/ChartsDepthTests.swift#testAnyChartSymbolShapeWraps	
@@ -2029,7 +2029,7 @@ s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5Int64V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#init	Never is uninhabited; the PrimitivePlottableProtocol witness compiles but no value can be constructed to exercise it.
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5NeverO	implemented	test:full/charts/tests/agent/ChartsWave12Tests.swift#testNeverPrimitivePlottableInit	Never is uninhabited; witness pinned via Never? flatMap to init(primitivePlottable:) yielding nil
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s5UInt8V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xSgx_tcfc::SYNTHESIZED::s:s6UInt32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
@@ -2046,7 +2046,7 @@ s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s4Int8
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5Int64V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
-s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5NeverO	declared	source:full/charts/Charts.swift#primitivePlottable	Never is uninhabited; the PrimitivePlottableProtocol witness compiles but no value can be constructed to exercise it.
+s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5NeverO	implemented	test:full/charts/tests/agent/ChartsWave12Tests.swift#testNeverPrimitivePlottableValue	Never is uninhabited; getter witness pinned via Never? map to primitivePlottable yielding nil
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s5UInt8V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt16V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	
 s:6Charts26PrimitivePlottableProtocolPAAE09primitiveC0xvp::SYNTHESIZED::s:s6UInt32V	implemented	test:full/charts/tests/agent/ChartsBinningTests.swift#testPrimitivePlottableProtocolNumericWitnesses	

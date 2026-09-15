@@ -36,8 +36,22 @@ public struct ShortcutsLink: View {
 }
 
 public struct ShortcutsLinkStyle: Hashable, Sendable {
-    public static let automatic = ShortcutsLinkStyle()
-    public init() {}
+    private let token: UInt8
+
+    public static let automatic = ShortcutsLinkStyle(token: 0)
+    public static let dark = ShortcutsLinkStyle(token: 1)
+    public static let light = ShortcutsLinkStyle(token: 2)
+    public static let automaticOutline = ShortcutsLinkStyle(token: 3)
+    public static let darkOutline = ShortcutsLinkStyle(token: 4)
+    public static let lightOutline = ShortcutsLinkStyle(token: 5)
+
+    public init() {
+        self.token = 0
+    }
+
+    private init(token: UInt8) {
+        self.token = token
+    }
 }
 
 public final class ShortcutsUIButton: UIButton, @unchecked Sendable {

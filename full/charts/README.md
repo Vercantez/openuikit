@@ -1242,3 +1242,104 @@ resolve to listed guest sources (0 missing), and the top citation
 (`testViewOverlayBatch01`, 274 rows, 3.2%) stays far below the 40%
 cap. No product sources were added or edited; the guest manifest is
 unchanged.
+
+### Wave-12 final declared sweep (pi agent, 3 declared -> 0)
+
+This pass converts the last 3 declared rows per the wave-12 prompt. It
+starts from the wave-11 ledger (`implemented` 8508, `declared` 3,
+`deferred` 905, `unavailable` 0, `not-applicable` 58) and ends with
+`implemented` 8511, `declared` 0, `deferred` 905, `unavailable` 0,
+`not-applicable` 58. Implemented gain is +3. Nondeferred
+(`implemented` + `declared`) stays 8511, above the medium-full floor
+(4737). Leftover (`declared` + `deferred`) drops 908 -> 905.
+
+| status | before | after |
+| --- | ---: | ---: |
+| implemented | 8508 | 8511 |
+| declared | 3 | 0 |
+| deferred | 905 | 905 |
+| unavailable | 0 | 0 |
+| not-applicable | 58 | 58 |
+
+What converted (3 rows, new `tests/agent/ChartsWave12Tests.swift`):
+
+- `s:6Charts19AnyChartSymbolShapeV14AnimatableDataa` ->
+  `#testAnyChartSymbolShapeAnimatableData`. Apple oracle (`xcrun
+  swiftc`, Xcode 26.1 Charts) pins both `AnyChartSymbolShape` and
+  `BasicChartSymbolShape` `AnimatableData` to `EmptyAnimatableData`
+  (probe prints `EmptyAnimatableData` twice). Linux now carries the
+  same member: `ChartsLookalikes.EmptyAnimatableData` (inside `#if
+  !canImport(SwiftUI)`; on Apple builds the name resolves to
+  SwiftUI's own type) plus `AnyChartSymbolShape.AnimatableData`
+  typealias guarded the same way. The test asserts the type identity
+  and exercises `path(in:)` on the erased shape. No animation
+  behavior is invented.
+- `...PrimitivePlottableProtocol...primitiveC0...NeverO` (init) ->
+  `#testNeverPrimitivePlottableInit`: pins the synthesized failable
+  init as a `(Never) -> Never?` function value plus the
+  `Never.PrimitivePlottable == Never` identity. `Never` is
+  uninhabited, so no witness call can execute (a `Never?`-mapping
+  variant and a closure variant both fail Linux compilation by
+  design: inferred-`Never?` warning and will-never-be-executed); the
+  witness reference is the strongest honest pinning available.
+- `...primitiveC0xvp...NeverO` (getter) ->
+  `#testNeverPrimitivePlottableValue`: pins the getter as a
+  `\Never.primitivePlottable` key path plus the same type identity.
+  Each new test is cited by exactly 1 row; top citation is unchanged
+  (`testViewOverlayBatch01`, 274 rows, 3.2% of 8511; cap 3404).
+
+Overlay override: converts zero `not-applicable` rows. All 58 n/a rows
+were re-checked: none is an `s:7SwiftUI4View` modifier (all are
+`Animatable` / `Shape` boolean-combiner / `trim` / `scale` /
+`rotation` / `sizeThatFits` on `Circle`, `Circle` statics, or
+`ScrollTargetBehavior.properties`), and none is a stdlib/Foundation
+protocol witness either. GPU/image renderer rows stay deferred per the
+wave-12 lane rule; all other deferred rows (stdlib operators,
+Combine / `FormatStyle` / `SortComparator`, `symbolRotation` with no
+RealityKit type, scroll/gesture timing) are untouched.
+Hardware/daemon/Siri/Apple Pay/Screen Time success stays fail-closed.
+No `DispatchQueue.main`, `RunLoop`, semaphore waits, or `await` in
+cited tests.
+
+Gate repair (pre-existing breakage, fixed in this pass):
+`tests/agent/ChartsWave11Tests.swift` as committed at HEAD did not
+compile under `swift:6.2-noble` (Swift 6.2.4, aarch64 Linux) — 6
+errors, verified identical on a pristine `git show HEAD:` tree, so the
+breakage predates this pass. Lookalike-`View` overloads stole four
+call shapes (`View.symbol(BasicChartSymbolShape)` over
+`ChartContent.symbol(S:)`; generic `View.font<T0>` over
+`AxisMark.font`; generic `View.offset` over `AxisMark.offset`), and
+`ChartAxisContent().compositingLayer()` has no member at all
+(`ChartAxisContent` is `View`-only: an `xcrun swiftc` probe confirms
+Apple's type also refuses the `AxisContent` constraint, so adding a
+Linux conformance would invent API). The repair follows the wave-6
+test-repair precedent (names, counts, and called identifiers
+unchanged; explicit contextual types only): `any ChartContent` on the
+`symbol(S:)` call, `_AxisMarkAttributed<AxisValueLabel<Text>>` on
+`font` / both `offset`s, and `AxisMarks()` (real `AxisContent`) with
+`_AxisContentAttributed<AxisMarks<_EmptyAxisMark>>` for both
+`compositingLayer` calls. The repair additionally exposed a runtime
+overload steal the compiler never flagged:
+`BarMark.offset(x:y:)` resolved to the identity `View.offset<T0,T1>`
+(record `offsetX` stayed 0), so all five `ChartContent.offset` calls
+in `testWave11ChartContentBatch03` now carry
+`_ChartAttributedPlotContent` annotations and assert the stamped
+fields green.
+
+Linux verification for this pass (replicated sealed gate under
+docker `swift:6.2-noble`, Swift 6.2.4 aarch64): product dylib
+compiles with `swiftc -warnings-as-errors`, all 324 unique cited
+tests link, and the runner emits marker-only stdout
+`CHARTS_AGENT_RUNTIME_OK` (`LIB_OK` / `LINK_OK` / `LINUX_RUN_OK`).
+The repo-level `validate_seed.py --phase deliverable` still reports
+only its 2 pre-existing worktree-drift errors (absent repo-level
+`full/framework-roadmap/framework-roadmap.json`, never present in
+this worktree); all coverage/test evidence checks inside it pass. No
+`.build`, `build`, or `scratch` products remain under `full/charts/`.
+
+Files changed: `ChartsLookalikes.swift` (+`EmptyAnimatableData`),
+`ChartsSurface.swift` (+`AnyChartSymbolShape.AnimatableData`
+typealias), `coverage.tsv` (3 rows declared -> implemented),
+`tests/agent/ChartsWave11Tests.swift` (11-line overload-repair),
+`tests/agent/ChartsWave12Tests.swift` (new, 3 tests), `README.md`
+(this section). Guest manifest unchanged (no new product files).

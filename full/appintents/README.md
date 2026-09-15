@@ -39,6 +39,32 @@ Coverage this round (ledger at start of this increment, then after):
 | After wave 18 | 5240 | 198 | 1130 | 0 | 18 | 5438 |
 | After wave 19 | 5261 | 177 | 1130 | 0 | 18 | 5438 |
 | After wave 20 | 5267 | 171 | 1130 | 0 | 18 | 5438 |
+| After wave 21 | 5278 | 163 | 1127 | 0 | 18 | 5441 |
+
+Wave 21 (this increment) converts 11 rows with five synchronous tests in
+`tests/agent/AppIntentsWave21Tests.swift` (largest cites 3): the six
+remaining `_System`-constrained `IntentParameter` description-first shapes
+(no-title optionsProvider+resolvers / optionsProvider / resolvers / plain,
+titled optionsProvider+resolvers / resolvers) pinned on `Value == String`
+through the real host inits in `AppIntentsRemainingParameters.swift`
+(default/description/dialog stored, provider attached, resolvers recorded
+as metadata only), plus five `ShortcutsLinkStyle` statics (`dark` /
+`light`, previously declared, and the `darkOutline` / `lightOutline` /
+`automaticOutline` deferred rows) as host-local tokens on the overlay
+struct in `AppIntentsOverlays.swift`, mirroring the existing
+`SiriTipViewStyle` token design; `ShortcutsLinkStyle() == .automatic` is
+preserved. Deliberately left declared: async `requestValue` /
+`requestConfirmation` / `requestChoice` / `donate` / `perform` (no `await`
+in cited tests), `EntityProperty.asyncGetter` (no run loop), macros
+(`AppEnum(schema:)` et al, no plugin), `IntentResultContainer`
+`result()` / `result(dialog:)` (kept out so `IntentResultValue`
+inference stays unambiguous), `entityType` (host stores only the
+type-name string, never the metatype), `_System` inits already covered,
+`StartWorkoutIntent.init(style:)` (no init requirement to delegate to),
+`AppIntentsExtension.configuration` (dependency-owned `AppExtension`),
+`Never.init()` (uninhabited) and async `Never.perform()`,
+`ExpressibleByNilLiteral` when-condition overloads (indistinguishable
+without invented labels), and Siri/daemon/service behavior.
 
 Wave 20 (this increment) converts 6 of the 177 declared rows: the five
 `Never` result aliases (`Value` / `Dialog` / `Snippet` / `OpensAppIntent` /
@@ -252,7 +278,7 @@ No test is cited by more than 293 rows (5.9% of implemented rows, well
 under the 40% bulk-relabel line). Wave-14 tests cite at most 20 rows each.
 Wave-15 tests cite at most 20 rows each. Wave-16 tests cite at most 22 rows
 each. Wave-17 overlay batches cite at most 293 rows each; depth tests cite
-at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each. Wave-20 tests cite at most 4 rows each.
+at most 12 rows each. Wave-18 tests cite at most 22 rows each. Wave-19 tests cite at most 3 rows each. Wave-20 tests cite at most 4 rows each. Wave-21 tests cite at most 3 rows each.
 New depth-pass tests are synchronous; they do not
 wait on `DispatchSemaphore` or `RunLoop`. Existing first-pass `wait()` helpers
 remain for `perform()` only.

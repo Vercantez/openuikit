@@ -714,4 +714,15 @@ public extension View {
     }
 }
 
+/// Linux stand-in for SwiftUI's `EmptyAnimatableData`.
+///
+/// Apple oracle (`xcrun swiftc`, Xcode 26.1 Charts): both
+/// `AnyChartSymbolShape.AnimatableData` and
+/// `BasicChartSymbolShape.AnimatableData` resolve to `EmptyAnimatableData`.
+/// The lookalike carries no animation behavior; it only pins the typealias
+/// identity so the Linux module exposes the same member.
+public struct EmptyAnimatableData: Equatable, Sendable {
+    public init() {}
+}
+
 #endif

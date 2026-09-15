@@ -182,7 +182,7 @@ func testAVAssetLoadFailClosed() {
     precondition(asset.tracks.isEmpty)
     precondition(asset.metadata.isEmpty)
     let loaded = avfAwait { () async throws -> (CMTime, [AVAssetTrack], Bool) in
-        try await asset.load(.duration, .tracks, .isPlayable)
+        try await asset.load(.duration, AVPartialAsyncProperty<AVAsset>.tracks, AVPartialAsyncProperty<AVAsset>.isPlayable)
     }
     switch loaded {
     case .success(let triple):
@@ -199,7 +199,7 @@ func testAVAssetLoadFailClosed() {
     default:
         preconditionFailure("duration load must complete")
     }
-    let metadata = avfAwait { try await asset.load(.metadata) }
+    let metadata = avfAwait { try await asset.load(AVPartialAsyncProperty<AVAsset>.metadata) }
     switch metadata {
     case .success(let items):
         precondition(items.isEmpty)
